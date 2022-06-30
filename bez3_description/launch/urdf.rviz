@@ -1,0 +1,577 @@
+Panels:
+  - Class: rviz/Displays
+    Help Height: 78
+    Name: Displays
+    Property Tree Widget:
+      Expanded:
+        - /Global Options1
+        - /Status1
+        - /RobotModel1
+        - /TF1
+        - /TF2
+        - /TF2/Tree1
+        - /TF2/Tree1/base_link1
+        - /TF2/Tree1/base_link1/custom_servo_support__lower_neck__v1_11
+        - /TF2/Tree1/base_link1/torso_11
+      Splitter Ratio: 0.5
+    Tree Height: 732
+  - Class: rviz/Selection
+    Name: Selection
+  - Class: rviz/Tool Properties
+    Expanded:
+      - /2D Pose Estimate1
+      - /2D Nav Goal1
+      - /Publish Point1
+    Name: Tool Properties
+    Splitter Ratio: 0.5886790156364441
+  - Class: rviz/Views
+    Expanded:
+      - /Current View1
+    Name: Views
+    Splitter Ratio: 0.5
+  - Class: rviz/Time
+    Experimental: false
+    Name: Time
+    SyncMode: 0
+    SyncSource: ""
+Preferences:
+  PromptSaveOnExit: true
+Toolbars:
+  toolButtonStyle: 2
+Visualization Manager:
+  Class: ""
+  Displays:
+    - Alpha: 0.5
+      Cell Size: 1
+      Class: rviz/Grid
+      Color: 160; 160; 164
+      Enabled: true
+      Line Style:
+        Line Width: 0.029999999329447746
+        Value: Lines
+      Name: Grid
+      Normal Cell Count: 0
+      Offset:
+        X: 0
+        Y: 0
+        Z: 0
+      Plane: XY
+      Plane Cell Count: 10
+      Reference Frame: <Fixed Frame>
+      Value: true
+    - Alpha: 0.4000000059604645
+      Class: rviz/RobotModel
+      Collision Enabled: false
+      Enabled: true
+      Links:
+        25t-servo-hub_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        25t-servo-hub_2:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        25t-servo-hub_3:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        25t-servo-hub_4:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        25t-servo-hub_Mirror__1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        25t-servo-hub_Mirror__2:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        All Links Enabled: true
+        Expand Joint Details: false
+        Expand Link Details: false
+        Expand Tree: false
+        JX_servo_v8_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        JX_servo_v8_11:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        JX_servo_v8_12:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        JX_servo_v8_13:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        JX_servo_v8_14:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        JX_servo_v8_15:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        JX_servo_v8_16:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        JX_servo_v8_17:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        JX_servo_v8_18:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        JX_servo_v8_19:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        JX_servo_v8_8:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        JX_servo_v8_9:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        Link Tree Style: Links in Alphabetic Order
+        base_link:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        camera_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        custom_servo_support__lower_neck__v1_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        elbow-attach_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        elbow-attach_Mirror__1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        elbow-bearing_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        elbow-bearing_Mirror__1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        gobilda-servo_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        gobilda-servo_3:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        gobilda-servo_4:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        gobilda-servo_5:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        gobilda-servo_Mirror__1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        gobilda-servo_Mirror__2:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        head_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        left_bicep_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        left_calve_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        left_foot_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        left_forearm_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        left_hip_front_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        left_hip_front_2:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        left_hip_side_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        left_thigh_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        neck_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        right_ankle_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        right_ankle_2:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        right_bicep_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        right_calve_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        right_foot_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        right_forearm_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        right_hip_side_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        right_thigh_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        torso_1:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+      Name: RobotModel
+      Robot Description: robot_description
+      TF Prefix: ""
+      Update Interval: 0
+      Value: true
+      Visual Enabled: true
+    - Class: rviz/TF
+      Enabled: false
+      Frame Timeout: 15
+      Frames:
+        All Enabled: true
+      Marker Alpha: 1
+      Marker Scale: 0.5
+      Name: TF
+      Show Arrows: true
+      Show Axes: true
+      Show Names: true
+      Tree:
+        {}
+      Update Interval: 0
+      Value: false
+    - Class: rviz/TF
+      Enabled: true
+      Frame Timeout: 15
+      Frames:
+        25t-servo-hub_1:
+          Value: true
+        25t-servo-hub_2:
+          Value: true
+        25t-servo-hub_3:
+          Value: true
+        25t-servo-hub_4:
+          Value: true
+        25t-servo-hub_Mirror__1:
+          Value: true
+        25t-servo-hub_Mirror__2:
+          Value: true
+        All Enabled: true
+        JX_servo_v8_1:
+          Value: true
+        JX_servo_v8_11:
+          Value: true
+        JX_servo_v8_12:
+          Value: true
+        JX_servo_v8_13:
+          Value: true
+        JX_servo_v8_14:
+          Value: true
+        JX_servo_v8_15:
+          Value: true
+        JX_servo_v8_16:
+          Value: true
+        JX_servo_v8_17:
+          Value: true
+        JX_servo_v8_18:
+          Value: true
+        JX_servo_v8_19:
+          Value: true
+        JX_servo_v8_8:
+          Value: true
+        JX_servo_v8_9:
+          Value: true
+        base_link:
+          Value: true
+        camera_1:
+          Value: true
+        custom_servo_support__lower_neck__v1_1:
+          Value: true
+        elbow-attach_1:
+          Value: true
+        elbow-attach_Mirror__1:
+          Value: true
+        elbow-bearing_1:
+          Value: true
+        elbow-bearing_Mirror__1:
+          Value: true
+        gobilda-servo_1:
+          Value: true
+        gobilda-servo_3:
+          Value: true
+        gobilda-servo_4:
+          Value: true
+        gobilda-servo_5:
+          Value: true
+        gobilda-servo_Mirror__1:
+          Value: true
+        gobilda-servo_Mirror__2:
+          Value: true
+        head_1:
+          Value: true
+        left_bicep_1:
+          Value: true
+        left_calve_1:
+          Value: true
+        left_foot_1:
+          Value: true
+        left_forearm_1:
+          Value: true
+        left_hip_front_1:
+          Value: true
+        left_hip_front_2:
+          Value: true
+        left_hip_side_1:
+          Value: true
+        left_thigh_1:
+          Value: true
+        neck_1:
+          Value: true
+        right_ankle_1:
+          Value: true
+        right_ankle_2:
+          Value: true
+        right_bicep_1:
+          Value: true
+        right_calve_1:
+          Value: true
+        right_foot_1:
+          Value: true
+        right_forearm_1:
+          Value: true
+        right_hip_side_1:
+          Value: true
+        right_thigh_1:
+          Value: true
+        torso_1:
+          Value: true
+      Marker Alpha: 1
+      Marker Scale: 0.10000000149011612
+      Name: TF
+      Show Arrows: true
+      Show Axes: true
+      Show Names: true
+      Tree:
+        base_link:
+          custom_servo_support__lower_neck__v1_1:
+            gobilda-servo_4:
+              25t-servo-hub_3:
+                neck_1:
+                  25t-servo-hub_4:
+                    gobilda-servo_5:
+                      head_1:
+                        camera_1:
+                          {}
+          torso_1:
+            25t-servo-hub_1:
+              gobilda-servo_1:
+                left_bicep_1:
+                  gobilda-servo_3:
+                    25t-servo-hub_2:
+                      elbow-attach_1:
+                        left_forearm_1:
+                          elbow-bearing_1:
+                            {}
+            25t-servo-hub_Mirror__1:
+              gobilda-servo_Mirror__1:
+                right_bicep_1:
+                  gobilda-servo_Mirror__2:
+                    25t-servo-hub_Mirror__2:
+                      elbow-attach_Mirror__1:
+                        right_forearm_1:
+                          elbow-bearing_Mirror__1:
+                            {}
+            JX_servo_v8_1:
+              left_hip_side_1:
+                JX_servo_v8_8:
+                  left_hip_front_1:
+                    JX_servo_v8_9:
+                      left_thigh_1:
+                        JX_servo_v8_11:
+                          left_calve_1:
+                            JX_servo_v8_12:
+                              left_hip_front_2:
+                                JX_servo_v8_13:
+                                  left_foot_1:
+                                    {}
+            JX_servo_v8_14:
+              right_hip_side_1:
+                JX_servo_v8_15:
+                  right_ankle_1:
+                    JX_servo_v8_16:
+                      right_thigh_1:
+                        JX_servo_v8_17:
+                          right_calve_1:
+                            JX_servo_v8_18:
+                              right_ankle_2:
+                                JX_servo_v8_19:
+                                  right_foot_1:
+                                    {}
+      Update Interval: 0
+      Value: true
+  Enabled: true
+  Global Options:
+    Background Color: 48; 48; 48
+    Default Light: true
+    Fixed Frame: base_link
+    Frame Rate: 30
+  Name: root
+  Tools:
+    - Class: rviz/Interact
+      Hide Inactive Objects: true
+    - Class: rviz/MoveCamera
+    - Class: rviz/Select
+    - Class: rviz/FocusCamera
+    - Class: rviz/Measure
+    - Class: rviz/SetInitialPose
+      Theta std deviation: 0.2617993950843811
+      Topic: /initialpose
+      X std deviation: 0.5
+      Y std deviation: 0.5
+    - Class: rviz/SetGoal
+      Topic: /move_base_simple/goal
+    - Class: rviz/PublishPoint
+      Single click: true
+      Topic: /clicked_point
+  Value: true
+  Views:
+    Current:
+      Class: rviz/Orbit
+      Distance: 0.9250624179840088
+      Enable Stereo Rendering:
+        Stereo Eye Separation: 0.05999999865889549
+        Stereo Focal Distance: 1
+        Swap Stereo Eyes: false
+        Value: false
+      Field of View: 0.7853981852531433
+      Focal Point:
+        X: 0.08751234412193298
+        Y: -0.1458250880241394
+        Z: -0.14766979217529297
+      Focal Shape Fixed Size: true
+      Focal Shape Size: 0.05000000074505806
+      Invert Z Axis: false
+      Name: Current View
+      Near Clip Distance: 0.009999999776482582
+      Pitch: 0.48020219802856445
+      Target Frame: <Fixed Frame>
+      Yaw: 1.8085790872573853
+    Saved: ~
+Window Geometry:
+  Displays:
+    collapsed: false
+  Height: 1020
+  Hide Left Dock: false
+  Hide Right Dock: false
+  QMainWindow State: 000000ff00000000fd00000004000000000000015300000363fc0200000008fb0000001200530065006c0065006300740069006f006e00000001e10000009b0000004f00fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073010000003400000363000000ab00fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261000000010000010f00000363fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a005600690065007700730100000034000003630000009200fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e100000197000000030000075000000044fc0100000002fb0000000800540069006d00650100000000000007500000028c00fffffffb0000000800540069006d00650100000000000004500000000000000000000004e40000036300000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  Selection:
+    collapsed: false
+  Time:
+    collapsed: false
+  Tool Properties:
+    collapsed: false
+  Views:
+    collapsed: false
+  Width: 1872
+  X: 0
+  Y: 23

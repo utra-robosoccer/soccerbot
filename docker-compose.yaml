@@ -3,12 +3,6 @@ version: "3.3"
 # Instructions
 # https://github.com/utra-robosoccer/soccerbot/wiki/Docker
 
-networks:
-  soccer_network:
-    ipam:
-      config:
-        - subnet: 172.18.0.0/24
-
 x-gpu: &gpu
   deploy:
     resources:
@@ -84,9 +78,6 @@ services:
 
   friendly:
     <<: *soccerbot
-    networks:
-      soccer_network:
-        ipv4_address: 172.18.0.2
     environment:
       ROBOCUP_ROBOT_ID: 1 # (see start_competition.sh for positions), not 1 https://discord.com/channels/462951096374132736/798238127588114462/954388600290685008
       ROBOCUP_TEAM_COLOR: "red"
@@ -100,9 +91,6 @@ services:
 
   opponent:
     <<: *soccerbot
-    networks:
-      soccer_network:
-        ipv4_address: 172.18.0.6
     environment:
       ROBOCUP_ROBOT_ID: 1
       ROBOCUP_TEAM_COLOR: "blue"

@@ -97,7 +97,8 @@ class Path:
 
         cumulative_ratio = 0
         for path_section in self.path_sections:
-            if total_duration == 0: return 0, path_section
+            if total_duration == 0:
+                return 0, path_section
             ratio = path_section.duration() / total_duration
             next_cumulative_ratio = cumulative_ratio + ratio
             if next_cumulative_ratio >= r:

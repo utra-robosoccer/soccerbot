@@ -152,9 +152,6 @@ class SoccerbotRos(Soccerbot):
         self.publishHeight()
         pass
 
-    def ready(self):
-        super(SoccerbotRos, self).ready()
-
     def publishHeight(self):
         f = Float64()
         f.data = self.pose.get_position()[2]

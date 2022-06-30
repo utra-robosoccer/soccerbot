@@ -68,7 +68,6 @@ class Communication:
         for motor_name, target in zip(joint_command.name, joint_command.position):
             if motor_name in self._motor_map:
                 self._motor_map[motor_name]["value"] = target
-        # print('************', [(a['id'], a['value']) for a in sorted(self._motor_map.values(), key=lambda b: int(b['id']))])
 
     def send_angles(self, event):
         motor_angles = {}  # [0] * len(self._motor_map)
@@ -127,15 +126,6 @@ class Communication:
                 angle = np.deg2rad(angle)
             else:
                 angle = self._motor_map[motor]["value"]
-
-            # # Joint controller state
-            # state = JointControllerState()
-            # state.process_value = angle
-            # state.command = self._motor_map[motor]["value"]
-            # state.error = angle - self._motor_map[motor]["value"]
-            # state.process_value_dot = 0  # TODO PID settings and process value dot
-            # state.header.stamp = rp.rostime.get_rostime()
-            # self._motor_map[motor]["publisher"].publish(state)
 
             # Joint State
             joint_state.name.append(motor)

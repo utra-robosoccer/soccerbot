@@ -14,13 +14,20 @@
 
     <!-- prettier-ignore -->
 
-    <param name="robot_description" if="$(eval robot_model == 'bez1')" command="xacro '$(find bez1_description)/urdf/soccerbot.xacro'
+    <param name="robot_description" if="$(eval robot_model == 'bez1')" command="xacro '$(find bez1_description)/urdf/bez1.xacro'
         robot_name:=$(arg robot_name)
         model_type:=dae
         file_path:=package://bez1_description
         has_base_footprint:=false
         tf_prefix:=$(arg robot_name)
         "
+    />
+
+    <param
+        name="robot_description"
+        if="$(eval robot_model == 'bez3')"
+        command="xacro '$(find bez3_description)/urdf/bez3.xacro'
+        tf_prefix:=$(arg robot_name)"
     />
 
     <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" />
