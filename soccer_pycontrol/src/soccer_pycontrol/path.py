@@ -28,6 +28,8 @@ class Path:
         self.path_sections.append(p)
 
     def isShortPath(self, start_transform: Transformation, end_transform: Transformation):
+        # Only use bezier for simple forward paths
+
         theta_diff = wrapToPi(end_transform.get_orientation_euler()[0] - start_transform.get_orientation_euler()[0])
         pos_theta_diff = math.atan2(
             end_transform.get_position()[1] - start_transform.get_position()[1],
@@ -36,10 +38,12 @@ class Path:
         if abs(wrapToPi(pos_theta_diff - theta_diff)) > math.pi / 4:
             return True
 
-        return (
-            np.linalg.norm(end_transform.get_position()[0:2] - start_transform.get_position()[0:2])
-            < PathSection.bodystep_size_default * PathSectionBezier.turn_duration * 4
-        )
+        start_end_diff = end_transform @ np.linalg.inv(start_transform)
+        start_end_angle = math.atan2(start_end_diff[1, 3], start_end_diff[0, 3])
+        if abs(start_end_angle) > math.pi / 4:
+            return True
+
+        return False
 
     def createPathSection(self, start_transform: Transformation, end_transform: Transformation):
         is_short_distance = self.isShortPath(start_transform, end_transform)

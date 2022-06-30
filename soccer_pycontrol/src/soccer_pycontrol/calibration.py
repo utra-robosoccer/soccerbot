@@ -11,6 +11,7 @@ import argparse
 
 import matplotlib.pyplot as plt
 import numpy as np
+import pybullet as pb
 import rospy
 import torch
 from torch import nn
@@ -19,34 +20,21 @@ from soccer_common.transformation import Transformation
 
 
 class Calibration:
-    # fmt: off
-    x_range = np.flip(
-        np.array([-2.0, -1.5, -1.0, -0.8, -0.5, -0.3, -0.2, -0.15, -0.1, -0.05, 0, 0.05, 0.1, 0.15, 0.3, 0.4, 0.5, 0.8, 1.0, 1.5, 2.0]))
-    y_range = np.array([0, 0.05, 0.1, 0.15, 0.3, 0.4, 0.5, 1.0, 1.5, 2.0])
-    ang_range = np.pi * np.array([-0.8, -0.6, -0.4, -0.2, 0, 0.2, 0.4, 0.6, 0.8, 1])
-    # fmt: on
-    model_name = "calibration_models/model.995"
+    x_range = np.linspace(0, 0.5, 25)
+    y_range = np.linspace(-0.5, 0.5, 50)
+    ang_range = np.pi * np.linspace(-0.9, 0.9, 20)
+    try:
+        robot_model = rospy.get_param("~robot_model", "bez1")
+    except ConnectionRefusedError:
+        robot_model = "bez1"
 
     # Runs a series of movements to collect data in the calibration folder
     def obtain_calibration(self):
-        from soccer_pycontrol.soccerbot_controller_ros import SoccerbotControllerRos
-
-        rospy.init_node("soccer_control")
-        for node in [
-            "soccer_strategy",
-            "soccer_pycontrol",
-            "soccer_trajectories",
-            "ball_detector",
-            "detector_goalpost",
-            "object_detector",
-            "rosbag",
-        ]:
-            os.system(f"/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/{node}'")
+        from soccer_pycontrol.soccerbot_controller import SoccerbotController
 
         try:
             np.set_printoptions(precision=3)
 
-            # ang_range = np.pi * np.array([0])
             if not os.path.exists("calibration"):
                 os.makedirs("calibration")
 
@@ -69,25 +57,19 @@ class Calibration:
 
                         attempt = 0
                         while attempt < 5:
-                            walker = SoccerbotControllerRos()
+                            walker = SoccerbotController(display=False)
                             walker.soccerbot.useCalibration = False
-                            walker.setPose(Transformation())
+
+                            walker.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
+                            walker.ready()
+                            walker.wait(100)
                             walker.setGoal(Transformation([x, y, 0.0], quat))
                             success = walker.run(single_trajectory=True)
                             if success:
-                                walker.update_robot_pose(footprint_name="/base_footprint_gt")
-                                euler = Transformation.get_euler_from_quaternion(
-                                    [
-                                        walker.robot_pose.pose.orientation.x,
-                                        walker.robot_pose.pose.orientation.y,
-                                        walker.robot_pose.pose.orientation.z,
-                                        walker.robot_pose.pose.orientation.w,
-                                    ]
-                                )
                                 final_position = [
-                                    walker.robot_pose.pose.position.x,
-                                    walker.robot_pose.pose.position.y,
-                                    euler[0],
+                                    pb.getBasePositionAndOrientation(walker.soccerbot.body)[0],
+                                    pb.getBasePositionAndOrientation(walker.soccerbot.body)[1],
+                                    Transformation.get_euler_from_quaternion(pb.getBasePositionAndOrientation(walker.soccerbot.body)[1])[0],
                                 ]
                                 print("Final Position is " + str(final_position))
                                 np.save(file_name, final_position)
@@ -96,12 +78,15 @@ class Calibration:
                                 print("Attempt Failed")
                             attempt = attempt + 1
 
+                        del walker
                         if attempt == 5:
                             print("Failed 5 times")
                             exit(1)
 
             exit(0)
-        except (KeyboardInterrupt, rospy.exceptions.ROSException):
+        except KeyboardInterrupt:
+            exit(1)
+        except rospy.exceptions.ROSException:
             exit(1)
 
     def load_data(self, combine_yaw=False):
@@ -414,19 +399,3 @@ class Calibration:
             angles="xy",
         )
         plt.show()
-
-
-# Run calibration
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Run Soccer calibration")
-    parser.add_argument("--collect", help="Collect", action="store_true")
-    args = parser.parse_args()
-
-    c = Calibration()
-    if args.collect:
-        c.obtain_calibration()
-    else:
-        c.calibrate()
-        c.view_calibration()
-        c.invert_model()
-        c.test_adjust_navigation_transform()
