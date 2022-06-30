@@ -13,10 +13,10 @@ from soccer_pycontrol.utils import wrapToPi
 
 
 class Path:
-    step_precision = rospy.get_param("~step_precision", 0.02)  # Time for a single time step
+    step_precision = rospy.get_param("step_precision", 0.02)  # Time for a single time step
 
-    pre_footstep_ratio = rospy.get_param("~pre_footstep_ratio", 0.15)  # Ratio of fullstep duration to keep foot on ground on prefootstep
-    post_footstep_ratio = rospy.get_param("~post_footstep_ratio", 0.25)  # Ratio of fullstep duration to keep foot on ground on postfootstep
+    pre_footstep_ratio = rospy.get_param("pre_footstep_ratio", 0.15)  # Ratio of fullstep duration to keep foot on ground on prefootstep
+    post_footstep_ratio = rospy.get_param("post_footstep_ratio", 0.25)  # Ratio of fullstep duration to keep foot on ground on postfootstep
 
     def __init__(self, start_transform: Transformation, end_transform: Transformation):
         self.start_transform = start_transform

@@ -23,6 +23,7 @@ RUN_LOCALLY = "pycharm" in sys.argv[0]
 
 class IntegrationTest(TestCase):
     START_PLAY = "false"
+    ROBOT_MODEL = "bez3"
 
     def reset_simulation(self):
 
@@ -43,7 +44,7 @@ class IntegrationTest(TestCase):
                 [
                     "/bin/bash",
                     "-c",
-                    f"export START_PLAY={self.START_PLAY} && source ~/catkin_ws/devel/setup.bash && roslaunch soccerbot soccerbot_multi.launch",
+                    f"export START_PLAY={self.START_PLAY} && export ROBOT_MODEL={self.ROBOT_MODEL} && source ~/catkin_ws/devel/setup.bash && roslaunch soccerbot soccerbot_multi.launch",
                 ]
             )
         else:
@@ -156,7 +157,7 @@ class IntegrationTestInitial(IntegrationTest):
             assert handle.get_num_connections() > 0
             print("Connection looks okay")
             # Validate that the robot moves towards the goal
-            for i in range(0, 200):  # 100s timeout
+            for i in range(0, 20000000000000):  # 100s timeout
                 print("dist: {}, cycle: {}".format(self.distance, i))
                 rospy.sleep(1)
                 if self.distance < DIST_TOLERANCE:
