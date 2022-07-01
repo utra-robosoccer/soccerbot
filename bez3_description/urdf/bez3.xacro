@@ -13,14 +13,14 @@
   <visual>
     <origin xyz="0 0 0" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/base_link.stl" scale="1 1 1"/>
     </geometry>
     <material name="steel_satin"/>
   </visual>
   <collision>
     <origin xyz="0 0 0" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/base_link.stl" scale="1 1 1"/>
     </geometry>
   </collision>
 </link>
@@ -34,14 +34,14 @@
   <visual>
     <origin xyz="-0.0 -0.005 -0.0" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/torso_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/torso_1.stl" scale="1 1 1"/>
     </geometry>
     <material name="polymide_kapton"/>
   </visual>
   <collision>
     <origin xyz="-0.0 -0.005 -0.0" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/torso_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/torso_1.stl" scale="1 1 1"/>
     </geometry>
   </collision>
 </link>
@@ -55,14 +55,14 @@
   <visual>
     <origin xyz="0.0225 -0.0545 0.13699" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/JX_servo_v12_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/JX_servo_v12_1.stl" scale="1 1 1"/>
     </geometry>
     <material name="plastic_matte_black"/>
   </visual>
   <collision>
     <origin xyz="0.0225 -0.0545 0.13699" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/JX_servo_v12_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/JX_servo_v12_1.stl" scale="1 1 1"/>
     </geometry>
   </collision>
 </link>
@@ -76,14 +76,14 @@
   <visual>
     <origin xyz="0.0045 -0.0545 0.16339" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/left_hip_side_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/left_hip_side_1.stl" scale="1 1 1"/>
     </geometry>
     <material name="plastic_glossy_black"/>
   </visual>
   <collision>
     <origin xyz="0.0045 -0.0545 0.16339" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/left_hip_side_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/left_hip_side_1.stl" scale="1 1 1"/>
     </geometry>
   </collision>
 </link>
@@ -97,14 +97,14 @@
   <visual>
     <origin xyz="0.0345 -0.0545 0.198726" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/JX_servo_v12_8.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/JX_servo_v12_8.stl" scale="1 1 1"/>
     </geometry>
     <material name="plastic_matte_black"/>
   </visual>
   <collision>
     <origin xyz="0.0345 -0.0545 0.198726" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/JX_servo_v12_8.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/JX_servo_v12_8.stl" scale="1 1 1"/>
     </geometry>
   </collision>
 </link>
@@ -118,14 +118,14 @@
   <visual>
     <origin xyz="0.0609 -0.046 0.179826" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/left_hip_front_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/left_hip_front_1.stl" scale="1 1 1"/>
     </geometry>
     <material name="plastic_glossy_black"/>
   </visual>
   <collision>
     <origin xyz="0.0609 -0.046 0.179826" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/left_hip_front_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/left_hip_front_1.stl" scale="1 1 1"/>
     </geometry>
   </collision>
 </link>
@@ -139,14 +139,14 @@
   <visual>
     <origin xyz="-0.0035 -0.0699 0.253626" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/JX_servo_v12_9.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/JX_servo_v12_9.stl" scale="1 1 1"/>
     </geometry>
     <material name="plastic_matte_black"/>
   </visual>
   <collision>
     <origin xyz="-0.0035 -0.0699 0.253626" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/JX_servo_v12_9.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/JX_servo_v12_9.stl" scale="1 1 1"/>
     </geometry>
   </collision>
 </link>
@@ -160,14 +160,14 @@
   <visual>
     <origin xyz="0.005 -0.0924 0.198726" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/left_thigh_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/left_thigh_1.stl" scale="1 1 1"/>
     </geometry>
     <material name="plastic_glossy_black"/>
   </visual>
   <collision>
     <origin xyz="0.005 -0.0924 0.198726" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/left_thigh_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/left_thigh_1.stl" scale="1 1 1"/>
     </geometry>
   </collision>
 </link>
@@ -181,14 +181,14 @@
   <visual>
     <origin xyz="0.005 -0.0924 0.322726" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/JX_servo_v12_11.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/JX_servo_v12_11.stl" scale="1 1 1"/>
     </geometry>
     <material name="plastic_matte_black"/>
   </visual>
   <collision>
     <origin xyz="0.005 -0.0924 0.322726" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/JX_servo_v12_11.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/JX_servo_v12_11.stl" scale="1 1 1"/>
     </geometry>
   </collision>
 </link>
@@ -202,14 +202,14 @@
   <visual>
     <origin xyz="-0.0035 -0.066 0.377626" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/left_calve_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/left_calve_1.stl" scale="1 1 1"/>
     </geometry>
     <material name="plastic_glossy_black"/>
   </visual>
   <collision>
     <origin xyz="-0.0035 -0.066 0.377626" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/left_calve_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/left_calve_1.stl" scale="1 1 1"/>
     </geometry>
   </collision>
 </link>
@@ -223,14 +223,14 @@
   <visual>
     <origin xyz="0.00505 -0.094 0.462631" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/JX_servo_v12_12.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/JX_servo_v12_12.stl" scale="1 1 1"/>
     </geometry>
     <material name="plastic_matte_black"/>
   </visual>
   <collision>
     <origin xyz="0.00505 -0.094 0.462631" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/JX_servo_v12_12.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/JX_servo_v12_12.stl" scale="1 1 1"/>
     </geometry>
   </collision>
 </link>
@@ -244,14 +244,14 @@
   <visual>
     <origin xyz="-0.00345 -0.0715 0.407731" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/left_hip_front_2.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/left_hip_front_2.stl" scale="1 1 1"/>
     </geometry>
     <material name="plastic_glossy_black"/>
   </visual>
   <collision>
     <origin xyz="-0.00345 -0.0715 0.407731" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/left_hip_front_2.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/left_hip_front_2.stl" scale="1 1 1"/>
     </geometry>
   </collision>
 </link>
@@ -265,14 +265,14 @@
   <visual>
     <origin xyz="0.06095 -0.0465 0.407731" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/JX_servo_v12_13.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/JX_servo_v12_13.stl" scale="1 1 1"/>
     </geometry>
     <material name="plastic_matte_black"/>
   </visual>
   <collision>
     <origin xyz="0.06095 -0.0465 0.407731" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/JX_servo_v12_13.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/JX_servo_v12_13.stl" scale="1 1 1"/>
     </geometry>
   </collision>
 </link>
@@ -286,14 +286,14 @@
   <visual>
     <origin xyz="0.03455 -0.055 0.462631" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/left_foot_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/left_foot_1.stl" scale="1 1 1"/>
     </geometry>
     <material name="plastic_glossy_black"/>
   </visual>
   <collision>
     <origin xyz="0.03455 -0.055 0.462631" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/left_foot_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/left_foot_1.stl" scale="1 1 1"/>
     </geometry>
   </collision>
 </link>
@@ -307,14 +307,14 @@
   <visual>
     <origin xyz="0.0225 0.0545 0.137" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/JX_servo_v12_14.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/JX_servo_v12_14.stl" scale="1 1 1"/>
     </geometry>
     <material name="plastic_matte_black"/>
   </visual>
   <collision>
     <origin xyz="0.0225 0.0545 0.137" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/JX_servo_v12_14.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/JX_servo_v12_14.stl" scale="1 1 1"/>
     </geometry>
   </collision>
 </link>
@@ -328,14 +328,14 @@
   <visual>
     <origin xyz="0.0045 0.0545 0.1634" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/right_hip_side_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/right_hip_side_1.stl" scale="1 1 1"/>
     </geometry>
     <material name="plastic_glossy_black"/>
   </visual>
   <collision>
     <origin xyz="0.0045 0.0545 0.1634" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/right_hip_side_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/right_hip_side_1.stl" scale="1 1 1"/>
     </geometry>
   </collision>
 </link>
@@ -349,14 +349,14 @@
   <visual>
     <origin xyz="0.0345 0.0545 0.198736" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/JX_servo_v12_15.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/JX_servo_v12_15.stl" scale="1 1 1"/>
     </geometry>
     <material name="plastic_matte_black"/>
   </visual>
   <collision>
     <origin xyz="0.0345 0.0545 0.198736" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/JX_servo_v12_15.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/JX_servo_v12_15.stl" scale="1 1 1"/>
     </geometry>
   </collision>
 </link>
@@ -370,14 +370,14 @@
   <visual>
     <origin xyz="0.0609 0.046 0.179836" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/right_ankle_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/right_ankle_1.stl" scale="1 1 1"/>
     </geometry>
     <material name="plastic_glossy_black"/>
   </visual>
   <collision>
     <origin xyz="0.0609 0.046 0.179836" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/right_ankle_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/right_ankle_1.stl" scale="1 1 1"/>
     </geometry>
   </collision>
 </link>
@@ -391,14 +391,14 @@
   <visual>
     <origin xyz="-0.0035 0.0699 0.253636" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/JX_servo_v12_16.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/JX_servo_v12_16.stl" scale="1 1 1"/>
     </geometry>
     <material name="plastic_matte_black"/>
   </visual>
   <collision>
     <origin xyz="-0.0035 0.0699 0.253636" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/JX_servo_v12_16.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/JX_servo_v12_16.stl" scale="1 1 1"/>
     </geometry>
   </collision>
 </link>
@@ -412,14 +412,14 @@
   <visual>
     <origin xyz="0.005 0.0924 0.198736" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/right_thigh_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/right_thigh_1.stl" scale="1 1 1"/>
     </geometry>
     <material name="plastic_glossy_black"/>
   </visual>
   <collision>
     <origin xyz="0.005 0.0924 0.198736" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/right_thigh_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/right_thigh_1.stl" scale="1 1 1"/>
     </geometry>
   </collision>
 </link>
@@ -433,14 +433,14 @@
   <visual>
     <origin xyz="0.005 0.0924 0.322736" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/JX_servo_v12_17.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/JX_servo_v12_17.stl" scale="1 1 1"/>
     </geometry>
     <material name="plastic_matte_black"/>
   </visual>
   <collision>
     <origin xyz="0.005 0.0924 0.322736" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/JX_servo_v12_17.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/JX_servo_v12_17.stl" scale="1 1 1"/>
     </geometry>
   </collision>
 </link>
@@ -454,14 +454,14 @@
   <visual>
     <origin xyz="-0.0035 0.066 0.377636" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/right_calve_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/right_calve_1.stl" scale="1 1 1"/>
     </geometry>
     <material name="plastic_glossy_black"/>
   </visual>
   <collision>
     <origin xyz="-0.0035 0.066 0.377636" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/right_calve_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/right_calve_1.stl" scale="1 1 1"/>
     </geometry>
   </collision>
 </link>
@@ -475,14 +475,14 @@
   <visual>
     <origin xyz="0.00505 0.094 0.462641" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/JX_servo_v12_18.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/JX_servo_v12_18.stl" scale="1 1 1"/>
     </geometry>
     <material name="plastic_matte_black"/>
   </visual>
   <collision>
     <origin xyz="0.00505 0.094 0.462641" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/JX_servo_v12_18.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/JX_servo_v12_18.stl" scale="1 1 1"/>
     </geometry>
   </collision>
 </link>
@@ -496,14 +496,14 @@
   <visual>
     <origin xyz="-0.00345 0.0715 0.407741" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/right_ankle_2.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/right_ankle_2.stl" scale="1 1 1"/>
     </geometry>
     <material name="plastic_glossy_black"/>
   </visual>
   <collision>
     <origin xyz="-0.00345 0.0715 0.407741" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/right_ankle_2.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/right_ankle_2.stl" scale="1 1 1"/>
     </geometry>
   </collision>
 </link>
@@ -517,14 +517,14 @@
   <visual>
     <origin xyz="0.06095 0.0465 0.407741" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/JX_servo_v12_19.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/JX_servo_v12_19.stl" scale="1 1 1"/>
     </geometry>
     <material name="plastic_matte_black"/>
   </visual>
   <collision>
     <origin xyz="0.06095 0.0465 0.407741" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/JX_servo_v12_19.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/JX_servo_v12_19.stl" scale="1 1 1"/>
     </geometry>
   </collision>
 </link>
@@ -538,14 +538,14 @@
   <visual>
     <origin xyz="0.03455 0.055 0.462641" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/right_foot_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/right_foot_1.stl" scale="1 1 1"/>
     </geometry>
     <material name="plastic_glossy_black"/>
   </visual>
   <collision>
     <origin xyz="0.03455 0.055 0.462641" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/right_foot_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/right_foot_1.stl" scale="1 1 1"/>
     </geometry>
   </collision>
 </link>
@@ -559,14 +559,14 @@
   <visual>
     <origin xyz="0.021 -0.1075 0.0365" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/25t-servo-hub_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/25t-servo-hub_1.stl" scale="1 1 1"/>
     </geometry>
     <material name="aluminum_satin"/>
   </visual>
   <collision>
     <origin xyz="0.021 -0.1075 0.0365" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/25t-servo-hub_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/25t-servo-hub_1.stl" scale="1 1 1"/>
     </geometry>
   </collision>
 </link>
@@ -580,14 +580,14 @@
   <visual>
     <origin xyz="0.021 -0.110294 0.0365" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/gobilda-servo_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/gobilda-servo_1.stl" scale="1 1 1"/>
     </geometry>
     <material name="plastic_glossy_grey"/>
   </visual>
   <collision>
     <origin xyz="0.021 -0.110294 0.0365" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/gobilda-servo_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/gobilda-servo_1.stl" scale="1 1 1"/>
     </geometry>
   </collision>
 </link>
@@ -601,14 +601,14 @@
   <visual>
     <origin xyz="0.0285 -0.147194 0.029" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/left_bicep_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/left_bicep_1.stl" scale="1 1 1"/>
     </geometry>
     <material name="plastic_glossy_black"/>
   </visual>
   <collision>
     <origin xyz="0.0285 -0.147194 0.029" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/left_bicep_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/left_bicep_1.stl" scale="1 1 1"/>
     </geometry>
   </collision>
 </link>
@@ -622,14 +622,14 @@
   <visual>
     <origin xyz="0.0285 -0.147194 0.0993" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/gobilda-servo_3.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/gobilda-servo_3.stl" scale="1 1 1"/>
     </geometry>
     <material name="plastic_glossy_grey"/>
   </visual>
   <collision>
     <origin xyz="0.0285 -0.147194 0.0993" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/gobilda-servo_3.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/gobilda-servo_3.stl" scale="1 1 1"/>
     </geometry>
   </collision>
 </link>
@@ -643,14 +643,14 @@
   <visual>
     <origin xyz="0.021 -0.110294 0.1068" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/25t-servo-hub_2.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/25t-servo-hub_2.stl" scale="1 1 1"/>
     </geometry>
     <material name="aluminum_satin"/>
   </visual>
   <collision>
     <origin xyz="0.021 -0.110294 0.1068" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/25t-servo-hub_2.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/25t-servo-hub_2.stl" scale="1 1 1"/>
     </geometry>
   </collision>
 </link>
@@ -664,14 +664,14 @@
   <visual>
     <origin xyz="0.021 -0.1075 0.1068" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/elbow-attach_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/elbow-attach_1.stl" scale="1 1 1"/>
     </geometry>
     <material name="plastic_glossy_black"/>
   </visual>
   <collision>
     <origin xyz="0.021 -0.1075 0.1068" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/elbow-attach_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/elbow-attach_1.stl" scale="1 1 1"/>
     </geometry>
   </collision>
 </link>
@@ -685,14 +685,14 @@
   <visual>
     <origin xyz="0.0485 -0.1095 0.0968" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/left_forearm_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/left_forearm_1.stl" scale="1 1 1"/>
     </geometry>
     <material name="plastic_glossy_black"/>
   </visual>
   <collision>
     <origin xyz="0.0485 -0.1095 0.0968" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/left_forearm_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/left_forearm_1.stl" scale="1 1 1"/>
     </geometry>
   </collision>
 </link>
@@ -706,14 +706,14 @@
   <visual>
     <origin xyz="0.0485 -0.154174 0.0968" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/elbow-bearing_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/elbow-bearing_1.stl" scale="1 1 1"/>
     </geometry>
     <material name="plastic_glossy_black"/>
   </visual>
   <collision>
     <origin xyz="0.0485 -0.154174 0.0968" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/elbow-bearing_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/elbow-bearing_1.stl" scale="1 1 1"/>
     </geometry>
   </collision>
 </link>
@@ -727,14 +727,14 @@
   <visual>
     <origin xyz="0.021 0.1075 0.0365" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/25t-servo-hub_Mirror__1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/25t-servo-hub_Mirror__1.stl" scale="1 1 1"/>
     </geometry>
     <material name="aluminum_satin"/>
   </visual>
   <collision>
     <origin xyz="0.021 0.1075 0.0365" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/25t-servo-hub_Mirror__1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/25t-servo-hub_Mirror__1.stl" scale="1 1 1"/>
     </geometry>
   </collision>
 </link>
@@ -748,14 +748,14 @@
   <visual>
     <origin xyz="0.021 0.110294 0.0365" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/gobilda-servo_Mirror__1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/gobilda-servo_Mirror__1.stl" scale="1 1 1"/>
     </geometry>
     <material name="plastic_glossy_grey"/>
   </visual>
   <collision>
     <origin xyz="0.021 0.110294 0.0365" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/gobilda-servo_Mirror__1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/gobilda-servo_Mirror__1.stl" scale="1 1 1"/>
     </geometry>
   </collision>
 </link>
@@ -769,14 +769,14 @@
   <visual>
     <origin xyz="0.0285 0.147194 0.029" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/right_bicep_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/right_bicep_1.stl" scale="1 1 1"/>
     </geometry>
     <material name="plastic_glossy_black"/>
   </visual>
   <collision>
     <origin xyz="0.0285 0.147194 0.029" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/right_bicep_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/right_bicep_1.stl" scale="1 1 1"/>
     </geometry>
   </collision>
 </link>
@@ -790,14 +790,14 @@
   <visual>
     <origin xyz="0.0285 0.147194 0.0993" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/gobilda-servo_Mirror__2.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/gobilda-servo_Mirror__2.stl" scale="1 1 1"/>
     </geometry>
     <material name="plastic_glossy_grey"/>
   </visual>
   <collision>
     <origin xyz="0.0285 0.147194 0.0993" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/gobilda-servo_Mirror__2.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/gobilda-servo_Mirror__2.stl" scale="1 1 1"/>
     </geometry>
   </collision>
 </link>
@@ -811,14 +811,14 @@
   <visual>
     <origin xyz="0.021 0.110294 0.1068" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/25t-servo-hub_Mirror__2.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/25t-servo-hub_Mirror__2.stl" scale="1 1 1"/>
     </geometry>
     <material name="aluminum_satin"/>
   </visual>
   <collision>
     <origin xyz="0.021 0.110294 0.1068" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/25t-servo-hub_Mirror__2.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/25t-servo-hub_Mirror__2.stl" scale="1 1 1"/>
     </geometry>
   </collision>
 </link>
@@ -832,14 +832,14 @@
   <visual>
     <origin xyz="0.021 0.1075 0.1068" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/elbow-attach_Mirror__1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/elbow-attach_Mirror__1.stl" scale="1 1 1"/>
     </geometry>
     <material name="plastic_glossy_black"/>
   </visual>
   <collision>
     <origin xyz="0.021 0.1075 0.1068" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/elbow-attach_Mirror__1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/elbow-attach_Mirror__1.stl" scale="1 1 1"/>
     </geometry>
   </collision>
 </link>
@@ -853,14 +853,14 @@
   <visual>
     <origin xyz="0.0485 0.1095 0.0968" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/right_forearm_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/right_forearm_1.stl" scale="1 1 1"/>
     </geometry>
     <material name="plastic_glossy_black"/>
   </visual>
   <collision>
     <origin xyz="0.0485 0.1095 0.0968" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/right_forearm_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/right_forearm_1.stl" scale="1 1 1"/>
     </geometry>
   </collision>
 </link>
@@ -874,14 +874,14 @@
   <visual>
     <origin xyz="0.0485 0.154174 0.0968" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/elbow-bearing_Mirror__1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/elbow-bearing_Mirror__1.stl" scale="1 1 1"/>
     </geometry>
     <material name="plastic_glossy_black"/>
   </visual>
   <collision>
     <origin xyz="0.0485 0.154174 0.0968" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/elbow-bearing_Mirror__1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/elbow-bearing_Mirror__1.stl" scale="1 1 1"/>
     </geometry>
   </collision>
 </link>
@@ -895,14 +895,14 @@
   <visual>
     <origin xyz="-0.0 -0.0 1e-05" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/custom_servo_support__lower_neck__v2_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/custom_servo_support__lower_neck__v2_1.stl" scale="1 1 1"/>
     </geometry>
     <material name="plastic_glossy_black"/>
   </visual>
   <collision>
     <origin xyz="-0.0 -0.0 1e-05" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/custom_servo_support__lower_neck__v2_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/custom_servo_support__lower_neck__v2_1.stl" scale="1 1 1"/>
     </geometry>
   </collision>
 </link>
@@ -916,14 +916,14 @@
   <visual>
     <origin xyz="0.01715 0.0075 -0.00697" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/gobilda-servo_4.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/gobilda-servo_4.stl" scale="1 1 1"/>
     </geometry>
     <material name="plastic_glossy_grey"/>
   </visual>
   <collision>
     <origin xyz="0.01715 0.0075 -0.00697" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/gobilda-servo_4.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/gobilda-servo_4.stl" scale="1 1 1"/>
     </geometry>
   </collision>
 </link>
@@ -937,14 +937,14 @@
   <visual>
     <origin xyz="0.00965 -0.0 -0.04387" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/25t-servo-hub_3.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/25t-servo-hub_3.stl" scale="1 1 1"/>
     </geometry>
     <material name="aluminum_satin"/>
   </visual>
   <collision>
     <origin xyz="0.00965 -0.0 -0.04387" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/25t-servo-hub_3.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/25t-servo-hub_3.stl" scale="1 1 1"/>
     </geometry>
   </collision>
 </link>
@@ -958,14 +958,14 @@
   <visual>
     <origin xyz="0.00965 -0.0 -0.046664" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/neck_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/neck_1.stl" scale="1 1 1"/>
     </geometry>
     <material name="plastic_glossy_black"/>
   </visual>
   <collision>
     <origin xyz="0.00965 -0.0 -0.046664" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/neck_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/neck_1.stl" scale="1 1 1"/>
     </geometry>
   </collision>
 </link>
@@ -979,14 +979,14 @@
   <visual>
     <origin xyz="0.00965 0.022187 -0.080481" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/25t-servo-hub_4.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/25t-servo-hub_4.stl" scale="1 1 1"/>
     </geometry>
     <material name="aluminum_satin"/>
   </visual>
   <collision>
     <origin xyz="0.00965 0.022187 -0.080481" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/25t-servo-hub_4.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/25t-servo-hub_4.stl" scale="1 1 1"/>
     </geometry>
   </collision>
 </link>
@@ -1000,14 +1000,14 @@
   <visual>
     <origin xyz="0.00965 0.019393 -0.080481" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/gobilda-servo_5.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/gobilda-servo_5.stl" scale="1 1 1"/>
     </geometry>
     <material name="plastic_glossy_grey"/>
   </visual>
   <collision>
     <origin xyz="0.00965 0.019393 -0.080481" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/gobilda-servo_5.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/gobilda-servo_5.stl" scale="1 1 1"/>
     </geometry>
   </collision>
 </link>
@@ -1021,14 +1021,14 @@
   <visual>
     <origin xyz="0.01715 -0.017507 -0.087981" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/head_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/head_1.stl" scale="1 1 1"/>
     </geometry>
     <material name="plastic_glossy_black"/>
   </visual>
   <collision>
     <origin xyz="0.01715 -0.017507 -0.087981" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/head_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/head_1.stl" scale="1 1 1"/>
     </geometry>
   </collision>
 </link>
@@ -1042,14 +1042,14 @@
   <visual>
     <origin xyz="-0.00685 -0.003487 -0.101481" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/camera_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/camera_1.stl" scale="1 1 1"/>
     </geometry>
     <material name="plastic_glossy_black"/>
   </visual>
   <collision>
     <origin xyz="-0.00685 -0.003487 -0.101481" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/camera_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/camera_1.stl" scale="1 1 1"/>
     </geometry>
   </collision>
 </link>
@@ -1063,19 +1063,19 @@
   <visual>
     <origin xyz="-0.04405 -0.003487 -0.128481" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/camera-link_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/camera-link_1.stl" scale="1 1 1"/>
     </geometry>
     <material name="steel_satin"/>
   </visual>
   <collision>
     <origin xyz="-0.04405 -0.003487 -0.128481" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/camera-link_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/camera-link_1.stl" scale="1 1 1"/>
     </geometry>
   </collision>
 </link>
 
-<link name="$(arg tf_prefix)/imu">
+<link name="$(arg tf_prefix)/imu_link">
   <inertial>
     <origin xyz="-4.440892098500626e-18 -1.7763568394002505e-17 -0.0495" rpy="0 0 0"/>
     <mass value="0.00019625"/>
@@ -1084,14 +1084,14 @@
   <visual>
     <origin xyz="-0.0 -0.0 0.005" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/imu-link_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/imu-link_1.stl" scale="1 1 1"/>
     </geometry>
     <material name="steel_satin"/>
   </visual>
   <collision>
     <origin xyz="-0.0 -0.0 0.005" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/imu-link_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/imu-link_1.stl" scale="1 1 1"/>
     </geometry>
   </collision>
 </link>
@@ -1105,14 +1105,14 @@
   <visual>
     <origin xyz="0.012 -0.000333 0.005" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/Component32_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/Component32_1.stl" scale="1 1 1"/>
     </geometry>
     <material name="plastic_matte_blue"/>
   </visual>
   <collision>
     <origin xyz="0.012 -0.000333 0.005" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/Component32_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/Component32_1.stl" scale="1 1 1"/>
     </geometry>
   </collision>
 </link>
@@ -1126,14 +1126,14 @@
   <visual>
     <origin xyz="0.012 -0.000333 0.052" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/TX2_board_v2_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/TX2_board_v2_1.stl" scale="1 1 1"/>
     </geometry>
     <material name="silver_default"/>
   </visual>
   <collision>
     <origin xyz="0.012 -0.000333 0.052" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez3_description/meshes/TX2_board_v2_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez3_description/meshes/TX2_board_v2_1.stl" scale="1 1 1"/>
     </geometry>
   </collision>
 </link>
@@ -1460,7 +1460,7 @@
 <joint name="imu_joint" type="fixed">
   <origin xyz="0.0 -0.005 -0.005" rpy="0 0 0"/>
   <parent link="$(arg tf_prefix)/torso"/>
-  <child link="$(arg tf_prefix)/imu"/>
+  <child link="$(arg tf_prefix)/imu_link"/>
   <axis xyz="0.0 0.0 1.0"/>
 </joint>
 
