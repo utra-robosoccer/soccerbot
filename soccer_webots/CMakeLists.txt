@@ -33,9 +33,3 @@ add_custom_command(
     COMMAND ${CMAKE_COMMAND} -E copy ${PROTO_PY}
             ${CMAKE_SOURCE_DIR}/src/soccer_webots
 )
-
-add_custom_command(
-    TARGET robocup_api_proto
-    COMMAND ./src/urdf2webots_postprocessing.py
-    WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-)
