@@ -219,7 +219,7 @@ class TestWalking:
         assert walk_success
 
     @pytest.mark.timeout(TEST_TIMEOUT)
-    @pytest.mark.flaky(reruns=1)
+    @pytest.mark.flaky(reruns=3)
     def test_small_movement_0(self, walker: SoccerbotController):
         walker.setPose(Transformation([0, 0, 0], [0.00000, 0, 0, 1]))
         walker.ready()
@@ -278,7 +278,7 @@ class TestWalking:
         assert walk_success
 
     @pytest.mark.timeout(TEST_TIMEOUT)
-    @pytest.mark.flaky(reruns=1)
+    @pytest.mark.flaky(reruns=3)
     def test_small_movement_5(self, walker: SoccerbotController):
         walker.setPose(
             Transformation(
