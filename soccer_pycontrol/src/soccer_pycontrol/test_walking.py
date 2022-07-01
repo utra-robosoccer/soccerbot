@@ -16,8 +16,8 @@ from unittest.mock import MagicMock
 
 from soccer_common.transformation import Transformation
 
-run_in_ros = True
-display = True
+run_in_ros = False
+display = False
 TEST_TIMEOUT = 60
 
 if run_in_ros:
@@ -68,7 +68,7 @@ from soccer_pycontrol.soccerbot_controller import SoccerbotController
 
 
 class TestWalking:
-    robot_models = ["bez3"]
+    robot_models = ["bez1", "bez3"]
 
     @staticmethod
     @pytest.fixture(params=robot_models)
