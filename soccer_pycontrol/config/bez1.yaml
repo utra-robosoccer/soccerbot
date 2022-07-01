@@ -2,12 +2,17 @@
 torso_height: 0.36 # 24 to 38 not sure
 walking_hip_height: 0.165 # not sure
 
-bodystep_size_default: 0.01
+bodystep_size_default: 0.001
 
 steps_per_second_default: 2.5
 foot_separation: = 0.044
 step_height: = 0.054
+torso_offset_x: 0.04 #0.04
 
-step_outwardness: = 0.015
-step_rotation: = 0.05
-backwards_bodystep_size_ratio: 0.5
+walking_Kp: 1.6
+walking_Ki: 0.0005
+walking_Kd: 0.0
+
+standing_Kp: 0.15
+standing_Ki: 0.001
+standing_Kd: 0.0

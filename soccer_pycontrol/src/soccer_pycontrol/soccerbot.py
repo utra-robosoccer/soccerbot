@@ -505,7 +505,7 @@ class Soccerbot:
             locations[index[1] + (index[0] * 2) + 4] = True
         return locations
 
-    walking_pid = PID(Kp=0.8, Kd=0.0, Ki=0.0005, setpoint=-0.01, output_limits=(-1.57, 1.57))
+    walking_pid = PID(Kp=1.6, Kd=0.0, Ki=0.0005, setpoint=-0.01, output_limits=(-1.57, 1.57))
 
     def apply_imu_feedback(self, t: float, pose: tr):
         if pose is None:
