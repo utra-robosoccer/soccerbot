@@ -61,8 +61,8 @@ services:
       - ./external/webots/projects/samples/contests/robocup/controllers/referee/team_2_single_bez3.json:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/team_2_single_bez3.json:rw
       - ./external/webots/projects/samples/contests/robocup/protos/:/usr/local/webots/projects/samples/contests/robocup/protos/:rw
     environment:
-      #      DISPLAY: unix:1
-      DISPLAY: unix$DISPLAY # Uncomment for local test
+      DISPLAY: unix:1
+      #      DISPLAY: unix$DISPLAY # Uncomment for local test
       JAVA_HOME: /usr
       XDG_RUNTIME_DIR: $XDG_RUNTIME_DIR
 
