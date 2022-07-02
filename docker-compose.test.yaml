@@ -84,4 +84,4 @@ services:
       PYTHONUNBUFFERED: 1
       DISPLAY: unix$DISPLAY
       XDG_RUNTIME_DIR: $XDG_RUNTIME_DIR
-      ROBOT_MODEL: bez3
+      ROBOT_MODEL: bez1
