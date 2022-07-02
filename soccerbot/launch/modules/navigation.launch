@@ -12,9 +12,9 @@
         <rosparam command="load" file="$(find bez1_description)/config/motor_mapping.yaml" />
     </node>
 
-    <node pkg="soccer_pycontrol" type="main.py" name="soccer_pycontrol" output="screen">
-        <param name="robot_model" value="$(arg robot_model)" />
-        <param name="calibration_file" value="$(find soccer_pycontrol)/src/soccer_pycontrol/calibration_models/model.995_inverse" />
-        <rosparam command="load" file="$(find soccer_pycontrol)/config/$(arg param_file_name).yaml" />
-    </node>
+    <!--    <node pkg="soccer_pycontrol" type="main.py" name="soccer_pycontrol" output="screen">-->
+    <!--        <param name="robot_model" value="$(arg robot_model)" />-->
+    <!--        <param name="calibration_file" value="$(find soccer_pycontrol)/src/soccer_pycontrol/calibration_models/model.995_inverse" />-->
+    <!--        <rosparam command="load" file="$(find soccer_pycontrol)/config/$(arg param_file_name).yaml" />-->
+    <!--    </node>-->
 </launch>

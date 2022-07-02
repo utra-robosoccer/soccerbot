@@ -16,8 +16,8 @@ from unittest.mock import MagicMock
 
 from soccer_common.transformation import Transformation
 
-real_robot = False
-run_in_ros = False
+real_robot = True
+run_in_ros = True
 display = False
 TEST_TIMEOUT = 60
 
@@ -74,7 +74,7 @@ from soccer_pycontrol.soccerbot_controller_ros import SoccerbotControllerRos
 
 
 class TestWalking:
-    robot_models = ["bez1", "bez3"]
+    robot_models = ["bez1"]  # , "bez3"]
 
     @staticmethod
     def reset_attributes():
