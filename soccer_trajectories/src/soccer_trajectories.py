@@ -3,6 +3,9 @@ import copy
 import csv
 import os
 
+if "ROS_NAMESPACE" not in os.environ:
+    os.environ["ROS_NAMESPACE"] = "/robot1"
+
 import rospy
 from rospy import ROSException
 from scipy.interpolate import interp1d
@@ -147,7 +150,9 @@ class Trajectory:
 
 class SoccerTrajectoryClass:
     def __init__(self):
-        self.trajectory_path = ""
+        rospy.init_node("soccer_trajectories")
+        default_path = os.path.join(os.path.dirname(__file__), "../trajectories/bez1")
+        self.trajectory_path = rospy.get_param("~trajectory_path", default_path)
         self.trajectory_complete = True
         self.trajectory = None
         self.command_sub = rospy.Subscriber("command", FixedTrajectoryCommand, self.run_trajectory, queue_size=1)
@@ -177,17 +182,7 @@ class SoccerTrajectoryClass:
         self.finish_trajectory.publish()
         self.trajectory_complete = True
 
-    def run(self):
-        rospy.init_node("soccer_trajectories")
-        self.trajectory_path = rospy.get_param("~trajectory_path")
-        rospy.spin()
-
 
 if __name__ == "__main__":
     trajectory_class = SoccerTrajectoryClass()
-
-    try:
-        trajectory_class.run()
-    except ROSException as ex:
-        print(ex)
-        exit(0)
+    rospy.spin()

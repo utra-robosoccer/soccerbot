@@ -214,7 +214,7 @@ class Soccerbot:
         except (ROSException, AttributeError) as ex:
             rospy.logerr(ex)
 
-        for r in np.arange(0, 1, 0.040):
+        for r in np.arange(0, 1.04, 0.040):
             rospy.loginfo_throttle(1, "Going into ready position")
             self.configuration[0:18] = (
                 np.array(np.array(configuration[0:18]) - np.array(previous_configuration[0:18])) * r + np.array(previous_configuration[0:18])
@@ -505,7 +505,13 @@ class Soccerbot:
             locations[index[1] + (index[0] * 2) + 4] = True
         return locations
 
-    walking_pid = PID(Kp=0.8, Kd=0.0, Ki=0.0005, setpoint=-0.01, output_limits=(-1.57, 1.57))
+    walking_pid = PID(
+        Kp=rospy.get_param("~walking_Kp", 0.8),
+        Kd=rospy.get_param("~walking_Kd", 0.0),
+        Ki=rospy.get_param("~walking_Ki", 0.0005),
+        setpoint=-0.01,
+        output_limits=(-1.57, 1.57),
+    )
 
     def apply_imu_feedback(self, t: float, pose: tr):
         if pose is None:
@@ -517,7 +523,13 @@ class Soccerbot:
         self.configuration_offset[Joints.RIGHT_ARM_1] = 5 * F
         return F
 
-    standing_pid = PID(Kp=0.15, Kd=0.0, Ki=0.001, setpoint=-0.01, output_limits=(-1.57, 1.57))
+    standing_pid = PID(
+        Kp=rospy.get_param("~standing_Kp", 0.15),
+        Kd=rospy.get_param("~standing_Kd", 0.0),
+        Ki=rospy.get_param("~standing_Ki", 0.001),
+        setpoint=-0.01,
+        output_limits=(-1.57, 1.57),
+    )
 
     def apply_imu_feedback_standing(self, pose: tr):
         if pose is None:
