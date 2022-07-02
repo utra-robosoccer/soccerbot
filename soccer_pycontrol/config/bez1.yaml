@@ -1,1 +1,18 @@
 # Path parameters
+torso_height: 0.36 # 24 to 38 not sure
+walking_hip_height: 0.165 # not sure
+
+bodystep_size_default: 0.04
+
+steps_per_second_default: 3.5
+foot_separation: 0.035
+step_height: 0.03
+torso_offset_x: 0.015 # positive is forward
+
+walking_Kp: 0.8
+walking_Ki: 0.0005
+walking_Kd: 0.0
+
+standing_Kp: 0.15
+standing_Ki: 0.001
+standing_Kd: 0.0
