@@ -40,6 +40,7 @@
 
     <include file="$(find soccerbot)/launch/modules/localization.launch">
         <arg name="robot_name" value="$(arg robot_name)" />
+        <arg name="simulation" value="$(arg simulation)" />
         <arg name="x_pos" value="$(arg x_pos)" />
         <arg name="y_pos" value="$(arg y_pos)" />
         <arg name="a_pos" value="$(arg a_pos)" />

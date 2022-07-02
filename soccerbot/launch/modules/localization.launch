@@ -2,19 +2,29 @@
 
 <launch>
     <arg name="fake_localization" default="false" />
+    <arg name="simulation" default="true" />
+    <arg name="testing" default="false" />
+    <arg name="Robocup" default="false" />
     <arg name="robot_name" default="robot1" />
     <arg name="map_name" default="robocup" />
     <arg name="x_pos" default="0" />
     <arg name="y_pos" default="0" />
     <arg name="a_pos" default="0" />
 
+    <arg name="param_file_name" value="simulation" if="$(arg simulation)" />
+    <arg name="param_file_name" value="testing" if="$(arg testing)" />
+    <arg name="param_file_name" value="Robocup" if="$(arg Robocup)" />
+
     <!-- Map server -->
     <node name="map_server" pkg="map_server" type="map_server" args="$(find soccer_common)/maps/$(arg map_name).yaml">
         <param name="frame_id" value="world" />
     </node>
 
-    <node pkg="soccer_object_localization" type="detector_fieldline.py" name="detector_fieldline" output="screen" />
+    <node pkg="soccer_object_localization" type="detector_fieldline.py" name="detector_fieldline" output="screen">
+        <rosparam command="load" file="$(find soccer_object_localization)/config/$(arg param_file_name).yaml" />
+    </node>
     <node pkg="soccer_object_localization" type="detector_goalpost.py" name="detector_goalpost" output="screen" />
+
     <node pkg="pointcloud_to_laserscan" type="pointcloud_to_laserscan_node" name="pointcloud_to_laserscan" unless="$(arg fake_localization)">
         <rosparam file="$(find soccer_common)/config/pointcloud_to_laserscan.yaml" command="load" />
         <remap from="cloud_in" to="field_point_cloud" />

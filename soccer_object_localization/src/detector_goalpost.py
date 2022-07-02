@@ -52,15 +52,15 @@ class DetectorGoalPost(Detector):
         cv2.rectangle(image, [0, 0], [640, int(h * 7 / 10.0)], [0, 0, 0], cv2.FILLED)
 
         # Field line detection
-        mask2 = cv2.inRange(hsv, (0, 0, 255 - 65), (255, 65, 255))
+        mask2 = cv2.inRange(hsv, (0, 0, 255 - DetectorFieldline.field_line_detection_hsv), (255, DetectorFieldline.field_line_detection_hsv, 255))
         out = cv2.bitwise_and(image, image, mask=mask2)
 
         kernel = np.ones((7, 7), np.uint8)
         out = cv2.morphologyEx(out, cv2.MORPH_CLOSE, kernel)
 
         cdst = cv2.cvtColor(out, cv2.COLOR_BGR2GRAY)
-        retval, dst = cv2.threshold(cdst, 127, 255, cv2.THRESH_BINARY)
-        edges = cv2.Canny(dst, 50, 150)
+        retval, dst = cv2.threshold(cdst, DetectorFieldline.binary_threshold_start, DetectorFieldline.binary_threshold_end, cv2.THRESH_BINARY)
+        edges = cv2.Canny(dst, DetectorFieldline.CANNY_THRESHOLD_1, DetectorFieldline.CANNY_THRESHOLD_2)
 
         lines = cv2.HoughLinesP(
             edges,

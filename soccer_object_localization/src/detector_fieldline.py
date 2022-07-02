@@ -21,13 +21,17 @@ from std_msgs.msg import Bool, Header
 
 
 class DetectorFieldline(Detector):
-    CANNY_THRESHOLD_1 = 400
-    CANNY_THRESHOLD_2 = 1000
-    HOUGH_RHO = 1
-    HOUGH_THETA = np.pi / 180
-    HOUGH_THRESHOLD = 50
-    HOUGH_MIN_LINE_LENGTH = 50
-    HOUGH_MAX_LINE_GAP = 50
+    CANNY_THRESHOLD_1 = rospy.get_param("~CANNY_THRESHOLD_1", 50)
+    CANNY_THRESHOLD_2 = rospy.get_param("~CANNY_THRESHOLD_2", 1000)
+    HOUGH_RHO = rospy.get_param("~HOUGH_RHO", 1)
+    HOUGH_THETA = rospy.get_param("~HOUGH_THETA", np.pi / 180)
+    HOUGH_THRESHOLD = rospy.get_param("~HOUGH_THRESHOLD", 50)
+    HOUGH_MIN_LINE_LENGTH = rospy.get_param("~HOUGH_MIN_LINE_LENGTH", 50)
+    HOUGH_MAX_LINE_GAP = rospy.get_param("~HOUGH_MAX_LINE_GAP", 50)
+
+    field_line_detection_hsv = rospy.get_param("~field_line_detection_hsv", 65)
+    binary_threshold_start = rospy.get_param("~binary_threshold_start", 127)
+    binary_threshold_end = rospy.get_param("~binary_threshold_end", 255)
 
     def __init__(self):
         super().__init__()
@@ -71,16 +75,18 @@ class DetectorFieldline(Detector):
         cv2.rectangle(image, [0, 0], [640, h], [0, 0, 0], cv2.FILLED)
 
         # Field line detection
-        mask2 = cv2.inRange(hsv, (0, 0, 255 - 65), (255, 65, 255))
+
+        mask2 = cv2.inRange(hsv, (0, 0, 255 - DetectorFieldline.field_line_detection_hsv), (255, DetectorFieldline.field_line_detection_hsv, 255))
         out = cv2.bitwise_and(image, image, mask=mask2)
 
         kernel = np.ones((7, 7), np.uint8)
         out = cv2.morphologyEx(out, cv2.MORPH_CLOSE, kernel)
 
         cdst = cv2.cvtColor(out, cv2.COLOR_BGR2GRAY)
-        retval, dst = cv2.threshold(cdst, 127, 255, cv2.THRESH_BINARY)
 
-        edges = cv2.Canny(dst, 50, 150)
+        retval, dst = cv2.threshold(cdst, DetectorFieldline.binary_threshold_start, DetectorFieldline.binary_threshold_end, cv2.THRESH_BINARY)
+
+        edges = cv2.Canny(dst, DetectorFieldline.CANNY_THRESHOLD_1, DetectorFieldline.CANNY_THRESHOLD_2)
 
         lines = cv2.HoughLinesP(
             edges,
@@ -106,7 +112,7 @@ class DetectorFieldline(Detector):
 
             pt1 = (x1, y1)
             pt2 = (x2, y2)
-            if abs(angle) < 10:  # Horizontal
+            if abs(angle) < 10:  # Horizontal # I dont remember what happens here I think its getting all different types of line
                 cv2.line(ccdst, pt1, pt2, (255, 0, 0), thickness=3, lineType=cv2.LINE_AA)
             elif abs(abs(angle) - 90) < 10:  # Vertical
                 cv2.line(ccdst, pt1, pt2, (0, 255, 0), thickness=3, lineType=cv2.LINE_AA)

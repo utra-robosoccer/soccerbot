@@ -1,0 +1,12 @@
+# Field lines
+CANNY_THRESHOLD_1: 50
+CANNY_THRESHOLD_2: 150
+HOUGH_RHO: 1
+HOUGH_THETA: 0.017453278
+HOUGH_THRESHOLD: 50
+HOUGH_MIN_LINE_LENGTH: 50
+HOUGH_MAX_LINE_GAP: 50
+
+field_line_detection_hsv: 65
+binary_threshold_start: 127
+binary_threshold_end: 255
