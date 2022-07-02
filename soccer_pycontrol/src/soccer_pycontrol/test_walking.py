@@ -1,24 +1,22 @@
 import os
-import sys
 from importlib import reload
-from os.path import exists
 from types import ModuleType
 
 import numpy as np
 import pybullet as pb
 import pytest
-import yaml
+
+from soccer_common.mock_ros import mock_ros
 
 if "ROS_NAMESPACE" not in os.environ:
     os.environ["ROS_NAMESPACE"] = "/robot1"
-
-from unittest.mock import MagicMock
 
 from soccer_common.transformation import Transformation
 
 real_robot = False
 run_in_ros = False
 display = False
+robot_model = "bez1"
 TEST_TIMEOUT = 60
 
 if run_in_ros:
@@ -29,45 +27,13 @@ if run_in_ros:
     os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_pycontrol'")
     os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_trajectories'")
 
+file_path = os.path.dirname(os.path.abspath(__file__))
+if real_robot:
+    config_path = f"{file_path}/../../config/{robot_model}.yaml"
 else:
-    sys.modules["rospy"] = MagicMock()
-    sys.modules["soccer_msgs"] = __import__("soccer_msgs_mock")
-    import rospy
+    config_path = f"{file_path}/../../config/{robot_model}_sim.yaml"
+mock_ros(robot_model=robot_model, real_robot=real_robot, config_path=config_path)
 
-    rospy.Time = MagicMock()
-    joint_state = MagicMock()
-    joint_state.position = [0.0] * 18
-    rospy.wait_for_message = MagicMock(return_value=joint_state)
-    rospy.loginfo_throttle = lambda a, b: None
-
-robot_model = "bez1"
-
-
-def f(a, b):
-    a = a.lstrip("~")
-    if a == "robot_model":
-        return robot_model
-
-    file_path = os.path.dirname(os.path.abspath(__file__))
-    if real_robot:
-        config_path = f"{file_path}/../../config/{robot_model}.yaml"
-    else:
-        config_path = f"{file_path}/../../config/{robot_model}_sim.yaml"
-
-    if not exists(config_path):
-        raise Exception(f"{config_path} does not exist")
-
-    with open(config_path, "r") as g:
-
-        y = yaml.safe_load(g)
-        for c in a.split("/"):
-            if y is None or c not in y:
-                return b
-            y = y[c]
-        return y
-
-
-rospy.get_param = f
 import soccer_pycontrol.soccerbot_controller
 from soccer_pycontrol.calibration import adjust_navigation_transform
 from soccer_pycontrol.soccerbot import Links
