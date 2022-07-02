@@ -1,21 +1,14 @@
 #!/usr/bin/env python3
-import copy
 import os
 import sys
 
-import ruamel.yaml
-from scipy.optimize import curve_fit
-from scipy.stats import stats
-
-from soccer_pycontrol.utils import trimToPi, wrapToPi
-
-if "ROS_NAMESPACE" not in os.environ:
-    os.environ["ROS_NAMESPACE"] = "/robot1"
-
 import numpy as np
 import rospy
+import ruamel.yaml
+from scipy.optimize import curve_fit
 
 from soccer_common.transformation import Transformation
+from soccer_pycontrol.utils import trimToPi, wrapToPi
 
 robot_model = "bez1"
 
