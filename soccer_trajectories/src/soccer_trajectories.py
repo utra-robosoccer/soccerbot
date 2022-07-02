@@ -168,7 +168,7 @@ class SoccerTrajectoryClass:
         if not self.trajectory_complete:
             return
         self.trajectory_complete = False
-        print(self.trajectory_path)
+
         path = self.trajectory_path + "/" + command.trajectory_name + ".csv"
 
         if not os.path.exists(path):
