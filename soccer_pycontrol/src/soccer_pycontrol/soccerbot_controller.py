@@ -1,6 +1,7 @@
 import time
 from time import sleep
 
+import numpy as np
 import pybullet as pb
 import pybullet_data
 
@@ -35,6 +36,15 @@ class SoccerbotController:
 
     def setPose(self, pose: Transformation):
         self.soccerbot.setPose(pose)
+
+    def getPose(self):
+        return np.array(
+            [
+                pb.getBasePositionAndOrientation(self.soccerbot.body)[0][0],
+                pb.getBasePositionAndOrientation(self.soccerbot.body)[0][1],
+                Transformation.get_euler_from_quaternion(pb.getBasePositionAndOrientation(self.soccerbot.body)[1])[0],
+            ]
+        )
 
     def setGoal(self, goal: Transformation):
         self.soccerbot.createPathToGoal(goal)

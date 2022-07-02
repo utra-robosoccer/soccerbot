@@ -236,7 +236,7 @@ def adjust_navigation_transform(start_transform: Transformation, end_transform: 
     c = min(max_x, step_2_distance)
     c_remainder = max(0.0, step_2_distance - max_x)
 
-    quadratic = lambda a, b, c: (-b + np.sqrt(b**2 + 4 * a * c)) / (2 * a)
+    quadratic = lambda a, b, c: (-b + np.sqrt(b**2 + 4 * a * c)) / (2 * a) if a != 0 else (1 / b) * c
     step_2_distance_new = quadratic(calibration_trans_a, calibration_trans_b, c)
     step_2_distance_new = step_2_distance_new + (1 / calibration_trans_a2) * c_remainder
 
@@ -248,6 +248,7 @@ def adjust_navigation_transform(start_transform: Transformation, end_transform: 
     rot2 = Transformation((0, 0, 0), Transformation.get_quaternion_from_euler([step_3_angular_distance_new, 0, 0]))
 
     end_transform_new = start_transform @ rot1 @ trans @ rot2
+    end_transform_new.is_walking_backwards = isWalkingBackwards()  # HACK needed to pass the calibrated walking over :(
 
     return end_transform_new
 

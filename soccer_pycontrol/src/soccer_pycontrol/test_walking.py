@@ -120,9 +120,15 @@ class TestWalking:
         walker.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
         walker.ready()
         walker.wait(200)
-        walker.setGoal(Transformation([1, 0, 0], [0, 0, 0, 1]))
+        goal_position = Transformation([1, 0, 0], [0, 0, 0, 1])
+        walker.setGoal(goal_position)
         walk_success = walker.run(single_trajectory=True)
         assert walk_success
+
+        final_position = walker.getPose()
+        distance_offset = np.linalg.norm((final_position - goal_position.get_position())[0:2])
+        if robot_model == "bez1":
+            assert distance_offset < 0.08
 
     @pytest.mark.timeout(TEST_TIMEOUT)
     @pytest.mark.flaky(reruns=1)
@@ -195,9 +201,15 @@ class TestWalking:
         walker.setPose(Transformation([0, 0, 0], [0.00000, 0, 0, 1]))
         walker.ready()
         walker.wait(100)
-        walker.setGoal(Transformation([0, -1, 0], [0.00000, 0, 0, 1]))
+        goal_position = Transformation([0, -0.5, 0], [0.00000, 0, 0, 1])
+        walker.setGoal(goal_position)
         walk_success = walker.run(single_trajectory=True)
         assert walk_success
+
+        final_position = walker.getPose()
+        distance_offset = np.linalg.norm((final_position - goal_position.get_position())[0:2])
+        if robot_model == "bez1":
+            assert distance_offset < 0.08
 
     @pytest.mark.timeout(TEST_TIMEOUT)
     @pytest.mark.flaky(reruns=2)
@@ -384,24 +396,3 @@ class TestWalking:
         new_end_transform = adjust_navigation_transform(start_transform, end_transform)
         assert new_end_transform.get_orientation_euler()[0] > np.pi / 4
         assert np.linalg.norm(new_end_transform.get_position()[0:2]) > 1
-
-    @pytest.mark.parametrize("goal", [[1, 0, 0], [0.5, 0, 0], [0.3, 0, 0], [0.1, 0, 0], [0.1, 0.1, 0], [0.1, -0.1, 0], [0.1, -0.1, 0.5]])
-    def test_walk_calibrate(self, walker: SoccerbotController, goal):
-        walker.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
-        walker.ready()
-        walker.wait(200)
-        goal_position = Transformation([goal[0], goal[1], 0], Transformation.get_quaternion_from_euler([goal[2], 0, 0]))
-        walker.setGoal(goal_position)
-        walk_success = walker.run(single_trajectory=True)
-
-        final_position = np.array(
-            [
-                pb.getBasePositionAndOrientation(walker.soccerbot.body)[0][0],
-                pb.getBasePositionAndOrientation(walker.soccerbot.body)[0][1],
-                Transformation.get_euler_from_quaternion(pb.getBasePositionAndOrientation(walker.soccerbot.body)[1])[0],
-            ]
-        )
-
-        assert walk_success
-        distance_offset = np.linalg.norm((final_position - goal_position.get_position())[0:2])
-        assert distance_offset < 0.1
