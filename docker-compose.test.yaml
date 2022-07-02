@@ -54,7 +54,7 @@ services:
       - ./external/webots/projects/samples/contests/robocup/worlds:/usr/local/webots/projects/samples/contests/robocup/worlds:rw
       - ./external/webots/projects/samples/contests/robocup/controllers/referee/referee.py:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/referee.py:rw
       - ./external/webots/projects/samples/contests/robocup/controllers/referee/udp_bouncer.py:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/udp_bouncer.py:rw
-      - ./external/webots/projects/samples/contests/robocup/controllers/referee/game_single_${ROBOT_MODEL:-bez3}.json:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/game.json:rw
+      - ./external/webots/projects/samples/contests/robocup/controllers/referee/game_single_${ROBOT_MODEL:-bez1}.json:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/game.json:rw
       - ./external/webots/projects/samples/contests/robocup/controllers/referee/team_1_single_bez1.json:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/team_1_single_bez1.json:rw
       - ./external/webots/projects/samples/contests/robocup/controllers/referee/team_1_single_bez3.json:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/team_1_single_bez3.json:rw
       - ./external/webots/projects/samples/contests/robocup/controllers/referee/team_2_single_bez1.json:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/team_2_single_bez1.json:rw
