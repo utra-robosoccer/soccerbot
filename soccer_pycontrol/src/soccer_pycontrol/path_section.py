@@ -1,6 +1,6 @@
 import abc
 import functools
-import time
+import math
 from abc import ABC
 
 import numpy as np
@@ -44,11 +44,17 @@ class PathSection(ABC):
             self.distanceMap[j, 0:2] = [i, self.distance]
             j = j + 1
 
+        # Adjusting body step size to account for extra distance
+        if self.distance != 0:
+            self.bodystep_size = self.distance / math.ceil(self.distance / bodystep_size)
+            if self.bodyStepCount() <= 1:
+                self.speed = self.steps_per_second * self.bodystep_size
+
     @abc.abstractmethod
     def poseAtRatio(self, r):
         pass
 
-    def linearStepCount(self):
+    def linearStepCount(self) -> int:
         return self.distance / self.bodystep_size
 
     def angularStepCount(self):

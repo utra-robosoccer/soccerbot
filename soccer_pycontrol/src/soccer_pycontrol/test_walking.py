@@ -76,6 +76,16 @@ class TestWalking:
     robot_models = ["bez1"]  # , "bez3"]
 
     @staticmethod
+    def reset_attributes():
+        for i in range(2):
+            for attribute_name in dir(soccer_pycontrol):
+                if attribute_name == __name__.replace(__package__ + ".", ""):
+                    continue
+                attribute = getattr(soccer_pycontrol, attribute_name)
+                if type(attribute) is ModuleType:
+                    reload(attribute)
+
+    @staticmethod
     @pytest.fixture(params=robot_models)
     def walker(request):
         global robot_model
@@ -84,13 +94,7 @@ class TestWalking:
         if run_in_ros:
             c = SoccerbotControllerRos()
         else:
-            for i in range(2):
-                for attribute_name in dir(soccer_pycontrol):
-                    if attribute_name == __name__.replace(__package__ + ".", ""):
-                        continue
-                    attribute = getattr(soccer_pycontrol, attribute_name)
-                    if type(attribute) is ModuleType:
-                        reload(attribute)
+            TestWalking.reset_attributes()
             c = SoccerbotController(display=display)
         yield c
         del c
@@ -303,5 +307,32 @@ class TestWalking:
         walker.wait(100)
         goal = Transformation.get_transform_from_euler([0, 0, 0])
         walker.setGoal(goal)
+        walk_success = walker.run(single_trajectory=True)
+        assert walk_success
+
+    @pytest.mark.timeout(TEST_TIMEOUT)
+    def test_walk_tiny_1(self, walker: SoccerbotController):
+        walker.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
+        walker.ready()
+        walker.wait(200)
+        walker.setGoal(Transformation([0.01, 0, 0], [0, 0, 0, 1]))
+        walk_success = walker.run(single_trajectory=True)
+        assert walk_success
+
+    @pytest.mark.timeout(TEST_TIMEOUT)
+    def test_walk_tiny_2(self, walker: SoccerbotController):
+        walker.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
+        walker.ready()
+        walker.wait(200)
+        walker.setGoal(Transformation([-0.01, 0, 0], [0, 0, 0, 1]))
+        walk_success = walker.run(single_trajectory=True)
+        assert walk_success
+
+    @pytest.mark.timeout(TEST_TIMEOUT)
+    def test_walk_tiny_3(self, walker: SoccerbotController):
+        walker.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
+        walker.ready()
+        walker.wait(200)
+        walker.setGoal(Transformation([0.01, 0.01, 0], [0, 0, 0, 1]))
         walk_success = walker.run(single_trajectory=True)
         assert walk_success
