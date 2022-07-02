@@ -1,0 +1,105 @@
+### C++ ###
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+#*.o
+#*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+#*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+### Eclipse ###
+
+#.metadata
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+#local.properties
+#.settings/
+.loadpath
+.recommenders
+
+# External tool builders
+.externalToolBuilders/
+
+# PyDev specific (Python IDE for Eclipse)
+*.pydevproject
+
+# CDT-specific (C/C++ Development Tooling)
+#.cproject
+
+# Java annotation processor (APT)
+.factorypath
+
+# PDT-specific (PHP Development Tools)
+.buildpath
+
+# sbteclipse plugin
+.target
+
+# Tern plugin
+.tern-project
+
+# TeXlipse plugin
+.texlipse
+
+# STS (Spring Tool Suite)
+.springBeans
+
+# Code Recommenders
+.recommenders/
+
+# Scala IDE specific (Scala & Java development for Eclipse)
+.cache-main
+.scala_dependencies
+.worksheet
+
+### Eclipse Patch ###
+# Eclipse Core
+#.project
+.metadata/
+# JDT-specific (Eclipse Java Development Tools)
+#.classpath
+
+# STM Microelectronics stuff
+**/Debug/
+**/Build/
+!googletest/build/
+!RobotTest/
+**/output.map
+RemoteSystemsTempFiles/
+.metadata/
+*/language.settings.xml
+Robot/.settings/language.settings.xml
+Robot/NUCLEO-F767ZI.xml
+CubeMX/F4/*
+!CubeMX/F4/*.ioc
+CubeMX/F7/*
+!CubeMX/F7/*.ioc

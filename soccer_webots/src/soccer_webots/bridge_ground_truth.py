@@ -151,8 +151,4 @@ if __name__ == "__main__":
 
     reset_ball_subscriber = rospy.Subscriber("/reset_ball", Pose, reset_ball)
 
-    try:
-        while not rospy.is_shutdown():
-            supervisor.step(int(supervisor.getBasicTimeStep()))
-    except rospy.exceptions.ROSException as ex:
-        exit(0)
+    rospy.spin()

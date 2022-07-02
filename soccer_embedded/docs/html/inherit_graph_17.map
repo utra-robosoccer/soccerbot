@@ -1,0 +1,5 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" href="$d6/d16/class_u_a_r_t_1_1_uart_interface.html" title="UartInterface" alt="" coords="5,31,100,57"/>
+<area shape="rect" id="node2" href="$dd/dd8/class_m_o_c_k_s_1_1_mock_uart_interface.html" title="MockUartInterface" alt="" coords="148,5,275,32"/>
+<area shape="rect" id="node3" href="$d8/deb/class_u_a_r_t_1_1_hal_uart_interface.html" title="HalUartInterface" alt="" coords="154,56,269,83"/>
+</map>

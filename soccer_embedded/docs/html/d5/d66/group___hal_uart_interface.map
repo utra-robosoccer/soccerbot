@@ -1,0 +1,6 @@
+<map id="HalUartInterface" name="HalUartInterface">
+<area shape="rect" id="node1" href="$d2/d54/group___header.html" title="Header" alt="" coords="219,5,281,32"/>
+<area shape="rect" id="node2" href="$d0/d27/group___uart_driver.html" title="Manages the usage of a particular UART, taking care of hardware&#45;level calls, OS&#45;level calls..." alt="" coords="211,56,289,83"/>
+<area shape="rect" id="node3" href="$d9/d44/group___uart_interface.html" title="Interface implemented by concrete &amp; mock UART objects. " alt="" coords="203,107,297,133"/>
+<area shape="rect" id="node5" href="$d2/d48/group___u_a_r_t.html" title="UART" alt="" coords="222,157,278,184"/>
+</map>

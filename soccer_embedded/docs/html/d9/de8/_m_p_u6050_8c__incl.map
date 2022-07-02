@@ -1,0 +1,8 @@
+<map id="Robot/Drivers/MPU6050/MPU6050.c" name="Robot/Drivers/MPU6050/MPU6050.c">
+<area shape="rect" id="node2" href="$dd/d37/_m_p_u6050_8h.html" title="Header code for the MPU6050 library, including the struct in which accelerometer and gyroscope data a..." alt="" coords="317,95,407,121"/>
+<area shape="rect" id="node3" href="$d5/d9c/_notification_8h.html" title="This file defines resources used throughout various parts of the system that engage in non&#45;blocking I..." alt="" coords="452,169,549,196"/>
+<area shape="rect" id="node6" href="$d5/daf/i2c_8h_source.html" title="i2c.h" alt="" coords="377,169,427,196"/>
+<area shape="rect" id="node10" href="$db/de4/usart_8h_source.html" title="usart.h" alt="" coords="5,169,68,196"/>
+<area shape="rect" id="node11" href="$d6/d7c/gpio_8h_source.html" title="gpio.h" alt="" coords="295,169,352,196"/>
+<area shape="rect" id="node8" href="$d4/dbf/main_8h.html" title=": Header for main.c file. This file contains the common defines of the application. " alt="" coords="231,244,293,271"/>
+</map>
