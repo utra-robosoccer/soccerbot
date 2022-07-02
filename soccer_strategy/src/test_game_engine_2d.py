@@ -8,6 +8,7 @@ sys.modules["soccer_msgs"] = __import__("soccer_msgs_mock")
 import rospy
 
 rospy.Time = MagicMock()
+rospy.get_param = lambda a, b: b
 
 
 from game_engine_2d import GameEngine2D

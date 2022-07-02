@@ -27,7 +27,7 @@ if run_in_ros:
     os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_strategy'")
     os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_pycontrol'")
     os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_trajectories'")
-    from soccer_pycontrol.soccerbot_controller_ros import SoccerbotControllerRos
+
 else:
     sys.modules["rospy"] = MagicMock()
     sys.modules["soccer_msgs"] = __import__("soccer_msgs_mock")
@@ -39,7 +39,7 @@ else:
     rospy.wait_for_message = MagicMock(return_value=joint_state)
     rospy.loginfo_throttle = lambda a, b: None
 
-robot_model = ""
+robot_model = "bez1"
 
 
 def f(a, b):
@@ -65,6 +65,7 @@ rospy.get_param = f
 import soccer_pycontrol.soccerbot_controller
 from soccer_pycontrol.soccerbot import Links
 from soccer_pycontrol.soccerbot_controller import SoccerbotController
+from soccer_pycontrol.soccerbot_controller_ros import SoccerbotControllerRos
 
 
 class TestWalking:
@@ -305,11 +306,30 @@ class TestWalking:
         walk_success = walker.run(single_trajectory=True)
         assert walk_success
 
-    def test_walk_tiny(self, walker: SoccerbotController):
+    @pytest.mark.timeout(TEST_TIMEOUT)
+    def test_walk_tiny_1(self, walker: SoccerbotController):
         walker.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
         walker.ready()
         walker.wait(200)
         walker.setGoal(Transformation([0.01, 0, 0], [0, 0, 0, 1]))
+        walk_success = walker.run(single_trajectory=True)
+        assert walk_success
+
+    @pytest.mark.timeout(TEST_TIMEOUT)
+    def test_walk_tiny_2(self, walker: SoccerbotController):
+        walker.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
+        walker.ready()
+        walker.wait(200)
+        walker.setGoal(Transformation([-0.01, 0, 0], [0, 0, 0, 1]))
+        walk_success = walker.run(single_trajectory=True)
+        assert walk_success
+
+    @pytest.mark.timeout(TEST_TIMEOUT)
+    def test_walk_tiny_3(self, walker: SoccerbotController):
+        walker.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
+        walker.ready()
+        walker.wait(200)
+        walker.setGoal(Transformation([0.01, 0.01, 0], [0, 0, 0, 1]))
         walk_success = walker.run(single_trajectory=True)
         assert walk_success
 

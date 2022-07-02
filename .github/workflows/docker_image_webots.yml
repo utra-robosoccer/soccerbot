@@ -1,6 +1,8 @@
 name: Docker Image Webots
 
 on:
+  schedule:
+  - cron: "0 1 1 * *"
   push:
     branches: [master]
     paths-ignore:
