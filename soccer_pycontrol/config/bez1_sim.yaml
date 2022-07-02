@@ -1,1 +1,10 @@
-# Path parameters
+# Path calibration Parameters
+
+# Translation calibration parameters
+# Xnew = a * Xold + b * Xold^2
+calibration_trans_a: 1
+calibration_trans_b: 0
+
+# Rotation calibration parameters
+# Xnew = a * Xold
+calibration_rot_1: 1

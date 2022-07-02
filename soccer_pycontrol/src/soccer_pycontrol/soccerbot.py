@@ -14,7 +14,7 @@ from sensor_msgs.msg import JointState
 
 from soccer_common.pid import PID
 from soccer_common.transformation import Transformation as tr
-from soccer_pycontrol.calibration import Calibration
+from soccer_pycontrol.calibration import adjust_navigation_transform
 from soccer_pycontrol.path_robot import PathRobot
 from soccer_pycontrol.utils import wrapToPi
 
@@ -140,9 +140,6 @@ class Soccerbot:
 
         # For head rotation
         self.head_step = 0.0
-
-        self.calibration = Calibration()
-        # self.calibration.adjust_navigation_goal(np.array([[0, 0]]))
 
     def get_angles(self):
         """
@@ -338,7 +335,7 @@ class Soccerbot:
 
         # Add calibration
         if self.useCalibration:
-            finishPositionCalibrated = self.calibration.adjust_navigation_transform_linear(self.pose, finishPosition)
+            finishPositionCalibrated = adjust_navigation_transform(self.pose, finishPosition)
         else:
             finishPositionCalibrated = finishPosition
 
