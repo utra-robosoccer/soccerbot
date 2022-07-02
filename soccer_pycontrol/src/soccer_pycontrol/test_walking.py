@@ -18,7 +18,7 @@ from soccer_common.transformation import Transformation
 
 real_robot = False
 run_in_ros = False
-display = False
+display = True
 TEST_TIMEOUT = 60
 
 if run_in_ros:

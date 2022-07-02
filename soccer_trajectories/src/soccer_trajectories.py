@@ -181,6 +181,7 @@ class SoccerTrajectoryClass:
         rospy.loginfo("Finished Trajectory: " + command.trajectory_name)
         self.finish_trajectory.publish()
         self.trajectory_complete = True
+        return True
 
 
 if __name__ == "__main__":
