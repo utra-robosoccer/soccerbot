@@ -214,7 +214,7 @@ class Soccerbot:
         except (ROSException, AttributeError) as ex:
             rospy.logerr(ex)
 
-        for r in np.arange(0, 1.04, 0.040):
+        for r in np.arange(0, 1, 0.040):
             rospy.loginfo_throttle(1, "Going into ready position")
             self.configuration[0:18] = (
                 np.array(np.array(configuration[0:18]) - np.array(previous_configuration[0:18])) * r + np.array(previous_configuration[0:18])
