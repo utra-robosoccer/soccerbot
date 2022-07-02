@@ -35,6 +35,8 @@ class PathSectionShort(PathSection):
             intermediate_angle = wrapToPi(intermediate_angle + np.pi)
         final_angle = self.end_transform.get_orientation_euler()[0]
 
+        # TODO super small steps
+
         step_1_duration = abs(wrapToPi(intermediate_angle - start_angle)) / self.angular_speed
         step_2_duration = np.linalg.norm(diff_position) / self.speed
         step_3_duration = abs(wrapToPi(intermediate_angle - final_angle)) / self.angular_speed

@@ -75,7 +75,7 @@ class Soccerbot:
     arm_0_center = -0.45
     arm_1_center = np.pi * 0.8
 
-    def __init__(self, pose, useFixedBase=False, useCalibration=False):
+    def __init__(self, pose, useFixedBase=False, useCalibration=True):
         self.useCalibration = useCalibration
 
         home = expanduser("~")
@@ -313,7 +313,10 @@ class Soccerbot:
         [r, p, y] = pose.get_orientation_euler()
         q_new = tr.get_quaternion_from_euler([r, 0, 0])
         self.pose.set_orientation(q_new)
-        pb.resetBasePositionAndOrientation(self.body, self.pose.get_position(), self.pose.get_orientation())
+        try:
+            pb.resetBasePositionAndOrientation(self.body, self.pose.get_position(), self.pose.get_orientation())
+        except pb.error as err:
+            exit(1)
 
     def addTorsoHeight(self, position: tr):
         positionCoordinate = position.get_position()
@@ -335,7 +338,7 @@ class Soccerbot:
 
         # Add calibration
         if self.useCalibration:
-            finishPositionCalibrated = self.calibration.adjust_navigation_transform(self.pose, finishPosition)
+            finishPositionCalibrated = self.calibration.adjust_navigation_transform_linear(self.pose, finishPosition)
         else:
             finishPositionCalibrated = finishPosition
 

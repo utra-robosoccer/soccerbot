@@ -17,7 +17,7 @@ from unittest.mock import MagicMock
 from soccer_common.transformation import Transformation
 
 run_in_ros = False
-display = False
+display = True
 TEST_TIMEOUT = 60
 
 if run_in_ros:
@@ -71,6 +71,16 @@ class TestWalking:
     robot_models = ["bez1", "bez3"]
 
     @staticmethod
+    def reset_attributes():
+        for i in range(2):
+            for attribute_name in dir(soccer_pycontrol):
+                if attribute_name == __name__.replace(__package__ + ".", ""):
+                    continue
+                attribute = getattr(soccer_pycontrol, attribute_name)
+                if type(attribute) is ModuleType:
+                    reload(attribute)
+
+    @staticmethod
     @pytest.fixture(params=robot_models)
     def walker(request):
         global robot_model
@@ -79,13 +89,7 @@ class TestWalking:
         if run_in_ros:
             c = SoccerbotControllerRos()
         else:
-            for i in range(2):
-                for attribute_name in dir(soccer_pycontrol):
-                    if attribute_name == __name__.replace(__package__ + ".", ""):
-                        continue
-                    attribute = getattr(soccer_pycontrol, attribute_name)
-                    if type(attribute) is ModuleType:
-                        reload(attribute)
+            TestWalking.reset_attributes()
             c = SoccerbotController(display=display)
         yield c
         del c
@@ -300,3 +304,32 @@ class TestWalking:
         walker.setGoal(goal)
         walk_success = walker.run(single_trajectory=True)
         assert walk_success
+
+    def test_walk_tiny(self, walker: SoccerbotController):
+        walker.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
+        walker.ready()
+        walker.wait(200)
+        walker.setGoal(Transformation([0.01, 0, 0], [0, 0, 0, 1]))
+        walk_success = walker.run(single_trajectory=True)
+        assert walk_success
+
+    @pytest.mark.parametrize("goal", [[1, 0, 0], [0.5, 0, 0], [0.3, 0, 0], [0.1, 0, 0], [0.1, 0.1, 0], [0.1, -0.1, 0], [0.1, -0.1, 0.5]])
+    def test_walk_calibrate(self, walker: SoccerbotController, goal):
+        walker.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
+        walker.ready()
+        walker.wait(200)
+        goal_position = Transformation([goal[0], goal[1], 0], Transformation.get_quaternion_from_euler([goal[2], 0, 0]))
+        walker.setGoal(goal_position)
+        walk_success = walker.run(single_trajectory=True)
+
+        final_position = np.array(
+            [
+                pb.getBasePositionAndOrientation(walker.soccerbot.body)[0][0],
+                pb.getBasePositionAndOrientation(walker.soccerbot.body)[0][1],
+                Transformation.get_euler_from_quaternion(pb.getBasePositionAndOrientation(walker.soccerbot.body)[1])[0],
+            ]
+        )
+
+        assert walk_success
+        distance_offset = np.linalg.norm((final_position - goal_position.get_position())[0:2])
+        assert distance_offset < 0.1
