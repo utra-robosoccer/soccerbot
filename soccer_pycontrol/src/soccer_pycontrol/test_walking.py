@@ -17,7 +17,7 @@ from unittest.mock import MagicMock
 from soccer_common.transformation import Transformation
 
 run_in_ros = False
-display = False
+display = True
 TEST_TIMEOUT = 60
 
 if run_in_ros:
@@ -330,6 +330,15 @@ class TestWalking:
         walker.ready()
         walker.wait(200)
         walker.setGoal(Transformation([0.01, 0.01, 0], [0, 0, 0, 1]))
+        walk_success = walker.run(single_trajectory=True)
+        assert walk_success
+
+    @pytest.mark.timeout(TEST_TIMEOUT)
+    def test_walk_tiny_4(self, walker: SoccerbotController):
+        walker.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
+        walker.ready()
+        walker.wait(200)
+        walker.setGoal(Transformation([0, 0, 0], Transformation.get_quaternion_from_euler([0.1, 0, 0])))
         walk_success = walker.run(single_trajectory=True)
         assert walk_success
 

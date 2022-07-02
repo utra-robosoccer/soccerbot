@@ -134,8 +134,8 @@ class Calibration:
 
         start_positions = []
         final_positions = []
-        for theta in np.linspace(-np.pi, np.pi / 2, 21):
-            walker = SoccerbotController(display=True, useCalibration=False)
+        for theta in np.linspace(-np.pi / 2, np.pi / 2, 21):
+            walker = SoccerbotController(display=False, useCalibration=False)
 
             walker.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
             walker.ready()
@@ -149,7 +149,7 @@ class Calibration:
                 ]
             )
 
-            goal_position = Transformation([0, 0, theta])
+            goal_position = Transformation([0, 0, 0], Transformation.get_quaternion_from_euler([theta, 0, 0]))
             walker.setGoal(goal_position)
             walk_success = walker.run(single_trajectory=True)
             assert walk_success
