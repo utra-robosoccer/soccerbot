@@ -102,6 +102,10 @@ class PathSectionShort(PathSection):
 
     @functools.lru_cache
     def isWalkingBackwards(self):
+        # Hacky attribute obtained from the calibration
+        if hasattr(self.end_transform, "is_walking_backwards"):
+            return self.end_transform.is_walking_backwards
+
         diff_position = self.end_transform.get_position()[0:2] - self.start_transform.get_position()[0:2]
         start_angle = self.start_transform.get_orientation_euler()[0]
         intermediate_angle = np.arctan2(diff_position[1], diff_position[0])
