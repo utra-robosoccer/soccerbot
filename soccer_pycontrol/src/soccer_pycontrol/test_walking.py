@@ -63,6 +63,7 @@ def f(a, b):
 
 rospy.get_param = f
 import soccer_pycontrol.soccerbot_controller
+from soccer_pycontrol.calibration import adjust_navigation_transform
 from soccer_pycontrol.soccerbot import Links
 from soccer_pycontrol.soccerbot_controller import SoccerbotController
 from soccer_pycontrol.soccerbot_controller_ros import SoccerbotControllerRos
@@ -355,15 +356,12 @@ class TestWalking:
         assert walk_success
 
     def test_path_calibration(self):
-        from calibration import adjust_navigation_transform
 
         start_transform = Transformation([0.0, 0, 0], [0, 0, 0, 1])
 
         end_transform = Transformation([0.1, 0, 0], [0, 0, 0, 1])
         new_end_transform = adjust_navigation_transform(start_transform, end_transform)
         assert new_end_transform.get_position()[0] > 0.1
-
-        from calibration import adjust_navigation_transform
 
         start_transform = Transformation([0.0, 0, 0], [0, 0, 0, 1])
 
