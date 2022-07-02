@@ -26,7 +26,7 @@ class PathSectionShort(PathSection):
         self.angular_speed = self.steps_per_second_default * self.angular_bodystep_size  # Rotational speed in radians per second
         super().__init__(start_transform, end_transform, bodystep_size)
 
-        if self.angle_distance != 0:
+        if self.angle_distance != 0 and self.distance == 0:
             self.angular_bodystep_size = self.angle_distance / np.ceil(self.angle_distance / self.angular_bodystep_size)
             if self.bodyStepCount() <= 1:
                 self.angular_speed = self.steps_per_second_default * self.angular_bodystep_size
