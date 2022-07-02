@@ -8,7 +8,7 @@
 [![Docker Image Size](https://badgen.net/docker/size/utrarobosoccer/soccerbot?icon=docker&label=image%20size)](https://hub.docker.com/r/utrarobosoccer/soccerbot/)
 [![Docker Pulls](https://badgen.net/docker/pulls/utrarobosoccer/soccerbot?icon=docker&label=pulls)](https://hub.docker.com/r/utrarobosoccer/soccerbot/)
 
-The initial efforts to form new team within UTRA began summer 2016. However, it was not until summer 2017 that we were well-defined and the creation of our robots from scratch began. Following some recruitment around that time, our team had a small number of members split across three subsystems: mechanical, electrical and software. Later that summer, the embedded subsystem (microcontroller firmware), emerged out of the electrical subsystem, and the control subsystem was formed to focus on bipedal locomotion.
+The initial efforts to form new team within UTRA began summer 2016. However, it was not until summer 2017 that we were well-defined and the creation of our robots from scratch began. Following some recruitment around that time, our team had a small number of members split across three subsystems: mechanical, electrical and software. Later that summer, the embedded subsystem (microcontroller software), emerged out of the electrical subsystem, and the control subsystem was formed to focus on bipedal locomotion.
 
 By the end of 2017, our team grew to more than 20 members, all engineering undergraduates at the University of Toronto. Around that time, we were highly focused on achieving the basic requirements to qualify for the 2018 RoboCup competition in Montreal that upcoming summer. After several sleepless February nights, the video below was produced along with a concise paper.
 
