@@ -332,3 +332,24 @@ class TestWalking:
         walker.setGoal(Transformation([0.01, 0.01, 0], [0, 0, 0, 1]))
         walk_success = walker.run(single_trajectory=True)
         assert walk_success
+
+    @pytest.mark.parametrize("goal", [[1, 0, 0], [0.5, 0, 0], [0.3, 0, 0], [0.1, 0, 0], [0.1, 0.1, 0], [0.1, -0.1, 0], [0.1, -0.1, 0.5]])
+    def test_walk_calibrate(self, walker: SoccerbotController, goal):
+        walker.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
+        walker.ready()
+        walker.wait(200)
+        goal_position = Transformation([goal[0], goal[1], 0], Transformation.get_quaternion_from_euler([goal[2], 0, 0]))
+        walker.setGoal(goal_position)
+        walk_success = walker.run(single_trajectory=True)
+
+        final_position = np.array(
+            [
+                pb.getBasePositionAndOrientation(walker.soccerbot.body)[0][0],
+                pb.getBasePositionAndOrientation(walker.soccerbot.body)[0][1],
+                Transformation.get_euler_from_quaternion(pb.getBasePositionAndOrientation(walker.soccerbot.body)[1])[0],
+            ]
+        )
+
+        assert walk_success
+        distance_offset = np.linalg.norm((final_position - goal_position.get_position())[0:2])
+        assert distance_offset < 0.1

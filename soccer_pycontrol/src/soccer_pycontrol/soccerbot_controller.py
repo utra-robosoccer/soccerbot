@@ -12,7 +12,7 @@ from soccer_pycontrol.soccerbot import Soccerbot
 class SoccerbotController:
     PYBULLET_STEP = 0.01
 
-    def __init__(self, display=True):
+    def __init__(self, display=True, useCalibration=True):
         self.display = display
         if display:
             self.client_id = pb.connect(pb.GUI)
@@ -23,7 +23,7 @@ class SoccerbotController:
         pb.setGravity(0, 0, -9.81)
         self.ramp = Ramp("plane.urdf", (0, 0, 0), (0, 0, 0), lateralFriction=0.9, spinningFriction=0.9, rollingFriction=0.0)
 
-        self.soccerbot = Soccerbot(Transformation(), useFixedBase=False)
+        self.soccerbot = Soccerbot(Transformation(), useFixedBase=False, useCalibration=useCalibration)
         self.terminate_walk = False
 
     def __del__(self):
@@ -38,6 +38,7 @@ class SoccerbotController:
 
     def setGoal(self, goal: Transformation):
         self.soccerbot.createPathToGoal(goal)
+        # self.soccerbot.robot_path.show()
 
     def wait(self, steps):
         for i in range(steps):
