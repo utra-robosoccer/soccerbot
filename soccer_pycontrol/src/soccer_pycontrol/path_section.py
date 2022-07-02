@@ -49,10 +49,6 @@ class PathSection(ABC):
             self.bodystep_size = self.distance / math.ceil(self.distance / bodystep_size)
             if self.bodyStepCount() <= 1:
                 self.speed = self.steps_per_second * self.bodystep_size
-        if self.angle_distance != 0:
-            self.angular_bodystep_size = self.angle_distance / math.ceil(self.angle_distance / self.angular_bodystep_size)
-            if self.bodyStepCount() <= 1:
-                self.angular_speed = self.steps_per_second_default * self.angular_bodystep_size
 
     @abc.abstractmethod
     def poseAtRatio(self, r):
