@@ -1,3 +1,8 @@
+FROM nvidia/cudagl:11.4.2-base as dependencies
+WORKDIR /usr/local
+COPY webots webots
+RUN rm -rf webots/projects/samples/contests/robocup
+
 FROM nvidia/cudagl:11.4.2-base
 
 ENV DEBIAN_FRONTEND=noninteractive
@@ -41,7 +46,8 @@ WORKDIR /usr/local
 COPY GameController GameController
 COPY webots/scripts webots/scripts
 RUN ./webots/scripts/install/linux_compilation_dependencies.sh
-COPY webots webots
+COPY --from=dependencies /usr/local/webots webots
+
 RUN echo WEBOTS_HOME="/usr/local/webots" >> ~/.bashrc && \
     cd webots && \
     make
@@ -50,6 +56,7 @@ RUN apt update && apt-fast -y install ant protobuf-compiler libprotobuf-dev libj
     cd GameController && \
     ant
 
+COPY webots/projects/samples/contests/robocup webots/projects/samples/contests/robocup
 RUN cd webots/projects/samples/contests/robocup/controllers/referee && \
     pip3 install numpy==1.20.2 && \
     pip3 install -r requirements.txt
