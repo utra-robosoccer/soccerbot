@@ -3,6 +3,7 @@ import copy
 import os
 import sys
 
+from scipy.optimize import curve_fit
 from scipy.stats import stats
 
 if "ROS_NAMESPACE" not in os.environ:
@@ -16,7 +17,7 @@ from soccer_common.transformation import Transformation
 
 class Calibration:
     @staticmethod
-    def show_calibration_graph():
+    def setup_calibration():
         from os.path import exists
         from unittest.mock import MagicMock
 
@@ -53,6 +54,12 @@ class Calibration:
                 return y
 
         rospy.get_param = f
+
+        pass
+
+    @staticmethod
+    def calibrate_x():
+        Calibration.setup_calibration()
 
         import pybullet as pb
 
@@ -103,19 +110,85 @@ class Calibration:
 
         x = np.array(start_positions)[:, 0]
         y = np.array(final_positions)[:, 0]
-        plt.scatter(x, y)
+        plt.scatter(x, y, marker="+")
         plt.title("X position vs Actual X position")
         plt.xlabel("Desired X Position")
         plt.ylabel("Actual X Position")
+        plt.grid(b=True, which="both", color="0.65", linestyle="-")
+        plt.minorticks_on()
 
-        slope, intercept, r, p, std_err = stats.linregress(x, y)
+        def func(x, a, b):
+            return a * x + b * x**2
 
-        def myfunc(x):
-            return slope * x + intercept
+        popt, pcov = curve_fit(func, x, y)
+        plt.plot(x, func(x, *popt), "r-", label="fit: a=%5.3f, b=%5.3f" % tuple(popt))
+        plt.show()
 
-        mymodel = list(map(myfunc, x))
-        print(f"Slope: {slope} Intercept: {intercept}")
-        plt.plot(x, mymodel)
+    @staticmethod
+    def calibrate_theta():
+        Calibration.setup_calibration()
+
+        import pybullet as pb
+
+        from soccer_pycontrol.soccerbot_controller import SoccerbotController
+
+        start_positions = []
+        final_positions = []
+        for theta in np.linspace(-np.pi, np.pi / 2, 21):
+            walker = SoccerbotController(display=True, useCalibration=False)
+
+            walker.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
+            walker.ready()
+            walker.wait(200)
+
+            actual_start_position = np.array(
+                [
+                    pb.getBasePositionAndOrientation(walker.soccerbot.body)[0][0],
+                    pb.getBasePositionAndOrientation(walker.soccerbot.body)[0][1],
+                    Transformation.get_euler_from_quaternion(pb.getBasePositionAndOrientation(walker.soccerbot.body)[1])[0],
+                ]
+            )
+
+            goal_position = Transformation([0, 0, theta])
+            walker.setGoal(goal_position)
+            walk_success = walker.run(single_trajectory=True)
+            assert walk_success
+
+            final_position = np.array(
+                [
+                    pb.getBasePositionAndOrientation(walker.soccerbot.body)[0][0],
+                    pb.getBasePositionAndOrientation(walker.soccerbot.body)[0][1],
+                    Transformation.get_euler_from_quaternion(pb.getBasePositionAndOrientation(walker.soccerbot.body)[1])[0],
+                ]
+            )
+            final_transformation = final_position - actual_start_position
+
+            print(f"Final Transformation {final_transformation}")
+
+            start_positions.append(goal_position.get_position())
+            final_positions.append(final_transformation)
+
+            walker.wait(100)
+
+            del walker
+
+        # Plot the beginning and final positions
+        import matplotlib.pyplot as plt
+
+        x = np.array(start_positions)[:, 2]
+        y = np.array(final_positions)[:, 2]
+        plt.scatter(x, y, marker="+")
+        plt.title("X position vs Actual X position")
+        plt.xlabel("Desired X Position")
+        plt.ylabel("Actual X Position")
+        plt.grid(b=True, which="both", color="0.65", linestyle="-")
+        plt.minorticks_on()
+
+        def func(x, a, b):
+            return a * x + b * x**2
+
+        popt, pcov = curve_fit(func, x, y)
+        plt.plot(x, func(x, *popt), "r-", label="fit: a=%5.3f, b=%5.3f" % tuple(popt))
         plt.show()
 
     def adjust_navigation_transform_linear(self, start_transform: Transformation, end_transform: Transformation) -> Transformation:
@@ -144,4 +217,5 @@ class Calibration:
 
 
 if __name__ == "__main__":
-    Calibration.show_calibration_graph()
+    # Calibration.calibrate_x()
+    Calibration.calibrate_theta()
