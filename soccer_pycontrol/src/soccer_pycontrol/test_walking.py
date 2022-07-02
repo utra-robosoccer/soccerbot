@@ -16,6 +16,7 @@ from unittest.mock import MagicMock
 
 from soccer_common.transformation import Transformation
 
+real_robot = True
 run_in_ros = True
 display = False
 TEST_TIMEOUT = 60
@@ -46,8 +47,11 @@ def f(a, b):
     a = a.lstrip("~")
     if a == "robot_model":
         return robot_model
+    if real_robot:
+        config_path = f"../../config/{robot_model}.yaml"
+    else:
+        config_path = f"../../config/{robot_model}_sim.yaml"
 
-    config_path = f"../../config/{robot_model}_sim.yaml"
     if not exists(config_path):
         return b
 
