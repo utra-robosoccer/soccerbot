@@ -46,6 +46,7 @@ class PathSection(ABC):
 
         # Adjusting body step size to account for extra distance
         self.bodystep_size = self.distance / math.ceil(self.distance / bodystep_size)
+        self.speed = self.steps_per_second * self.bodystep_size
 
     @abc.abstractmethod
     def poseAtRatio(self, r):
