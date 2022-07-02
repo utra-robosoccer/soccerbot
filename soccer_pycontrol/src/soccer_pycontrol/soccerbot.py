@@ -1,6 +1,7 @@
 import enum
 import math
 import os
+import time
 from copy import deepcopy
 from os.path import expanduser
 
@@ -20,55 +21,53 @@ from soccer_pycontrol.utils import wrapToPi
 
 
 class Joints(enum.IntEnum):
-    LEFT_ARM_1 = rospy.get_param("~joint_indices/LEFT_ARM_1", 0)
-    LEFT_ARM_2 = rospy.get_param("~joint_indices/LEFT_ARM_2", 1)
-    RIGHT_ARM_1 = rospy.get_param("~joint_indices/RIGHT_ARM_1", 2)
-    RIGHT_ARM_2 = rospy.get_param("~joint_indices/RIGHT_ARM_2", 3)
-    LEFT_LEG_1 = rospy.get_param("~joint_indices/LEFT_LEG_1", 4)
-    LEFT_LEG_2 = rospy.get_param("~joint_indices/LEFT_LEG_2", 5)
-    LEFT_LEG_3 = rospy.get_param("~joint_indices/LEFT_LEG_3", 6)
-    LEFT_LEG_4 = rospy.get_param("~joint_indices/LEFT_LEG_4", 7)
-    LEFT_LEG_5 = rospy.get_param("~joint_indices/LEFT_LEG_5", 8)
-    LEFT_LEG_6 = rospy.get_param("~joint_indices/LEFT_LEG_6", 9)
-    RIGHT_LEG_1 = rospy.get_param("~joint_indices/RIGHT_LEG_1", 10)
-    RIGHT_LEG_2 = rospy.get_param("~joint_indices/RIGHT_LEG_2", 11)
-    RIGHT_LEG_3 = rospy.get_param("~joint_indices/RIGHT_LEG_3", 12)
-    RIGHT_LEG_4 = rospy.get_param("~joint_indices/RIGHT_LEG_4", 13)
-    RIGHT_LEG_5 = rospy.get_param("~joint_indices/RIGHT_LEG_5", 14)
-    RIGHT_LEG_6 = rospy.get_param("~joint_indices/RIGHT_LEG_6", 15)
-    HEAD_1 = rospy.get_param("~joint_indices/HEAD_1", 16)
-    HEAD_2 = rospy.get_param("~joint_indices/HEAD_2", 17)
-    HEAD_CAMERA = rospy.get_param("~joint_indices/HEAD_CAMERA", 18)
-    IMU = rospy.get_param("~joint_indices/IMU", 19)
+    LEFT_ARM_1 = rospy.get_param("joint_indices/LEFT_ARM_1", 0)
+    LEFT_ARM_2 = rospy.get_param("joint_indices/LEFT_ARM_2", 1)
+    RIGHT_ARM_1 = rospy.get_param("joint_indices/RIGHT_ARM_1", 2)
+    RIGHT_ARM_2 = rospy.get_param("joint_indices/RIGHT_ARM_2", 3)
+    LEFT_LEG_1 = rospy.get_param("joint_indices/LEFT_LEG_1", 4)
+    LEFT_LEG_2 = rospy.get_param("joint_indices/LEFT_LEG_2", 5)
+    LEFT_LEG_3 = rospy.get_param("joint_indices/LEFT_LEG_3", 6)
+    LEFT_LEG_4 = rospy.get_param("joint_indices/LEFT_LEG_4", 7)
+    LEFT_LEG_5 = rospy.get_param("joint_indices/LEFT_LEG_5", 8)
+    LEFT_LEG_6 = rospy.get_param("joint_indices/LEFT_LEG_6", 9)
+    RIGHT_LEG_1 = rospy.get_param("joint_indices/RIGHT_LEG_1", 10)
+    RIGHT_LEG_2 = rospy.get_param("joint_indices/RIGHT_LEG_2", 11)
+    RIGHT_LEG_3 = rospy.get_param("joint_indices/RIGHT_LEG_3", 12)
+    RIGHT_LEG_4 = rospy.get_param("joint_indices/RIGHT_LEG_4", 13)
+    RIGHT_LEG_5 = rospy.get_param("joint_indices/RIGHT_LEG_5", 14)
+    RIGHT_LEG_6 = rospy.get_param("joint_indices/RIGHT_LEG_6", 15)
+    HEAD_1 = rospy.get_param("joint_indices/HEAD_1", 16)
+    HEAD_2 = rospy.get_param("joint_indices/HEAD_2", 17)
 
 
 class Links(enum.IntEnum):
-    TORSO = rospy.get_param("~joint_indices/TORSO", -1)
-    LEFT_ARM_1 = rospy.get_param("~joint_indices/LEFT_ARM_1", 0)
-    LEFT_ARM_2 = rospy.get_param("~joint_indices/LEFT_ARM_2", 1)
-    RIGHT_ARM_1 = rospy.get_param("~joint_indices/RIGHT_ARM_1", 2)
-    RIGHT_ARM_2 = rospy.get_param("~joint_indices/RIGHT_ARM_2", 3)
-    LEFT_LEG_1 = rospy.get_param("~joint_indices/LEFT_LEG_1", 4)
-    LEFT_LEG_2 = rospy.get_param("~joint_indices/LEFT_LEG_2", 5)
-    LEFT_LEG_3 = rospy.get_param("~joint_indices/LEFT_LEG_3", 6)
-    LEFT_LEG_4 = rospy.get_param("~joint_indices/LEFT_LEG_4", 7)
-    LEFT_LEG_5 = rospy.get_param("~joint_indices/LEFT_LEG_5", 8)
-    LEFT_LEG_6 = rospy.get_param("~joint_indices/LEFT_LEG_6", 9)
-    RIGHT_LEG_1 = rospy.get_param("~joint_indices/RIGHT_LEG_1", 10)
-    RIGHT_LEG_2 = rospy.get_param("~joint_indices/RIGHT_LEG_2", 11)
-    RIGHT_LEG_3 = rospy.get_param("~joint_indices/RIGHT_LEG_3", 12)
-    RIGHT_LEG_4 = rospy.get_param("~joint_indices/RIGHT_LEG_4", 13)
-    RIGHT_LEG_5 = rospy.get_param("~joint_indices/RIGHT_LEG_5", 14)
-    RIGHT_LEG_6 = rospy.get_param("~joint_indices/RIGHT_LEG_6", 15)
-    HEAD_1 = rospy.get_param("~joint_indices/HEAD_1", 16)
-    HEAD_2 = rospy.get_param("~joint_indices/HEAD_2", 17)
-    HEAD_CAMERA = rospy.get_param("~joint_indices/HEAD_CAMERA", 18)
-    IMU = rospy.get_param("~joint_indices/IMU", 19)
+    TORSO = rospy.get_param("joint_indices/TORSO", -1)
+    LEFT_ARM_1 = rospy.get_param("joint_indices/LEFT_ARM_1", 0)
+    LEFT_ARM_2 = rospy.get_param("joint_indices/LEFT_ARM_2", 1)
+    RIGHT_ARM_1 = rospy.get_param("joint_indices/RIGHT_ARM_1", 2)
+    RIGHT_ARM_2 = rospy.get_param("joint_indices/RIGHT_ARM_2", 3)
+    LEFT_LEG_1 = rospy.get_param("joint_indices/LEFT_LEG_1", 4)
+    LEFT_LEG_2 = rospy.get_param("joint_indices/LEFT_LEG_2", 5)
+    LEFT_LEG_3 = rospy.get_param("joint_indices/LEFT_LEG_3", 6)
+    LEFT_LEG_4 = rospy.get_param("joint_indices/LEFT_LEG_4", 7)
+    LEFT_LEG_5 = rospy.get_param("joint_indices/LEFT_LEG_5", 8)
+    LEFT_LEG_6 = rospy.get_param("joint_indices/LEFT_LEG_6", 9)
+    RIGHT_LEG_1 = rospy.get_param("joint_indices/RIGHT_LEG_1", 10)
+    RIGHT_LEG_2 = rospy.get_param("joint_indices/RIGHT_LEG_2", 11)
+    RIGHT_LEG_3 = rospy.get_param("joint_indices/RIGHT_LEG_3", 12)
+    RIGHT_LEG_4 = rospy.get_param("joint_indices/RIGHT_LEG_4", 13)
+    RIGHT_LEG_5 = rospy.get_param("joint_indices/RIGHT_LEG_5", 14)
+    RIGHT_LEG_6 = rospy.get_param("joint_indices/RIGHT_LEG_6", 15)
+    HEAD_1 = rospy.get_param("joint_indices/HEAD_1", 16)
+    HEAD_2 = rospy.get_param("joint_indices/HEAD_2", 17)
+    HEAD_CAMERA = rospy.get_param("joint_indices/HEAD_CAMERA", 18)
+    IMU = rospy.get_param("joint_indices/IMU", 19)
 
 
 class Soccerbot:
-    torso_height = rospy.get_param("~torso_height", 0.36)  # Hardcoded for now, todo calculate this
-    walking_hip_height = rospy.get_param("~walking_hip_height", 0.165)  # Hardcoded for now, todo calculate this
+    torso_height = rospy.get_param("torso_height", 0.36)  # Hardcoded for now, todo calculate this
+    walking_hip_height = rospy.get_param("walking_hip_height", 0.165)  # Hardcoded for now, todo calculate this
     foot_box = [0.09, 0.07, 0.01474]
     right_collision_center = [0.00385, 0.00401, -0.00737]
     # pybullet_offset = [0.0082498, -0.0017440, -0.0522479]
@@ -83,7 +82,7 @@ class Soccerbot:
             home
             + f"/catkin_ws/src/soccerbot/{rospy.get_param('~robot_model', 'bez1')}_description/urdf/{rospy.get_param('~robot_model', 'bez1')}.urdf",
             useFixedBase=useFixedBase,
-            flags=pb.URDF_USE_INERTIA_FROM_FILE | (pb.URDF_MERGE_FIXED_LINKS if rospy.get_param("~merge_fixed_links", False) else 0),
+            flags=pb.URDF_USE_INERTIA_FROM_FILE | (pb.URDF_MERGE_FIXED_LINKS if rospy.get_param("merge_fixed_links", False) else 0),
             basePosition=[pose.get_position()[0], pose.get_position()[1], Soccerbot.torso_height],
             baseOrientation=pose.get_orientation(),
         )
@@ -118,20 +117,20 @@ class Soccerbot:
         self.left_foot_init_position[2, 3] = -(self.hip_to_torso[2, 3] + self.walking_hip_height) + self.foot_center_to_floor
 
         self.setPose(pose)
-        self.torso_offset = tr([rospy.get_param("~torso_offset_x", 0), 0, 0])
+        self.torso_offset = tr([rospy.get_param("torso_offset_x", 0), 0, 0])
         self.robot_path: PathRobot = None
         self.robot_odom_path: PathRobot = None
 
         self.configuration = [0.0] * len(Joints)
         self.configuration_offset = [0.0] * len(Joints)
         self.max_forces = []
-        for i in range(0, 20):
-            self.max_forces.append(pb.getJointInfo(self.body, i)[10] or rospy.get_param("~max_force", 6))
+        for i in range(0, 18):
+            self.max_forces.append(pb.getJointInfo(self.body, i)[10] or rospy.get_param("max_force", 6))
 
         pb.setJointMotorControlArray(
             bodyIndex=self.body,
             controlMode=pb.POSITION_CONTROL,
-            jointIndices=list(range(0, 20, 1)),
+            jointIndices=list(range(0, 18, 1)),
             targetPositions=self.get_angles(),
             forces=self.max_forces,
         )
@@ -227,7 +226,7 @@ class Soccerbot:
         pb.setJointMotorControlArray(
             bodyIndex=self.body,
             controlMode=pb.POSITION_CONTROL,
-            jointIndices=list(range(0, 20, 1)),
+            jointIndices=list(range(0, 18, 1)),
             targetPositions=self.get_angles(),
             forces=self.max_forces,
         )
@@ -384,7 +383,7 @@ class Soccerbot:
             num=math.ceil(self.robot_path.duration() / self.robot_path.step_precision) + 1,
         )
         if show:
-            plot_angles = np.zeros((len(iterator), 20))
+            plot_angles = np.zeros((len(iterator), 18))
         i = 0
         for t in iterator:
             self.stepPath(t)
@@ -447,9 +446,9 @@ class Soccerbot:
         :param verbose: Optional - Set to True to print the linear acceleration and angular velocity
         :return: concatenated 3-axes values for linear acceleration and angular velocity
         """
-        [quart_link, lin_vel, ang_vel] = pb.getLinkState(self.body, linkIndex=Links.IMU, computeLinkVelocity=1)[5:8]
+        quart_link, lin_vel, ang_vel = pb.getBasePositionAndOrientation(self.body)[1:2] + pb.getBaseVelocity(self.body)
         # [lin_vel, ang_vel] = p.getLinkState(bodyUniqueId=self.soccerbotUid, linkIndex=Links.HEAD_1, computeLinkVelocity=1)[6:8]
-        # print(p.getLinkStates(bodyUniqueId=self.soccerbotUid, linkIndices=range(0,20,1), computeLinkVelocity=1))
+        # print(p.getLinkStates(bodyUniqueId=self.soccerbotUid, linkIndices=range(0,18,1), computeLinkVelocity=1))
         # p.getBaseVelocity(self.soccerbotUid)
         lin_vel = np.array(lin_vel, dtype=np.float32)
         self.gravity = [0, 0, -9.81]
@@ -471,7 +470,9 @@ class Soccerbot:
         :param verbose: Optional - Set to True to print the linear acceleration and angular velocity
         :return: concatenated 3-axes values for linear acceleration and angular velocity
         """
-        [quat_pos, quat_orientation] = pb.getLinkState(self.body, linkIndex=Links.IMU, computeLinkVelocity=1)[4:6]
+        [quat_pos, quat_orientation] = pb.getBasePositionAndOrientation(self.body)[
+            0:2
+        ]  # TODO return to Links.IMU from -1 #pb.getLinkState(self.body, linkIndex=Links.TORSO, computeLinkVelocity=1)[4:6] # TODO return to Links.IMU from -1
 
         return tr(quat_pos, quat_orientation)
 

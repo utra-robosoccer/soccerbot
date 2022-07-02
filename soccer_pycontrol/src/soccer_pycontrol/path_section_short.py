@@ -10,8 +10,8 @@ from soccer_pycontrol.utils import wrapToPi
 
 
 class PathSectionShort(PathSection):
-    steps_per_second_default = rospy.get_param("~steps_per_second_default", 2.5)  # try 6 motors P = 09.25
-    scale_yaw = rospy.get_param("~scale_yaw", 1.0)  # Increase the rotation by angle
+    steps_per_second_default = rospy.get_param("steps_per_second_default", 2.5)  # try 6 motors P = 09.25
+    scale_yaw = rospy.get_param("scale_yaw", 1.0)  # Increase the rotation by angle
 
     def __init__(self, start_transform: Transformation, end_transform: Transformation):
         self.start_transform = start_transform
@@ -25,11 +25,6 @@ class PathSectionShort(PathSection):
         self.angular_bodystep_size = 0.25  # radians Radians per angular step
         self.angular_speed = self.steps_per_second_default * self.angular_bodystep_size  # Rotational speed in radians per second
         super().__init__(start_transform, end_transform, bodystep_size)
-
-        if self.angle_distance != 0 and self.distance == 0:
-            self.angular_bodystep_size = self.angle_distance / np.ceil(self.angle_distance / self.angular_bodystep_size)
-            if self.bodyStepCount() <= 1:
-                self.angular_speed = self.steps_per_second_default * self.angular_bodystep_size
 
     def poseAtRatio(self, r):
         diff_position = self.end_transform.get_position()[0:2] - self.start_transform.get_position()[0:2]
