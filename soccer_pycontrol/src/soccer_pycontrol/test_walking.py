@@ -16,6 +16,7 @@ from unittest.mock import MagicMock
 
 from soccer_common.transformation import Transformation
 
+real_robot = False
 run_in_ros = False
 display = False
 TEST_TIMEOUT = 60
@@ -47,9 +48,14 @@ def f(a, b):
     if a == "robot_model":
         return robot_model
 
-    config_path = f"../../config/{robot_model}_sim.yaml"
+    file_path = os.path.dirname(os.path.abspath(__file__))
+    if real_robot:
+        config_path = f"{file_path}/../../config/{robot_model}.yaml"
+    else:
+        config_path = f"{file_path}/../../config/{robot_model}_sim.yaml"
+
     if not exists(config_path):
-        return b
+        raise Exception(f"{config_path} does not exist")
 
     with open(config_path, "r") as g:
 
