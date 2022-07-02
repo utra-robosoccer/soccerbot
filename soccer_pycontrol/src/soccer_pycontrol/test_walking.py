@@ -68,6 +68,7 @@ def f(a, b):
 
 rospy.get_param = f
 import soccer_pycontrol.soccerbot_controller
+from soccer_pycontrol.calibration import adjust_navigation_transform
 from soccer_pycontrol.soccerbot import Links
 from soccer_pycontrol.soccerbot_controller import SoccerbotController
 from soccer_pycontrol.soccerbot_controller_ros import SoccerbotControllerRos
@@ -125,9 +126,15 @@ class TestWalking:
         walker.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
         walker.ready()
         walker.wait(200)
-        walker.setGoal(Transformation([1, 0, 0], [0, 0, 0, 1]))
+        goal_position = Transformation([1, 0, 0], [0, 0, 0, 1])
+        walker.setGoal(goal_position)
         walk_success = walker.run(single_trajectory=True)
         assert walk_success
+
+        final_position = walker.getPose()
+        distance_offset = np.linalg.norm((final_position - goal_position.get_position())[0:2])
+        if robot_model == "bez1":
+            assert distance_offset < 0.08
 
     @pytest.mark.timeout(TEST_TIMEOUT)
     @pytest.mark.flaky(reruns=1)
@@ -200,9 +207,15 @@ class TestWalking:
         walker.setPose(Transformation([0, 0, 0], [0.00000, 0, 0, 1]))
         walker.ready()
         walker.wait(100)
-        walker.setGoal(Transformation([0, -1, 0], [0.00000, 0, 0, 1]))
+        goal_position = Transformation([0, -0.5, 0], [0.00000, 0, 0, 1])
+        walker.setGoal(goal_position)
         walk_success = walker.run(single_trajectory=True)
         assert walk_success
+
+        final_position = walker.getPose()
+        distance_offset = np.linalg.norm((final_position - goal_position.get_position())[0:2])
+        if robot_model == "bez1":
+            assert distance_offset < 0.08
 
     @pytest.mark.timeout(TEST_TIMEOUT)
     @pytest.mark.flaky(reruns=2)
@@ -346,3 +359,43 @@ class TestWalking:
         walker.setGoal(Transformation([0, 0, 0], Transformation.get_quaternion_from_euler([0.1, 0, 0])))
         walk_success = walker.run(single_trajectory=True)
         assert walk_success
+
+    def test_path_calibration(self):
+
+        start_transform = Transformation([0.0, 0, 0], [0, 0, 0, 1])
+
+        end_transform = Transformation([0.1, 0, 0], [0, 0, 0, 1])
+        new_end_transform = adjust_navigation_transform(start_transform, end_transform)
+        assert new_end_transform.get_position()[0] > 0.1
+
+        start_transform = Transformation([0.0, 0, 0], [0, 0, 0, 1])
+
+        end_transform = Transformation([0.0, 0, 0], Transformation.get_quaternion_from_euler([0.5, 0, 0]))
+        new_end_transform = adjust_navigation_transform(start_transform, end_transform)
+        assert new_end_transform.get_orientation_euler()[0] > 0.5
+
+        end_transform = Transformation([0.0, 0, 0], Transformation.get_quaternion_from_euler([-0.5, 0, 0]))
+        new_end_transform = adjust_navigation_transform(start_transform, end_transform)
+        assert new_end_transform.get_orientation_euler()[0] < -0.5
+
+        end_transform = Transformation([0.0, 0, 0], Transformation.get_quaternion_from_euler([1.5, 0, 0]))
+        new_end_transform = adjust_navigation_transform(start_transform, end_transform)
+        assert new_end_transform.get_orientation_euler()[0] > 1.5
+
+        end_transform = Transformation([0.0, 0, 0], Transformation.get_quaternion_from_euler([-1.5, 0, 0]))
+        new_end_transform = adjust_navigation_transform(start_transform, end_transform)
+        assert new_end_transform.get_orientation_euler()[0] < -1.5
+
+        end_transform = Transformation([0.0, 0, 0], Transformation.get_quaternion_from_euler([3.0, 0, 0]))
+        new_end_transform = adjust_navigation_transform(start_transform, end_transform)
+        assert new_end_transform.get_orientation_euler()[0] == np.pi
+
+        end_transform = Transformation([1, 1, 0], Transformation.get_quaternion_from_euler([np.pi / 4, 0, 0]))
+        new_end_transform = adjust_navigation_transform(start_transform, end_transform)
+        assert new_end_transform.get_orientation_euler()[0] > np.pi / 4
+        assert np.linalg.norm(new_end_transform.get_position()[0:2]) > np.sqrt(2)
+
+        end_transform = Transformation([1, 0, 0], Transformation.get_quaternion_from_euler([np.pi / 4, 0, 0]))
+        new_end_transform = adjust_navigation_transform(start_transform, end_transform)
+        assert new_end_transform.get_orientation_euler()[0] > np.pi / 4
+        assert np.linalg.norm(new_end_transform.get_position()[0:2]) > 1

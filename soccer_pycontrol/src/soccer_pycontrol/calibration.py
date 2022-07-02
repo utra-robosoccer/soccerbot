@@ -1,432 +1,276 @@
 #!/usr/bin/env python3
 import copy
-import functools
-import glob
 import os
+import sys
+
+import ruamel.yaml
+from scipy.optimize import curve_fit
+from scipy.stats import stats
+
+from soccer_pycontrol.utils import trimToPi, wrapToPi
 
 if "ROS_NAMESPACE" not in os.environ:
     os.environ["ROS_NAMESPACE"] = "/robot1"
 
-import argparse
-
-import matplotlib.pyplot as plt
 import numpy as np
 import rospy
-import torch
-from torch import nn
 
 from soccer_common.transformation import Transformation
 
+robot_model = "bez1"
 
-class Calibration:
-    # fmt: off
-    x_range = np.flip(
-        np.array([-2.0, -1.5, -1.0, -0.8, -0.5, -0.3, -0.2, -0.15, -0.1, -0.05, 0, 0.05, 0.1, 0.15, 0.3, 0.4, 0.5, 0.8, 1.0, 1.5, 2.0]))
-    y_range = np.array([0, 0.05, 0.1, 0.15, 0.3, 0.4, 0.5, 1.0, 1.5, 2.0])
-    ang_range = np.pi * np.array([-0.8, -0.6, -0.4, -0.2, 0, 0.2, 0.4, 0.6, 0.8, 1])
-    # fmt: on
-    model_name = "calibration_models/model.995"
 
-    # Runs a series of movements to collect data in the calibration folder
-    def obtain_calibration(self):
-        from soccer_pycontrol.soccerbot_controller_ros import SoccerbotControllerRos
+def setup_calibration():
+    from os.path import exists
+    from unittest.mock import MagicMock
 
-        rospy.init_node("soccer_control")
-        for node in [
-            "soccer_strategy",
-            "soccer_pycontrol",
-            "soccer_trajectories",
-            "ball_detector",
-            "detector_goalpost",
-            "object_detector",
-            "rosbag",
-        ]:
-            os.system(f"/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/{node}'")
+    import yaml
 
-        try:
-            np.set_printoptions(precision=3)
+    sys.modules["rospy"] = MagicMock()
+    sys.modules["soccer_msgs"] = __import__("soccer_msgs_mock")
+    import rospy
 
-            # ang_range = np.pi * np.array([0])
-            if not os.path.exists("calibration"):
-                os.makedirs("calibration")
+    rospy.Time = MagicMock()
+    joint_state = MagicMock()
+    joint_state.position = [0.0] * 18
+    rospy.wait_for_message = MagicMock(return_value=joint_state)
+    rospy.loginfo_throttle = lambda a, b: None
 
-            clear = False
-            if clear:
-                files = glob.glob("calibration/*")
-                for f in files:
-                    os.remove(f)
+    robot_model = "bez1"
 
-            for x in Calibration.x_range:
-                for y in Calibration.y_range:
-                    for yaw in Calibration.ang_range:
-                        file_name = f"calibration/{x:.2f}_{y:.2f}_{yaw:.2f}.npy"
-                        if os.path.exists(file_name):
-                            continue
+    def f(a, b):
+        a = a.lstrip("~")
+        if a == "robot_model":
+            return robot_model
 
-                        quat = Transformation.get_quaternion_from_euler([yaw, 0, 0])
+        config_path = f"../../config/{robot_model}_sim.yaml"
+        if not exists(config_path):
+            return b
 
-                        print(f"Getting Calibration for x: {x} y: {y} yaw: {yaw:.2f}")
+        with open(config_path, "r") as g:
 
-                        attempt = 0
-                        while attempt < 5:
-                            walker = SoccerbotControllerRos()
-                            walker.soccerbot.useCalibration = False
-                            walker.setPose(Transformation())
-                            walker.setGoal(Transformation([x, y, 0.0], quat))
-                            success = walker.run(single_trajectory=True)
-                            if success:
-                                walker.update_robot_pose(footprint_name="/base_footprint_gt")
-                                euler = Transformation.get_euler_from_quaternion(
-                                    [
-                                        walker.robot_pose.pose.orientation.x,
-                                        walker.robot_pose.pose.orientation.y,
-                                        walker.robot_pose.pose.orientation.z,
-                                        walker.robot_pose.pose.orientation.w,
-                                    ]
-                                )
-                                final_position = [
-                                    walker.robot_pose.pose.position.x,
-                                    walker.robot_pose.pose.position.y,
-                                    euler[0],
-                                ]
-                                print("Final Position is " + str(final_position))
-                                np.save(file_name, final_position)
-                                break
-                            else:
-                                print("Attempt Failed")
-                            attempt = attempt + 1
+            y = yaml.safe_load(g)
+            for c in a.split("/"):
+                if y is None or c not in y:
+                    return b
+                y = y[c]
+            return y
 
-                        if attempt == 5:
-                            print("Failed 5 times")
-                            exit(1)
+    rospy.get_param = f
 
-            exit(0)
-        except (KeyboardInterrupt, rospy.exceptions.ROSException):
-            exit(1)
+    pass
 
-    def load_data(self, combine_yaw=False):
-        files = glob.glob("calibration/*")
-        goal_positions = []
-        end_positions = []
-        for f in files:
-            goal_position = np.array(f.replace("calibration/", "").replace(".npy", "").split("_")).astype(float)
-            end_position = np.load(f)
 
-            if combine_yaw:
-                has = False
-                for i in range(len(goal_positions)):
-                    if goal_positions[i][0] == goal_position[0] and goal_positions[i][1] == goal_position[1]:
-                        end_positions[i][0:2] = end_positions[i][0:2] + end_position[0:2]
-                        has = True
-                if not has:
-                    goal_positions.append(goal_position)
-                    end_positions.append(end_position)
+def calibrate_x():
+    setup_calibration()
 
-            else:
-                goal_positions.append(goal_position)
-                end_positions.append(end_position)
+    import pybullet as pb
 
-        goal_positions = np.array(goal_positions)
-        end_positions = np.array(end_positions)
+    from soccer_pycontrol.soccerbot_controller import SoccerbotController
 
-        if combine_yaw:
-            end_positions[:, 0:2] = end_positions[:, 0:2] / len(Calibration.ang_range)
-            goal_positions[:, 2] = 0
-            end_positions[:, 2] = 0
+    start_positions = []
+    final_positions = []
+    for x in np.linspace(0.0, 0.2, 21):
+        walker = SoccerbotController(display=False, useCalibration=False)
 
-        return goal_positions, end_positions
+        walker.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
+        walker.ready()
+        walker.wait(200)
 
-    def calibrate(self):
-        last_epoch = 0
-        model_name = f"calibration_models/model.{last_epoch}"
-
-        goal_positions, end_positions = self.load_data(combine_yaw=True)
-
-        # define the model
-        class NN(nn.Module):
-            def __init__(self):
-                super(NN, self).__init__()
-                self.flatten = nn.Flatten()
-                self.linear_relu_stack = nn.Sequential(
-                    nn.Linear(2, 64),
-                    nn.ReLU(),
-                    nn.Linear(64, 64),
-                    nn.ReLU(),
-                    nn.Linear(64, 2),
-                )
-
-            def forward(self, inputs):
-                outputs = self.linear_relu_stack(inputs)
-                return outputs
-
-        model = NN()
-        if os.path.exists(model_name):
-            print("Loading from model " + model_name)
-            model.load_state_dict(torch.load(model_name))
-
-        # optimizer and per-prediction error
-        criterion = torch.nn.MSELoss(reduction="sum")
-        optimizer = torch.optim.SGD(model.parameters(), lr=0.003)
-
-        # for stochastic gradient descent, create batches
-        train_dataset = torch.utils.data.DataLoader((goal_positions[:, 0:2], end_positions[:, 0:2]), batch_size=2, shuffle=True, num_workers=4)
-
-        epochs = 300
-        for epoch in range(last_epoch, epochs):
-            for step, (x_batch_train, y_batch_train) in enumerate(train_dataset):
-
-                predictions = model(x_batch_train.float())
-                loss = criterion(y_batch_train.float(), predictions)
-
-                optimizer.zero_grad()
-                loss.backward()
-                optimizer.step()
-
-            print(f"Epoch {epoch}: Average ppError: {loss.item()}")
-            if epoch % 5 == 0:
-                torch.save(model.state_dict(), f"calibration_models/model.{epoch}")
-
-    def view_calibration(self):
-        goal_positions, end_positions = self.load_data(True)
-
-        # plt.quiver(end_positions[:,0], end_positions[:,1], np.cos(end_positions[:,2]), np.sin(end_positions[:,2]), color="red", width=0.001)
-        plt.quiver(
-            end_positions[:, 0],
-            end_positions[:, 1],
-            goal_positions[:, 0] - end_positions[:, 0],
-            goal_positions[:, 1] - end_positions[:, 1],
-            color="green",
-            scale=1,
-            scale_units="xy",
-            angles="xy",
-            width=0.0003,
-        )
-        plt.quiver(
-            goal_positions[:, 0],
-            goal_positions[:, 1],
-            np.cos(goal_positions[:, 2]),
-            np.sin(goal_positions[:, 2]),
-            width=0.001,
+        actual_start_position = np.array(
+            [
+                pb.getBasePositionAndOrientation(walker.soccerbot.body)[0][0],
+                pb.getBasePositionAndOrientation(walker.soccerbot.body)[0][1],
+                Transformation.get_euler_from_quaternion(pb.getBasePositionAndOrientation(walker.soccerbot.body)[1])[0],
+            ]
         )
 
-        if os.path.exists(self.model_name):
-            print("Loading from model " + self.model_name)
-            model = torch.load(self.model_name)
-            end_positions_model = np.array(model(goal_positions[:, 0:2]))
-            # plt.quiver(end_positions_model[:, 0], end_positions_model[:, 1], np.cos(end_positions_model[:, 2]),
-            #            np.sin(end_positions_model[:, 2]), color="orange", width=0.001)
-            plt.quiver(
-                goal_positions[:, 0],
-                goal_positions[:, 1],
-                end_positions_model[:, 0] - goal_positions[:, 0],
-                end_positions_model[:, 1] - goal_positions[:, 1],
-                color="red",
-                scale=1,
-                scale_units="xy",
-                angles="xy",
-                width=0.0003,
-            )
-            # plt.quiver(end_positions_model[:, 0], end_positions_model[:, 1],
-            #            end_positions[:, 0] - end_positions_model[:, 0],
-            #            end_positions[:, 1] - end_positions_model[:, 1],
-            #            color="purple", scale=1, scale_units='xy', angles='xy', width=0.0003)
+        goal_position = Transformation([x, 0, 0])
+        walker.setGoal(goal_position)
+        walk_success = walker.run(single_trajectory=True)
+        assert walk_success
 
-        plt.show()
-        pass
-
-    def invert_model(self):
-        precision = 0.1
-        print("Loading from model " + self.model_name)
-        model = torch.load(self.model_name)
-
-        points = []
-        for x in np.arange(-2, 2, precision):
-            for y in np.arange(0, 1, precision):
-                points.append([x, y])
-
-        end_points = np.array(points)
-        start_points = np.array(model(end_points))
-        end_points_filter = []
-        start_points_filter = []
-        for start_point, end_point in zip(start_points, end_points):
-            if start_point[1] < 0:
-                continue
-
-            start_points_filter.append(start_point)
-            end_points_filter.append(end_point)
-
-            start_point_neg = np.copy(start_point)
-            end_point_neg = np.copy(end_point)
-            start_point_neg[1] = -start_point_neg[1]
-            end_point_neg[1] = -end_point_neg[1]
-            start_points_filter.append(start_point_neg)
-            end_points_filter.append(end_point_neg)
-
-        end_points_filter = np.array(end_points_filter)
-        start_points_filter = np.array(start_points_filter)
-
-        plt.quiver(
-            start_points_filter[:, 0],
-            start_points_filter[:, 1],
-            end_points_filter[:, 0] - start_points_filter[:, 0],
-            end_points_filter[:, 1] - start_points_filter[:, 1],
-            width=0.0002,
-            scale=1,
-            scale_units="xy",
-            angles="xy",
+        final_position = np.array(
+            [
+                pb.getBasePositionAndOrientation(walker.soccerbot.body)[0][0],
+                pb.getBasePositionAndOrientation(walker.soccerbot.body)[0][1],
+                Transformation.get_euler_from_quaternion(pb.getBasePositionAndOrientation(walker.soccerbot.body)[1])[0],
+            ]
         )
-        plt.show()
+        final_transformation = final_position - actual_start_position
 
-        class NN(nn.Module):
-            def __init__(self):
-                super(NN, self).__init__()
-                self.flatten = nn.Flatten()
-                self.linear_relu_stack = nn.Sequential(
-                    nn.Linear(2, 64),
-                    nn.ReLU(),
-                    nn.Linear(64, 64),
-                    nn.ReLU(),
-                    nn.Linear(64, 2),
-                )
+        print(f"Final Transformation {final_transformation}")
 
-            def forward(self, inputs):
-                outputs = self.linear_relu_stack(inputs)
-                return outputs
+        start_positions.append(goal_position.get_position())
+        final_positions.append(final_transformation)
 
-        model = NN()
+        walker.wait(100)
 
-        # optimizer and per-prediction error
-        criterion = torch.nn.MSELoss(reduction="sum")
-        optimizer = torch.optim.SGD(model.parameters(), lr=0.003)
+        del walker
 
-        # for stochastic gradient descent, create batches
-        batch_size = 1
-        train_dataset = torch.utils.data.DataLoader((start_points_filter, end_points_filter), batch_size=2, shuffle=True, num_workers=4)
+    # Plot the beginning and final positions
+    import matplotlib.pyplot as plt
 
-        epochs = 21
-        for epoch in range(0, epochs):
-            for step, (x_batch_train, y_batch_train) in enumerate(train_dataset):
+    x = np.array(start_positions)[:, 0]
+    y = np.array(final_positions)[:, 0]
+    plt.scatter(x, y, marker="+")
+    plt.title("X position vs Actual X position")
+    plt.xlabel("Desired X Position")
+    plt.ylabel("Actual X Position")
+    plt.grid(b=True, which="both", color="0.65", linestyle="-")
+    plt.minorticks_on()
 
-                predictions = model(x_batch_train.float())
-                loss = criterion(y_batch_train.float(), predictions)
+    def func(x, a, b):
+        return a * (x**2) + b * x
 
-                optimizer.zero_grad()
-                loss.backward()
-                optimizer.step()
+    popt, pcov = curve_fit(func, x, y)
+    plt.plot(x, func(x, *popt), "r-", label="fit: a=%5.3f, b=%5.3f" % tuple(popt))
+    plt.show()
 
-            print(f"Epoch {epoch}: Average ppError: {loss.item()}")
-        torch.save(model, self.model_name + "_inverse")
+    def func(x, a):
+        return a * x
 
-    @functools.cached_property
-    def adjust_navigation_goal(self):
-        dir_path = os.path.dirname(os.path.realpath(__file__))
-        calib_file = dir_path + "/" + self.model_name + "_inverse"
-        try:
-            calib_file = rospy.get_param("~calibration_file", calib_file)
-        except ConnectionRefusedError as ce:
-            pass
+    popt2, pcov2 = curve_fit(func, x[int(len(x) / 2) : -1], y[int(len(y) / 2) : -1])
 
-        print("Loading from model " + calib_file)
-        model = torch.load(calib_file)
-        return model
+    return popt[0], popt[1], popt2[0]
 
-    def test_adjust_navigation_goal(self):
-        points = []
-        precision = 0.1
-        for x in np.arange(-1, 1, precision):
-            for y in np.arange(-1, 1, precision):
-                points.append([x, y])
 
-        start_points = np.array(points)
-        end_points = np.array(self.adjust_navigation_goal(start_points))
+def calibrate_theta():
+    setup_calibration()
 
-        plt.quiver(
-            start_points[:, 0],
-            start_points[:, 1],
-            end_points[:, 0] - start_points[:, 0],
-            end_points[:, 1] - start_points[:, 1],
-            width=0.0005,
-            scale=1,
-            scale_units="xy",
-            angles="xy",
+    import pybullet as pb
+
+    from soccer_pycontrol.soccerbot_controller import SoccerbotController
+
+    start_angles = []
+    final_angles = []
+    for theta in np.linspace(-np.pi / 2, np.pi / 2, 21):
+        walker = SoccerbotController(display=False, useCalibration=False)
+
+        walker.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
+        walker.ready()
+        walker.wait(200)
+
+        actual_start_position = np.array(
+            [
+                pb.getBasePositionAndOrientation(walker.soccerbot.body)[0][0],
+                pb.getBasePositionAndOrientation(walker.soccerbot.body)[0][1],
+                Transformation.get_euler_from_quaternion(pb.getBasePositionAndOrientation(walker.soccerbot.body)[1])[0],
+            ]
         )
-        plt.show()
 
-    def adjust_navigation_transform(self, start_transform: Transformation, end_transform: Transformation) -> Transformation:
-        if np.linalg.norm(start_transform.get_transform()[0:2] - end_transform.get_transform()[0:2]) < 0.05:
-            return end_transform
+        goal_position = Transformation([0, 0, 0], Transformation.get_quaternion_from_euler([theta, 0, 0]))
+        walker.setGoal(goal_position)
+        walk_success = walker.run(single_trajectory=True)
+        assert walk_success
 
-        diff_transform = np.linalg.inv(start_transform) @ end_transform
-        diff_position = diff_transform[0:2, 3]
-        [diff_yaw, diff_pitch, diff_roll] = Transformation.get_euler_from_rotation_matrix(diff_transform[0:3, 0:3])
-        scale = 1
-        boundary = 0.7
-        if abs(diff_position[0]) > boundary:
-            scale = abs(diff_position[0]) / boundary
-        elif abs(diff_position[1]) > boundary:
-            scale = abs(diff_position[1]) / boundary
-
-        diff_position = diff_position / scale
-
-        yaw_scale = 1
-        new_position = np.array(self.adjust_navigation_goal(np.array([diff_position])))[0]
-        new_position = new_position * scale
-
-        diff_yaw = max(min(diff_yaw * yaw_scale, np.pi), -np.pi)
-
-        diff_transform_new = copy.deepcopy(diff_transform)
-        diff_transform_new[0:2, 3] = new_position
-        diff_transform_new.set_orientation(Transformation.get_quaternion_from_euler([diff_yaw, 0, 0]))
-        end_transform_new = start_transform @ diff_transform_new
-        return end_transform_new
-
-    def test_adjust_navigation_transform(self):
-        transforms = []
-        precision = 0.1
-        for x in np.arange(-2, 2, precision):
-            for y in np.arange(-2, 2, precision):
-                t = Transformation(position=[x, y, 0])
-                transforms.append(t)
-
-        transforms_adjusted = []
-        start = Transformation()
-        for transform in transforms:
-            transforms_adjusted.append(self.adjust_navigation_transform(start, transform))
-
-        start_points = []
-        end_points = []
-        for transform in transforms:
-            start_points.append(transform.get_position()[0:2])
-        for transform in transforms_adjusted:
-            end_points.append(transform.get_position()[0:2])
-
-        start_points = np.array(start_points)
-        end_points = np.array(end_points)
-
-        plt.quiver(
-            start_points[:, 0],
-            start_points[:, 1],
-            end_points[:, 0] - start_points[:, 0],
-            end_points[:, 1] - start_points[:, 1],
-            width=0.0005,
-            scale=1,
-            scale_units="xy",
-            angles="xy",
+        final_position = np.array(
+            [
+                pb.getBasePositionAndOrientation(walker.soccerbot.body)[0][0],
+                pb.getBasePositionAndOrientation(walker.soccerbot.body)[0][1],
+                Transformation.get_euler_from_quaternion(pb.getBasePositionAndOrientation(walker.soccerbot.body)[1])[0],
+            ]
         )
-        plt.show()
+        final_transformation = final_position - actual_start_position
+
+        print(f"Final Transformation {final_transformation}")
+
+        start_angles.append(theta)
+        final_angles.append(final_transformation[2])
+
+        walker.wait(100)
+
+        del walker
+
+    # Plot the beginning and final positions
+    import matplotlib.pyplot as plt
+
+    x = np.array(start_angles)
+    y = np.array(final_angles)
+    plt.scatter(x, y, marker="+")
+    plt.title("Theta vs Actual Theta position")
+    plt.xlabel("Desired Theta Position")
+    plt.ylabel("Actual Theta Position")
+    plt.grid(b=True, which="both", color="0.65", linestyle="-")
+    plt.minorticks_on()
+
+    def func(x, a):
+        return a * x
+
+    popt, pcov = curve_fit(func, x, y)
+    plt.plot(x, func(x, *popt), "r-", label="fit: a=%5.3f" % tuple(popt))
+    plt.show()
+
+    return popt[0]
 
 
-# Run calibration
+def adjust_navigation_transform(start_transform: Transformation, end_transform: Transformation) -> Transformation:
+    calibration_trans_a = rospy.get_param("calibration_trans_a", 0)
+    calibration_trans_b = rospy.get_param("calibration_trans_b", 1)
+    calibration_trans_a2 = rospy.get_param("calibration_trans_a2", 1)
+    calibration_rot_a = rospy.get_param("calibration_rot_a", 1)
+
+    def isWalkingBackwards():
+        start_angle = start_transform.get_orientation_euler()[0]
+        del_pose = end_transform.get_position() - start_transform.get_position()
+        if np.dot([np.cos(start_angle), np.sin(start_angle)], del_pose[0:2]) < 0:
+            return True
+        return False
+
+    diff_position = end_transform.get_position()[0:2] - start_transform.get_position()[0:2]
+    start_angle = start_transform.get_orientation_euler()[0]
+    intermediate_angle = np.arctan2(diff_position[1], diff_position[0])
+
+    if isWalkingBackwards():
+        intermediate_angle = wrapToPi(intermediate_angle + np.pi)
+    final_angle = end_transform.get_orientation_euler()[0]
+
+    step_1_angular_distance = wrapToPi(intermediate_angle - start_angle)
+    step_2_distance = np.linalg.norm(diff_position)
+    step_3_angular_distance = wrapToPi(final_angle - intermediate_angle)
+
+    step_1_angular_distance_new = (1 / calibration_rot_a) * step_1_angular_distance
+    step_3_angular_distance_new = (1 / calibration_rot_a) * step_3_angular_distance
+
+    max_x = calibration_trans_a * 0.2**2 + calibration_trans_b * 0.2
+    c = min(max_x, step_2_distance)
+    c_remainder = max(0.0, step_2_distance - max_x)
+
+    quadratic = lambda a, b, c: (-b + np.sqrt(b**2 + 4 * a * c)) / (2 * a) if a != 0 else (1 / b) * c
+    step_2_distance_new = quadratic(calibration_trans_a, calibration_trans_b, c)
+    step_2_distance_new = step_2_distance_new + (1 / calibration_trans_a2) * c_remainder
+
+    step_1_angular_distance_new = trimToPi(step_1_angular_distance_new)
+    step_3_angular_distance_new = trimToPi(step_3_angular_distance_new)
+
+    rot1 = Transformation((0, 0, 0), Transformation.get_quaternion_from_euler([step_1_angular_distance_new, 0, 0]))
+    trans = Transformation((step_2_distance_new, 0, 0))
+    rot2 = Transformation((0, 0, 0), Transformation.get_quaternion_from_euler([step_3_angular_distance_new, 0, 0]))
+
+    end_transform_new = start_transform @ rot1 @ trans @ rot2
+    end_transform_new.is_walking_backwards = isWalkingBackwards()  # HACK needed to pass the calibrated walking over :(
+
+    return end_transform_new
+
+
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Run Soccer calibration")
-    parser.add_argument("--collect", help="Collect", action="store_true")
-    args = parser.parse_args()
+    config_file_path = os.path.dirname(__file__).replace("src/soccer_pycontrol", f"config/{robot_model}_sim.yaml")
+    yaml = ruamel.yaml.YAML()
 
-    c = Calibration()
-    if args.collect:
-        c.obtain_calibration()
-    else:
-        c.calibrate()
-        c.view_calibration()
-        c.invert_model()
-        c.test_adjust_navigation_transform()
+    # Calibrate translation
+    a, b, a2 = calibrate_x()
+    with open(config_file_path) as f:
+        data = yaml.load(f)
+    data["calibration_trans_a"] = float(a)
+    data["calibration_trans_b"] = float(b)
+    data["calibration_trans_a2"] = float(a2)
+    with open(config_file_path, "w") as f:
+        yaml.dump(data, f)
+
+    # Calibrate rotation
+    a = calibrate_theta()
+    with open(config_file_path) as f:
+        data = yaml.load(f)
+    data["calibration_rot_a"] = float(a)
+    with open(config_file_path, "w") as f:
+        yaml.dump(data, f)
