@@ -194,7 +194,7 @@ def calibrate_theta():
     plt.plot(x, func(x, *popt), "r-", label="fit: a=%5.3f" % tuple(popt))
     plt.show()
 
-    return popt[0], popt[1]
+    return popt[0]
 
 
 def adjust_navigation_transform(start_transform: Transformation, end_transform: Transformation) -> Transformation:
@@ -228,17 +228,17 @@ if __name__ == "__main__":
 
     # Calibrate translation
     a, b = calibrate_x()
-    with open(config_file_path, "r+") as f:
+    with open(config_file_path) as f:
         data = yaml.load(f)
-        data["calibration_trans_a"] = a
-        data["calibration_trans_b"] = b
-    with open(config_file_path, "wb") as f:
+    data["calibration_trans_a"] = float(a)
+    data["calibration_trans_b"] = float(b)
+    with open(config_file_path, "w") as f:
         yaml.dump(data, f)
 
     # Calibrate rotation
     a = calibrate_theta()
-    with open(config_file_path, "r+") as f:
-        yaml = ruamel.yaml.YAML()
+    with open(config_file_path) as f:
         data = yaml.load(f)
-        data["calibration_rot_a"] = a
+    data["calibration_rot_a"] = float(a)
+    with open(config_file_path, "w") as f:
         yaml.dump(data, f)
