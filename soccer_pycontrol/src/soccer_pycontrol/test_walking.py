@@ -76,7 +76,7 @@ from soccer_pycontrol.soccerbot_controller_ros import SoccerbotControllerRos
 
 
 class TestWalking:
-    robot_models = ["bez1", "bez3"]
+    robot_models = ["bez1"]
 
     @staticmethod
     def reset_attributes():
@@ -104,6 +104,7 @@ class TestWalking:
 
     @pytest.mark.timeout(TEST_TIMEOUT)
     @pytest.mark.flaky(reruns=1)
+    @pytest.mark.parametrize("walker", ["bez1", "bez3"], indirect=True)
     def test_ik(self, walker: SoccerbotController):
         walker.soccerbot.configuration[Links.RIGHT_LEG_1 : Links.RIGHT_LEG_6 + 1] = walker.soccerbot.inverseKinematicsRightFoot(
             np.copy(walker.soccerbot.right_foot_init_position)
@@ -123,6 +124,7 @@ class TestWalking:
                 _ = _
             pb.stepSimulation()
 
+    @pytest.mark.parametrize("walker", ["bez1", "bez3"], indirect=True)
     def test_walk_1(self, walker: SoccerbotController):
         walker.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
         walker.ready()
