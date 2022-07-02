@@ -306,10 +306,29 @@ class TestWalking:
         walk_success = walker.run(single_trajectory=True)
         assert walk_success
 
-    def test_walk_tiny(self, walker: SoccerbotController):
+    @pytest.mark.timeout(TEST_TIMEOUT)
+    def test_walk_tiny_1(self, walker: SoccerbotController):
         walker.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
         walker.ready()
         walker.wait(200)
         walker.setGoal(Transformation([0.01, 0, 0], [0, 0, 0, 1]))
+        walk_success = walker.run(single_trajectory=True)
+        assert walk_success
+
+    @pytest.mark.timeout(TEST_TIMEOUT)
+    def test_walk_tiny_2(self, walker: SoccerbotController):
+        walker.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
+        walker.ready()
+        walker.wait(200)
+        walker.setGoal(Transformation([-0.01, 0, 0], [0, 0, 0, 1]))
+        walk_success = walker.run(single_trajectory=True)
+        assert walk_success
+
+    @pytest.mark.timeout(TEST_TIMEOUT)
+    def test_walk_tiny_3(self, walker: SoccerbotController):
+        walker.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
+        walker.ready()
+        walker.wait(200)
+        walker.setGoal(Transformation([0.01, 0.01, 0], [0, 0, 0, 1]))
         walk_success = walker.run(single_trajectory=True)
         assert walk_success
