@@ -21,7 +21,8 @@ def mock_ros(robot_model, real_robot, config_path):
             return robot_model
 
         if not exists(config_path):
-            raise Exception(f"{config_path} does not exist")
+            print(f"{config_path} does not exist")
+            return b
 
         with open(config_path, "r") as g:
             y = yaml.safe_load(g)
