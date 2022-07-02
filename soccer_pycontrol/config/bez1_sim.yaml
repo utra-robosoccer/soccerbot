@@ -1,9 +1,11 @@
 # Path calibration Parameters
 
 # Translation calibration parameters
-# Xactual = a * Xdesired + b * Xdesired^2
-calibration_trans_a: 0.09648309030343964
-calibration_trans_b: 4.0738686479274415
+# Xactual = a * Xdesired^2 + b * Xdesired (between 0 and 0.2m)
+# Xactual = a2 * Xdesired (after 0.2m)
+calibration_trans_a: 4.0738686479274415
+calibration_trans_b: 0.09648309030343964
+calibration_trans_a2: 0.7485569113303958
 
 # Rotation calibration parameters
 # Xactual = a * Xdesired

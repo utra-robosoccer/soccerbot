@@ -342,6 +342,49 @@ class TestWalking:
         walk_success = walker.run(single_trajectory=True)
         assert walk_success
 
+    def test_path_calibration(self):
+        from calibration import adjust_navigation_transform
+
+        start_transform = Transformation([0.0, 0, 0], [0, 0, 0, 1])
+
+        end_transform = Transformation([0.1, 0, 0], [0, 0, 0, 1])
+        new_end_transform = adjust_navigation_transform(start_transform, end_transform)
+        assert new_end_transform.get_position()[0] > 0.1
+
+        from calibration import adjust_navigation_transform
+
+        start_transform = Transformation([0.0, 0, 0], [0, 0, 0, 1])
+
+        end_transform = Transformation([0.0, 0, 0], Transformation.get_quaternion_from_euler([0.5, 0, 0]))
+        new_end_transform = adjust_navigation_transform(start_transform, end_transform)
+        assert new_end_transform.get_orientation_euler()[0] > 0.5
+
+        end_transform = Transformation([0.0, 0, 0], Transformation.get_quaternion_from_euler([-0.5, 0, 0]))
+        new_end_transform = adjust_navigation_transform(start_transform, end_transform)
+        assert new_end_transform.get_orientation_euler()[0] < -0.5
+
+        end_transform = Transformation([0.0, 0, 0], Transformation.get_quaternion_from_euler([1.5, 0, 0]))
+        new_end_transform = adjust_navigation_transform(start_transform, end_transform)
+        assert new_end_transform.get_orientation_euler()[0] > 1.5
+
+        end_transform = Transformation([0.0, 0, 0], Transformation.get_quaternion_from_euler([-1.5, 0, 0]))
+        new_end_transform = adjust_navigation_transform(start_transform, end_transform)
+        assert new_end_transform.get_orientation_euler()[0] < -1.5
+
+        end_transform = Transformation([0.0, 0, 0], Transformation.get_quaternion_from_euler([3.0, 0, 0]))
+        new_end_transform = adjust_navigation_transform(start_transform, end_transform)
+        assert new_end_transform.get_orientation_euler()[0] == np.pi
+
+        end_transform = Transformation([1, 1, 0], Transformation.get_quaternion_from_euler([np.pi / 4, 0, 0]))
+        new_end_transform = adjust_navigation_transform(start_transform, end_transform)
+        assert new_end_transform.get_orientation_euler()[0] > np.pi / 4
+        assert np.linalg.norm(new_end_transform.get_position()[0:2]) > np.sqrt(2)
+
+        end_transform = Transformation([1, 0, 0], Transformation.get_quaternion_from_euler([np.pi / 4, 0, 0]))
+        new_end_transform = adjust_navigation_transform(start_transform, end_transform)
+        assert new_end_transform.get_orientation_euler()[0] > np.pi / 4
+        assert np.linalg.norm(new_end_transform.get_position()[0:2]) > 1
+
     @pytest.mark.parametrize("goal", [[1, 0, 0], [0.5, 0, 0], [0.3, 0, 0], [0.1, 0, 0], [0.1, 0.1, 0], [0.1, -0.1, 0], [0.1, -0.1, 0.5]])
     def test_walk_calibrate(self, walker: SoccerbotController, goal):
         walker.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))

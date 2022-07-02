@@ -7,6 +7,8 @@ import ruamel.yaml
 from scipy.optimize import curve_fit
 from scipy.stats import stats
 
+from soccer_pycontrol.utils import trimToPi, wrapToPi
+
 if "ROS_NAMESPACE" not in os.environ:
     os.environ["ROS_NAMESPACE"] = "/robot1"
 
@@ -119,13 +121,18 @@ def calibrate_x():
     plt.minorticks_on()
 
     def func(x, a, b):
-        return a * x + b * x**2
+        return a * (x**2) + b * x
 
     popt, pcov = curve_fit(func, x, y)
     plt.plot(x, func(x, *popt), "r-", label="fit: a=%5.3f, b=%5.3f" % tuple(popt))
     plt.show()
 
-    return popt[0], popt[1]
+    def func(x, a):
+        return a * x
+
+    popt2, pcov2 = curve_fit(func, x[int(len(x) / 2) : -1], y[int(len(y) / 2) : -1])
+
+    return popt[0], popt[1], popt2[0]
 
 
 def calibrate_theta():
@@ -198,27 +205,50 @@ def calibrate_theta():
 
 
 def adjust_navigation_transform(start_transform: Transformation, end_transform: Transformation) -> Transformation:
-    x_navigation_scale = rospy.get_param("x_navigation_scale", 1.3)
-    y_navigation_scale = rospy.get_param("y_navigation_scale", 1)
-    theta_navigation_scale = rospy.get_param("theta_navigation_scale", 1)
+    calibration_trans_a = rospy.get_param("calibration_trans_a", 0)
+    calibration_trans_b = rospy.get_param("calibration_trans_b", 1)
+    calibration_trans_a2 = rospy.get_param("calibration_trans_a2", 1)
+    calibration_rot_a = rospy.get_param("calibration_rot_a", 1)
 
-    if np.linalg.norm(start_transform.get_transform()[0:2] - end_transform.get_transform()[0:2]) < 0.05:
-        return end_transform
+    def isWalkingBackwards():
+        start_angle = start_transform.get_orientation_euler()[0]
+        del_pose = end_transform.get_position() - start_transform.get_position()
+        if np.dot([np.cos(start_angle), np.sin(start_angle)], del_pose[0:2]) < 0:
+            return True
+        return False
 
-    diff_transform = np.linalg.inv(start_transform) @ end_transform
-    diff_position = diff_transform[0:2, 3]
-    [diff_yaw, diff_pitch, diff_roll] = Transformation.get_euler_from_rotation_matrix(diff_transform[0:3, 0:3])
+    diff_position = end_transform.get_position()[0:2] - start_transform.get_position()[0:2]
+    start_angle = start_transform.get_orientation_euler()[0]
+    intermediate_angle = np.arctan2(diff_position[1], diff_position[0])
 
-    new_position = diff_position
-    new_position[0] *= x_navigation_scale
-    new_position[1] *= y_navigation_scale
+    if isWalkingBackwards():
+        intermediate_angle = wrapToPi(intermediate_angle + np.pi)
+    final_angle = end_transform.get_orientation_euler()[0]
 
-    diff_yaw = max(min(diff_yaw * theta_navigation_scale, np.pi), -np.pi)
+    step_1_angular_distance = wrapToPi(intermediate_angle - start_angle)
+    step_2_distance = np.linalg.norm(diff_position)
+    step_3_angular_distance = wrapToPi(final_angle - intermediate_angle)
 
-    diff_transform_new = copy.deepcopy(diff_transform)
-    diff_transform_new[0:2, 3] = new_position
-    diff_transform_new.set_orientation(Transformation.get_quaternion_from_euler([diff_yaw, 0, 0]))
-    end_transform_new = start_transform @ diff_transform_new
+    step_1_angular_distance_new = (1 / calibration_rot_a) * step_1_angular_distance
+    step_3_angular_distance_new = (1 / calibration_rot_a) * step_3_angular_distance
+
+    max_x = calibration_trans_a * 0.2**2 + calibration_trans_b * 0.2
+    c = min(max_x, step_2_distance)
+    c_remainder = max(0.0, step_2_distance - max_x)
+
+    quadratic = lambda a, b, c: (-b + np.sqrt(b**2 + 4 * a * c)) / (2 * a)
+    step_2_distance_new = quadratic(calibration_trans_a, calibration_trans_b, c)
+    step_2_distance_new = step_2_distance_new + (1 / calibration_trans_a2) * c_remainder
+
+    step_1_angular_distance_new = trimToPi(step_1_angular_distance_new)
+    step_3_angular_distance_new = trimToPi(step_3_angular_distance_new)
+
+    rot1 = Transformation((0, 0, 0), Transformation.get_quaternion_from_euler([step_1_angular_distance_new, 0, 0]))
+    trans = Transformation((step_2_distance_new, 0, 0))
+    rot2 = Transformation((0, 0, 0), Transformation.get_quaternion_from_euler([step_3_angular_distance_new, 0, 0]))
+
+    end_transform_new = start_transform @ rot1 @ trans @ rot2
+
     return end_transform_new
 
 
@@ -227,11 +257,12 @@ if __name__ == "__main__":
     yaml = ruamel.yaml.YAML()
 
     # Calibrate translation
-    a, b = calibrate_x()
+    a, b, a2 = calibrate_x()
     with open(config_file_path) as f:
         data = yaml.load(f)
     data["calibration_trans_a"] = float(a)
     data["calibration_trans_b"] = float(b)
+    data["calibration_trans_a2"] = float(a2)
     with open(config_file_path, "w") as f:
         yaml.dump(data, f)
 
