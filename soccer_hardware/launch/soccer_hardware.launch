@@ -10,7 +10,7 @@
         <rosparam command="load" file="$(find soccer_hardware)/config/imu_calibration.yaml" />
     </node>
 
-    <node name="camera" pkg="usb_cam" type="usb_cam_node" output="screen">
+    <node name="camera" pkg="usb_cam" type="usb_cam_node" if="$(arg test_walking)" output="screen">
         <param name="video_device" value="/dev/video0" />
         <param name="image_width" value="640" />
         <param name="image_height" value="480" />
@@ -18,6 +18,7 @@
         <param name="camera_frame_id" value="camera" />
         <param name="io_method" value="mmap" />
     </node>
+
     <!-- Complementary filter -->
     <node pkg="imu_complementary_filter" type="complementary_filter_node" name="imu_complementary_filter" if="$(arg test_walking)" output="log">
         <rosparam file="$(find soccerbot)/config/imu_complementary_filter.yaml" command="load" />

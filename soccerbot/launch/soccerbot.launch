@@ -48,6 +48,11 @@
         <arg name="map_name" value="test" unless="$(arg simulation)" />
     </include>
 
+    <include file="$(find soccerbot)/launch/modules/vision.launch">
+        <arg name="robot_name" value="$(arg robot_name)" />
+        <arg name="simulation" value="$(arg simulation)" />
+    </include>
+
     <!--    <include file="$(find soccerbot)/launch/modules/navigation.launch">-->
     <!--        <arg name="simulation" value="$(arg simulation)" />-->
     <!--        <arg name="robot_model" value="$(arg robot_model)" />-->

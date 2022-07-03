@@ -9,11 +9,6 @@
     <arg name="y_pos" default="0" />
     <arg name="a_pos" default="0" />
 
-    <include file="$(find soccerbot)/launch/modules/vision.launch">
-        <arg name="robot_name" value="$(arg robot_name)" />
-        <arg name="simulation" value="$(arg simulation)" />
-    </include>
-
     <!-- Map server -->
     <node name="map_server" pkg="map_server" type="map_server" args="$(find soccer_common)/maps/$(arg map_name).yaml">
         <param name="frame_id" value="world" />
