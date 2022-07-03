@@ -39,8 +39,8 @@ class Joints(enum.IntEnum):
     RIGHT_LEG_6 = rospy.get_param("joint_indices/RIGHT_LEG_6", 15)
     HEAD_1 = rospy.get_param("joint_indices/HEAD_1", 16)
     HEAD_2 = rospy.get_param("joint_indices/HEAD_2", 17)
-    HEAD_CAMERA = rospy.get_param("joint_indices/HEAD_CAMERA", 18)
-    IMU = rospy.get_param("joint_indices/IMU", 19)
+    # HEAD_CAMERA = rospy.get_param("joint_indices/HEAD_CAMERA", 18)
+    # IMU = rospy.get_param("joint_indices/IMU", 19)
 
 
 class Links(enum.IntEnum):
