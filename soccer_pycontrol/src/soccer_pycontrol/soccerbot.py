@@ -448,9 +448,9 @@ class Soccerbot:
         :param verbose: Optional - Set to True to print the linear acceleration and angular velocity
         :return: concatenated 3-axes values for linear acceleration and angular velocity
         """
-        [quart_link, lin_vel, ang_vel] = pb.getLinkState(self.body, linkIndex=Links.IMU, computeLinkVelocity=1)[5:8]
+        quart_link, lin_vel, ang_vel = pb.getBasePositionAndOrientation(self.body)[1:2] + pb.getBaseVelocity(self.body)
         # [lin_vel, ang_vel] = p.getLinkState(bodyUniqueId=self.soccerbotUid, linkIndex=Links.HEAD_1, computeLinkVelocity=1)[6:8]
-        # print(p.getLinkStates(bodyUniqueId=self.soccerbotUid, linkIndices=range(0,20,1), computeLinkVelocity=1))
+        # print(p.getLinkStates(bodyUniqueId=self.soccerbotUid, linkIndices=range(0,18,1), computeLinkVelocity=1))
         # p.getBaseVelocity(self.soccerbotUid)
         lin_vel = np.array(lin_vel, dtype=np.float32)
         self.gravity = [0, 0, -9.81]
@@ -472,7 +472,9 @@ class Soccerbot:
         :param verbose: Optional - Set to True to print the linear acceleration and angular velocity
         :return: concatenated 3-axes values for linear acceleration and angular velocity
         """
-        [quat_pos, quat_orientation] = pb.getLinkState(self.body, linkIndex=Links.IMU, computeLinkVelocity=1)[4:6]
+        [quat_pos, quat_orientation] = pb.getBasePositionAndOrientation(self.body)[
+            0:2
+        ]  # TODO return to Links.IMU from -1 #pb.getLinkState(self.body, linkIndex=Links.TORSO, computeLinkVelocity=1)[4:6] # TODO return to Links.IMU from -1
 
         return tr(quat_pos, quat_orientation)
 
