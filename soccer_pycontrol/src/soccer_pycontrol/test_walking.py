@@ -11,8 +11,8 @@ if "ROS_NAMESPACE" not in os.environ:
 
 from soccer_common.transformation import Transformation
 
-real_robot = True
-run_in_ros = True
+real_robot = False
+run_in_ros = False
 display = False
 robot_model = "bez1"
 TEST_TIMEOUT = 60
@@ -30,11 +30,10 @@ if run_in_ros:
     os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_strategy'")
     os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_pycontrol'")
     os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_trajectories'")
-else:
-    from soccer_common.mock_ros import mock_ros
 
-    mock_ros(robot_model=robot_model, real_robot=real_robot, config_path=config_path)
+from soccer_common.mock_ros import mock_ros
 
+mock_ros(robot_model=robot_model, real_robot=real_robot, config_path=config_path)
 
 import soccer_pycontrol.soccerbot_controller
 from soccer_pycontrol.calibration import adjust_navigation_transform
