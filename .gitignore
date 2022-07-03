@@ -21,6 +21,6 @@ cmake-build-debug
 /soccer_common/credentials.json
 
 soccerbot/bags/*
-!soccerbot/bags/view_rosbag.sh
+!soccerbot/bags/*.sh
 slave.py
 venv/
