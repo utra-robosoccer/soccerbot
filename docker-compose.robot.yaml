@@ -30,6 +30,9 @@ services:
       TEST_CONTROL: "true"
       ROBOCUP_ROBOT_ID: 3
       ROBOT_MODEL: "bez3"
+      # command: /bin/bash -c "source ~/catkin_ws/devel/setup.bash &&
+      # if [[ $$TEST_CONTROL == 'true' ]]; then roslaunch soccer_hardware soccer_hardware.launch test_walking:=true  __ns:=robot$$ROBOCUP_ROBOT_ID;
+      # else roslaunch soccerbot soccerbot.launch simulation:=false __ns:=robot$$ROBOCUP_ROBOT_ID; fi || sleep infinity"
       ROBOCUP_TEAM_COLOR: "red"
       ROBOCUP_SIMULATOR_ADDR: "simulator:10001"
       ROBOCUP_MIRROR_SERVER_IP: "simulator"

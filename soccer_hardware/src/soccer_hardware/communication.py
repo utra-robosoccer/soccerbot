@@ -1,4 +1,5 @@
 import math
+import os
 from threading import Lock
 
 import rospy as rp
@@ -37,13 +38,13 @@ class Communication:
         self._rx_imu_thread.set_timeout(0.010)
         self._rx_imu_thread.bind(self.receive_imu_callback)
 
-        self._pub_imu = rp.Publisher("imu_raw", Imu, queue_size=1)
-        self._pub_joint_states = rp.Publisher("joint_states", JointState, queue_size=1)
+        self._pub_imu = rp.Publisher("~imu_raw", Imu, queue_size=1)
+        self._pub_joint_states = rp.Publisher("~joint_states", JointState, queue_size=1)
 
         self._imu_calibration = rp.get_param("~imu_calibration")
         self._motor_map = rp.get_param("~motor_mapping")
 
-        self._joint_command_sub = rp.Subscriber("/joint_command", JointState, self.joint_command_callback)
+        self._joint_command_sub = rp.Subscriber("joint_command", JointState, self.joint_command_callback)
 
         for motor in self._motor_map:
             self._motor_map[motor]["value"] = 0.0
@@ -70,12 +71,12 @@ class Communication:
                 self._motor_map[motor_name]["value"] = target
 
     def send_angles(self, event):
-        motor_angles = {}  # [0] * len(self._motor_map)
+        motor_angles = []  # [0] * len(self._motor_map)
         for motor_name, motor in self._motor_map.items():
             angle = np.rad2deg(motor["value"] * float(motor["direction"])) + float(motor["offset"])
             if "limits" in motor and motor["limits"] is not None:
                 angle = max(motor["limits"][0], min(motor["limits"][1], angle))
-            motor_angles[int(motor["id"])] = angle
+            motor_angles.append(((motor_name, motor), angle))
         self._tx_servo_thread.send(motor_angles)
 
     def receive_servo_callback(self, received_angles):
@@ -94,7 +95,7 @@ class Communication:
         # IMU FEEDBACK
         imu = Imu()
         imu.header.stamp = rp.rostime.get_rostime()
-        imu.header.frame_id = "imu_link"
+        imu.header.frame_id = os.environ["ROS_NAMESPACE"][1:] + "/imu_link"
 
         # TODO autocalibrate
         imu.angular_velocity = Vector3(

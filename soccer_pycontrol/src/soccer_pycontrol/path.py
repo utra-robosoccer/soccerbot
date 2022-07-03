@@ -4,6 +4,7 @@ from math import ceil, floor
 import matplotlib.pyplot as plt
 import numpy as np
 import rospy
+from mpl_toolkits.mplot3d import Axes3D  # <--- This is important for 3d plotting
 
 from soccer_common import Transformation
 from soccer_pycontrol.path_section import PathSection
@@ -13,10 +14,10 @@ from soccer_pycontrol.utils import wrapToPi
 
 
 class Path:
-    step_precision = rospy.get_param("~step_precision", 0.02)  # Time for a single time step
+    step_precision = rospy.get_param("step_precision", 0.02)  # Time for a single time step
 
-    pre_footstep_ratio = rospy.get_param("~pre_footstep_ratio", 0.15)  # Ratio of fullstep duration to keep foot on ground on prefootstep
-    post_footstep_ratio = rospy.get_param("~post_footstep_ratio", 0.25)  # Ratio of fullstep duration to keep foot on ground on postfootstep
+    pre_footstep_ratio = rospy.get_param("pre_footstep_ratio", 0.15)  # Ratio of fullstep duration to keep foot on ground on prefootstep
+    post_footstep_ratio = rospy.get_param("post_footstep_ratio", 0.25)  # Ratio of fullstep duration to keep foot on ground on postfootstep
 
     def __init__(self, start_transform: Transformation, end_transform: Transformation):
         self.start_transform = start_transform
@@ -28,6 +29,9 @@ class Path:
         self.path_sections.append(p)
 
     def isShortPath(self, start_transform: Transformation, end_transform: Transformation):
+        # Only use bezier for simple forward paths
+
+        # If there is too much final rotation
         theta_diff = wrapToPi(end_transform.get_orientation_euler()[0] - start_transform.get_orientation_euler()[0])
         pos_theta_diff = math.atan2(
             end_transform.get_position()[1] - start_transform.get_position()[1],
@@ -36,6 +40,13 @@ class Path:
         if abs(wrapToPi(pos_theta_diff - theta_diff)) > math.pi / 4:
             return True
 
+        # If there is too much initial rotation
+        start_end_diff = end_transform @ np.linalg.inv(start_transform)
+        start_end_angle = math.atan2(start_end_diff[1, 3], start_end_diff[0, 3])
+        if abs(start_end_angle) > math.pi / 4:
+            return True
+
+        # If the distance is too close
         return (
             np.linalg.norm(end_transform.get_position()[0:2] - start_transform.get_position()[0:2])
             < PathSection.bodystep_size_default * PathSectionBezier.turn_duration * 4
@@ -60,7 +71,7 @@ class Path:
             angularStepCount += path_section.angularStepCount()
         return angularStepCount
 
-    def bodyStepCount(self):
+    def bodyStepCount(self) -> int:
         bodyStepCount = 0
         for path_section in self.path_sections:
             bodyStepCount += path_section.bodyStepCount()

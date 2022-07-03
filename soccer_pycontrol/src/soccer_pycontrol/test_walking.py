@@ -1,23 +1,22 @@
 import os
-import sys
 from importlib import reload
-from os.path import exists
 from types import ModuleType
 
 import numpy as np
 import pybullet as pb
 import pytest
-import yaml
+
+from soccer_common.mock_ros import mock_ros
 
 if "ROS_NAMESPACE" not in os.environ:
     os.environ["ROS_NAMESPACE"] = "/robot1"
 
-from unittest.mock import MagicMock
-
 from soccer_common.transformation import Transformation
 
+real_robot = False
 run_in_ros = False
 display = False
+robot_model = "bez1"
 TEST_TIMEOUT = 60
 
 if run_in_ros:
@@ -27,48 +26,33 @@ if run_in_ros:
     os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_strategy'")
     os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_pycontrol'")
     os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_trajectories'")
-    from soccer_pycontrol.soccerbot_controller_ros import SoccerbotControllerRos
+
+file_path = os.path.dirname(os.path.abspath(__file__))
+if real_robot:
+    config_path = f"{file_path}/../../config/{robot_model}.yaml"
 else:
-    sys.modules["rospy"] = MagicMock()
-    sys.modules["soccer_msgs"] = __import__("soccer_msgs_mock")
-    import rospy
+    config_path = f"{file_path}/../../config/{robot_model}_sim.yaml"
+mock_ros(robot_model=robot_model, real_robot=real_robot, config_path=config_path)
 
-    rospy.Time = MagicMock()
-    joint_state = MagicMock()
-    joint_state.position = [0.0] * 18
-    rospy.wait_for_message = MagicMock(return_value=joint_state)
-    rospy.loginfo_throttle = lambda a, b: None
-
-robot_model = ""
-
-
-def f(a, b):
-    a = a.lstrip("~")
-    if a == "robot_model":
-        return robot_model
-
-    config_path = f"../../config/{robot_model}_sim.yaml"
-    if not exists(config_path):
-        return b
-
-    with open(config_path, "r") as g:
-
-        y = yaml.safe_load(g)
-        for c in a.split("/"):
-            if y is None or c not in y:
-                return b
-            y = y[c]
-        return y
-
-
-rospy.get_param = f
 import soccer_pycontrol.soccerbot_controller
+from soccer_pycontrol.calibration import adjust_navigation_transform
 from soccer_pycontrol.soccerbot import Links
 from soccer_pycontrol.soccerbot_controller import SoccerbotController
+from soccer_pycontrol.soccerbot_controller_ros import SoccerbotControllerRos
 
 
 class TestWalking:
-    robot_models = ["bez1", "bez3"]
+    robot_models = ["bez1"]
+
+    @staticmethod
+    def reset_attributes():
+        for i in range(2):
+            for attribute_name in dir(soccer_pycontrol):
+                if attribute_name == __name__.replace(__package__ + ".", ""):
+                    continue
+                attribute = getattr(soccer_pycontrol, attribute_name)
+                if type(attribute) is ModuleType:
+                    reload(attribute)
 
     @staticmethod
     @pytest.fixture(params=robot_models)
@@ -79,19 +63,14 @@ class TestWalking:
         if run_in_ros:
             c = SoccerbotControllerRos()
         else:
-            for i in range(2):
-                for attribute_name in dir(soccer_pycontrol):
-                    if attribute_name == __name__.replace(__package__ + ".", ""):
-                        continue
-                    attribute = getattr(soccer_pycontrol, attribute_name)
-                    if type(attribute) is ModuleType:
-                        reload(attribute)
+            TestWalking.reset_attributes()
             c = SoccerbotController(display=display)
         yield c
         del c
 
     @pytest.mark.timeout(TEST_TIMEOUT)
     @pytest.mark.flaky(reruns=1)
+    @pytest.mark.parametrize("walker", ["bez1", "bez3"], indirect=True)
     def test_ik(self, walker: SoccerbotController):
         walker.soccerbot.configuration[Links.RIGHT_LEG_1 : Links.RIGHT_LEG_6 + 1] = walker.soccerbot.inverseKinematicsRightFoot(
             np.copy(walker.soccerbot.right_foot_init_position)
@@ -111,13 +90,20 @@ class TestWalking:
                 _ = _
             pb.stepSimulation()
 
+    @pytest.mark.parametrize("walker", ["bez1", "bez3"], indirect=True)
     def test_walk_1(self, walker: SoccerbotController):
         walker.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
         walker.ready()
         walker.wait(200)
-        walker.setGoal(Transformation([1, 0, 0], [0, 0, 0, 1]))
+        goal_position = Transformation([1, 0, 0], [0, 0, 0, 1])
+        walker.setGoal(goal_position)
         walk_success = walker.run(single_trajectory=True)
         assert walk_success
+
+        final_position = walker.getPose()
+        distance_offset = np.linalg.norm((final_position - goal_position.get_position())[0:2])
+        if robot_model == "bez1":
+            assert distance_offset < 0.08
 
     @pytest.mark.timeout(TEST_TIMEOUT)
     @pytest.mark.flaky(reruns=1)
@@ -190,9 +176,15 @@ class TestWalking:
         walker.setPose(Transformation([0, 0, 0], [0.00000, 0, 0, 1]))
         walker.ready()
         walker.wait(100)
-        walker.setGoal(Transformation([0, -1, 0], [0.00000, 0, 0, 1]))
+        goal_position = Transformation([0, -0.5, 0], [0.00000, 0, 0, 1])
+        walker.setGoal(goal_position)
         walk_success = walker.run(single_trajectory=True)
         assert walk_success
+
+        final_position = walker.getPose()
+        distance_offset = np.linalg.norm((final_position - goal_position.get_position())[0:2])
+        if robot_model == "bez1":
+            assert distance_offset < 0.08
 
     @pytest.mark.timeout(TEST_TIMEOUT)
     @pytest.mark.flaky(reruns=2)
@@ -200,8 +192,13 @@ class TestWalking:
         walker.setPose(Transformation([0, 0, 0], [0.00000, 0, 0, 1]))
         walker.ready()
         walker.wait(100)
-        walker.setGoal(Transformation([-1, 0.3, 0], [0.00000, 0, 0, 1]))
+        goal_position = Transformation([-1, 0.3, 0], [0.00000, 0, 0, 1])
+        walker.setGoal(goal_position)
         walk_success = walker.run(single_trajectory=True)
+        final_position = walker.getPose()
+        distance_offset = np.linalg.norm((final_position - goal_position.get_position())[0:2])
+        if robot_model == "bez1":
+            assert distance_offset < 0.08
         assert walk_success
 
     @pytest.mark.timeout(TEST_TIMEOUT)
@@ -300,3 +297,79 @@ class TestWalking:
         walker.setGoal(goal)
         walk_success = walker.run(single_trajectory=True)
         assert walk_success
+
+    @pytest.mark.timeout(TEST_TIMEOUT)
+    def test_walk_tiny_1(self, walker: SoccerbotController):
+        walker.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
+        walker.ready()
+        walker.wait(200)
+        walker.setGoal(Transformation([0.01, 0, 0], [0, 0, 0, 1]))
+        walk_success = walker.run(single_trajectory=True)
+        assert walk_success
+
+    @pytest.mark.timeout(TEST_TIMEOUT)
+    def test_walk_tiny_2(self, walker: SoccerbotController):
+        walker.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
+        walker.ready()
+        walker.wait(200)
+        walker.setGoal(Transformation([-0.01, 0, 0], [0, 0, 0, 1]))
+        walk_success = walker.run(single_trajectory=True)
+        assert walk_success
+
+    @pytest.mark.timeout(TEST_TIMEOUT)
+    def test_walk_tiny_3(self, walker: SoccerbotController):
+        walker.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
+        walker.ready()
+        walker.wait(200)
+        walker.setGoal(Transformation([0.01, 0.01, 0], [0, 0, 0, 1]))
+        walk_success = walker.run(single_trajectory=True)
+        assert walk_success
+
+    @pytest.mark.timeout(TEST_TIMEOUT)
+    def test_walk_tiny_4(self, walker: SoccerbotController):
+        walker.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
+        walker.ready()
+        walker.wait(200)
+        walker.setGoal(Transformation([0, 0, 0], Transformation.get_quaternion_from_euler([0.1, 0, 0])))
+        walk_success = walker.run(single_trajectory=True)
+        assert walk_success
+
+    def test_path_calibration(self):
+
+        start_transform = Transformation([0.0, 0, 0], [0, 0, 0, 1])
+
+        end_transform = Transformation([0.1, 0, 0], [0, 0, 0, 1])
+        new_end_transform = adjust_navigation_transform(start_transform, end_transform)
+        assert new_end_transform.get_position()[0] > 0.1
+
+        start_transform = Transformation([0.0, 0, 0], [0, 0, 0, 1])
+
+        end_transform = Transformation([0.0, 0, 0], Transformation.get_quaternion_from_euler([0.5, 0, 0]))
+        new_end_transform = adjust_navigation_transform(start_transform, end_transform)
+        assert new_end_transform.get_orientation_euler()[0] > 0.5
+
+        end_transform = Transformation([0.0, 0, 0], Transformation.get_quaternion_from_euler([-0.5, 0, 0]))
+        new_end_transform = adjust_navigation_transform(start_transform, end_transform)
+        assert new_end_transform.get_orientation_euler()[0] < -0.5
+
+        end_transform = Transformation([0.0, 0, 0], Transformation.get_quaternion_from_euler([1.5, 0, 0]))
+        new_end_transform = adjust_navigation_transform(start_transform, end_transform)
+        assert new_end_transform.get_orientation_euler()[0] > 1.5
+
+        end_transform = Transformation([0.0, 0, 0], Transformation.get_quaternion_from_euler([-1.5, 0, 0]))
+        new_end_transform = adjust_navigation_transform(start_transform, end_transform)
+        assert new_end_transform.get_orientation_euler()[0] < -1.5
+
+        end_transform = Transformation([0.0, 0, 0], Transformation.get_quaternion_from_euler([3.0, 0, 0]))
+        new_end_transform = adjust_navigation_transform(start_transform, end_transform)
+        assert new_end_transform.get_orientation_euler()[0] == np.pi
+
+        end_transform = Transformation([1, 1, 0], Transformation.get_quaternion_from_euler([np.pi / 4, 0, 0]))
+        new_end_transform = adjust_navigation_transform(start_transform, end_transform)
+        assert new_end_transform.get_orientation_euler()[0] > np.pi / 4
+        assert np.linalg.norm(new_end_transform.get_position()[0:2]) > np.sqrt(2)
+
+        end_transform = Transformation([1, 0, 0], Transformation.get_quaternion_from_euler([np.pi / 4, 0, 0]))
+        new_end_transform = adjust_navigation_transform(start_transform, end_transform)
+        assert new_end_transform.get_orientation_euler()[0] > np.pi / 4
+        assert np.linalg.norm(new_end_transform.get_position()[0:2]) > 1
