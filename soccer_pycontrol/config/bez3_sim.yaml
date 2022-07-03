@@ -22,7 +22,7 @@ joint_indices:
   HEAD_1: 16
   HEAD_2: 17
 
-steps_per_second_default: 1.3
+steps_per_second_default: 1.0
 bodystep_size_default: 0.05
 foot_separation: 0.06
 torso_offset_x: 0.03
