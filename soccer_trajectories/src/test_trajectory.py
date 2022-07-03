@@ -15,17 +15,20 @@ os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robo
 os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_trajectories'")
 
 robot_model = "bez1"
+if real_robot:
+    from soccer_msgs.msg import FixedTrajectoryCommand
+else:
+    from soccer_common.mock_ros import mock_ros
 
-from soccer_common.mock_ros import mock_ros
+    file_path = os.path.dirname(os.path.abspath(__file__))
 
-file_path = os.path.dirname(os.path.abspath(__file__))
+    config_path = f"{file_path}/../../{robot_model}_description/config/motor_mapping.yaml"
 
-config_path = f"{file_path}/../../{robot_model}_description/config/motor_mapping.yaml"
+    from unittest.mock import MagicMock
 
-from unittest.mock import MagicMock
+    mock_ros(robot_model=robot_model, real_robot=real_robot, config_path=config_path)
+    FixedTrajectoryCommand = MagicMock()
 
-mock_ros(robot_model=robot_model, real_robot=real_robot, config_path=config_path)
-FixedTrajectoryCommand = MagicMock()
 from soccer_trajectories import SoccerTrajectoryClass
 
 
