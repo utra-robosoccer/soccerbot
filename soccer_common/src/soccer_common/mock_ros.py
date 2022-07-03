@@ -15,7 +15,7 @@ def mock_ros(robot_model, real_robot, config_path):
     rospy.wait_for_message = MagicMock(return_value=joint_state)
     rospy.loginfo_throttle = lambda a, b: None
 
-    def f(a, b):
+    def get_param(a, b=None):
         a = a.lstrip("~")
         if a == "robot_model":
             return robot_model
@@ -32,4 +32,4 @@ def mock_ros(robot_model, real_robot, config_path):
                 y = y[c]
             return y
 
-    rospy.get_param = f
+    rospy.get_param = get_param
