@@ -1,4 +1,5 @@
 import math
+import os
 
 import rospy as rp
 from control_msgs.msg import JointControllerState
@@ -72,7 +73,7 @@ class Communication:
         # IMU FEEDBACK
         imu = Imu()
         imu.header.stamp = rp.rostime.get_rostime()
-        imu.header.frame_id = "imu_link"
+        imu.header.frame_id = os.environ["ROS_NAMESPACE"][1:] + "/imu_link"
 
         # TODO autocalibrate
         imu.angular_velocity = Vector3(

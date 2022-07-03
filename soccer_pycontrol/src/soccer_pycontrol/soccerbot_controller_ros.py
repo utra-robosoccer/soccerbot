@@ -153,6 +153,7 @@ class SoccerbotControllerRos(SoccerbotController):
             ]:
                 self.soccerbot.robot_path = None
                 self.goal = self.new_goal
+                self.soccerbot.publishOdometry()
                 self.soccerbot.reset_imus()
                 self.soccerbot.updateRobotConfiguration()
                 r.sleep()
