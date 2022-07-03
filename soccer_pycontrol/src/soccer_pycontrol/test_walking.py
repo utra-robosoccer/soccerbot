@@ -15,7 +15,7 @@ from soccer_common.transformation import Transformation
 
 real_robot = False
 run_in_ros = False
-display = False
+display = True
 robot_model = "bez1"
 TEST_TIMEOUT = 60
 
@@ -192,8 +192,13 @@ class TestWalking:
         walker.setPose(Transformation([0, 0, 0], [0.00000, 0, 0, 1]))
         walker.ready()
         walker.wait(100)
-        walker.setGoal(Transformation([-1, 0.3, 0], [0.00000, 0, 0, 1]))
+        goal_position = Transformation([-1, 0.3, 0], [0.00000, 0, 0, 1])
+        walker.setGoal(goal_position)
         walk_success = walker.run(single_trajectory=True)
+        final_position = walker.getPose()
+        distance_offset = np.linalg.norm((final_position - goal_position.get_position())[0:2])
+        if robot_model == "bez1":
+            assert distance_offset < 0.08
         assert walk_success
 
     @pytest.mark.timeout(TEST_TIMEOUT)

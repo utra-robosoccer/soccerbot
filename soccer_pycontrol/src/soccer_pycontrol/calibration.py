@@ -237,7 +237,7 @@ def adjust_navigation_transform(start_transform: Transformation, end_transform: 
     step_3_angular_distance_new = trimToPi(step_3_angular_distance_new)
 
     rot1 = Transformation((0, 0, 0), Transformation.get_quaternion_from_euler([step_1_angular_distance_new, 0, 0]))
-    trans = Transformation((step_2_distance_new, 0, 0))
+    trans = Transformation((step_2_distance_new, 0, 0)) if not isWalkingBackwards() else Transformation((-step_2_distance_new, 0, 0))
     rot2 = Transformation((0, 0, 0), Transformation.get_quaternion_from_euler([step_3_angular_distance_new, 0, 0]))
 
     end_transform_new = start_transform @ rot1 @ trans @ rot2
