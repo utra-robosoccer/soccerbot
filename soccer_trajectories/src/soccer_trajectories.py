@@ -80,8 +80,14 @@ class Trajectory:
                     self.max_time = self.times[-1]
                 else:
                     joint_values = list(map(float, row[1:]))
-                    param = "~motor_mapping/{}/initial_state".format(joint_name)
-                    last_pose_value = float(rospy.get_param(param))
+
+                    try:
+                        param = "~motor_mapping/{}/initial_state".format(joint_name)
+                        last_pose_value = float(rospy.get_param(param))
+                    except:
+                        param = "/robot1/soccer_hardware/motor_mapping/{}/initial_state".format(joint_name)
+                        last_pose_value = float(rospy.get_param(param))
+
                     # last_pose_value = 0.0
                     joint_values = [last_pose_value] + joint_values + [last_pose_value]
                     self.splines[joint_name] = interp1d(self.times, joint_values)
