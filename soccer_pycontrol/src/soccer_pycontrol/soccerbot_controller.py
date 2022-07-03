@@ -28,7 +28,7 @@ class SoccerbotController:
         self.terminate_walk = False
 
     def __del__(self):
-        if hasattr(self, "client_id"):
+        if hasattr(self, "client_id") and pb.isConnected(self.client_id):
             pb.disconnect(self.client_id)
 
     def ready(self):
@@ -91,7 +91,7 @@ class SoccerbotController:
             pb.setJointMotorControlArray(
                 bodyIndex=self.soccerbot.body,
                 controlMode=pb.POSITION_CONTROL,
-                jointIndices=list(range(0, 20, 1)),
+                jointIndices=list(range(0, 18, 1)),
                 targetPositions=self.soccerbot.get_angles(),
             )
             pb.stepSimulation()

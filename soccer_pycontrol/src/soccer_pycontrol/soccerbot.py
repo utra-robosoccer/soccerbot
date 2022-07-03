@@ -8,8 +8,8 @@ from os.path import expanduser
 import matplotlib.pyplot as plt
 import numpy as np
 import pybullet as pb
-import rosparam
 import rospy
+import scipy
 from rospy import ROSException
 from sensor_msgs.msg import JointState
 
@@ -39,8 +39,8 @@ class Joints(enum.IntEnum):
     RIGHT_LEG_6 = rospy.get_param("joint_indices/RIGHT_LEG_6", 15)
     HEAD_1 = rospy.get_param("joint_indices/HEAD_1", 16)
     HEAD_2 = rospy.get_param("joint_indices/HEAD_2", 17)
-    HEAD_CAMERA = rospy.get_param("joint_indices/HEAD_CAMERA", 18)
-    IMU = rospy.get_param("joint_indices/IMU", 19)
+    # HEAD_CAMERA = rospy.get_param("joint_indices/HEAD_CAMERA", 18)
+    # IMU = rospy.get_param("joint_indices/IMU", 19)
 
 
 class Links(enum.IntEnum):
@@ -126,13 +126,13 @@ class Soccerbot:
         self.configuration = [0.0] * len(Joints)
         self.configuration_offset = [0.0] * len(Joints)
         self.max_forces = []
-        for i in range(0, 20):
+        for i in range(0, 18):
             self.max_forces.append(pb.getJointInfo(self.body, i)[10] or rospy.get_param("max_force", 6))
 
         pb.setJointMotorControlArray(
             bodyIndex=self.body,
             controlMode=pb.POSITION_CONTROL,
-            jointIndices=list(range(0, 20, 1)),
+            jointIndices=list(range(0, 18, 1)),
             targetPositions=self.get_angles(),
             forces=self.max_forces,
         )
@@ -218,17 +218,17 @@ class Soccerbot:
                 np.array(np.array(configuration[0:18]) - np.array(previous_configuration[0:18])) * r + np.array(previous_configuration[0:18])
             ).tolist()
             self.publishAngles()
+            if pb.isConnected():
+                pb.setJointMotorControlArray(
+                    bodyIndex=self.body,
+                    controlMode=pb.POSITION_CONTROL,
+                    jointIndices=list(range(0, 18, 1)),
+                    targetPositions=self.get_angles(),
+                    forces=self.max_forces,
+                )
             rospy.sleep(0.020)
 
         self.configuration_offset = [0] * len(Joints)
-
-        pb.setJointMotorControlArray(
-            bodyIndex=self.body,
-            controlMode=pb.POSITION_CONTROL,
-            jointIndices=list(range(0, 20, 1)),
-            targetPositions=self.get_angles(),
-            forces=self.max_forces,
-        )
 
     def updateRobotConfiguration(self):
         try:
@@ -244,8 +244,7 @@ class Soccerbot:
         :return: Motor angles for the right foot
         """
         transformation[0:3, 3] = transformation[0:3, 3] - self.torso_to_right_hip[0:3, 3]
-        invconf = np.linalg.inv(transformation)
-
+        invconf = scipy.linalg.inv(transformation)
         d3 = self.DH[2, 0]
         d4 = self.DH[3, 0]
 
@@ -279,10 +278,10 @@ class Soccerbot:
         H56 = tr.get_transform_from_dh(self.DH[5, 0], self.DH[5, 1], self.DH[5, 2], theta6)
         H36 = np.matmul(H34, np.matmul(H45, H56))
         final_rotation = tr.get_transform_from_euler([0, np.pi / 2, np.pi])
-        H03 = np.matmul(np.matmul(transformation, final_rotation), np.linalg.inv(H36))
+        H03 = np.matmul(np.matmul(transformation, final_rotation), scipy.linalg.inv(H36))
         assert np.linalg.norm(H03[0:3, 3]) - d3 < 0.03
 
-        angles = tr.get_euler_from_rotation_matrix(np.linalg.inv(H03[0:3, 0:3]), orientation="ZYX")
+        angles = tr.get_euler_from_rotation_matrix(scipy.linalg.inv(H03[0:3, 0:3]), orientation="ZYX")
         theta3 = np.pi / 2 - angles[0]
         theta1 = -angles[1]
         theta2 = angles[2] + np.pi / 2
@@ -311,10 +310,8 @@ class Soccerbot:
         [r, p, y] = pose.get_orientation_euler()
         q_new = tr.get_quaternion_from_euler([r, 0, 0])
         self.pose.set_orientation(q_new)
-        try:
+        if pb.isConnected():
             pb.resetBasePositionAndOrientation(self.body, self.pose.get_position(), self.pose.get_orientation())
-        except pb.error as err:
-            exit(1)
 
     def addTorsoHeight(self, position: tr):
         positionCoordinate = position.get_position()
@@ -361,8 +358,12 @@ class Soccerbot:
         crotch_position = self.robot_path.crotchPosition(t) @ self.torso_offset
 
         [right_foot_position, left_foot_position] = self.robot_path.footPosition(t)
-        torso_to_left_foot = np.matmul(np.linalg.inv(crotch_position), left_foot_position)  # crotch_position \ left_foot_position;
-        torso_to_right_foot = np.matmul(np.linalg.inv(crotch_position), right_foot_position)  # crotch_position \ right_foot_position;
+        torso_to_left_foot = scipy.linalg.lstsq(crotch_position, left_foot_position, lapack_driver="gelsy")[
+            0
+        ]  # np.matmul(np.linalg.inv(crotch_position), left_foot_position)
+        torso_to_right_foot = scipy.linalg.lstsq(crotch_position, right_foot_position, lapack_driver="gelsy")[
+            0
+        ]  # np.matmul(np.linalg.inv(crotch_position), right_foot_position)
 
         if verbose:
             print("------------------- feet angles -------------------")
@@ -385,7 +386,7 @@ class Soccerbot:
             num=math.ceil(self.robot_path.duration() / self.robot_path.step_precision) + 1,
         )
         if show:
-            plot_angles = np.zeros((len(iterator), 20))
+            plot_angles = np.zeros((len(iterator), 18))
         i = 0
         for t in iterator:
             self.stepPath(t)
@@ -448,9 +449,10 @@ class Soccerbot:
         :param verbose: Optional - Set to True to print the linear acceleration and angular velocity
         :return: concatenated 3-axes values for linear acceleration and angular velocity
         """
-        [quart_link, lin_vel, ang_vel] = pb.getLinkState(self.body, linkIndex=Links.IMU, computeLinkVelocity=1)[5:8]
+
+        quart_link, lin_vel, ang_vel = pb.getBasePositionAndOrientation(self.body)[1:2] + pb.getBaseVelocity(self.body)
         # [lin_vel, ang_vel] = p.getLinkState(bodyUniqueId=self.soccerbotUid, linkIndex=Links.HEAD_1, computeLinkVelocity=1)[6:8]
-        # print(p.getLinkStates(bodyUniqueId=self.soccerbotUid, linkIndices=range(0,20,1), computeLinkVelocity=1))
+        # print(p.getLinkStates(bodyUniqueId=self.soccerbotUid, linkIndices=range(0,18,1), computeLinkVelocity=1))
         # p.getBaseVelocity(self.soccerbotUid)
         lin_vel = np.array(lin_vel, dtype=np.float32)
         self.gravity = [0, 0, -9.81]
@@ -472,7 +474,10 @@ class Soccerbot:
         :param verbose: Optional - Set to True to print the linear acceleration and angular velocity
         :return: concatenated 3-axes values for linear acceleration and angular velocity
         """
-        [quat_pos, quat_orientation] = pb.getLinkState(self.body, linkIndex=Links.IMU, computeLinkVelocity=1)[4:6]
+        if rospy.get_param("merge_fixed_links", False):
+            [quat_pos, quat_orientation] = pb.getBasePositionAndOrientation(self.body)[0:2]
+        else:
+            [quat_pos, quat_orientation] = pb.getLinkState(self.body, linkIndex=Links.IMU, computeLinkVelocity=1)[4:6]
 
         return tr(quat_pos, quat_orientation)
 
