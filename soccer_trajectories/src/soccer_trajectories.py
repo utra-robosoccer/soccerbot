@@ -80,7 +80,8 @@ class Trajectory:
                     self.max_time = self.times[-1]
                 else:
                     joint_values = list(map(float, row[1:]))
-                    param = "~motor_mapping/{}/initial_state".format(joint_name)
+                    # TODO revert changes
+                    param = "/robot1/soccer_hardware/motor_mapping/{}/initial_state".format(joint_name)
                     last_pose_value = float(rospy.get_param(param))
                     # last_pose_value = 0.0
                     joint_values = [last_pose_value] + joint_values + [last_pose_value]
@@ -181,6 +182,7 @@ class SoccerTrajectoryClass:
         rospy.loginfo("Finished Trajectory: " + command.trajectory_name)
         self.finish_trajectory.publish()
         self.trajectory_complete = True
+        return True
 
 
 if __name__ == "__main__":
