@@ -10,9 +10,9 @@ from soccer_pycontrol.path_foot import PathFoot
 
 class PathCrotch(PathFoot):
 
-    crotch_zdiff_sway = rospy.get_param("~crotch_zdiff_sway", 0.00)
-    crotch_sidediff_sway = rospy.get_param("~crotch_sidediff_sway", -0.025)
-    crotch_thetadiff_sway = rospy.get_param("~crotch_thetadiff_sway", [0.0, 0.0, 0.0])
+    crotch_zdiff_sway = rospy.get_param("crotch_zdiff_sway", 0.00)
+    crotch_sidediff_sway = rospy.get_param("crotch_sidediff_sway", -0.025)
+    crotch_thetadiff_sway = rospy.get_param("crotch_thetadiff_sway", [0.0, 0.0, 0.0])
 
     first_step_left = 0
 

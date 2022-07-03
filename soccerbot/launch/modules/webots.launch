@@ -2,7 +2,7 @@
     <arg name="single" default="true" />
     <env name="GAME_CONTROLLER_HOME" value="$(env HOME)/catkin_ws/src/soccerbot/external/GameController" />
     <env name="WEBOTS_HOME" value="$(env HOME)/catkin_ws/src/soccerbot/external/webots" />
-    <env name="WEBOTS_ROBOCUP_GAME" value="$(env HOME)/catkin_ws/src/soccerbot/external/webots/projects/samples/contests/robocup/controllers/referee/game_single.json" if="$(arg single)" />
+    <env name="WEBOTS_ROBOCUP_GAME" value="$(env HOME)/catkin_ws/src/soccerbot/external/webots/projects/samples/contests/robocup/controllers/referee/game_single_$(optenv ROBOT_MODEL bez1).json" if="$(arg single)" />
     <env name="WEBOTS_ROBOCUP_GAME" value="$(env HOME)/catkin_ws/src/soccerbot/external/webots/projects/samples/contests/robocup/controllers/referee/game.json" unless="$(arg single)" />
     <env name="JAVA_HOME" value="/usr" />
     <node pkg="soccerbot" type="webots.sh" name="webots" required="true" />
