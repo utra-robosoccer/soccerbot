@@ -507,9 +507,9 @@ class Soccerbot:
         return locations
 
     walking_pid = PID(
-        Kp=rospy.get_param("~walking_Kp", 0.8),
-        Kd=rospy.get_param("~walking_Kd", 0.0),
-        Ki=rospy.get_param("~walking_Ki", 0.0005),
+        Kp=rospy.get_param("walking_Kp", 0.8),
+        Kd=rospy.get_param("walking_Kd", 0.0),
+        Ki=rospy.get_param("walking_Ki", 0.0005),
         setpoint=-0.01,
         output_limits=(-1.57, 1.57),
     )
@@ -525,9 +525,9 @@ class Soccerbot:
         return F
 
     standing_pid = PID(
-        Kp=rospy.get_param("~standing_Kp", 0.15),
-        Kd=rospy.get_param("~standing_Kd", 0.0),
-        Ki=rospy.get_param("~standing_Ki", 0.001),
+        Kp=rospy.get_param("standing_Kp", 0.15),
+        Kd=rospy.get_param("standing_Kd", 0.0),
+        Ki=rospy.get_param("standing_Ki", 0.001),
         setpoint=-0.01,
         output_limits=(-1.57, 1.57),
     )
