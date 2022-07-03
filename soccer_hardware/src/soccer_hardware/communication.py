@@ -83,7 +83,7 @@ class Communication:
         self.publish_sensor_data(self._last_angles, self._last_imu)
 
     def receive_imu_callback(self, received_imu):
-        # print(received_imu)
+        print("RECEIVED IMU: ", received_imu)
         self._last_imu = np.array(received_imu).reshape((6, 1))
         self.publish_sensor_data(self._last_angles, self._last_imu)
 

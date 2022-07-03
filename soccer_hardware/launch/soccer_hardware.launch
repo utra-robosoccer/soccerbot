@@ -1,11 +1,12 @@
 <launch>
+    <!-- arg name="robot_description" value="$(arg robot_model)_description" /-->
     <node name="soccer_hardware" pkg="soccer_hardware" type="soccer_hardware.py" output="screen" cwd="node">
         <param name="imu_port" value="/dev/ttyACM" />
         <param name="imu_baud_rate" value="230400" />
         <param name="servo_port" value="/dev/ttyUSB" />
         <param name="servo_baud_rate" value="1000000" />
-        <rosparam command="load" file="$(find soccer_description)/config/soccerbot_control.yaml" />
-        <rosparam command="load" file="$(find soccer_description)/config/motor_mapping.yaml" />
+        <rosparam command="load" file="$(find bez3_description)/config/soccerbot_control.yaml" />
+        <rosparam command="load" file="$(find bez3_description)/config/motor_mapping.yaml" />
         <rosparam command="load" file="$(find soccer_hardware)/config/imu_calibration.yaml" />
     </node>
 </launch>
