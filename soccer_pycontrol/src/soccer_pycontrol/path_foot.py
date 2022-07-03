@@ -18,12 +18,12 @@ class PostPreSetting(enum.IntEnum):
 
 
 class PathFoot(Path):
-    half_to_full_step_time_ratio = rospy.get_param("~half_to_full_step_time_ratio", 0.7)  # Duration difference between half and full step
+    half_to_full_step_time_ratio = rospy.get_param("half_to_full_step_time_ratio", 0.7)  # Duration difference between half and full step
 
-    foot_separation = rospy.get_param("~foot_separation", 0.044)
-    step_height = rospy.get_param("~step_height", 0.065)  # height of step
-    step_outwardness = rospy.get_param("~step_outwardness", 0.015)
-    step_rotation = rospy.get_param("~step_rotation", 0.05)
+    foot_separation = rospy.get_param("foot_separation", 0.044)
+    step_height = rospy.get_param("step_height", 0.065)  # height of step
+    step_outwardness = rospy.get_param("step_outwardness", 0.015)
+    step_rotation = rospy.get_param("step_rotation", 0.05)
 
     def __init__(self, start_transform, end_transform, foot_center_to_floor):
         super().__init__(start_transform, end_transform)
