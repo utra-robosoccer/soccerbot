@@ -16,7 +16,7 @@ from unittest.mock import MagicMock
 
 from soccer_common.transformation import Transformation
 
-real_robot = False
+real_robot = True
 run_in_ros = True
 display = False
 TEST_TIMEOUT = 60
@@ -66,7 +66,9 @@ class TestTrajectory:
         robot_model = request.param
 
         if run_in_ros:
+
             c = SoccerTrajectoryClass()
+
         else:
             TestTrajectory.reset_attributes()
             c = SoccerTrajectoryClass()  # need a version for pybullet

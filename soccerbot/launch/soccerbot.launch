@@ -32,11 +32,11 @@
 
     <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" />
 
-    <include file="$(find soccerbot)/launch/modules/sensors.launch" unless="$(arg simulation)" />
+    <!--    <include file="$(find soccerbot)/launch/modules/sensors.launch" unless="$(arg simulation)" />-->
 
-    <include file="$(find soccerbot)/launch/modules/communication.launch" if="$(arg simulation)">
-        <arg name="robot_name" value="$(arg robot_name)" />
-    </include>
+    <!--    <include file="$(find soccerbot)/launch/modules/communication.launch" if="$(arg simulation)">-->
+    <!--        <arg name="robot_name" value="$(arg robot_name)" />-->
+    <!--    </include>-->
 
     <include file="$(find soccerbot)/launch/modules/localization.launch">
         <arg name="robot_name" value="$(arg robot_name)" />
@@ -48,17 +48,17 @@
         <arg name="map_name" value="test" unless="$(arg simulation)" />
     </include>
 
-    <include file="$(find soccerbot)/launch/modules/navigation.launch">
-        <arg name="simulation" value="$(arg simulation)" />
-        <arg name="robot_model" value="$(arg robot_model)" />
-    </include>
+    <!--    <include file="$(find soccerbot)/launch/modules/navigation.launch">-->
+    <!--        <arg name="simulation" value="$(arg simulation)" />-->
+    <!--        <arg name="robot_model" value="$(arg robot_model)" />-->
+    <!--    </include>-->
 
-    <include file="$(find soccerbot)/launch/modules/strategy.launch">
-        <arg name="x_pos" value="$(arg x_pos)" />
-        <arg name="y_pos" value="$(arg y_pos)" />
-        <arg name="a_pos" value="$(arg a_pos)" />
-        <arg name="robot_id" value="$(arg robot_id)" />
-    </include>
+    <!--    <include file="$(find soccerbot)/launch/modules/strategy.launch">-->
+    <!--        <arg name="x_pos" value="$(arg x_pos)" />-->
+    <!--        <arg name="y_pos" value="$(arg y_pos)" />-->
+    <!--        <arg name="a_pos" value="$(arg a_pos)" />-->
+    <!--        <arg name="robot_id" value="$(arg robot_id)" />-->
+    <!--    </include>-->
 
     <!-- prettier-ignore -->
     <node pkg="rosbag" type="record" name="rosbag" args="-O $(find soccerbot)/bags/$(optenv ROBOCUP_TEAM_COLOR red)_$(arg robot_name).bag

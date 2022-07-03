@@ -16,9 +16,9 @@ from unittest.mock import MagicMock
 
 from soccer_common.transformation import Transformation
 
-real_robot = False
-run_in_ros = False
-display = True
+real_robot = True
+run_in_ros = True
+display = False
 TEST_TIMEOUT = 60
 
 if run_in_ros:
