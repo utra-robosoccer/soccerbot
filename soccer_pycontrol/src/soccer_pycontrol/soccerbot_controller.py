@@ -91,7 +91,7 @@ class SoccerbotController:
             pb.setJointMotorControlArray(
                 bodyIndex=self.soccerbot.body,
                 controlMode=pb.POSITION_CONTROL,
-                jointIndices=list(range(0, 20, 1)),
+                jointIndices=list(range(0, 18, 1)),
                 targetPositions=self.soccerbot.get_angles(),
             )
             pb.stepSimulation()
