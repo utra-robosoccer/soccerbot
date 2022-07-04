@@ -28,7 +28,7 @@ class SoccerbotController:
         self.terminate_walk = False
 
     def __del__(self):
-        if hasattr(self, "client_id"):
+        if hasattr(self, "client_id") and pb.isConnected(self.client_id):
             pb.disconnect(self.client_id)
 
     def ready(self):
