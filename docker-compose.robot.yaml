@@ -24,7 +24,7 @@ services:
       else roslaunch soccerbot soccerbot.launch simulation:=false __ns:=robot$$ROBOCUP_ROBOT_ID; fi || sleep infinity"
     environment:
       ROS_MASTER_URI: ${ROS_MASTER_URI}
-      TEST_CONTROL: "false"
+      TEST_CONTROL: "true"
       ROBOCUP_ROBOT_ID: 1
       ROBOCUP_TEAM_COLOR: "red"
       ROBOCUP_SIMULATOR_ADDR: "simulator:10001"
