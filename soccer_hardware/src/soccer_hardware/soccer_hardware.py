@@ -21,14 +21,14 @@ if __name__ == "__main__":
     # Try all ranges in port
     imu_ser = None
     servo_ser = None
-    for i in range(0, 10):
+    for i in [""] + [str(a) for a in range(0, 10)]:
         try:
-            imu_ser = serial.Serial(imu_port + str(i), imu_baud, timeout=0)
+            imu_ser = serial.Serial(imu_port + i, imu_baud, timeout=0)
         except serial.serialutil.SerialException as e:
             pass
 
         try:
-            servo_ser = serial.Serial(servo_port + str(i), servo_baud, timeout=0)
+            servo_ser = serial.Serial(servo_port + i, servo_baud, timeout=0)
         except serial.serialutil.SerialException as e:
             pass
 

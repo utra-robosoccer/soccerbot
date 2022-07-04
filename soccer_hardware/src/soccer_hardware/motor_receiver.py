@@ -2,9 +2,11 @@ import struct
 import time
 from threading import Event, Lock, Thread
 
+import jx_servo_util
 import rospy as rp
 import serial
-from motor_util import CMD_HEADS, CMDS, RWS, uart_transact, un6pack
+from common_motor_util import un6pack
+from jx_servo_util import CMD_HEADS, CMDS, RWS
 from receiver import Receiver
 from transformations import *
 from utility import log_string
@@ -13,7 +15,7 @@ from utility import log_string
 class MotorReceiver(Receiver):
     def _receive_packet_from_mcu(self, timeout):
         with self._ser._motor_lock:  # NOTE: possibly replace with acquire-release with timeout
-            valid, raw_pos = uart_transact(self._ser, [], CMDS.POSITION, RWS.READ, timeout)
+            valid, raw_pos = jx_servo_util.uart_transact(self._ser, [], CMDS.POSITION, RWS.READ, timeout)
             pos = {}
             if valid:
                 # print('!!!!!!!RX!!!!!!!')

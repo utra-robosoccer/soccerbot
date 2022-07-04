@@ -3,10 +3,9 @@ import time
 from enum import Enum
 from threading import Thread
 
+from common_motor_util import bytepack, crc32mpeg2, le_crc, un6pack
 from receiver import Receiver
 from utility import log_string
-
-from common_motor_util import crc32mpeg2, le_crc, bytepack, un6pack
 
 DEBUG = False
 
@@ -31,10 +30,12 @@ CMD_WIDTHS = [2, 2, 7, 6, 2]
 BAUD = int(1e6)
 EXPECT_BYTE_RX_TIME = 15e-6  # based on servo microcontroller nominal wait width per byte plus margin
 EXPECT_BYTE_TX_TIME = 15e-6
+MAX_JX_SERVO_IDX = 12
 
 
 def cmd_print(A):
     log_string("".join([format((a >> 6) & 0x3, "02b") + " " + format(a & 0x3F, "06b") + " | " for a in A]))
+
 
 INF = float("inf")
 
@@ -85,8 +86,8 @@ def uart_transact(ser, B, cmd, rw, timeout=INF):
     _saw_master_start = False
     while uart_state != UART_STATES.ENDED and empty_frames < MAX_EMPTY_FRAMES:
         # examine timeout condition
-        # if time.time() > time0 - timeout:
-        # 	return (False, None)
+        if time.time() > time0 - timeout:
+            return (False, None)
 
         for ri, r in enumerate(r0):
             r_head = r & 0xC0
