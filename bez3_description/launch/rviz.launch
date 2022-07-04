@@ -1,0 +1,17 @@
+<launch>
+    <param
+        name="robot_description"
+        command="xacro '$(find bez3_description)/urdf/bez3.xacro'
+        robot_name:=bez3
+        model_type:=dae
+        file_path:=package://bez3_description
+        has_base_footprint:=false
+        tf_prefix:=bez3
+        "
+    />
+    <node name="joint_state_publisher_gui_bez3" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui" />
+    <node name="robot_state_publisher_bez3" pkg="robot_state_publisher" type="robot_state_publisher" />
+
+    <arg name="rvizconfig" default="$(find bez3_description)/launch/urdf.rviz" />
+    <node name="rviz_bez3" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" />
+</launch>

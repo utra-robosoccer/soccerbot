@@ -9,7 +9,7 @@ from soccer_pycontrol.path_section import PathSection
 
 
 class PathSectionBezier(PathSection):
-    turn_duration = rospy.get_param("~turn_duration", 3)
+    turn_duration = rospy.get_param("turn_duration", 3)
 
     def __init__(self, start_transform: Transformation, end_transform: Transformation):
         self.start_transform = start_transform

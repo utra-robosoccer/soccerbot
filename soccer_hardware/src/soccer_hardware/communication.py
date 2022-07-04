@@ -1,4 +1,5 @@
 import math
+import os
 from threading import Lock
 
 import rospy as rp
@@ -43,7 +44,7 @@ class Communication:
         self._imu_calibration = rp.get_param("~imu_calibration")
         self._motor_map = rp.get_param("~motor_mapping")
 
-        self._joint_command_sub = rp.Subscriber("~joint_command", JointState, self.joint_command_callback)
+        self._joint_command_sub = rp.Subscriber("joint_command", JointState, self.joint_command_callback)
 
         for motor in self._motor_map:
             self._motor_map[motor]["value"] = 0.0
@@ -94,7 +95,7 @@ class Communication:
         # IMU FEEDBACK
         imu = Imu()
         imu.header.stamp = rp.rostime.get_rostime()
-        imu.header.frame_id = "imu_link"
+        imu.header.frame_id = os.environ["ROS_NAMESPACE"][1:] + "/imu_link"
 
         # TODO autocalibrate
         imu.angular_velocity = Vector3(
@@ -126,15 +127,6 @@ class Communication:
                 angle = np.deg2rad(angle)
             else:
                 angle = self._motor_map[motor]["value"]
-
-            # # Joint controller state
-            # state = JointControllerState()
-            # state.process_value = angle
-            # state.command = self._motor_map[motor]["value"]
-            # state.error = angle - self._motor_map[motor]["value"]
-            # state.process_value_dot = 0  # TODO PID settings and process value dot
-            # state.header.stamp = rp.rostime.get_rostime()
-            # self._motor_map[motor]["publisher"].publish(state)
 
             # Joint State
             joint_state.name.append(motor)

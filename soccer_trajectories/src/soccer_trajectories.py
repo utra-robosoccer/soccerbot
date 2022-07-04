@@ -3,6 +3,9 @@ import copy
 import csv
 import os
 
+if "ROS_NAMESPACE" not in os.environ:
+    os.environ["ROS_NAMESPACE"] = "/robot1"
+
 import rospy
 from rospy import ROSException
 from scipy.interpolate import interp1d
@@ -77,7 +80,7 @@ class Trajectory:
                     self.max_time = self.times[-1]
                 else:
                     joint_values = list(map(float, row[1:]))
-                    param = "~motor_mapping/{}/initial_state".format(joint_name)
+                    param = "motor_mapping/{}/initial_state".format(joint_name)
                     last_pose_value = float(rospy.get_param(param))
                     # last_pose_value = 0.0
                     joint_values = [last_pose_value] + joint_values + [last_pose_value]
@@ -147,7 +150,9 @@ class Trajectory:
 
 class SoccerTrajectoryClass:
     def __init__(self):
-        self.trajectory_path = ""
+        rospy.init_node("soccer_trajectories")
+        default_path = os.path.join(os.path.dirname(__file__), "../trajectories/bez1")
+        self.trajectory_path = rospy.get_param("~trajectory_path", default_path)
         self.trajectory_complete = True
         self.trajectory = None
         self.command_sub = rospy.Subscriber("command", FixedTrajectoryCommand, self.run_trajectory, queue_size=1)
@@ -176,18 +181,9 @@ class SoccerTrajectoryClass:
         rospy.loginfo("Finished Trajectory: " + command.trajectory_name)
         self.finish_trajectory.publish()
         self.trajectory_complete = True
-
-    def run(self):
-        rospy.init_node("soccer_trajectories")
-        self.trajectory_path = rospy.get_param("~trajectory_path")
-        rospy.spin()
+        return True
 
 
 if __name__ == "__main__":
     trajectory_class = SoccerTrajectoryClass()
-
-    try:
-        trajectory_class.run()
-    except ROSException as ex:
-        print(ex)
-        exit(0)
+    rospy.spin()

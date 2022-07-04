@@ -35,7 +35,8 @@ class SoccerbotControllerRos(SoccerbotController):
     def update_robot_pose(self, footprint_name="/base_footprint"):
         try:
             (trans, rot) = self.tf_listener.lookupTransform("world", os.environ["ROS_NAMESPACE"] + footprint_name, rospy.Time(0))
-        except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+        except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException) as e:
+            print(e)
             return False
         self.robot_pose = PoseStamped()
         self.robot_pose.pose.position.x = trans[0]
@@ -127,7 +128,10 @@ class SoccerbotControllerRos(SoccerbotController):
         r = rospy.Rate(1 / SoccerbotController.PYBULLET_STEP)
         stable_count = 5
 
-        while not single_trajectory and self.soccerbot.robot_state.status == RobotState.STATUS_DISCONNECTED:
+        if single_trajectory:
+            self.soccerbot.robot_state.status = RobotState.STATUS_WALKING
+
+        while self.soccerbot.robot_state.status == RobotState.STATUS_DISCONNECTED:
             try:
                 r.sleep()
             except ROSInterruptException:
@@ -149,6 +153,7 @@ class SoccerbotControllerRos(SoccerbotController):
             ]:
                 self.soccerbot.robot_path = None
                 self.goal = self.new_goal
+                self.soccerbot.publishOdometry()
                 self.soccerbot.reset_imus()
                 self.soccerbot.updateRobotConfiguration()
                 r.sleep()

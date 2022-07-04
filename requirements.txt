@@ -19,6 +19,9 @@ pre-commit
 timeout_decorator
 torch
 torchvision
+pytest-timeout
+pytest-rerunfailures
+ruamel.yaml
 
 # object detection
 Pillow==9.0.1

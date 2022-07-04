@@ -1,4 +1,7 @@
 <launch>
+    <arg name="robot_name" default="robot1" />
+    <arg name="test_walking" default="false" />
+
     <node name="soccer_hardware" pkg="soccer_hardware" type="soccer_hardware.py" output="screen" cwd="node">
         <param name="imu_port" value="/dev/ttyACM" />
         <param name="imu_baud_rate" value="230400" />
@@ -7,5 +10,21 @@
         <rosparam command="load" file="$(find soccer_description)/config/soccerbot_control.yaml" />
         <rosparam command="load" file="$(find soccer_description)/config/motor_mapping.yaml" />
         <rosparam command="load" file="$(find soccer_hardware)/config/imu_calibration.yaml" />
+    </node>
+
+    <!-- Complementary filter -->
+    <node pkg="imu_complementary_filter" type="complementary_filter_node" name="imu_complementary_filter" if="$(arg test_walking)" output="log">
+        <rosparam file="$(find soccerbot)/config/imu_complementary_filter.yaml" command="load" />
+        <remap from="imu/data_raw" to="imu_raw" />
+        <remap from="imu/data" to="imu_filtered" />
+    </node>
+
+    <!-- IMU location -->
+    <node pkg="robot_pose_ekf" type="robot_pose_ekf" name="robot_pose_ekf" if="$(arg test_walking)" output="log">
+        <rosparam file="$(find soccerbot)/config/robot_pose_ekf.yaml" command="load" />
+        <remap from="robot_pose_ekf/odom_combined" to="odom_combined" />
+        <remap from="imu_data" to="imu_filtered" />
+        <param name="output_frame" value="$(arg robot_name)/odom" />
+        <param name="base_footprint_frame" value="$(arg robot_name)/base_footprint" />
     </node>
 </launch>

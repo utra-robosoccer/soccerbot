@@ -1,6 +1,6 @@
 import abc
 import functools
-import time
+import math
 from abc import ABC
 
 import numpy as np
@@ -11,9 +11,9 @@ from soccer_pycontrol.utils import wrapTo2Pi, wrapToPi
 
 
 class PathSection(ABC):
-    backwards_bodystep_size_ratio = rospy.get_param("~backwards_bodystep_size_ratio", 0.5)  # How much smaller the body step is for backwards movement
-    bodystep_size_default = rospy.get_param("~bodystep_size_default", 0.04)
-    steps_per_second_default = rospy.get_param("~steps_per_second_default", 3.5)
+    backwards_bodystep_size_ratio = rospy.get_param("backwards_bodystep_size_ratio", 0.5)  # How much smaller the body step is for backwards movement
+    bodystep_size_default = rospy.get_param("bodystep_size_default", 0.04)
+    steps_per_second_default = rospy.get_param("steps_per_second_default", 3.5)
 
     def __init__(self, start_transform: Transformation, end_transform: Transformation, bodystep_size=bodystep_size_default):
         self.start_transform = start_transform
@@ -44,11 +44,17 @@ class PathSection(ABC):
             self.distanceMap[j, 0:2] = [i, self.distance]
             j = j + 1
 
+        # Adjusting body step size to account for extra distance
+        if self.distance != 0:
+            self.bodystep_size = self.distance / math.ceil(self.distance / bodystep_size)
+            if self.bodyStepCount() <= 1:
+                self.speed = self.steps_per_second * self.bodystep_size
+
     @abc.abstractmethod
     def poseAtRatio(self, r):
         pass
 
-    def linearStepCount(self):
+    def linearStepCount(self) -> int:
         return self.distance / self.bodystep_size
 
     def angularStepCount(self):
