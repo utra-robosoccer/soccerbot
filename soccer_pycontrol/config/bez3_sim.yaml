@@ -1,7 +1,7 @@
 # Path parameters
 
-torso_height: 0.45
-walking_hip_height: 0.22
+torso_height: 0.46
+walking_hip_height: 0.26
 joint_indices:
   LEFT_ARM_1: 12
   LEFT_ARM_2: 13
@@ -22,8 +22,8 @@ joint_indices:
   HEAD_1: 16
   HEAD_2: 17
 
-steps_per_second_default: 2
-bodystep_size_default: 0.08
+steps_per_second_default: 1.0
+bodystep_size_default: 0.05
 foot_separation: 0.06
-torso_offset_x: 0.04
+torso_offset_x: 0.03
 merge_fixed_links: true

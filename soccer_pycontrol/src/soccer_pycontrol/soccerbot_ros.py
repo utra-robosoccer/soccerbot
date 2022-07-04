@@ -22,6 +22,7 @@ class SoccerbotRos(Soccerbot):
         self.pub_all_motor = rospy.Publisher("joint_command", JointState, queue_size=1)
         self.motor_names = [pb.getJointInfo(self.body, i)[1].decode("utf-8") for i in range(18)]
         self.odom_publisher = rospy.Publisher("odom", Odometry, queue_size=1)
+        self.odom_pose = tr()
         self.torso_height_publisher = rospy.Publisher("torso_height", Float64, queue_size=1, latch=True)
         self.path_publisher = rospy.Publisher("path", Path, queue_size=1, latch=True)
         self.path_odom_publisher = rospy.Publisher("path_odom", Path, queue_size=1, latch=True)
@@ -109,8 +110,8 @@ class SoccerbotRos(Soccerbot):
     def publishOdometry(self):
         o = Odometry()
         o.header.stamp = rospy.Time.now()
-        o.header.frame_id = os.environ["ROS_NAMESPACE"] + "/odom"
-        o.child_frame_id = os.environ["ROS_NAMESPACE"] + "/torso"
+        o.header.frame_id = os.environ["ROS_NAMESPACE"][1:] + "/odom"
+        o.child_frame_id = os.environ["ROS_NAMESPACE"][1:] + "/base_link"
         pose = self.odom_pose.get_position()
         o.pose.pose.position.x = pose[0]
         o.pose.pose.position.y = pose[1]

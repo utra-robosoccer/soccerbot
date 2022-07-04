@@ -15,7 +15,7 @@ from sensor_msgs.msg import JointState
 
 from soccer_common.pid import PID
 from soccer_common.transformation import Transformation as tr
-from soccer_pycontrol.calibration import Calibration
+from soccer_pycontrol.calibration import adjust_navigation_transform
 from soccer_pycontrol.path_robot import PathRobot
 from soccer_pycontrol.utils import wrapToPi
 
@@ -39,6 +39,8 @@ class Joints(enum.IntEnum):
     RIGHT_LEG_6 = rospy.get_param("joint_indices/RIGHT_LEG_6", 15)
     HEAD_1 = rospy.get_param("joint_indices/HEAD_1", 16)
     HEAD_2 = rospy.get_param("joint_indices/HEAD_2", 17)
+    # HEAD_CAMERA = rospy.get_param("joint_indices/HEAD_CAMERA", 18)
+    # IMU = rospy.get_param("joint_indices/IMU", 19)
 
 
 class Links(enum.IntEnum):
@@ -74,7 +76,7 @@ class Soccerbot:
     arm_0_center = -0.45
     arm_1_center = np.pi * 0.8
 
-    def __init__(self, pose, useFixedBase=False, useCalibration=False):
+    def __init__(self, pose, useFixedBase=False, useCalibration=True):
         self.useCalibration = useCalibration
 
         home = expanduser("~")
@@ -139,9 +141,6 @@ class Soccerbot:
 
         # For head rotation
         self.head_step = 0.0
-
-        self.calibration = Calibration()
-        # self.calibration.adjust_navigation_goal(np.array([[0, 0]]))
 
     def get_angles(self):
         """
@@ -312,7 +311,10 @@ class Soccerbot:
         [r, p, y] = pose.get_orientation_euler()
         q_new = tr.get_quaternion_from_euler([r, 0, 0])
         self.pose.set_orientation(q_new)
-        pb.resetBasePositionAndOrientation(self.body, self.pose.get_position(), self.pose.get_orientation())
+        try:
+            pb.resetBasePositionAndOrientation(self.body, self.pose.get_position(), self.pose.get_orientation())
+        except pb.error as err:
+            exit(1)
 
     def addTorsoHeight(self, position: tr):
         positionCoordinate = position.get_position()
@@ -334,7 +336,7 @@ class Soccerbot:
 
         # Add calibration
         if self.useCalibration:
-            finishPositionCalibrated = self.calibration.adjust_navigation_transform(self.pose, finishPosition)
+            finishPositionCalibrated = adjust_navigation_transform(self.pose, finishPosition)
         else:
             finishPositionCalibrated = finishPosition
 
@@ -446,6 +448,7 @@ class Soccerbot:
         :param verbose: Optional - Set to True to print the linear acceleration and angular velocity
         :return: concatenated 3-axes values for linear acceleration and angular velocity
         """
+
         quart_link, lin_vel, ang_vel = pb.getBasePositionAndOrientation(self.body)[1:2] + pb.getBaseVelocity(self.body)
         # [lin_vel, ang_vel] = p.getLinkState(bodyUniqueId=self.soccerbotUid, linkIndex=Links.HEAD_1, computeLinkVelocity=1)[6:8]
         # print(p.getLinkStates(bodyUniqueId=self.soccerbotUid, linkIndices=range(0,18,1), computeLinkVelocity=1))
@@ -470,9 +473,10 @@ class Soccerbot:
         :param verbose: Optional - Set to True to print the linear acceleration and angular velocity
         :return: concatenated 3-axes values for linear acceleration and angular velocity
         """
-        [quat_pos, quat_orientation] = pb.getBasePositionAndOrientation(self.body)[
-            0:2
-        ]  # TODO return to Links.IMU from -1 #pb.getLinkState(self.body, linkIndex=Links.TORSO, computeLinkVelocity=1)[4:6] # TODO return to Links.IMU from -1
+        if rospy.get_param("merge_fixed_links", False):
+            [quat_pos, quat_orientation] = pb.getBasePositionAndOrientation(self.body)[0:2]
+        else:
+            [quat_pos, quat_orientation] = pb.getLinkState(self.body, linkIndex=Links.IMU, computeLinkVelocity=1)[4:6]
 
         return tr(quat_pos, quat_orientation)
 
@@ -507,9 +511,9 @@ class Soccerbot:
         return locations
 
     walking_pid = PID(
-        Kp=rospy.get_param("~walking_Kp", 0.8),
-        Kd=rospy.get_param("~walking_Kd", 0.0),
-        Ki=rospy.get_param("~walking_Ki", 0.0005),
+        Kp=rospy.get_param("walking_Kp", 0.8),
+        Kd=rospy.get_param("walking_Kd", 0.0),
+        Ki=rospy.get_param("walking_Ki", 0.0005),
         setpoint=-0.01,
         output_limits=(-1.57, 1.57),
     )
@@ -525,9 +529,9 @@ class Soccerbot:
         return F
 
     standing_pid = PID(
-        Kp=rospy.get_param("~standing_Kp", 0.15),
-        Kd=rospy.get_param("~standing_Kd", 0.0),
-        Ki=rospy.get_param("~standing_Ki", 0.001),
+        Kp=rospy.get_param("standing_Kp", 0.15),
+        Kd=rospy.get_param("standing_Kd", 0.0),
+        Ki=rospy.get_param("standing_Ki", 0.001),
         setpoint=-0.01,
         output_limits=(-1.57, 1.57),
     )

@@ -9,3 +9,7 @@ def wrapTo2Pi(num: float) -> float:
 def wrapToPi(num: float) -> float:
     rem = (num + np.pi) % (2 * np.pi) - np.pi
     return rem
+
+
+def trimToPi(num: float) -> float:
+    return max(min(num, np.pi), -np.pi)

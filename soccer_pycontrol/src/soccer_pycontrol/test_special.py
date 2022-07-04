@@ -7,11 +7,12 @@ import numpy as np
 from matplotlib import pyplot as plt
 from soccer_msgs_mock.msg import RobotState
 
+from soccer_common.mock_ros import mock_ros
+
 if "ROS_NAMESPACE" not in os.environ:
     os.environ["ROS_NAMESPACE"] = "/robot1"
 
 from unittest import TestCase
-from unittest.mock import MagicMock
 
 from soccer_common.transformation import Transformation
 
@@ -28,21 +29,14 @@ if run_in_ros:
     os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_strategy'")
     os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_pycontrol'")
     os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_trajectories'")
-    from soccer_pycontrol.soccerbot_controller_ros import SoccerbotControllerRos
-else:
-    sys.modules["rospy"] = MagicMock()
-    sys.modules["soccer_msgs"] = __import__("soccer_msgs_mock")
-    import rospy
 
-    rospy.Time = MagicMock()
-    joint_state = MagicMock()
-    joint_state.position = [0.0] * 18
-    rospy.wait_for_message = MagicMock(return_value=joint_state)
-    rospy.loginfo_throttle = lambda a, b: None
-    rospy.get_param = lambda a, b: b
-    from soccer_pycontrol.soccerbot_controller import SoccerbotController
+file_path = os.path.dirname(os.path.abspath(__file__))
+config_path = f"{file_path}/../../config/bez1_sim.yaml"
+mock_ros(robot_model="bez1", real_robot=False, config_path=config_path)
 
 from soccer_pycontrol.path import Path
+from soccer_pycontrol.soccerbot_controller import SoccerbotController
+from soccer_pycontrol.soccerbot_controller_ros import SoccerbotControllerRos
 
 
 class TestSpecial(TestCase):

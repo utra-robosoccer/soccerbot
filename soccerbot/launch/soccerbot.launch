@@ -73,6 +73,7 @@
         imu_filtered
         initialpose
         joint_command
+        joint_states
         odom
         path
         scan
