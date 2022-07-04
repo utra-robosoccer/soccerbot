@@ -5,15 +5,18 @@ def mock_ros(robot_model, real_robot, config_path):
 
     import yaml
 
-    sys.modules["rospy"] = MagicMock()
-    sys.modules["soccer_msgs"] = __import__("soccer_msgs_mock")
-    import rospy
+    if not real_robot:
+        sys.modules["rospy"] = MagicMock()
+        sys.modules["soccer_msgs"] = __import__("soccer_msgs_mock")
+        import rospy
 
-    rospy.Time = MagicMock()
-    joint_state = MagicMock()
-    joint_state.position = [0.0] * 18
-    rospy.wait_for_message = MagicMock(return_value=joint_state)
-    rospy.loginfo_throttle = lambda a, b: None
+        rospy.Time = MagicMock()
+        joint_state = MagicMock()
+        joint_state.position = [0.0] * 18
+        rospy.wait_for_message = MagicMock(return_value=joint_state)
+        rospy.loginfo_throttle = lambda a, b: None
+    else:
+        import rospy
 
     def get_param(a, b=None):
         a = a.lstrip("~")
