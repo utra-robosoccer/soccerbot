@@ -218,17 +218,17 @@ class Soccerbot:
                 np.array(np.array(configuration[0:18]) - np.array(previous_configuration[0:18])) * r + np.array(previous_configuration[0:18])
             ).tolist()
             self.publishAngles()
+            if pb.isConnected():
+                pb.setJointMotorControlArray(
+                    bodyIndex=self.body,
+                    controlMode=pb.POSITION_CONTROL,
+                    jointIndices=list(range(0, 18, 1)),
+                    targetPositions=self.get_angles(),
+                    forces=self.max_forces,
+                )
             rospy.sleep(0.020)
 
         self.configuration_offset = [0] * len(Joints)
-
-        pb.setJointMotorControlArray(
-            bodyIndex=self.body,
-            controlMode=pb.POSITION_CONTROL,
-            jointIndices=list(range(0, 18, 1)),
-            targetPositions=self.get_angles(),
-            forces=self.max_forces,
-        )
 
     def updateRobotConfiguration(self):
         try:
@@ -311,10 +311,8 @@ class Soccerbot:
         [r, p, y] = pose.get_orientation_euler()
         q_new = tr.get_quaternion_from_euler([r, 0, 0])
         self.pose.set_orientation(q_new)
-        try:
+        if pb.isConnected():
             pb.resetBasePositionAndOrientation(self.body, self.pose.get_position(), self.pose.get_orientation())
-        except pb.error as err:
-            exit(1)
 
     def addTorsoHeight(self, position: tr):
         positionCoordinate = position.get_position()
