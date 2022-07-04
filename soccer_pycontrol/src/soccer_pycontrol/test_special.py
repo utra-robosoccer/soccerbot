@@ -75,7 +75,7 @@ class TestSpecial(TestCase):
                 pb.setJointMotorControlArray(
                     bodyIndex=self.walker.soccerbot.body,
                     controlMode=pb.POSITION_CONTROL,
-                    jointIndices=list(range(0, 20, 1)),
+                    jointIndices=list(range(0, 18, 1)),
                     targetPositions=self.walker.soccerbot.get_angles(),
                     forces=forces,
                 )
@@ -126,7 +126,7 @@ class TestSpecial(TestCase):
                 pb.setJointMotorControlArray(
                     bodyIndex=self.walker.soccerbot.body,
                     controlMode=pb.POSITION_CONTROL,
-                    jointIndices=list(range(0, 20, 1)),
+                    jointIndices=list(range(0, 18, 1)),
                     targetPositions=self.walker.soccerbot.get_angles(),
                     forces=forces,
                 )
@@ -201,7 +201,7 @@ class TestSpecial(TestCase):
                 pb.setJointMotorControlArray(
                     bodyIndex=self.walker.soccerbot.body,
                     controlMode=pb.POSITION_CONTROL,
-                    jointIndices=list(range(0, 20, 1)),
+                    jointIndices=list(range(0, 18, 1)),
                     targetPositions=self.walker.soccerbot.get_angles(),
                     forces=forces,
                 )
