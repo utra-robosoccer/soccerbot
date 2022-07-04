@@ -3,6 +3,7 @@ import math
 
 import numpy as np
 import rospy
+import scipy
 
 from soccer_common.transformation import Transformation as tr
 from soccer_pycontrol.path_foot import PathFoot
@@ -22,7 +23,7 @@ class PathCrotch(PathFoot):
         # Calculate the foot for the first step (based on destination)
         axang_angle, axang_vector = tr.get_axis_angle_from_quaternion(self.start_transform.get_orientation())
         theta1 = axang_angle
-        diff_transform = np.matmul(end_transform, np.linalg.inv(start_transform))
+        diff_transform = np.matmul(end_transform, scipy.linalg.inv(start_transform))
         theta2 = np.arctan2(diff_transform[1, 3], diff_transform[0, 3])
         if (theta2 - theta1) % (2 * np.pi) > np.pi:
             self.first_step_left = 0

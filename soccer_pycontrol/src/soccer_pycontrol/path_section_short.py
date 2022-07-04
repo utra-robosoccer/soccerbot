@@ -97,6 +97,7 @@ class PathSectionShort(PathSection):
             ratio = step_num / (step_1_steps + step_2_steps + step_3_steps)
         return ratio
 
+    @functools.lru_cache
     def duration(self):
         return self.distance / self.speed + self.angle_distance / self.angular_speed
 

@@ -4,6 +4,7 @@ from math import ceil, floor
 import matplotlib.pyplot as plt
 import numpy as np
 import rospy
+import scipy
 from mpl_toolkits.mplot3d import Axes3D  # <--- This is important for 3d plotting
 
 from soccer_common import Transformation
@@ -41,7 +42,7 @@ class Path:
             return True
 
         # If there is too much initial rotation
-        start_end_diff = end_transform @ np.linalg.inv(start_transform)
+        start_end_diff = end_transform @ scipy.linalg.inv(start_transform)
         start_end_angle = math.atan2(start_end_diff[1, 3], start_end_diff[0, 3])
         if abs(start_end_angle) > math.pi / 4:
             return True
