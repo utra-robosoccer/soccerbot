@@ -91,7 +91,7 @@ class TestWalking:
                 _ = _
             pb.stepSimulation()
 
-    @pytest.mark.parametrize("walker", ["bez1"], indirect=True)
+    @pytest.mark.parametrize("walker", ["bez1", "bez3"], indirect=True)
     def test_walk_1(self, walker: SoccerbotController):
         walker.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
         walker.ready()
@@ -103,8 +103,8 @@ class TestWalking:
 
         final_position = walker.getPose()
         distance_offset = np.linalg.norm((final_position - goal_position.get_position())[0:2])
-        # if robot_model == "bez1":
-        #     assert distance_offset < 0.08
+        if robot_model == "bez1":
+            assert distance_offset < 0.08
 
     @pytest.mark.timeout(TEST_TIMEOUT)
     @pytest.mark.flaky(reruns=1)
