@@ -89,7 +89,7 @@ extern TIM_HandleTypeDef htim15;
 extern TIM_HandleTypeDef htim16;
 
 #define NUM_PWM_SERVOS 6
-uint32_t volatile *servo_ccrs[NUM_PWM_SERVOS] = {
+volatile uint32_t *servo_ccrs[NUM_PWM_SERVOS] = {
 	&TIM1->CCR1,
 	&TIM1->CCR2,
 	&TIM1->CCR3,
@@ -135,6 +135,7 @@ int main(void)
   MX_TIM16_Init();
   MX_CRC_Init();
   /* USER CODE BEGIN 2 */
+
   HAL_TIM_Base_Start(&htim1);
   HAL_TIM_Base_Start(&htim6);
   HAL_TIM_Base_Start(&htim15);
@@ -177,13 +178,13 @@ int main(void)
 				if(valid_gyro) {
 					soccerbot::app::processImuData(imu_data);
 				}
-				if(0) {
+				if(1) {
 					// HAL_UART_Transmit_IT(&huart2, (uint8_t*)&PACKET_HEADER, sizeof(PACKET_HEADER));
 					memcpy((void*)uart_tx_buf, &PACKET_HEADER, sizeof(PACKET_HEADER));
 					memcpy((void*)(&uart_tx_buf[sizeof(PACKET_HEADER)]), &imu_data.x_Gyro, sizeof(imu_data));
 					HAL_UART_Transmit_IT(&huart2, (uint8_t*)uart_tx_buf, sizeof(PACKET_HEADER) + sizeof(imu_data));
 				}
-				if(1) {
+				if(0) {
 					char buf[64] = { 0 };
 					size_t n = sprintf(buf, "%ld\t%.2f\t%.2f\r\n", HAL_GetTick(), imu_data.z_Accel, imu_data.z_Gyro);
 					HAL_UART_Transmit_IT(&huart2, (const uint8_t*)buf, n);
@@ -191,7 +192,7 @@ int main(void)
 			}
 		}
 
-		{
+		if(1) {
 			if(tick > last_rx_tick) { // ~1kHz poll
 				last_rx_tick = tick;
 				// READ BLOCK
