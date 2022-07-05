@@ -23,6 +23,7 @@ RUN_LOCALLY = "pycharm" in sys.argv[0]
 
 class IntegrationTest(TestCase):
     START_PLAY = "false"
+    ROBOT_MODEL = "bez1"
 
     def reset_simulation(self):
 
@@ -43,7 +44,7 @@ class IntegrationTest(TestCase):
                 [
                     "/bin/bash",
                     "-c",
-                    f"export START_PLAY={self.START_PLAY} && source ~/catkin_ws/devel/setup.bash && roslaunch soccerbot soccerbot_multi.launch",
+                    f"export START_PLAY={self.START_PLAY} && export ROBOT_MODEL={self.ROBOT_MODEL} && source ~/catkin_ws/devel/setup.bash && roslaunch soccerbot soccerbot_multi.launch",
                 ]
             )
         else:

@@ -14,16 +14,14 @@ from soccer_pycontrol.soccerbot_ros import SoccerbotRos
 
 class SoccerbotControllerRos(SoccerbotController):
     def __init__(self):
-        pb.connect(pb.DIRECT)
+        self.client_id = pb.connect(pb.DIRECT)
         pb.setAdditionalSearchPath(pybullet_data.getDataPath())  # optionally
         pb.resetDebugVisualizerCamera(cameraDistance=0.5, cameraYaw=0, cameraPitch=0, cameraTargetPosition=[0, 0, 0.25])
         pb.setGravity(0, 0, -9.81)
-
         self.soccerbot = SoccerbotRos(Transformation(), useFixedBase=False)
-        self.ramp = Ramp("plane.urdf", (0, 0, 0), (0, 0, 0), lateralFriction=0.9, spinningFriction=0.9, rollingFriction=0.0)
+        pb.disconnect(self.client_id)
 
         self.position_subscriber = rospy.Subscriber("goal", PoseStamped, self.goal_callback)
-
         self.completed_walk_publisher = rospy.Publisher("action_complete", Empty, queue_size=1)
         self.goal = PoseStamped()
         self.robot_pose: PoseStamped = None
@@ -216,7 +214,6 @@ class SoccerbotControllerRos(SoccerbotController):
                 if self.soccerbot.imu_ready:
                     self.soccerbot.apply_imu_feedback(self.t, self.soccerbot.get_imu())
 
-                forces = self.soccerbot.apply_foot_pressure_sensor_feedback(self.ramp.plane)
                 self.soccerbot.current_step_time = self.soccerbot.current_step_time + self.soccerbot.robot_path.step_precision
                 self.soccerbot.publishOdometry()
 

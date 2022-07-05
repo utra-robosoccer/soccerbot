@@ -2,6 +2,7 @@ import math
 
 import matplotlib.pyplot as plt
 import numpy as np
+import scipy
 
 from soccer_pycontrol.path import Path
 from soccer_pycontrol.path_crotch import PathCrotch
@@ -76,8 +77,8 @@ class PathRobot(PathCrotch):
         for t in times:
             [lfp[:, :, i], rfp[:, :, i]] = self.footPosition(t)
             crp[:, :, i] = self.crotchPosition(t)
-            diff_right_foot[:, :, i] = np.matmul(lfp[:, :, i], np.linalg.inv(crp[:, :, i]))  # lfp[:,:, i] / crp[:,:, i]
-            diff_left_foot[:, :, i] = np.matmul(rfp[:, :, i], np.linalg.inv(crp[:, :, i]))  # rfp[:,:, i] / crp[:,:, i]
+            diff_right_foot[:, :, i] = np.matmul(lfp[:, :, i], scipy.linalg.inv(crp[:, :, i]))  # lfp[:,:, i] / crp[:,:, i]
+            diff_left_foot[:, :, i] = np.matmul(rfp[:, :, i], scipy.linalg.inv(crp[:, :, i]))  # rfp[:,:, i] / crp[:,:, i]
             i = i + 1
 
         plt.subplot(322)
