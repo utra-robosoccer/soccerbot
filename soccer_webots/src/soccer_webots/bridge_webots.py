@@ -79,8 +79,8 @@ class GameControllerBridge:
         self.socket = None
         self.first_run = True
         self.published_camera_info = False
-        self.amcl_received = False
-        rospy.Subscriber("/" + self.base_frame + "/amcl_pose", PoseWithCovarianceStamped, self.amcl_callback)
+        self.odom_combined_received = False
+        rospy.Subscriber("/" + self.base_frame + "/odom_combined", PoseWithCovarianceStamped, self.odom_combined_callback)
         self.run()
 
     def receive_msg(self):
@@ -113,7 +113,7 @@ class GameControllerBridge:
                     sensor_time_steps = self.get_sensor_time_steps(active=True)
                 self.send_actuator_requests(sensor_time_steps)
                 self.first_run = False
-                if not self.amcl_received:
+                if not self.odom_combined_received:
                     odom_pub = rospy.Publisher("/" + self.base_frame + "/odom", Odometry, queue_size=50)
 
                     # since all odometry is 6DOF we'll need a quaternion created from yaw
@@ -165,8 +165,8 @@ class GameControllerBridge:
 
         self.close_connection()
 
-    def amcl_callback(self, data):
-        self.amcl_received = True
+    def odom_combined_callback(self, data):
+        self.odom_combined_received = True
 
     def create_publishers(self):
         self.pub_clock = rospy.Publisher("/clock", Clock, queue_size=1)
