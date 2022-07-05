@@ -13,11 +13,11 @@ if "ROS_NAMESPACE" not in os.environ:
 
 from soccer_common.transformation import Transformation
 
-real_robot = False
-run_in_ros = False
+real_robot = True
+run_in_ros = True
 display = False
-robot_model = "bez1"
-TEST_TIMEOUT = 60
+robot_model = "bez3"
+TEST_TIMEOUT = 1e6
 
 if run_in_ros:
     import rospy
@@ -42,7 +42,7 @@ from soccer_pycontrol.soccerbot_controller_ros import SoccerbotControllerRos
 
 
 class TestWalking:
-    robot_models = ["bez1"]
+    robot_models = ["bez3"]
 
     @staticmethod
     def reset_attributes():
@@ -70,7 +70,7 @@ class TestWalking:
 
     @pytest.mark.timeout(TEST_TIMEOUT)
     @pytest.mark.flaky(reruns=1)
-    @pytest.mark.parametrize("walker", ["bez1", "bez3"], indirect=True)
+    @pytest.mark.parametrize("walker", robot_models, indirect=True)
     def test_ik(self, walker: SoccerbotController):
         walker.soccerbot.configuration[Links.RIGHT_LEG_1 : Links.RIGHT_LEG_6 + 1] = walker.soccerbot.inverseKinematicsRightFoot(
             np.copy(walker.soccerbot.right_foot_init_position)
@@ -90,7 +90,7 @@ class TestWalking:
                 _ = _
             pb.stepSimulation()
 
-    @pytest.mark.parametrize("walker", ["bez1", "bez3"], indirect=True)
+    @pytest.mark.parametrize("walker", robot_models, indirect=True)
     def test_walk_1(self, walker: SoccerbotController):
         walker.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
         walker.ready()
@@ -98,6 +98,7 @@ class TestWalking:
         goal_position = Transformation([1, 0, 0], [0, 0, 0, 1])
         walker.setGoal(goal_position)
         walk_success = walker.run(single_trajectory=True)
+        print(os.environ["ROS_MASTER_URI"])
         assert walk_success
 
         final_position = walker.getPose()
