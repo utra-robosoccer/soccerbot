@@ -70,7 +70,8 @@ void Error_Handler(void);
 #define LD3_Pin GPIO_PIN_3
 #define LD3_GPIO_Port GPIOB
 /* USER CODE BEGIN Private defines */
-
+#define SERVO0 (900)
+#define SERVO_RANGE (1200)
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus
