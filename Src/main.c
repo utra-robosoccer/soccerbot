@@ -77,10 +77,11 @@ void SystemClock_Config(void);
 #define UART_RX_BUF_SIZE 39
 volatile uint8_t uart_tx_buf[32] = { 0 },
 		         uart_rx_buf[UART_RX_BUF_SIZE] = { 0 },
+				 uart_rx_buf_stash[UART_RX_BUF_SIZE] = { 0 },
 				 uart_rx_crc_buf[UART_RX_BUF_SIZE] = { 0 };
 				 // uart_rx_valid_buf[UART_RX_BUF_SIZE] = { 0 };
-volatile size_t uart_rx_buf_idx = 0,
-		        uart_rx_munched_idx = 0;
+volatile uint32_t uart_rx_buf_idx = 0,
+		          uart_rx_munched_idx = 0;
 
 extern CRC_HandleTypeDef hcrc;
 extern TIM_HandleTypeDef htim1;
@@ -169,7 +170,7 @@ int main(void)
 
     /* USER CODE BEGIN 3 */
 		uint32_t tick = HAL_GetTick();
-		{
+		if(1) {
 			// WRITE BLOCK
 			if(tick > last_tx_tick + 1) { // reliable enough 500Hz if most of the time is spent in the busy wait and the conditional stuff doesn't take more than a few 100 us
 				last_tx_tick = tick;
@@ -196,6 +197,7 @@ int main(void)
 			if(tick > last_rx_tick) { // ~1kHz poll
 				last_rx_tick = tick;
 				// READ BLOCK
+
 				volatile uint16_t last_read_size = huart2.RxXferSize - huart2.RxXferCount;
 				volatile uint8_t next_read_size = UART_RX_BUF_SIZE; // min(, UART_RX_BUF_SIZE - ((uart_rx_buf_idx + last_read_size) % UART_RX_BUF_SIZE));
 				HAL_StatusTypeDef status = HAL_UART_Receive_IT(&huart2, (uint8_t*)&uart_rx_buf[(uart_rx_buf_idx + last_read_size) % UART_RX_BUF_SIZE], next_read_size);
@@ -203,30 +205,35 @@ int main(void)
 					uart_rx_buf_idx += last_read_size;
 				}
 
+
 				uint16_t cur_read_size = huart2.RxXferSize - huart2.RxXferCount;
-				uint16_t eot = uart_rx_buf_idx + cur_read_size;
-				for(uint8_t i = uart_rx_munched_idx; i < eot; i++) {
-					if(uart_rx_buf[i % UART_RX_BUF_SIZE] & 0x40) {
+				memcpy((void*)uart_rx_buf_stash, (void*)uart_rx_buf, UART_RX_BUF_SIZE);
+
+				uint32_t eot = uart_rx_buf_idx + cur_read_size;
+				for(uint32_t i = uart_rx_munched_idx; i < eot; i++) {
+					if(uart_rx_buf_stash[i % UART_RX_BUF_SIZE] & 0x40) {
 						// crc_buf = rx_buf[munched_idx:] + rx_buf[:munched_idx]
 						uint16_t bytes_to_end = UART_RX_BUF_SIZE - (uart_rx_munched_idx % UART_RX_BUF_SIZE);
-						memcpy((void*)uart_rx_crc_buf, (void*)&uart_rx_buf[uart_rx_munched_idx % UART_RX_BUF_SIZE], bytes_to_end);
-						memcpy((void*)&uart_rx_crc_buf[bytes_to_end], (void*)uart_rx_buf, uart_rx_munched_idx % UART_RX_BUF_SIZE);
+						memcpy((void*)uart_rx_crc_buf, (void*)&uart_rx_buf_stash[uart_rx_munched_idx % UART_RX_BUF_SIZE], bytes_to_end);
+						memcpy((void*)&uart_rx_crc_buf[bytes_to_end], (void*)uart_rx_buf_stash, uart_rx_munched_idx % UART_RX_BUF_SIZE);
 
-						uint16_t packet_size = max(0, (int16_t)eot - (int16_t)uart_rx_munched_idx - 1) % UART_RX_BUF_SIZE;
-						memset((void*)&uart_rx_crc_buf[packet_size], 0, UART_RX_BUF_SIZE - packet_size); // excludes bytes past data (including master-calculated CRC)
+						uint16_t packet_size = (i - uart_rx_munched_idx) % UART_RX_BUF_SIZE;
+						{
+							memset((void*)&uart_rx_crc_buf[packet_size], 0, UART_RX_BUF_SIZE - packet_size); // excludes bytes past data (including master-calculated CRC)
 
-						volatile uint16_t n_crc32 = ((max(packet_size, 1) - 1) / 4) + 1;
-						volatile uint8_t crc = HAL_CRC_Calculate(&hcrc, (uint32_t*)uart_rx_crc_buf, n_crc32);
-						if(((crc ^ uart_rx_buf[i % UART_RX_BUF_SIZE]) & 0x3F) == 0) {
-							for(uint8_t servo_idx = 0; servo_idx < NUM_PWM_SERVOS; servo_idx++) {
-								uint16_t ccr = uart_rx_buf[(uart_rx_munched_idx + servo_idx * 2) % UART_RX_BUF_SIZE];
-								ccr |= (uint16_t)uart_rx_buf[(uart_rx_munched_idx + servo_idx * 2 + 1) % UART_RX_BUF_SIZE] << 6;
-								*servo_ccrs[servo_idx] = SERVO0 + ccr * SERVO_RANGE / 0xFFF; // (uint32_t)(uart_rx_buf[(uart_rx_munched_idx + servo_idx) % UART_RX_BUF_SIZE] & 0x7F) * htim1.Instance->ARR / 0x7F;
+							volatile uint16_t n_crc32 = ((max(packet_size, 1) - 1) / 4) + 1;
+							volatile uint8_t crc = HAL_CRC_Calculate(&hcrc, (uint32_t*)uart_rx_crc_buf, n_crc32);
+							uint32_t idx0 = i + (UART_RX_BUF_SIZE - 12);
+							if(((crc ^ uart_rx_buf_stash[i % UART_RX_BUF_SIZE]) & 0x3F) == 0) {
+								for(uint8_t servo_idx = max(0, 12 - (int32_t)packet_size); servo_idx < NUM_PWM_SERVOS; servo_idx++) {
+									uint32_t ccr = (uart_rx_buf_stash[(idx0 + servo_idx * 2) % UART_RX_BUF_SIZE]) & 0x3F;
+									ccr |= ((uint16_t)uart_rx_buf_stash[(idx0 + servo_idx * 2 + 1) % UART_RX_BUF_SIZE] & 0x3F) << 6;
+									*servo_ccrs[servo_idx] = SERVO0 + (ccr * SERVO_RANGE) / 0xFFF; // (uint32_t)(uart_rx_buf[(uart_rx_munched_idx + servo_idx) % UART_RX_BUF_SIZE] & 0x7F) * htim1.Instance->ARR / 0x7F;
+								}
 							}
 						}
 						// possibly count bad packets
 						uart_rx_munched_idx = i + 1;
-						break;
 					}
 				}
 			}
