@@ -74,10 +74,12 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-#define UART_RX_BUF_SIZE 39
+#define NUM_PWM_SERVOS 6
+#define PWM_SERVO_PACKET_SIZE (NUM_PWM_SERVOS * 2)
+#define UART_RX_BUF_SIZE ((PWM_SERVO_PACKET_SIZE + 1) * 3)
+
 volatile uint8_t uart_tx_buf[32] = { 0 },
 		         uart_rx_buf[UART_RX_BUF_SIZE] = { 0 },
-				 uart_rx_buf_stash[UART_RX_BUF_SIZE] = { 0 },
 				 uart_rx_crc_buf[UART_RX_BUF_SIZE] = { 0 };
 				 // uart_rx_valid_buf[UART_RX_BUF_SIZE] = { 0 };
 volatile uint32_t uart_rx_buf_idx = 0,
@@ -89,7 +91,6 @@ extern TIM_HandleTypeDef htim6;
 extern TIM_HandleTypeDef htim15;
 extern TIM_HandleTypeDef htim16;
 
-#define NUM_PWM_SERVOS 6
 volatile uint32_t *servo_ccrs[NUM_PWM_SERVOS] = {
 	&TIM1->CCR1,
 	&TIM1->CCR2,
@@ -193,14 +194,44 @@ int main(void)
 			}
 		}
 
-		if(1) {
+		{
 			if(tick > last_rx_tick) { // ~1kHz poll
+				last_rx_tick = tick;
+				volatile uint8_t uart_rx_buf_stash[UART_RX_BUF_SIZE] = { 0 };
+				volatile uint16_t read_size = huart2.RxXferSize - huart2.RxXferCount;
+				memcpy((void*)uart_rx_buf_stash, (void*)uart_rx_buf, read_size);
+				HAL_StatusTypeDef status = HAL_UART_Receive_IT(&huart2, (uint8_t*)&uart_rx_buf, UART_RX_BUF_SIZE);
+				uint16_t ccrs[NUM_PWM_SERVOS] = { 0 };
+				for(uint8_t i = NUM_PWM_SERVOS * 2; i < UART_RX_BUF_SIZE; i++) {
+					if((uart_rx_buf_stash[i % UART_RX_BUF_SIZE] >> 6) == 0b01) {
+						uint32_t idx0 = i - PWM_SERVO_PACKET_SIZE;
+						memcpy((void*)uart_rx_crc_buf, (void*)&uart_rx_buf_stash[idx0], PWM_SERVO_PACKET_SIZE);
+						volatile uint16_t n_crc32 = ((max(PWM_SERVO_PACKET_SIZE, 1) - 1) / 4) + 1;
+						volatile uint8_t crc = HAL_CRC_Calculate(&hcrc, (uint32_t*)uart_rx_crc_buf, n_crc32);
+						if(((crc ^ uart_rx_buf_stash[i]) & 0x3F) == 0) {
+							for(uint8_t servo_idx = 0; servo_idx < NUM_PWM_SERVOS; servo_idx++) {
+								uint32_t ccr = (uart_rx_buf_stash[(idx0 + servo_idx * 2)]) & 0x3F;
+								ccr |= ((uint16_t)uart_rx_buf_stash[(idx0 + servo_idx * 2 + 1)] & 0x3F) << 6;
+								ccrs[servo_idx] = SERVO0 + (ccr * SERVO_RANGE) / 0xFFF; // (uint32_t)(uart_rx_buf[(uart_rx_munched_idx + servo_idx) % UART_RX_BUF_SIZE] & 0x7F) * htim1.Instance->ARR / 0x7F;
+							}
+						}
+					}
+				}
+				for(uint8_t servo_idx = 0; servo_idx < NUM_PWM_SERVOS; servo_idx++) {
+					*servo_ccrs[servo_idx] = ccrs[servo_idx];
+				}
+			}
+		}
+
+		if(0) {
+			if(tick > last_rx_tick) { // ~1kHz poll
+				volatile uint8_t uart_rx_buf_stash[UART_RX_BUF_SIZE] = { 0 };
 				last_rx_tick = tick;
 				// READ BLOCK
 
 				volatile uint16_t last_read_size = huart2.RxXferSize - huart2.RxXferCount;
 				volatile uint8_t next_read_size = UART_RX_BUF_SIZE; // min(, UART_RX_BUF_SIZE - ((uart_rx_buf_idx + last_read_size) % UART_RX_BUF_SIZE));
-				HAL_StatusTypeDef status = HAL_UART_Receive_IT(&huart2, (uint8_t*)&uart_rx_buf[(uart_rx_buf_idx + last_read_size) % UART_RX_BUF_SIZE], next_read_size);
+				HAL_StatusTypeDef status = HAL_UART_Receive_IT(&huart2, (uint8_t*)&uart_rx_buf, next_read_size); // (uart_rx_buf_idx + last_read_size) % UART_RX_BUF_SIZE
 				if(status == HAL_OK) {
 					uart_rx_buf_idx += last_read_size;
 				}

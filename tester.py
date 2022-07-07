@@ -40,17 +40,18 @@ def pack6(A):
 with serial.Serial(sys.argv[1] if len(sys.argv) > 1 else '/dev/cu.usbmodem14203', 230400) as ser:
 	i = 0;
 	while True:
-		p = [int(math.sin(i / 100) * 0x300 + 0x800)] * 6
-		# try:
-		# 	s, p_ = [int(a, 0) for a in input().strip().split(' ')]
-		# 	p[s] = p_
-		# except (ValueError, IndexError):
-		# 	pass # p = [0x800] * 6
+		# p = [int(math.sin(i / 100) * 0x300 + 0x800)] * 6
+		p = [0x800] * 6
+		try:
+			s, p_ = [int(a, 0) for a in input().strip().split(' ')]
+			p[s] = p_
+		except (ValueError, IndexError):
+			pass # p = [0x800] * 6
 			
-		print(p[0])
+		# print(p[0])
 		bs = pack6(p)
 		crc = (1 << 6) | (le_crc(bs) & 0x3F)
-		# print(bs, crc)
+		print(bs, crc)
 		ser.write(bs + bytepack(crc))
 		i += 1
 		time.sleep(0.01)
