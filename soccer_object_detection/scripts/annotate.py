@@ -146,7 +146,7 @@ class Test(TestCase):
                 except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
                     rospy.logwarn_throttle(2, "Cannot find ball transform")
 
-            self.camera.reset_position(publish_basecamera=False, from_world_frame=True, timestamp=image_msg.header.stamp)
+            self.camera.reset_position(from_world_frame=True, timestamp=image_msg.header.stamp)
             label = self.camera.calculateBoundingBoxesFromBall(Transformation(ball_position), ball_radius)
 
             # Draw the rectangle

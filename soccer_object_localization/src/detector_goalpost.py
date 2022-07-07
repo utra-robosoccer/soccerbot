@@ -43,7 +43,7 @@ class DetectorGoalPost(Detector):
         if not self.camera.ready():
             return
 
-        self.camera.reset_position(publish_basecamera=False, timestamp=img.header.stamp)
+        self.camera.reset_position(timestamp=img.header.stamp)
 
         image = CvBridge().imgmsg_to_cv2(img, desired_encoding="rgb8")
         hsv = cv2.cvtColor(src=image, code=cv2.COLOR_BGR2HSV)
