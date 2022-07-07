@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
-
+import copy
 import os
 import time
 
+import scipy
 from rospy.impl.tcpros_base import DEFAULT_BUFF_SIZE
 
+from soccer_common.transformation import Transformation
 from soccer_msgs.msg import RobotState
 
 if "ROS_NAMESPACE" not in os.environ:
@@ -52,7 +54,6 @@ class DetectorFieldline(Detector):
         if self.robot_state.status not in [
             RobotState.STATUS_READY,
             RobotState.STATUS_LOCALIZING,
-            RobotState.STATUS_WALKING,
             RobotState.STATUS_DETERMINING_SIDE,
         ]:
             return
@@ -62,7 +63,7 @@ class DetectorFieldline(Detector):
 
         pts = []
 
-        self.camera.reset_position(publish_basecamera=True, timestamp=img.header.stamp)
+        self.camera.reset_position(timestamp=img.header.stamp)
         rospy.loginfo_once("Started Publishing Fieldlines")
 
         image = CvBridge().imgmsg_to_cv2(img, desired_encoding="rgb8")
@@ -131,11 +132,13 @@ class DetectorFieldline(Detector):
         if self.publish_point_cloud and self.point_cloud_publisher.get_num_connections() > 0:
             points3d = []
             for p in pts:
-                points3d.append(self.camera.findFloorCoordinate(p))
+                camToPoint = Transformation(self.camera.findFloorCoordinate(p))
+                points3d.append(camToPoint.get_position())
+
             # Publish fieldlines in laserscan format
             header = Header()
             header.stamp = img.header.stamp
-            header.frame_id = self.robot_name + "/base_camera"
+            header.frame_id = self.robot_name + "/odom"
             point_cloud_msg = pcl2.create_cloud_xyz32(header, points3d)
             if self.point_cloud_publisher.get_num_connections() > 0:
                 self.point_cloud_publisher.publish(point_cloud_msg)

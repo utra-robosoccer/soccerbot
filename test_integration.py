@@ -7,7 +7,7 @@ from unittest import TestCase
 import numpy as np
 import rospy
 import tf
-from geometry_msgs.msg import Pose
+from geometry_msgs.msg import PoseStamped
 from robot import Robot
 from rosgraph_msgs.msg import Clock
 from scipy.spatial.transform import Rotation as R
@@ -68,28 +68,32 @@ class IntegrationTest(TestCase):
         self.bounding_boxes = b
 
     def set_robot_pose(self, x, y, theta):
-        resetPublisher = rospy.Publisher("/robot1/reset_robot", Pose, queue_size=1, latch=True)
-        p = Pose()
-        p.position.x = x
-        p.position.y = y
-        p.position.z = 0
+        resetPublisher = rospy.Publisher("/robot1/reset_robot", PoseStamped, queue_size=1, latch=True)
+        p = PoseStamped()
+        p.header.stamp = rospy.Time.now()
+        p.header.frame_id = "world"
+        p.pose.position.x = x
+        p.pose.position.y = y
+        p.pose.position.z = 0
 
         r = R.from_euler("ZYX", [theta, 0, 0], degrees=False)
         q = r.as_quat()
 
-        p.orientation.x = q[0]
-        p.orientation.y = q[1]
-        p.orientation.z = q[2]
-        p.orientation.w = q[3]
+        p.pose.orientation.x = q[0]
+        p.pose.orientation.y = q[1]
+        p.pose.orientation.z = q[2]
+        p.pose.orientation.w = q[3]
 
         resetPublisher.publish(p)
 
     def set_ball_pose(self, x, y):
-        ballPublisher = rospy.Publisher("/reset_ball", Pose, queue_size=1, latch=True)
-        p = Pose()
-        p.position.x = x
-        p.position.y = y
-        p.position.z = 0
+        ballPublisher = rospy.Publisher("/reset_ball", PoseStamped, queue_size=1, latch=True)
+        p = PoseStamped()
+        p.header.stamp = rospy.Time.now()
+        p.header.frame_id = "world"
+        p.pose.position.x = x
+        p.pose.position.y = y
+        p.pose.position.z = 0
 
         ballPublisher.publish(p)
 

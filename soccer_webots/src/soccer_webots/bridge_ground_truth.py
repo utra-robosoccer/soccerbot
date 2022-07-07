@@ -8,7 +8,7 @@ import rospy
 import tf
 import transforms3d
 from controller import Node, Supervisor
-from geometry_msgs.msg import Pose
+from geometry_msgs.msg import PoseStamped
 from nav_msgs.msg import Odometry
 from rosgraph_msgs.msg import Clock
 
@@ -26,29 +26,31 @@ clock: Clock = None
 test_clock: Clock = None
 
 
-def reset_robot(pose: Pose, robot: str):
+def reset_robot(pose: PoseStamped, robot: str):
     robotdef = supervisor.getFromDef(ROBOTS_PROTO_NAME[ROBOTS.index(robot)])
     if robotdef is not None:
-        robotdef.getField("translation").setSFVec3f([pose.position.x, pose.position.y, 0.366])
-        axis, angle = transforms3d.quaternions.quat2axangle([pose.orientation.w, pose.orientation.x, pose.orientation.y, pose.orientation.z])
+        robotdef.getField("translation").setSFVec3f([pose.pose.position.x, pose.pose.position.y, 0.366])
+        axis, angle = transforms3d.quaternions.quat2axangle(
+            [pose.pose.orientation.w, pose.pose.orientation.x, pose.pose.orientation.y, pose.pose.orientation.z]
+        )
         robotdef.getField("rotation").setSFRotation(list(np.append(axis, angle)))
         robotdef.resetPhysics()
         supervisor.simulationResetPhysics()
         supervisor.step(1)
-        print(f"{robot} reset to ({pose.position.x}, {pose.position.y})")
+        print(f"{robot} reset to ({pose.pose.position.x}, {pose.pose.position.y})")
     else:
         rospy.logerr("Reset robot failed")
 
 
-def reset_ball(pose: Pose):
+def reset_ball(pose: PoseStamped):
     ball_def = supervisor.getFromDef("BALL")
     if ball_def is not None:
-        ball_def.getField("translation").setSFVec3f([pose.position.x, pose.position.y, 0.0772])
+        ball_def.getField("translation").setSFVec3f([pose.pose.position.x, pose.pose.position.y, 0.0772])
         ball_def.getField("rotation").setSFRotation([0, 0, 1, 0])
         ball_def.resetPhysics()
         supervisor.simulationResetPhysics()
         supervisor.step(1)
-        print(f"ball reset to ({pose.position.x}, {pose.position.y})")
+        print(f"ball reset to ({pose.pose.position.x}, {pose.pose.position.y})")
     else:
         rospy.logerr("Reset ball failed")
 
@@ -147,8 +149,8 @@ if __name__ == "__main__":
 
     reset_robot_subscribers = []
     for robot in ROBOTS:
-        reset_robot_subscribers.append(rospy.Subscriber("/" + robot + "/reset_robot", Pose, reset_robot, robot))
+        reset_robot_subscribers.append(rospy.Subscriber("/" + robot + "/reset_robot", PoseStamped, reset_robot, robot))
 
-    reset_ball_subscriber = rospy.Subscriber("/reset_ball", Pose, reset_ball)
+    reset_ball_subscriber = rospy.Subscriber("/reset_ball", PoseStamped, reset_ball)
 
     rospy.spin()

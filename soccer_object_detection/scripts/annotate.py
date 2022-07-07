@@ -10,7 +10,7 @@ import numpy as np
 import rospy
 import tf
 from cv_bridge import CvBridge
-from geometry_msgs.msg import Pose
+from geometry_msgs.msg import PoseStamped
 from scipy.spatial.transform import Rotation as R
 from sensor_msgs.msg import Image
 from tf import TransformListener
@@ -25,30 +25,34 @@ class Test(TestCase):
         return rem
 
     def set_ball_position(self, x, y):
-        ballPublisher = rospy.Publisher("/reset_ball", Pose, queue_size=1, latch=True)
-        p = Pose()
-        p.position.x = x
-        p.position.y = y
-        p.position.z = 0
+        ballPublisher = rospy.Publisher("/reset_ball", PoseStamped, queue_size=1, latch=True)
+        p = PoseStamped()
+        p.header.stamp = rospy.Time.now()
+        p.header.frame_id = "world"
+        p.pose.position.x = x
+        p.pose.position.y = y
+        p.pose.position.z = 0
 
         ballPublisher.publish(p)
 
         pass
 
     def reset_robot_position(self, x, y, theta, head_angle_1, head_angle_2):
-        resetPublisher = rospy.Publisher("/robot1/reset_robot", Pose, queue_size=1, latch=True)
-        p = Pose()
-        p.position.x = x
-        p.position.y = y
-        p.position.z = 0
+        resetPublisher = rospy.Publisher("/robot1/reset_robot", PoseStamped, queue_size=1, latch=True)
+        p = PoseStamped()
+        p.header.stamp = rospy.Time.now()
+        p.header.frame_id = "world"
+        p.pose.position.x = x
+        p.pose.position.y = y
+        p.pose.position.z = 0
 
         r = R.from_euler("ZYX", [theta, 0, 0], degrees=False)
         q = r.as_quat()
 
-        p.orientation.x = q[0]
-        p.orientation.y = q[1]
-        p.orientation.z = q[2]
-        p.orientation.w = q[3]
+        p.pose.orientation.x = q[0]
+        p.pose.orientation.y = q[1]
+        p.pose.orientation.z = q[2]
+        p.pose.orientation.w = q[3]
 
         resetPublisher.publish(p)
 

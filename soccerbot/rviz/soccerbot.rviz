@@ -68,6 +68,8 @@ Visualization Manager:
         All Enabled: false
         robot1/ball:
           Value: true
+        robot1/ball_gt:
+          Value: true
         robot1/base_camera:
           Value: true
         robot1/base_footprint:
@@ -75,6 +77,8 @@ Visualization Manager:
         robot1/base_footprint_gt:
           Value: true
         robot1/camera:
+          Value: true
+        robot1/camera_gt:
           Value: true
         robot1/head:
           Value: true
@@ -128,7 +132,11 @@ Visualization Manager:
       Show Names: true
       Tree:
         world:
+          robot1/ball_gt:
+            {}
           robot1/base_footprint_gt:
+            {}
+          robot1/camera_gt:
             {}
           robot1/odom:
             robot1/base_camera:
@@ -204,7 +212,7 @@ Visualization Manager:
               Color: 255; 255; 255
               Color Transformer: Intensity
               Decay Time: 0
-              Enabled: false
+              Enabled: true
               Invert Rainbow: false
               Max Color: 255; 255; 255
               Min Color: 0; 0; 0
@@ -219,7 +227,7 @@ Visualization Manager:
               Unreliable: false
               Use Fixed Frame: true
               Use rainbow: true
-              Value: false
+              Value: true
             - Alpha: 1
               Autocompute Intensity Bounds: true
               Autocompute Value Bounds:
@@ -232,7 +240,7 @@ Visualization Manager:
               Color: 255; 0; 0
               Color Transformer: FlatColor
               Decay Time: 0
-              Enabled: false
+              Enabled: true
               Invert Rainbow: true
               Max Color: 255; 255; 255
               Min Color: 0; 0; 0
@@ -247,7 +255,7 @@ Visualization Manager:
               Unreliable: false
               Use Fixed Frame: true
               Use rainbow: false
-              Value: false
+              Value: true
             - Alpha: 0.30000001192092896
               Class: rviz/Map
               Color Scheme: map
