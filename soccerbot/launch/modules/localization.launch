@@ -51,7 +51,7 @@
         <!--        <param name="pose0" value="/$(arg robot_name)/amcl_pose" />-->
         <!--        <param name="imu0" value="/$(arg robot_name)/imu_filtered" />-->
         <param name="odom_frame" value="$(arg robot_name)/odom" />
-        <param name="base_link_frame" value="$(arg robot_name)/base_camera" />
+        <param name="base_link_frame" value="$(arg robot_name)/base_footprint" />
     </node>
 
     <node name="torso_height_publisher" pkg="bez1_description" type="base_footprint_to_torso.py" />
@@ -63,7 +63,7 @@
         <param name="initial_pose_y" value="$(arg y_pos)" />
         <param name="initial_pose_a" value="$(arg a_pos)" />
         <param name="odom_frame_id" value="$(arg robot_name)/odom" />
-        <param name="base_frame_id" value="$(arg robot_name)/base_camera" />
+        <param name="base_frame_id" value="$(arg robot_name)/base_footprint" />
     </node>
 
     <node pkg="tf" type="static_transform_publisher" name="imu_to_robot_base" args="0 0 0 0 0 0 $(arg robot_name)/odom $(arg robot_name)/base_footprint 100" if="$(arg fake_localization)" />
