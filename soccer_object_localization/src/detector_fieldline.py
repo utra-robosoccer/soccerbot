@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
-import copy
 import os
 import time
 
-import scipy
 from rospy.impl.tcpros_base import DEFAULT_BUFF_SIZE
 
 from soccer_common.transformation import Transformation
@@ -54,6 +52,7 @@ class DetectorFieldline(Detector):
         if self.robot_state.status not in [
             RobotState.STATUS_READY,
             RobotState.STATUS_LOCALIZING,
+            RobotState.STATUS_WALKING,
             RobotState.STATUS_DETERMINING_SIDE,
         ]:
             return
