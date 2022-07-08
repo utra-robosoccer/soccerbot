@@ -48,7 +48,7 @@ class Path:
             return True
 
         # If the distance is too close
-        return np.linalg.norm(end_transform.get_position()[0:2] - start_transform.get_position()[0:2]) < 1
+        return np.linalg.norm(end_transform.get_position()[0:2] - start_transform.get_position()[0:2]) < 0.6
 
     def createPathSection(self, start_transform: Transformation, end_transform: Transformation):
         is_short_distance = self.isShortPath(start_transform, end_transform)

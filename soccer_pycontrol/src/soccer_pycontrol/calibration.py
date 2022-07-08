@@ -14,7 +14,7 @@ from soccer_common.transformation import Transformation
 from soccer_pycontrol.utils import trimToPi, wrapToPi
 
 robot_model = "bez1"
-run_in_ros = True
+run_in_ros = False
 
 
 def setup_calibration():
