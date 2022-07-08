@@ -103,7 +103,7 @@ class SoccerbotControllerRos(SoccerbotController):
             [
                 trans[0],
                 trans[1],
-                rot[2],
+                Transformation.get_euler_from_quaternion(rot)[0],
             ]
         )
 
