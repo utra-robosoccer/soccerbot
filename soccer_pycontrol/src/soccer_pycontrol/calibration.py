@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 import os
+
+if "ROS_NAMESPACE" not in os.environ:
+    os.environ["ROS_NAMESPACE"] = "/robot1"
 import sys
 
 import numpy as np
@@ -11,6 +14,7 @@ from soccer_common.transformation import Transformation
 from soccer_pycontrol.utils import trimToPi, wrapToPi
 
 robot_model = "bez1"
+run_in_ros = False
 
 
 def setup_calibration():
@@ -55,41 +59,34 @@ def setup_calibration():
 
 
 def calibrate_x():
-    setup_calibration()
+    if not run_in_ros:
+        setup_calibration()
 
     import pybullet as pb
 
     from soccer_pycontrol.soccerbot_controller import SoccerbotController
+    from soccer_pycontrol.soccerbot_controller_ros import SoccerbotControllerRos
 
     start_positions = []
     final_positions = []
     for x in np.linspace(0.0, 0.2, 21):
-        walker = SoccerbotController(display=False, useCalibration=False)
-
+        if run_in_ros:
+            walker = SoccerbotControllerRos(useCalibration=False)
+        else:
+            walker = SoccerbotController(display=False, useCalibration=False)
         walker.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
         walker.ready()
         walker.wait(200)
 
-        actual_start_position = np.array(
-            [
-                pb.getBasePositionAndOrientation(walker.soccerbot.body)[0][0],
-                pb.getBasePositionAndOrientation(walker.soccerbot.body)[0][1],
-                Transformation.get_euler_from_quaternion(pb.getBasePositionAndOrientation(walker.soccerbot.body)[1])[0],
-            ]
-        )
+        actual_start_position = walker.getPose()
 
         goal_position = Transformation([x, 0, 0])
         walker.setGoal(goal_position)
         walk_success = walker.run(single_trajectory=True)
-        assert walk_success
+        if not walk_success:
+            continue
 
-        final_position = np.array(
-            [
-                pb.getBasePositionAndOrientation(walker.soccerbot.body)[0][0],
-                pb.getBasePositionAndOrientation(walker.soccerbot.body)[0][1],
-                Transformation.get_euler_from_quaternion(pb.getBasePositionAndOrientation(walker.soccerbot.body)[1])[0],
-            ]
-        )
+        final_position = walker.getPose()
         final_transformation = final_position - actual_start_position
 
         print(f"Final Transformation {final_transformation}")
@@ -129,41 +126,33 @@ def calibrate_x():
 
 
 def calibrate_theta():
-    setup_calibration()
-
-    import pybullet as pb
+    if not run_in_ros:
+        setup_calibration()
 
     from soccer_pycontrol.soccerbot_controller import SoccerbotController
+    from soccer_pycontrol.soccerbot_controller_ros import SoccerbotControllerRos
 
     start_angles = []
     final_angles = []
     for theta in np.linspace(-np.pi / 2, np.pi / 2, 21):
-        walker = SoccerbotController(display=False, useCalibration=False)
+        if run_in_ros:
+            walker = SoccerbotControllerRos(useCalibration=False)
+        else:
+            walker = SoccerbotController(display=False, useCalibration=False)
 
         walker.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
         walker.ready()
         walker.wait(200)
 
-        actual_start_position = np.array(
-            [
-                pb.getBasePositionAndOrientation(walker.soccerbot.body)[0][0],
-                pb.getBasePositionAndOrientation(walker.soccerbot.body)[0][1],
-                Transformation.get_euler_from_quaternion(pb.getBasePositionAndOrientation(walker.soccerbot.body)[1])[0],
-            ]
-        )
+        actual_start_position = walker.getPose()
 
         goal_position = Transformation([0, 0, 0], Transformation.get_quaternion_from_euler([theta, 0, 0]))
         walker.setGoal(goal_position)
         walk_success = walker.run(single_trajectory=True)
-        assert walk_success
+        if not walk_success:
+            continue
 
-        final_position = np.array(
-            [
-                pb.getBasePositionAndOrientation(walker.soccerbot.body)[0][0],
-                pb.getBasePositionAndOrientation(walker.soccerbot.body)[0][1],
-                Transformation.get_euler_from_quaternion(pb.getBasePositionAndOrientation(walker.soccerbot.body)[1])[0],
-            ]
-        )
+        final_position = walker.getPose()
         final_transformation = final_position - actual_start_position
 
         print(f"Final Transformation {final_transformation}")
@@ -247,6 +236,14 @@ def adjust_navigation_transform(start_transform: Transformation, end_transform: 
 
 
 if __name__ == "__main__":
+    if run_in_ros:
+
+        os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_strategy'")
+        os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_pycontrol'")
+        os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_trajectories'")
+        rospy.init_node("soccer_control_calibration")
+        rospy.loginfo("Initializing Soccer Control Calibration")
+
     config_file_path = os.path.dirname(__file__).replace("src/soccer_pycontrol", f"config/{robot_model}_sim.yaml")
     yaml = ruamel.yaml.YAML()
 

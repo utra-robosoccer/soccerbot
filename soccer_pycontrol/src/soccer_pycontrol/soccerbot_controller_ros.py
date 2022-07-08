@@ -13,12 +13,12 @@ from soccer_pycontrol.soccerbot_ros import SoccerbotRos
 
 
 class SoccerbotControllerRos(SoccerbotController):
-    def __init__(self):
+    def __init__(self, useCalibration=True):
         self.client_id = pb.connect(pb.DIRECT)
         pb.setAdditionalSearchPath(pybullet_data.getDataPath())  # optionally
         pb.resetDebugVisualizerCamera(cameraDistance=0.5, cameraYaw=0, cameraPitch=0, cameraTargetPosition=[0, 0, 0.25])
         pb.setGravity(0, 0, -9.81)
-        self.soccerbot = SoccerbotRos(Transformation(), useFixedBase=False)
+        self.soccerbot = SoccerbotRos(Transformation(), useFixedBase=False, useCalibration=useCalibration)
         pb.disconnect(self.client_id)
 
         self.position_subscriber = rospy.Subscriber("goal", PoseStamped, self.goal_callback)
@@ -56,6 +56,8 @@ class SoccerbotControllerRos(SoccerbotController):
 
     def transformation_to_pose(self, trans: Transformation) -> PoseStamped:
         t = PoseStamped()
+        t.header.stamp = rospy.Time.now()
+        t.header.frame_id = "world"
         t.pose.position.x = trans.get_position()[0]
         t.pose.position.y = trans.get_position()[1]
         t.pose.position.z = trans.get_position()[2]
@@ -89,6 +91,21 @@ class SoccerbotControllerRos(SoccerbotController):
         initialPosePublisher.publish(p)
 
         rospy.sleep(0.5)
+
+    def getPose(self, footprint_name="/base_footprint_gt"):
+        try:
+            (trans, rot) = self.tf_listener.lookupTransform("world", os.environ["ROS_NAMESPACE"] + footprint_name, rospy.Time(0))
+        except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException) as e:
+            print(e)
+            return False
+
+        return np.array(
+            [
+                trans[0],
+                trans[1],
+                Transformation.get_euler_from_quaternion(rot)[0],
+            ]
+        )
 
     def setGoal(self, goal: Transformation):
         self.goal_callback(self.transformation_to_pose(goal))

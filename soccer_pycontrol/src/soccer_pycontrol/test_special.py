@@ -31,7 +31,7 @@ if run_in_ros:
     os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_trajectories'")
 
 file_path = os.path.dirname(os.path.abspath(__file__))
-config_path = f"{file_path}/../../config/bez1_sim.yaml"
+config_path = f"{file_path}/../../config/bez1_sim_pybullet.yaml"
 mock_ros(robot_model="bez1", real_robot=False, config_path=config_path)
 
 from soccer_pycontrol.path import Path
