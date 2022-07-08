@@ -248,14 +248,14 @@ if __name__ == "__main__":
     yaml = ruamel.yaml.YAML()
 
     # Calibrate translation
-    # a, b, a2 = calibrate_x()
-    # with open(config_file_path) as f:
-    #     data = yaml.load(f)
-    # data["calibration_trans_a"] = float(a)
-    # data["calibration_trans_b"] = float(b)
-    # data["calibration_trans_a2"] = float(a2)
-    # with open(config_file_path, "w") as f:
-    #     yaml.dump(data, f)
+    a, b, a2 = calibrate_x()
+    with open(config_file_path) as f:
+        data = yaml.load(f)
+    data["calibration_trans_a"] = float(a)
+    data["calibration_trans_b"] = float(b)
+    data["calibration_trans_a2"] = float(a2)
+    with open(config_file_path, "w") as f:
+        yaml.dump(data, f)
 
     # Calibrate rotation
     a = calibrate_theta()
