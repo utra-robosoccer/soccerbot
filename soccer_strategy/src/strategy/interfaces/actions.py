@@ -54,7 +54,7 @@ class Actions:
         robot.set_navigation_position(position)
 
     @staticmethod
-    def navigate_to_position_with_offset(robot, destination_position, target_position, offset=0.1):
+    def navigate_to_position_with_offset(robot, destination_position, target_position, offset=0.175):
         # Destination position = the position of the ball for example
         # Target Position = the position of the net, or where to aim
 
