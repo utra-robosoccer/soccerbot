@@ -1,8 +1,3 @@
-import math
-import os
-import time
-
-import rospy
 import tf
 from geometry_msgs.msg import Pose2D, PoseStamped
 from nav_msgs.msg import Odometry, Path
@@ -14,9 +9,9 @@ from soccer_pycontrol.soccerbot import *
 
 
 class SoccerbotRos(Soccerbot):
-    def __init__(self, position, useFixedBase=False):
+    def __init__(self, position, useFixedBase=False, useCalibration=True):
 
-        super().__init__(position, useFixedBase)
+        super().__init__(position, useFixedBase, useCalibration)
 
         self.motor_publishers = {}
         self.pub_all_motor = rospy.Publisher("joint_command", JointState, queue_size=1)
