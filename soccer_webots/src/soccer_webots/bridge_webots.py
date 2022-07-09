@@ -286,9 +286,9 @@ class GameControllerBridge:
 
         if self.pub_imu_first > 0:
             if imu_msg.linear_acceleration.z > 10 or imu_msg.linear_acceleration.z < 8:
-                self.pub_imu_first -= 1
-            else:
                 self.pub_imu_first = 2
+            else:
+                self.pub_imu_first -= 1
             return
 
         if imu_accel and imu_gyro:
