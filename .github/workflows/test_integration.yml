@@ -64,3 +64,19 @@ jobs:
         with:
           name: Rosbags_Kick
           path: soccerbot/bags
+      - name: Kick and Walk Integration Test
+        env:
+          ROBOT_X: 3.5
+          TEST_NAME: test_walk_and_kick_right
+        run: |
+          docker-compose -f docker-compose.test.kick.yaml up --exit-code-from friendly
+      - name: Get integration test logs
+        if: always()
+        run: |
+          docker-compose logs
+      - name: Get rosbag
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: Rosbags_Kick
+          path: soccerbot/bags
