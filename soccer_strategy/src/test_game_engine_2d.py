@@ -71,7 +71,7 @@ class Test(TestCase):
         robot = MagicMock()
         goal_position = numpy.array([5, 0])
 
-        robot.position = goal_position - numpy.array([0.5, 1.0])
+        robot.position = goal_position - numpy.array([0.4, 1.0])
         ball_position = goal_position - numpy.array([0.4, 1.2])
         Actions.navigate_to_position_with_offset = MagicMock()
         Actions.navigate_to_scoring_position(robot, ball_position, goal_position)
