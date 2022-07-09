@@ -81,7 +81,7 @@ class StrategyDummy(Strategy):
                         2
                     ) and this_robot.status != Robot.Status.WALKING:
                         rospy.loginfo("Navigation to ball")
-                        Actions.navigate_to_position_with_offset(this_robot, np.array(ball.position[0:2]), goal_position)
+                        Actions.navigate_to_scoring_position(this_robot, np.array(ball.position[0:2]), goal_position)
 
             pass
 

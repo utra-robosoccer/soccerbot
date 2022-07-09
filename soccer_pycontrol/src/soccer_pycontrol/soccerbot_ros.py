@@ -191,7 +191,7 @@ class SoccerbotRos(Soccerbot):
             self.configuration[Joints.RIGHT_ARM_2] = (0.8 - self.configuration[Joints.RIGHT_ARM_2]) * 0.05 + self.configuration[Joints.RIGHT_ARM_2]
 
             # If the last time it saw the ball was 2 seconds ago
-            if self.last_ball_found_timestamp is not None and (rospy.Time.now() - self.last_ball_found_timestamp) < rospy.Duration(2):
+            if self.last_ball_found_timestamp is not None and (rospy.Time.now() - self.last_ball_found_timestamp) < rospy.Duration(3):
 
                 assert self.ball_pixel is not None
 
