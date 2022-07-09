@@ -1,5 +1,6 @@
 def mock_ros(robot_model, real_robot, config_path):
     import sys
+    import time
     from os.path import exists
     from unittest.mock import MagicMock
 
@@ -14,6 +15,8 @@ def mock_ros(robot_model, real_robot, config_path):
         joint_state = MagicMock()
         joint_state.position = [0.0] * 18
         rospy.wait_for_message = MagicMock(return_value=joint_state)
+        rospy.Time.now = MagicMock(return_value=0)
+        rospy.Duration = lambda a: a
         rospy.loginfo_throttle = lambda a, b: None
     else:
         import rospy

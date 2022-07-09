@@ -29,7 +29,7 @@ class RobotControlled(Robot):
         self.path = None
 
         self.max_kick_speed = 2
-        self.navigation_goal_localized_time = rospy.Time()
+        self.navigation_goal_localized_time = rospy.Time.now()
         self.kick_with_right_foot = True
 
     def set_navigation_position(self, goal_position):

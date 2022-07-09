@@ -30,7 +30,7 @@ class RobotControlled2D(RobotControlled):
 
     def set_kick_velocity(self, kick_velocity):
         kick_angle_rand = np.random.normal(0, 0.2)
-        kick_force_rand = max(np.random.normal(0.2, 0.3), 0)
+        kick_force_rand = max(np.random.normal(0.4, 0.3), 0)
         if kick_force_rand == 0:
             print("Kick Missed")
 
