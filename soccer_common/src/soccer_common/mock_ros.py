@@ -1,6 +1,5 @@
 def mock_ros(robot_model, real_robot, config_path):
     import sys
-    import time
     from os.path import exists
     from unittest.mock import MagicMock
 
