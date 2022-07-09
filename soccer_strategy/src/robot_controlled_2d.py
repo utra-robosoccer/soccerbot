@@ -2,6 +2,7 @@ import math
 import time
 
 import numpy as np
+import rospy
 from ball import Ball
 from robot import Robot
 from robot_controlled import RobotControlled
@@ -58,6 +59,6 @@ class RobotControlled2D(RobotControlled):
         distance = np.linalg.norm(ball_to_robot)
         if angle < self.ObservationConstants.FOV / 2 and distance < self.ObservationConstants.VISION_RANGE:
             self.observed_ball.position = ball_position
-            self.navigation_goal_localized_time = time.time()
+            self.navigation_goal_localized_time = rospy.Time.now()
 
         # TODO can add noise here

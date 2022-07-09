@@ -69,7 +69,7 @@ class RobotControlled3D(RobotControlled):
         p.pose.orientation.y = q[1]
         p.pose.orientation.z = q[2]
         p.pose.orientation.w = q[3]
-        print("Sending New Goal: " + str(goal_position))
+        rospy.loginfo("Sending New Goal: " + str(goal_position))
         self.goal_position = goal_position
         self.goal_publisher.publish(p)
         return True
@@ -194,7 +194,7 @@ class RobotControlled3D(RobotControlled):
             rospy.logerr("Invalid Action Completed " + str(self.status))
 
     def head_centered_on_ball_callback(self, data):
-        self.navigation_goal_localized_time = time.time()
+        self.navigation_goal_localized_time = rospy.Time.now()
 
     def imu_callback(self, msg):
         angle_threshold = 1.2  # in radian
