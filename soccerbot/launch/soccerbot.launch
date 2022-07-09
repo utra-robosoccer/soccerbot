@@ -67,6 +67,7 @@
         /$(arg robot_name)/ball_pixel
         /$(arg robot_name)/command
         /$(arg robot_name)/detected_robot_pose
+        /$(arg robot_name)/detection_image
         /$(arg robot_name)/execute_game_interruption
         /$(arg robot_name)/gamestate
         /$(arg robot_name)/goal
@@ -90,6 +91,7 @@
         /reset_ball
         /tf
         /tf_static
+        /rosout
     "
     />
 </launch>

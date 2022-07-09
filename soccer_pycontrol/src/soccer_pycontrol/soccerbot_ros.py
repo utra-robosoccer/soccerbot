@@ -1,3 +1,5 @@
+import copy
+
 import tf
 from geometry_msgs.msg import Pose2D, PoseStamped
 from nav_msgs.msg import Odometry, Path
@@ -27,7 +29,8 @@ class SoccerbotRos(Soccerbot):
         self.listener = tf.TransformListener()
         self.last_ball_found_timestamp = None
         self.last_ball_pose = None
-        self.look_at_last_ball_pose_timeout = None
+        self.look_at_last_ball_pose = None
+        self.look_at_last_ball_pose_timeout = rospy.Time.now()
         self.ball_pixel_subscriber = rospy.Subscriber("ball_pixel", Pose2D, self.ball_pixel_callback, queue_size=1)
         self.ball_pixel: Pose2D = None
         self.last_ball_pixel: Pose2D = None
@@ -217,14 +220,14 @@ class SoccerbotRos(Soccerbot):
                         rospy.loginfo_throttle(1, f"Centering Camera on Ball (x,y) ({self.ball_pixel.x}, {self.ball_pixel.y}) -> (320, 240)")
 
             # If it finished moving, turn it's head to the last location where it saw the ball
-            elif self.last_ball_pose is not None:
-                if self.look_at_last_ball_pose_timeout is None:
+            elif self.last_ball_pose is not None or self.look_at_last_ball_pose_timeout > rospy.Time.now():
+
+                if self.last_ball_pose is not None:
+                    self.look_at_last_ball_pose = copy.deepcopy(self.last_ball_pose)
                     self.look_at_last_ball_pose_timeout = rospy.Time.now() + rospy.Duration(5)
 
-                if rospy.Time.now() > self.look_at_last_ball_pose_timeout:
-                    self.look_at_last_ball_pose_timeout = None
-                    self.last_ball_pose = None
-                    return
+                self.last_ball_pose = None
+                rospy.loginfo_throttle(1, f"Searching for ball last location {self.look_at_last_ball_pose.get_position()}")
 
                 try:
                     camera_position, camera_orientation = self.listener.lookupTransform(
@@ -238,7 +241,7 @@ class SoccerbotRos(Soccerbot):
                     rospy.logerr_throttle(5, "Unable to get robot to camera pose")
                     return
 
-                camera_to_ball = scipy.linalg.inv(camera_pose) @ self.last_ball_pose
+                camera_to_ball = scipy.linalg.inv(camera_pose) @ self.look_at_last_ball_pose
                 camera_to_ball_position = camera_to_ball.get_position()
                 yaw = math.atan2(camera_to_ball_position[1], camera_to_ball_position[0])
                 pitch = math.atan2(camera_to_ball_position[2], camera_to_ball_position[0])
@@ -248,7 +251,7 @@ class SoccerbotRos(Soccerbot):
 
                 rospy.loginfo_throttle(
                     1,
-                    f"Rotating head to last seen ball location {self.last_ball_pose.get_position()}. Camera Location {camera_pose.get_position()}, Camera To Ball {camera_to_ball_position}, Calculated Yaw {yaw}, Pitch {pitch}, Timeout {self.look_at_last_ball_pose_timeout}",
+                    f"Rotating head to last seen ball location {self.look_at_last_ball_pose.get_position()}. Camera Location {camera_pose.get_position()}, Camera To Ball {camera_to_ball_position}, Calculated Yaw {yaw}, Pitch {pitch}, Timeout {self.look_at_last_ball_pose_timeout}",
                 )
 
             else:

@@ -86,8 +86,9 @@ class RobotControlled3D(RobotControlled):
         self.status = Robot.Status.READY
         if self.role == Robot.Role.UNASSIGNED:
             self.role = Robot.Role.STRIKER
-        self.reset_initial_position()
-        pass
+        while self.amcl_pose is None:
+            self.reset_initial_position()
+            rospy.sleep(0.5)
 
     def update_robot_state(self, _):
         # Get Ball Position from TF
