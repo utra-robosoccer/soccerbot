@@ -49,7 +49,7 @@ class Test(TestCase):
         Actions.navigate_to_scoring_position(robot, ball_position, goal_position)
         assert Actions.navigate_to_position_with_offset.call_args[0][0] == robot
         assert np.array_equal(Actions.navigate_to_position_with_offset.call_args[0][1], ball_position)
-        assert np.array_equal(Actions.navigate_to_position_with_offset.call_args[0][2], np.array([4.8, -0.6]))
+        assert np.array_equal(Actions.navigate_to_position_with_offset.call_args[0][2], np.array([5, -0.6]))
 
     def test_navigate_to_scoring_position_with_offset_case_2a(self):
         from strategy.interfaces.actions import Actions

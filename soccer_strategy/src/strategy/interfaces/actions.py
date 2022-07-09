@@ -74,12 +74,12 @@ class Actions:
         case_1_dist_ball_to_goal = math.sqrt(tempy**2 + distance_ball_to_net**2)
         case_1_wont_go_out_of_net = abs(target_position_y) < goal_width / 2
 
-        ball_is_very_close_to_net = distance_ball_to_net < 0.3
+        ball_is_very_close_to_net = distance_ball_to_net < 0.4
         player_is_close_to_ball = ball_player_distance < 0.5
 
         ball_is_close_to_net = distance_ball_to_net < 0.6
         ball_is_in_front_of_net = abs(ball_position[1]) < goal_width / 2
-        angle_is_not_bad_for_player = player_is_behind_ball and case_1_dist_ball_to_goal < 3
+        angle_is_not_bad_for_player = player_is_behind_ball and case_1_dist_ball_to_goal < 0.5
 
         # There are 3 cases here
         # A. If player is close ot the ball and the kicking angle is not bad, and can reach in 10cm, go for the kick directy
@@ -89,14 +89,14 @@ class Actions:
         case_2 = ball_is_close_to_net and ball_is_in_front_of_net
 
         if case_1:
-            target_position = np.array([ball_position[0], target_position_y])
+            target_position = np.array([goal_position[0], target_position_y])
 
             rospy.loginfo(f"Case 1: Target Position {target_position}")
-            Actions.navigate_to_position_with_offset(robot, ball_position, target_position)
+            Actions.navigate_to_position_with_offset(robot, ball_position, target_position, offset=0.168)
         elif case_2:
             target_position = np.array([goal_position[0], ball_position[1]])
 
-            difficult_for_player_to_navigate = abs(ball_position[0]) - 0.3 < abs(player_position[0])
+            difficult_for_player_to_navigate = abs(ball_position[0]) - 0.1 < abs(player_position[0])
 
             if difficult_for_player_to_navigate:
                 rospy.loginfo(f"Case 2a: Target Position {target_position}")

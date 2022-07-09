@@ -51,7 +51,7 @@ class Team:
         self.strategy = None
         self.formation = None
         self.formations = DEFAULT_FORMATIONS
-        self.enemy_goal_position = [4.8, 0]
+        self.enemy_goal_position = [4.5, 0]
 
     def flip_positions(self):
         self.enemy_goal_position[0] = -self.enemy_goal_position[0]
