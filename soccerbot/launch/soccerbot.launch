@@ -91,6 +91,7 @@
         /reset_ball
         /tf
         /tf_static
+        /rosout
     "
     />
 </launch>
