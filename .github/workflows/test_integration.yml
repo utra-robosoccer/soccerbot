@@ -78,5 +78,5 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v3
         with:
-          name: Rosbags_Kick
+          name: Rosbags_Walk_and_Kick
           path: soccerbot/bags
