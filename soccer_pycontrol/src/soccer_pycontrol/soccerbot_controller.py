@@ -73,10 +73,10 @@ class SoccerbotController:
                 else:
                     stable_count = 5
             else:
-                if self.soccerbot.current_step_time <= t <= self.soccerbot.robot_path.duration():
+                if t < self.soccerbot.robot_path.duration():
                     self.soccerbot.stepPath(t, verbose=False)
                     self.soccerbot.apply_imu_feedback(t, self.soccerbot.get_imu())
-                    self.soccerbot.current_step_time = self.soccerbot.current_step_time + self.soccerbot.robot_path.step_precision
+                    self.soccerbot.current_step_time = t
 
             angle_threshold = 1.25  # in radian
             [roll, pitch, yaw] = self.soccerbot.get_imu().get_orientation_euler()

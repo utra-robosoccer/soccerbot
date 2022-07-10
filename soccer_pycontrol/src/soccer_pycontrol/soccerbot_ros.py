@@ -56,9 +56,10 @@ class SoccerbotRos(Soccerbot):
         js.header.stamp = rospy.Time.now()
         js.position = []
         js.effort = []
+        angles = self.get_angles()
         for i, n in enumerate(self.motor_names):
             js.name.append(n)
-            js.position.append(self.get_angles()[i])
+            js.position.append(angles[i])
         try:
             rospy.loginfo_once("Started Publishing Motors")
             self.pub_all_motor.publish(js)

@@ -8,6 +8,7 @@ from rospy import ROSInterruptException
 from std_msgs.msg import Bool, Empty
 
 from soccer_msgs.msg import RobotState
+from soccer_pycontrol.path_section import PathSection
 from soccer_pycontrol.soccerbot_controller import *
 from soccer_pycontrol.soccerbot_ros import SoccerbotRos
 
@@ -157,6 +158,8 @@ class SoccerbotControllerRos(SoccerbotController):
         time_now = 0
 
         while not rospy.is_shutdown():
+            time_start = time.time()
+
             if self.soccerbot.robot_state.status in [
                 RobotState.STATUS_DISCONNECTED,
                 RobotState.STATUS_DETERMINING_SIDE,
@@ -224,14 +227,16 @@ class SoccerbotControllerRos(SoccerbotController):
                 self.goal = self.new_goal
                 self.soccerbot.robot_path = self.new_path
 
-            if self.soccerbot.robot_path is not None and self.soccerbot.current_step_time <= self.t <= self.soccerbot.robot_path.duration():
+            if self.soccerbot.robot_path is not None and self.t <= self.soccerbot.robot_path.duration():
                 self.soccerbot.stepPath(self.t, verbose=False)
 
-                # IMU feedback while walking
+                # IMU feedback while walking (Average Time: 0.00017305118281667)
                 if self.soccerbot.imu_ready:
                     self.soccerbot.apply_imu_feedback(self.t, self.soccerbot.get_imu())
 
-                self.soccerbot.current_step_time = self.soccerbot.current_step_time + self.soccerbot.robot_path.step_precision
+                self.soccerbot.current_step_time = self.t
+
+                # Publish robot's position and height (Average Time: 0.00030437924645164)
                 self.soccerbot.publishOdometry()
 
             # Walk completed
@@ -289,7 +294,14 @@ class SoccerbotControllerRos(SoccerbotController):
                         print("Fallen Front")
                         return False
 
-            self.soccerbot.publishAngles()  # Disable to stop walking
+            # Publishes angles to robot (Average Time: 0.00041992547082119)
+            self.soccerbot.publishAngles()
+
+            time_end = time.time()
+            print(time_end - time_start)
+            if time_end - time_start > SoccerbotController.PYBULLET_STEP * 1.2:
+                rospy.logerr(f"Step Delta took longer than expected {time_end - time_start}. Control Frequency {SoccerbotController.PYBULLET_STEP}")
+                rospy.logerr(f"Desired Steps Per Second: {PathSection.steps_per_second_default}")
 
             self.t = self.t + SoccerbotController.PYBULLET_STEP
 

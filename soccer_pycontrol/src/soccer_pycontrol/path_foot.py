@@ -1,4 +1,5 @@
 import enum
+import functools
 import math
 from copy import deepcopy
 
@@ -29,16 +30,20 @@ class PathFoot(Path):
         super().__init__(start_transform, end_transform)
         self.foot_center_to_floor = foot_center_to_floor
 
+    @functools.lru_cache
     def half_step_time(self):
         return self.full_step_time() * self.half_to_full_step_time_ratio
 
+    @functools.lru_cache
     def num_steps(self):
         return self.bodyStepCount() + 1
 
+    @functools.lru_cache
     def full_step_time(self):
         total_step_time = self.duration()
         return total_step_time / (2 * self.half_to_full_step_time_ratio + (self.num_steps() - 2))
 
+    @functools.lru_cache
     def footHeightRatio(self, t, post_pre_settings=0):
         full_step_time = self.full_step_time()
         half_step_time = self.half_step_time()
@@ -145,6 +150,7 @@ class PathFoot(Path):
 
         return [step_num, right_foot_step_ratio, left_foot_step_ratio]
 
+    @functools.lru_cache
     def right_foot_position_at_step(self, n):
         bodystep = self.getBodyStepPose(n)
 
@@ -152,6 +158,7 @@ class PathFoot(Path):
         transformToLeftFoot = tr([0, -self.foot_separation, -bodypos[2] + self.foot_center_to_floor])
         return np.matmul(bodystep, transformToLeftFoot)
 
+    @functools.lru_cache
     def left_foot_position_at_step(self, n):
         bodystep = self.getBodyStepPose(n)
 
@@ -159,6 +166,7 @@ class PathFoot(Path):
         transformToRightFoot = tr([0, self.foot_separation, -bodypos[2] + self.foot_center_to_floor])
         return np.matmul(bodystep, transformToRightFoot)
 
+    @functools.lru_cache
     def whatIsTheFootDoing(self, step_num):
         if step_num == 0:
             if self.first_step_left:
@@ -256,7 +264,7 @@ class PathFoot(Path):
         r = lambda X: f(X) - (1 - (2 * s)) * f(aa)  # r = @(X) f(X) - (1-2*s)*f(aa);
 
         X = 0
-        while np.abs(r(X)) > 0.0001:
+        while np.abs(r(X)) > 0.0005:
             X = X - r(X) / J(X)
 
         if aa == 0:
