@@ -244,6 +244,7 @@ class TestWalking:
 
     @pytest.mark.timeout(TEST_TIMEOUT)
     @pytest.mark.flaky(reruns=2)
+    @pytest.mark.skip
     def test_small_movement_2(self, walker: SoccerbotController):
         walker.setPose(Transformation([0, 0, 0], [0.00000, 0, 0, 1]))
         walker.ready()
