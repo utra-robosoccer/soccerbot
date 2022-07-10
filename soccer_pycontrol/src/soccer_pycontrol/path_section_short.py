@@ -20,7 +20,7 @@ class PathSectionShort(PathSection):
         if self.isWalkingBackwards():
             bodystep_size = rospy.get_param("bodystep_size_short_backwards", 0.025)
         else:
-            bodystep_size = rospy.get_param("bodystep_size_short_forwards", 0.025)
+            bodystep_size = rospy.get_param("bodystep_size_short_forwards", 0.035)
 
         self.angular_bodystep_size = 0.25  # radians Radians per angular step
         self.angular_speed = self.steps_per_second_default * self.angular_bodystep_size  # Rotational speed in radians per second
