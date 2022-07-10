@@ -98,7 +98,7 @@ class TestWalking:
         walker.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
         walker.ready()
         walker.wait(200)
-        goal_position = Transformation([0.02, 0, 0], [0, 0, 0, 1])
+        goal_position = Transformation([0.1, 0, 0], [0, 0, 0, 1])
         walker.setGoal(goal_position)
         walk_success = walker.run(single_trajectory=True)
         assert walk_success

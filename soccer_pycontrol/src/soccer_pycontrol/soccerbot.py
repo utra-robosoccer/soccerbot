@@ -522,7 +522,7 @@ class Soccerbot:
         Kp=rospy.get_param("walking_Kp", 0.8),
         Kd=rospy.get_param("walking_Kd", 0.0),
         Ki=rospy.get_param("walking_Ki", 0.0005),
-        setpoint=-0.01,
+        setpoint=rospy.get_param("walking_setpoint", -0.01),
         output_limits=(-1.57, 1.57),
     )
 
