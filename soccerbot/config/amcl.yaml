@@ -1,26 +1,30 @@
 min_particles: 100
 max_particles: 5000
-kld_err: 0.00001
+kld_err: 0.01
 kld_z: 0.99
-update_min_d: 0.02
+update_min_d: 0.05
 update_min_a: 0.05
-resample_interval: 1
-gui_publish_rate: 1
+resample_interval: 2
+gui_publish_rate: 10
 transform_tolerance: 0.1
 laser_model_type: "likelihood_field"
 laser_max_beams: 100
 tf_broadcast: true
-odom_model_type: "omni-corrected"
-odom_alpha1: 0.2
-odom_alpha2: 0.2
-odom_alpha3: 0.2
-odom_alpha4: 0.2
-odom_alpha5: 0.2
+
+# Add together to be 1
+laser_z_hit: 0.9
+laser_z_rand: 0.1
+
+odom_model_type: "diff-corrected"
+odom_alpha1: 0.00003 # 1 radian odom error per step
+odom_alpha2: 0.00
+odom_alpha3: 0.00003 # 1 cm odom error per step
+odom_alpha4: 0.00
 
 use_map_topic: true
 first_map_only: true
 scan_topic: scan
-initial_cov_xx: 0.1
-initial_cov_yy: 0.1
-initial_cov_aa: 0.1
+initial_cov_xx: 0.05
+initial_cov_yy: 0.05
+initial_cov_aa: 0.05
 global_frame_id: "world"

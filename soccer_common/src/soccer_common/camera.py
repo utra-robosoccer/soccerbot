@@ -30,7 +30,7 @@ class Camera:
     def ready(self) -> bool:
         return self.pose is not None and self.resolution_x is not None and self.resolution_y is not None and self.camera_info is not None
 
-    def reset_position(self, publish_basecamera=False, from_world_frame=False, timestamp=rospy.Time(0)):
+    def reset_position(self, from_world_frame=False, timestamp=rospy.Time(0)):
         trans = None
         rot = None
 
@@ -73,35 +73,7 @@ class Camera:
         assert trans is not None
         assert rot is not None
 
-        if not from_world_frame:
-            euler = Transformation.get_euler_from_quaternion(rot)
-            euler[0] = 0
-            rot_no_yaw = Transformation.get_quaternion_from_euler(euler)
-            self.pose = Transformation(trans, rot_no_yaw)
-        else:
-            self.pose = Transformation(trans, rot)
-
-        # Send transform of the camera to camera footprint
-        if publish_basecamera:
-            br = tf2_ros.TransformBroadcaster()
-            camera_footprint = TransformStamped()
-            camera_footprint.header.frame_id = self.robot_name + "/odom"
-            camera_footprint.child_frame_id = self.robot_name + "/base_camera"
-            camera_footprint.header.stamp = timestamp
-
-            euler = Transformation.get_euler_from_quaternion(rot)
-            euler[1] = 0
-            euler[2] = 0
-            rot_only_yaw = Transformation.get_quaternion_from_euler(euler)
-            camera_footprint.transform.translation.x = trans[0]
-            camera_footprint.transform.translation.y = trans[1]
-            camera_footprint.transform.translation.z = 0
-
-            camera_footprint.transform.rotation.x = rot_only_yaw[0]
-            camera_footprint.transform.rotation.y = rot_only_yaw[1]
-            camera_footprint.transform.rotation.z = rot_only_yaw[2]
-            camera_footprint.transform.rotation.w = rot_only_yaw[3]
-            br.sendTransform(camera_footprint)
+        self.pose = Transformation(trans, rot)
 
         return True
 
@@ -120,7 +92,7 @@ class Camera:
         x_delta = (pixel_world_pose.get_position()[0] - self.pose.get_position()[0]) / ratio
         y_delta = (pixel_world_pose.get_position()[1] - self.pose.get_position()[1]) / ratio
 
-        return [x_delta, y_delta, 0]
+        return [x_delta + camera_pose.get_position()[0], y_delta + camera_pose.get_position()[1], 0]
 
     # From a 3d position on the field, get the camera coordinate
     def findCameraCoordinate(self, pos: [int]) -> [int]:

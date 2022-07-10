@@ -1,11 +1,7 @@
-transform_tolerance: 0.01
 min_height: -1.0
 max_height: 1.0
 
-angle_min: -3.16
-angle_max: 3.16
 angle_increment: 0.005
-scan_time: 0.3333
 range_min: 0.0
 range_max: 3.0
 use_inf: true

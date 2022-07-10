@@ -29,7 +29,7 @@ class RobotControlled3D(RobotControlled):
         self.imu_subsciber = rospy.Subscriber("imu_filtered", Imu, self.imu_callback)
         self.action_completed_subscriber = rospy.Subscriber("action_complete", Empty, self.action_completed_callback, queue_size=1)
         self.head_centered_on_ball_subscriber = rospy.Subscriber("head_centered_on_ball", Empty, self.head_centered_on_ball_callback, queue_size=1)
-        self.reset_robot_subscriber = rospy.Subscriber("reset_robot", Pose, self.reset_robot_callback, queue_size=1)
+        self.reset_robot_subscriber = rospy.Subscriber("reset_robot", PoseStamped, self.reset_robot_callback, queue_size=1)
 
         # Publishers
         self.robot_initial_pose_publisher = rospy.Publisher("initialpose", PoseWithCovarianceStamped, queue_size=1, latch=True)
@@ -69,23 +69,26 @@ class RobotControlled3D(RobotControlled):
         p.pose.orientation.y = q[1]
         p.pose.orientation.z = q[2]
         p.pose.orientation.w = q[3]
-        print("Sending New Goal: " + str(goal_position))
+        rospy.loginfo("Sending New Goal: " + str(goal_position))
         self.goal_position = goal_position
         self.goal_publisher.publish(p)
         return True
 
-    def reset_robot_callback(self, pose: Pose):
-        self.position[0] = pose.position.x
-        self.position[1] = pose.position.y
+    def reset_robot_callback(self, pose: PoseStamped):
+        self.position[0] = pose.pose.position.x
+        self.position[1] = pose.pose.position.y
 
-        q = tf.transformations.euler_from_quaternion([pose.orientation.w, pose.orientation.x, pose.orientation.y, pose.orientation.z])
+        q = tf.transformations.euler_from_quaternion(
+            [pose.pose.orientation.w, pose.pose.orientation.x, pose.pose.orientation.y, pose.pose.orientation.z]
+        )
         self.position[2] = q[2]
-        rospy.loginfo(f"Robot Reset Called to {pose.position.x} {pose.position.y} {q[2]}")
+        rospy.loginfo(f"Robot Reset Called to {pose.pose.position.x} {pose.pose.position.y} {q[2]}")
         self.status = Robot.Status.READY
         if self.role == Robot.Role.UNASSIGNED:
             self.role = Robot.Role.STRIKER
-        self.reset_initial_position()
-        pass
+        while self.amcl_pose is None:
+            self.reset_initial_position()
+            rospy.sleep(0.5)
 
     def update_robot_state(self, _):
         # Get Ball Position from TF
@@ -192,7 +195,7 @@ class RobotControlled3D(RobotControlled):
             rospy.logerr("Invalid Action Completed " + str(self.status))
 
     def head_centered_on_ball_callback(self, data):
-        self.navigation_goal_localized_time = time.time()
+        self.navigation_goal_localized_time = rospy.Time.now()
 
     def imu_callback(self, msg):
         angle_threshold = 1.2  # in radian

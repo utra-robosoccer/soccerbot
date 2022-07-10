@@ -1,22 +1,20 @@
-import math
-import os
-import time
+import copy
 
-import rospy
 import tf
 from geometry_msgs.msg import Pose2D, PoseStamped
 from nav_msgs.msg import Odometry, Path
 from sensor_msgs.msg import Imu, JointState
 from std_msgs.msg import Empty, Float64
 
+from soccer_common import Transformation
 from soccer_msgs.msg import RobotState
 from soccer_pycontrol.soccerbot import *
 
 
 class SoccerbotRos(Soccerbot):
-    def __init__(self, position, useFixedBase=False):
+    def __init__(self, position, useFixedBase=False, useCalibration=True):
 
-        super().__init__(position, useFixedBase)
+        super().__init__(position, useFixedBase, useCalibration)
 
         self.motor_publishers = {}
         self.pub_all_motor = rospy.Publisher("joint_command", JointState, queue_size=1)
@@ -30,6 +28,9 @@ class SoccerbotRos(Soccerbot):
         self.imu_ready = False
         self.listener = tf.TransformListener()
         self.last_ball_found_timestamp = None
+        self.last_ball_pose = None
+        self.look_at_last_ball_pose = None
+        self.look_at_last_ball_pose_timeout = rospy.Time.now()
         self.ball_pixel_subscriber = rospy.Subscriber("ball_pixel", Pose2D, self.ball_pixel_callback, queue_size=1)
         self.ball_pixel: Pose2D = None
         self.last_ball_pixel: Pose2D = None
@@ -173,19 +174,24 @@ class SoccerbotRos(Soccerbot):
                 ball_found_timestamp = self.listener.getLatestCommonTime(
                     os.environ["ROS_NAMESPACE"] + "/camera", os.environ["ROS_NAMESPACE"] + "/ball"
                 )
+                last_ball_position, last_ball_orientation = self.listener.lookupTransform(
+                    "world", os.environ["ROS_NAMESPACE"] + "/ball", rospy.Time(0)
+                )
                 if self.last_ball_found_timestamp is None or ball_found_timestamp - self.last_ball_found_timestamp > rospy.Duration(2):
                     self.last_ball_found_timestamp = ball_found_timestamp
+                    self.last_ball_pose = Transformation(last_ball_position)
+                    rospy.loginfo_throttle(5, f"Ball found with pose {self.last_ball_pose.get_position()}")
 
             except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
                 rospy.loginfo_throttle(5, "Ball no longer in field of view, searching for the ball")
                 pass
 
             # So that the arms don't block the vision
-            self.configuration[Joints.LEFT_ARM_2] = (0.3 - self.configuration[Joints.LEFT_ARM_2]) * 0.05 + self.configuration[Joints.LEFT_ARM_2]
-            self.configuration[Joints.RIGHT_ARM_2] = (0.3 - self.configuration[Joints.RIGHT_ARM_2]) * 0.05 + self.configuration[Joints.RIGHT_ARM_2]
+            self.configuration[Joints.LEFT_ARM_2] = (0.8 - self.configuration[Joints.LEFT_ARM_2]) * 0.05 + self.configuration[Joints.LEFT_ARM_2]
+            self.configuration[Joints.RIGHT_ARM_2] = (0.8 - self.configuration[Joints.RIGHT_ARM_2]) * 0.05 + self.configuration[Joints.RIGHT_ARM_2]
 
-            # If the last time it saw the ball was 5 seconds ago
-            if self.last_ball_found_timestamp is not None and (rospy.Time.now() - self.last_ball_found_timestamp) < rospy.Duration(10):
+            # If the last time it saw the ball was 2 seconds ago
+            if self.last_ball_found_timestamp is not None and (rospy.Time.now() - self.last_ball_found_timestamp) < rospy.Duration(3):
 
                 assert self.ball_pixel is not None
 
@@ -213,7 +219,43 @@ class SoccerbotRos(Soccerbot):
                     else:
                         rospy.loginfo_throttle(1, f"Centering Camera on Ball (x,y) ({self.ball_pixel.x}, {self.ball_pixel.y}) -> (320, 240)")
 
+            # If it finished moving, turn it's head to the last location where it saw the ball
+            elif self.last_ball_pose is not None or self.look_at_last_ball_pose_timeout > rospy.Time.now():
+
+                if self.last_ball_pose is not None:
+                    self.look_at_last_ball_pose = copy.deepcopy(self.last_ball_pose)
+                    self.look_at_last_ball_pose_timeout = rospy.Time.now() + rospy.Duration(5)
+
+                self.last_ball_pose = None
+                rospy.loginfo_throttle(1, f"Searching for ball last location {self.look_at_last_ball_pose.get_position()}")
+
+                try:
+                    camera_position, camera_orientation = self.listener.lookupTransform(
+                        "world", os.environ["ROS_NAMESPACE"] + "/camera", rospy.Time(0)
+                    )
+                    euler_yaw_only = Transformation.get_euler_from_quaternion(camera_orientation)
+                    euler_yaw_only[1] = 0
+                    euler_yaw_only[2] = 0
+                    camera_pose = Transformation(camera_position, Transformation.get_quaternion_from_euler(euler_yaw_only))
+                except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+                    rospy.logerr_throttle(5, "Unable to get robot to camera pose")
+                    return
+
+                camera_to_ball = scipy.linalg.inv(camera_pose) @ self.look_at_last_ball_pose
+                camera_to_ball_position = camera_to_ball.get_position()
+                yaw = math.atan2(camera_to_ball_position[1], camera_to_ball_position[0])
+                pitch = math.atan2(camera_to_ball_position[2], camera_to_ball_position[0])
+
+                self.configuration[Joints.HEAD_1] = yaw
+                self.configuration[Joints.HEAD_2] = -pitch
+
+                rospy.loginfo_throttle(
+                    1,
+                    f"Rotating head to last seen ball location {self.look_at_last_ball_pose.get_position()}. Camera Location {camera_pose.get_position()}, Camera To Ball {camera_to_ball_position}, Calculated Yaw {yaw}, Pitch {pitch}, Timeout {self.look_at_last_ball_pose_timeout}",
+                )
+
             else:
+                rospy.loginfo_throttle(5, "Searching for ball again")
                 self.configuration[Joints.HEAD_1] = math.sin(self.head_step * SoccerbotRos.HEAD_YAW_FREQ) * (math.pi / 4)
                 self.configuration[Joints.HEAD_2] = math.pi * 0.185 - math.cos(self.head_step * SoccerbotRos.HEAD_PITCH_FREQ) * math.pi * 0.15
                 self.head_step += 1

@@ -22,6 +22,8 @@ if real_robot:
     config_path = f"{file_path}/../../config/{robot_model}.yaml"
 else:
     config_path = f"{file_path}/../../config/{robot_model}_sim.yaml"
+    if robot_model == "bez1":
+        config_path = f"{file_path}/../../config/{robot_model}_sim_pybullet.yaml"
 
 if run_in_ros:
     import rospy
