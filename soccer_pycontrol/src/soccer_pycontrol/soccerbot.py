@@ -364,29 +364,25 @@ class Soccerbot:
         return self.robot_path
 
     def stepPath(self, t, verbose=False):
-
         assert t <= self.robot_path.duration()
+
+        # Get Crotch position (Average Time: 0.0007538795471191406)
         crotch_position = self.robot_path.crotchPosition(t) @ self.torso_offset
 
+        # Get foot position at time (Average Time: 0.0004878044128417969)
         [right_foot_position, left_foot_position] = self.robot_path.footPosition(t)
-        torso_to_left_foot = scipy.linalg.lstsq(crotch_position, left_foot_position, lapack_driver="gelsy")[
-            0
-        ]  # np.matmul(np.linalg.inv(crotch_position), left_foot_position)
-        torso_to_right_foot = scipy.linalg.lstsq(crotch_position, right_foot_position, lapack_driver="gelsy")[
-            0
-        ]  # np.matmul(np.linalg.inv(crotch_position), right_foot_position)
 
-        if verbose:
-            print("------------------- feet angles -------------------")
+        # Calcualate the feet position relative from torso (Average Time: 0.000133514404296875)
+        torso_to_left_foot = scipy.linalg.lstsq(crotch_position, left_foot_position, lapack_driver="gelsy")[0]
+        torso_to_right_foot = scipy.linalg.lstsq(crotch_position, right_foot_position, lapack_driver="gelsy")[0]
+
+        # Inverse kinematics for both feet (Average Time: 0.0015840530395507812)
         thetas = self.inverseKinematicsRightFoot(torso_to_right_foot)
-        if verbose:
-            print("Right foot: " + str([format(theta, ".3f") for theta in thetas]).replace("'", ""))
         self.configuration[Links.RIGHT_LEG_1 : Links.RIGHT_LEG_6 + 1] = thetas[0:6]
+
         thetas = self.inverseKinematicsLeftFoot(torso_to_left_foot)
-        if verbose:
-            print("Left foot: " + str([format(theta, ".3f") for theta in thetas]).replace("'", ""))
-            print("--------------------------------------------------")
         self.configuration[Links.LEFT_LEG_1 : Links.LEFT_LEG_6 + 1] = thetas[0:6]
+
         self.pose = crotch_position
 
     def calculate_angles(self, show=True):
