@@ -13,7 +13,7 @@ from soccer_common.transformation import Transformation
 
 real_robot = False
 run_in_ros = False
-display = False
+display = True
 robot_model = "bez1"
 TEST_TIMEOUT = 60
 
@@ -248,7 +248,7 @@ class TestWalking:
         walker.setPose(Transformation([0, 0, 0], [0.00000, 0, 0, 1]))
         walker.ready()
         walker.wait(100)
-        goal = Transformation.get_transform_from_euler([np.pi, 0, 0])
+        goal = Transformation.get_transform_from_euler([0.5 * np.pi, 0, 0])
         goal.set_position([-0.3, 0, 0])
         walker.setGoal(goal)
         walk_success = walker.run(single_trajectory=True)
