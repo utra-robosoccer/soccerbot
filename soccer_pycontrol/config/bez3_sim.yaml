@@ -23,16 +23,20 @@ joint_indices:
   HEAD_2: 17
 
 walking_hip_height: 0.22
-steps_per_second_default: 1.8
-bodystep_size_default: 0.8
-foot_separation: 0.04
-torso_offset_x: 0.00
+steps_per_second_default: 1.6
+bodystep_size_default: 0.6
+foot_separation: 0.045
+torso_offset_x: 0.01
 merge_fixed_links: true
 
 crotch_sidediff_sway: -0.025 # -0.025
-crotch_zdiff_sway: 0.00 # 0
+crotch_zdiff_sway: -0.02 # 0
 
 step_rotation: 0.3 # 0.05
-step_outwardness: 0.015 # 0.015
+step_outwardness: 0.01 # 0.015
 pre_footstep_ratio: 0.15 # 0.15
-step_height: 0.065 # 0.065
+step_height: 0.07 # 0.065
+
+standing_Kp: 0.00
+standing_Kd: 0.00
+standing_Ki: 0.00
