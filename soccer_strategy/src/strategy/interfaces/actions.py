@@ -108,7 +108,7 @@ class Actions:
             target_position = goal_position
 
             rospy.loginfo(f"Case 3a: Target Position {target_position}")
-            Actions.navigate_to_position_with_offset(robot, ball_position, target_position, offset=0.3)
+            Actions.navigate_to_position_with_offset(robot, ball_position, target_position)
 
     @staticmethod
     def navigate_to_position_with_offset(robot, destination_position, target_position, offset=0.173):
