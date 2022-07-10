@@ -49,7 +49,7 @@ class TestTrajectory:
     @pytest.mark.parametrize("trajectory", ["bez1"], indirect=True)
     def test_getupfront(self, trajectory: SoccerTrajectoryClass):
         msg = FixedTrajectoryCommand()
-        msg.trajectory_name = "getupback"
+        msg.trajectory_name = "getupfront"
         msg.mirror = False
         traj_success = trajectory.run_trajectory(command=msg)
         assert traj_success
