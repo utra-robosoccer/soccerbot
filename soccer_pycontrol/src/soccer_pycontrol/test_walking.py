@@ -243,13 +243,13 @@ class TestWalking:
         assert walk_success
 
     @pytest.mark.timeout(TEST_TIMEOUT)
-    @pytest.mark.flaky(reruns=1)
+    @pytest.mark.flaky(reruns=2)
     def test_small_movement_2(self, walker: SoccerbotController):
         walker.setPose(Transformation([0, 0, 0], [0.00000, 0, 0, 1]))
         walker.ready()
         walker.wait(100)
         goal = Transformation.get_transform_from_euler([0.5 * np.pi, 0, 0])
-        goal.set_position([-0.3, 0, 0])
+        goal.set_position([-0.1, 0, 0])
         walker.setGoal(goal)
         walk_success = walker.run(single_trajectory=True)
         assert walk_success

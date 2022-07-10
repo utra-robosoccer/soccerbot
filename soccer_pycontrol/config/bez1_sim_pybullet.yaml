@@ -10,3 +10,5 @@ calibration_trans_a2: 0.7485569113303958
 # Rotation calibration parameters
 # Xactual = a * Xdesired
 calibration_rot_a: 0.7506750441673335
+
+bodystep_size_short_backwards: 0.015
