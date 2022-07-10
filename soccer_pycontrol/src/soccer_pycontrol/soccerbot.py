@@ -89,6 +89,8 @@ class Soccerbot:
             baseOrientation=pose.get_orientation(),
         )
         self.pybullet_offset = pb.getBasePositionAndOrientation(self.body)[0][:2] + (0,)  # pb.getLinkState(self.body, Links.TORSO)[4:6]
+        self.motor_names = [pb.getJointInfo(self.body, i)[1].decode("utf-8") for i in range(18)]
+
         # IMU Stuff
         self.prev_lin_vel = [0, 0, 0]
         self.time_step_sim = 1.0 / 240
