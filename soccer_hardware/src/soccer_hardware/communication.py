@@ -38,7 +38,7 @@ class Communication:
         for motor in self._motor_map:
             self._motor_map[motor]["value"] = 0.0
 
-        self._publish_timer = rp.Timer(rp.Duration(nsecs=10000000), self.send_angles)
+        self._publish_timer = rp.Timer(rp.Duration(nsecs=25000000), self.send_angles)
 
     def run(self):
         self._rx_thread.start()

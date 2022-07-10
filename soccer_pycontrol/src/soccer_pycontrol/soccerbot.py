@@ -89,6 +89,8 @@ class Soccerbot:
             baseOrientation=pose.get_orientation(),
         )
         self.pybullet_offset = pb.getBasePositionAndOrientation(self.body)[0][:2] + (0,)  # pb.getLinkState(self.body, Links.TORSO)[4:6]
+        self.motor_names = [pb.getJointInfo(self.body, i)[1].decode("utf-8") for i in range(18)]
+
         # IMU Stuff
         self.prev_lin_vel = [0, 0, 0]
         self.time_step_sim = 1.0 / 240
@@ -112,14 +114,22 @@ class Soccerbot:
         self.right_hip_to_left_hip = self.get_link_transformation(Links.LEFT_LEG_1, Links.RIGHT_LEG_1)
         self.hip_to_torso = self.get_link_transformation(Links.RIGHT_LEG_1, Links.TORSO)
 
+        pitch_correction = tr([0, 0, 0], tr.get_quaternion_from_euler([0, rospy.get_param("torso_offset_pitch_ready", 0.0), 0]))
+
         self.right_foot_init_position = self.get_link_transformation(Links.TORSO, Links.RIGHT_LEG_6)
         self.right_foot_init_position[2, 3] = -(self.hip_to_torso[2, 3] + self.walking_hip_height) + self.foot_center_to_floor
+        self.right_foot_init_position[0, 3] -= rospy.get_param("torso_offset_x_ready", 0.0)
+        self.right_foot_init_position = pitch_correction @ self.right_foot_init_position
 
         self.left_foot_init_position = self.get_link_transformation(Links.TORSO, Links.LEFT_LEG_6)
         self.left_foot_init_position[2, 3] = -(self.hip_to_torso[2, 3] + self.walking_hip_height) + self.foot_center_to_floor
+        self.left_foot_init_position[0, 3] -= rospy.get_param("torso_offset_x_ready", 0.0)
+        self.left_foot_init_position = pitch_correction @ self.left_foot_init_position
 
         self.setPose(pose)
-        self.torso_offset = tr([rospy.get_param("torso_offset_x", 0), 0, 0])
+
+        pitch_correction = tr([0, 0, 0], tr.get_quaternion_from_euler([0, rospy.get_param("torso_offset_pitch", 0.0), 0]))
+        self.torso_offset = pitch_correction @ tr([rospy.get_param("torso_offset_x", 0), 0, 0])
         self.robot_path: PathRobot = None
         self.robot_odom_path: PathRobot = None
 
@@ -208,11 +218,12 @@ class Soccerbot:
         previous_configuration = self.configuration
         try:
             joint_state = rospy.wait_for_message("joint_states", JointState, timeout=3)
-            previous_configuration = joint_state.position
+            indexes = [joint_state.name.index(motor_name) for motor_name in self.motor_names]
+            previous_configuration = [joint_state.position[i] for i in indexes]
         except (ROSException, AttributeError) as ex:
             rospy.logerr(ex)
 
-        for r in np.arange(0, 1, 0.040):
+        for r in np.arange(0, 1.00, 0.040):
             rospy.loginfo_throttle(1, "Going into ready position")
             self.configuration[0:18] = (
                 np.array(np.array(configuration[0:18]) - np.array(previous_configuration[0:18])) * r + np.array(previous_configuration[0:18])
@@ -226,7 +237,7 @@ class Soccerbot:
                     targetPositions=self.get_angles(),
                     forces=self.max_forces,
                 )
-            rospy.sleep(0.020)
+            rospy.sleep(rospy.get_param("get_ready_rate", 0.02))
 
         self.configuration_offset = [0] * len(Joints)
 
@@ -515,7 +526,7 @@ class Soccerbot:
         Kp=rospy.get_param("walking_Kp", 0.8),
         Kd=rospy.get_param("walking_Kd", 0.0),
         Ki=rospy.get_param("walking_Ki", 0.0005),
-        setpoint=-0.01,
+        setpoint=rospy.get_param("walking_setpoint", -0.01),
         output_limits=(-1.57, 1.57),
     )
 

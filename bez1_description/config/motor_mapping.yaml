@@ -24,7 +24,7 @@ motor_mapping:
   right_leg_motor_4:
     id: 1
     direction: 1 #foot points upwards
-    offset: 151.5
+    offset: 150.5
     initial_state: 0.2
   right_leg_motor_5:
     id: 0
@@ -44,7 +44,7 @@ motor_mapping:
   left_leg_motor_2:
     id: 8
     direction: 1 # leg goes forwards
-    offset: 151
+    offset: 150
     initial_state: 0.25
   left_leg_motor_3:
     id: 9

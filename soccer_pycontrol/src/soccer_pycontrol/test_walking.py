@@ -103,10 +103,11 @@ class TestWalking:
         walk_success = walker.run(single_trajectory=True)
         assert walk_success
 
-        final_position = walker.getPose()
-        distance_offset = np.linalg.norm((final_position - goal_position.get_position())[0:2])
-        if robot_model == "bez1":
-            assert distance_offset < 0.08
+        if not run_in_ros:
+            final_position = walker.getPose()
+            distance_offset = np.linalg.norm((final_position - goal_position.get_position())[0:2])
+            if robot_model == "bez1":
+                assert distance_offset < 0.08
 
     @pytest.mark.timeout(TEST_TIMEOUT)
     @pytest.mark.flaky(reruns=1)

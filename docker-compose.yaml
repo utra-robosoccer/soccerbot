@@ -27,6 +27,7 @@ x-soccerbot: &soccerbot
       - utrarobosoccer/soccerbot_dependencies
   cap_add:
     - SYS_PTRACE
+    - SYS_NICE
   pid: "host"
   security_opt:
     - seccomp:unconfined
