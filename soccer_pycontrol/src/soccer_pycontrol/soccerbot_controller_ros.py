@@ -298,7 +298,6 @@ class SoccerbotControllerRos(SoccerbotController):
             self.soccerbot.publishAngles()
 
             time_end = time.time()
-            print(time_end - time_start)
             if time_end - time_start > SoccerbotController.PYBULLET_STEP * 1.2:
                 rospy.logerr(f"Step Delta took longer than expected {time_end - time_start}. Control Frequency {SoccerbotController.PYBULLET_STEP}")
                 rospy.logerr(f"Desired Steps Per Second: {PathSection.steps_per_second_default}")

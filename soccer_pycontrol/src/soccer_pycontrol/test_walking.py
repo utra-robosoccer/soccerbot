@@ -12,7 +12,7 @@ if "ROS_NAMESPACE" not in os.environ:
 from soccer_common.transformation import Transformation
 
 real_robot = False
-run_in_ros = True
+run_in_ros = False
 display = False
 robot_model = "bez1"
 TEST_TIMEOUT = 60
@@ -202,7 +202,7 @@ class TestWalking:
         final_position = walker.getPose()
         distance_offset = np.linalg.norm((final_position - goal_position.get_position())[0:2])
         if robot_model == "bez1":
-            assert distance_offset < 0.1
+            assert distance_offset < 0.2
         assert walk_success
 
     @pytest.mark.timeout(TEST_TIMEOUT)
