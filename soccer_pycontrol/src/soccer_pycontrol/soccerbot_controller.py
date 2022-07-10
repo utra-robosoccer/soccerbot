@@ -4,6 +4,7 @@ from time import sleep
 import numpy as np
 import pybullet as pb
 import pybullet_data
+import rospy
 
 from soccer_common.transformation import Transformation
 from soccer_pycontrol.ramp import Ramp
@@ -11,7 +12,7 @@ from soccer_pycontrol.soccerbot import Soccerbot
 
 
 class SoccerbotController:
-    PYBULLET_STEP = 0.01
+    PYBULLET_STEP = rospy.get_param("control_frequency", 0.01)
 
     def __init__(self, display=True, useCalibration=True):
         self.display = display

@@ -8,6 +8,7 @@ from rospy import ROSInterruptException
 from std_msgs.msg import Bool, Empty
 
 from soccer_msgs.msg import RobotState
+from soccer_pycontrol.path_section import PathSection
 from soccer_pycontrol.soccerbot_controller import *
 from soccer_pycontrol.soccerbot_ros import SoccerbotRos
 
