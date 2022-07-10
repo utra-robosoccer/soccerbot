@@ -16,8 +16,8 @@ class PathSection(ABC):
     steps_per_second_default = rospy.get_param("steps_per_second_default", 3.5)
 
     def __init__(self, start_transform: Transformation, end_transform: Transformation, bodystep_size=bodystep_size_default):
-        self.start_transform = start_transform
-        self.end_transform = end_transform
+        self.start_transform: Transformation = start_transform
+        self.end_transform: Transformation = end_transform
 
         self.bodystep_size = bodystep_size
         self.steps_per_second = PathSection.steps_per_second_default
