@@ -1,3 +1,5 @@
+control_frequency: 0.02
+
 # Path parameters
 torso_height: 0.36 # 24 to 38 not sure
 walking_hip_height: 0.185 # not sure
@@ -14,7 +16,7 @@ torso_offset_pitch: 0.15
 torso_offset_x_ready: 0.012 # positive is forward
 torso_offset_pitch_ready: -0.1
 crotch_sidediff_sway: -0.01
-#get_ready_rate: 0.03
+get_ready_rate: 0.03
 #pre_footstep_ratio: 0.05
 post_footstep_ratio: 0.2
 
