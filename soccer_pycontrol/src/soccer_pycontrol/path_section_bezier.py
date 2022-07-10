@@ -12,8 +12,8 @@ class PathSectionBezier(PathSection):
     turn_duration = rospy.get_param("turn_duration", 3)
 
     def __init__(self, start_transform: Transformation, end_transform: Transformation):
-        self.start_transform = start_transform
-        self.end_transform = end_transform
+        self.start_transform: Transformation = start_transform
+        self.end_transform: Transformation = end_transform
         if self.isWalkingBackwards():
             bodystep_size = PathSection.bodystep_size_default * PathSection.backwards_bodystep_size_ratio
         else:

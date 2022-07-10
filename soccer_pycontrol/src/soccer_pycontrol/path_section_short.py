@@ -14,8 +14,8 @@ class PathSectionShort(PathSection):
     scale_yaw = rospy.get_param("scale_yaw", 1.0)  # Increase the rotation by angle
 
     def __init__(self, start_transform: Transformation, end_transform: Transformation):
-        self.start_transform = start_transform
-        self.end_transform = end_transform
+        self.start_transform: Transformation = start_transform
+        self.end_transform: Transformation = end_transform
 
         if self.isWalkingBackwards():
             bodystep_size = rospy.get_param("bodystep_size_short_backwards", 0.025)
