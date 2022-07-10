@@ -23,19 +23,21 @@ class Test(TestCase):
         sys.modules["soccer_msgs"] = __import__("soccer_msgs_mock")
         from game_engine_2d import GameEngine2D
         from strategy.strategy_dummy import StrategyDummy
+        from strategy.strategy_stationary import StrategyStationary
 
         mock_ros(robot_model="bez1", real_robot=False, config_path="")
 
         friendly_wins = 0
         opponent_wins = 0
         for i in range(1):
-            g = GameEngine2D(display=self.display, team_1_strategy=StrategyDummy, team_2_strategy=StrategyDummy)
+            g = GameEngine2D(display=self.display, team_1_strategy=StrategyDummy, team_2_strategy=StrategyStationary)
             friendly_points, opponent_points = g.run()
             if friendly_points > opponent_points:
                 friendly_wins += 1
             elif friendly_points < opponent_points:
                 opponent_wins += 1
         print(f"Friendly: {friendly_wins}, opponent: {opponent_wins}")
+        assert not (friendly_wins == 0 and opponent_wins == 0)
 
     def test_navigate_to_scoring_position_with_offset_case_1(self):
         from strategy.interfaces.actions import Actions

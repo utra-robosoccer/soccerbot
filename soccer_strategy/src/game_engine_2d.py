@@ -118,7 +118,6 @@ class GameEngine2D:
                 self.reset_robots()
             if step % int(game_period_seconds / 2 / 20) == 0:
                 print(f"\033[96mTime Elapsed: {step } / {game_period_seconds}\033[0m")
-                self.reset_robots()
 
             self.update_estimated_physics(self.team1.robots + self.team2.robots, self.ball)
 
@@ -165,6 +164,7 @@ class GameEngine2D:
                 update_position = robot.transformation_to_position(update_position_transformation)
                 if robot.path.isFinished(robot.path_time):
                     robot.status = Robot.Status.READY
+                    robot.position = robot.path.end_transform.to_pos_theta()
                     robot.path_time = 0
                     continue
 
