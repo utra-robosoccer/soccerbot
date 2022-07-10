@@ -16,8 +16,8 @@ class Test(TestCase):
 
         super().setUpClass()
         self.display = True
-        # if "pytest" in sys.argv[0]:
-        #     self.display = False
+        if "pytest" in sys.argv[0]:
+            self.display = False
 
     def test_dummy_vs_stationary_strategy(self):
         sys.modules["soccer_msgs"] = __import__("soccer_msgs_mock")
