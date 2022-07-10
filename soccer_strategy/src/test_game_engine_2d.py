@@ -16,8 +16,8 @@ class Test(TestCase):
 
         super().setUpClass()
         self.display = True
-        if "pytest" in sys.argv[0]:
-            self.display = False
+        # if "pytest" in sys.argv[0]:
+        #     self.display = False
 
     def test_dummy_vs_stationary_strategy(self):
         sys.modules["soccer_msgs"] = __import__("soccer_msgs_mock")
@@ -36,11 +36,10 @@ class Test(TestCase):
         sys.modules["soccer_msgs"] = __import__("soccer_msgs_mock")
         from game_engine_2d import GameEngine2D
         from strategy.strategy_dummy import StrategyDummy
-        from strategy.strategy_stationary import StrategyStationary
 
         mock_ros(robot_model="bez1", real_robot=False, config_path="")
 
-        g = GameEngine2D(display=self.display, team_1_strategy=StrategyDummy, team_2_strategy=StrategyStationary, game_duration=2)
+        g = GameEngine2D(display=self.display, team_1_strategy=StrategyDummy, team_2_strategy=StrategyDummy, game_duration=2)
         friendly_points, opponent_points = g.run()
         print(f"Friendly: {friendly_points}, opponent: {opponent_points}")
 
