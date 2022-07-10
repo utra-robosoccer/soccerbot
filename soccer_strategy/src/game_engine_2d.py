@@ -19,8 +19,9 @@ class GameEngine2D:
     PHYSICS_UPDATE_INTERVAL = 0.25  # 4 Times per second
     DISPLAY_UPDATE_INTERVAL = 0.5  # Every 5 seconds
 
-    def __init__(self, display=True, team_1_strategy=StrategyDummy, team_2_strategy=StrategyDummy):
+    def __init__(self, display=True, team_1_strategy=StrategyDummy, team_2_strategy=StrategyDummy, game_duration=20):
         self.display = display
+        self.game_duration = game_duration
 
         # Initialize teams
         self.team1 = Team(
@@ -108,7 +109,9 @@ class GameEngine2D:
 
     # TODO it is slow because it is re-pathing whenever the ball changes its position
     def run(self):
-        game_period_seconds = int(2 * 10 * 60 / GameEngine2D.PHYSICS_UPDATE_INTERVAL)  # 2 Periods of 10 minutes each, each step is a second
+        game_period_seconds = int(
+            self.game_duration * 60 / GameEngine2D.PHYSICS_UPDATE_INTERVAL
+        )  # 2 Periods of 10 minutes each, each step is a second
         friendly_points = 0
         opponent_points = 0
 
