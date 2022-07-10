@@ -7,7 +7,7 @@ from unittest import TestCase
 import numpy as np
 import rospy
 import tf
-from geometry_msgs.msg import Pose
+from geometry_msgs.msg import PoseStamped
 from robot import Robot
 from rosgraph_msgs.msg import Clock
 from scipy.spatial.transform import Rotation as R
@@ -19,6 +19,23 @@ from soccer_object_detection.msg import BoundingBoxes
 from soccer_strategy.src.team import Team
 
 RUN_LOCALLY = "pycharm" in sys.argv[0]
+
+
+class bcolors:
+    HEADER = "\033[95m"
+    OKBLUE = "\033[94m"
+    OKCYAN = "\033[96m"
+    OKGREEN = "\033[92m"
+    MAGENTA = "\u001b[35m"
+    WARNING = "\033[93m"
+    FAIL = "\033[91m"
+    ENDC = "\033[0m"
+    BOLD = "\033[1m"
+    UNDERLINE = "\033[4m"
+
+
+def printlog(s: str):
+    print(bcolors.MAGENTA + s + bcolors.ENDC)
 
 
 class IntegrationTest(TestCase):
@@ -68,28 +85,32 @@ class IntegrationTest(TestCase):
         self.bounding_boxes = b
 
     def set_robot_pose(self, x, y, theta):
-        resetPublisher = rospy.Publisher("/robot1/reset_robot", Pose, queue_size=1, latch=True)
-        p = Pose()
-        p.position.x = x
-        p.position.y = y
-        p.position.z = 0
+        resetPublisher = rospy.Publisher("/robot1/reset_robot", PoseStamped, queue_size=1, latch=True)
+        p = PoseStamped()
+        p.header.stamp = rospy.Time.now()
+        p.header.frame_id = "world"
+        p.pose.position.x = x
+        p.pose.position.y = y
+        p.pose.position.z = 0
 
         r = R.from_euler("ZYX", [theta, 0, 0], degrees=False)
         q = r.as_quat()
 
-        p.orientation.x = q[0]
-        p.orientation.y = q[1]
-        p.orientation.z = q[2]
-        p.orientation.w = q[3]
+        p.pose.orientation.x = q[0]
+        p.pose.orientation.y = q[1]
+        p.pose.orientation.z = q[2]
+        p.pose.orientation.w = q[3]
 
         resetPublisher.publish(p)
 
     def set_ball_pose(self, x, y):
-        ballPublisher = rospy.Publisher("/reset_ball", Pose, queue_size=1, latch=True)
-        p = Pose()
-        p.position.x = x
-        p.position.y = y
-        p.position.z = 0
+        ballPublisher = rospy.Publisher("/reset_ball", PoseStamped, queue_size=1, latch=True)
+        p = PoseStamped()
+        p.header.stamp = rospy.Time.now()
+        p.header.frame_id = "world"
+        p.pose.position.x = x
+        p.pose.position.y = y
+        p.pose.position.z = 0
 
         ballPublisher.publish(p)
 
@@ -128,22 +149,22 @@ class IntegrationTestInitial(IntegrationTest):
         DIST_TOLERANCE = 2
 
         def processMsg(data: RobotState):
-            print("processMsg, status {}, role {}".format(data.status, data.role))
+            printlog("processMsg, status {}, role {}".format(data.status, data.role))
             coords = [np.inf, np.inf, np.inf]  # Placeholder
             if data.role == RobotState.ROLE_GOALIE:
                 coords = self.team.formations["ready"][Robot.Role.GOALIE]
-                print("Robot.Role.GOALIE - {}".format(coords))
+                printlog("Robot.Role.GOALIE - {}".format(coords))
             elif data.role == RobotState.ROLE_LEFT_WING:
                 coords = self.team.formations["ready"][Robot.Role.LEFT_WING]
-                print("Robot.Role.LEFT_WING - {}".format(coords))
+                printlog("Robot.Role.LEFT_WING - {}".format(coords))
             elif data.role == RobotState.ROLE_RIGHT_WING:
                 coords = self.team.formations["ready"][Robot.Role.RIGHT_WING]
-                print("Robot.Role.RIGHT_WING - {}".format(coords))
+                printlog("Robot.Role.RIGHT_WING - {}".format(coords))
             elif data.role == RobotState.ROLE_STRIKER:
                 coords = self.team.formations["ready"][Robot.Role.STRIKER]
-                print("Robot.Role.STRIKER - {}".format(coords))
+                printlog("Robot.Role.STRIKER - {}".format(coords))
             self.distance = np.linalg.norm([coords[0] - data.pose.position.x, coords[1] - data.pose.position.y])
-            print("processMsg distance: {}".format(self.distance))
+            printlog("processMsg distance: {}".format(self.distance))
 
         while not rospy.is_shutdown():
             # Validate that the robot publishes robot????
@@ -151,20 +172,20 @@ class IntegrationTestInitial(IntegrationTest):
             try:
                 rospy.wait_for_message("/robot1/state", RobotState, 10)
             except rospy.ROSException:
-                print("Connection Failed")
+                printlog("Connection Failed")
 
             handle = rospy.Subscriber("/robot1/state", RobotState, processMsg)
             rospy.wait_for_message("/robot1/state", RobotState, 120)
             assert handle.get_num_connections() > 0
-            print("Connection looks okay")
+            printlog("Connection looks okay")
             # Validate that the robot moves towards the goal
             for i in range(0, 200):  # 100s timeout
-                print("dist: {}, cycle: {}".format(self.distance, i))
+                printlog("dist: {}, cycle: {}".format(self.distance, i))
                 rospy.sleep(1)
                 if self.distance < DIST_TOLERANCE:
                     break
             assert self.distance < DIST_TOLERANCE
-            print("Goal reached")
+            printlog("Goal reached")
 
             # Validates that the robot kicks the ball
             # TODO
@@ -186,11 +207,31 @@ class IntegrationTestPlaying(IntegrationTest):
 
             gt_ball_pose = self.get_ball_pose(gt=False)
             if gt_ball_pose is not None:
-                print(f"Current ball location: {gt_ball_pose}")
+                printlog(f"Current ball location: {gt_ball_pose}")
                 if gt_ball_pose[0] > 4.5:
-                    print("Goal Scored")
+                    printlog("Goal Scored")
                     return
             else:
-                print("Ball not found")
+                printlog("Ball not found")
 
-            rospy.sleep(0.5)
+            rospy.sleep(2)
+
+    @timeout_decorator.timeout(10000)
+    def test_walk_and_kick_right(self):
+        self.set_robot_pose(3.5, 0.0, 0)
+        self.set_ball_pose(4.16, -0.04)
+        while not rospy.is_shutdown():
+            if self.bounding_boxes is None:
+                rospy.sleep(0.1)
+                continue
+
+            gt_ball_pose = self.get_ball_pose(gt=False)
+            if gt_ball_pose is not None:
+                printlog(f"Current ball location: {gt_ball_pose}")
+                if gt_ball_pose[0] > 4.5:
+                    printlog("Goal Scored")
+                    return
+            else:
+                printlog("Ball not found")
+
+            rospy.sleep(2)

@@ -79,8 +79,8 @@ class GameControllerBridge:
         self.socket = None
         self.first_run = True
         self.published_camera_info = False
-        self.amcl_received = False
-        rospy.Subscriber("/" + self.base_frame + "/amcl_pose", PoseWithCovarianceStamped, self.amcl_callback)
+        self.odom_combined_received = False
+        rospy.Subscriber("/" + self.base_frame + "/odom_combined", PoseWithCovarianceStamped, self.odom_combined_callback)
         self.run()
 
     def receive_msg(self):
@@ -113,7 +113,7 @@ class GameControllerBridge:
                     sensor_time_steps = self.get_sensor_time_steps(active=True)
                 self.send_actuator_requests(sensor_time_steps)
                 self.first_run = False
-                if not self.amcl_received:
+                if not self.odom_combined_received:
                     odom_pub = rospy.Publisher("/" + self.base_frame + "/odom", Odometry, queue_size=50)
 
                     # since all odometry is 6DOF we'll need a quaternion created from yaw
@@ -165,8 +165,8 @@ class GameControllerBridge:
 
         self.close_connection()
 
-    def amcl_callback(self, data):
-        self.amcl_received = True
+    def odom_combined_callback(self, data):
+        self.odom_combined_received = True
 
     def create_publishers(self):
         self.pub_clock = rospy.Publisher("/clock", Clock, queue_size=1)
@@ -174,6 +174,7 @@ class GameControllerBridge:
         self.pub_camera = rospy.Publisher("camera/image_raw", Image, queue_size=1)
         self.pub_camera_info = rospy.Publisher("camera/camera_info", CameraInfo, queue_size=1, latch=True)
         self.pub_imu = rospy.Publisher("imu_raw", Imu, queue_size=1)
+        self.pub_imu_first = 2
         self.pressure_sensors_pub = {i: rospy.Publisher("foot_contact_{}".format(i), Bool, queue_size=10) for i in range(8)}
         self.pub_joint_states = rospy.Publisher("joint_states", JointState, queue_size=1)
 
@@ -282,6 +283,13 @@ class GameControllerBridge:
                 imu_msg.angular_velocity.x = ((value.X + 32768) / 65535) * (8.7266 * 2) - 8.7266
                 imu_msg.angular_velocity.y = ((value.Y + 32768) / 65535) * (8.7266 * 2) - 8.7266
                 imu_msg.angular_velocity.z = ((value.Z + 32768) / 65535) * (8.7266 * 2) - 8.7266
+
+        if self.pub_imu_first > 0:
+            if imu_msg.linear_acceleration.z > 10 or imu_msg.linear_acceleration.z < 8:
+                self.pub_imu_first = 2
+            else:
+                self.pub_imu_first -= 1
+            return
 
         if imu_accel and imu_gyro:
             self.pub_imu.publish(imu_msg)

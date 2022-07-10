@@ -37,8 +37,8 @@ class Joints(enum.IntEnum):
     RIGHT_LEG_4 = rospy.get_param("joint_indices/RIGHT_LEG_4", 13)
     RIGHT_LEG_5 = rospy.get_param("joint_indices/RIGHT_LEG_5", 14)
     RIGHT_LEG_6 = rospy.get_param("joint_indices/RIGHT_LEG_6", 15)
-    HEAD_1 = rospy.get_param("joint_indices/HEAD_1", 16)
-    HEAD_2 = rospy.get_param("joint_indices/HEAD_2", 17)
+    HEAD_1 = rospy.get_param("joint_indices/HEAD_1", 16)  # Left Right (Yaw)
+    HEAD_2 = rospy.get_param("joint_indices/HEAD_2", 17)  # Up Down (Pitch)
     # HEAD_CAMERA = rospy.get_param("joint_indices/HEAD_CAMERA", 18)
     # IMU = rospy.get_param("joint_indices/IMU", 19)
 
