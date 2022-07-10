@@ -107,7 +107,7 @@ class TestWalking:
             final_position = walker.getPose()
             distance_offset = np.linalg.norm((final_position - goal_position.get_position())[0:2])
             if robot_model == "bez1":
-                assert distance_offset < 0.1
+                assert distance_offset < 0.08
 
     @pytest.mark.timeout(TEST_TIMEOUT)
     @pytest.mark.flaky(reruns=1)
@@ -188,7 +188,7 @@ class TestWalking:
         final_position = walker.getPose()
         distance_offset = np.linalg.norm((final_position - goal_position.get_position())[0:2])
         if robot_model == "bez1":
-            assert distance_offset < 0.1
+            assert distance_offset < 0.08
 
     @pytest.mark.timeout(TEST_TIMEOUT)
     @pytest.mark.flaky(reruns=2)
@@ -196,13 +196,13 @@ class TestWalking:
         walker.setPose(Transformation([0, 0, 0], [0.00000, 0, 0, 1]))
         walker.ready()
         walker.wait(100)
-        goal_position = Transformation([-1, 0.5, 0], [0.00000, 0, 0, 1])
+        goal_position = Transformation([-1, 0.3, 0], [0.00000, 0, 0, 1])
         walker.setGoal(goal_position)
         walk_success = walker.run(single_trajectory=True)
         final_position = walker.getPose()
         distance_offset = np.linalg.norm((final_position - goal_position.get_position())[0:2])
         if robot_model == "bez1":
-            assert distance_offset < 0.1
+            assert distance_offset < 0.08
         assert walk_success
 
     @pytest.mark.timeout(TEST_TIMEOUT)
@@ -243,14 +243,13 @@ class TestWalking:
         assert walk_success
 
     @pytest.mark.timeout(TEST_TIMEOUT)
-    @pytest.mark.flaky(reruns=2)
-    @pytest.mark.skip
+    @pytest.mark.flaky(reruns=1)
     def test_small_movement_2(self, walker: SoccerbotController):
         walker.setPose(Transformation([0, 0, 0], [0.00000, 0, 0, 1]))
         walker.ready()
         walker.wait(100)
-        goal = Transformation.get_transform_from_euler([0.5 * np.pi, 0, 0])
-        goal.set_position([-0.1, 0, 0])
+        goal = Transformation.get_transform_from_euler([np.pi, 0, 0])
+        goal.set_position([-0.3, 0, 0])
         walker.setGoal(goal)
         walk_success = walker.run(single_trajectory=True)
         assert walk_success
@@ -269,7 +268,6 @@ class TestWalking:
 
     @pytest.mark.timeout(TEST_TIMEOUT)
     @pytest.mark.flaky(reruns=1)
-    @pytest.mark.skip
     def test_small_movement_4(self, walker: SoccerbotController):
         walker.setPose(Transformation([0.2489, -0.163, 0.0], [0.0284, -0.003, 0.9939, 0.01986]))
         walker.ready()

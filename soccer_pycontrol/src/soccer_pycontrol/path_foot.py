@@ -264,7 +264,7 @@ class PathFoot(Path):
         r = lambda X: f(X) - (1 - (2 * s)) * f(aa)  # r = @(X) f(X) - (1-2*s)*f(aa);
 
         X = 0
-        while np.abs(r(X)) > 0.0005:
+        while np.abs(r(X)) > 0.0001:
             X = X - r(X) / J(X)
 
         if aa == 0:
