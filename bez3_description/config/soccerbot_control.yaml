@@ -1,0 +1,81 @@
+# Publish all joint states -----------------------------------
+joint_state_controller:
+  type: joint_state_controller/JointStateController
+  publish_rate: 50
+
+# Position Controllers ---------------------------------------
+right_leg_motor_0:
+  type: effort_controllers/JointPositionController
+  joint: right_leg_motor_0
+  pid: { p: 10.0, i: 0.0, d: 0.0 }
+right_leg_motor_1:
+  type: effort_controllers/JointPositionController
+  joint: right_leg_motor_1
+  pid: { p: 10.0, i: 0.0, d: 0.0 }
+right_leg_motor_2:
+  type: effort_controllers/JointPositionController
+  joint: right_leg_motor_2
+  pid: { p: 10.0, i: 0.0, d: 0.0 }
+right_leg_motor_3:
+  type: effort_controllers/JointPositionController
+  joint: right_leg_motor_3
+  pid: { p: 10.0, i: 0.0, d: 0.0 }
+right_leg_motor_4:
+  type: effort_controllers/JointPositionController
+  joint: right_leg_motor_4
+  pid: { p: 10.0, i: 0.0, d: 0.0 }
+right_leg_motor_5:
+  type: effort_controllers/JointPositionController
+  joint: right_leg_motor_5
+  pid: { p: 10.0, i: 0.0, d: 0.0 }
+
+left_leg_motor_0:
+  type: effort_controllers/JointPositionController
+  joint: left_leg_motor_0
+  pid: { p: 10.0, i: 0.0, d: 0.0 }
+left_leg_motor_1:
+  type: effort_controllers/JointPositionController
+  joint: left_leg_motor_1
+  pid: { p: 10.0, i: 0.0, d: 0.0 }
+left_leg_motor_2:
+  type: effort_controllers/JointPositionController
+  joint: left_leg_motor_2
+  pid: { p: 10.0, i: 0.0, d: 0.0 }
+left_leg_motor_3:
+  type: effort_controllers/JointPositionController
+  joint: left_leg_motor_3
+  pid: { p: 10.0, i: 0.0, d: 0.0 }
+left_leg_motor_4:
+  type: effort_controllers/JointPositionController
+  joint: left_leg_motor_4
+  pid: { p: 10.0, i: 0.0, d: 0.0 }
+left_leg_motor_5:
+  type: effort_controllers/JointPositionController
+  joint: left_leg_motor_5
+  pid: { p: 10.0, i: 0.0, d: 0.0 }
+
+left_arm_motor_0:
+  type: effort_controllers/JointPositionController
+  joint: left_arm_motor_0
+  pid: { p: 10.0, i: 0.0, d: 0.0 }
+left_arm_motor_1:
+  type: effort_controllers/JointPositionController
+  joint: left_arm_motor_1
+  pid: { p: 10.0, i: 0.0, d: 0.0 }
+right_arm_motor_0:
+  type: effort_controllers/JointPositionController
+  joint: right_arm_motor_0
+  pid: { p: 10.0, i: 0.0, d: 0.0 }
+right_arm_motor_1:
+  type: effort_controllers/JointPositionController
+  joint: right_arm_motor_1
+  pid: { p: 10.0, i: 0.0, d: 0.0 }
+
+head_motor_0:
+  type: effort_controllers/JointPositionController
+  joint: head_motor_0
+  pid: { p: 10.0, i: 0.0, d: 0.0 }
+head_motor_1:
+  type: effort_controllers/JointPositionController
+  joint: head_motor_1
+  pid: { p: 10.0, i: 0.0, d: 0.0 }
