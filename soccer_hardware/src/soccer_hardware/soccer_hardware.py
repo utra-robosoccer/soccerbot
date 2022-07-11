@@ -10,10 +10,6 @@ if __name__ == "__main__":
     port = rospy.get_param("~port", "/dev/ttyACM")
     baud = rospy.get_param("~baud", 230400)
 
-    log_string("Connecting To Embedded system")
-    log_string("\tPort: " + port)
-    log_string("\tBaud rate: " + str(baud))
-
     # Try all ranges in port
     i = 0
     ser = serial.Serial()
@@ -27,6 +23,10 @@ if __name__ == "__main__":
     if i == 9:
         rospy.logerr("No serial port found: " + port)
         exit(0)
+
+    log_string("Connecting To Embedded system")
+    log_string("\tPort: " + port + str(i))
+    log_string("\tBaud rate: " + str(baud))
 
     attempt = 0
     rate = rospy.Rate(1)

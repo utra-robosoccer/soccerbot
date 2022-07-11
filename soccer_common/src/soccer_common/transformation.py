@@ -219,3 +219,12 @@ class Transformation(np.ndarray):
         average.set_orientation(r_average.as_quat())
 
         return average
+
+    def to_pos_theta(self):
+        return np.array([self.get_position()[0], self.get_position()[1], self.get_orientation_euler()[0]])
+
+    @staticmethod
+    def from_pos_theta(position):
+        transform_position = (position[0], position[1], 0.0)
+        q = Transformation.get_quaternion_from_euler([position[2], 0, 0])
+        return Transformation(transform_position, q)
