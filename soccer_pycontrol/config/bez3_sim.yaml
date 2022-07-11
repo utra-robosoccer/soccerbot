@@ -1,7 +1,7 @@
 # Path parameters
 
 torso_height: 0.46
-walking_hip_height: 0.26
+
 joint_indices:
   LEFT_ARM_1: 12
   LEFT_ARM_2: 13
@@ -22,8 +22,23 @@ joint_indices:
   HEAD_1: 16
   HEAD_2: 17
 
-steps_per_second_default: 1.0
-bodystep_size_default: 0.05
-foot_separation: 0.06
-torso_offset_x: 0.03
+walking_hip_height: 0.26
+steps_per_second_default: 1.6
+bodystep_size_default: 0.01
+bodystep_size_short_backwards: 0.05
+bodystep_size_short_forwards: 0.05
+foot_separation: 0.045
+torso_offset_x: 0.01
 merge_fixed_links: true
+
+crotch_sidediff_sway: -0.024 # -0.025
+crotch_zdiff_sway: -0.02 # 0
+
+step_rotation: 0.3 # 0.05
+step_outwardness: 0.01 # 0.015
+pre_footstep_ratio: 0.15 # 0.15
+step_height: 0.07 # 0.065
+
+standing_Kp: 0.00
+standing_Kd: 0.00
+standing_Ki: 0.00

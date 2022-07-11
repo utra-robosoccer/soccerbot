@@ -40,7 +40,7 @@ def printlog(s: str):
 
 class IntegrationTest(TestCase):
     START_PLAY = "false"
-    ROBOT_MODEL = "bez1"
+    ROBOT_MODEL = os.environ['ROBOT_MODEL'] if 'ROBOT_MODEL' in os.environ else "bez1"
 
     def reset_simulation(self):
 
@@ -52,7 +52,7 @@ class IntegrationTest(TestCase):
             subprocess.call(["/bin/bash", "-c", "killall python3 || echo 'No Python Executables running'"])
             subprocess.call(["/bin/bash", "-c", "killall /usr/bin/java || echo 'No Java Executables running'"])
             subprocess.call(["/bin/bash", "-c", "kill -9 $(pgrep webots) || echo 'No Webots running'"])
-            subprocess.call(["/bin/bash", "-c", "source ~/catkin_ws/devel/setup.bash && rosnode kill -a || echo 'No Nodes running"])
+            subprocess.call(["/bin/bash", "-c", "source ~/catkin_ws/devel/setup.bash && rosnode kill -a || echo 'No Nodes running'"])
 
     def start_simulation(self):
         if RUN_LOCALLY:
