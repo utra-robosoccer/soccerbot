@@ -26,5 +26,6 @@ ruamel.yaml
 # object detection
 Pillow==9.0.1
 tqdm
-mxnet-cu112; platform_machine == 'x86_64'
+torch
+torchvision
 pybullet
