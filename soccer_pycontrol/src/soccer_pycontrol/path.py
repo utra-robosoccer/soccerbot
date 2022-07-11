@@ -1,3 +1,4 @@
+import functools
 import math
 from math import ceil, floor
 
@@ -21,8 +22,8 @@ class Path:
     post_footstep_ratio = rospy.get_param("post_footstep_ratio", 0.25)  # Ratio of fullstep duration to keep foot on ground on postfootstep
 
     def __init__(self, start_transform: Transformation, end_transform: Transformation):
-        self.start_transform = start_transform
-        self.end_transform = end_transform
+        self.start_transform: Transformation = start_transform
+        self.end_transform: Transformation = end_transform
 
         self.path_sections = []
 
@@ -48,10 +49,7 @@ class Path:
             return True
 
         # If the distance is too close
-        return (
-            np.linalg.norm(end_transform.get_position()[0:2] - start_transform.get_position()[0:2])
-            < PathSection.bodystep_size_default * PathSectionBezier.turn_duration * 4
-        )
+        return np.linalg.norm(end_transform.get_position()[0:2] - start_transform.get_position()[0:2]) < 1
 
     def createPathSection(self, start_transform: Transformation, end_transform: Transformation):
         is_short_distance = self.isShortPath(start_transform, end_transform)
@@ -60,24 +58,28 @@ class Path:
         else:
             return PathSectionBezier(start_transform, end_transform)
 
+    @functools.lru_cache
     def linearStepCount(self):
         linearStepCount = 0
         for path_section in self.path_sections:
             linearStepCount += path_section.angularStepCount()
         return linearStepCount
 
+    @functools.lru_cache
     def angularStepCount(self):
         angularStepCount = 0
         for path_section in self.path_sections:
             angularStepCount += path_section.angularStepCount()
         return angularStepCount
 
+    @functools.lru_cache
     def bodyStepCount(self) -> int:
         bodyStepCount = 0
         for path_section in self.path_sections:
             bodyStepCount += path_section.bodyStepCount()
         return floor(bodyStepCount)
 
+    @functools.lru_cache
     def getBodyStepPose(self, step_num):
         count = step_num
         for path_section in self.path_sections:
@@ -86,6 +88,7 @@ class Path:
             count = count - path_section.bodyStepCount()
         raise Exception("Invalid body step calculation " + str(count))
 
+    @functools.lru_cache
     def duration(self):
         duration = 0
         for path_section in self.path_sections:
@@ -93,6 +96,7 @@ class Path:
         return duration
 
     # Do not use in the walking engine
+    @functools.lru_cache
     def estimatedPositionAtTime(self, t):
         estimated_ratio = min(t / self.duration(), 1)
         return self.poseAtRatio(estimated_ratio)
@@ -100,10 +104,12 @@ class Path:
     def isFinished(self, t):
         return t >= self.duration()
 
+    @functools.lru_cache
     def bodyStepTime(self):
         return self.duration() / self.bodyStepCount()
 
     # Return the subpath and the corresponding ratio
+    @functools.lru_cache
     def getSubPathSectionAndRatio(self, r: float):
         total_duration = self.duration()
 

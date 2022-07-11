@@ -14,9 +14,17 @@ def mock_ros(robot_model, real_robot, config_path):
         joint_state = MagicMock()
         joint_state.position = [0.0] * 18
         rospy.wait_for_message = MagicMock(return_value=joint_state)
+        rospy.Time.now = MagicMock(return_value=0)
+        rospy.Duration = lambda a: a
         rospy.loginfo_throttle = lambda a, b: None
+        rospy.loginfo = lambda a: print(a)
+        rospy.logwarn = lambda a: print(a)
+        rospy.logerr = lambda a: print(a)
     else:
         import rospy
+
+    if not exists(config_path):
+        print(f"Config Path {config_path} does not exist")
 
     def get_param(a, b=None):
         a = a.lstrip("~")
@@ -24,7 +32,6 @@ def mock_ros(robot_model, real_robot, config_path):
             return robot_model
 
         if not exists(config_path):
-            print(f"{config_path} does not exist")
             return b
 
         with open(config_path, "r") as g:

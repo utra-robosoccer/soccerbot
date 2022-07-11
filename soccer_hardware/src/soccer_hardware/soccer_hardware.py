@@ -12,12 +12,6 @@ if __name__ == "__main__":
     imu_baud = rospy.get_param("~imu_baud", 230400)
     servo_baud = rospy.get_param("~servo_baud", 1000000)
 
-    log_string("Connecting To Embedded system")
-    log_string("\tServo Port: " + servo_port)
-    log_string("\tServo Baud rate: " + str(servo_baud))
-    log_string("\tIMU Port: " + imu_port)
-    log_string("\tIMU Baud rate: " + str(imu_baud))
-
     # Try all ranges in port
     imu_ser = None
     servo_ser = None
@@ -40,6 +34,10 @@ if __name__ == "__main__":
             + ("Servo port `%s`" % servo_port if servo_ser is None else "")
         )
         exit(0)
+
+    log_string("Connecting To Embedded system")
+    log_string("\tPort: " + port + str(i))
+    log_string("\tBaud rate: " + str(baud))
 
     attempt = 0
     rate = rospy.Rate(1)

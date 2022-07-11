@@ -26,9 +26,9 @@ motor_mapping:
     initial_state: -0.4
     limits: [8.79, 171.21]
   right_leg_motor_4:
-    id: 2
-    direction: 1 # 1 #foot points upwards # same
-    offset: 90
+    id: 1
+    direction: 1 #foot points upwards
+    offset: 150.5
     initial_state: 0.2
     limits: [70.31, 168.13]
   right_leg_motor_5:
@@ -54,9 +54,8 @@ motor_mapping:
     initial_state: -0.05
     limits: [81.96, 109.86]
   left_leg_motor_2:
-    id: 5
-    direction: 1 # 1 # leg goes forwards # same
-    offset: 90
+    id: 8
+    direction: 1 # leg goes forwards
     initial_state: 0.25
     limits: [70.88, 171.21]
   left_leg_motor_3:

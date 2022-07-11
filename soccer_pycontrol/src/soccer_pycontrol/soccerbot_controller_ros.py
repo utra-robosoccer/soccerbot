@@ -8,17 +8,18 @@ from rospy import ROSInterruptException
 from std_msgs.msg import Bool, Empty
 
 from soccer_msgs.msg import RobotState
+from soccer_pycontrol.path_section import PathSection
 from soccer_pycontrol.soccerbot_controller import *
 from soccer_pycontrol.soccerbot_ros import SoccerbotRos
 
 
 class SoccerbotControllerRos(SoccerbotController):
-    def __init__(self):
+    def __init__(self, useCalibration=True):
         self.client_id = pb.connect(pb.DIRECT)
         pb.setAdditionalSearchPath(pybullet_data.getDataPath())  # optionally
         pb.resetDebugVisualizerCamera(cameraDistance=0.5, cameraYaw=0, cameraPitch=0, cameraTargetPosition=[0, 0, 0.25])
         pb.setGravity(0, 0, -9.81)
-        self.soccerbot = SoccerbotRos(Transformation(), useFixedBase=False)
+        self.soccerbot = SoccerbotRos(Transformation(), useFixedBase=False, useCalibration=useCalibration)
         pb.disconnect(self.client_id)
 
         self.position_subscriber = rospy.Subscriber("goal", PoseStamped, self.goal_callback)
@@ -56,6 +57,8 @@ class SoccerbotControllerRos(SoccerbotController):
 
     def transformation_to_pose(self, trans: Transformation) -> PoseStamped:
         t = PoseStamped()
+        t.header.stamp = rospy.Time.now()
+        t.header.frame_id = "world"
         t.pose.position.x = trans.get_position()[0]
         t.pose.position.y = trans.get_position()[1]
         t.pose.position.z = trans.get_position()[2]
@@ -74,10 +77,10 @@ class SoccerbotControllerRos(SoccerbotController):
         q_new = Transformation.get_quaternion_from_euler([r, 0, 0])
         pose.set_orientation(q_new)
 
-        resetPublisher = rospy.Publisher("/robot1/reset_robot", Pose, queue_size=1, latch=True)
+        resetPublisher = rospy.Publisher("/robot1/reset_robot", PoseStamped, queue_size=1, latch=True)
         initialPosePublisher = rospy.Publisher("initialpose", PoseWithCovarianceStamped, queue_size=1, latch=True)
         pose_stamped = self.transformation_to_pose(pose)
-        resetPublisher.publish(pose_stamped.pose)
+        resetPublisher.publish(pose_stamped)
         self.robot_pose = pose_stamped
 
         rospy.sleep(0.5)
@@ -89,6 +92,21 @@ class SoccerbotControllerRos(SoccerbotController):
         initialPosePublisher.publish(p)
 
         rospy.sleep(0.5)
+
+    def getPose(self, footprint_name="/base_footprint_gt"):
+        try:
+            (trans, rot) = self.tf_listener.lookupTransform("world", os.environ["ROS_NAMESPACE"] + footprint_name, rospy.Time(0))
+        except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException) as e:
+            print(e)
+            return False
+
+        return np.array(
+            [
+                trans[0],
+                trans[1],
+                Transformation.get_euler_from_quaternion(rot)[0],
+            ]
+        )
 
     def setGoal(self, goal: Transformation):
         self.goal_callback(self.transformation_to_pose(goal))
@@ -140,6 +158,8 @@ class SoccerbotControllerRos(SoccerbotController):
         time_now = 0
 
         while not rospy.is_shutdown():
+            time_start = time.time()
+
             if self.soccerbot.robot_state.status in [
                 RobotState.STATUS_DISCONNECTED,
                 RobotState.STATUS_DETERMINING_SIDE,
@@ -207,14 +227,16 @@ class SoccerbotControllerRos(SoccerbotController):
                 self.goal = self.new_goal
                 self.soccerbot.robot_path = self.new_path
 
-            if self.soccerbot.robot_path is not None and self.soccerbot.current_step_time <= self.t <= self.soccerbot.robot_path.duration():
+            if self.soccerbot.robot_path is not None and self.t <= self.soccerbot.robot_path.duration():
                 self.soccerbot.stepPath(self.t, verbose=False)
 
-                # IMU feedback while walking
+                # IMU feedback while walking (Average Time: 0.00017305118281667)
                 if self.soccerbot.imu_ready:
                     self.soccerbot.apply_imu_feedback(self.t, self.soccerbot.get_imu())
 
-                self.soccerbot.current_step_time = self.soccerbot.current_step_time + self.soccerbot.robot_path.step_precision
+                self.soccerbot.current_step_time = self.t
+
+                # Publish robot's position and height (Average Time: 0.00030437924645164)
                 self.soccerbot.publishOdometry()
 
             # Walk completed
@@ -272,7 +294,13 @@ class SoccerbotControllerRos(SoccerbotController):
                         print("Fallen Front")
                         return False
 
-            self.soccerbot.publishAngles()  # Disable to stop walking
+            # Publishes angles to robot (Average Time: 0.00041992547082119)
+            self.soccerbot.publishAngles()
+
+            time_end = time.time()
+            if time_end - time_start > SoccerbotController.PYBULLET_STEP * 1.2:
+                rospy.logerr(f"Step Delta took longer than expected {time_end - time_start}. Control Frequency {SoccerbotController.PYBULLET_STEP}")
+                rospy.logerr(f"Desired Steps Per Second: {PathSection.steps_per_second_default}")
 
             self.t = self.t + SoccerbotController.PYBULLET_STEP
 
