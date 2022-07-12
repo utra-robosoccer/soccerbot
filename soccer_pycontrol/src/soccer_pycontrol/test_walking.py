@@ -11,8 +11,8 @@ if "ROS_NAMESPACE" not in os.environ:
 
 from soccer_common.transformation import Transformation
 
-real_robot = False
-run_in_ros = False
+real_robot = True
+run_in_ros = True
 display = False
 robot_model = "bez1"
 TEST_TIMEOUT = 60
@@ -93,12 +93,12 @@ class TestWalking:
                 _ = _
             pb.stepSimulation()
 
-    @pytest.mark.parametrize("walker", ["bez1", "bez3"], indirect=True)
+    @pytest.mark.parametrize("walker", ["bez1"], indirect=True)
     def test_walk_1(self, walker: SoccerbotController):
         walker.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
         walker.ready()
         walker.wait(200)
-        goal_position = Transformation([1, 0, 0], [0, 0, 0, 1])
+        goal_position = Transformation([0.3, 0, 0], [0, 0, 0, 1])
         walker.setGoal(goal_position)
         walk_success = walker.run(single_trajectory=True)
         assert walk_success
