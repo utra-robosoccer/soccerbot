@@ -32,7 +32,7 @@ class Test(TestCase):
         random_corner = corners[np.random.randint(0, 2)]
 
         g = GameEngine2D(
-            display=True,
+            display=self.display,
             team_1_strategy=StrategyCornerkick,
             team_2_strategy=StrategyStationary,
             game_duration=5,
