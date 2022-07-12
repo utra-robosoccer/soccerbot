@@ -24,6 +24,7 @@ pytest-rerunfailures
 ruamel.yaml
 
 # object detection
+-r https://raw.githubusercontent.com/ultralytics/yolov5/master/requirements.txt # for yolov5
 Pillow==9.0.1
 tqdm
 torch
