@@ -265,7 +265,7 @@ class SoccerbotRos(Soccerbot):
 
         elif self.robot_state.status == RobotState.STATUS_LOCALIZING:
             self.configuration[Joints.HEAD_1] = math.cos(self.head_step * SoccerbotRos.HEAD_YAW_FREQ) * (math.pi / 4)
-            self.configuration[Joints.HEAD_2] = math.pi * rospy.get_param("head_rotation_yaw_center", 0.185) - math.sin(
+            self.configuration[Joints.HEAD_2] = math.pi * rospy.get_param("head_rotation_yaw_center", 0.175) - math.sin(
                 self.head_step * SoccerbotRos.HEAD_PITCH_FREQ
             ) * math.pi * rospy.get_param("head_rotation_yaw_range", 0.15)
             self.head_step += 1
