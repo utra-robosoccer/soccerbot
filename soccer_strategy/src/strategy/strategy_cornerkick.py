@@ -8,6 +8,10 @@ from soccer_msgs.msg import GameState
 
 
 class StrategyCornerkick(Strategy):
+
+    CORNERKICK_ROBOT = 2
+    CORNERKICK_TARGET = np.array([2, 0])
+
     def update_next_strategy(self, friendly_team: Team, opponent_team: Team, game_state: GameState):
         super().update_next_strategy(friendly_team, opponent_team, game_state)
         this_robot = self.get_current_robot(friendly_team)
@@ -15,12 +19,9 @@ class StrategyCornerkick(Strategy):
         # assign one robot to always do the cornerkicks
         # TODO make sure this works when the ball starts on any side
 
-        CORNERKICK_ROBOT = 2
-        CORNERKICK_TARGET = np.array([3, 0])
-
-        if this_robot.robot_id == CORNERKICK_ROBOT:
+        if this_robot.robot_id == StrategyCornerkick.CORNERKICK_ROBOT:
             if rospy.Time.now() - this_robot.observed_ball.last_observed_time_stamp < rospy.Duration(2):
-                goal_position = CORNERKICK_TARGET
+                goal_position = StrategyCornerkick.CORNERKICK_TARGET
                 ball = this_robot.observed_ball
                 if this_robot.can_kick(ball, goal_position):
                     if this_robot.status in [Robot.Status.READY]:

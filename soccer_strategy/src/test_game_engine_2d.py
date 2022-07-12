@@ -28,19 +28,20 @@ class Test(TestCase):
 
         mock_ros(robot_model="bez1", real_robot=False, config_path="")
 
-        CORNERS = [np.array([4.5, 3]), np.array([-4.5, 3])]
-        random_corner = CORNERS[np.random.randint(0, 1)]
+        corners = [np.array([4.5, 3]), np.array([4.5, -3])]
+        random_corner = corners[np.random.randint(0, 2)]
 
         g = GameEngine2D(
             display=True,
             team_1_strategy=StrategyCornerkick,
             team_2_strategy=StrategyStationary,
-            game_duration=40,
-            init_ball_position=np.array([4.5, 3]),
+            game_duration=5,
+            init_ball_position=random_corner,
         )
         friendly_points, opponent_points = g.run()
 
         # pass if the ball is near the target position
+        assert np.allclose(StrategyCornerkick.CORNERKICK_TARGET, g.ball.position, atol=2)
 
     def test_dummy_vs_stationary_strategy(self):
         sys.modules["soccer_msgs"] = __import__("soccer_msgs_mock")
