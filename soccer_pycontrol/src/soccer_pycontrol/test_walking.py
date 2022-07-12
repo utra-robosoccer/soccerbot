@@ -11,8 +11,8 @@ if "ROS_NAMESPACE" not in os.environ:
 
 from soccer_common.transformation import Transformation
 
-real_robot = True
-run_in_ros = True
+real_robot = False
+run_in_ros = False
 display = False
 robot_model = "bez1"
 TEST_TIMEOUT = 60
