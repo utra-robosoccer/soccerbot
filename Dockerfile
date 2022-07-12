@@ -78,7 +78,7 @@ COPY requirements.txt /tmp/requirements.txt
 RUN if [[ "$BASE_IMAGE" == "utrarobosoccer/noetic" ]] ; then pip3 install -r /tmp/requirements.txt --extra-index-url https://download.pytorch.org/whl/cu117 ; else pip3 install -r /tmp/requirements.txt ; fi
 
 COPY --from=dependencies /tmp/catkin_install_list /tmp/catkin_install_list
-RUN apt-get update && apt-fast install -y --no-install-recommends $(cat /tmp/catkin_install_list)
+RUN (apt-get update || echo "Apt Error") && apt-fast install -y --no-install-recommends $(cat /tmp/catkin_install_list)
 
 # Create User
 ARG USER="robosoccer"
