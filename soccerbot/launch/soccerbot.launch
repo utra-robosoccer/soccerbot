@@ -32,7 +32,9 @@
 
     <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" />
 
-    <include file="$(find soccerbot)/launch/modules/sensors.launch" unless="$(arg simulation)" />
+    <include file="$(find soccerbot)/launch/modules/sensors.launch" unless="$(arg simulation)">
+        <arg name="robot_model" value="$(arg robot_model)" />
+    </include>
 
     <include file="$(find soccerbot)/launch/modules/communication.launch" if="$(arg simulation)">
         <arg name="robot_name" value="$(arg robot_name)" />
