@@ -19,6 +19,29 @@ class Test(TestCase):
         if "pytest" in sys.argv[0]:
             self.display = False
 
+    def test_corner_kick(self):
+        sys.modules["soccer_msgs"] = __import__("soccer_msgs_mock")
+        from game_engine_2d import GameEngine2D
+        from strategy.strategy_cornerkick import StrategyCornerkick
+        from strategy.strategy_dummy import StrategyDummy
+        from strategy.strategy_stationary import StrategyStationary
+
+        mock_ros(robot_model="bez1", real_robot=False, config_path="")
+
+        CORNERS = [np.array([4.5, 3]), np.array([-4.5, 3])]
+        random_corner = CORNERS[np.random.randint(0, 1)]
+
+        g = GameEngine2D(
+            display=True,
+            team_1_strategy=StrategyCornerkick,
+            team_2_strategy=StrategyStationary,
+            game_duration=40,
+            init_ball_position=np.array([4.5, 3]),
+        )
+        friendly_points, opponent_points = g.run()
+
+        # pass if the ball is near the target position
+
     def test_dummy_vs_stationary_strategy(self):
         sys.modules["soccer_msgs"] = __import__("soccer_msgs_mock")
         from game_engine_2d import GameEngine2D
