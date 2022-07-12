@@ -5,7 +5,7 @@ import pytest
 if "ROS_NAMESPACE" not in os.environ:
     os.environ["ROS_NAMESPACE"] = "/robot1"
 
-real_robot = True
+real_robot = False
 
 display = False
 TEST_TIMEOUT = 60
