@@ -74,9 +74,6 @@ RUN pip install --no-cache-dir --upgrade pip Cython pybullet
 
 RUN curl -sSL https://get.docker.com/ | sh
 
-COPY soccerbot/scripts/install_mxnet.sh install_mxnet.sh
-RUN bash install_mxnet.sh
-
 COPY requirements.txt /tmp/requirements.txt
 RUN if [[ "$BASE_IMAGE" == "utrarobosoccer/noetic" ]] ; then pip3 install -r /tmp/requirements.txt --extra-index-url https://download.pytorch.org/whl/cu117 ; else pip3 install -r /tmp/requirements.txt ; fi
 
@@ -95,11 +92,6 @@ WORKDIR /home/$USER/catkin_ws
 RUN chown -R $USER /home/$USER/catkin_ws
 USER $USER
 
-# Predownload yolo3 mobilenet
-RUN curl https://apache-mxnet.s3-accelerate.dualstack.amazonaws.com/gluon/models/yolo3_mobilenet1.0_coco-66dbbae6.zip \
-    --create-dirs --output /home/$USER/.mxnet/models/yolo3_mobilenet1.0_coco-66dbbae6.zip && \
-    unzip /home/$USER/.mxnet/models/yolo3_mobilenet1.0_coco-66dbbae6.zip -d /home/$USER/.mxnet/models/
-
 # Build C++ ROS Packages such as AMCL first
 COPY --from=dependencies --chown=$USER /root/src/amcl src/soccerbot/amcl
 RUN source /opt/ros/noetic/setup.bash && catkin config --cmake-args -DCMAKE_BUILD_TYPE=Release
@@ -111,5 +103,3 @@ COPY --from=dependencies --chown=$USER /root/src src/soccerbot
 RUN source /opt/ros/noetic/setup.bash && catkin config --cmake-args -DCMAKE_BUILD_TYPE=Debug
 RUN source /opt/ros/noetic/setup.bash && catkin build --no-status soccerbot
 RUN echo "source /home/$USER/catkin_ws/devel/setup.bash" >> ~/.bashrc
-
-ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/aarch64-linux-gnu/tegra:/home/$USER/.local/mxnet
