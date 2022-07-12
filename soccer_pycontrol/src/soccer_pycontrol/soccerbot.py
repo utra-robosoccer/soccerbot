@@ -129,7 +129,7 @@ class Soccerbot:
         self.setPose(pose)
 
         pitch_correction = tr([0, 0, 0], tr.get_quaternion_from_euler([0, rospy.get_param("torso_offset_pitch", 0.0), 0]))
-        self.torso_offset = pitch_correction @ tr([rospy.get_param("torso_offset_x", 0), 0, 0])
+        self.torso_offset = tr([rospy.get_param("torso_offset_x", 0), 0, 0]) @ pitch_correction
         self.robot_path: PathRobot = None
         self.robot_odom_path: PathRobot = None
 
