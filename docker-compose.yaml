@@ -12,8 +12,7 @@ x-gpu: &gpu
             count: all
             capabilities: [gpu, compute, utility, graphics]
 
-x-soccerbot: &soccerbot
-  <<: *gpu
+x-soccerbot: &soccerbot #  <<: *gpu
   image: utrarobosoccer/soccerbot
   privileged: true
   build:

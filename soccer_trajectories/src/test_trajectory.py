@@ -5,7 +5,7 @@ import pytest
 if "ROS_NAMESPACE" not in os.environ:
     os.environ["ROS_NAMESPACE"] = "/robot1"
 
-real_robot = False
+real_robot = True
 
 display = False
 TEST_TIMEOUT = 60
@@ -49,7 +49,7 @@ class TestTrajectory:
     @pytest.mark.parametrize("trajectory", ["bez1"], indirect=True)
     def test_getupfront(self, trajectory: SoccerTrajectoryClass):
         msg = FixedTrajectoryCommand()
-        msg.trajectory_name = "getupfront"
+        msg.trajectory_name = "getupback"
         msg.mirror = False
         traj_success = trajectory.run_trajectory(command=msg)
         assert traj_success
