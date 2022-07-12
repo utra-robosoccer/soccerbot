@@ -1,5 +1,6 @@
 import copy
 
+import rospy
 import tf
 from geometry_msgs.msg import Pose2D, PoseStamped
 from nav_msgs.msg import Odometry, Path
@@ -257,12 +258,16 @@ class SoccerbotRos(Soccerbot):
             else:
                 rospy.loginfo_throttle(5, "Searching for ball again")
                 self.configuration[Joints.HEAD_1] = math.sin(self.head_step * SoccerbotRos.HEAD_YAW_FREQ) * (math.pi / 4)
-                self.configuration[Joints.HEAD_2] = math.pi * 0.185 - math.cos(self.head_step * SoccerbotRos.HEAD_PITCH_FREQ) * math.pi * 0.15
+                self.configuration[Joints.HEAD_2] = math.pi * rospy.get_param("head_rotation_yaw_center", 0.185) - math.cos(
+                    self.head_step * SoccerbotRos.HEAD_PITCH_FREQ
+                ) * math.pi * rospy.get_param("head_rotation_yaw_range", 0.15)
                 self.head_step += 1
 
         elif self.robot_state.status == RobotState.STATUS_LOCALIZING:
             self.configuration[Joints.HEAD_1] = math.cos(self.head_step * SoccerbotRos.HEAD_YAW_FREQ) * (math.pi / 4)
-            self.configuration[Joints.HEAD_2] = math.pi * 0.175 - math.sin(self.head_step * SoccerbotRos.HEAD_PITCH_FREQ) * math.pi * 0.15
+            self.configuration[Joints.HEAD_2] = math.pi * rospy.get_param("head_rotation_yaw_center", 0.175) - math.sin(
+                self.head_step * SoccerbotRos.HEAD_PITCH_FREQ
+            ) * math.pi * rospy.get_param("head_rotation_yaw_range", 0.15)
             self.head_step += 1
         else:
             self.configuration[Joints.HEAD_1] = 0

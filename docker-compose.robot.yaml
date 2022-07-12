@@ -28,9 +28,10 @@ services:
       TEST_CONTROL: "false"
       ROBOCUP_ROBOT_ID: 1
       ROBOCUP_TEAM_COLOR: "red"
-      ROBOCUP_SIMULATOR_ADDR: "simulator:10001"
-      ROBOCUP_MIRROR_SERVER_IP: "simulator"
-      ROBOCUP_GAMECONTROLLER_IP: "simulator"
+      ROBOCUP_GAMECONTROLLER_IP: "192.168.0.2"
       ROBOCUP_TEAM_ID: 16
       PYTHONUNBUFFERED: 1
       LD_PRELOAD: /usr/local/lib/python3.8/dist-packages/torch/lib/libgomp-d22c30c5.so.1
+      X_POS: ${X_POS:--4}
+      Y_POS: ${X_POS:--3.15}
+      YAW: ${YAW:-1.57}

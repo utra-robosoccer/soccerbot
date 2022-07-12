@@ -242,11 +242,16 @@ class Soccerbot:
         self.configuration_offset = [0] * len(Joints)
 
     def updateRobotConfiguration(self):
+        self.configuration_offset = [0] * len(Joints)
         try:
             joint_state = rospy.wait_for_message("joint_states", JointState, timeout=3)
-            self.configuration[0:18] = joint_state.position
+            indexes = [joint_state.name.index(motor_name) for motor_name in self.motor_names]
+            self.configuration[0:18] = [joint_state.position[i] for i in indexes]
         except (ROSException, KeyError, AttributeError) as ex:
             rospy.logerr(ex)
+        except ValueError as vx:
+            print(self.motor_names)
+            raise vx
 
     def inverseKinematicsRightFoot(self, transformation):
         """
