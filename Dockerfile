@@ -77,7 +77,11 @@ RUN curl -sSL https://get.docker.com/ | sh
 COPY requirements.txt /tmp/requirements.txt
 RUN pip3 install -r /tmp/requirements.txt --extra-index-url https://download.pytorch.org/whl/cu117
 
-RUN if [[ "$BASE_IMAGE" == "arm64v8/ros:noetic-robot" ]] ; then pip3 install -r /tmp/requirements.txt --extra-index-url https://download.pytorch.org/whl/cu117; fi
+RUN if [[ "$BASE_IMAGE" == "arm64v8/ros:noetic-robot" ]] ; then \
+    apt-get install -y libomp5 \
+    pip install gdown && \
+    gdown https://drive.google.com/uc?id=1AQQuBS9skNk1mgZXMp0FmTIwjuxc81WY && \
+    pip install torch-1.11.0a0+gitbc2c6ed-cp38-cp38-linux_aarch64.whl fi
 
 COPY --from=dependencies /tmp/catkin_install_list /tmp/catkin_install_list
 RUN (apt-get update || echo "Apt Error") && apt-fast install -y --no-install-recommends $(cat /tmp/catkin_install_list)
