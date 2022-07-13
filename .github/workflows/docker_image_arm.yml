@@ -4,9 +4,9 @@ name: Docker Image ARM
 on:
   workflow_dispatch:
   schedule:
-  - cron: "0 1 1 * *"
+    - cron: "0 1 1 * *"
   push:
-    branches: [master, change_mxnet_to_pip]
+    branches: [master, mxnet_to_pytorch]
     paths-ignore:
       - "**.md"
 
