@@ -54,6 +54,8 @@ class RobotControlled3D(RobotControlled):
         pass
 
     def set_navigation_position(self, goal_position):
+        goal_position = self.shorten_navigation_position(goal_position)
+
         if not super().set_navigation_position(goal_position):
             return False
 
