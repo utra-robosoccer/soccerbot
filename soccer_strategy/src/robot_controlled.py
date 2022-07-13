@@ -34,7 +34,7 @@ class RobotControlled(Robot):
         self.kick_with_right_foot = True
 
     def shorten_navigation_position(self, goal_position):
-        shorten_navigation_limit = rospy.get_param("shorten_navigation_limit", 0.3)
+        shorten_navigation_limit = rospy.get_param("shorten_navigation_limit", 3)
         distance_xy = np.linalg.norm(self.position[0:2] - goal_position[0:2])
         if distance_xy < shorten_navigation_limit:
             return goal_position
