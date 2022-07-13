@@ -222,6 +222,14 @@ class Soccerbot:
             previous_configuration = [joint_state.position[i] for i in indexes]
         except (ROSException, AttributeError) as ex:
             rospy.logerr(ex)
+        except ValueError as ex:
+            print(ex)
+            rospy.logerr("Not all joint states are reported, cable disconnect?")
+            rospy.logerr("Joint States")
+            rospy.logerr(joint_state)
+            rospy.logerr("Motor Names")
+            print(self.motor_names)
+            previous_configuration = [0] * len(Joints)
 
         for r in np.arange(0, 1.00, 0.040):
             rospy.loginfo_throttle(1, "Going into ready position")
@@ -249,9 +257,14 @@ class Soccerbot:
             self.configuration[0:18] = [joint_state.position[i] for i in indexes]
         except (ROSException, KeyError, AttributeError) as ex:
             rospy.logerr(ex)
-        except ValueError as vx:
+        except ValueError as ex:
+            print(ex)
+            rospy.logerr("Not all joint states are reported, cable disconnect?")
+            rospy.logerr("Joint States")
+            rospy.logerr(joint_state)
+            rospy.logerr("Motor Names")
             print(self.motor_names)
-            raise vx
+            self.configuration[0:18] = [0] * len(Joints)
 
     def inverseKinematicsRightFoot(self, transformation):
         """
