@@ -82,7 +82,7 @@ RUN if [[ "$BASE_IMAGE" == "arm64v8/ros:noetic-robot" ]] ; then \
     pip install gdown && \
     gdown https://drive.google.com/uc?id=1AQQuBS9skNk1mgZXMp0FmTIwjuxc81WY && \
     pip install torch-1.11.0a0+gitbc2c6ed-cp38-cp38-linux_aarch64.whl && \
-    rm -rf torch-1.11.0a0+gitbc2c6ed-cp38-cp38-linux_aarch64.whl fi
+    rm -rf torch-1.11.0a0+gitbc2c6ed-cp38-cp38-linux_aarch64.whl ; fi
 
 COPY --from=dependencies /tmp/catkin_install_list /tmp/catkin_install_list
 RUN (apt-get update || echo "Apt Error") && apt-fast install -y --no-install-recommends $(cat /tmp/catkin_install_list)
