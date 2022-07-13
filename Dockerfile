@@ -74,14 +74,18 @@ RUN pip install --no-cache-dir --upgrade pip Cython pybullet
 
 RUN curl -sSL https://get.docker.com/ | sh
 
-COPY soccerbot/scripts/install_mxnet.sh install_mxnet.sh
-RUN bash install_mxnet.sh
-
 COPY requirements.txt /tmp/requirements.txt
-RUN pip install -r /tmp/requirements.txt
+RUN pip3 install -r /tmp/requirements.txt --extra-index-url https://download.pytorch.org/whl/cu117
+
+RUN if [[ "$BASE_IMAGE" == "arm64v8/ros:noetic-robot" ]] ; then \
+    apt-get install -y libomp5 && \
+    pip install gdown && \
+    gdown https://drive.google.com/uc?id=1AQQuBS9skNk1mgZXMp0FmTIwjuxc81WY && \
+    pip install torch-1.11.0a0+gitbc2c6ed-cp38-cp38-linux_aarch64.whl && \
+    rm -rf torch-1.11.0a0+gitbc2c6ed-cp38-cp38-linux_aarch64.whl ; fi
 
 COPY --from=dependencies /tmp/catkin_install_list /tmp/catkin_install_list
-RUN apt-get update && apt-fast install -y --no-install-recommends $(cat /tmp/catkin_install_list)
+RUN (apt-get update || echo "Apt Error") && apt-fast install -y --no-install-recommends $(cat /tmp/catkin_install_list)
 
 # Create User
 ARG USER="robosoccer"
@@ -95,11 +99,6 @@ WORKDIR /home/$USER/catkin_ws
 RUN chown -R $USER /home/$USER/catkin_ws
 USER $USER
 
-# Predownload yolo3 mobilenet
-RUN curl https://apache-mxnet.s3-accelerate.dualstack.amazonaws.com/gluon/models/yolo3_mobilenet1.0_coco-66dbbae6.zip \
-    --create-dirs --output /home/$USER/.mxnet/models/yolo3_mobilenet1.0_coco-66dbbae6.zip && \
-    unzip /home/$USER/.mxnet/models/yolo3_mobilenet1.0_coco-66dbbae6.zip -d /home/$USER/.mxnet/models/
-
 # Build C++ ROS Packages such as AMCL first
 COPY --from=dependencies --chown=$USER /root/src/amcl src/soccerbot/amcl
 RUN source /opt/ros/noetic/setup.bash && catkin config --cmake-args -DCMAKE_BUILD_TYPE=Release
@@ -112,4 +111,4 @@ RUN source /opt/ros/noetic/setup.bash && catkin config --cmake-args -DCMAKE_BUIL
 RUN source /opt/ros/noetic/setup.bash && catkin build --no-status soccerbot
 RUN echo "source /home/$USER/catkin_ws/devel/setup.bash" >> ~/.bashrc
 
-ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/aarch64-linux-gnu/tegra:/home/$USER/.local/mxnet
+ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/targets/aarch64-linux/lib/

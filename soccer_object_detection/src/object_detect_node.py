@@ -10,12 +10,10 @@ if "ROS_NAMESPACE" not in os.environ:
 from argparse import ArgumentParser
 
 import cv2
-import mxnet as mx
 import rospy
+import torch
 from cv_bridge import CvBridge
-from gluoncv import data, model_zoo, utils
 from model import CNN, Label, find_batch_bounding_boxes, init_weights
-from mxnet import autograd, gluon, np, npx
 from rospy import ROSException
 from sensor_msgs.msg import Image
 
@@ -23,10 +21,7 @@ from soccer_common.camera import Camera
 from soccer_msgs.msg import RobotState
 from soccer_object_detection.msg import BoundingBox, BoundingBoxes
 
-if mx.context.num_gpus() == 0:
-    ctx = mx.cpu()
-else:
-    ctx = mx.gpu()
+SOCCER_BALL = 32
 
 
 class ObjectDetectionNode(object):
@@ -37,8 +32,9 @@ class ObjectDetectionNode(object):
     """
 
     def __init__(self, model_path, num_feat):
-        self.model = model_zoo.get_model("yolo3_mobilenet1.0_coco", pretrained=True, ctx=ctx)
-        self.model.reset_class(classes=["sports ball"], reuse_weights=["sports ball"])
+        self.model = model = torch.hub.load("ultralytics/yolov5", "yolov5s")
+        if torch.cuda.is_available():
+            self.model.cuda()
 
         self.robot_name = rospy.get_namespace()[1:-1]  # remove '/'
         self.camera = Camera(self.robot_name)
@@ -59,6 +55,8 @@ class ObjectDetectionNode(object):
         self.robot_state = robot_state
 
     def callback(self, msg: Image):
+        global SOCCER_BALL
+        # webots: 480x640x4pixels
         if self.robot_state.status not in [
             RobotState.STATUS_LOCALIZING,
             RobotState.STATUS_READY,
@@ -70,49 +68,30 @@ class ObjectDetectionNode(object):
         # width x height x channels (bgra8)
         image = self.br.imgmsg_to_cv2(msg)
         self.camera.reset_position(timestamp=msg.header.stamp)
+
+        # cover horizon to help robot ignore things outside field
         h = self.camera.calculateHorizonCoverArea()
         cv2.rectangle(image, [0, 0], [640, h + 30], [0, 165, 255], cv2.FILLED)
 
         if image is not None:
+            # 1. preprocess image
             img = image[:, :, :3]  # get rid of alpha channel
-            # scale = 480 / 300
-            # dim = (int(640 / scale), 300)
-            # img = cv2.resize(img, dsize=dim, interpolation=cv2.INTER_AREA)
-            #
-            # w, h = 400, 300
-            # y, x, _ = img.shape  # 160, 213
-            # x_offset = x / 2 - w / 2
-            # y_offset = y / 2 - h / 2
-            #
-            # crop_img = img[int(y_offset):int(y_offset + h), int(x_offset):int(x_offset + w)]
-            #
-            # img_torch = util.cv_to_torch(crop_img)
-            #
-            # img_norm = img_torch / 255  # model expects normalized img
+            img = img[..., ::-1]  # convert bgr to rgb
 
-            # outputs, _ = self.model(torch.tensor(np.expand_dims(img_norm, axis=0)).float())
-            # bbxs = find_batch_bounding_boxes(outputs)[0]
-
-            x = mx.nd.array(img)
-            x, orig_img = data.transforms.presets.rcnn.transform_test(
-                [x],
-            )
-            x = mx.nd.array(x, ctx=ctx)
-            box_ids, scores, bbxs = self.model(x)
+            # 2. inference
+            results = self.model(img)
 
             bbs_msg = BoundingBoxes()
-
-            for box_id, score, bbx in zip(box_ids[0], scores[0], bbxs[0]):
-                if box_id.asscalar() != -1:
+            for prediction in results.xyxy[0]:
+                x1, y1, x2, y2, confidence, img_class = prediction.cpu().numpy()
+                print(x1, y1, x2, y2, confidence, img_class)
+                if img_class == SOCCER_BALL:
                     bb_msg = BoundingBox()
-
-                    xratio = msg.width / orig_img.shape[1]
-                    yratio = msg.height / orig_img.shape[0]
-
-                    bb_msg.xmin = round(bbx[0].asscalar() * xratio)
-                    bb_msg.ymin = round(bbx[1].asscalar() * yratio)
-                    bb_msg.xmax = round(bbx[2].asscalar() * xratio)
-                    bb_msg.ymax = round(bbx[3].asscalar() * yratio)
+                    bb_msg.xmin = round(x1)
+                    bb_msg.ymin = round(y1)
+                    bb_msg.xmax = round(x2)
+                    bb_msg.ymax = round(y2)
+                    bb_msg.probability = confidence
                     bb_msg.id = Label.BALL.value
                     bb_msg.Class = "ball"
                     bbs_msg.bounding_boxes.append(bb_msg)
@@ -120,16 +99,8 @@ class ObjectDetectionNode(object):
             bbs_msg.header = msg.header
             try:
                 if self.pub_detection.get_num_connections() > 0:
-                    img = utils.viz.cv_plot_bbox(
-                        orig_img,
-                        bbxs[0][0 : len(bbs_msg.bounding_boxes)],
-                        scores=scores[0][0 : len(bbs_msg.bounding_boxes)],
-                        labels=box_ids[0][0 : len(bbs_msg.bounding_boxes)],
-                        class_names=self.model.classes,
-                        linewidth=1,
-                        thresh=0.0,
-                    )
-                    self.pub_detection.publish(self.br.cv2_to_imgmsg(img))
+                    results.render()
+                    self.pub_detection.publish(self.br.cv2_to_imgmsg(results.imgs[0]))
 
                 if self.pub_boundingbox.get_num_connections() > 0 and len(bbs_msg.bounding_boxes) > 0:
                     self.pub_boundingbox.publish(bbs_msg)

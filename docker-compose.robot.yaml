@@ -19,6 +19,10 @@ services:
         - utrarobosoccer/soccerbot:arm64
     volumes:
       - /usr/lib/aarch64-linux-gnu/tegra:/usr/lib/aarch64-linux-gnu/tegra
+      - /usr/local/cuda:/usr/local/cuda
+      - /usr/local/cuda-10:/usr/local/cuda-10
+      - /usr/local/cuda-10.2:/usr/local/cuda-10.2
+      - /etc/alternatives/cuda:/etc/alternatives/cuda
     command:
       /bin/bash -c "source ~/catkin_ws/devel/setup.bash && sudo chmod +s /usr/bin/nice &&
       if [[ $$TEST_CONTROL == 'true' ]]; then roslaunch soccer_hardware soccer_hardware.launch test_walking:=true  __ns:=robot$$ROBOCUP_ROBOT_ID;
@@ -31,7 +35,6 @@ services:
       ROBOCUP_GAMECONTROLLER_IP: "192.168.0.2"
       ROBOCUP_TEAM_ID: 16
       PYTHONUNBUFFERED: 1
-      LD_PRELOAD: /usr/local/lib/python3.8/dist-packages/torch/lib/libgomp-d22c30c5.so.1
       X_POS: ${X_POS:--4}
       Y_POS: ${X_POS:--3.15}
       YAW: ${YAW:-1.57}
