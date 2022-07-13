@@ -87,6 +87,8 @@ RUN if [[ "$BASE_IMAGE" == "arm64v8/ros:noetic-robot" ]] ; then \
 COPY --from=dependencies /tmp/catkin_install_list /tmp/catkin_install_list
 RUN (apt-get update || echo "Apt Error") && apt-fast install -y --no-install-recommends $(cat /tmp/catkin_install_list)
 
+
+
 # Create User
 ARG USER="robosoccer"
 RUN groupadd -g 1000 $USER && \
@@ -98,6 +100,14 @@ RUN groupadd -g 1000 $USER && \
 WORKDIR /home/$USER/catkin_ws
 RUN chown -R $USER /home/$USER/catkin_ws
 USER $USER
+
+# Predownload neural networks
+RUN mkdir -p /home/$USER/.cache/torch/hub/ &&  \
+    cd /home/$USER/.cache/torch/hub/ && \
+    wget https://github.com/ultralytics/yolov5/archive/master.zip && \
+    unzip /home/$USER/.cache/torch/hub/master.zip && \
+    mv yolov5-master ultralytics_yolov5_master && \
+    rm -rf master.zip
 
 # Build C++ ROS Packages such as AMCL first
 COPY --from=dependencies --chown=$USER /root/src/amcl src/soccerbot/amcl
