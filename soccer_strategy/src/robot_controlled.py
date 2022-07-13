@@ -8,6 +8,7 @@ from robot import Robot
 
 from soccer_common.transformation import Transformation
 from soccer_pycontrol import path
+from soccer_pycontrol.utils import wrapTo2Pi, wrapToPi
 
 
 class RobotControlled(Robot):
@@ -31,6 +32,21 @@ class RobotControlled(Robot):
         self.max_kick_speed = 2
         self.navigation_goal_localized_time = rospy.Time.now()
         self.kick_with_right_foot = True
+
+    def shorten_navigation_position(self, goal_position):
+        shorten_navigation_limit = rospy.get_param("shorten_navigation_limit", 0.3)
+        distance_xy = np.linalg.norm(self.position[0:2] - goal_position[0:2])
+        if distance_xy < shorten_navigation_limit:
+            return goal_position
+
+        diff = goal_position[0:2] - self.position[0:2]
+        diff_unit = diff / np.linalg.norm(diff)
+        diff_unit *= shorten_navigation_limit
+
+        diff_angle = math.atan2(diff[0], diff[1])
+        diff_angle *= shorten_navigation_limit
+
+        return np.array([diff_unit[0], diff_unit[1], diff_angle] + self.position)
 
     def set_navigation_position(self, goal_position):
         if self.status == Robot.Status.WALKING:
