@@ -19,19 +19,84 @@ services:
         - utrarobosoccer/soccerbot:arm64
     volumes:
       - /usr/lib/aarch64-linux-gnu/tegra:/usr/lib/aarch64-linux-gnu/tegra
+      - /usr/local/cuda:/usr/local/cuda
+      - /usr/local/cuda-10:/usr/local/cuda-10
+      - /usr/local/cuda-10.2:/usr/local/cuda-10.2
+      - /etc/alternatives/cuda:/etc/alternatives/cuda
+    #      - /usr/lib/aarch64-linux-gnu/libopencv_calib3d.so.4.1.1:/usr/lib/aarch64-linux-gnu/libopencv_calib3d.so.4.1.1
+    #      - /usr/lib/aarch64-linux-gnu/libopencv_core.so.4.1.1:/usr/lib/aarch64-linux-gnu/libopencv_core.so.4.1.1
+    #      - /usr/lib/aarch64-linux-gnu/libopencv_dnn.so.4.1.1:/usr/lib/aarch64-linux-gnu/libopencv_dnn.so.4.1.1
+    #      - /usr/lib/aarch64-linux-gnu/libopencv_features2d.so.4.1.1:/usr/lib/aarch64-linux-gnu/libopencv_features2d.so.4.1.1
+    #      - /usr/lib/aarch64-linux-gnu/libopencv_flann.so.4.1.1:/usr/lib/aarch64-linux-gnu/libopencv_flann.so.4.1.1
+    #      - /usr/lib/aarch64-linux-gnu/libopencv_gapi.so.4.1.1:/usr/lib/aarch64-linux-gnu/libopencv_gapi.so.4.1.1
+    #      - /usr/lib/aarch64-linux-gnu/libopencv_highgui.so.4.1.1:/usr/lib/aarch64-linux-gnu/libopencv_highgui.so.4.1.1
+    #      - /usr/lib/aarch64-linux-gnu/libopencv_imgcodecs.so.4.1.1:/usr/lib/aarch64-linux-gnu/libopencv_imgcodecs.so.4.1.1
+    #      - /usr/lib/aarch64-linux-gnu/libopencv_imgproc.so.4.1.1:/usr/lib/aarch64-linux-gnu/libopencv_imgproc.so.4.1.1
+    #      - /usr/lib/aarch64-linux-gnu/libopencv_ml.so.4.1.1:/usr/lib/aarch64-linux-gnu/libopencv_ml.so.4.1.1
+    #      - /usr/lib/aarch64-linux-gnu/libopencv_objdetect.so.4.1.1:/usr/lib/aarch64-linux-gnu/libopencv_objdetect.so.4.1.1
+    #      - /usr/lib/aarch64-linux-gnu/libopencv_photo.so.4.1.1:/usr/lib/aarch64-linux-gnu/libopencv_photo.so.4.1.1
+    #      - /usr/lib/aarch64-linux-gnu/libopencv_stitching.so.4.1.1:/usr/lib/aarch64-linux-gnu/libopencv_stitching.so.4.1.1
+    #      - /usr/lib/aarch64-linux-gnu/libopencv_video.so.4.1.1:/usr/lib/aarch64-linux-gnu/libopencv_video.so.4.1.1
+    #      - /usr/lib/aarch64-linux-gnu/libopencv_videoio.so.4.1.1:/usr/lib/aarch64-linux-gnu/libopencv_videoio.so.4.1.1
+    #      - /usr/lib/aarch64-linux-gnu/libopencv_calib3d.so.4.1:/usr/lib/aarch64-linux-gnu/libopencv_calib3d.so.4.1
+    #      - /usr/lib/aarch64-linux-gnu/libopencv_core.so.4.1:/usr/lib/aarch64-linux-gnu/libopencv_core.so.4.1
+    #      - /usr/lib/aarch64-linux-gnu/libopencv_dnn.so.4.1:/usr/lib/aarch64-linux-gnu/libopencv_dnn.so.4.1
+    #      - /usr/lib/aarch64-linux-gnu/libopencv_features2d.so.4.1:/usr/lib/aarch64-linux-gnu/libopencv_features2d.so.4.1
+    #      - /usr/lib/aarch64-linux-gnu/libopencv_flann.so.4.1:/usr/lib/aarch64-linux-gnu/libopencv_flann.so.4.1
+    #      - /usr/lib/aarch64-linux-gnu/libopencv_gapi.so.4.1:/usr/lib/aarch64-linux-gnu/libopencv_gapi.so.4.1
+    #      - /usr/lib/aarch64-linux-gnu/libopencv_highgui.so.4.1:/usr/lib/aarch64-linux-gnu/libopencv_highgui.so.4.1
+    #      - /usr/lib/aarch64-linux-gnu/libopencv_imgcodecs.so.4.1:/usr/lib/aarch64-linux-gnu/libopencv_imgcodecs.so.4.1
+    #      - /usr/lib/aarch64-linux-gnu/libopencv_imgproc.so.4.1:/usr/lib/aarch64-linux-gnu/libopencv_imgproc.so.4.1
+    #      - /usr/lib/aarch64-linux-gnu/libopencv_ml.so.4.1:/usr/lib/aarch64-linux-gnu/libopencv_ml.so.4.1
+    #      - /usr/lib/aarch64-linux-gnu/libopencv_objdetect.so.4.1:/usr/lib/aarch64-linux-gnu/libopencv_objdetect.so.4.1
+    #      - /usr/lib/aarch64-linux-gnu/libopencv_photo.so.4.1:/usr/lib/aarch64-linux-gnu/libopencv_photo.so.4.1
+    #      - /usr/lib/aarch64-linux-gnu/libopencv_stitching.so.4.1:/usr/lib/aarch64-linux-gnu/libopencv_stitching.so.4.1
+    #      - /usr/lib/aarch64-linux-gnu/libopencv_video.so.4.1:/usr/lib/aarch64-linux-gnu/libopencv_video.so.4.1
+    #      - /usr/lib/aarch64-linux-gnu/libopencv_videoio.so.4.1:/usr/lib/aarch64-linux-gnu/libopencv_videoio.so.4.1
+    #      - /usr/lib/aarch64-linux-gnu/libopencv_calib3d.so:/usr/lib/aarch64-linux-gnu/libopencv_calib3d.so
+    #      - /usr/lib/aarch64-linux-gnu/libopencv_core.so:/usr/lib/aarch64-linux-gnu/libopencv_core.so
+    #      - /usr/lib/aarch64-linux-gnu/libopencv_dnn.so:/usr/lib/aarch64-linux-gnu/libopencv_dnn.so
+    #      - /usr/lib/aarch64-linux-gnu/libopencv_features2d.so:/usr/lib/aarch64-linux-gnu/libopencv_features2d.so
+    #      - /usr/lib/aarch64-linux-gnu/libopencv_flann.so:/usr/lib/aarch64-linux-gnu/libopencv_flann.so
+    #      - /usr/lib/aarch64-linux-gnu/libopencv_gapi.so:/usr/lib/aarch64-linux-gnu/libopencv_gapi.so
+    #      - /usr/lib/aarch64-linux-gnu/libopencv_highgui.so:/usr/lib/aarch64-linux-gnu/libopencv_highgui.so
+    #      - /usr/lib/aarch64-linux-gnu/libopencv_imgcodecs.so:/usr/lib/aarch64-linux-gnu/libopencv_imgcodecs.so
+    #      - /usr/lib/aarch64-linux-gnu/libopencv_imgproc.so:/usr/lib/aarch64-linux-gnu/libopencv_imgproc.so
+    #      - /usr/lib/aarch64-linux-gnu/libopencv_ml.so:/usr/lib/aarch64-linux-gnu/libopencv_ml.so
+    #      - /usr/lib/aarch64-linux-gnu/libopencv_objdetect.so:/usr/lib/aarch64-linux-gnu/libopencv_objdetect.so
+    #      - /usr/lib/aarch64-linux-gnu/libopencv_photo.so:/usr/lib/aarch64-linux-gnu/libopencv_photo.so
+    #      - /usr/lib/aarch64-linux-gnu/libopencv_stitching.so:/usr/lib/aarch64-linux-gnu/libopencv_stitching.so
+    #      - /usr/lib/aarch64-linux-gnu/libopencv_video.so:/usr/lib/aarch64-linux-gnu/libopencv_video.so
+    #      - /usr/lib/aarch64-linux-gnu/libopencv_videoio.so:/usr/lib/aarch64-linux-gnu/libopencv_videoio.so
+    #      - /usr/lib/aarch64-linux-gnu/libcudnn.so:/usr/lib/aarch64-linux-gnu/libcudnn.so
+    #      - /usr/lib/aarch64-linux-gnu/libcudnn.so.8:/usr/lib/aarch64-linux-gnu/libcudnn.so.8
+    #      - /usr/lib/aarch64-linux-gnu/libcudnn.so.8.2.1:/usr/lib/aarch64-linux-gnu/libcudnn.so.8.2.1
+    #      - /usr/lib/aarch64-linux-gnu/libcudnn_adv_infer.so.8.2.1:/usr/lib/aarch64-linux-gnu/libcudnn_adv_infer.so.8.2.1
+    #      - /usr/lib/aarch64-linux-gnu/libcudnn_adv_train.so.8.2.1:/usr/lib/aarch64-linux-gnu/libcudnn_adv_train.so.8.2.1
+    #      - /usr/lib/aarch64-linux-gnu/libcudnn_cnn_infer.so.8.2.1:/usr/lib/aarch64-linux-gnu/libcudnn_cnn_infer.so.8.2.1
+    #      - /usr/lib/aarch64-linux-gnu/libcudnn_cnn_train.so.8.2.1:/usr/lib/aarch64-linux-gnu/libcudnn_cnn_train.so.8.2.1
+    #      - /usr/lib/aarch64-linux-gnu/libcudnn_ops_infer.so.8.2.1:/usr/lib/aarch64-linux-gnu/libcudnn_ops_infer.so.8.2.1
+    #      - /usr/lib/aarch64-linux-gnu/libcudnn_ops_train.so.8.2.1:/usr/lib/aarch64-linux-gnu/libcudnn_ops_train.so.8.2.1
+    #      - /usr/lib/aarch64-linux-gnu/libcudnn_adv_infer.so.8:/usr/lib/aarch64-linux-gnu/libcudnn_adv_infer.so.8
+    #      - /usr/lib/aarch64-linux-gnu/libcudnn_adv_train.so.8:/usr/lib/aarch64-linux-gnu/libcudnn_adv_train.so.8
+    #      - /usr/lib/aarch64-linux-gnu/libcudnn_cnn_infer.so.8:/usr/lib/aarch64-linux-gnu/libcudnn_cnn_infer.so.8
+    #      - /usr/lib/aarch64-linux-gnu/libcudnn_cnn_train.so.8:/usr/lib/aarch64-linux-gnu/libcudnn_cnn_train.so.8
+    #      - /usr/lib/aarch64-linux-gnu/libcudnn_ops_infer.so.8:/usr/lib/aarch64-linux-gnu/libcudnn_ops_infer.so.8
+    #      - /usr/lib/aarch64-linux-gnu/libcudnn_ops_train.so.8:/usr/lib/aarch64-linux-gnu/libcudnn_ops_train.so.8
+    #      - /usr/lib/aarch64-linux-gnu/libcudnn_static.a:/usr/lib/aarch64-linux-gnu/libcudnn_static.a
+    #      - /usr/lib/aarch64-linux-gnu/libcudnn_static_v8.a:/usr/lib/aarch64-linux-gnu/libcudnn_static_v8.a
     command:
       /bin/bash -c "source ~/catkin_ws/devel/setup.bash && sudo chmod +s /usr/bin/nice &&
       if [[ $$TEST_CONTROL == 'true' ]]; then roslaunch soccer_hardware soccer_hardware.launch test_walking:=true  __ns:=robot$$ROBOCUP_ROBOT_ID;
       else roslaunch soccerbot soccerbot.launch simulation:=false __ns:=robot$$ROBOCUP_ROBOT_ID; fi || sleep infinity"
     environment:
       ROS_MASTER_URI: ${ROS_MASTER_URI}
-      TEST_CONTROL: "false"
+      TEST_CONTROL: "true"
       ROBOCUP_ROBOT_ID: 1
       ROBOCUP_TEAM_COLOR: "red"
       ROBOCUP_GAMECONTROLLER_IP: "192.168.0.2"
       ROBOCUP_TEAM_ID: 16
       PYTHONUNBUFFERED: 1
-      LD_LIBRARY_PATH: $LD_LIBRARY_PATH:/usr/local/cuda-10.2/targets/aarch64-linux/lib/
       X_POS: ${X_POS:--4}
       Y_POS: ${X_POS:--3.15}
       YAW: ${YAW:-1.57}
