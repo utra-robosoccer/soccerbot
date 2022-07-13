@@ -1,5 +1,6 @@
 <!-- Launches the sensors and darknet for the robot -->
 <launch>
+    <arg name="robot_model" default="bez1" />
     <arg name="play_rosbag" default="false" />
     <arg name="record_rosbag" default="false" />
     <arg name="rosbag_file" default="$(find soccer_common)/bags/localization_1.bag" />
@@ -22,6 +23,7 @@
         </node>
 
         <!-- Motor Drivers -->
-        <include file="$(find soccer_hardware)/launch/soccer_hardware.launch" />
+        <include file="$(find soccer_hardware)/launch/soccer_hardware.launch" if="$(eval robot_model == 'bez1')" />
+        <include file="$(find soccer_hardware_bez3)/launch/soccer_hardware_bez3.launch" if="$(eval robot_model == 'bez3')" />
     </group>
 </launch>

@@ -15,6 +15,7 @@ find_package(
     soccer_object_localization
     soccer_pycontrol
     soccer_hardware
+    soccer_hardware_bez3
 )
 
 catkin_package(CATKIN_DEPENDS soccer_msgs soccer_object_detection)

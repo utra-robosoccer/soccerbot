@@ -28,7 +28,7 @@ else:
 if run_in_ros:
     import rospy
 
-    rospy.init_node("soccer_control")
+    rospy.init_node("soccer_control_test")
     os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_strategy'")
     os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_pycontrol'")
     os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_trajectories'")

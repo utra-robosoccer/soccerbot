@@ -129,7 +129,7 @@ class Soccerbot:
         self.setPose(pose)
 
         pitch_correction = tr([0, 0, 0], tr.get_quaternion_from_euler([0, rospy.get_param("torso_offset_pitch", 0.0), 0]))
-        self.torso_offset = pitch_correction @ tr([rospy.get_param("torso_offset_x", 0), 0, 0])
+        self.torso_offset = tr([rospy.get_param("torso_offset_x", 0), 0, 0]) @ pitch_correction
         self.robot_path: PathRobot = None
         self.robot_odom_path: PathRobot = None
 
@@ -242,11 +242,16 @@ class Soccerbot:
         self.configuration_offset = [0] * len(Joints)
 
     def updateRobotConfiguration(self):
+        self.configuration_offset = [0] * len(Joints)
         try:
             joint_state = rospy.wait_for_message("joint_states", JointState, timeout=3)
-            self.configuration[0:18] = joint_state.position
+            indexes = [joint_state.name.index(motor_name) for motor_name in self.motor_names]
+            self.configuration[0:18] = [joint_state.position[i] for i in indexes]
         except (ROSException, KeyError, AttributeError) as ex:
             rospy.logerr(ex)
+        except ValueError as vx:
+            print(self.motor_names)
+            raise vx
 
     def inverseKinematicsRightFoot(self, transformation):
         """
