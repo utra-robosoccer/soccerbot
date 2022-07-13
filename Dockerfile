@@ -75,7 +75,9 @@ RUN pip install --no-cache-dir --upgrade pip Cython pybullet
 RUN curl -sSL https://get.docker.com/ | sh
 
 COPY requirements.txt /tmp/requirements.txt
-RUN if [[ "$BASE_IMAGE" == "utrarobosoccer/noetic" ]] ; then pip3 install -r /tmp/requirements.txt --extra-index-url https://download.pytorch.org/whl/cu117 ; else pip3 install -r /tmp/requirements.txt ; fi
+RUN pip3 install -r /tmp/requirements.txt --extra-index-url https://download.pytorch.org/whl/cu117
+
+RUN if [[ "$BASE_IMAGE" == "arm64v8/ros:noetic-robot" ]] ; then pip3 install -r /tmp/requirements.txt --extra-index-url https://download.pytorch.org/whl/cu117; fi
 
 COPY --from=dependencies /tmp/catkin_install_list /tmp/catkin_install_list
 RUN (apt-get update || echo "Apt Error") && apt-fast install -y --no-install-recommends $(cat /tmp/catkin_install_list)
