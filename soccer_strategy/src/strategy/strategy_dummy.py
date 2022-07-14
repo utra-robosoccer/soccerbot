@@ -1,14 +1,11 @@
 import math
 
-# import rospy
-# rospy only used here for rospy.loginfo
-import time
-
+import numpy as np
 import rospy
+from robot import Robot
 from strategy.interfaces.actions import Actions
 from strategy.interfaces.evaluations import Evaluations
 from strategy.strategy import Strategy, get_back_up, update_average_ball_position
-from strategy.utils import *
 from team import Team
 
 from soccer_msgs.msg import GameState
