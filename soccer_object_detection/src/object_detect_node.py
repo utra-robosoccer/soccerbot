@@ -35,7 +35,7 @@ class ObjectDetectionNode(object):
         self.model = torch.hub.load("ultralytics/yolov5", "yolov5s")
 
         if torch.cuda.is_available():
-            rospy.logwarn("Using CUDA for object detection")
+            rospy.loginfo("Using CUDA for object detection")
             self.model.cuda()
         else:
             rospy.logwarn("Not using CUDA")

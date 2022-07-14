@@ -29,6 +29,8 @@ class Camera:
 
         self.tf_listener = TransformListener()
 
+        self.init_time = rospy.Time.now()
+
     def ready(self) -> bool:
         return self.pose is not None and self.resolution_x is not None and self.resolution_y is not None and self.camera_info is not None
 
@@ -39,16 +41,18 @@ class Camera:
         if from_world_frame:
             base_frame = "world"
             target_frame = self.robot_name + "/camera"
+            duration_to_wait_for_transform = 5
         else:
             base_frame = self.robot_name + "/odom"
             target_frame = self.robot_name + "/camera"
+            duration_to_wait_for_transform = 1
 
         while not rospy.is_shutdown():
             try:
                 while not self.tf_listener.canTransform(base_frame, target_frame, timestamp):
-                    if rospy.Time.now() - timestamp > rospy.Duration(1):
+                    if rospy.Time.now() - timestamp > rospy.Duration(duration_to_wait_for_transform):
                         self.tf_listener.lookupTransform(base_frame, target_frame, rospy.Time(0))
-                        print("Cant find tf")
+                        rospy.logwarn_throttle(1, f"Cant find TF between {base_frame} and {target_frame} at {timestamp}")
                     rospy.sleep(0.05)
 
                 (trans, rot) = self.tf_listener.lookupTransform(base_frame, target_frame, rospy.Time(0))
@@ -60,11 +64,14 @@ class Camera:
                 tf.ExtrapolationException,
                 tf2_py.TransformException,
             ) as ex:
-                rospy.logerr_throttle(10, str(ex))
+                if rospy.Time.now() - self.init_time > rospy.Duration(5):
+                    rospy.logwarn_throttle(10, str(ex))
                 try:
                     rospy.sleep(0.1)
                 except ROSInterruptException:
                     exit(0)
+            except ROSInterruptException:
+                exit(0)
 
         if rospy.is_shutdown():
             exit(0)

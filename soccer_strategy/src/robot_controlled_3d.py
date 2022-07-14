@@ -50,6 +50,8 @@ class RobotControlled3D(RobotControlled):
 
         self.active = True
 
+        self.node_init_time = rospy.Time.now()
+
     def set_kick_velocity(self, kick_velocity):
         pass
 
@@ -113,7 +115,7 @@ class RobotControlled3D(RobotControlled):
                 )
             self.observed_ball.position = np.array([ball_pose[0][0], ball_pose[0][1], ball_pose[0][2]])
         except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
-            rospy.logwarn_throttle(30, "Unable to locate ball in TF tree")
+            rospy.loginfo_throttle(30, "Still looking for ball in TF Tree")
             self.observed_ball.position = None
 
         # Get Robot Position from TF
@@ -130,7 +132,8 @@ class RobotControlled3D(RobotControlled):
                 self.status = Robot.Status.READY
 
         except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
-            rospy.logwarn_throttle(30, "Unable to locate robot in TF tree")
+            if rospy.Time.now() - self.node_init_time > rospy.Duration(5):
+                rospy.logwarn_throttle(5, "Unable to locate robot in TF tree")
 
         # Publish Robot state info
         r = RobotState()
