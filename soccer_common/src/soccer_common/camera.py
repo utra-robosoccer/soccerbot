@@ -1,11 +1,7 @@
-import time
-
 import numpy as np
 import rospy
 import tf
 import tf2_py
-import tf2_ros
-from geometry_msgs.msg import Pose, TransformStamped
 from rospy import Subscriber
 from rospy.exceptions import ROSInterruptException
 from sensor_msgs.msg import CameraInfo
