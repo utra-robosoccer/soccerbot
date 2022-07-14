@@ -15,5 +15,7 @@
         <param name="robot_id" value="$(arg robot_id)" />
     </node>
 
+    <rosparam command="load" file="$(find soccer_strategy)/config/bez1.yaml" />
+
     <node name="team_communication" pkg="soccer_strategy" type="team_communication.py" output="screen" if="$(optenv COMPETITION false)" />
 </launch>

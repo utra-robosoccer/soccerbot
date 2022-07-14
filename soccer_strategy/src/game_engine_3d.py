@@ -85,7 +85,10 @@ class GameEngine3D:
             elif current_strategy is StrategyDetermineSide and not self.team1.strategy.complete:
                 new_strategy = StrategyDetermineSide
             else:
-                new_strategy = StrategyReady
+                if rospy.get_param("skip_ready_strategy", False):
+                    new_strategy = StrategyDummy
+                else:
+                    new_strategy = StrategyReady
         elif self.gameState.gameState == GameState.GAMESTATE_SET:
             if self.robot().status == Robot.Status.PENALIZED:
                 new_strategy = StrategyDetermineSide
