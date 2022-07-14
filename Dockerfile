@@ -74,15 +74,16 @@ RUN pip install --no-cache-dir --upgrade pip Cython pybullet
 
 RUN curl -sSL https://get.docker.com/ | sh
 
-COPY requirements.txt /tmp/requirements.txt
-RUN pip3 install -r /tmp/requirements.txt --extra-index-url https://download.pytorch.org/whl/cu117
-
-RUN if [[ "$BASE_IMAGE" == "arm64v8/ros:noetic-robot" ]] ; then \
+RUN if [[ "$(dpkg --print-architecture)" == "arm64" ]] ; then \
+    apt-get update && \
     apt-get install -y libomp5 && \
     pip install gdown && \
     gdown https://drive.google.com/uc?id=1AQQuBS9skNk1mgZXMp0FmTIwjuxc81WY && \
     pip install torch-1.11.0a0+gitbc2c6ed-cp38-cp38-linux_aarch64.whl && \
     rm -rf torch-1.11.0a0+gitbc2c6ed-cp38-cp38-linux_aarch64.whl ; fi
+
+COPY requirements.txt /tmp/requirements.txt
+RUN pip3 install -r /tmp/requirements.txt --extra-index-url https://download.pytorch.org/whl/cu117
 
 COPY --from=dependencies /tmp/catkin_install_list /tmp/catkin_install_list
 RUN (apt-get update || echo "Apt Error") && apt-fast install -y --no-install-recommends $(cat /tmp/catkin_install_list)
@@ -121,4 +122,4 @@ RUN source /opt/ros/noetic/setup.bash && catkin config --cmake-args -DCMAKE_BUIL
 RUN source /opt/ros/noetic/setup.bash && catkin build --no-status soccerbot
 RUN echo "source /home/$USER/catkin_ws/devel/setup.bash" >> ~/.bashrc
 
-ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/targets/aarch64-linux/lib/
+ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/aarch64-linux-gnu/tegra:/usr/local/cuda/targets/aarch64-linux/lib/
