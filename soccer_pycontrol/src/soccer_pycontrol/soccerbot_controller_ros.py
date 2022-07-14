@@ -119,24 +119,24 @@ class SoccerbotControllerRos(SoccerbotController):
 
         # Update existing path
         # Note the code is here instead of run because the computation will disturb the main thread. Main thread should still be running
-        # if self.soccerbot.robot_path is not None:
-        #     print("Updating New Goal")
-        #     start = time.time()
-        #     goal_position = self.pose_to_transformation(pose.pose)
-        #     self.soccerbot.addTorsoHeight(goal_position)
-        #     self.new_path = copy.deepcopy(self.soccerbot.robot_path)
-        #
-        #     try:
-        #         self.t_new_path = self.new_path.dynamicallyUpdateGoalPosition(self.t, goal_position)
-        #     except Exception as ex:
-        #         print(ex)
-        #         return
-        #
-        #     end = time.time()
-        #
-        #     self.soccerbot.publishPath(self.new_path)
-        #     print("New Goal Updated, Time Taken: ", end - start)
-        #     pass
+        if self.soccerbot.robot_path is not None:
+            print("Updating New Goal")
+            start = time.time()
+            goal_position = self.pose_to_transformation(pose.pose)
+            self.soccerbot.addTorsoHeight(goal_position)
+            self.new_path = copy.deepcopy(self.soccerbot.robot_path)
+
+            try:
+                self.t_new_path = self.new_path.dynamicallyUpdateGoalPosition(self.t, goal_position)
+            except Exception as ex:
+                print(ex)
+                return
+
+            end = time.time()
+
+            self.soccerbot.publishPath(self.new_path)
+            print("New Goal Updated, Time Taken: ", end - start)
+            pass
         self.new_goal = pose
 
     def run(self, single_trajectory=False):
