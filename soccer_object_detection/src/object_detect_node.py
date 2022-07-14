@@ -32,9 +32,13 @@ class ObjectDetectionNode(object):
     """
 
     def __init__(self, model_path, num_feat):
-        self.model = model = torch.hub.load("ultralytics/yolov5", "yolov5s")
+        self.model = torch.hub.load("ultralytics/yolov5", "yolov5s")
+
         if torch.cuda.is_available():
+            rospy.logwarn("Using CUDA for object detection")
             self.model.cuda()
+        else:
+            rospy.logwarn("Not using CUDA")
 
         self.robot_name = rospy.get_namespace()[1:-1]  # remove '/'
         self.camera = Camera(self.robot_name)

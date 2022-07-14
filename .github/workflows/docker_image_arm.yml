@@ -6,7 +6,7 @@ on:
   schedule:
     - cron: "0 1 1 * *"
   push:
-    branches: [master, build_arms]
+    branches: [master, fix_again]
     paths-ignore:
       - "**.md"
 

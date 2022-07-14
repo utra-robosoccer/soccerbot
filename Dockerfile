@@ -76,11 +76,14 @@ RUN curl -sSL https://get.docker.com/ | sh
 
 RUN if [[ "$(dpkg --print-architecture)" == "arm64" ]] ; then \
     apt-get update && \
-    apt-get install -y libomp5 && \
+    apt-get install -y libomp5 libopenblas-dev && \
     pip install gdown && \
     gdown https://drive.google.com/uc?id=1AQQuBS9skNk1mgZXMp0FmTIwjuxc81WY && \
+    gdown https://drive.google.com/uc?id=1BaBhpAizP33SV_34-l3es9MOEFhhS1i2 && \
     pip install torch-1.11.0a0+gitbc2c6ed-cp38-cp38-linux_aarch64.whl && \
-    rm -rf torch-1.11.0a0+gitbc2c6ed-cp38-cp38-linux_aarch64.whl ; fi
+    pip install torchvision-0.12.0a0+9b5a3fe-cp38-cp38-linux_aarch64.whl && \
+    rm -rf torch-1.11.0a0+gitbc2c6ed-cp38-cp38-linux_aarch64.whl && \
+    rm -rf torchvision-0.12.0a0+9b5a3fe-cp38-cp38-linux_aarch64.whl; fi
 
 COPY requirements.txt /tmp/requirements.txt
 RUN pip3 install -r /tmp/requirements.txt --extra-index-url https://download.pytorch.org/whl/cu117
