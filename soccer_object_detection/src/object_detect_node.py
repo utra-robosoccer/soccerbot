@@ -88,7 +88,6 @@ class ObjectDetectionNode(object):
             bbs_msg = BoundingBoxes()
             for prediction in results.xyxy[0]:
                 x1, y1, x2, y2, confidence, img_class = prediction.cpu().numpy()
-                print(x1, y1, x2, y2, confidence, img_class)
                 if img_class == SOCCER_BALL:
                     bb_msg = BoundingBox()
                     bb_msg.xmin = round(x1)
