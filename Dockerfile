@@ -121,4 +121,4 @@ RUN source /opt/ros/noetic/setup.bash && catkin config --cmake-args -DCMAKE_BUIL
 RUN source /opt/ros/noetic/setup.bash && catkin build --no-status soccerbot
 RUN echo "source /home/$USER/catkin_ws/devel/setup.bash" >> ~/.bashrc
 
-ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/targets/aarch64-linux/lib/
+ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/aarch64-linux-gnu/tegrag:/usr/local/cuda/targets/aarch64-linux/lib/
