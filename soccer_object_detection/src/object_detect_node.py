@@ -68,7 +68,7 @@ class ObjectDetectionNode(object):
         ]:
             return
 
-        rospy.loginfo_throttle(60, "Recieved Image")
+        rospy.loginfo_once("Object Detection Receiving image")
         # width x height x channels (bgra8)
         image = self.br.imgmsg_to_cv2(msg)
         self.camera.reset_position(timestamp=msg.header.stamp)

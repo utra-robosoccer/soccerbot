@@ -39,7 +39,7 @@
     <include file="$(find soccerbot)/launch/modules/communication.launch" if="$(arg simulation)">
         <arg name="robot_name" value="$(arg robot_name)" />
     </include>
-    
+
     <node pkg="soccer_strategy" type="game_controller_receiver.py" name="game_controller_receiver" output="screen" />
 
     <include file="$(find soccerbot)/launch/modules/localization.launch">
@@ -61,6 +61,8 @@
         <arg name="y_pos" value="$(arg y_pos)" />
         <arg name="a_pos" value="$(arg a_pos)" />
         <arg name="robot_id" value="$(arg robot_id)" />
+        <arg name="robot_model" value="$(arg robot_model)" />
+        <arg name="simulation" value="$(arg simulation)" />
     </include>
 
     <!-- prettier-ignore -->

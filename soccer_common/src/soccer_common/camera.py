@@ -1,3 +1,5 @@
+import time
+
 import numpy as np
 import rospy
 import tf
@@ -41,13 +43,15 @@ class Camera:
             base_frame = self.robot_name + "/odom"
             target_frame = self.robot_name + "/camera"
 
-        cannot_find_transform = False
         while not rospy.is_shutdown():
             try:
-                if cannot_find_transform:
-                    (trans, rot) = self.tf_listener.lookupTransform(base_frame, target_frame, rospy.Time(0))
-                else:
-                    (trans, rot) = self.tf_listener.lookupTransform(base_frame, target_frame, timestamp)
+                while not self.tf_listener.canTransform(base_frame, target_frame, timestamp):
+                    if rospy.Time.now() - timestamp > rospy.Duration(1):
+                        self.tf_listener.lookupTransform(base_frame, target_frame, rospy.Time(0))
+                        print("Cant find tf")
+                    rospy.sleep(0.05)
+
+                (trans, rot) = self.tf_listener.lookupTransform(base_frame, target_frame, rospy.Time(0))
                 break
             except (
                 tf2_py.LookupException,
@@ -56,12 +60,7 @@ class Camera:
                 tf.ExtrapolationException,
                 tf2_py.TransformException,
             ) as ex:
-                rospy.logwarn_throttle(10, str(ex))
-                rospy.logwarn_throttle(
-                    10,
-                    f"Waiting for transformation from { base_frame } to  { target_frame }, timestamp {timestamp.secs}",
-                )
-                cannot_find_transform = True
+                rospy.logerr_throttle(10, str(ex))
                 try:
                     rospy.sleep(0.1)
                 except ROSInterruptException:
