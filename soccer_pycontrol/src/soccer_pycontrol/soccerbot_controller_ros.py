@@ -153,6 +153,7 @@ class SoccerbotControllerRos(SoccerbotController):
             except ROSInterruptException:
                 exit(0)
 
+        self.soccerbot.ready()
         self.soccerbot.reset_imus()
         self.soccerbot.updateRobotConfiguration()
         time_now = 0

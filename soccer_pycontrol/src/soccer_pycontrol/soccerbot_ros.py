@@ -164,8 +164,8 @@ class SoccerbotRos(Soccerbot):
         # TODO subscribe to foot pressure sensors
         pass
 
-    HEAD_YAW_FREQ = 0.005
-    HEAD_PITCH_FREQ = 0.005
+    HEAD_YAW_FREQ = rospy.get_param("head_yaw_freq", 0.005)
+    HEAD_PITCH_FREQ = rospy.get_param("head_pitch_freq", 0.005)
 
     def apply_head_rotation(self):
         if self.robot_state.status in [self.robot_state.STATUS_DETERMINING_SIDE, self.robot_state.STATUS_PENALIZED]:
@@ -194,6 +194,8 @@ class SoccerbotRos(Soccerbot):
                 pass
 
             # So that the arms don't block the vision
+            self.configuration[Joints.LEFT_ARM_1] = (-0.3 - self.configuration[Joints.LEFT_ARM_1]) * 0.05 + self.configuration[Joints.LEFT_ARM_1]
+            self.configuration[Joints.RIGHT_ARM_1] = (-0.3 - self.configuration[Joints.RIGHT_ARM_1]) * 0.05 + self.configuration[Joints.RIGHT_ARM_1]
             self.configuration[Joints.LEFT_ARM_2] = (0.8 - self.configuration[Joints.LEFT_ARM_2]) * 0.05 + self.configuration[Joints.LEFT_ARM_2]
             self.configuration[Joints.RIGHT_ARM_2] = (0.8 - self.configuration[Joints.RIGHT_ARM_2]) * 0.05 + self.configuration[Joints.RIGHT_ARM_2]
 
@@ -252,6 +254,11 @@ class SoccerbotRos(Soccerbot):
                 camera_to_ball_position = camera_to_ball.get_position()
                 yaw = math.atan2(camera_to_ball_position[1], camera_to_ball_position[0])
                 pitch = math.atan2(camera_to_ball_position[2], camera_to_ball_position[0])
+
+                # If the ball last location is too difficult for the head to turn to
+                if abs(yaw) > np.pi * 0.5 or abs(pitch) > np.pi * 0.7:
+                    self.look_at_last_ball_pose_timeout = rospy.Time.now()
+                    return
 
                 self.configuration[Joints.HEAD_1] = yaw
                 self.configuration[Joints.HEAD_2] = -pitch
