@@ -1,14 +1,11 @@
 import abc
 import math
-import time
 
 import numpy as np
 import rospy
 from robot import Robot
 
 from soccer_common.transformation import Transformation
-from soccer_pycontrol import path
-from soccer_pycontrol.utils import wrapTo2Pi, wrapToPi
 
 
 class RobotControlled(Robot):
@@ -27,7 +24,6 @@ class RobotControlled(Robot):
 
         self.start_position = None
         self.goal_position = None
-        self.path = None
 
         self.max_kick_speed = 2
         self.navigation_goal_localized_time = rospy.Time.now()
@@ -51,14 +47,13 @@ class RobotControlled(Robot):
     def set_navigation_position(self, goal_position):
         if self.status == Robot.Status.WALKING:
             if self.goal_position is not None and np.linalg.norm(np.array(self.goal_position[0:2]) - np.array(goal_position[0:2])) < 0.05:
-                print("New Goal too close to previous goal: New " + str(self.goal_position) + " Old " + str(goal_position))
+                rospy.logwarn("New Goal too close to previous goal: New " + str(self.goal_position) + " Old " + str(goal_position))
                 return False
             else:
-                print("Updating Goal: New " + str(self.goal_position) + " Old " + str(goal_position))
+                rospy.logwarn("Updating Goal: New " + str(self.goal_position) + " Old " + str(goal_position))
 
         self.start_position = self.position
         self.goal_position = goal_position
-        self.path = path.Path(self.position_to_transformation(self.start_position), self.position_to_transformation(self.goal_position))
         self.status = Robot.Status.WALKING
         return True
 

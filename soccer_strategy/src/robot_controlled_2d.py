@@ -1,11 +1,11 @@
 import math
-import time
 
 import numpy as np
 import rospy
-from ball import Ball
 from robot import Robot
 from robot_controlled import RobotControlled
+
+from soccer_pycontrol import path
 
 
 class RobotControlled2D(RobotControlled):
@@ -27,6 +27,7 @@ class RobotControlled2D(RobotControlled):
         self.robot_id = robot_id
         self.robot_name = "robot %d" % robot_id
         self.path_time = 0
+        self.path = None
 
     def set_kick_velocity(self, kick_velocity):
         kick_angle_rand = np.random.normal(0, 0.2)
@@ -37,6 +38,10 @@ class RobotControlled2D(RobotControlled):
         rotation_rand = np.array([[np.cos(kick_angle_rand), -np.sin(kick_angle_rand)], [np.sin(kick_angle_rand), np.cos(kick_angle_rand)]])
 
         self.kick_velocity = kick_force_rand * rotation_rand @ kick_velocity
+
+    def set_navigation_position(self, goal_position):
+        super().set_navigation_position(goal_position)
+        self.path = path.Path(self.position_to_transformation(self.start_position), self.position_to_transformation(self.goal_position))
 
     def get_opponent_net_position(self):
         if self.team == Robot.Team.FRIENDLY:

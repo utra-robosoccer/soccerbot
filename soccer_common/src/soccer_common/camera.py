@@ -2,6 +2,7 @@ import numpy as np
 import rospy
 import tf
 import tf2_py
+import tf2_ros
 from rospy import Subscriber
 from rospy.exceptions import ROSInterruptException
 from sensor_msgs.msg import CameraInfo
@@ -30,7 +31,7 @@ class Camera:
     def ready(self) -> bool:
         return self.pose is not None and self.resolution_x is not None and self.resolution_y is not None and self.camera_info is not None
 
-    def reset_position(self, from_world_frame=False, timestamp=rospy.Time(0)):
+    def reset_position(self, from_world_frame=False, timestamp=rospy.Time(0), skip_if_not_found=False):
 
         if from_world_frame:
             base_frame = "world"
@@ -75,6 +76,9 @@ class Camera:
             tf2_py.TransformException,
         ) as ex:
             pass
+
+        if skip_if_not_found:
+            return
 
         # Then try waiting for the first transform
         try:

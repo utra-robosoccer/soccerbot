@@ -21,6 +21,19 @@ from soccer_common.camera import Camera
 from soccer_msgs.msg import BoundingBox, BoundingBoxes, RobotState
 
 
+class bcolors:
+    HEADER = "\033[95m"
+    OKBLUE = "\033[94m"
+    OKCYAN = "\033[96m"
+    OKGREEN = "\033[92m"
+    MAGENTA = "\u001b[35m"
+    WARNING = "\033[93m"
+    FAIL = "\033[91m"
+    ENDC = "\033[0m"
+    BOLD = "\033[1m"
+    UNDERLINE = "\033[4m"
+
+
 class ObjectDetectionNode(object):
     SOCCER_BALL = 0
     CONFIDENCE_THRESHOLD = rospy.get_param("confidence_threshold", 0.75)
@@ -34,7 +47,7 @@ class ObjectDetectionNode(object):
     def __init__(self, model_path):
         self.model = torch.hub.load("ultralytics/yolov5", "custom", path=model_path)
         if torch.cuda.is_available():
-            rospy.loginfo("Using CUDA for object detection")
+            rospy.loginfo(f"{bcolors.OKGREEN}Using CUDA for object detection{bcolors.ENDC}")
             self.model.cuda()
         else:
             rospy.logwarn("Not using CUDA")

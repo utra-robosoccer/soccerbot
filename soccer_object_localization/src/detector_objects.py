@@ -47,7 +47,7 @@ class DetectorBall(Detector):
             return
 
         s = time.time()
-        self.camera.reset_position(timestamp=msg.header.stamp, from_world_frame=True)
+        self.camera.reset_position(timestamp=msg.header.stamp, from_world_frame=True, skip_if_not_found=True)
         e = time.time()
         if e - s > 1:
             rospy.logerr_throttle(1, f"Resetting camera position took longer than usual ({e-s}) seconds")
@@ -84,7 +84,7 @@ class DetectorBall(Detector):
 
                 # If it is the first ball, we need high confidence
                 if self.last_ball_pose is None:
-                    if box.probability < 0.8:
+                    if box.probability < 0.78:
                         rospy.logwarn_throttle(0.5, f"Ignoring first pose of ball with low confidence threshold {box.probability}")
                         continue
 
