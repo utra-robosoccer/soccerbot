@@ -21,7 +21,8 @@ from soccer_common.camera import Camera
 from soccer_msgs.msg import RobotState
 from soccer_object_detection.msg import BoundingBox, BoundingBoxes
 
-SOCCER_BALL = 32
+SOCCER_BALL = 0
+CONFIDENCE_THRESHOLD = 0.6
 
 
 class ObjectDetectionNode(object):
@@ -32,7 +33,7 @@ class ObjectDetectionNode(object):
     """
 
     def __init__(self, model_path, num_feat):
-        self.model = model = torch.hub.load("ultralytics/yolov5", "yolov5s")
+        self.model = torch.hub.load("ultralytics/yolov5", "custom", path=model_path)
         if torch.cuda.is_available():
             self.model.cuda()
 
@@ -55,7 +56,7 @@ class ObjectDetectionNode(object):
         self.robot_state = robot_state
 
     def callback(self, msg: Image):
-        global SOCCER_BALL
+        global SOCCER_BALL, CONFIDENCE_THRESHOLD
         # webots: 480x640x4pixels
         if self.robot_state.status not in [
             RobotState.STATUS_LOCALIZING,
@@ -85,7 +86,7 @@ class ObjectDetectionNode(object):
             for prediction in results.xyxy[0]:
                 x1, y1, x2, y2, confidence, img_class = prediction.cpu().numpy()
                 print(x1, y1, x2, y2, confidence, img_class)
-                if img_class == SOCCER_BALL:
+                if img_class == SOCCER_BALL and confidence > CONFIDENCE_THRESHOLD:
                     bb_msg = BoundingBox()
                     bb_msg.xmin = round(x1)
                     bb_msg.ymin = round(y1)
