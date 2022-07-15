@@ -1,8 +1,11 @@
 import os.path
 from unittest import TestCase
+from unittest.mock import MagicMock
 
 import cv2
-import torch
+from cv2 import Mat
+
+from soccer_common import Transformation
 
 
 def IoU(boxA, boxB):
@@ -26,34 +29,55 @@ def IoU(boxA, boxB):
 
 
 class Test(TestCase):
-    def test_ball_image(self):
-        IOU_THRESHOLD = 0.9
-        CONFIDENCE_THRESHOLD = 0.7
-        BALL_CLASS = 0
+    def test_object_detection_node(self):
+        import numpy as np
+        import rospy
+        import tf2_ros
+        from sensor_msgs.msg import Image
+
+        from soccer_common import Camera
+
+        Camera.reset_position = MagicMock()
+        tf2_ros.TransformListener = MagicMock()
+        rospy.Time.now = MagicMock(return_value=0)
+        rospy.get_param = lambda a, b: b
+        from object_detect_node import ObjectDetectionNode
+
+        n = ObjectDetectionNode(model_path="small_model/July14.pt")
+        n.pub_detection.get_num_connections = MagicMock(return_value=1)
+        n.pub_boundingbox.get_num_connections = MagicMock(return_value=1)
+
+        n.pub_detection.publish = MagicMock()
+        n.pub_boundingbox.publish = MagicMock()
+
+        from cv_bridge import CvBridge
+
+        cvbridge = CvBridge()
         src_path = os.path.dirname(os.path.realpath(__file__))
-        model_path = src_path + "/small_model/July14.pt"
         test_path = src_path + "/test_image"
-
-        model = torch.hub.load("ultralytics/yolov5", "custom", path=model_path)
-
-        if torch.cuda.is_available():
-            model.cuda()
-
         for file_name in os.listdir(test_path):
-            img = cv2.imread(os.path.join(test_path, file_name))  # ground truth box = (68, 89) (257, 275)
+            img: Mat = cv2.imread(os.path.join(test_path, file_name))  # ground truth box = (68, 89) (257, 275)
+            img_msg: Image = cvbridge.cv2_to_imgmsg(img)
+            n.camera.resolution_x = img.shape[1]
+            n.camera.resolution_y = img.shape[0]
+            n.camera.pose.set_orientation(Transformation.get_quaternion_from_euler([0, np.pi / 8, 0]))
+            n.callback(img_msg)
+
+            # Extract ground truth
             ground_truth_boxes = file_name[:-4].split("_")[1:]  # strip name and .png
             ground_truth_boxes = list(map(int, ground_truth_boxes))
 
-            results = model(img)  # you can print(results) for more info
+            # Check assertion
+            self.assertGreater(n.pub_boundingbox.publish.call_args[0][0].bounding_boxes[0].probability, n.CONFIDENCE_THRESHOLD)
+            bounding_boxes = [
+                n.pub_boundingbox.publish.call_args[0][0].bounding_boxes[0].xmin,
+                n.pub_boundingbox.publish.call_args[0][0].bounding_boxes[0].ymin,
+                n.pub_boundingbox.publish.call_args[0][0].bounding_boxes[0].xmax,
+                n.pub_boundingbox.publish.call_args[0][0].bounding_boxes[0].ymax,
+            ]
+            iou = IoU(bounding_boxes, ground_truth_boxes)
+            self.assertGreater(iou, 0.8, "bounding boxes are off by too much!")
 
-            for prediction in results.xyxy[0]:
-                x1, y1, x2, y2, confidence, img_class = prediction.cpu().numpy()
-                if img_class == BALL_CLASS:
-                    iou = IoU([x1, y1, x2, y2], ground_truth_boxes)
-                    self.assertGreater(iou, IOU_THRESHOLD, "bounding boxes are off by too much!")
-                    self.assertGreater(confidence, CONFIDENCE_THRESHOLD, "model not confident enough!")
-
-                    # uncomment to view bounding boxes
-                    # img_detect = cv2.rectangle(img, (int(x1), int(y1)), (int(x2), int(y2)), (255, 0, 0), 2)
-                    # cv2.imshow("res", img_detect)
-                    # cv2.waitKey(0)
+            mat = cvbridge.imgmsg_to_cv2(n.pub_detection.publish.call_args[0][0])
+            cv2.imshow("res", mat)
+            cv2.waitKey(0)

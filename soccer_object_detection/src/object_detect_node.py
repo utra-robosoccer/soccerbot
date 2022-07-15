@@ -13,7 +13,7 @@ import cv2
 import rospy
 import torch
 from cv_bridge import CvBridge
-from model import CNN, Label, find_batch_bounding_boxes, init_weights
+from model import Label
 from rospy import ROSException
 from sensor_msgs.msg import Image
 
@@ -21,18 +21,18 @@ from soccer_common.camera import Camera
 from soccer_msgs.msg import RobotState
 from soccer_object_detection.msg import BoundingBox, BoundingBoxes
 
-SOCCER_BALL = 0
-CONFIDENCE_THRESHOLD = 0.7
-
 
 class ObjectDetectionNode(object):
+    SOCCER_BALL = 0
+    CONFIDENCE_THRESHOLD = 0.7
+
     """
     Detect ball, robot
     publish bounding boxes
     input: 480x640x4 bgra8 -> output: 3x200x150
     """
 
-    def __init__(self, model_path, num_feat):
+    def __init__(self, model_path):
         self.model = torch.hub.load("ultralytics/yolov5", "custom", path=model_path)
         if torch.cuda.is_available():
             rospy.loginfo("Using CUDA for object detection")
@@ -59,7 +59,6 @@ class ObjectDetectionNode(object):
         self.robot_state = robot_state
 
     def callback(self, msg: Image):
-        global SOCCER_BALL, CONFIDENCE_THRESHOLD
         # webots: 480x640x4pixels
         if self.robot_state.status not in [
             RobotState.STATUS_LOCALIZING,
@@ -74,22 +73,25 @@ class ObjectDetectionNode(object):
         self.camera.reset_position(timestamp=msg.header.stamp)
 
         # cover horizon to help robot ignore things outside field
-        h = self.camera.calculateHorizonCoverArea()
-        cv2.rectangle(image, [0, 0], [640, h + 30], [0, 165, 255], cv2.FILLED)
+        cover_horizon_up_threshold = rospy.get_param("cover_horizon_up_threshold", 30)
+        h = self.camera.calculateHorizonCoverArea() - cover_horizon_up_threshold
+        cv2.rectangle(image, [0, 0], [self.camera.resolution_x, max(0, h)], [0, 165, 255], cv2.FILLED)
 
         if image is not None:
             # 1. preprocess image
             img = image[:, :, :3]  # get rid of alpha channel
             img = img[..., ::-1]  # convert bgr to rgb
-
+            img = img[max(0, h + 1) : -1, :]
             # 2. inference
+
             results = self.model(img)
 
             bbs_msg = BoundingBoxes()
             for prediction in results.xyxy[0]:
                 x1, y1, x2, y2, confidence, img_class = prediction.cpu().numpy()
-                print(x1, y1, x2, y2, confidence, img_class)
-                if img_class == SOCCER_BALL and confidence > CONFIDENCE_THRESHOLD:
+                y1 += h + 1
+                y2 += h + 1
+                if img_class == self.SOCCER_BALL and confidence > self.CONFIDENCE_THRESHOLD:
                     bb_msg = BoundingBox()
                     bb_msg.xmin = round(x1)
                     bb_msg.ymin = round(y1)
@@ -121,7 +123,7 @@ if __name__ == "__main__":
     args, unknown = parser.parse_known_args()
 
     rospy.init_node("object_detector")
-    my_node = ObjectDetectionNode(args.model_path, args.num_feat)
+    my_node = ObjectDetectionNode(args.model_path)
 
     try:
         rospy.spin()
