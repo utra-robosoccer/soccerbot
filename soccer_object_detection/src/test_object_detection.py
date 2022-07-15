@@ -27,7 +27,8 @@ def IoU(boxA, boxB):
 
 class Test(TestCase):
     def test_ball_image(self):
-        CONFIDENCE_THRESHOLD = 0.6
+        IOU_THRESHOLD = 0.9
+        CONFIDENCE_THRESHOLD = 0.7
         BALL_CLASS = 0
         src_path = os.path.dirname(os.path.realpath(__file__))
         model_path = src_path + "/small_model/July14.pt"
@@ -49,9 +50,11 @@ class Test(TestCase):
                 x1, y1, x2, y2, confidence, img_class = prediction.cpu().numpy()
                 if img_class == BALL_CLASS:
                     iou = IoU([x1, y1, x2, y2], ground_truth_boxes)
-                    self.assertGreater(iou, CONFIDENCE_THRESHOLD, "bounding boxes are off by too much!")
 
                     # uncomment to view bounding boxes
-                    # img_detect = cv2.rectangle(img, (int(x1), int(y1)), (int(x2), int(y2)), (255, 0, 0), 2)
-                    # cv2.imshow("res", img_detect)
-                    # cv2.waitKey(0)
+                    img_detect = cv2.rectangle(img, (int(x1), int(y1)), (int(x2), int(y2)), (255, 0, 0), 2)
+                    cv2.imshow("res", img_detect)
+                    cv2.waitKey(0)
+                    print(confidence, iou)
+                    self.assertGreater(iou, IOU_THRESHOLD, "bounding boxes are off by too much!")
+                    self.assertGreater(confidence, CONFIDENCE_THRESHOLD, "model not confident enough!")

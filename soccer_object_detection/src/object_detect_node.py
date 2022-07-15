@@ -22,7 +22,7 @@ from soccer_msgs.msg import RobotState
 from soccer_object_detection.msg import BoundingBox, BoundingBoxes
 
 SOCCER_BALL = 0
-CONFIDENCE_THRESHOLD = 0.6
+CONFIDENCE_THRESHOLD = 0.7
 
 
 class ObjectDetectionNode(object):
