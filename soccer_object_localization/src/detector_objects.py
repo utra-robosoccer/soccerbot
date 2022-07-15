@@ -20,7 +20,7 @@ from geometry_msgs.msg import Pose2D, TransformStamped
 from sensor_msgs.msg import JointState
 
 from soccer_common.transformation import Transformation
-from soccer_object_detection.msg import BoundingBox, BoundingBoxes
+from soccer_msgs.msg import BoundingBox, BoundingBoxes
 
 
 class DetectorBall(Detector):

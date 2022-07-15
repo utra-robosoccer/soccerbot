@@ -18,8 +18,7 @@ from rospy import ROSException
 from sensor_msgs.msg import Image
 
 from soccer_common.camera import Camera
-from soccer_msgs.msg import RobotState
-from soccer_object_detection.msg import BoundingBox, BoundingBoxes
+from soccer_msgs.msg import BoundingBox, BoundingBoxes, RobotState
 
 
 class ObjectDetectionNode(object):
