@@ -164,7 +164,7 @@ class IntegrationTestPlaying(IntegrationTest):
     START_PLAY = "true"
 
     # Place the ball right in front of the robot, should kick right foot
-    @timeout_decorator.timeout(5)
+    @timeout_decorator.timeout(60 * 5)
     def test_kick_right(self):
         self.set_robot_pose(4.0, 0.0, 0)
         self.set_ball_pose(4.16, -0.04)
