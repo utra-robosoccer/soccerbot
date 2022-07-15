@@ -78,6 +78,7 @@ class Test(TestCase):
             iou = IoU(bounding_boxes, ground_truth_boxes)
             self.assertGreater(iou, 0.8, "bounding boxes are off by too much!")
 
-            mat = cvbridge.imgmsg_to_cv2(n.pub_detection.publish.call_args[0][0])
-            cv2.imshow("res", mat)
-            cv2.waitKey(0)
+            if os.environ["DISPLAY"]:
+                mat = cvbridge.imgmsg_to_cv2(n.pub_detection.publish.call_args[0][0])
+                cv2.imshow("res", mat)
+                cv2.waitKey(0)
