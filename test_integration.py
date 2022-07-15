@@ -142,6 +142,7 @@ class IntegrationTest(TestCase):
 class IntegrationTestInitial(IntegrationTest):
     START_PLAY = "false"
 
+    @timeout_decorator.timeout(60 * 10)
     def test_game_start(self):
         self.team = Team(None)
         self.distance = np.inf
@@ -196,7 +197,7 @@ class IntegrationTestPlaying(IntegrationTest):
     START_PLAY = "true"
 
     # Place the ball right in front of the robot, should kick right foot
-    @timeout_decorator.timeout(10000)
+    @timeout_decorator.timeout(60 * 5)
     def test_kick_right(self):
         self.set_robot_pose(4.0, 0.0, 0)
         self.set_ball_pose(4.16, -0.04)
@@ -216,7 +217,7 @@ class IntegrationTestPlaying(IntegrationTest):
 
             rospy.sleep(2)
 
-    @timeout_decorator.timeout(10000)
+    @timeout_decorator.timeout(60 * 15)
     def test_walk_and_kick_right(self):
         self.set_robot_pose(3.5, 0.0, 0)
         self.set_ball_pose(4.16, -0.04)

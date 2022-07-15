@@ -35,7 +35,7 @@ class ObjectDetectionNode(object):
         self.model = torch.hub.load("ultralytics/yolov5", "yolov5s")
 
         if torch.cuda.is_available():
-            rospy.logwarn("Using CUDA for object detection")
+            rospy.loginfo("Using CUDA for object detection")
             self.model.cuda()
         else:
             rospy.logwarn("Not using CUDA")
@@ -68,7 +68,7 @@ class ObjectDetectionNode(object):
         ]:
             return
 
-        rospy.loginfo_throttle(60, "Recieved Image")
+        rospy.loginfo_once("Object Detection Receiving image")
         # width x height x channels (bgra8)
         image = self.br.imgmsg_to_cv2(msg)
         self.camera.reset_position(timestamp=msg.header.stamp)
@@ -103,7 +103,7 @@ class ObjectDetectionNode(object):
             try:
                 if self.pub_detection.get_num_connections() > 0:
                     results.render()
-                    self.pub_detection.publish(self.br.cv2_to_imgmsg(results.imgs[0]))
+                    self.pub_detection.publish(self.br.cv2_to_imgmsg(results.imgs[0], encoding="bgr8"))
 
                 if self.pub_boundingbox.get_num_connections() > 0 and len(bbs_msg.bounding_boxes) > 0:
                     self.pub_boundingbox.publish(bbs_msg)

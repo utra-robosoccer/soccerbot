@@ -1,2 +1,3 @@
 skip_determine_side: true
 skip_ready_strategy: true
+delay_before_rotate_to_search_ball: 60

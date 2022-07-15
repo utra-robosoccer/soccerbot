@@ -56,7 +56,10 @@ class GameStateReceiver(object):
                 rospy.logerr_throttle(10, ae)
             except socket.timeout as s:
                 if not connected:
-                    rospy.logerr_throttle(10, "Socket Timeout, rebinding socket: " + str(s))
+                    if rospy.get_time() > 5:
+                        rospy.logerr_throttle(10, "Socket Timeout, rebinding socket: " + str(s))
+                    else:
+                        rospy.loginfo_once("Waiting for socket")
                 else:
                     rospy.logwarn_throttle(10, "Socket Timeout, rebinding socket: " + str(s))
                 self.receiver_socket.close()
