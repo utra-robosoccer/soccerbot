@@ -9,5 +9,4 @@
         <param name="robot_name" value="$(arg robot_name)" />
     </node>
 
-    <node pkg="soccer_strategy" type="game_controller_receiver.py" name="game_controller_receiver" output="screen" />
 </launch>
