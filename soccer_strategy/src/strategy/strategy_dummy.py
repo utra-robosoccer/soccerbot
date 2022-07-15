@@ -10,20 +10,6 @@ from team import Team
 
 from soccer_msgs.msg import GameState
 
-GRADIENT_UPDATE_INTERVAL_LENGTH = 0.5
-
-ALPHA = 0.5
-BETA = 0.5
-EPS = 0.5
-
-
-class Thresholds:
-    POSSESSION = 0.2  # How close player has to be to ball to have possession
-    GOALIE_ANGLE = 5  # How close goalie has to be to defense line
-    PASS = -1  # Maximum distance between players trying to pass to each other
-    OBSTACLE = 1  # Size of player obstacles
-    PASSING = 2  # distance for obstacle detection when moving to a position
-
 
 class StrategyDummy(Strategy):
     def __init__(self):
@@ -84,8 +70,8 @@ class StrategyDummy(Strategy):
 
         # If the ball hasn't been seen in 10 seconds
         elif rospy.Time.now() - this_robot.observed_ball.last_observed_time_stamp > rospy.Duration(
-            10
-        ) and rospy.Time.now() - self.time_of_end_of_action > rospy.Duration(10):
+            rospy.get_param("delay_before_rotate_to_search_ball", 10)
+        ) and rospy.Time.now() - self.time_of_end_of_action > rospy.Duration(rospy.get_param("delay_before_rotate_to_search_ball", 10)):
             if this_robot.status not in [Robot.Status.WALKING, Robot.Status.KICKING]:
                 player_angle = this_robot.position[2]
                 player_position = this_robot.position[0:2]
@@ -95,5 +81,5 @@ class StrategyDummy(Strategy):
                     f"Player {this_robot.robot_id}: Rotating to locate ball. Time of End of Action {self.time_of_end_of_action}, Last Observed Time Stamp {this_robot.observed_ball.last_observed_time_stamp}"
                 )
 
-                turn_position = [player_position[0], player_position[1], player_angle + math.pi * 0.8]
+                turn_position = np.array([player_position[0], player_position[1], player_angle + math.pi * 0.8])
                 this_robot.set_navigation_position(turn_position)
