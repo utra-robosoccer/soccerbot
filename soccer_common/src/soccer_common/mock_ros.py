@@ -1,4 +1,4 @@
-def mock_ros(robot_model, real_robot, config_path):
+def mock_ros(robot_model="bez1", real_robot=False, config_path=""):
     import sys
     from os.path import exists
     from unittest.mock import MagicMock

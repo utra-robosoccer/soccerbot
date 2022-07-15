@@ -6,6 +6,9 @@ import cv2
 from cv2 import Mat
 
 from soccer_common import Transformation
+from soccer_common.mock_ros import mock_ros
+
+mock_ros()
 
 
 def IoU(boxA, boxB):
@@ -40,7 +43,6 @@ class Test(TestCase):
         Camera.reset_position = MagicMock()
         tf2_ros.TransformListener = MagicMock()
         rospy.Time.now = MagicMock(return_value=0)
-        rospy.get_param = lambda a, b: b
         from object_detect_node import ObjectDetectionNode
         from soccer_msgs_mock.msg import RobotState
 
