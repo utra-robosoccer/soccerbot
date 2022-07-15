@@ -167,30 +167,14 @@ class IntegrationTestInitial(IntegrationTest):
             self.distance = np.linalg.norm([coords[0] - data.pose.position.x, coords[1] - data.pose.position.y])
             printlog("processMsg distance: {}".format(self.distance))
 
+        rospy.Subscriber("/robot1/state", RobotState, processMsg)
+
         while not rospy.is_shutdown():
-            # Validate that the robot publishes robot????
+            printlog(f"Distance to Ball: {self.distance}")
             rospy.sleep(1)
-            try:
-                rospy.wait_for_message("/robot1/state", RobotState, 10)
-            except rospy.ROSException:
-                printlog("Connection Failed")
-
-            handle = rospy.Subscriber("/robot1/state", RobotState, processMsg)
-            rospy.wait_for_message("/robot1/state", RobotState, 120)
-            assert handle.get_num_connections() > 0
-            printlog("Connection looks okay")
-            # Validate that the robot moves towards the goal
-            for i in range(0, 200):  # 100s timeout
-                printlog("dist: {}, cycle: {}".format(self.distance, i))
-                rospy.sleep(1)
-                if self.distance < DIST_TOLERANCE:
-                    break
-            assert self.distance < DIST_TOLERANCE
+            if self.distance < DIST_TOLERANCE:
+                break
             printlog("Goal reached")
-
-            # Validates that the robot kicks the ball
-            # TODO
-            break
 
 
 class IntegrationTestPlaying(IntegrationTest):
