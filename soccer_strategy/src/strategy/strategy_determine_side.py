@@ -3,9 +3,7 @@ import math
 import numpy as np
 import rospy
 import tf
-from geometry_msgs.msg import PoseWithCovarianceStamped
 from robot import Robot
-from strategy.interfaces.actions import Actions
 from strategy.strategy import Strategy, get_back_up
 from team import Team
 
@@ -69,7 +67,7 @@ class StrategyDetermineSide(Strategy):
             y = -y
             theta = -theta
         rospy.loginfo("Robot Position Determined, Determining Roles, Flip Required " + str(self.flip_required))
-        current_robot.position = [x, y, theta]
+        current_robot.position = np.array([x, y, theta])
         current_robot.reset_initial_position()
 
     def determine_role(self, current_robot, friendly_team):

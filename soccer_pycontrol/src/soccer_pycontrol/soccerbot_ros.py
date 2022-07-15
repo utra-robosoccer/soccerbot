@@ -225,7 +225,7 @@ class SoccerbotRos(Soccerbot):
 
                 if self.last_ball_pose is not None:
                     self.look_at_last_ball_pose = copy.deepcopy(self.last_ball_pose)
-                    self.look_at_last_ball_pose_timeout = rospy.Time.now() + rospy.Duration(5)
+                    self.look_at_last_ball_pose_timeout = rospy.Time.now() + rospy.Duration(2)
 
                 self.last_ball_pose = None
                 rospy.loginfo_throttle(1, f"Searching for ball last location {self.look_at_last_ball_pose.get_position()}")
