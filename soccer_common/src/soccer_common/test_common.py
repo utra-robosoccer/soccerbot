@@ -4,6 +4,10 @@ from unittest.mock import MagicMock
 import tf2_ros
 
 tf2_ros.TransformListener = MagicMock()
+import rospy
+
+rospy.Time.now = MagicMock(return_value=0)
+
 from soccer_common.camera import Camera
 from soccer_common.transformation import Transformation
 
