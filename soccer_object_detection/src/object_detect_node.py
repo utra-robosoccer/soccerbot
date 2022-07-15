@@ -13,29 +13,41 @@ import cv2
 import rospy
 import torch
 from cv_bridge import CvBridge
-from model import CNN, Label, find_batch_bounding_boxes, init_weights
+from model import Label
 from rospy import ROSException
 from sensor_msgs.msg import Image
 
 from soccer_common.camera import Camera
-from soccer_msgs.msg import RobotState
-from soccer_object_detection.msg import BoundingBox, BoundingBoxes
+from soccer_msgs.msg import BoundingBox, BoundingBoxes, RobotState
 
-SOCCER_BALL = 32
+
+class bcolors:
+    HEADER = "\033[95m"
+    OKBLUE = "\033[94m"
+    OKCYAN = "\033[96m"
+    OKGREEN = "\033[92m"
+    MAGENTA = "\u001b[35m"
+    WARNING = "\033[93m"
+    FAIL = "\033[91m"
+    ENDC = "\033[0m"
+    BOLD = "\033[1m"
+    UNDERLINE = "\033[4m"
 
 
 class ObjectDetectionNode(object):
+    SOCCER_BALL = 0
+    CONFIDENCE_THRESHOLD = rospy.get_param("confidence_threshold", 0.75)
+
     """
     Detect ball, robot
     publish bounding boxes
     input: 480x640x4 bgra8 -> output: 3x200x150
     """
 
-    def __init__(self, model_path, num_feat):
-        self.model = torch.hub.load("ultralytics/yolov5", "yolov5s")
-
+    def __init__(self, model_path):
+        self.model = torch.hub.load("ultralytics/yolov5", "custom", path=model_path)
         if torch.cuda.is_available():
-            rospy.loginfo("Using CUDA for object detection")
+            rospy.loginfo(f"{bcolors.OKGREEN}Using CUDA for object detection{bcolors.ENDC}")
             self.model.cuda()
         else:
             rospy.logwarn("Not using CUDA")
@@ -59,7 +71,6 @@ class ObjectDetectionNode(object):
         self.robot_state = robot_state
 
     def callback(self, msg: Image):
-        global SOCCER_BALL
         # webots: 480x640x4pixels
         if self.robot_state.status not in [
             RobotState.STATUS_LOCALIZING,
@@ -74,21 +85,25 @@ class ObjectDetectionNode(object):
         self.camera.reset_position(timestamp=msg.header.stamp)
 
         # cover horizon to help robot ignore things outside field
-        h = self.camera.calculateHorizonCoverArea()
-        cv2.rectangle(image, [0, 0], [640, h + 30], [0, 165, 255], cv2.FILLED)
+        cover_horizon_up_threshold = rospy.get_param("cover_horizon_up_threshold", 30)
+        h = self.camera.calculateHorizonCoverArea() - cover_horizon_up_threshold
+        cv2.rectangle(image, [0, 0], [self.camera.resolution_x, max(0, h)], [0, 165, 255], cv2.FILLED)
 
         if image is not None:
             # 1. preprocess image
             img = image[:, :, :3]  # get rid of alpha channel
             img = img[..., ::-1]  # convert bgr to rgb
-
+            img = img[max(0, h + 1) : -1, :]
             # 2. inference
+
             results = self.model(img)
 
             bbs_msg = BoundingBoxes()
             for prediction in results.xyxy[0]:
                 x1, y1, x2, y2, confidence, img_class = prediction.cpu().numpy()
-                if img_class == SOCCER_BALL:
+                y1 += h + 1
+                y2 += h + 1
+                if img_class == self.SOCCER_BALL and confidence > self.CONFIDENCE_THRESHOLD:
                     bb_msg = BoundingBox()
                     bb_msg.xmin = round(x1)
                     bb_msg.ymin = round(y1)
@@ -120,7 +135,7 @@ if __name__ == "__main__":
     args, unknown = parser.parse_known_args()
 
     rospy.init_node("object_detector")
-    my_node = ObjectDetectionNode(args.model_path, args.num_feat)
+    my_node = ObjectDetectionNode(args.model_path)
 
     try:
         rospy.spin()

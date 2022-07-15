@@ -14,8 +14,7 @@ from scipy.spatial.transform import Rotation as R
 from timeout_decorator import timeout_decorator
 
 from soccer_common.camera import Camera
-from soccer_msgs.msg import RobotState
-from soccer_object_detection.msg import BoundingBoxes
+from soccer_msgs.msg import BoundingBoxes, RobotState
 from soccer_strategy.src.team import Team
 
 RUN_LOCALLY = "pycharm" in sys.argv[0]
@@ -147,34 +146,18 @@ class IntegrationTestInitial(IntegrationTest):
         self.team = Team(None)
         self.distance = np.inf
 
-        DIST_TOLERANCE = 2
-
         def processMsg(data: RobotState):
-            printlog("processMsg, status {}, role {}".format(data.status, data.role))
-            coords = [np.inf, np.inf, np.inf]  # Placeholder
-            if data.role == RobotState.ROLE_GOALIE:
-                coords = self.team.formations["ready"][Robot.Role.GOALIE]
-                printlog("Robot.Role.GOALIE - {}".format(coords))
-            elif data.role == RobotState.ROLE_LEFT_WING:
-                coords = self.team.formations["ready"][Robot.Role.LEFT_WING]
-                printlog("Robot.Role.LEFT_WING - {}".format(coords))
-            elif data.role == RobotState.ROLE_RIGHT_WING:
-                coords = self.team.formations["ready"][Robot.Role.RIGHT_WING]
-                printlog("Robot.Role.RIGHT_WING - {}".format(coords))
-            elif data.role == RobotState.ROLE_STRIKER:
-                coords = self.team.formations["ready"][Robot.Role.STRIKER]
-                printlog("Robot.Role.STRIKER - {}".format(coords))
+            coords = self.team.formations["ready"][data.role]
             self.distance = np.linalg.norm([coords[0] - data.pose.position.x, coords[1] - data.pose.position.y])
-            printlog("processMsg distance: {}".format(self.distance))
 
         rospy.Subscriber("/robot1/state", RobotState, processMsg)
 
         while not rospy.is_shutdown():
-            printlog(f"Distance to Ball: {self.distance}")
+            printlog(f"Distance to destination: {self.distance}")
             rospy.sleep(1)
-            if self.distance < DIST_TOLERANCE:
+            if self.distance < 2:
                 break
-            printlog("Goal reached")
+        printlog("Goal reached")
 
 
 class IntegrationTestPlaying(IntegrationTest):

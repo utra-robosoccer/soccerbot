@@ -39,6 +39,7 @@ jobs:
           docker-compose pull
           docker-compose build --progress=plain
       - name: Walking Integration Test
+        timeout-minutes: 10
         run: |
           chmod -R o+w .
           docker-compose -f docker-compose.test.yaml up --exit-code-from friendly
@@ -59,6 +60,7 @@ jobs:
           name: RosbagsWalking
           path: soccerbot/bags
       - name: Kick Integration Test
+        timeout-minutes: 5
         run: |
           docker-compose -f docker-compose.test.kick.yaml up --exit-code-from friendly
       - name: Get integration test logs
@@ -78,6 +80,7 @@ jobs:
           name: RosbagsKick
           path: soccerbot/bags
       - name: Kick and Walk Integration Test
+        timeout-minutes: 15
         env:
           ROBOT_X: 3.5
           TEST_NAME: test_walk_and_kick_right

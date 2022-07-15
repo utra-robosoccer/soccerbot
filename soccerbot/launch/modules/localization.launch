@@ -22,7 +22,7 @@
 
     <!-- Ball Detection -->
     <node pkg="soccer_object_localization" type="detector_objects.py" name="ball_detector" output="screen" />
-    <node name="object_detector" pkg="soccer_object_detection" type="object_detect_node.py" output="screen" args="--model $(find soccer_object_detection)/src/outputs/model3_feat10 --num-feat 10" unless="$(arg fake_localization)">
+    <node name="object_detector" pkg="soccer_object_detection" type="object_detect_node.py" output="screen" args="--model $(find soccer_object_detection)/src/small_model/July14.pt" unless="$(arg fake_localization)">
         <env name="OMP_NUM_THREADS" value="1" />
     </node>
 

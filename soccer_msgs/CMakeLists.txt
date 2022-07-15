@@ -8,7 +8,10 @@ find_package(
                geometry_msgs
 )
 
-add_message_files(FILES GameState.msg FixedTrajectoryCommand.msg RobotState.msg)
+add_message_files(
+    FILES GameState.msg FixedTrajectoryCommand.msg RobotState.msg
+          BoundingBox.msg BoundingBoxes.msg
+)
 
 generate_messages(DEPENDENCIES std_msgs geometry_msgs)
 

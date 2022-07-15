@@ -94,6 +94,14 @@ class DetectorFieldline(Detector):
         ccdst = cv2.cvtColor(cdst, cv2.COLOR_GRAY2RGB)
 
         if lines is None:
+            # Need to publish an empty point cloud to start the robot
+            if self.publish_point_cloud and self.point_cloud_publisher.get_num_connections() > 0:
+                # Publish fieldlines in laserscan format
+                header = Header()
+                header.stamp = img.header.stamp
+                header.frame_id = self.robot_name + "/odom"
+                point_cloud_msg = pcl2.create_cloud_xyz32(header, [])
+                self.point_cloud_publisher.publish(point_cloud_msg)
             return
 
         for l in lines:
@@ -139,8 +147,7 @@ class DetectorFieldline(Detector):
             header.stamp = img.header.stamp
             header.frame_id = self.robot_name + "/odom"
             point_cloud_msg = pcl2.create_cloud_xyz32(header, points3d)
-            if self.point_cloud_publisher.get_num_connections() > 0:
-                self.point_cloud_publisher.publish(point_cloud_msg)
+            self.point_cloud_publisher.publish(point_cloud_msg)
 
         t_end = time.time()
         rospy.loginfo_throttle(60, "Fieldline detection rate: " + str(t_end - t_start))

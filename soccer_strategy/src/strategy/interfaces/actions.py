@@ -134,5 +134,5 @@ class Actions:
         destination_position_biased = [destination_position_biased[0], destination_position_biased[1], diff_angle]
 
         np.set_printoptions(precision=3)
-        print("Player {}: Navigation | Destination position biased {}".format(robot.robot_id, destination_position_biased))
+        rospy.loginfo("Player {}: Navigation | Destination position biased {}".format(robot.robot_id, destination_position_biased))
         Actions.navigation_to_position(robot, destination_position_biased)

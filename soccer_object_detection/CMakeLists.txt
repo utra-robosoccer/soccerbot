@@ -4,13 +4,9 @@ project(soccer_object_detection)
 find_package(
     catkin
     REQUIRED
-    COMPONENTS rospy std_msgs message_generation
+    COMPONENTS rospy
 )
 
-add_message_files(FILES BoundingBox.msg BoundingBoxes.msg)
-
-generate_messages(DEPENDENCIES std_msgs)
-
-catkin_package(CATKIN_DEPENDS message_runtime std_msgs)
+catkin_package(CATKIN_DEPENDS)
 
 include_directories(${catkin_INCLUDE_DIRS})

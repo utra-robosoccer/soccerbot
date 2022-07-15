@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import os
+import time
 
 import numpy as np
 
@@ -20,7 +21,7 @@ from geometry_msgs.msg import Pose2D, TransformStamped
 from sensor_msgs.msg import JointState
 
 from soccer_common.transformation import Transformation
-from soccer_object_detection.msg import BoundingBox, BoundingBoxes
+from soccer_msgs.msg import BoundingBox, BoundingBoxes
 
 
 class DetectorBall(Detector):
@@ -45,7 +46,11 @@ class DetectorBall(Detector):
         if not self.camera.ready:
             return
 
-        self.camera.reset_position(timestamp=msg.header.stamp, from_world_frame=True)
+        s = time.time()
+        self.camera.reset_position(timestamp=msg.header.stamp, from_world_frame=True, skip_if_not_found=True)
+        e = time.time()
+        if e - s > 1:
+            rospy.logerr_throttle(1, f"Resetting camera position took longer than usual ({e-s}) seconds")
 
         # Ball
         max_detection_size = 0
@@ -77,6 +82,12 @@ class DetectorBall(Detector):
                 if abs(ball_pose.get_position()[0]) > 5.2 or abs(ball_pose.get_position()[1]) > 3.5:
                     continue
 
+                # If it is the first ball, we need high confidence
+                if self.last_ball_pose is None:
+                    if box.probability < 0.78:
+                        rospy.logwarn_throttle(0.5, f"Ignoring first pose of ball with low confidence threshold {box.probability}")
+                        continue
+
                 # Exclude balls that are too far from the previous location
                 if self.last_ball_pose is not None:
                     if np.linalg.norm(ball_pose.get_position()[0:2]) < 0.1:  # In the start position
@@ -104,6 +115,8 @@ class DetectorBall(Detector):
                     pass
 
         if final_camera_to_ball is not None:
+            self.ball_pixel_publisher.publish(final_ball_pixel)
+
             rospy.loginfo_throttle(
                 1,
                 f"\u001b[1m\u001b[34mBall detected [{self.last_ball_pose.get_position()[0]:.3f}, {self.last_ball_pose.get_position()[1]:.3f}] \u001b[0m",
@@ -122,8 +135,6 @@ class DetectorBall(Detector):
             ball_pose.transform.rotation.z = final_camera_to_ball.get_orientation()[2]
             ball_pose.transform.rotation.w = final_camera_to_ball.get_orientation()[3]
             br.sendTransform(ball_pose)
-
-            self.ball_pixel_publisher.publish(final_ball_pixel)
 
         # Robots
         detected_robots = 0
