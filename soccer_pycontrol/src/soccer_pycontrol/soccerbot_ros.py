@@ -2,6 +2,7 @@ import copy
 
 import rospy
 import tf
+import tf2_py
 from geometry_msgs.msg import Pose2D, PoseStamped
 from nav_msgs.msg import Odometry, Path
 from sensor_msgs.msg import Imu, JointState
@@ -175,15 +176,16 @@ class SoccerbotRos(Soccerbot):
                 ball_found_timestamp = self.listener.getLatestCommonTime(
                     os.environ["ROS_NAMESPACE"] + "/camera", os.environ["ROS_NAMESPACE"] + "/ball"
                 )
-                last_ball_position, last_ball_orientation = self.listener.lookupTransform(
-                    "world", os.environ["ROS_NAMESPACE"] + "/ball", rospy.Time(0)
-                )
+
                 if self.last_ball_found_timestamp is None or ball_found_timestamp - self.last_ball_found_timestamp > rospy.Duration(2):
                     self.last_ball_found_timestamp = ball_found_timestamp
-                    self.last_ball_pose = Transformation(last_ball_position)
-                    rospy.loginfo_throttle(5, f"Ball found with pose {self.last_ball_pose.get_position()}")
+                    rospy.loginfo_throttle(5, f"Ball found at timestamp {self.last_ball_found_timestamp}")
 
-            except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+                now = rospy.Time.now()
+                last_ball_position, last_ball_orientation = self.listener.lookupTransform("world", os.environ["ROS_NAMESPACE"] + "/ball", now)
+                self.last_ball_pose = Transformation(last_ball_position)
+
+            except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException, tf2_py.TransformException):
                 rospy.loginfo_throttle(5, "Ball no longer in field of view, searching for the ball")
                 pass
 

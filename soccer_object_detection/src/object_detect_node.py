@@ -23,7 +23,7 @@ from soccer_msgs.msg import BoundingBox, BoundingBoxes, RobotState
 
 class ObjectDetectionNode(object):
     SOCCER_BALL = 0
-    CONFIDENCE_THRESHOLD = 0.7
+    CONFIDENCE_THRESHOLD = rospy.get_param("confidence_threshold", 0.75)
 
     """
     Detect ball, robot

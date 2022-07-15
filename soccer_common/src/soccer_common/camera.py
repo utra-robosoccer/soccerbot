@@ -31,57 +31,50 @@ class Camera:
         return self.pose is not None and self.resolution_x is not None and self.resolution_y is not None and self.camera_info is not None
 
     def reset_position(self, from_world_frame=False, timestamp=rospy.Time(0)):
-        trans = None
-        rot = None
 
         if from_world_frame:
             base_frame = "world"
             target_frame = self.robot_name + "/camera"
-            if rospy.Time.now() - self.init_time > rospy.Duration(5):
-                duration_to_wait_for_transform = 3
-            else:
-                duration_to_wait_for_transform = 0.5
         else:
             base_frame = self.robot_name + "/odom"
             target_frame = self.robot_name + "/camera"
-            duration_to_wait_for_transform = 0.5
 
-        while not rospy.is_shutdown():
-            try:
-                while not self.tf_listener.canTransform(base_frame, target_frame, timestamp):
-                    if rospy.Time.now() - timestamp > rospy.Duration(duration_to_wait_for_transform):
-                        self.tf_listener.lookupTransform(base_frame, target_frame, rospy.Time(0))
-                        rospy.logwarn_throttle(1, f"Cant find TF between {base_frame} and {target_frame} at {timestamp}")
-                        break
-                    rospy.sleep(0.05)
+        # First if the timestamp transformation can be found
+        if self.tf_listener.canTransform(base_frame, target_frame, timestamp):
+            (trans, rot) = self.tf_listener.lookupTransform(base_frame, target_frame, timestamp)
+            self.pose = Transformation(trans, rot)
+            return
 
-                (trans, rot) = self.tf_listener.lookupTransform(base_frame, target_frame, rospy.Time(0))
-                break
-            except (
-                tf2_py.LookupException,
-                tf.LookupException,
-                tf.ConnectivityException,
-                tf.ExtrapolationException,
-                tf2_py.TransformException,
-            ) as ex:
-                if rospy.Time.now() - self.init_time > rospy.Duration(5):
-                    rospy.logwarn_throttle(10, str(ex))
-                try:
-                    rospy.sleep(0.1)
-                except ROSInterruptException:
-                    exit(0)
-            except ROSInterruptException:
-                exit(0)
+        # Then just get the first transform
+        try:
+            (trans, rot) = self.tf_listener.lookupTransform(base_frame, target_frame, rospy.Time(0))
+            self.pose = Transformation(trans, rot)
+            return
+        except (
+            tf2_py.LookupException,
+            tf.LookupException,
+            tf.ConnectivityException,
+            tf.ExtrapolationException,
+            tf2_py.TransformException,
+        ) as ex:
+            rospy.logwarn_throttle(10, f"Cant find TF between {base_frame} and {target_frame} at {timestamp}")
+            rospy.logwarn_throttle(10, str(ex))
 
-        if rospy.is_shutdown():
-            exit(0)
-
-        assert trans is not None
-        assert rot is not None
-
-        self.pose = Transformation(trans, rot)
-
-        return True
+        # Then try waiting for the transform
+        try:
+            self.tf_listener.waitForTransform(base_frame, target_frame, rospy.Time(0), rospy.Duration(60))
+            (trans, rot) = self.tf_listener.lookupTransform(base_frame, target_frame, timestamp)
+            self.pose = Transformation(trans, rot)
+            return
+        except (
+            tf2_py.LookupException,
+            tf.LookupException,
+            tf.ConnectivityException,
+            tf.ExtrapolationException,
+            tf2_py.TransformException,
+        ) as ex:
+            rospy.logerr_throttle(10, f"Cant find TF between {base_frame} and {target_frame} at {timestamp}")
+            rospy.logerr_throttle(10, str(ex))
 
     def cameraInfoCallback(self, camera_info: CameraInfo):
         self.resolution_x = camera_info.width

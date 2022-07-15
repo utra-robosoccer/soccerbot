@@ -132,7 +132,7 @@ class DetectorGoalPost(Detector):
 
                     br = tf2_ros.TransformBroadcaster()
                     robot_pose = TransformStamped()
-                    robot_pose.header.frame_id = self.robot_name + "/base_camera"
+                    robot_pose.header.frame_id = self.robot_name + "/base_footprint"
                     robot_pose.child_frame_id = self.robot_name + "/goal_post"
                     robot_pose.header.stamp = img.header.stamp
                     robot_pose.header.seq = img.header.seq
