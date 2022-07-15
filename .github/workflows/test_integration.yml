@@ -38,6 +38,8 @@ jobs:
         run: |
           docker-compose pull
           docker-compose build --progress=plain
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
       - name: Walking Integration Test
         run: |
           docker-compose -f docker-compose.test.yaml up --exit-code-from friendly
