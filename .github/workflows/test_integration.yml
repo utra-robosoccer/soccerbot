@@ -56,7 +56,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v3
         with:
-          name: Rosbags_Walking
+          name: RosbagsWalking
           path: soccerbot/bags
       - name: Kick Integration Test
         run: |
@@ -75,7 +75,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v3
         with:
-          name: Rosbags_Kick
+          name: RosbagsKick
           path: soccerbot/bags
       - name: Kick and Walk Integration Test
         env:
@@ -97,5 +97,5 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v3
         with:
-          name: Rosbags_Walk_and_Kick
+          name: RosbagsWalkAndKick
           path: soccerbot/bags

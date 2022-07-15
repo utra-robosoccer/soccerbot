@@ -37,11 +37,14 @@ class Camera:
         if from_world_frame:
             base_frame = "world"
             target_frame = self.robot_name + "/camera"
-            duration_to_wait_for_transform = 5
+            if rospy.Time.now() - self.init_time > rospy.Duration(5):
+                duration_to_wait_for_transform = 3
+            else:
+                duration_to_wait_for_transform = 0.5
         else:
             base_frame = self.robot_name + "/odom"
             target_frame = self.robot_name + "/camera"
-            duration_to_wait_for_transform = 1
+            duration_to_wait_for_transform = 0.5
 
         while not rospy.is_shutdown():
             try:
@@ -49,6 +52,7 @@ class Camera:
                     if rospy.Time.now() - timestamp > rospy.Duration(duration_to_wait_for_transform):
                         self.tf_listener.lookupTransform(base_frame, target_frame, rospy.Time(0))
                         rospy.logwarn_throttle(1, f"Cant find TF between {base_frame} and {target_frame} at {timestamp}")
+                        break
                     rospy.sleep(0.05)
 
                 (trans, rot) = self.tf_listener.lookupTransform(base_frame, target_frame, rospy.Time(0))
