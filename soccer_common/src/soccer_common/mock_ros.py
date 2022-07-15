@@ -15,6 +15,7 @@ def mock_ros(robot_model, real_robot, config_path):
         joint_state.position = [0.0] * 18
         rospy.wait_for_message = MagicMock(return_value=joint_state)
         rospy.Time.now = MagicMock(return_value=0)
+        rospy.get_namespace = MagicMock(return_value="/robot1/")
         rospy.Duration = lambda a: a
         rospy.loginfo_throttle = lambda a, b: None
         rospy.loginfo = lambda a: print(a)

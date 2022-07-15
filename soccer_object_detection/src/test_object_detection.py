@@ -42,22 +42,29 @@ class Test(TestCase):
         rospy.Time.now = MagicMock(return_value=0)
         rospy.get_param = lambda a, b: b
         from object_detect_node import ObjectDetectionNode
+        from soccer_msgs_mock.msg import RobotState
 
-        n = ObjectDetectionNode(model_path="small_model/July14.pt")
-        n.pub_detection.get_num_connections = MagicMock(return_value=1)
-        n.pub_boundingbox.get_num_connections = MagicMock(return_value=1)
-
-        n.pub_detection.publish = MagicMock()
-        n.pub_boundingbox.publish = MagicMock()
+        src_path = os.path.dirname(os.path.realpath(__file__))
+        model_path = src_path + "/small_model/July14.pt"
+        test_path = src_path + "/test_image"
 
         from cv_bridge import CvBridge
 
         cvbridge = CvBridge()
-        src_path = os.path.dirname(os.path.realpath(__file__))
-        test_path = src_path + "/test_image"
         for file_name in os.listdir(test_path):
             img: Mat = cv2.imread(os.path.join(test_path, file_name))  # ground truth box = (68, 89) (257, 275)
             img_msg: Image = cvbridge.cv2_to_imgmsg(img)
+
+            n = ObjectDetectionNode(model_path=model_path)
+            n.pub_detection = MagicMock()
+            n.pub_boundingbox = MagicMock()
+            n.pub_detection.get_num_connections = MagicMock(return_value=1)
+            n.pub_boundingbox.get_num_connections = MagicMock(return_value=1)
+            n.pub_detection.publish = MagicMock()
+            n.pub_boundingbox.publish = MagicMock()
+
+            n.robot_state.status = RobotState.STATUS_READY
+
             n.camera.resolution_x = img.shape[1]
             n.camera.resolution_y = img.shape[0]
             n.camera.pose.set_orientation(Transformation.get_quaternion_from_euler([0, np.pi / 8, 0]))
@@ -81,4 +88,5 @@ class Test(TestCase):
             if os.environ["DISPLAY"]:
                 mat = cvbridge.imgmsg_to_cv2(n.pub_detection.publish.call_args[0][0])
                 cv2.imshow("res", mat)
-                cv2.waitKey(0)
+                cv2.waitKey(1)
+                cv2.destroyAllWindows()
