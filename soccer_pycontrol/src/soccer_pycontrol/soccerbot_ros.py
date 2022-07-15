@@ -181,9 +181,13 @@ class SoccerbotRos(Soccerbot):
                     self.last_ball_found_timestamp = ball_found_timestamp
                     rospy.loginfo_throttle(5, f"Ball found at timestamp {self.last_ball_found_timestamp}")
 
-                now = rospy.Time.now()
-                last_ball_position, last_ball_orientation = self.listener.lookupTransform("world", os.environ["ROS_NAMESPACE"] + "/ball", now)
-                self.last_ball_pose = Transformation(last_ball_position)
+                    self.listener.waitForTransform(
+                        "world", os.environ["ROS_NAMESPACE"] + "/ball", ball_found_timestamp, rospy.Duration(nsecs=100000000)
+                    )
+                    last_ball_position, last_ball_orientation = self.listener.lookupTransform(
+                        "world", os.environ["ROS_NAMESPACE"] + "/ball", ball_found_timestamp
+                    )
+                    self.last_ball_pose = Transformation(last_ball_position)
 
             except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException, tf2_py.TransformException):
                 rospy.loginfo_throttle(5, "Ball no longer in field of view, searching for the ball")

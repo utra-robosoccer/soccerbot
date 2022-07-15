@@ -35,15 +35,32 @@ class Camera:
         if from_world_frame:
             base_frame = "world"
             target_frame = self.robot_name + "/camera"
+            timeout_duration = rospy.Duration(nsecs=1000000)
         else:
             base_frame = self.robot_name + "/odom"
             target_frame = self.robot_name + "/camera"
+            timeout_duration = rospy.Duration(secs=1)
 
         # First if the timestamp transformation can be found
         if self.tf_listener.canTransform(base_frame, target_frame, timestamp):
             (trans, rot) = self.tf_listener.lookupTransform(base_frame, target_frame, timestamp)
             self.pose = Transformation(trans, rot)
             return
+
+        # Then wait the specified time
+        try:
+            self.tf_listener.waitForTransform(base_frame, target_frame, timestamp, timeout_duration)
+            (trans, rot) = self.tf_listener.lookupTransform(base_frame, target_frame, timestamp)
+            self.pose = Transformation(trans, rot)
+            return
+        except (
+            tf2_py.LookupException,
+            tf.LookupException,
+            tf.ConnectivityException,
+            tf.ExtrapolationException,
+            tf2_py.TransformException,
+        ) as ex:
+            pass
 
         # Then just get the first transform
         try:
@@ -57,10 +74,9 @@ class Camera:
             tf.ExtrapolationException,
             tf2_py.TransformException,
         ) as ex:
-            rospy.logwarn_throttle(10, f"Cant find TF between {base_frame} and {target_frame} at {timestamp}")
-            rospy.logwarn_throttle(10, str(ex))
+            pass
 
-        # Then try waiting for the transform
+        # Then try waiting for the first transform
         try:
             self.tf_listener.waitForTransform(base_frame, target_frame, rospy.Time(0), rospy.Duration(60))
             (trans, rot) = self.tf_listener.lookupTransform(base_frame, target_frame, timestamp)
