@@ -38,15 +38,20 @@ jobs:
         run: |
           docker-compose pull
           docker-compose build --progress=plain
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
       - name: Walking Integration Test
         run: |
+          chmod -R o+w .
           docker-compose -f docker-compose.test.yaml up --exit-code-from friendly
       - name: Get integration test logs
         if: always()
         run: |
           docker-compose logs
+          docker cp soccerbot_simulator_1:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/textures/ soccerbot/bags || echo "Unable to find logs"
+          docker cp soccerbot_simulator_1:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/bouncing_log.txt soccerbot/bags || echo "Unable to find logs"
+          docker cp soccerbot_simulator_1:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/log.txt soccerbot/bags || echo "Unable to find logs"
+          docker cp soccerbot_simulator_1:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/recording.html soccerbot/bags || echo "Unable to find logs"
+          docker cp soccerbot_simulator_1:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/recording.json soccerbot/bags || echo "Unable to find logs"
+          docker cp soccerbot_simulator_1:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/recording.x3d soccerbot/bags || echo "Unable to find logs"
       - name: Get rosbag
         if: always()
         uses: actions/upload-artifact@v3
@@ -60,6 +65,12 @@ jobs:
         if: always()
         run: |
           docker-compose logs
+          docker cp soccerbot_simulator_1:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/textures/ soccerbot/bags || echo "Unable to find logs"
+          docker cp soccerbot_simulator_1:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/bouncing_log.txt soccerbot/bags || echo "Unable to find logs"
+          docker cp soccerbot_simulator_1:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/log.txt soccerbot/bags || echo "Unable to find logs"
+          docker cp soccerbot_simulator_1:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/recording.html soccerbot/bags || echo "Unable to find logs"
+          docker cp soccerbot_simulator_1:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/recording.json soccerbot/bags || echo "Unable to find logs"
+          docker cp soccerbot_simulator_1:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/recording.x3d soccerbot/bags || echo "Unable to find logs"
       - name: Get rosbag
         if: always()
         uses: actions/upload-artifact@v3
@@ -76,6 +87,12 @@ jobs:
         if: always()
         run: |
           docker-compose logs
+          docker cp soccerbot_simulator_1:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/textures/ soccerbot/bags || echo "Unable to find logs"
+          docker cp soccerbot_simulator_1:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/bouncing_log.txt soccerbot/bags || echo "Unable to find logs"
+          docker cp soccerbot_simulator_1:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/log.txt soccerbot/bags || echo "Unable to find logs"
+          docker cp soccerbot_simulator_1:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/recording.html soccerbot/bags || echo "Unable to find logs"
+          docker cp soccerbot_simulator_1:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/recording.json soccerbot/bags || echo "Unable to find logs"
+          docker cp soccerbot_simulator_1:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/recording.x3d soccerbot/bags || echo "Unable to find logs"
       - name: Get rosbag
         if: always()
         uses: actions/upload-artifact@v3
