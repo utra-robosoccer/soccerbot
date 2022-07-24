@@ -2,9 +2,7 @@ import numpy as np
 import rospy
 import tf
 import tf2_py
-import tf2_ros
 from rospy import Subscriber
-from rospy.exceptions import ROSInterruptException
 from sensor_msgs.msg import CameraInfo
 from tf import TransformListener
 from tf.transformations import *
@@ -31,15 +29,15 @@ class Camera:
     def ready(self) -> bool:
         return self.pose is not None and self.resolution_x is not None and self.resolution_y is not None and self.camera_info is not None
 
-    def reset_position(self, from_world_frame=False, timestamp=rospy.Time(0), skip_if_not_found=False):
+    def reset_position(self, from_world_frame=False, timestamp=rospy.Time(0), camera_frame="/camera", skip_if_not_found=False):
 
         if from_world_frame:
             base_frame = "world"
-            target_frame = self.robot_name + "/camera"
+            target_frame = self.robot_name + camera_frame
             timeout_duration = rospy.Duration(nsecs=1000000)
         else:
             base_frame = self.robot_name + "/odom"
-            target_frame = self.robot_name + "/camera"
+            target_frame = self.robot_name + camera_frame
             timeout_duration = rospy.Duration(secs=1)
 
         # First if the timestamp transformation can be found
@@ -117,7 +115,7 @@ class Camera:
     def findCameraCoordinate(self, pos: [int]) -> [int]:
         pos3d = Transformation(pos)
         camera_pose = self.pose
-        pos3d_tr = pos3d @ np.linalg.inv(camera_pose)
+        pos3d_tr = np.linalg.inv(camera_pose) @ pos3d
 
         return self.findCameraCoordinateFixedCamera(pos3d_tr.get_position())
 
