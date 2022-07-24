@@ -86,7 +86,7 @@ class Path:
             if count <= path_section.bodyStepCount():
                 return path_section.getBodyStepPose(count)
             count = count - path_section.bodyStepCount()
-        raise Exception("Invalid body step calculation " + str(count))
+        raise Exception(f"Invalid body step calculation {count}/{self.bodyStepCount()}")
 
     @functools.lru_cache
     def duration(self):

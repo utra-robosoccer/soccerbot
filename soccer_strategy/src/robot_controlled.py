@@ -84,7 +84,7 @@ class RobotControlled(Robot):
         nav_angle_diff = player_angle - robot_ball_angle
         distance_of_player_to_ball = np.linalg.norm(player_position - ball_position)
 
-        if distance_of_player_to_ball < 0.18 and abs(nav_angle_diff) < 0.4:
+        if distance_of_player_to_ball < rospy.get_param("min_kick_distance", 0.20) and abs(nav_angle_diff) < rospy.get_param("min_kick_angle", 0.4):
             if nav_angle_diff > 0:
                 self.kick_with_right_foot = True
             else:
