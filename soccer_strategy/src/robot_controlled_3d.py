@@ -3,6 +3,7 @@ import time
 
 import numpy as np
 import rospy
+import tf2_py
 import tf.transformations
 from geometry_msgs.msg import Pose, PoseArray, PoseStamped, PoseWithCovarianceStamped
 from robot import Robot
@@ -23,10 +24,10 @@ class RobotControlled3D(RobotControlled):
 
         super().__init__(team=team, role=role, status=status, position=self.position_default)
 
-        # Subscibers
+        # Subscribers
         self.amcl_pose_subscriber = rospy.Subscriber("amcl_pose", PoseWithCovarianceStamped, self.amcl_pose_callback)
         self.amcl_pose = None
-        self.imu_subsciber = rospy.Subscriber("imu_filtered", Imu, self.imu_callback)
+        self.imu_subscriber = rospy.Subscriber("imu_filtered", Imu, self.imu_callback)
         self.action_completed_subscriber = rospy.Subscriber("action_complete", Empty, self.action_completed_callback, queue_size=1)
         self.head_centered_on_ball_subscriber = rospy.Subscriber("head_centered_on_ball", Empty, self.head_centered_on_ball_callback, queue_size=1)
         self.reset_robot_subscriber = rospy.Subscriber("reset_robot", PoseStamped, self.reset_robot_callback, queue_size=1)
@@ -112,7 +113,7 @@ class RobotControlled3D(RobotControlled):
                     "world", "robot" + str(self.robot_id) + "/ball", self.observed_ball.last_observed_time_stamp
                 )
             self.observed_ball.position = np.array([ball_pose[0][0], ball_pose[0][1], ball_pose[0][2]])
-        except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+        except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException, tf2_py.TransformException):
             rospy.loginfo_throttle(30, "Still looking for ball in TF Tree")
             self.observed_ball.position = None
 
