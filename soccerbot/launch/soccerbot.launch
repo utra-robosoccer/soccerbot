@@ -68,7 +68,7 @@
     </include>
 
     <!-- prettier-ignore -->
-    <node pkg="rosbag" type="record" name="rosbag" args="-b 0 -O $(find soccerbot)/bags/$(optenv ROBOCUP_TEAM_COLOR red)_$(arg robot_name).bag
+    <node pkg="rosbag" type="record" name="rosbag" args="-O $(find soccerbot)/bags/$(optenv ROBOCUP_TEAM_COLOR red)_$(arg robot_name).bag
         /$(arg robot_name)/state
         /$(arg robot_name)/action_complete
         /$(arg robot_name)/amcl_pose
