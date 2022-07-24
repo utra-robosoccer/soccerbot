@@ -207,7 +207,7 @@ class IntegrationTestPlaying(IntegrationTest):
     # Run this to generate many ball and robot locations and test that the localization are correct
     # 1. Run roslaunch soccerbot soccerbot_multi.launch competition:=false fake_localization:=true
     # If complaining missing opencv make sure LD_LIBRARY_PATH env is set
-    def test_annotate_ball(self, num_samples=10000):
+    def test_annotate_ball(self, num_samples=100):
         import math
         import os
         import random
