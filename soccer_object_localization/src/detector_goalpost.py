@@ -129,21 +129,13 @@ class DetectorGoalPost(Detector):
                 floor_x = floor_close_x * (1 - ratio2) + floor_center_x * ratio2
                 floor_y = floor_close_y * (1 - ratio2) + floor_center_y * ratio2
                 if floor_x > 0.0:
-
-                    br = tf2_ros.TransformBroadcaster()
-                    robot_pose = TransformStamped()
-                    robot_pose.header.frame_id = self.robot_name + "/base_footprint"
-                    robot_pose.child_frame_id = self.robot_name + "/goal_post"
-                    robot_pose.header.stamp = img.header.stamp
-                    robot_pose.header.seq = img.header.seq
-                    robot_pose.transform.translation.x = floor_x
-                    robot_pose.transform.translation.y = floor_y
-                    robot_pose.transform.translation.z = 0
-                    robot_pose.transform.rotation.x = 0
-                    robot_pose.transform.rotation.y = 0
-                    robot_pose.transform.rotation.z = 0
-                    robot_pose.transform.rotation.w = 1
-                    br.sendTransform(robot_pose)
+                    self.br.sendTransform(
+                        (floor_x, floor_y, 0),
+                        (0, 0, 0, 1),
+                        img.header.stamp,
+                        self.robot_name + "/goal_post",
+                        self.robot_name + "/base_footprint",
+                    )
 
         if self.image_publisher.get_num_connections() > 0:
             img_out = CvBridge().cv2_to_imgmsg(ccdst)

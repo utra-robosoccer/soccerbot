@@ -228,7 +228,7 @@ class SoccerbotControllerRos(SoccerbotController):
                 self.goal = self.new_goal
                 self.soccerbot.robot_path = self.new_path
 
-            if self.soccerbot.robot_path is not None and self.t <= self.soccerbot.robot_path.duration():
+            if self.soccerbot.robot_path is not None and 0 <= self.t <= self.soccerbot.robot_path.duration():
                 self.soccerbot.stepPath(self.t, verbose=False)
 
                 # IMU feedback while walking (Average Time: 0.00017305118281667)
@@ -247,7 +247,7 @@ class SoccerbotControllerRos(SoccerbotController):
                 and not self.terminated
             ):
                 walk_time = rospy.Time.now().secs + (rospy.Time.now().nsecs / 100000000) - (time_now.secs + (time_now.nsecs / 100000000))
-                rospy.loginfo("Completed Walk, Took: " + str(walk_time))
+                rospy.loginfo(f"\033[92mCompleted Walk, Took: {walk_time} \033[0m")
                 e = Empty()
                 self.completed_walk_publisher.publish(e)
 

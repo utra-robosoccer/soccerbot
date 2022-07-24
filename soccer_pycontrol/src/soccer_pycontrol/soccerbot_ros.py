@@ -88,7 +88,7 @@ class SoccerbotRos(Soccerbot):
             p = Path()
             p.header.frame_id = "world"
             p.header.stamp = rospy.Time.now()
-            for i in range(0, robot_path.bodyStepCount() + 1, 1):
+            for i in range(0, robot_path.bodyStepCount(), 1):
                 step = robot_path.getBodyStepPose(i)
                 position = step.get_position()
                 orientation = step.get_orientation()
@@ -181,13 +181,12 @@ class SoccerbotRos(Soccerbot):
                     self.last_ball_found_timestamp = ball_found_timestamp
                     rospy.loginfo_throttle(5, f"Ball found at timestamp {self.last_ball_found_timestamp}")
 
-                    self.listener.waitForTransform(
-                        "world", os.environ["ROS_NAMESPACE"] + "/ball", ball_found_timestamp, rospy.Duration(nsecs=100000000)
-                    )
+                    self.listener.waitForTransform("world", os.environ["ROS_NAMESPACE"] + "/ball", rospy.Time(0), rospy.Duration(nsecs=500000000))
                     last_ball_position, last_ball_orientation = self.listener.lookupTransform(
-                        "world", os.environ["ROS_NAMESPACE"] + "/ball", ball_found_timestamp
+                        "world", os.environ["ROS_NAMESPACE"] + "/ball", rospy.Time(0)
                     )
                     self.last_ball_pose = Transformation(last_ball_position)
+                    rospy.loginfo_once("Last ball pose set")
 
             except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException, tf2_py.TransformException):
                 rospy.loginfo_throttle(5, "Ball no longer in field of view, searching for the ball")

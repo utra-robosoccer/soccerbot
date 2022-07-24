@@ -1,4 +1,5 @@
 import rospy
+import tf
 
 from soccer_common.camera import Camera
 from soccer_msgs.msg import RobotState
@@ -13,6 +14,8 @@ class Detector:
         self.robot_state_subscriber = rospy.Subscriber("state", RobotState, self.robot_state_callback)
         self.robot_state = RobotState()
         self.robot_state.status = RobotState.STATUS_DISCONNECTED
+
+        self.br = tf.TransformBroadcaster()
         pass
 
     def robot_state_callback(self, robot_state: RobotState):

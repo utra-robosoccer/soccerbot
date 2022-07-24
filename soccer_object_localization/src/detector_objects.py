@@ -114,25 +114,22 @@ class DetectorBall(Detector):
 
         if final_camera_to_ball is not None:
             self.ball_pixel_publisher.publish(final_ball_pixel)
-
+            self.br.sendTransform(
+                (final_camera_to_ball.get_position()[0], final_camera_to_ball.get_position()[1], final_camera_to_ball.get_position()[2]),
+                (
+                    final_camera_to_ball.get_orientation()[0],
+                    final_camera_to_ball.get_orientation()[1],
+                    final_camera_to_ball.get_orientation()[2],
+                    final_camera_to_ball.get_orientation()[3],
+                ),
+                msg.header.stamp,
+                self.robot_name + "/ball",
+                self.robot_name + "/camera",
+            )
             rospy.loginfo_throttle(
                 1,
                 f"\u001b[1m\u001b[34mBall detected [{self.last_ball_pose.get_position()[0]:.3f}, {self.last_ball_pose.get_position()[1]:.3f}] \u001b[0m",
             )
-            br = tf2_ros.TransformBroadcaster()
-            ball_pose = TransformStamped()
-            ball_pose.header.frame_id = self.robot_name + "/camera"
-            ball_pose.child_frame_id = self.robot_name + "/ball"
-            ball_pose.header.stamp = msg.header.stamp
-            ball_pose.header.seq = msg.header.seq
-            ball_pose.transform.translation.x = final_camera_to_ball.get_position()[0]
-            ball_pose.transform.translation.y = final_camera_to_ball.get_position()[1]
-            ball_pose.transform.translation.z = final_camera_to_ball.get_position()[2]
-            ball_pose.transform.rotation.x = final_camera_to_ball.get_orientation()[0]
-            ball_pose.transform.rotation.y = final_camera_to_ball.get_orientation()[1]
-            ball_pose.transform.rotation.z = final_camera_to_ball.get_orientation()[2]
-            ball_pose.transform.rotation.w = final_camera_to_ball.get_orientation()[3]
-            br.sendTransform(ball_pose)
 
 
 if __name__ == "__main__":
