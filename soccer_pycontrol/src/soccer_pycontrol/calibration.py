@@ -14,7 +14,7 @@ from soccer_common.transformation import Transformation
 from soccer_pycontrol.utils import trimToPi, wrapToPi
 
 robot_model = "bez1"
-run_in_ros = False
+run_in_ros = True
 
 
 def setup_calibration():
@@ -257,10 +257,10 @@ if __name__ == "__main__":
     with open(config_file_path, "w") as f:
         yaml.dump(data, f)
 
-    # Calibrate rotation
-    a = calibrate_theta()
-    with open(config_file_path) as f:
-        data = yaml.load(f)
-    data["calibration_rot_a"] = float(a)
-    with open(config_file_path, "w") as f:
-        yaml.dump(data, f)
+    # # Calibrate rotation
+    # a = calibrate_theta()
+    # with open(config_file_path) as f:
+    #     data = yaml.load(f)
+    # data["calibration_rot_a"] = float(a)
+    # with open(config_file_path, "w") as f:
+    #     yaml.dump(data, f)
