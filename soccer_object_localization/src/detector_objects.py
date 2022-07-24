@@ -12,8 +12,6 @@ from soccer_msgs.msg import RobotState
 if "ROS_NAMESPACE" not in os.environ:
     os.environ["ROS_NAMESPACE"] = "/robot1"
 
-import math
-
 import rospy
 import tf2_ros
 from detector import Detector
@@ -84,7 +82,7 @@ class DetectorBall(Detector):
 
                 # If it is the first ball, we need high confidence
                 if self.last_ball_pose is None:
-                    if box.probability < 0.78:
+                    if box.probability < rospy.get_param("~first_ball_detection_confidence_threshold", 0.78):
                         rospy.logwarn_throttle(0.5, f"Ignoring first pose of ball with low confidence threshold {box.probability}")
                         continue
 
@@ -135,88 +133,6 @@ class DetectorBall(Detector):
             ball_pose.transform.rotation.z = final_camera_to_ball.get_orientation()[2]
             ball_pose.transform.rotation.w = final_camera_to_ball.get_orientation()[3]
             br.sendTransform(ball_pose)
-
-        # Robots
-        detected_robots = 0
-        for box in msg.bounding_boxes:
-            if box.Class == "robot":
-                if self.head_motor_1_angle > 0.6:
-                    continue  # probably looking at own hands
-
-                x_avg = (box.xmin + box.xmax) / 2.0
-                y_avg = (box.ymax + box.ymin) / 2.0
-                y_close = box.ymax
-
-                robot_length = abs(box.xmax - box.xmin)
-                robot_width = abs(box.ymax - box.ymin)
-                if robot_length <= 0 or robot_width <= 0:
-                    continue
-
-                length_to_width_ratio_in_full_view = 68 / 22.0
-                foot_ratio_of_length = 0.2
-                foot_pixel = box.ymax
-
-                robot_standing_up = True
-                if robot_standing_up:
-                    # Side obstructed
-                    if box.xmax == 640:
-                        # right side obstructed
-                        robot_width = robot_length / length_to_width_ratio_in_full_view
-                        box.xmax = box.xmin + robot_length
-                    elif box.xmin == 0:
-                        # left side obstructed
-                        robot_width = robot_length / length_to_width_ratio_in_full_view
-                        box.xmin = box.xmax - robot_length
-                        # If entire robot in field of view
-                    if box.ymax == 480 and box.ymin == 0:
-                        # Top and bottom both obstructed
-                        # TODO dont know what to do at this moment, assume 50 50 top bottom
-                        desired_robot_length = length_to_width_ratio_in_full_view * robot_width
-                        additional_robot_length = desired_robot_length - robot_length
-                        box.ymax = box.ymax + additional_robot_length / 2
-                        box.ymin = box.ymin - additional_robot_length / 2
-                    elif box.ymax == 480:
-                        # bottom obstructed
-                        robot_length = length_to_width_ratio_in_full_view * robot_width
-                        box.ymax = box.ymin + robot_length
-                    elif box.ymin == 0:
-                        # top obstructed
-                        robot_length = length_to_width_ratio_in_full_view * robot_width
-                        box.ymin = box.ymax - robot_length
-
-                    foot_pixel = box.ymax - robot_length * foot_ratio_of_length
-
-                [floor_center_x, floor_center_y, _] = self.camera.findFloorCoordinate([x_avg, foot_pixel])
-                [floor_close_x, floor_close_y, _] = self.camera.findFloorCoordinate([x_avg, y_close])
-
-                camera_pose = self.camera.pose
-
-                distance = ((floor_center_x - camera_pose.get_position()[0]) ** 2 + (floor_center_y - camera_pose.get_position()[1]) ** 2) ** 0.5
-                theta = math.atan2(distance, camera_pose.get_position()[2])
-                ratio = math.tan(theta) ** 2
-                ratio2 = 1 / (1 + ratio)
-                if 1 < ratio2 < 0:
-                    continue
-
-                floor_x = floor_close_x * (1 - ratio2) + floor_center_x * ratio2
-                floor_y = floor_close_y * (1 - ratio2) + floor_center_y * ratio2
-
-                if floor_x > 0.0:
-                    br = tf2_ros.TransformBroadcaster()
-                    robot_pose = TransformStamped()
-                    robot_pose.header.frame_id = self.robot_name + "/base_camera"
-                    robot_pose.child_frame_id = self.robot_name + "/detected_robot_" + str(detected_robots)
-                    robot_pose.header.stamp = msg.header.stamp
-                    robot_pose.header.seq = msg.header.seq
-                    robot_pose.transform.translation.x = floor_x
-                    robot_pose.transform.translation.y = floor_y
-                    robot_pose.transform.translation.z = 0
-                    robot_pose.transform.rotation.x = 0
-                    robot_pose.transform.rotation.y = 0
-                    robot_pose.transform.rotation.z = 0
-                    robot_pose.transform.rotation.w = 1
-                    br.sendTransform(robot_pose)
-                    detected_robots += 1
 
 
 if __name__ == "__main__":
