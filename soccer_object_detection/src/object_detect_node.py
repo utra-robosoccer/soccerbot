@@ -35,8 +35,6 @@ class bcolors:
 
 
 class ObjectDetectionNode(object):
-    SOCCER_BALL = 0
-    CONFIDENCE_THRESHOLD = rospy.get_param("confidence_threshold", 0.75)
 
     """
     Detect ball, robot
@@ -45,6 +43,9 @@ class ObjectDetectionNode(object):
     """
 
     def __init__(self, model_path):
+        self.SOCCER_BALL = 0
+        self.CONFIDENCE_THRESHOLD = rospy.get_param("~ball_confidence_threshold", 0.75)
+
         self.model = torch.hub.load("ultralytics/yolov5", "custom", path=model_path)
         if torch.cuda.is_available():
             rospy.loginfo(f"{bcolors.OKGREEN}Using CUDA for object detection{bcolors.ENDC}")
