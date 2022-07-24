@@ -12,10 +12,6 @@ from soccer_common.transformation import Transformation
 
 class Camera:
     def __init__(self, robot_name: str):
-        import rospy
-
-        rospy.Time.now()
-
         self.robot_name = robot_name
         self.pose = Transformation()
         self.resolution_x = None
