@@ -2,9 +2,7 @@ import numpy as np
 import rospy
 import tf
 import tf2_py
-import tf2_ros
 from rospy import Subscriber
-from rospy.exceptions import ROSInterruptException
 from sensor_msgs.msg import CameraInfo
 from tf import TransformListener
 from tf.transformations import *
@@ -14,6 +12,10 @@ from soccer_common.transformation import Transformation
 
 class Camera:
     def __init__(self, robot_name: str):
+        import rospy
+
+        rospy.Time.now()
+
         self.robot_name = robot_name
         self.pose = Transformation()
         self.resolution_x = None
@@ -117,7 +119,7 @@ class Camera:
     def findCameraCoordinate(self, pos: [int]) -> [int]:
         pos3d = Transformation(pos)
         camera_pose = self.pose
-        pos3d_tr = pos3d @ np.linalg.inv(camera_pose)
+        pos3d_tr = np.linalg.inv(camera_pose) @ pos3d
 
         return self.findCameraCoordinateFixedCamera(pos3d_tr.get_position())
 
