@@ -7,6 +7,7 @@ from unittest import TestCase
 import numpy as np
 import rospy
 import tf
+import tf2_ros
 from geometry_msgs.msg import PoseStamped
 from rosgraph_msgs.msg import Clock
 from scipy.spatial.transform import Rotation as R
@@ -207,7 +208,6 @@ class IntegrationTestPlaying(IntegrationTest):
     # 1. Run roslaunch soccerbot soccerbot_multi.launch competition:=false fake_localization:=true
     # If complaining missing opencv make sure LD_LIBRARY_PATH env is set
     def test_annotate_ball(self, num_samples=10000):
-        import json
         import math
         import os
         import random
@@ -223,11 +223,21 @@ class IntegrationTestPlaying(IntegrationTest):
 
         from soccer_common.transformation import Transformation
 
-        os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_pycontrol'")
-        os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_trajectories'")
-        j = 0
+        if not os.path.exists("images"):
+            os.makedirs("images")
 
-        rospy.init_node("soccer_annotate")
+        j = 0
+        for file in [f for f in os.listdir("images") if os.path.isfile(os.path.join("images", f))]:
+            if "border" in file:
+                continue
+            num = int(file.split("_")[0].replace("img", ""))
+            if j < num:
+                j = num
+
+        os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_pycontrol'")
+        os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_strategy'")
+        os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_trajectories'")
+
         self.camera = Camera("robot1")
 
         field_width = 2.5  # m
@@ -259,9 +269,8 @@ class IntegrationTestPlaying(IntegrationTest):
 
             print(robot_position, robot_theta)
             self.set_robot_pose(robot_position[0], robot_position[1], robot_theta)
-            time.sleep(0.5)
             self.set_ball_pose(ball_position[0], ball_position[1])
-            time.sleep(0.5)
+            time.sleep(0.3)
             # Calculate the frame in the camera
             image_msg = rospy.wait_for_message("/robot1/camera/image_raw", Image)
 
@@ -273,15 +282,14 @@ class IntegrationTestPlaying(IntegrationTest):
 
             # Annotate the image automatically
             # Set the camera
-            while not rospy.is_shutdown():
-                try:
-                    (ball_position, rot) = tf_listener.lookupTransform("world", "robot1/ball", image_msg.header.stamp)
-                    header = tf_listener.getLatestCommonTime("world", "robot1/ball")
-                    break
-                except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
-                    rospy.logwarn_throttle(2, "Cannot find ball transform")
+            try:
+                if tf_listener.waitForTransform("world", "robot1/ball_gt", image_msg.header.stamp, rospy.Duration(1)):
+                    (ball_position, rot) = tf_listener.lookupTransform("world", "robot1/ball_gt", image_msg.header.stamp)
+            except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException, tf2_ros.TransformException):
+                rospy.logwarn_throttle(2, "Cannot find ball transform")
+                continue
 
-            self.camera.reset_position(from_world_frame=True, timestamp=image_msg.header.stamp)
+            self.camera.reset_position(from_world_frame=True, camera_frame="/camera_gt", timestamp=image_msg.header.stamp)
             label = self.camera.calculateBoundingBoxesFromBall(Transformation(ball_position), ball_radius)
 
             # Draw the rectangle
@@ -295,14 +303,11 @@ class IntegrationTestPlaying(IntegrationTest):
             # if key != 32:
             #     continue
 
-            jsonPath = "../images/bb_img_{}.json".format(j)
-            with open(jsonPath, "w") as f:
-                json.dump((pt1, pt2), f)
-            filePath = "../images/img_{}.jpg".format(j)
+            filePath = f"images/img{j}_{pt1[0]}_{pt1[1]}_{pt2[0]}_{pt2[1]}.png"
             if os.path.exists(filePath):
                 os.remove(filePath)
             cv2.imwrite(filePath, image)
-            filePath2 = "../images/img_border_{}.jpg".format(j)
+            filePath2 = f"images/imgborder{j}_{pt1[0]}_{pt1[1]}_{pt2[0]}_{pt2[1]}.png"
             if os.path.exists(filePath2):
                 os.remove(filePath2)
             cv2.imwrite(filePath2, image_rect)
