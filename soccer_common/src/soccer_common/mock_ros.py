@@ -8,7 +8,6 @@ def mock_ros(robot_model="bez1", real_robot=False, config_path=""):
     if not real_robot:
         sys.modules["rospy"] = MagicMock()
         sys.modules["soccer_msgs"] = __import__("soccer_msgs_mock")
-        sys.modules["tf"] = MagicMock()
         import rospy
 
         rospy.Time = MagicMock()

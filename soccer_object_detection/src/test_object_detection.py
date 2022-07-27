@@ -12,7 +12,7 @@ mock_ros()
 
 
 def IoU(boxA, boxB):
-    # determine the (x, y)-coordinates of the mockerintersection rectangle
+    # determine the (x, y)-coordinates of the intersection rectangle
     xA = max(boxA[0], boxB[0])
     yA = max(boxA[1], boxB[1])
     xB = min(boxA[2], boxB[2])
