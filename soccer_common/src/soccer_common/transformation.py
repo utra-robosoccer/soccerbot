@@ -4,142 +4,119 @@ from scipy.spatial.transform import Slerp
 
 
 class Transformation(np.ndarray):
-    def __new__(cls, position=(0.0, 0.0, 0.0), quaternion=(0.0, 0.0, 0.0, 1.0), *args, **kwargs):
+    def __new__(
+        cls,
+        position=(0.0, 0.0, 0.0),
+        orientation=(0.0, 0.0, 0.0, 1.0),
+        rotation_matrix=None,
+        matrix=None,
+        euler=None,
+        pos_theta=None,
+        dh=None,
+        *args,
+        **kwargs
+    ):
         """
         Constructor for the H-transform object, inherits from numpy array
         :param position: translation component of the transform, defaults to zero
-        :param quaternion: rotational component of the transform in quaternion of form [x y z w], defaults to no rotation
+        :param orientation: rotational component of the transform in quaternion of form [x y z w], defaults to no rotation
         """
         cls = np.eye(4).view(cls)
-        cls.set_position(position)
-        cls.set_orientation(quaternion)
+
+        if matrix is not None:
+            cls = matrix
+        elif rotation_matrix is not None:
+            cls[0:3, 0:3] = rotation_matrix
+            cls.position = position
+        elif dh is not None:
+            a = dh[0]
+            alpha = dh[1]
+            d = dh[2]
+            theta = dh[3]
+
+            cls[0, 0] = np.cos(theta)
+            cls[0, 1] = -np.sin(theta) * np.cos(alpha)
+            cls[0, 2] = np.sin(theta) * np.sin(alpha)
+            cls[0, 3] = a * np.cos(theta)
+            cls[1, 0] = np.sin(theta)
+            cls[1, 1] = np.cos(theta) * np.cos(alpha)
+            cls[1, 2] = -np.cos(theta) * np.sin(alpha)
+            cls[1, 3] = a * np.sin(theta)
+            cls[2, 1] = np.sin(alpha)
+            cls[2, 2] = np.cos(alpha)
+            cls[2, 3] = d
+        elif euler is not None:
+            cls.orientation_euler = euler
+            cls.position = position
+        elif pos_theta is not None:
+            cls.pos_theta = pos_theta
+        else:
+            cls.position = position
+            cls.orientation = orientation
         return cls
 
-    def get_transform(self):
-        """
-        Returns the np array for this
-        :return: a vector 3x1
-        """
+    @property
+    def transform(self) -> np.ndarray:
         return np.array(self)
 
-    def get_position(self):
-        """
-        Gives the translational component of H-transform
-        :return: a vector 3x1
-        """
+    @property
+    def position(self) -> np.ndarray:
+        # Position in form [x y z]
         return np.array(self[0:3, 3])
 
-    def set_position(self, position):
-        """
-        sets the translational component of H-transform
-        :param position: a vector 3x1
-        :return: None
-        """
+    @position.setter
+    def position(self, position: [float]):
         self[0:3, 3] = position
 
-    def get_orientation(self):
-        """
-        Gives the rotation of the H-transform in quaternion form
-        :return: quaternion of form [x y z w]
-        """
+    @property
+    def orientation(self) -> np.ndarray:
+        # Quaternion in form [x y z w]
         r = R.from_matrix(self[0:3, 0:3])
         return r.as_quat()
 
-    def get_orientation_euler(self):
-        """
-        Gives the rotation of the H-transform in euler axis form
-        :return: angles of form [r p y]
-        """
-        return Transformation.get_euler_from_rotation_matrix(self[0:3, 0:3])
-
-    def set_orientation(self, quat):
-        """
-        Sets the rotational component of the H-transform
-        :param quat: rotation in the quaternion form of [x y z w]
-        :return: None
-        """
+    @orientation.setter
+    def orientation(self, quat: [float]):
         r = R.from_quat(quat)
         self[0:3, 0:3] = np.reshape(r.as_matrix(), [3, 3])
 
-    @staticmethod
-    def get_transform_from_dh(a, alpha, d, theta):
-        t = Transformation()
-
-        t[0, 0] = np.cos(theta)
-        t[0, 1] = -np.sin(theta) * np.cos(alpha)
-        t[0, 2] = np.sin(theta) * np.sin(alpha)
-        t[0, 3] = a * np.cos(theta)
-        t[1, 0] = np.sin(theta)
-        t[1, 1] = np.cos(theta) * np.cos(alpha)
-        t[1, 2] = -np.cos(theta) * np.sin(alpha)
-        t[1, 3] = a * np.sin(theta)
-        t[2, 1] = np.sin(alpha)
-        t[2, 2] = np.cos(alpha)
-        t[2, 3] = d
-
-        return t
-
-    @staticmethod
-    def get_transform_from_pose_stamped(x, y, theta):
-        t = Transformation.get_transform_from_euler([0, 0, theta])
-        t.set_position([x, y, 0])
-        return t
-
-    @staticmethod
-    def get_matrix_from_euler(euler_array, sequence="ZYX"):
-        """
-        Gives 4x4 H-transform object from the euler angle represtation with translation component defaulting to zero
-        :param euler_array: the array of 3 angles
-        :param sequence: axes of rotation order in a string of three letters, see intrinsic vs extrinsic for capital and small case letters
-        :return: H-transform
-        """
-        r = R.from_euler(seq=sequence, angles=euler_array, degrees=False)
-        return r.as_matrix()
-
-    @staticmethod
-    def get_transform_from_euler(euler_array, sequence="ZYX"):
-        """
-        Gives 4x4 H-transform object from the euler angle represtation with translation component defaulting to zero
-        :param euler_array: the array of 3 angles
-        :param sequence: axes of rotation order in a string of three letters, see intrinsic vs extrinsic for capital and small case letters
-        :return: H-transform
-        """
-        r = R.from_euler(seq=sequence, angles=euler_array, degrees=False)
-        t = Transformation(quaternion=r.as_quat())
-        return t
-
-    @staticmethod
-    def get_euler_from_rotation_matrix(r, orientation="ZYX"):
-        """
-        Gives euler angles rotation form of rotation matrix
-        :param r: 3x3 rotation matrix
-        :param orientation: axes of rotation order in a string of three letters, see intrinsic vs extrinsic for capital and small case letters
-        :return: an array of three angles in radians
-        """
-        e = R.from_matrix(r)
+    @property
+    def orientation_euler(self, orientation="ZYX") -> np.ndarray:
+        # Quaternion in form [yaw pitch roll]
+        e = R.from_matrix(self[0:3, 0:3])
         return e.as_euler(orientation, degrees=False)
 
-    @staticmethod
-    def get_quaternion_from_rotation_matrix(r):
-        """
-        Gives euler angles rotation form of rotation matrix
-        :param r: 3x3 rotation matrix
-        :param orientation: axes of rotation order in a string of three letters, see intrinsic vs extrinsic for capital and small case letters
-        :return: an array of three angles in radians
-        """
-        e = R.from_matrix(r)
-        return e.as_quat()
+    @orientation_euler.setter
+    def orientation_euler(self, euler_array, sequence="ZYX"):
+        r = R.from_euler(seq=sequence, angles=euler_array, degrees=False)
+        self.orientation = r.as_quat()
+
+    @property
+    def rotation_matrix(self) -> np.array:
+        return np.array(self[0:3, 0:3])
+
+    @rotation_matrix.setter
+    def rotation_matrix(self, rotation_matrix):
+        self[0:3, 0:3] = rotation_matrix
+
+    @property
+    def pos_theta(self):
+        # Field in form [x, y, yaw]
+        return np.array([self.position[0], self.position[1], self.orientation_euler[0]])
+
+    @pos_theta.setter
+    def pos_theta(self, pos_theta: [float]):
+        self.position = (pos_theta[0], pos_theta[1], 0.0)
+        self.orientation_euler = [pos_theta[2], 0, 0]
 
     @staticmethod
-    def get_quaternion_from_euler(euler_array, sequence="ZYX"):
+    def distance(t1, t2) -> float:
         """
-        Get the quaternion representation of euler angle rotations
-        :param euler_array: array of 3 angles for rotation
-        :param sequence: order and type of rotation, see intrinsic vs extrinsic for capital and small case letter
-        :return: quaternion in the form of [x y z w]
+        Gives the translational distance between 2 H-transforms
+        :param t1: first H-transform
+        :param t2: second H-transform
+        :return:
         """
-        r = R.from_euler(seq=sequence, angles=euler_array, degrees=False)
-        return r.as_quat()
+        return np.linalg.norm(t1[0:3, 3] - t2[0:3, 3])
 
     @staticmethod
     def get_euler_from_quaternion(quaternion, seq="ZYX"):
@@ -179,26 +156,6 @@ class Transformation(np.ndarray):
         return angle, vector
 
     @staticmethod
-    def get_distance(t1, t2):
-        """
-        Gives the translational distance between 2 H-transforms
-        :param t1: first H-transform
-        :param t2: second H-transform
-        :return:
-        """
-        return np.linalg.norm(t1[0:3, 3] - t2[0:3, 3])
-
-    @staticmethod
-    def get_rotation_matrix_from_transformation(transformation):
-        """
-        Returns a 3x3 rotation matrix from the 4x4 H-transform
-        :param transformation: H-transform
-        :return: rotation matrix
-        """
-        r = R.from_quat(transformation.get_orientation())
-        return r.as_matrix()
-
-    @staticmethod
     def transformation_weighted_average(t_start, t_end, ratio):
         """
         Interpolates between two transforms. Inclination is based on a ratio.
@@ -210,21 +167,12 @@ class Transformation(np.ndarray):
         :return: weighted average H-transform
         """
         average = Transformation()
-        delta_position = t_end.get_position() - t_start.get_position()
-        average.set_position(t_start.get_position() + (delta_position * ratio))
-        rots = R.from_quat([t_start.get_orientation(), t_end.get_orientation()])
+        delta_position = t_end.position - t_start.position
+        average.position = t_start.position + (delta_position * ratio)
+        rots = R.from_quat([t_start.orientation, t_end.orientation])
         s = Slerp([0, 1], rots)
         r_average = s([ratio])[0]
 
-        average.set_orientation(r_average.as_quat())
+        average.orientation = r_average.as_quat()
 
         return average
-
-    def to_pos_theta(self):
-        return np.array([self.get_position()[0], self.get_position()[1], self.get_orientation_euler()[0]])
-
-    @staticmethod
-    def from_pos_theta(position):
-        transform_position = (position[0], position[1], 0.0)
-        q = Transformation.get_quaternion_from_euler([position[2], 0, 0])
-        return Transformation(transform_position, q)

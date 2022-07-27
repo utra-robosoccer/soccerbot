@@ -140,7 +140,7 @@ class DetectorFieldline(Detector):
             points3d = []
             for p in pts:
                 camToPoint = Transformation(self.camera.findFloorCoordinate(p))
-                points3d.append(camToPoint.get_position())
+                points3d.append(camToPoint.position)
 
             # Publish fieldlines in laserscan format
             header = Header()

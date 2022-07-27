@@ -59,23 +59,22 @@ class SoccerbotControllerRos(SoccerbotController):
         t = PoseStamped()
         t.header.stamp = rospy.Time.now()
         t.header.frame_id = "world"
-        t.pose.position.x = trans.get_position()[0]
-        t.pose.position.y = trans.get_position()[1]
-        t.pose.position.z = trans.get_position()[2]
+        t.pose.position.x = trans.position[0]
+        t.pose.position.y = trans.position[1]
+        t.pose.position.z = trans.position[2]
 
-        t.pose.orientation.x = trans.get_orientation()[0]
-        t.pose.orientation.y = trans.get_orientation()[1]
-        t.pose.orientation.z = trans.get_orientation()[2]
-        t.pose.orientation.w = trans.get_orientation()[3]
+        t.pose.orientation.x = trans.orientation[0]
+        t.pose.orientation.y = trans.orientation[1]
+        t.pose.orientation.z = trans.orientation[2]
+        t.pose.orientation.w = trans.orientation[3]
         return t
 
     def ready(self):
         pass
 
     def setPose(self, pose: Transformation):
-        [r, p, y] = pose.get_orientation_euler()
-        q_new = Transformation.get_quaternion_from_euler([r, 0, 0])
-        pose.set_orientation(q_new)
+        [r, p, y] = pose.orientation_euler
+        pose.orientation_euler = [r, 0, 0]
 
         resetPublisher = rospy.Publisher("/robot1/reset_robot", PoseStamped, queue_size=1, latch=True)
         initialPosePublisher = rospy.Publisher("initialpose", PoseWithCovarianceStamped, queue_size=1, latch=True)
@@ -100,13 +99,7 @@ class SoccerbotControllerRos(SoccerbotController):
             print(e)
             return False
 
-        return np.array(
-            [
-                trans[0],
-                trans[1],
-                Transformation.get_euler_from_quaternion(rot)[0],
-            ]
-        )
+        return Transformation(position=trans, orientation=rot).pos_theta
 
     def setGoal(self, goal: Transformation):
         self.goal_callback(self.transformation_to_pose(goal))

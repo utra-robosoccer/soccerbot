@@ -34,10 +34,10 @@ class Path:
         # Only use bezier for simple forward paths
 
         # If there is too much final rotation
-        theta_diff = wrapToPi(end_transform.get_orientation_euler()[0] - start_transform.get_orientation_euler()[0])
+        theta_diff = wrapToPi(end_transform.orientation_euler[0] - start_transform.orientation_euler[0])
         pos_theta_diff = math.atan2(
-            end_transform.get_position()[1] - start_transform.get_position()[1],
-            end_transform.get_position()[0] - start_transform.get_position()[0],
+            end_transform.position[1] - start_transform.position[1],
+            end_transform.position[0] - start_transform.position[0],
         )
         if abs(wrapToPi(pos_theta_diff - theta_diff)) > math.pi / 4:
             return True
@@ -49,7 +49,7 @@ class Path:
             return True
 
         # If the distance is too close
-        return np.linalg.norm(end_transform.get_position()[0:2] - start_transform.get_position()[0:2]) < 1
+        return np.linalg.norm(end_transform.position[0:2] - start_transform.position[0:2]) < 1
 
     def createPathSection(self, start_transform: Transformation, end_transform: Transformation):
         is_short_distance = self.isShortPath(start_transform, end_transform)
@@ -97,7 +97,7 @@ class Path:
 
     # Do not use in the walking engine
     @functools.lru_cache
-    def estimatedPositionAtTime(self, t):
+    def estimatedPositionAtTime(self, t) -> Transformation:
         estimated_ratio = min(t / self.duration(), 1)
         return self.poseAtRatio(estimated_ratio)
 
@@ -226,7 +226,7 @@ class Path:
 
         for i in range(0, self.bodyStepCount(), 1):  # i = 0:1: obj.bodyStepCount
             step = self.getBodyStepPose(i)
-            position[i, 0:3] = step.get_position()
+            position[i, 0:3] = step.position
             orientation[i, 0:3] = (step[0:3, 0:3] @ np.reshape(np.array([0.015, 0.0, 0.0]), (3, 1)))[:, 0]
 
             count = i

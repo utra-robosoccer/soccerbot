@@ -39,13 +39,8 @@ class SoccerbotController:
         self.soccerbot.setPose(pose)
 
     def getPose(self):
-        return np.array(
-            [
-                pb.getBasePositionAndOrientation(self.soccerbot.body)[0][0],
-                pb.getBasePositionAndOrientation(self.soccerbot.body)[0][1],
-                Transformation.get_euler_from_quaternion(pb.getBasePositionAndOrientation(self.soccerbot.body)[1])[0],
-            ]
-        )
+        pos_orientation = pb.getBasePositionAndOrientation(self.soccerbot.body)
+        return Transformation(position=pos_orientation[0], orientation=pos_orientation[1]).pos_theta
 
     def setGoal(self, goal: Transformation):
         self.soccerbot.createPathToGoal(goal)
@@ -78,9 +73,9 @@ class SoccerbotController:
                     self.soccerbot.stepPath(t, verbose=False)
                     self.soccerbot.apply_imu_feedback(t, self.soccerbot.get_imu())
                     self.soccerbot.current_step_time = self.soccerbot.current_step_time + self.soccerbot.robot_path.step_precision
-            
+
             angle_threshold = 1.25  # in radian
-            [roll, pitch, yaw] = self.soccerbot.get_imu().get_orientation_euler()
+            [roll, pitch, yaw] = self.soccerbot.get_imu().orientation_euler
             if pitch > angle_threshold:
                 print("Fallen Back")
                 return False

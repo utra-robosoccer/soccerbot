@@ -69,7 +69,7 @@ class Test(TestCase):
 
             n.camera.resolution_x = img.shape[1]
             n.camera.resolution_y = img.shape[0]
-            n.camera.pose.set_orientation(Transformation.get_quaternion_from_euler([0, np.pi / 8, 0]))
+            n.camera.pose.orientation_euler = [0, np.pi / 8, 0]
             n.callback(img_msg)
 
             # Extract ground truth

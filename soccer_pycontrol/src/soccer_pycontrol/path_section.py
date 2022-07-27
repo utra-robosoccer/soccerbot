@@ -38,7 +38,7 @@ class PathSection(ABC):
         for i in precisions:
             new_pose = self.poseAtRatio(i)
             self.distance = self.distance + Transformation.get_distance(prev_pose, new_pose)
-            self.angle_distance = self.angle_distance + abs(wrapToPi(new_pose.get_orientation_euler()[0] - prev_pose.get_orientation_euler()[0]))
+            self.angle_distance = self.angle_distance + abs(wrapToPi(new_pose.orientation_euler[0] - prev_pose.orientation_euler[0]))
             prev_pose = new_pose
 
             self.distanceMap[j, 0:2] = [i, self.distance]

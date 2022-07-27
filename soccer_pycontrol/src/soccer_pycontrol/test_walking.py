@@ -105,7 +105,7 @@ class TestWalking:
 
         if not run_in_ros:
             final_position = walker.getPose()
-            distance_offset = np.linalg.norm((final_position - goal_position.get_position())[0:2])
+            distance_offset = np.linalg.norm((final_position - goal_position.position)[0:2])
             if robot_model == "bez1":
                 assert distance_offset < 0.08
 
@@ -186,7 +186,7 @@ class TestWalking:
         assert walk_success
 
         final_position = walker.getPose()
-        distance_offset = np.linalg.norm((final_position - goal_position.get_position())[0:2])
+        distance_offset = np.linalg.norm((final_position - goal_position.position)[0:2])
         if robot_model == "bez1":
             assert distance_offset < 0.08
 
@@ -200,7 +200,7 @@ class TestWalking:
         walker.setGoal(goal_position)
         walk_success = walker.run(single_trajectory=True)
         final_position = walker.getPose()
-        distance_offset = np.linalg.norm((final_position - goal_position.get_position())[0:2])
+        distance_offset = np.linalg.norm((final_position - goal_position.position)[0:2])
         if robot_model == "bez1":
             assert distance_offset < 0.08
         assert walk_success
@@ -212,7 +212,7 @@ class TestWalking:
         walker.ready()
         walker.wait(100)
 
-        goal = Transformation.get_transform_from_euler([np.pi, 0, 0])
+        goal = Transformation(euler=[np.pi, 0, 0])
         walker.setGoal(goal)
         walk_success = walker.run(single_trajectory=True)
         assert walk_success
@@ -223,8 +223,8 @@ class TestWalking:
         walker.setPose(Transformation([0, 0, 0], [0.00000, 0, 0, 1]))
         walker.ready()
         walker.wait(100)
-        goal = Transformation.get_transform_from_euler([np.pi / 5, 0, 0])
-        goal.set_position([0.05, 0.05, 0])
+        goal = Transformation(euler=[np.pi / 5, 0, 0])
+        goal.position = [0.05, 0.05, 0]
         walker.setGoal(goal)
         # walker.soccerbot.robot_path.show()
         walk_success = walker.run(single_trajectory=True)
@@ -236,8 +236,8 @@ class TestWalking:
         walker.setPose(Transformation([0, 0, 0], [0.00000, 0, 0, 1]))
         walker.ready()
         walker.wait(100)
-        goal = Transformation.get_transform_from_euler([np.pi, 0, 0])
-        goal.set_position([0.15, 0.05, 0])
+        goal = Transformation(euler=[np.pi, 0, 0])
+        goal.position = [0.15, 0.05, 0]
         walker.setGoal(goal)
         walk_success = walker.run(single_trajectory=True)
         assert walk_success
@@ -248,8 +248,8 @@ class TestWalking:
         walker.setPose(Transformation([0, 0, 0], [0.00000, 0, 0, 1]))
         walker.ready()
         walker.wait(100)
-        goal = Transformation.get_transform_from_euler([np.pi, 0, 0])
-        goal.set_position([-0.3, 0, 0])
+        goal = Transformation(euler=[np.pi, 0, 0])
+        goal.position = [-0.3, 0, 0]
         walker.setGoal(goal)
         walk_success = walker.run(single_trajectory=True)
         assert walk_success
@@ -260,8 +260,8 @@ class TestWalking:
         walker.setPose(Transformation([0, 0, 0], [0.00000, 0, 0, 1]))
         walker.ready()
         walker.wait(100)
-        goal = Transformation.get_transform_from_euler([-np.pi / 2, 0, 0])
-        goal.set_position([-0.2, -0.2, 0])
+        goal = Transformation(euler=[-np.pi / 2, 0, 0])
+        goal.position = [-0.2, -0.2, 0]
         walker.setGoal(goal)
         walk_success = walker.run(single_trajectory=True)
         assert walk_success
@@ -297,7 +297,7 @@ class TestWalking:
         walker.setPose(Transformation([0, 0, 0], [0.00000, 0, 0, 1]))
         walker.ready()
         walker.wait(100)
-        goal = Transformation.get_transform_from_euler([0, 0, 0])
+        goal = Transformation(euler=[0, 0, 0])
         walker.setGoal(goal)
         walk_success = walker.run(single_trajectory=True)
         assert walk_success
@@ -334,7 +334,7 @@ class TestWalking:
         walker.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
         walker.ready()
         walker.wait(200)
-        walker.setGoal(Transformation([0, 0, 0], Transformation.get_quaternion_from_euler([0.1, 0, 0])))
+        walker.setGoal(Transformation([0, 0, 0], euler=[0.1, 0, 0]))
         walk_success = walker.run(single_trajectory=True)
         assert walk_success
 
@@ -344,36 +344,36 @@ class TestWalking:
 
         end_transform = Transformation([0.1, 0, 0], [0, 0, 0, 1])
         new_end_transform = adjust_navigation_transform(start_transform, end_transform)
-        assert new_end_transform.get_position()[0] > 0.1
+        assert new_end_transform.position[0] > 0.1
 
         start_transform = Transformation([0.0, 0, 0], [0, 0, 0, 1])
 
-        end_transform = Transformation([0.0, 0, 0], Transformation.get_quaternion_from_euler([0.5, 0, 0]))
+        end_transform = Transformation([0.0, 0, 0], euler=[0.5, 0, 0])
         new_end_transform = adjust_navigation_transform(start_transform, end_transform)
-        assert new_end_transform.get_orientation_euler()[0] > 0.5
+        assert new_end_transform.orientation_euler[0] > 0.5
 
-        end_transform = Transformation([0.0, 0, 0], Transformation.get_quaternion_from_euler([-0.5, 0, 0]))
+        end_transform = Transformation([0.0, 0, 0], euler=[-0.5, 0, 0])
         new_end_transform = adjust_navigation_transform(start_transform, end_transform)
-        assert new_end_transform.get_orientation_euler()[0] < -0.5
+        assert new_end_transform.orientation_euler[0] < -0.5
 
-        end_transform = Transformation([0.0, 0, 0], Transformation.get_quaternion_from_euler([1.5, 0, 0]))
+        end_transform = Transformation([0.0, 0, 0], euler=[1.5, 0, 0])
         new_end_transform = adjust_navigation_transform(start_transform, end_transform)
-        assert new_end_transform.get_orientation_euler()[0] > 1.5
+        assert new_end_transform.orientation_euler[0] > 1.5
 
-        end_transform = Transformation([0.0, 0, 0], Transformation.get_quaternion_from_euler([-1.5, 0, 0]))
+        end_transform = Transformation([0.0, 0, 0], euler=[-1.5, 0, 0])
         new_end_transform = adjust_navigation_transform(start_transform, end_transform)
-        assert new_end_transform.get_orientation_euler()[0] < -1.5
+        assert new_end_transform.orientation_euler[0] < -1.5
 
-        end_transform = Transformation([0.0, 0, 0], Transformation.get_quaternion_from_euler([3.0, 0, 0]))
+        end_transform = Transformation([0.0, 0, 0], euler=[3.0, 0, 0])
         new_end_transform = adjust_navigation_transform(start_transform, end_transform)
-        assert new_end_transform.get_orientation_euler()[0] == np.pi
+        assert new_end_transform.orientation_euler[0] == np.pi
 
-        end_transform = Transformation([1, 1, 0], Transformation.get_quaternion_from_euler([np.pi / 4, 0, 0]))
+        end_transform = Transformation([1, 1, 0], euler=[np.pi / 4, 0, 0])
         new_end_transform = adjust_navigation_transform(start_transform, end_transform)
-        assert new_end_transform.get_orientation_euler()[0] > np.pi / 4
-        assert np.linalg.norm(new_end_transform.get_position()[0:2]) > np.sqrt(2)
+        assert new_end_transform.orientation_euler[0] > np.pi / 4
+        assert np.linalg.norm(new_end_transform.position[0:2]) > np.sqrt(2)
 
-        end_transform = Transformation([1, 0, 0], Transformation.get_quaternion_from_euler([np.pi / 4, 0, 0]))
+        end_transform = Transformation([1, 0, 0], euler=[np.pi / 4, 0, 0])
         new_end_transform = adjust_navigation_transform(start_transform, end_transform)
-        assert new_end_transform.get_orientation_euler()[0] > np.pi / 4
-        assert np.linalg.norm(new_end_transform.get_position()[0:2]) > 1
+        assert new_end_transform.orientation_euler[0] > np.pi / 4
+        assert np.linalg.norm(new_end_transform.position[0:2]) > 1

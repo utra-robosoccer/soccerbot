@@ -57,17 +57,6 @@ class RobotControlled(Robot):
         self.status = Robot.Status.WALKING
         return True
 
-    def position_to_transformation(self, position):
-        transfrom_position = (position[0], position[1], 0.0)
-        q = Transformation.get_quaternion_from_euler([position[2], 0, 0])
-        return Transformation(transfrom_position, q)
-
-    def transformation_to_position(self, transform):
-        transform_position = transform.get_position()
-        transform_quaternion = transform.get_orientation()
-        transform_angle = Transformation.get_euler_from_quaternion(transform_quaternion)
-        return np.array([transform_position[0], transform_position[1], transform_angle[0]])
-
     def can_kick(self, ball, goal_position):
         if ball is None or ball.position is None:
             return False

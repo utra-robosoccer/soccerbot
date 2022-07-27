@@ -204,7 +204,7 @@ class RobotControlled3D(RobotControlled):
     def imu_callback(self, msg):
         angle_threshold = 1.2  # in radian
         t = Transformation([0, 0, 0], [msg.orientation.x, msg.orientation.y, msg.orientation.z, msg.orientation.w])
-        roll, pitch, yaw = t.get_orientation_euler()
+        roll, pitch, yaw = t.orientation_euler
         if self.status in [
             Robot.Status.DETERMINING_SIDE,
             Robot.Status.READY,

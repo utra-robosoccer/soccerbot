@@ -76,8 +76,8 @@ class SoccerbotRos(Soccerbot):
         t_adjusted = t * self.robot_odom_path.duration() / self.robot_path.duration()
         crotch_position = self.robot_odom_path.crotchPosition(t_adjusted) @ self.torso_offset
 
-        base_pose = crotch_position.get_position()
-        base_orientation = crotch_position.get_orientation()
+        base_pose = crotch_position.position
+        base_orientation = crotch_position.orientation
         self.odom_pose = tr(base_pose, base_orientation)
 
     def publishPath(self, robot_path=None):
@@ -90,8 +90,8 @@ class SoccerbotRos(Soccerbot):
             p.header.stamp = rospy.Time.now()
             for i in range(0, robot_path.bodyStepCount(), 1):
                 step = robot_path.getBodyStepPose(i)
-                position = step.get_position()
-                orientation = step.get_orientation()
+                position = step.position
+                orientation = step.orientation
                 pose = PoseStamped()
                 pose.header.seq = i
                 pose.header.frame_id = "world"
@@ -115,11 +115,11 @@ class SoccerbotRos(Soccerbot):
         o.header.stamp = rospy.Time.now()
         o.header.frame_id = os.environ["ROS_NAMESPACE"][1:] + "/odom"
         o.child_frame_id = os.environ["ROS_NAMESPACE"][1:] + "/base_link"
-        pose = self.odom_pose.get_position()
+        pose = self.odom_pose.position
         o.pose.pose.position.x = pose[0]
         o.pose.pose.position.y = pose[1]
         o.pose.pose.position.z = 0
-        orientation = self.odom_pose.get_orientation()
+        orientation = self.odom_pose.orientation
         o.pose.pose.orientation.x = orientation[0]
         o.pose.pose.orientation.y = orientation[1]
         o.pose.pose.orientation.z = orientation[2]
@@ -139,7 +139,7 @@ class SoccerbotRos(Soccerbot):
 
     def publishHeight(self):
         f = Float64()
-        f.data = self.pose.get_position()[2]
+        f.data = self.pose.position[2]
         self.torso_height_publisher.publish(f)
         pass
 
@@ -157,7 +157,7 @@ class SoccerbotRos(Soccerbot):
 
     def is_fallen(self) -> bool:
         pose = self.get_imu()
-        [roll, pitch, yaw] = pose.get_orientation_euler()
+        [roll, pitch, yaw] = pose.orientation_euler
         return not np.pi / 6 > pitch > -np.pi / 6
 
     def get_foot_pressure_sensors(self, floor):
@@ -237,7 +237,7 @@ class SoccerbotRos(Soccerbot):
                     self.look_at_last_ball_pose_timeout = rospy.Time.now() + rospy.Duration(2)
 
                 self.last_ball_pose = None
-                rospy.loginfo_throttle(1, f"Searching for ball last location {self.look_at_last_ball_pose.get_position()}")
+                rospy.loginfo_throttle(1, f"Searching for ball last location {self.look_at_last_ball_pose.position}")
 
                 try:
                     camera_position, camera_orientation = self.listener.lookupTransform(
@@ -246,13 +246,13 @@ class SoccerbotRos(Soccerbot):
                     euler_yaw_only = Transformation.get_euler_from_quaternion(camera_orientation)
                     euler_yaw_only[1] = 0
                     euler_yaw_only[2] = 0
-                    camera_pose = Transformation(camera_position, Transformation.get_quaternion_from_euler(euler_yaw_only))
+                    camera_pose = Transformation(camera_position, euler=euler_yaw_only)
                 except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
                     rospy.logerr_throttle(5, "Unable to get robot to camera pose")
                     return
 
                 camera_to_ball = scipy.linalg.inv(camera_pose) @ self.look_at_last_ball_pose
-                camera_to_ball_position = camera_to_ball.get_position()
+                camera_to_ball_position = camera_to_ball.position
                 yaw = math.atan2(camera_to_ball_position[1], camera_to_ball_position[0])
                 pitch = math.atan2(camera_to_ball_position[2], camera_to_ball_position[0])
 
@@ -266,7 +266,7 @@ class SoccerbotRos(Soccerbot):
 
                 rospy.loginfo_throttle(
                     1,
-                    f"Rotating head to last seen ball location {self.look_at_last_ball_pose.get_position()}. Camera Location {camera_pose.get_position()}, Camera To Ball {camera_to_ball_position}, Calculated Yaw {yaw}, Pitch {pitch}, Timeout {self.look_at_last_ball_pose_timeout}",
+                    f"Rotating head to last seen ball location {self.look_at_last_ball_pose.position}. Camera Location {camera_pose.position}, Camera To Ball {camera_to_ball_position}, Calculated Yaw {yaw}, Pitch {pitch}, Timeout {self.look_at_last_ball_pose_timeout}",
                 )
 
             else:
