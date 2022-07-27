@@ -105,11 +105,11 @@ class Camera:
         pixel_pose = Transformation((self.focal_length, tx, ty), (0, 0, 0, 1))
         camera_pose = self.pose
         pixel_world_pose = camera_pose @ pixel_pose
-        ratio = (self.pose.get_position()[2] - pixel_world_pose.get_position()[2]) / self.pose.get_position()[2]  # Fix divide by 0 problem
-        x_delta = (pixel_world_pose.get_position()[0] - self.pose.get_position()[0]) / ratio
-        y_delta = (pixel_world_pose.get_position()[1] - self.pose.get_position()[1]) / ratio
+        ratio = (self.pose.position[2] - pixel_world_pose.position[2]) / self.pose.position[2]  # Fix divide by 0 problem
+        x_delta = (pixel_world_pose.position[0] - self.pose.position[0]) / ratio
+        y_delta = (pixel_world_pose.position[1] - self.pose.position[1]) / ratio
 
-        return [x_delta + camera_pose.get_position()[0], y_delta + camera_pose.get_position()[1], 0]
+        return [x_delta + camera_pose.position[0], y_delta + camera_pose.position[1], 0]
 
     # From a 3d position on the field, get the camera coordinate
     def findCameraCoordinate(self, pos: [int]) -> [int]:
@@ -117,15 +117,15 @@ class Camera:
         camera_pose = self.pose
         pos3d_tr = np.linalg.inv(camera_pose) @ pos3d
 
-        return self.findCameraCoordinateFixedCamera(pos3d_tr.get_position())
+        return self.findCameraCoordinateFixedCamera(pos3d_tr.position)
 
     def findCameraCoordinateFixedCamera(self, pos: [int]) -> [int]:
         pos = Transformation(pos)
 
-        ratio = self.focal_length / pos.get_position()[0]
+        ratio = self.focal_length / pos.position[0]
 
-        tx = pos.get_position()[1] * ratio
-        ty = pos.get_position()[2] * ratio
+        tx = pos.position[1] * ratio
+        ty = pos.position[2] * ratio
         x, y = self.worldToImageFrame(tx, ty)
         return [x, y]
 
@@ -166,9 +166,9 @@ class Camera:
         camera_pose = self.pose
         pos3d_tr = np.linalg.inv(camera_pose) @ ball_position
 
-        x = pos3d_tr.get_position()[0]
-        y = -pos3d_tr.get_position()[1]
-        z = -pos3d_tr.get_position()[2]
+        x = pos3d_tr.position[0]
+        y = -pos3d_tr.position[1]
+        z = -pos3d_tr.position[2]
         r = ball_radius
 
         thetay = math.atan2(y, x)
@@ -262,7 +262,7 @@ class Camera:
         return tr_cam
 
     def calculateHorizonCoverArea(self) -> int:
-        pitch = self.pose.get_orientation_euler()[1]
+        pitch = self.pose.orientation_euler[1]
         d = math.sin(pitch) * self.focal_length
 
         (r, h) = self.worldToImageFrame(0, -d)

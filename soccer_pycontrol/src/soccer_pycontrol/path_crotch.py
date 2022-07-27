@@ -21,7 +21,7 @@ class PathCrotch(PathFoot):
         super().__init__(start_transform, end_transform, foot_center_to_floor)
 
         # Calculate the foot for the first step (based on destination)
-        axang_angle, axang_vector = tr.get_axis_angle_from_quaternion(self.start_transform.get_orientation())
+        axang_angle, axang_vector = tr.get_axis_angle_from_quaternion(self.start_transform.quaternion)
         theta1 = axang_angle
         diff_transform = np.matmul(end_transform, scipy.linalg.inv(start_transform))
         theta2 = np.arctan2(diff_transform[1, 3], diff_transform[0, 3])
@@ -86,8 +86,8 @@ class PathCrotch(PathFoot):
         ydiff = r * self.crotch_sidediff_sway * is_right_foot
         thetadiff = ydiff / self.crotch_sidediff_sway * np.array(self.crotch_thetadiff_sway)
 
-        H = tr.get_transform_from_euler(thetadiff)  # H = eul2tform(thetadiff)
-        H.set_position([-0.005, ydiff, zdiff])
+        H = tr(euler=thetadiff)  # H = eul2tform(thetadiff)
+        H.position = [-0.005, ydiff, zdiff]
 
         position = np.matmul(position, H)
 

@@ -5,6 +5,7 @@ import rospy
 from robot import Robot
 from robot_controlled import RobotControlled
 
+from soccer_common.transformation import Transformation
 from soccer_pycontrol import path
 
 
@@ -41,7 +42,7 @@ class RobotControlled2D(RobotControlled):
 
     def set_navigation_position(self, goal_position):
         super().set_navigation_position(goal_position)
-        self.path = path.Path(self.position_to_transformation(self.start_position), self.position_to_transformation(self.goal_position))
+        self.path = path.Path(Transformation(pos_theta=self.start_position), Transformation(pos_theta=self.goal_position))
 
     def get_opponent_net_position(self):
         if self.team == Robot.Team.FRIENDLY:

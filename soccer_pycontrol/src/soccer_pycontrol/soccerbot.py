@@ -85,8 +85,8 @@ class Soccerbot:
             + f"/catkin_ws/src/soccerbot/{rospy.get_param('~robot_model', 'bez1')}_description/urdf/{rospy.get_param('~robot_model', 'bez1')}.urdf",
             useFixedBase=useFixedBase,
             flags=pb.URDF_USE_INERTIA_FROM_FILE | (pb.URDF_MERGE_FIXED_LINKS if rospy.get_param("merge_fixed_links", False) else 0),
-            basePosition=[pose.get_position()[0], pose.get_position()[1], Soccerbot.torso_height],
-            baseOrientation=pose.get_orientation(),
+            basePosition=[pose.position[0], pose.position[1], Soccerbot.torso_height],
+            baseOrientation=pose.quaternion,
         )
         self.pybullet_offset = pb.getBasePositionAndOrientation(self.body)[0][:2] + (0,)  # pb.getLinkState(self.body, Links.TORSO)[4:6]
         self.motor_names = [pb.getJointInfo(self.body, i)[1].decode("utf-8") for i in range(18)]
@@ -114,7 +114,7 @@ class Soccerbot:
         self.right_hip_to_left_hip = self.get_link_transformation(Links.LEFT_LEG_1, Links.RIGHT_LEG_1)
         self.hip_to_torso = self.get_link_transformation(Links.RIGHT_LEG_1, Links.TORSO)
 
-        pitch_correction = tr([0, 0, 0], tr.get_quaternion_from_euler([0, rospy.get_param("torso_offset_pitch_ready", 0.0), 0]))
+        pitch_correction = tr([0, 0, 0], euler=[0, rospy.get_param("torso_offset_pitch_ready", 0.0), 0])
 
         self.right_foot_init_position = self.get_link_transformation(Links.TORSO, Links.RIGHT_LEG_6)
         self.right_foot_init_position[2, 3] = -(self.hip_to_torso[2, 3] + self.walking_hip_height) + self.foot_center_to_floor
@@ -128,7 +128,7 @@ class Soccerbot:
 
         self.setPose(pose)
 
-        pitch_correction = tr([0, 0, 0], tr.get_quaternion_from_euler([0, rospy.get_param("torso_offset_pitch", 0.0), 0]))
+        pitch_correction = tr([0, 0, 0], euler=[0, rospy.get_param("torso_offset_pitch", 0.0), 0])
         self.torso_offset = tr([rospy.get_param("torso_offset_x", 0), 0, 0]) @ pitch_correction
         self.robot_path: PathRobot = None
         self.robot_odom_path: PathRobot = None
@@ -191,9 +191,9 @@ class Soccerbot:
         :return: None
         """
         # Used later to calculate inverse kinematics
-        position = self.pose.get_position()
+        position = self.pose.position
         position[2] = self.hip_to_torso[2, 3] + self.walking_hip_height
-        self.pose.set_position(position)
+        self.pose.position = position
 
         # hands
         configuration = [0.0] * len(Joints)
@@ -302,15 +302,15 @@ class Soccerbot:
         beta = np.arctan2(-d3 * np.cos(tmp3), d4 + (d3 * np.sin(tmp3)))
         theta5 = np.pi / 2 - (alp - beta)
 
-        H34 = tr.get_transform_from_dh(self.DH[3, 0], self.DH[3, 1], self.DH[3, 2], theta4)
-        H45 = tr.get_transform_from_dh(self.DH[4, 0], self.DH[4, 1], self.DH[4, 2], theta5)
-        H56 = tr.get_transform_from_dh(self.DH[5, 0], self.DH[5, 1], self.DH[5, 2], theta6)
+        H34 = tr(dh=[self.DH[3, 0], self.DH[3, 1], self.DH[3, 2], theta4])
+        H45 = tr(dh=[self.DH[4, 0], self.DH[4, 1], self.DH[4, 2], theta5])
+        H56 = tr(dh=[self.DH[5, 0], self.DH[5, 1], self.DH[5, 2], theta6])
         H36 = np.matmul(H34, np.matmul(H45, H56))
-        final_rotation = tr.get_transform_from_euler([0, np.pi / 2, np.pi])
+        final_rotation = tr(euler=[0, np.pi / 2, np.pi])
         H03 = np.matmul(np.matmul(transformation, final_rotation), scipy.linalg.inv(H36))
         assert np.linalg.norm(H03[0:3, 3]) - d3 < 0.03
 
-        angles = tr.get_euler_from_rotation_matrix(scipy.linalg.inv(H03[0:3, 0:3]), orientation="ZYX")
+        angles = tr(rotation_matrix=scipy.linalg.inv(H03[0:3, 0:3])).orientation_euler
         theta3 = np.pi / 2 - angles[0]
         theta1 = -angles[1]
         theta2 = angles[2] + np.pi / 2
@@ -329,23 +329,22 @@ class Soccerbot:
 
     def setPose(self, pose: tr):
         if hasattr(self, "pose"):
-            last_hip_height = self.pose.get_position()[2]
+            last_hip_height = self.pose.position[2]
         else:
             self.pose = pose
             last_hip_height = Soccerbot.torso_height
-        self.pose.set_position([pose.get_position()[0], pose.get_position()[1], last_hip_height])
+        self.pose.position = [pose.position[0], pose.position[1], last_hip_height]
 
         # Remove the roll and yaw from the pose
-        [r, p, y] = pose.get_orientation_euler()
-        q_new = tr.get_quaternion_from_euler([r, 0, 0])
-        self.pose.set_orientation(q_new)
+        [r, p, y] = pose.orientation_euler
+        self.pose.orientation_euler = [r, 0, 0]
         if pb.isConnected():
-            pb.resetBasePositionAndOrientation(self.body, self.pose.get_position(), self.pose.get_orientation())
+            pb.resetBasePositionAndOrientation(self.body, self.pose.position, self.pose.quaternion)
 
     def addTorsoHeight(self, position: tr):
-        positionCoordinate = position.get_position()
+        positionCoordinate = position.position
         positionCoordinate[2] = self.hip_to_torso[2, 3] + self.walking_hip_height
-        position.set_position(positionCoordinate)
+        position.position = positionCoordinate
 
     def createPathToGoal(self, finishPosition: tr):
         """
@@ -356,9 +355,8 @@ class Soccerbot:
         self.addTorsoHeight(finishPosition)
 
         # Remove the roll and yaw from the designated position
-        [r, p, y] = finishPosition.get_orientation_euler()
-        q_new = tr.get_quaternion_from_euler([r, 0, 0])
-        finishPosition.set_orientation(q_new)
+        [r, p, y] = finishPosition.orientation_euler
+        finishPosition.orientation_euler = [r, 0, 0]
 
         # Add calibration
         if self.useCalibration:
@@ -367,8 +365,8 @@ class Soccerbot:
             finishPositionCalibrated = finishPosition
 
         print(
-            f"\033[92mEnd Pose Calibrated: Position (xyz) [{finishPositionCalibrated.get_position()[0]:.3f} {finishPositionCalibrated.get_position()[1]:.3f} {finishPositionCalibrated.get_position()[2]:.3f}], "
-            f"Orientation (xyzw) [{finishPositionCalibrated.get_orientation()[0]:.3f} {finishPositionCalibrated.get_orientation()[1]:.3f} {finishPositionCalibrated.get_orientation()[2]:.3f} {finishPositionCalibrated.get_orientation()[3]:.3f}]\033[0m"
+            f"\033[92mEnd Pose Calibrated: Position (xyz) [{finishPositionCalibrated.position[0]:.3f} {finishPositionCalibrated.position[1]:.3f} {finishPositionCalibrated.position[2]:.3f}], "
+            f"Orientation (xyzw) [{finishPositionCalibrated.quaternion[0]:.3f} {finishPositionCalibrated.quaternion[1]:.3f} {finishPositionCalibrated.quaternion[2]:.3f} {finishPositionCalibrated.quaternion[3]:.3f}]\033[0m"
         )
 
         self.robot_path = PathRobot(self.pose, finishPositionCalibrated, self.foot_center_to_floor)
@@ -526,8 +524,8 @@ class Soccerbot:
         left_pts = pb.getContactPoints(bodyA=self.body, bodyB=floor, linkIndexA=Links.LEFT_LEG_6)
         right_center = np.array(pb.getLinkState(self.body, linkIndex=Links.RIGHT_LEG_6)[4])
         left_center = np.array(pb.getLinkState(self.body, linkIndex=Links.LEFT_LEG_6)[4])
-        right_tr = tr.get_rotation_matrix_from_transformation(tr(quaternion=pb.getLinkState(self.body, linkIndex=Links.RIGHT_LEG_6)[5]))
-        left_tr = tr.get_rotation_matrix_from_transformation(tr(quaternion=pb.getLinkState(self.body, linkIndex=Links.LEFT_LEG_6)[5]))
+        right_tr = tr(quaternion=pb.getLinkState(self.body, linkIndex=Links.RIGHT_LEG_6)[5]).rotation_matrix
+        left_tr = tr(quaternion=pb.getLinkState(self.body, linkIndex=Links.LEFT_LEG_6)[5]).rotation_matrix
         for point in right_pts:
             index = np.signbit(np.matmul(right_tr, point[5] - right_center))[0:2]
             locations[index[1] + index[0] * 2] = True
@@ -548,7 +546,7 @@ class Soccerbot:
         if pose is None:
             return
 
-        [roll, pitch, yaw] = pose.get_orientation_euler()
+        [roll, pitch, yaw] = pose.orientation_euler
         F = self.walking_pid.update(pitch)
         self.configuration_offset[Joints.LEFT_ARM_1] = 5 * F
         self.configuration_offset[Joints.RIGHT_ARM_1] = 5 * F
@@ -565,7 +563,7 @@ class Soccerbot:
     def apply_imu_feedback_standing(self, pose: tr):
         if pose is None:
             return
-        [roll, pitch, yaw] = pose.get_orientation_euler()
+        [roll, pitch, yaw] = pose.orientation_euler
         F = self.standing_pid.update(pitch)
         self.configuration_offset[Joints.LEFT_LEG_5] = F
         self.configuration_offset[Joints.RIGHT_LEG_5] = F

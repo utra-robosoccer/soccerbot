@@ -119,8 +119,8 @@ class DetectorGoalPost(Detector):
 
                 camera_pose = self.camera.pose
 
-                distance = ((floor_center_x - camera_pose.get_position()[0]) ** 2 + (floor_center_y - camera_pose.get_position()[1]) ** 2) ** 0.5
-                theta = math.atan2(distance, camera_pose.get_position()[2])
+                distance = ((floor_center_x - camera_pose.position[0]) ** 2 + (floor_center_y - camera_pose.position[1]) ** 2) ** 0.5
+                theta = math.atan2(distance, camera_pose.position[2])
                 ratio = math.tan(theta) ** 2
                 ratio2 = 1 / (1 + ratio)
                 if 1 < ratio2 < 0:

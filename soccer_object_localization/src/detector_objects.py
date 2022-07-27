@@ -72,12 +72,12 @@ class DetectorBall(Detector):
 
                 rospy.loginfo_throttle(
                     5,
-                    f"Candidate Ball Position { candidate_ball_counter }: { ball_pose.get_position()[0] } { ball_pose.get_position()[1] }, detection_size { detection_size }",
+                    f"Candidate Ball Position { candidate_ball_counter }: { ball_pose.position[0] } { ball_pose.position[1] }, detection_size { detection_size }",
                 )
                 candidate_ball_counter = candidate_ball_counter + 1
 
                 # Exclude balls outside the field + extra space in the net
-                if abs(ball_pose.get_position()[0]) > 5.2 or abs(ball_pose.get_position()[1]) > 3.5:
+                if abs(ball_pose.position[0]) > 5.2 or abs(ball_pose.position[1]) > 3.5:
                     continue
 
                 # If it is the first ball, we need high confidence
@@ -88,12 +88,12 @@ class DetectorBall(Detector):
 
                 # Exclude balls that are too far from the previous location
                 if self.last_ball_pose is not None:
-                    if np.linalg.norm(ball_pose.get_position()[0:2]) < 0.1:  # In the start position
+                    if np.linalg.norm(ball_pose.position[0:2]) < 0.1:  # In the start position
                         pass
-                    elif np.linalg.norm(ball_pose.get_position()[0:2] - self.last_ball_pose.get_position()[0:2]) > 3:  # meters from previous position
+                    elif np.linalg.norm(ball_pose.position[0:2] - self.last_ball_pose.position[0:2]) > 3:  # meters from previous position
                         rospy.logwarn_throttle(
                             0.5,
-                            f"Detected a ball too far away ({ self.last_ball_pose_counter }), Last Location {self.last_ball_pose.get_position()[0:2]} Detected Location {ball_pose.get_position()[0:2] }",
+                            f"Detected a ball too far away ({ self.last_ball_pose_counter }), Last Location {self.last_ball_pose.position[0:2]} Detected Location {ball_pose.position[0:2] }",
                         )
                         self.last_ball_pose_counter = self.last_ball_pose_counter + 1
                         if self.last_ball_pose_counter > 5:  # Counter to prevent being stuck when the ball is in a different location
@@ -115,20 +115,15 @@ class DetectorBall(Detector):
         if final_camera_to_ball is not None:
             self.ball_pixel_publisher.publish(final_ball_pixel)
             self.br.sendTransform(
-                (final_camera_to_ball.get_position()[0], final_camera_to_ball.get_position()[1], final_camera_to_ball.get_position()[2]),
-                (
-                    final_camera_to_ball.get_orientation()[0],
-                    final_camera_to_ball.get_orientation()[1],
-                    final_camera_to_ball.get_orientation()[2],
-                    final_camera_to_ball.get_orientation()[3],
-                ),
+                final_camera_to_ball.position,
+                final_camera_to_ball.quaternion,
                 msg.header.stamp,
                 self.robot_name + "/ball",
                 self.robot_name + "/camera",
             )
             rospy.loginfo_throttle(
                 1,
-                f"\u001b[1m\u001b[34mBall detected [{self.last_ball_pose.get_position()[0]:.3f}, {self.last_ball_pose.get_position()[1]:.3f}] \u001b[0m",
+                f"\u001b[1m\u001b[34mBall detected [{self.last_ball_pose.position[0]:.3f}, {self.last_ball_pose.position[1]:.3f}] \u001b[0m",
             )
 
 

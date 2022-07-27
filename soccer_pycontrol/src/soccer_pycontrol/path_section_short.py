@@ -32,13 +32,13 @@ class PathSectionShort(PathSection):
                 self.angular_speed = self.steps_per_second_default * self.angular_bodystep_size
 
     def poseAtRatio(self, r):
-        diff_position = self.end_transform.get_position()[0:2] - self.start_transform.get_position()[0:2]
-        start_angle = self.start_transform.get_orientation_euler()[0]
+        diff_position = self.end_transform.position[0:2] - self.start_transform.position[0:2]
+        start_angle = self.start_transform.orientation_euler[0]
         intermediate_angle = np.arctan2(diff_position[1], diff_position[0])
         intermediate_angle = wrapToPi(intermediate_angle - start_angle) * self.scale_yaw + start_angle
         if self.isWalkingBackwards():
             intermediate_angle = wrapToPi(intermediate_angle + np.pi)
-        final_angle = self.end_transform.get_orientation_euler()[0]
+        final_angle = self.end_transform.orientation_euler[0]
 
         step_1_duration = abs(wrapToPi(intermediate_angle - start_angle)) / self.angular_speed
         step_2_duration = np.linalg.norm(diff_position) / self.speed
@@ -55,34 +55,34 @@ class PathSectionShort(PathSection):
             pose = deepcopy(self.start_transform)
             percentage = t / step_1_duration
             angle = start_angle + wrapToPi(intermediate_angle - start_angle) * percentage
-            pose.set_orientation(Transformation.get_quaternion_from_euler([angle, 0, 0]))
+            pose.orientation_euler = [angle, 0, 0]
             return pose
         elif step_1_duration < t <= step_1_duration + step_2_duration != 0:
             # Then go straight
             pose = deepcopy(self.start_transform)
             percentage = (t - step_1_duration) / step_2_duration
-            position = diff_position * percentage + self.start_transform.get_position()[0:2]
-            pose.set_position(np.concatenate((position, [pose.get_position()[2]])))
-            pose.set_orientation(Transformation.get_quaternion_from_euler([intermediate_angle, 0, 0]))
+            position = diff_position * percentage + self.start_transform.position[0:2]
+            pose.position = np.concatenate((position, [pose.position[2]]))
+            pose.orientation_euler = [intermediate_angle, 0, 0]
             return pose
         elif step_1_duration + step_2_duration < t <= step_1_duration + step_2_duration + step_3_duration != 0:
             # Then turn
             pose = deepcopy(self.end_transform)
             percentage = (t - step_1_duration - step_2_duration) / step_3_duration
             angle = intermediate_angle + wrapToPi(final_angle - intermediate_angle) * percentage
-            pose.set_orientation(Transformation.get_quaternion_from_euler([angle, 0, 0]))
+            pose.orientation_euler = [angle, 0, 0]
             return pose
         else:
             pose = deepcopy(self.end_transform)
             return pose
 
     def getRatioFromStep(self, step_num):
-        diff_position = self.end_transform.get_position()[0:2] - self.start_transform.get_position()[0:2]
-        start_angle = self.start_transform.get_orientation_euler()[0]
+        diff_position = self.end_transform.position[0:2] - self.start_transform.position[0:2]
+        start_angle = self.start_transform.orientation_euler[0]
         intermediate_angle = np.arctan2(diff_position[1], diff_position[0])
         if self.isWalkingBackwards():
             intermediate_angle = wrapToPi(intermediate_angle + np.pi)
-        final_angle = self.end_transform.get_orientation_euler()[0]
+        final_angle = self.end_transform.orientation_euler[0]
 
         step_1_angular_distance = abs(wrapToPi(intermediate_angle - start_angle))
         step_2_distance = np.linalg.norm(diff_position)
@@ -106,8 +106,8 @@ class PathSectionShort(PathSection):
         if hasattr(self.end_transform, "is_walking_backwards"):
             return self.end_transform.is_walking_backwards
 
-        diff_position = self.end_transform.get_position()[0:2] - self.start_transform.get_position()[0:2]
-        start_angle = self.start_transform.get_orientation_euler()[0]
+        diff_position = self.end_transform.position[0:2] - self.start_transform.position[0:2]
+        start_angle = self.start_transform.orientation_euler[0]
         intermediate_angle = np.arctan2(diff_position[1], diff_position[0])
         return abs(wrapToPi(intermediate_angle - start_angle)) > np.pi / 2
 
