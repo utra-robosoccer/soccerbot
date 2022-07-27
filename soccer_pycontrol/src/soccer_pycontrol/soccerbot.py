@@ -310,7 +310,7 @@ class Soccerbot:
         H03 = np.matmul(np.matmul(transformation, final_rotation), scipy.linalg.inv(H36))
         assert np.linalg.norm(H03[0:3, 3]) - d3 < 0.03
 
-        angles = tr(scipy.linalg.inv(H03[0:3, 0:3])).orientation_euler
+        angles = tr(rotation_matrix=scipy.linalg.inv(H03[0:3, 0:3])).orientation_euler
         theta3 = np.pi / 2 - angles[0]
         theta1 = -angles[1]
         theta2 = angles[2] + np.pi / 2

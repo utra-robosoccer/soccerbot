@@ -1,9 +1,8 @@
 import copy
 import os
 
-import rospy
 import tf
-from geometry_msgs.msg import Pose, PoseArray, PoseStamped, PoseWithCovarianceStamped
+from geometry_msgs.msg import Pose, PoseStamped, PoseWithCovarianceStamped
 from rospy import ROSInterruptException
 from std_msgs.msg import Bool, Empty
 
@@ -37,37 +36,9 @@ class SoccerbotControllerRos(SoccerbotController):
         except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException) as e:
             print(e)
             return False
-        self.robot_pose = PoseStamped()
-        self.robot_pose.pose.position.x = trans[0]
-        self.robot_pose.pose.position.y = trans[1]
 
-        self.robot_pose.pose.orientation.x = rot[0]
-        self.robot_pose.pose.orientation.y = rot[1]
-        self.robot_pose.pose.orientation.z = rot[2]
-        self.robot_pose.pose.orientation.w = rot[3]
-
+        self.robot_pose = Transformation(position=trans, quaternion=rot).pose_stamped
         return True
-
-    def pose_to_transformation(self, pose: Pose) -> Transformation:
-        t = Transformation(
-            [pose.position.x, pose.position.y, pose.position.z],
-            [pose.orientation.x, pose.orientation.y, pose.orientation.z, pose.orientation.w],
-        )
-        return t
-
-    def transformation_to_pose(self, trans: Transformation) -> PoseStamped:
-        t = PoseStamped()
-        t.header.stamp = rospy.Time.now()
-        t.header.frame_id = "world"
-        t.pose.position.x = trans.position[0]
-        t.pose.position.y = trans.position[1]
-        t.pose.position.z = trans.position[2]
-
-        t.pose.orientation.x = trans.quaternion[0]
-        t.pose.orientation.y = trans.quaternion[1]
-        t.pose.orientation.z = trans.quaternion[2]
-        t.pose.orientation.w = trans.quaternion[3]
-        return t
 
     def ready(self):
         pass
@@ -78,7 +49,7 @@ class SoccerbotControllerRos(SoccerbotController):
 
         resetPublisher = rospy.Publisher("/robot1/reset_robot", PoseStamped, queue_size=1, latch=True)
         initialPosePublisher = rospy.Publisher("initialpose", PoseWithCovarianceStamped, queue_size=1, latch=True)
-        pose_stamped = self.transformation_to_pose(pose)
+        pose_stamped = pose.pose_stamped
         resetPublisher.publish(pose_stamped)
         self.robot_pose = pose_stamped
 
@@ -102,7 +73,7 @@ class SoccerbotControllerRos(SoccerbotController):
         return Transformation(position=trans, quaternion=rot).pos_theta
 
     def setGoal(self, goal: Transformation):
-        self.goal_callback(self.transformation_to_pose(goal))
+        self.goal_callback(goal.pose_stamped)
 
     def wait(self, steps: int):
         for i in range(steps):
@@ -115,7 +86,7 @@ class SoccerbotControllerRos(SoccerbotController):
         if self.soccerbot.robot_path is not None:
             print("Updating New Goal")
             start = time.time()
-            goal_position = self.pose_to_transformation(pose.pose)
+            goal_position = Transformation(pose=pose.pose)
             self.soccerbot.addTorsoHeight(goal_position)
             self.new_path = copy.deepcopy(self.soccerbot.robot_path)
 
@@ -199,7 +170,7 @@ class SoccerbotControllerRos(SoccerbotController):
                 self.goal = self.new_goal
                 self.soccerbot.reset_imus()
                 self.soccerbot.ready()
-                self.soccerbot.setPose(self.pose_to_transformation(self.robot_pose.pose))
+                self.soccerbot.setPose(Transformation(pose=self.robot_pose.pose))
 
                 def print_pose(name: str, pose: Pose):
                     print(
@@ -208,7 +179,7 @@ class SoccerbotControllerRos(SoccerbotController):
 
                 print_pose("Start Pose", self.robot_pose.pose)
                 print_pose("End Pose", self.goal.pose)
-                self.soccerbot.createPathToGoal(self.pose_to_transformation(self.goal.pose))
+                self.soccerbot.createPathToGoal(Transformation(pose=self.goal.pose))
                 self.t = -0.5
 
                 # self.soccerbot.robot_path.show()

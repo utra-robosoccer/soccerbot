@@ -109,7 +109,7 @@ def publish_ground_truth_messages(c: Clock):
             if camera_node is not None:
                 camera_pos = camera_node.getPosition()
                 adj_matrix = Transformation(euler=[0, np.pi / 2, -np.pi / 2])
-                orient_matrix = Transformation(np.reshape(camera_node.getOrientation(), (3, 3)))
+                orient_matrix = Transformation(rotation_matrix=np.reshape(camera_node.getOrientation(), (3, 3)))
                 camera_quat = (orient_matrix @ adj_matrix).quaternion
                 transform_broadcaster.sendTransform(
                     (camera_pos[0], camera_pos[1], camera_pos[2]),

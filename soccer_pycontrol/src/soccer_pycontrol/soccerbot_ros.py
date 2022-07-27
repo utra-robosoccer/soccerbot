@@ -89,7 +89,7 @@ class SoccerbotRos(Soccerbot):
             for i in range(0, robot_path.bodyStepCount(), 1):
                 step = robot_path.getBodyStepPose(i)
                 position = step.position
-                orientation = step.orientation
+                orientation = step.quaternion
                 pose = PoseStamped()
                 pose.header.seq = i
                 pose.header.frame_id = "world"
@@ -113,15 +113,8 @@ class SoccerbotRos(Soccerbot):
         o.header.stamp = rospy.Time.now()
         o.header.frame_id = os.environ["ROS_NAMESPACE"][1:] + "/odom"
         o.child_frame_id = os.environ["ROS_NAMESPACE"][1:] + "/base_link"
-        pose = self.odom_pose.position
-        o.pose.pose.position.x = pose[0]
-        o.pose.pose.position.y = pose[1]
+        o.pose.pose = self.odom_pose.pose
         o.pose.pose.position.z = 0
-        orientation = self.odom_pose.orientation
-        o.pose.pose.orientation.x = orientation[0]
-        o.pose.pose.orientation.y = orientation[1]
-        o.pose.pose.orientation.z = orientation[2]
-        o.pose.pose.orientation.w = orientation[3]
 
         # fmt: off
         o.pose.covariance = [1E-2, 0, 0, 0, 0, 0,

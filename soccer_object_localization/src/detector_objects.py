@@ -115,13 +115,8 @@ class DetectorBall(Detector):
         if final_camera_to_ball is not None:
             self.ball_pixel_publisher.publish(final_ball_pixel)
             self.br.sendTransform(
-                (final_camera_to_ball.position[0], final_camera_to_ball.position[1], final_camera_to_ball.position[2]),
-                (
-                    final_camera_to_ball.orientation[0],
-                    final_camera_to_ball.orientation[1],
-                    final_camera_to_ball.orientation[2],
-                    final_camera_to_ball.orientation[3],
-                ),
+                final_camera_to_ball.position,
+                final_camera_to_ball.quaternion,
                 msg.header.stamp,
                 self.robot_name + "/ball",
                 self.robot_name + "/camera",

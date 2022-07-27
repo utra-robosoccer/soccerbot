@@ -1,4 +1,6 @@
 import numpy as np
+import rospy
+from geometry_msgs.msg import Pose, PoseStamped
 from scipy.spatial.transform import Rotation as R
 from scipy.spatial.transform import Slerp
 
@@ -12,6 +14,7 @@ class Transformation(np.ndarray):
         matrix=None,
         euler=None,
         pos_theta=None,
+        pose=None,
         dh=None,
         *args,
         **kwargs
@@ -24,7 +27,7 @@ class Transformation(np.ndarray):
         cls = np.eye(4).view(cls)
 
         if matrix is not None:
-            cls = matrix
+            cls.matrix = matrix
         elif rotation_matrix is not None:
             cls[0:3, 0:3] = rotation_matrix
             cls.position = position
@@ -50,14 +53,20 @@ class Transformation(np.ndarray):
             cls.position = position
         elif pos_theta is not None:
             cls.pos_theta = pos_theta
+        elif pose is not None:
+            cls.pose = pose
         else:
             cls.position = position
             cls.quaternion = quaternion
         return cls
 
     @property
-    def transform(self) -> np.ndarray:
+    def matrix(self) -> np.ndarray:
         return np.array(self)
+
+    @matrix.setter
+    def matrix(self, matrix: np.array):
+        self[0:4, 0:4] = matrix
 
     @property
     def position(self) -> np.ndarray:
@@ -107,6 +116,34 @@ class Transformation(np.ndarray):
     def pos_theta(self, pos_theta: [float]):
         self.position = (pos_theta[0], pos_theta[1], 0.0)
         self.orientation_euler = [pos_theta[2], 0, 0]
+
+    @property
+    def pose(self) -> Pose:
+        position = self.position
+        quaternion = self.quaternion
+
+        p = Pose()
+        p.position.x = position[0]
+        p.position.y = position[1]
+        p.position.z = position[2]
+        p.orientation.x = quaternion[0]
+        p.orientation.y = quaternion[1]
+        p.orientation.z = quaternion[2]
+        p.orientation.w = quaternion[3]
+        return p
+
+    @pose.setter
+    def pose(self, pose: Pose):
+        self.position = [pose.position.x, pose.position.y, pose.position.z]
+        self.quaternion = [pose.orientation.x, pose.orientation.y, pose.orientation.z, pose.orientation.w]
+
+    @property
+    def pose_stamped(self) -> PoseStamped:
+        t = PoseStamped()
+        t.header.stamp = rospy.Time.now()
+        t.header.frame_id = "world"
+        t.pose = self.pose
+        return t
 
     @staticmethod
     def distance(t1, t2) -> float:
@@ -169,7 +206,7 @@ class Transformation(np.ndarray):
         average = Transformation()
         delta_position = t_end.position - t_start.position
         average.position = t_start.position + (delta_position * ratio)
-        rots = R.from_quat([t_start.orientation, t_end.orientation])
+        rots = R.from_quat([t_start.quaternion, t_end.quaternion])
         s = Slerp([0, 1], rots)
         r_average = s([ratio])[0]
 
