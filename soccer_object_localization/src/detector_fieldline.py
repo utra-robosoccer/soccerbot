@@ -21,8 +21,6 @@ from std_msgs.msg import Bool, Header
 
 
 class DetectorFieldline(Detector):
-    CANNY_THRESHOLD_1 = 400
-    CANNY_THRESHOLD_2 = 1000
     HOUGH_RHO = 1
     HOUGH_THETA = np.pi / 180
     HOUGH_THRESHOLD = 50
@@ -45,7 +43,7 @@ class DetectorFieldline(Detector):
     def initial_pose_callback(self, initial_pose: PoseWithCovarianceStamped):
         self.publish_point_cloud = True
 
-    def image_callback(self, img: Image):
+    def image_callback(self, img: Image, debug=False):
 
         t_start = time.time()
 
@@ -66,32 +64,46 @@ class DetectorFieldline(Detector):
         rospy.loginfo_once("Started Publishing Fieldlines")
 
         image = CvBridge().imgmsg_to_cv2(img, desired_encoding="rgb8")
-        hsv = cv2.cvtColor(src=image, code=cv2.COLOR_BGR2HSV)
         h = self.camera.calculateHorizonCoverArea()
-        cv2.rectangle(image, [0, 0], [640, h], [0, 0, 0], cv2.FILLED)
+        image = image[h + 1 : -1, :, :]
 
-        # Field line detection
-        mask2 = cv2.inRange(hsv, (0, 0, 255 - 65), (255, 65, 255))
-        out = cv2.bitwise_and(image, image, mask=mask2)
+        hsv = cv2.cvtColor(src=image, code=cv2.COLOR_BGR2HSV)
 
-        kernel = np.ones((7, 7), np.uint8)
-        out = cv2.morphologyEx(out, cv2.MORPH_CLOSE, kernel)
+        if debug:
+            cv2.imshow("CVT Color", image)
+            cv2.waitKey(0)
 
-        cdst = cv2.cvtColor(out, cv2.COLOR_BGR2GRAY)
-        retval, dst = cv2.threshold(cdst, 127, 255, cv2.THRESH_BINARY)
+        # Grass Mask
+        grass_only = cv2.inRange(hsv, (35, 100, 0), (85, 255, 255))
+        grass_only = cv2.morphologyEx(grass_only, cv2.MORPH_OPEN, np.ones((3, 3), np.uint8))
 
-        edges = cv2.Canny(dst, 50, 150)
+        if debug:
+            cv2.imshow("Grass Only", grass_only)
+            cv2.waitKey(0)
+
+        grass_only = cv2.morphologyEx(grass_only, cv2.MORPH_CLOSE, np.ones((30, 30), np.uint8))
+
+        if debug:
+            cv2.imshow("Grass Only", grass_only)
+            cv2.waitKey(0)
+
+        new_image = cv2.bitwise_and(hsv, hsv, mask=grass_only)
+        lines_in_field = cv2.inRange(new_image, (0, 0, 110), (255, 100, 255))
+        lines_in_field = cv2.morphologyEx(lines_in_field, cv2.MORPH_CLOSE, np.ones((3, 3), np.uint8))
+        lines_in_field = cv2.morphologyEx(lines_in_field, cv2.MORPH_GRADIENT, np.ones((2, 2), np.uint8))
+
+        if debug:
+            cv2.imshow("Lines in field", lines_in_field)
+            cv2.waitKey(0)
 
         lines = cv2.HoughLinesP(
-            edges,
-            rho=DetectorFieldline.HOUGH_RHO,
-            theta=DetectorFieldline.HOUGH_THETA,
-            threshold=DetectorFieldline.HOUGH_THRESHOLD,
-            minLineLength=DetectorFieldline.HOUGH_MIN_LINE_LENGTH,
-            maxLineGap=DetectorFieldline.HOUGH_MAX_LINE_GAP,
+            lines_in_field,
+            rho=1,
+            theta=np.pi / 180,
+            threshold=50,
+            minLineLength=70,
+            maxLineGap=30,
         )
-
-        ccdst = cv2.cvtColor(cdst, cv2.COLOR_GRAY2RGB)
 
         if lines is None:
             # Need to publish an empty point cloud to start the robot
@@ -115,11 +127,11 @@ class DetectorFieldline(Detector):
             pt1 = (x1, y1)
             pt2 = (x2, y2)
             if abs(angle) < 10:  # Horizontal
-                cv2.line(ccdst, pt1, pt2, (255, 0, 0), thickness=3, lineType=cv2.LINE_AA)
+                cv2.line(image, pt1, pt2, (255, 0, 0), thickness=1, lineType=cv2.LINE_AA)
             elif abs(abs(angle) - 90) < 10:  # Vertical
-                cv2.line(ccdst, pt1, pt2, (0, 255, 0), thickness=3, lineType=cv2.LINE_AA)
+                cv2.line(image, pt1, pt2, (0, 255, 0), thickness=1, lineType=cv2.LINE_AA)
             else:
-                cv2.line(ccdst, pt1, pt2, (0, 0, 255), thickness=3, lineType=cv2.LINE_AA)
+                cv2.line(image, pt1, pt2, (0, 0, 255), thickness=1, lineType=cv2.LINE_AA)
 
             if (pt2[0] - pt1[0]) == 0:
                 continue
@@ -131,8 +143,12 @@ class DetectorFieldline(Detector):
                 pt = [i, y]
                 pts.append(pt)
 
+        if debug:
+            cv2.imshow("Final Lines", image)
+            cv2.waitKey(0)
+
         if self.image_publisher.get_num_connections() > 0:
-            img_out = CvBridge().cv2_to_imgmsg(ccdst)
+            img_out = CvBridge().cv2_to_imgmsg(image)
             img_out.header = img.header
             self.image_publisher.publish(img_out)
 

@@ -207,7 +207,7 @@ class IntegrationTestPlaying(IntegrationTest):
     # Run this to generate many ball and robot locations and test that the localization are correct
     # 1. Run roslaunch soccerbot soccerbot_multi.launch competition:=false fake_localization:=true
     # If complaining missing opencv make sure LD_LIBRARY_PATH env is set
-    def test_annotate_ball(self, num_samples=100):
+    def test_annotate_ball(self, num_samples=100, create_localization_labels=True):
         import math
         import os
         import random
@@ -223,11 +223,13 @@ class IntegrationTestPlaying(IntegrationTest):
 
         from soccer_common.transformation import Transformation
 
-        if not os.path.exists("images"):
-            os.makedirs("images")
+        if not os.path.exists("soccer_object_localization/images"):
+            os.makedirs("soccer_object_localization/images")
 
         j = 0
-        for file in [f for f in os.listdir("images") if os.path.isfile(os.path.join("images", f))]:
+        for file in [
+            f for f in os.listdir("soccer_object_localization/images") if os.path.isfile(os.path.join("soccer_object_localization/images", f))
+        ]:
             if "border" in file:
                 continue
             num = int(file.split("_")[0].replace("img", ""))
@@ -270,7 +272,7 @@ class IntegrationTestPlaying(IntegrationTest):
             print(robot_position, robot_theta)
             self.set_robot_pose(robot_position[0], robot_position[1], robot_theta)
             self.set_ball_pose(ball_position[0], ball_position[1])
-            time.sleep(0.3)
+            time.sleep(0.5)
             # Calculate the frame in the camera
             image_msg = rospy.wait_for_message("/robot1/camera/image_raw", Image)
 
@@ -303,13 +305,19 @@ class IntegrationTestPlaying(IntegrationTest):
             # if key != 32:
             #     continue
 
-            filePath = f"images/img{j}_{pt1[0]}_{pt1[1]}_{pt2[0]}_{pt2[1]}.png"
-            if os.path.exists(filePath):
-                os.remove(filePath)
-            cv2.imwrite(filePath, image)
-            filePath2 = f"images/imgborder{j}_{pt1[0]}_{pt1[1]}_{pt2[0]}_{pt2[1]}.png"
-            if os.path.exists(filePath2):
-                os.remove(filePath2)
-            cv2.imwrite(filePath2, image_rect)
+            if create_localization_labels:
+                filePath = f"soccer_object_localization/images/img{j}_{robot_x}_{robot_y}_{robot_theta}.png"
+                if os.path.exists(filePath):
+                    os.remove(filePath)
+                cv2.imwrite(filePath, image)
+            else:
+                filePath = f"soccer_object_localization/images/img{j}_{pt1[0]}_{pt1[1]}_{pt2[0]}_{pt2[1]}.png"
+                if os.path.exists(filePath):
+                    os.remove(filePath)
+                cv2.imwrite(filePath, image)
+                filePath2 = f"images/imgborder{j}_{pt1[0]}_{pt1[1]}_{pt2[0]}_{pt2[1]}.png"
+                if os.path.exists(filePath2):
+                    os.remove(filePath2)
+                cv2.imwrite(filePath2, image_rect)
 
             j = j + 1
