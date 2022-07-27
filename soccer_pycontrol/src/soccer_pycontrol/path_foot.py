@@ -154,7 +154,7 @@ class PathFoot(Path):
     def right_foot_position_at_step(self, n):
         bodystep = self.getBodyStepPose(n)
 
-        bodypos = bodystep.get_position()
+        bodypos = bodystep.position
         transformToLeftFoot = tr([0, -self.foot_separation, -bodypos[2] + self.foot_center_to_floor])
         return np.matmul(bodystep, transformToLeftFoot)
 
@@ -162,7 +162,7 @@ class PathFoot(Path):
     def left_foot_position_at_step(self, n):
         bodystep = self.getBodyStepPose(n)
 
-        bodypos = bodystep.get_position()
+        bodypos = bodystep.position
         transformToRightFoot = tr([0, self.foot_separation, -bodypos[2] + self.foot_center_to_floor])
         return np.matmul(bodystep, transformToRightFoot)
 
@@ -238,14 +238,14 @@ class PathFoot(Path):
         """
 
         step_time = self.bodyStepTime()
-        distance_between_step = tr.get_distance(startTransform, endTransform)
+        distance_between_step = tr.distance(startTransform, endTransform)
         if distance_between_step == 0.0:
             delta = 0.001
-            angle = startTransform.get_orientation_euler()[2]
+            angle = startTransform.orientation_euler[2]
             delta_tr = [np.cos(angle) * delta, np.sin(angle) * delta, 0]
             endTransform = deepcopy(endTransform)
-            endTransform.set_position(endTransform.get_position() + delta_tr)
-            distance_between_step = tr.get_distance(startTransform, endTransform)
+            endTransform.position = endTransform.position + delta_tr
+            distance_between_step = tr.distance(startTransform, endTransform)
 
         assert distance_between_step != 0.0
         height_per_step = np.linalg.norm([zdiff, sidediff])

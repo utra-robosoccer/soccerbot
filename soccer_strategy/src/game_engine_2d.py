@@ -12,6 +12,7 @@ from strategy.strategy_dummy import StrategyDummy
 from strategy.strategy_stationary import StrategyStationary
 from team import Team
 
+from soccer_common import Transformation
 from soccer_msgs.msg import GameState
 
 
@@ -163,11 +164,11 @@ class GameEngine2D:
             robot.observe_ball(ball)
             if robot.status == Robot.Status.WALKING:
                 robot.path_time = robot.path_time + GameEngine2D.PHYSICS_UPDATE_INTERVAL
-                update_position_transformation = robot.path.estimatedPositionAtTime(robot.path_time)
-                update_position = robot.transformation_to_position(update_position_transformation)
+                update_position_transformation: Transformation = robot.path.estimatedPositionAtTime(robot.path_time)
+                update_position = update_position_transformation.pos_theta
                 if robot.path.isFinished(robot.path_time):
                     robot.status = Robot.Status.READY
-                    robot.position = robot.path.end_transform.to_pos_theta()
+                    robot.position = robot.path.end_transform.pos_theta
                     robot.path_time = 0
                     continue
 
