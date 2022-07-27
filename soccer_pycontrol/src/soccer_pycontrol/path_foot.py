@@ -238,14 +238,14 @@ class PathFoot(Path):
         """
 
         step_time = self.bodyStepTime()
-        distance_between_step = tr.get_distance(startTransform, endTransform)
+        distance_between_step = tr.distance(startTransform, endTransform)
         if distance_between_step == 0.0:
             delta = 0.001
             angle = startTransform.orientation_euler[2]
             delta_tr = [np.cos(angle) * delta, np.sin(angle) * delta, 0]
             endTransform = deepcopy(endTransform)
             endTransform.position = endTransform.position + delta_tr
-            distance_between_step = tr.get_distance(startTransform, endTransform)
+            distance_between_step = tr.distance(startTransform, endTransform)
 
         assert distance_between_step != 0.0
         height_per_step = np.linalg.norm([zdiff, sidediff])

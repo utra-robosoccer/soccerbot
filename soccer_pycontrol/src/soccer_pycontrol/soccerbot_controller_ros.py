@@ -63,10 +63,10 @@ class SoccerbotControllerRos(SoccerbotController):
         t.pose.position.y = trans.position[1]
         t.pose.position.z = trans.position[2]
 
-        t.pose.orientation.x = trans.orientation[0]
-        t.pose.orientation.y = trans.orientation[1]
-        t.pose.orientation.z = trans.orientation[2]
-        t.pose.orientation.w = trans.orientation[3]
+        t.pose.orientation.x = trans.quaternion[0]
+        t.pose.orientation.y = trans.quaternion[1]
+        t.pose.orientation.z = trans.quaternion[2]
+        t.pose.orientation.w = trans.quaternion[3]
         return t
 
     def ready(self):
@@ -99,7 +99,7 @@ class SoccerbotControllerRos(SoccerbotController):
             print(e)
             return False
 
-        return Transformation(position=trans, orientation=rot).pos_theta
+        return Transformation(position=trans, quaternion=rot).pos_theta
 
     def setGoal(self, goal: Transformation):
         self.goal_callback(self.transformation_to_pose(goal))

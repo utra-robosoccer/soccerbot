@@ -110,7 +110,7 @@ def publish_ground_truth_messages(c: Clock):
                 camera_pos = camera_node.getPosition()
                 adj_matrix = Transformation(euler=[0, np.pi / 2, -np.pi / 2])
                 orient_matrix = Transformation(np.reshape(camera_node.getOrientation(), (3, 3)))
-                camera_quat = (orient_matrix @ adj_matrix).orientation
+                camera_quat = (orient_matrix @ adj_matrix).quaternion
                 transform_broadcaster.sendTransform(
                     (camera_pos[0], camera_pos[1], camera_pos[2]),
                     (camera_quat[0], camera_quat[1], camera_quat[2], camera_quat[3]),

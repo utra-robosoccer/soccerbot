@@ -76,9 +76,7 @@ class SoccerbotRos(Soccerbot):
         t_adjusted = t * self.robot_odom_path.duration() / self.robot_path.duration()
         crotch_position = self.robot_odom_path.crotchPosition(t_adjusted) @ self.torso_offset
 
-        base_pose = crotch_position.position
-        base_orientation = crotch_position.orientation
-        self.odom_pose = tr(base_pose, base_orientation)
+        self.odom_pose = tr(position=crotch_position.position, quaternion=crotch_position.quaternion)
 
     def publishPath(self, robot_path=None):
         if robot_path is None:

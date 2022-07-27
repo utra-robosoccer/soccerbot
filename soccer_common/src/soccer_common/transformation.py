@@ -7,7 +7,7 @@ class Transformation(np.ndarray):
     def __new__(
         cls,
         position=(0.0, 0.0, 0.0),
-        orientation=(0.0, 0.0, 0.0, 1.0),
+        quaternion=(0.0, 0.0, 0.0, 1.0),
         rotation_matrix=None,
         matrix=None,
         euler=None,
@@ -19,7 +19,7 @@ class Transformation(np.ndarray):
         """
         Constructor for the H-transform object, inherits from numpy array
         :param position: translation component of the transform, defaults to zero
-        :param orientation: rotational component of the transform in quaternion of form [x y z w], defaults to no rotation
+        :param quaternion: rotational component of the transform in quaternion of form [x y z w], defaults to no rotation
         """
         cls = np.eye(4).view(cls)
 
@@ -52,7 +52,7 @@ class Transformation(np.ndarray):
             cls.pos_theta = pos_theta
         else:
             cls.position = position
-            cls.orientation = orientation
+            cls.quaternion = quaternion
         return cls
 
     @property
@@ -69,13 +69,13 @@ class Transformation(np.ndarray):
         self[0:3, 3] = position
 
     @property
-    def orientation(self) -> np.ndarray:
+    def quaternion(self) -> np.ndarray:
         # Quaternion in form [x y z w]
         r = R.from_matrix(self[0:3, 0:3])
         return r.as_quat()
 
-    @orientation.setter
-    def orientation(self, quat: [float]):
+    @quaternion.setter
+    def quaternion(self, quat: [float]):
         r = R.from_quat(quat)
         self[0:3, 0:3] = np.reshape(r.as_matrix(), [3, 3])
 
@@ -88,7 +88,7 @@ class Transformation(np.ndarray):
     @orientation_euler.setter
     def orientation_euler(self, euler_array, sequence="ZYX"):
         r = R.from_euler(seq=sequence, angles=euler_array, degrees=False)
-        self.orientation = r.as_quat()
+        self.quaternion = r.as_quat()
 
     @property
     def rotation_matrix(self) -> np.array:
@@ -173,6 +173,6 @@ class Transformation(np.ndarray):
         s = Slerp([0, 1], rots)
         r_average = s([ratio])[0]
 
-        average.orientation = r_average.as_quat()
+        average.quaternion = r_average.as_quat()
 
         return average

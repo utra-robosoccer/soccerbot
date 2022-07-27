@@ -86,7 +86,7 @@ class Soccerbot:
             useFixedBase=useFixedBase,
             flags=pb.URDF_USE_INERTIA_FROM_FILE | (pb.URDF_MERGE_FIXED_LINKS if rospy.get_param("merge_fixed_links", False) else 0),
             basePosition=[pose.position[0], pose.position[1], Soccerbot.torso_height],
-            baseOrientation=pose.orientation,
+            baseOrientation=pose.quaternion,
         )
         self.pybullet_offset = pb.getBasePositionAndOrientation(self.body)[0][:2] + (0,)  # pb.getLinkState(self.body, Links.TORSO)[4:6]
         self.motor_names = [pb.getJointInfo(self.body, i)[1].decode("utf-8") for i in range(18)]
@@ -339,7 +339,7 @@ class Soccerbot:
         [r, p, y] = pose.orientation_euler
         self.pose.orientation_euler = [r, 0, 0]
         if pb.isConnected():
-            pb.resetBasePositionAndOrientation(self.body, self.pose.position, self.pose.orientation)
+            pb.resetBasePositionAndOrientation(self.body, self.pose.position, self.pose.quaternion)
 
     def addTorsoHeight(self, position: tr):
         positionCoordinate = position.position
@@ -366,7 +366,7 @@ class Soccerbot:
 
         print(
             f"\033[92mEnd Pose Calibrated: Position (xyz) [{finishPositionCalibrated.position[0]:.3f} {finishPositionCalibrated.position[1]:.3f} {finishPositionCalibrated.position[2]:.3f}], "
-            f"Orientation (xyzw) [{finishPositionCalibrated.orientation[0]:.3f} {finishPositionCalibrated.orientation[1]:.3f} {finishPositionCalibrated.orientation[2]:.3f} {finishPositionCalibrated.orientation[3]:.3f}]\033[0m"
+            f"Orientation (xyzw) [{finishPositionCalibrated.quaternion[0]:.3f} {finishPositionCalibrated.quaternion[1]:.3f} {finishPositionCalibrated.quaternion[2]:.3f} {finishPositionCalibrated.quaternion[3]:.3f}]\033[0m"
         )
 
         self.robot_path = PathRobot(self.pose, finishPositionCalibrated, self.foot_center_to_floor)

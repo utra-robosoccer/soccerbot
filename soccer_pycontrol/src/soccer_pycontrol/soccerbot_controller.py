@@ -40,7 +40,7 @@ class SoccerbotController:
 
     def getPose(self):
         pos_orientation = pb.getBasePositionAndOrientation(self.soccerbot.body)
-        return Transformation(position=pos_orientation[0], orientation=pos_orientation[1]).pos_theta
+        return Transformation(position=pos_orientation[0], quaternion=pos_orientation[1]).pos_theta
 
     def setGoal(self, goal: Transformation):
         self.soccerbot.createPathToGoal(goal)
