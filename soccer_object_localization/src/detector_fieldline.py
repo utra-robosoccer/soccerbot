@@ -65,12 +65,12 @@ class DetectorFieldline(Detector):
 
         image = CvBridge().imgmsg_to_cv2(img, desired_encoding="rgb8")
         h = self.camera.calculateHorizonCoverArea()
-        image = image[h + 1 : -1, :, :]
+        image_crop = image[h + 1 : -1, :, :]
 
-        hsv = cv2.cvtColor(src=image, code=cv2.COLOR_BGR2HSV)
+        hsv = cv2.cvtColor(src=image_crop, code=cv2.COLOR_BGR2HSV)
 
         if debug:
-            cv2.imshow("CVT Color", image)
+            cv2.imshow("CVT Color", image_crop)
             cv2.waitKey(0)
 
         # Grass Mask
@@ -91,6 +91,8 @@ class DetectorFieldline(Detector):
         lines_in_field = cv2.inRange(new_image, (0, 0, 110), (255, 100, 255))
         lines_in_field = cv2.morphologyEx(lines_in_field, cv2.MORPH_CLOSE, np.ones((3, 3), np.uint8))
         lines_in_field = cv2.morphologyEx(lines_in_field, cv2.MORPH_GRADIENT, np.ones((2, 2), np.uint8))
+
+        lines_in_field = cv2.vconcat([np.zeros((h + 2, lines_in_field.shape[1]), dtype=lines_in_field.dtype), lines_in_field])
 
         if debug:
             cv2.imshow("Lines in field", lines_in_field)
