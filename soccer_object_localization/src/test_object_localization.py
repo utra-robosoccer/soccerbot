@@ -17,7 +17,7 @@ from soccer_common.transformation import Transformation
 from soccer_msgs.msg import RobotState
 
 
-class Test(TestCase):
+class TestObjectLocalization(TestCase):
     @unittest.mock.patch("soccer_common.camera.TransformListener")
     @unittest.mock.patch("soccer_common.camera.rospy.Time.now")
     def test_camera_find_floor_coordinate(self, mock_tf_listener, now):
