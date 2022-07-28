@@ -21,8 +21,6 @@ from std_msgs.msg import Bool, Header
 
 
 class DetectorFieldline(Detector):
-    CANNY_THRESHOLD_1 = 400
-    CANNY_THRESHOLD_2 = 1000
     HOUGH_RHO = 1
     HOUGH_THETA = np.pi / 180
     HOUGH_THRESHOLD = 50
@@ -45,7 +43,7 @@ class DetectorFieldline(Detector):
     def initial_pose_callback(self, initial_pose: PoseWithCovarianceStamped):
         self.publish_point_cloud = True
 
-    def image_callback(self, img: Image):
+    def image_callback(self, img: Image, debug=False):
 
         t_start = time.time()
 
@@ -66,81 +64,67 @@ class DetectorFieldline(Detector):
         rospy.loginfo_once("Started Publishing Fieldlines")
 
         image = CvBridge().imgmsg_to_cv2(img, desired_encoding="rgb8")
-        hsv = cv2.cvtColor(src=image, code=cv2.COLOR_BGR2HSV)
         h = self.camera.calculateHorizonCoverArea()
-        cv2.rectangle(image, [0, 0], [640, h], [0, 0, 0], cv2.FILLED)
+        image_crop = image[h + 1 : -1, :, :]
 
-        # Field line detection
-        mask2 = cv2.inRange(hsv, (0, 0, 255 - 65), (255, 65, 255))
-        out = cv2.bitwise_and(image, image, mask=mask2)
+        hsv = cv2.cvtColor(src=image_crop, code=cv2.COLOR_BGR2HSV)
 
-        kernel = np.ones((7, 7), np.uint8)
-        out = cv2.morphologyEx(out, cv2.MORPH_CLOSE, kernel)
+        if debug:
+            cv2.imshow("CVT Color", image_crop)
+            cv2.waitKey(0)
 
-        cdst = cv2.cvtColor(out, cv2.COLOR_BGR2GRAY)
-        retval, dst = cv2.threshold(cdst, 127, 255, cv2.THRESH_BINARY)
+        def circular_mask(radius: int):
+            mask = np.ones((radius, radius), np.uint8)
+            for i in range(mask.shape[0]):
+                for j in range(mask.shape[1]):
+                    if np.sqrt((i - radius / 2) ** 2 + (j - radius / 2) ** 2) > radius / 2:
+                        mask[i, j] = 0
+            return mask
 
-        edges = cv2.Canny(dst, 50, 150)
+        # Grass Mask
+        # Hue > 115 needed
+        grass_only = cv2.inRange(hsv, (35, 85, 0), (115, 255, 255))
+        grass_only = cv2.vconcat([np.zeros((h + 2, grass_only.shape[1]), dtype=grass_only.dtype), grass_only])
 
-        lines = cv2.HoughLinesP(
-            edges,
-            rho=DetectorFieldline.HOUGH_RHO,
-            theta=DetectorFieldline.HOUGH_THETA,
-            threshold=DetectorFieldline.HOUGH_THRESHOLD,
-            minLineLength=DetectorFieldline.HOUGH_MIN_LINE_LENGTH,
-            maxLineGap=DetectorFieldline.HOUGH_MAX_LINE_GAP,
-        )
+        grass_only_0 = cv2.morphologyEx(grass_only, cv2.MORPH_OPEN, circular_mask(4))
+        grass_only_1 = cv2.morphologyEx(grass_only, cv2.MORPH_CLOSE, circular_mask(4))
+        grass_only_2 = cv2.morphologyEx(grass_only_1, cv2.MORPH_OPEN, circular_mask(20))
+        grass_only_3 = cv2.morphologyEx(grass_only_2, cv2.MORPH_CLOSE, circular_mask(60))
 
-        ccdst = cv2.cvtColor(cdst, cv2.COLOR_GRAY2RGB)
+        grass_only_morph = cv2.morphologyEx(grass_only_3, cv2.MORPH_ERODE, circular_mask(8))
+        grass_only_flipped = cv2.bitwise_not(grass_only)
 
-        if lines is None:
-            # Need to publish an empty point cloud to start the robot
-            if self.publish_point_cloud and self.point_cloud_publisher.get_num_connections() > 0:
-                # Publish fieldlines in laserscan format
-                header = Header()
-                header.stamp = img.header.stamp
-                header.frame_id = self.robot_name + "/odom"
-                point_cloud_msg = pcl2.create_cloud_xyz32(header, [])
-                self.point_cloud_publisher.publish(point_cloud_msg)
-            return
+        lines_only = cv2.bitwise_and(grass_only_flipped, grass_only_flipped, mask=grass_only_morph)
+        lines_only = cv2.morphologyEx(lines_only, cv2.MORPH_CLOSE, circular_mask(4))
 
-        for l in lines:
-            x1, y1, x2, y2 = l[0]
-            # computing magnitude and angle of the line
-            if x2 == x1:
-                angle = 0
-            else:
-                angle = np.rad2deg(np.arctan((y2 - y1) / (x2 - x1)))
+        if debug:
+            cv2.imshow("grass_only", grass_only)
+            cv2.imshow("grass_only_0", grass_only_0)
+            cv2.imshow("grass_only_1", grass_only_1)
+            cv2.imshow("grass_only_2", grass_only_2)
+            cv2.imshow("grass_only_3", grass_only_3)
+            cv2.imshow("grass_only_morph", grass_only_morph)
+            cv2.imshow("grass_only_flipped", grass_only_flipped)
+            cv2.imshow("lines_only", lines_only)
+            cv2.waitKey(0)
 
-            pt1 = (x1, y1)
-            pt2 = (x2, y2)
-            if abs(angle) < 10:  # Horizontal
-                cv2.line(ccdst, pt1, pt2, (255, 0, 0), thickness=3, lineType=cv2.LINE_AA)
-            elif abs(abs(angle) - 90) < 10:  # Vertical
-                cv2.line(ccdst, pt1, pt2, (0, 255, 0), thickness=3, lineType=cv2.LINE_AA)
-            else:
-                cv2.line(ccdst, pt1, pt2, (0, 0, 255), thickness=3, lineType=cv2.LINE_AA)
-
-            if (pt2[0] - pt1[0]) == 0:
-                continue
-            slope = (pt2[1] - pt1[1]) / (pt2[0] - pt1[0])
-            b = y1 - slope * x1
-
-            for i in range(x1, x2, 10):
-                y = slope * i + b
-                pt = [i, y]
-                pts.append(pt)
+        # No line detection simply publish all white points
+        pts_x, pts_y = np.where(lines_only == 255)
 
         if self.image_publisher.get_num_connections() > 0:
-            img_out = CvBridge().cv2_to_imgmsg(ccdst)
+            img_out = CvBridge().cv2_to_imgmsg(lines_only)
             img_out.header = img.header
             self.image_publisher.publish(img_out)
 
         if self.publish_point_cloud and self.point_cloud_publisher.get_num_connections() > 0:
             points3d = []
-            for p in pts:
-                camToPoint = Transformation(self.camera.findFloorCoordinate(p))
-                points3d.append(camToPoint.position)
+
+            i = 0
+            for px, py in zip(pts_y, pts_x):
+                i = i + 1
+                if i % 30 == 0:
+                    camToPoint = Transformation(self.camera.findFloorCoordinate([px, py]))
+                    points3d.append(camToPoint.position)
 
             # Publish fieldlines in laserscan format
             header = Header()

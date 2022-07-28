@@ -14,8 +14,6 @@ class Camera:
     def __init__(self, robot_name: str):
         self.robot_name = robot_name
         self.pose = Transformation()
-        self.resolution_x = None
-        self.resolution_y = None
         self.camera_info = None
         self.diagonal_fov = 1.523
         self.focal_length = 3.67  # 3.67
@@ -95,9 +93,15 @@ class Camera:
             rospy.logerr_throttle(10, str(ex))
 
     def cameraInfoCallback(self, camera_info: CameraInfo):
-        self.resolution_x = camera_info.width
-        self.resolution_y = camera_info.height
         self.camera_info = camera_info
+
+    @property
+    def resolution_x(self):
+        return self.camera_info.width
+
+    @property
+    def resolution_y(self):
+        return self.camera_info.height
 
     # From a camera pixel, get a coordinate on the floor
     def findFloorCoordinate(self, pos: [int]) -> [int]:
