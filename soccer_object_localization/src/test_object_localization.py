@@ -25,8 +25,8 @@ class Test(TestCase):
         c = Camera("robot1")
         c.pose = p
         ci = CameraInfo()
-        c.height = 360
-        c.width = 240
+        ci.height = 240
+        ci.width = 360
         c.camera_info = ci
 
         p2 = c.findFloorCoordinate([360 / 2, 240 / 2])
@@ -41,8 +41,8 @@ class Test(TestCase):
         c = Camera("robot1")
         c.pose = p
         ci = CameraInfo()
-        c.height = 360
-        c.width = 240
+        ci.height = 240
+        ci.width = 360
         c.camera_info = ci
 
         p2 = c.findCameraCoordinate([0.5, 0, 0])
@@ -56,8 +56,8 @@ class Test(TestCase):
         c = Camera("robot1")
         c.pose = p
         ci = CameraInfo()
-        c.height = 360
-        c.width = 240
+        ci.height = 240
+        ci.width = 360
         c.camera_info = ci
 
         p3 = c.findCameraCoordinate([0.5, 0, 0.5])
@@ -75,8 +75,8 @@ class Test(TestCase):
                 c = Camera("robot1")
                 c.pose = p
                 ci = CameraInfo()
-                c.height = 360
-                c.width = 240
+                ci.height = 240
+                ci.width = 360
                 c.camera_info = ci
 
                 positions = [[0.5, 0, 0.1], [0.5, 0, 0], [0.5, 0, 0.1]]
@@ -105,8 +105,6 @@ class Test(TestCase):
         d.image_publisher.get_num_connections = MagicMock(return_value=1)
         # d.publish_point_cloud = True
         # d.point_cloud_publisher.get_num_connections = MagicMock(return_value=1)
-
-        import os
 
         import cv2
         from cv2 import Mat
@@ -140,7 +138,7 @@ class Test(TestCase):
 
                 cv2.waitKey(0)
 
-    @pytest.mark.skipif("DISPLAY" not in os.environ, reason="No Display")
+    @pytest.mark.skip
     def test_hsv_filter(self):
         import cv2
         import numpy as np
