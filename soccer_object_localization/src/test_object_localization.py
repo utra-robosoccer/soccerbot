@@ -1,7 +1,10 @@
 import math
+import os
 import unittest
 from unittest import TestCase
 from unittest.mock import MagicMock
+
+import pytest
 
 from soccer_common.mock_ros import mock_ros
 
@@ -126,14 +129,17 @@ class Test(TestCase):
             img_msg: Image = cvbridge.cv2_to_imgmsg(img, encoding="rgb8")
             d.image_publisher.publish = MagicMock()
             d.image_callback(img_msg, debug=False)
-            cv2.imshow("Before", img)
 
-            if d.image_publisher.publish.call_count != 0:
-                img_out = cvbridge.imgmsg_to_cv2(d.image_publisher.publish.call_args[0][0])
-                cv2.imshow("After", img_out)
+            if "DISPLAY" in os.environ:
+                cv2.imshow("Before", img)
 
-            cv2.waitKey(0)
+                if d.image_publisher.publish.call_count != 0:
+                    img_out = cvbridge.imgmsg_to_cv2(d.image_publisher.publish.call_args[0][0])
+                    cv2.imshow("After", img_out)
 
+                cv2.waitKey(0)
+
+    @pytest.mark.skipif("DISPLAY" not in os.environ, reason="No Display")
     def test_hsv_filter(self):
         import cv2
         import numpy as np
