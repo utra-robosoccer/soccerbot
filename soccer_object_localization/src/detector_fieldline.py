@@ -73,92 +73,58 @@ class DetectorFieldline(Detector):
             cv2.imshow("CVT Color", image_crop)
             cv2.waitKey(0)
 
+        def circular_mask(radius: int):
+            mask = np.ones((radius, radius), np.uint8)
+            for i in range(mask.shape[0]):
+                for j in range(mask.shape[1]):
+                    if np.sqrt((i - radius / 2) ** 2 + (j - radius / 2) ** 2) > radius / 2:
+                        mask[i, j] = 0
+            return mask
+
         # Grass Mask
-        grass_only = cv2.inRange(hsv, (35, 100, 0), (85, 255, 255))
-        grass_only = cv2.morphologyEx(grass_only, cv2.MORPH_OPEN, np.ones((3, 3), np.uint8))
+        # Hue > 115 needed
+        grass_only = cv2.inRange(hsv, (35, 85, 0), (115, 255, 255))
+        grass_only = cv2.vconcat([np.zeros((h + 2, grass_only.shape[1]), dtype=grass_only.dtype), grass_only])
+
+        grass_only_0 = cv2.morphologyEx(grass_only, cv2.MORPH_OPEN, circular_mask(4))
+        grass_only_1 = cv2.morphologyEx(grass_only, cv2.MORPH_CLOSE, circular_mask(4))
+        grass_only_2 = cv2.morphologyEx(grass_only_1, cv2.MORPH_OPEN, circular_mask(20))
+        grass_only_3 = cv2.morphologyEx(grass_only_2, cv2.MORPH_CLOSE, circular_mask(60))
+
+        grass_only_morph = cv2.morphologyEx(grass_only_3, cv2.MORPH_ERODE, circular_mask(8))
+        grass_only_flipped = cv2.bitwise_not(grass_only)
+
+        lines_only = cv2.bitwise_and(grass_only_flipped, grass_only_flipped, mask=grass_only_morph)
+        lines_only = cv2.morphologyEx(lines_only, cv2.MORPH_CLOSE, circular_mask(4))
 
         if debug:
-            cv2.imshow("Grass Only", grass_only)
+            cv2.imshow("grass_only", grass_only)
+            cv2.imshow("grass_only_0", grass_only_0)
+            cv2.imshow("grass_only_1", grass_only_1)
+            cv2.imshow("grass_only_2", grass_only_2)
+            cv2.imshow("grass_only_3", grass_only_3)
+            cv2.imshow("grass_only_morph", grass_only_morph)
+            cv2.imshow("grass_only_flipped", grass_only_flipped)
+            cv2.imshow("lines_only", lines_only)
             cv2.waitKey(0)
 
-        grass_only = cv2.morphologyEx(grass_only, cv2.MORPH_CLOSE, np.ones((30, 30), np.uint8))
-
-        if debug:
-            cv2.imshow("Grass Only", grass_only)
-            cv2.waitKey(0)
-
-        new_image = cv2.bitwise_and(hsv, hsv, mask=grass_only)
-        lines_in_field = cv2.inRange(new_image, (0, 0, 110), (255, 100, 255))
-        lines_in_field = cv2.morphologyEx(lines_in_field, cv2.MORPH_CLOSE, np.ones((3, 3), np.uint8))
-        lines_in_field = cv2.morphologyEx(lines_in_field, cv2.MORPH_GRADIENT, np.ones((2, 2), np.uint8))
-
-        lines_in_field = cv2.vconcat([np.zeros((h + 2, lines_in_field.shape[1]), dtype=lines_in_field.dtype), lines_in_field])
-
-        if debug:
-            cv2.imshow("Lines in field", lines_in_field)
-            cv2.waitKey(0)
-
-        lines = cv2.HoughLinesP(
-            lines_in_field,
-            rho=1,
-            theta=np.pi / 180,
-            threshold=50,
-            minLineLength=70,
-            maxLineGap=30,
-        )
-
-        if lines is None:
-            # Need to publish an empty point cloud to start the robot
-            if self.publish_point_cloud and self.point_cloud_publisher.get_num_connections() > 0:
-                # Publish fieldlines in laserscan format
-                header = Header()
-                header.stamp = img.header.stamp
-                header.frame_id = self.robot_name + "/odom"
-                point_cloud_msg = pcl2.create_cloud_xyz32(header, [])
-                self.point_cloud_publisher.publish(point_cloud_msg)
-            return
-
-        for l in lines:
-            x1, y1, x2, y2 = l[0]
-            # computing magnitude and angle of the line
-            if x2 == x1:
-                angle = 0
-            else:
-                angle = np.rad2deg(np.arctan((y2 - y1) / (x2 - x1)))
-
-            pt1 = (x1, y1)
-            pt2 = (x2, y2)
-            if abs(angle) < 10:  # Horizontal
-                cv2.line(image, pt1, pt2, (255, 0, 0), thickness=1, lineType=cv2.LINE_AA)
-            elif abs(abs(angle) - 90) < 10:  # Vertical
-                cv2.line(image, pt1, pt2, (0, 255, 0), thickness=1, lineType=cv2.LINE_AA)
-            else:
-                cv2.line(image, pt1, pt2, (0, 0, 255), thickness=1, lineType=cv2.LINE_AA)
-
-            if (pt2[0] - pt1[0]) == 0:
-                continue
-            slope = (pt2[1] - pt1[1]) / (pt2[0] - pt1[0])
-            b = y1 - slope * x1
-
-            for i in range(x1, x2, 10):
-                y = slope * i + b
-                pt = [i, y]
-                pts.append(pt)
-
-        if debug:
-            cv2.imshow("Final Lines", image)
-            cv2.waitKey(0)
+        # No line detection simply publish all white points
+        pts_x, pts_y = np.where(lines_only == 255)
 
         if self.image_publisher.get_num_connections() > 0:
-            img_out = CvBridge().cv2_to_imgmsg(image)
+            img_out = CvBridge().cv2_to_imgmsg(lines_only)
             img_out.header = img.header
             self.image_publisher.publish(img_out)
 
         if self.publish_point_cloud and self.point_cloud_publisher.get_num_connections() > 0:
             points3d = []
-            for p in pts:
-                camToPoint = Transformation(self.camera.findFloorCoordinate(p))
-                points3d.append(camToPoint.position)
+
+            i = 0
+            for px, py in zip(pts_y, pts_x):
+                i = i + 1
+                if i % 30 == 0:
+                    camToPoint = Transformation(self.camera.findFloorCoordinate([px, py]))
+                    points3d.append(camToPoint.position)
 
             # Publish fieldlines in laserscan format
             header = Header()

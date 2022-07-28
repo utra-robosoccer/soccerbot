@@ -103,6 +103,8 @@ class Test(TestCase):
         d = DetectorFieldline()
         d.robot_state.status = RobotState.STATUS_READY
         d.image_publisher.get_num_connections = MagicMock(return_value=1)
+        # d.publish_point_cloud = True
+        # d.point_cloud_publisher.get_num_connections = MagicMock(return_value=1)
 
         import os
 
@@ -115,7 +117,7 @@ class Test(TestCase):
         src_path = os.path.dirname(os.path.realpath(__file__))
         test_path = src_path + "/../images"
         for file_name in os.listdir(test_path):
-            # file_name = "img15_-1.4659361337858274_-0.5816355306389931_-0.502654929457147.png"
+            # file_name = "img0_-0.6805418953941712_-0.19657546078618005_-1.049088190788794.png"
 
             print(file_name)
             img: Mat = cv2.imread(os.path.join(test_path, file_name))
@@ -125,7 +127,6 @@ class Test(TestCase):
             c.width = img.shape[1]
             d.camera.camera_info = c
 
-            # ground truth box = (68, 89) (257, 275)
             img_msg: Image = cvbridge.cv2_to_imgmsg(img, encoding="rgb8")
             d.image_publisher.publish = MagicMock()
             d.image_callback(img_msg, debug=False)
@@ -167,7 +168,7 @@ class Test(TestCase):
         hMin = sMin = vMin = hMax = sMax = vMax = 0
         phMin = psMin = pvMin = phMax = psMax = pvMax = 0
 
-        img = cv2.imread("../images/img4_1.4594846269094557_1.495115016609354_-0.5027702268566427.png")
+        img = cv2.imread("../images/img14_-0.4107905429521215_2.4511358573282696_-0.8450607115290163.png")
         output = img
         waitTime = 33
 
