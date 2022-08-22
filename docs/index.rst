@@ -21,13 +21,14 @@ Robots
 =====================================
 Third Iteration - Bez 2 (2022)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-TODO
+.. image:: ./images/bez2/0.jpg
+  :width: 400
 
 Second Iteration - Bez 1 (2017)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 .. image:: ./images/bez1/0.jpg
   :width: 400
-Our second ineration contains of fully 3d printed parts uses a C390 camera for localization and uses dynamixel motors (AX-12 and MX-28) for movement
+Our second iteration contains of fully 3d printed parts uses a C390 camera for localization and uses dynamixel motors (AX-12 and MX-28) for movement
 
 .. image:: ./images/bez1/1.jpeg
   :width: 200
@@ -65,7 +66,23 @@ Past Competitions
 =====================================
 Robocup 2022 - Bangkok, Thailand
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-TODO
+.. image:: ./images/2022_bangkok/1.jpg
+  :width: 200
+.. image:: ./images/2022_bangkok/2.jpg
+  :width: 200
+.. image:: ./images/2022_bangkok/3.jpg
+  :width: 200
+.. image:: ./images/2022_bangkok/4.jpg
+  :width: 200
+.. image:: ./images/2022_bangkok/5.jpg
+  :width: 200
+.. image:: ./images/2022_bangkok/6.jpg
+  :width: 200
+.. image:: ./images/2022_bangkok/7.jpg
+  :width: 200
+.. image:: ./images/2022_bangkok/8.jpg
+  :width: 200
+
 
 Robocup 2018 - Montreal, Canada
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
