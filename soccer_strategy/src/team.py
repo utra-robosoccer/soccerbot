@@ -12,6 +12,7 @@ class FieldSide(enum.IntEnum):
 
 
 # cartesian coordinates with field centered at (0,0), scoring in positive x direction
+# http://humanoid.robocup.org/wp-content/uploads/RC-HL-2022-Rules-Changes-Marked-3.pdf
 DEFAULT_FORMATIONS = {
     "ready": {
         Robot.Role.GOALIE: [-4, 0, 0],

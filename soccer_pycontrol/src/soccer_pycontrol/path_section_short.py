@@ -5,8 +5,8 @@ import numpy as np
 import rospy
 
 from soccer_common.transformation import Transformation
+from soccer_common.utils import wrapToPi
 from soccer_pycontrol.path_section import PathSection
-from soccer_pycontrol.utils import wrapToPi
 
 
 class PathSectionShort(PathSection):

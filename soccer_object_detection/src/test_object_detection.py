@@ -44,6 +44,7 @@ class Test(TestCase):
         tf2_ros.TransformListener = MagicMock()
         rospy.Time.now = MagicMock(return_value=0)
         from object_detect_node import ObjectDetectionNode
+        from sensor_msgs.msg import CameraInfo
         from soccer_msgs_mock.msg import RobotState
 
         src_path = os.path.dirname(os.path.realpath(__file__))
@@ -67,8 +68,10 @@ class Test(TestCase):
 
             n.robot_state.status = RobotState.STATUS_READY
 
-            n.camera.resolution_x = img.shape[1]
-            n.camera.resolution_y = img.shape[0]
+            ci = CameraInfo()
+            ci.height = img.shape[0]
+            ci.width = img.shape[1]
+            n.camera.camera_info = ci
             n.camera.pose.orientation_euler = [0, np.pi / 8, 0]
             n.callback(img_msg)
 

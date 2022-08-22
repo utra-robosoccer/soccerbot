@@ -8,6 +8,8 @@ import rospy
 
 rospy.Time.now = MagicMock(return_value=0)
 
+from sensor_msgs.msg import CameraInfo
+
 from soccer_common.camera import Camera
 from soccer_common.transformation import Transformation
 
@@ -20,8 +22,10 @@ class Test(TestCase):
                 p = Transformation(cam_position, euler=[cam_angle, 0, 0])
                 c = Camera("robot1")
                 c.pose = p
-                c.resolution_x = 360
-                c.resolution_y = 240
+                ci = CameraInfo()
+                ci.height = 360
+                ci.width = 240
+                c.camera_info = ci
 
                 positions = [[0.5, 0, 0.1], [0.5, 0, 0], [0.5, 0, 0.1]]
                 for position in positions:

@@ -20,6 +20,7 @@ timeout_decorator
 pytest-timeout
 pytest-rerunfailures
 ruamel.yaml
+filterpy
 
 # object detection
 -r https://raw.githubusercontent.com/ultralytics/yolov5/master/requirements.txt # for yolov5

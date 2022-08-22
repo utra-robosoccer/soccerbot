@@ -15,9 +15,9 @@ from sensor_msgs.msg import JointState
 
 from soccer_common.pid import PID
 from soccer_common.transformation import Transformation as tr
+from soccer_common.utils import wrapToPi
 from soccer_pycontrol.calibration import adjust_navigation_transform
 from soccer_pycontrol.path_robot import PathRobot
-from soccer_pycontrol.utils import wrapToPi
 
 
 class Joints(enum.IntEnum):

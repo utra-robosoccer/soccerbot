@@ -69,7 +69,6 @@
 
     <!-- prettier-ignore -->
     <node pkg="rosbag" type="record" name="rosbag" args="-O $(find soccerbot)/bags/$(optenv ROBOCUP_TEAM_COLOR red)_$(arg robot_name).bag
-        /$(arg robot_name)/state
         /$(arg robot_name)/action_complete
         /$(arg robot_name)/amcl_pose
         /$(arg robot_name)/ball_pixel
@@ -100,6 +99,27 @@
         /tf
         /tf_static
         /rosout
+    "
+    />
+
+    <!-- Localization bag -->
+    <node
+        pkg="rosbag"
+        type="record"
+        name="rosbag_localization"
+        args="-O $(find soccerbot)/bags/localization.bag
+        /$(arg robot_name)/state
+        /$(arg robot_name)/imu_raw
+        /$(arg robot_name)/imu_filtered
+        /$(arg robot_name)/initialpose
+        /$(arg robot_name)/map
+        /$(arg robot_name)/odom
+        /$(arg robot_name)/odom_combined
+        /$(arg robot_name)/camera/line_image
+        /$(arg robot_name)/scan
+        /$(arg robot_name)/field_point_cloud
+        /tf
+        /tf_static
     "
     />
 </launch>
