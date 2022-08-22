@@ -24,3 +24,4 @@ soccerbot/bags/*
 !soccerbot/bags/*.sh
 slave.py
 venv/
+/docs/_build/
