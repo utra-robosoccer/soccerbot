@@ -21,24 +21,24 @@ Robots
 =====================================
 Third Iteration - Bez 2 (2022)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-.. image:: ./images/bez2/1.jpg
+.. image:: ./images/bez2/bez2_1.jpg
   :width: 400
 
 Second Iteration - Bez 1 (2017)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-.. image:: ./images/bez1/0.jpg
+.. image:: ./images/bez1/bez1_0.jpg
   :width: 400
 Our second iteration contains of fully 3d printed parts uses a C390 camera for localization and uses dynamixel motors (AX-12 and MX-28) for movement
 
-.. image:: ./images/bez1/1.jpeg
+.. image:: ./images/bez1/bez1_1.jpeg
   :width: 200
-.. image:: ./images/bez1/2.jpg
+.. image:: ./images/bez1/bez1_2.jpg
   :width: 200
-.. image:: ./images/bez1/3.jpg
+.. image:: ./images/bez1/bez1_3.jpg
   :width: 200
-.. image:: ./images/bez1/4.png
+.. image:: ./images/bez1/bez1_4.png
   :width: 200
-.. image:: ./images/bez1/5.png
+.. image:: ./images/bez1/bez1_5.png
   :width: 200
 
 **2020 Qualification video**
@@ -53,7 +53,7 @@ Our second iteration contains of fully 3d printed parts uses a C390 camera for l
 
 First Iteration - Bez 0 (2016)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-.. image:: ./images/bez0/1.jpg
+.. image:: ./images/bez0/bez0_1.jpg
   :width: 200
 Our first iteration of the robot contacted a pure sheet metal design and had very limitations in terms of robot control and movement completely controlled by Dynamixel AX-12 motors
 
@@ -66,41 +66,41 @@ Past Competitions
 =====================================
 Robocup 2022 - Bangkok, Thailand
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-.. image:: ./images/2022_bangkok/1.jpg
+.. image:: ./images/2022_bangkok/2022_1.jpg
   :width: 200
-.. image:: ./images/2022_bangkok/2.jpg
+.. image:: ./images/2022_bangkok/2022_2.jpg
   :width: 200
-.. image:: ./images/2022_bangkok/3.jpg
+.. image:: ./images/2022_bangkok/2022_3.jpg
   :width: 200
-.. image:: ./images/2022_bangkok/4.jpg
+.. image:: ./images/2022_bangkok/2022_4.jpg
   :width: 200
-.. image:: ./images/2022_bangkok/5.jpg
+.. image:: ./images/2022_bangkok/2022_5.jpg
   :width: 200
-.. image:: ./images/2022_bangkok/6.jpg
+.. image:: ./images/2022_bangkok/2022_6.jpg
   :width: 200
-.. image:: ./images/2022_bangkok/7.jpg
+.. image:: ./images/2022_bangkok/2022_7.jpg
   :width: 200
-.. image:: ./images/2022_bangkok/8.jpg
+.. image:: ./images/2022_bangkok/2022_8.jpg
   :width: 200
 
 
 Robocup 2018 - Montreal, Canada
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-.. image:: ./images/2018_montreal/1.jpg
+.. image:: ./images/2018_montreal/2018_1.jpg
   :width: 200
-.. image:: ./images/2018_montreal/2.jpg
+.. image:: ./images/2018_montreal/2018_2.jpg
   :width: 200
-.. image:: ./images/2018_montreal/3.jpg
+.. image:: ./images/2018_montreal/2018_3.jpg
   :width: 200
-.. image:: ./images/2018_montreal/4.jpg
+.. image:: ./images/2018_montreal/2018_4.jpg
   :width: 200
-.. image:: ./images/2018_montreal/5.jpg
+.. image:: ./images/2018_montreal/2018_5.jpg
   :width: 200
-.. image:: ./images/2018_montreal/6.jpg
+.. image:: ./images/2018_montreal/2018_6.jpg
   :width: 200
-.. image:: ./images/2018_montreal/7.jpg
+.. image:: ./images/2018_montreal/2018_7.jpg
   :width: 200
-.. image:: ./images/2018_montreal/8.jpg
+.. image:: ./images/2018_montreal/2018_8.jpg
   :width: 200
 
 Alumni
