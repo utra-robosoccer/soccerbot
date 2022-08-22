@@ -4,10 +4,7 @@
    contain the root `toctree` directive.
 
 Soccerbot - University of Toronto's first humanoid robotics team
-=====================================
-.. image:: images/UTRA-Logo-Dark-Wide-3.png
-  :alt: UTRA Logo
-
+==========================================================================
 
 In January 2016, a few undergraduate engineering students at the University of Toronto learned of the RoboCup International Competition, and were inspired by the vision it was founded upon—to have a team of autonomous humanoid robots beat the most recent champions of the World Cup by 2050, in full compliance with FIFA rules. Upon noticing there were no teams representing Canada in the competition, the first plans to start a robot soccer league began. In the summer of 2017, a team of inexperienced—but determined—undergraduate engineering students came together to create the first iteration a robot which could one day achieve RoboCup’s founding goal.
 
