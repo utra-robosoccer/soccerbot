@@ -21,7 +21,7 @@ Robots
 =====================================
 Third Iteration - Bez 2 (2022)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-.. image:: ./images/bez2/0.jpg
+.. image:: ./images/bez2/1.jpg
   :width: 400
 
 Second Iteration - Bez 1 (2017)
