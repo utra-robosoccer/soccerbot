@@ -23,19 +23,19 @@ TODO
 
 Second Iteration - Bez 1 (2017)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-.. image:: images/bez1/0.jpg
+.. image:: ./images/bez1/0.jpg
   :width: 400
 Our second ineration contains of fully 3d printed parts uses a C390 camera for localization and uses dynamixel motors (AX-12 and MX-28) for movement
 
-.. image:: images/bez1/1.jpeg
+.. image:: ./images/bez1/1.jpeg
   :width: 200
-.. image:: images/bez1/2.jpg
+.. image:: ./images/bez1/2.jpg
   :width: 200
-.. image:: images/bez1/3.jpg
+.. image:: ./images/bez1/3.jpg
   :width: 200
-.. image:: images/bez1/4.png
+.. image:: ./images/bez1/4.png
   :width: 200
-.. image:: images/bez1/5.png
+.. image:: ./images/bez1/5.png
   :width: 200
 
 **2020 Qualification video**
@@ -50,7 +50,7 @@ Our second ineration contains of fully 3d printed parts uses a C390 camera for l
 
 First Iteration - Bez 0 (2016)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-.. image:: images/bez0/1.jpg
+.. image:: ./images/bez0/1.jpg
   :width: 200
 Our first iteration of the robot contacted a pure sheet metal design and had very limitations in terms of robot control and movement completely controlled by Dynamixel AX-12 motors
 
@@ -67,21 +67,21 @@ TODO
 
 Robocup 2018 - Montreal, Canada
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-.. image:: images/2018_montreal/1.jpg
+.. image:: ./images/2018_montreal/1.jpg
   :width: 200
-.. image:: images/2018_montreal/2.jpg
+.. image:: ./images/2018_montreal/2.jpg
   :width: 200
-.. image:: images/2018_montreal/3.jpg
+.. image:: ./images/2018_montreal/3.jpg
   :width: 200
-.. image:: images/2018_montreal/4.jpg
+.. image:: ./images/2018_montreal/4.jpg
   :width: 200
-.. image:: images/2018_montreal/5.jpg
+.. image:: ./images/2018_montreal/5.jpg
   :width: 200
-.. image:: images/2018_montreal/6.jpg
+.. image:: ./images/2018_montreal/6.jpg
   :width: 200
-.. image:: images/2018_montreal/7.jpg
+.. image:: ./images/2018_montreal/7.jpg
   :width: 200
-.. image:: images/2018_montreal/8.jpg
+.. image:: ./images/2018_montreal/8.jpg
   :width: 200
 
 Alumni
@@ -101,22 +101,22 @@ See current members here (https://github.com/utra-robosoccer/soccerbot/wiki)
 
 Sponsors
 =====================================
-.. image:: images/sponsors/3m.jpg
+.. image:: ./images/sponsors/3m.jpg
   :width: 200
   :alt: 3M
-.. image:: images/sponsors/altium.png
+.. image:: ./images/sponsors/altium.png
   :width: 200
   :alt: Altium
-.. image:: images/sponsors/connecttech.png
+.. image:: ./images/sponsors/connecttech.png
   :width: 200
   :alt: Connecttech
-.. image:: images/sponsors/mathworks.jpg
+.. image:: ./images/sponsors/mathworks.jpg
   :width: 200
   :alt: Mathworks
-.. image:: images/sponsors/st.png
+.. image:: ./images/sponsors/st.png
   :width: 200
   :alt: ST
-.. image:: images/sponsors/uoft.png
+.. image:: ./images/sponsors/uoft.png
   :width: 200
   :alt: UofT
 
