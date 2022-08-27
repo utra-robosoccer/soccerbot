@@ -60,7 +60,7 @@ jobs:
           name: RosbagsWalking
           path: soccerbot/bags
       - name: Kick Integration Test
-        timeout-minutes: 5
+        timeout-minutes: 10
         run: |
           docker-compose -f docker-compose.test.kick.yaml up --exit-code-from friendly
       - name: Get integration test logs

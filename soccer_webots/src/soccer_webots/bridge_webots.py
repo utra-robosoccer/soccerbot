@@ -7,7 +7,6 @@ import struct
 import sys
 import time
 
-import messages_pb2
 import rospy
 import tf
 from geometry_msgs.msg import (
@@ -22,6 +21,8 @@ from nav_msgs.msg import Odometry
 from rosgraph_msgs.msg import Clock
 from sensor_msgs.msg import CameraInfo, Image, Imu, JointState
 from std_msgs.msg import Bool
+
+from soccer_webots import messages_pb2
 
 
 class GameControllerBridge:

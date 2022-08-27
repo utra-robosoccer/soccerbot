@@ -12,13 +12,12 @@
 #
 # import os
 # import sys
-# sys.path.insert(0, os.path.abspath('.'))
 
 
 # -- Project information -----------------------------------------------------
 
 project = 'soccerbot'
-copyright = '2021, Jason Wang'
+copyright = '2022, Jason Wang'
 author = 'Jason Wang'
 
 
@@ -57,5 +56,5 @@ html_theme_options = {
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
-html_logo = "_static/logo.png"  # Adding Rapyuta logo
-
+html_logo = "_static/logo.png"
+html_favicon = '_static/favicon.ico'
