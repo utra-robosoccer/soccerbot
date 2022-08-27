@@ -50,8 +50,6 @@ jobs:
           source /opt/ros/noetic/setup.bash
           catkin init
           catkin build
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
       - name: Build Sphinx Documentation
         run: |
           cd $HOME/catkin_ws/src/soccerbot/docs
