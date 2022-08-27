@@ -22,7 +22,7 @@ else:
 
     file_path = os.path.dirname(os.path.abspath(__file__))
 
-    config_path = f"{file_path}/../../{robot_model}_description/config/motor_mapping.yaml"
+    config_path = f"{file_path}/../../../{robot_model}_description/config/motor_mapping.yaml"
 
     from unittest.mock import MagicMock
 
@@ -33,7 +33,7 @@ from soccer_trajectories.soccer_trajectories import SoccerTrajectoryClass
 
 
 class TestTrajectory:
-    robot_models = ["bez1"]  # "bez3"]
+    robot_models = ["bez1"]
 
     @staticmethod
     @pytest.fixture(params=robot_models)
