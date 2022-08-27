@@ -21,6 +21,7 @@ pytest-timeout
 pytest-rerunfailures
 ruamel.yaml
 filterpy
+bagpy
 
 # object detection
 -r https://raw.githubusercontent.com/ultralytics/yolov5/master/requirements.txt # for yolov5

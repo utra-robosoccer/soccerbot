@@ -24,9 +24,10 @@ class FieldLinesUKF:
         self.i = 0  # The current step of the UKF
 
         points = MerweScaledSigmaPoints(n=3, alpha=0.00001, beta=2, kappa=0, subtract=self.residual_x)
+        landmarks = 1
         self.ukf = UKF(
             dim_x=3,
-            # dim_z=2 * len(landmarks),
+            dim_z=2 * landmarks,
             fx=self.move,
             hx=self.Hx,
             dt=dt,
@@ -38,7 +39,7 @@ class FieldLinesUKF:
         )
 
         self.ukf.x = np.array([-4, -3.15, 1.57])
-        self.ukf.P = np.diag([0.05, 0.05, 0.05])
+        self.ukf.P = np.diag([0.01, 0.01, 0.01])
         # self.ukf.R = np.diag([sigma_range**2, sigma_bearing**2] * len(landmarks))
         self.ukf.Q = np.eye(3) * 0.0001
 
@@ -130,14 +131,19 @@ class FieldLinesUKF:
             x[z + 1] = atan2(sum_sin, sum_cos)
         return x
 
-    def predict_and_update(self, u, z, landmarks):
-        draw_covariance_interval = 10
+    def predict(self, u, dt):
+        draw_covariance_interval = 150
 
         # Prediction and drop covariance
-        self.ukf.predict(u=u, wheelbase=wheelbase)
+        self.ukf.predict(dt=dt, u=u, wheelbase=wheelbase)
 
         if self.debug and self.i % draw_covariance_interval == 0:
-            plot_covariance((self.ukf.x[0], self.ukf.x[1]), self.ukf.P[0:2, 0:2], std=3, facecolor="k", alpha=0.3)
+            plot_covariance((self.ukf.x[0], self.ukf.x[1]), self.ukf.P[0:2, 0:2], std=2, facecolor="k", alpha=0.1)
+
+        self.i = self.i + 1
+
+    def update(self, z, landmarks):
+        draw_covariance_interval = 10
 
         # Update and draw covariance
         self.ukf.update(z, landmarks=landmarks)
