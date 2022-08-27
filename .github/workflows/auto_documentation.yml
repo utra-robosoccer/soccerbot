@@ -52,12 +52,14 @@ jobs:
           catkin build
       - name: Build Sphinx Documentation
         run: |
-          cd docs
+          cd $HOME/catkin_ws/src/soccerbot/docs
           make html
       - name: Setup Pages
         uses: actions/configure-pages@v2
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
+        with:
+          path: $HOME/catkin_ws/src/soccerbot/docs/_build/html
 
   # Deployment job
   deploy:
