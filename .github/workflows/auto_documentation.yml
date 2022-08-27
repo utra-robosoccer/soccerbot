@@ -1,36 +1,72 @@
-# This is a basic workflow to help you get started with Actions
+name: Deploy to github pages
 
-name: CI
-
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "master" branch
   push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+    branches: ["master"]
 
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
 jobs:
-  # This workflow contains a single job called "build"
   build:
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
+    timeout-minutes: 60
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: ros-tooling/setup-ros@v0.2
+        with:
+          required-ros-distributions: noetic
       - uses: actions/checkout@v3
-
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
-
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
+        with:
+          lfs: true
+          submodules: recursive
+      - name: Move directory
         run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+          mkdir -p $HOME/catkin_ws/src/soccerbot
+          mv $GITHUB_WORKSPACE/* $HOME/catkin_ws/src/soccerbot
+      - name: Install dependencies
+        run: |
+          cd $HOME/catkin_ws/src/soccerbot
+          source /opt/ros/noetic/setup.bash
+          rosdep update
+          rosdep install --from-path -i -y .
+          pip install --trusted-host=pypi.org --trusted-host=files.pythonhosted.org --trusted-host=pytorch.org --trusted-host=download.pytorch.org --trusted-host=files.pypi.org --trusted-host=files.pytorch.org \
+            -r requirements.txt --find-links https://download.pytorch.org/whl/cu113/torch_stable.html
+          sudo apt-get install -y python3-catkin-tools
+      - name: Build Soccerbot
+        run: |
+          cd $HOME/catkin_ws
+          source /opt/ros/noetic/setup.bash
+          catkin init
+          catkin build
+      - name: Build Sphinx Documentation
+        run: |
+          cd docs
+          make html
+      - name: Setup Pages
+        uses: actions/configure-pages@v2
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+
+  # Deployment job
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v1
