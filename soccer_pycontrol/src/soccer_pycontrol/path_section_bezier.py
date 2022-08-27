@@ -15,9 +15,9 @@ class PathSectionBezier(PathSection):
         self.start_transform: Transformation = start_transform
         self.end_transform: Transformation = end_transform
         if self.isWalkingBackwards():
-            bodystep_size = PathSection.bodystep_size_default * PathSection.backwards_bodystep_size_ratio
+            bodystep_size = self.bodystep_size_default * self.backwards_bodystep_size_ratio
         else:
-            bodystep_size = PathSection.bodystep_size_default
+            bodystep_size = self.bodystep_size_default
 
         super().__init__(start_transform, end_transform, bodystep_size)
 

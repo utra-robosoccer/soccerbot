@@ -14,10 +14,11 @@ import numpy as np
 import rospy
 import sensor_msgs.point_cloud2 as pcl2
 from cv_bridge import CvBridge
-from detector import Detector
 from geometry_msgs.msg import PoseWithCovarianceStamped
 from sensor_msgs.msg import Image, PointCloud2
 from std_msgs.msg import Bool, Header
+
+from soccer_object_localization.detector import Detector
 
 
 class DetectorFieldline(Detector):

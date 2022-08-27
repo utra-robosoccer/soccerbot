@@ -29,7 +29,7 @@ else:
     mock_ros(robot_model=robot_model, real_robot=real_robot, config_path=config_path)
     FixedTrajectoryCommand = MagicMock()
 
-from soccer_trajectories import SoccerTrajectoryClass
+from soccer_trajectories.soccer_trajectories import SoccerTrajectoryClass
 
 
 class TestTrajectory:

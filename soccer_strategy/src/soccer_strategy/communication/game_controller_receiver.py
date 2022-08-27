@@ -5,10 +5,14 @@ import socket
 
 import rospy
 from construct import ConstError, Container
-from gamestate import GAME_CONTROLLER_RESPONSE_VERSION, GameState, ReturnData
 from std_msgs.msg import Empty
 
 from soccer_msgs.msg import GameState as GameStateMsg
+from soccer_strategy.communication.gamestate import (
+    GAME_CONTROLLER_RESPONSE_VERSION,
+    GameState,
+    ReturnData,
+)
 
 
 class GameStateReceiver(object):

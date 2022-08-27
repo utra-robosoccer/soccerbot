@@ -95,8 +95,9 @@ class TestObjectLocalization(TestCase):
     @unittest.mock.patch("soccer_common.camera.TransformListener")
     @unittest.mock.patch("soccer_common.camera.rospy.Time.now")
     def test_fieldine_detection(self, mock_tf_listener, now):
-        from detector_fieldline import DetectorFieldline
         from sensor_msgs.msg import CameraInfo, Image
+
+        from soccer_object_localization.detector_fieldline import DetectorFieldline
 
         Camera.reset_position = MagicMock()
         Camera.ready = MagicMock()

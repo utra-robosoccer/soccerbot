@@ -5,10 +5,10 @@ import socket
 import struct
 import time
 
-import robot_state_pb2
 import rospy
 
 from soccer_msgs.msg import RobotState
+from soccer_strategy.communication import robot_state_pb2
 
 if __name__ == "__main__":
     rospy.init_node("team_communication")

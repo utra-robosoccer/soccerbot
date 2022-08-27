@@ -170,7 +170,7 @@ class Formations:
     ATTACKING = Formation([FieldPositions.GOALIE, FieldPositions.LEFT_WING, FieldPositions.CENTER_STRIKER, FieldPositions.RIGHT_WING])
 
 
-from strategy.strategy import update_average_ball_position
+from soccer_strategy.strategy.strategy import update_average_ball_position
 
 
 class StrategyDecisionTree(Strategy):

@@ -12,15 +12,12 @@ import math
 import cv2
 import numpy as np
 import rospy
-import tf2_ros
 from cv_bridge import CvBridge
-from detector import Detector
-from detector_fieldline import DetectorFieldline
-from geometry_msgs.msg import PointStamped, PoseStamped, TransformStamped
 from sensor_msgs.msg import Image
-from std_msgs.msg import Bool
 
 from soccer_msgs.msg import RobotState
+from soccer_object_localization.detector import Detector
+from soccer_object_localization.detector_fieldline import DetectorFieldline
 
 
 class DetectorGoalPost(Detector):

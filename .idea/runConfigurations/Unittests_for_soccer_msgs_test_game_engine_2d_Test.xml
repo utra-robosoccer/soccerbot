@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Unittests for soccer_strategy.test_game_engine_2d.Test" type="tests" factoryName="Unittests" nameIsGenerated="true">
+  <configuration default="false" name="Unittests for soccer_msgs.test_game_engine_2d.Test" type="tests" factoryName="Unittests" nameIsGenerated="true">
     <module name="soccerbot" />
     <option name="INTERPRETER_OPTIONS" value="" />
     <option name="PARENT_ENVS" value="true" />
@@ -52,7 +52,7 @@
     <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
     <option name="_new_pattern" value="&quot;&quot;" />
     <option name="_new_additionalArguments" value="&quot;&quot;" />
-    <option name="_new_target" value="&quot;soccer_strategy.test_game_engine_2d.Test&quot;" />
+    <option name="_new_target" value="&quot;soccer_msgs.test_game_engine_2d.Test&quot;" />
     <option name="_new_targetType" value="&quot;PYTHON&quot;" />
     <method v="2" />
   </configuration>

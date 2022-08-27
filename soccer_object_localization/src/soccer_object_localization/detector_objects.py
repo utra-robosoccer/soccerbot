@@ -13,13 +13,12 @@ if "ROS_NAMESPACE" not in os.environ:
     os.environ["ROS_NAMESPACE"] = "/robot1"
 
 import rospy
-import tf2_ros
-from detector import Detector
-from geometry_msgs.msg import Pose2D, TransformStamped
+from geometry_msgs.msg import Pose2D
 from sensor_msgs.msg import JointState
 
 from soccer_common.transformation import Transformation
 from soccer_msgs.msg import BoundingBox, BoundingBoxes
+from soccer_object_localization.detector import Detector
 
 
 class DetectorBall(Detector):
