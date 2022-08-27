@@ -25,6 +25,6 @@ ruamel.yaml
 -r https://raw.githubusercontent.com/ultralytics/yolov5/master/requirements.txt # for yolov5
 Pillow==9.0.1
 tqdm
-torch; platform_machine == 'x86_64'
+torch==1.12.0; platform_machine == 'x86_64'
 torchvision; platform_machine == 'x86_64'
 pybullet
