@@ -12,7 +12,7 @@ submodules:
 build:
   os: ubuntu-20.04
   tools:
-    python: "3.9"
+    python: "3.8"
   jobs:
     post_checkout:
       # Download and uncompress the binary
@@ -29,12 +29,6 @@ build:
       - ./git-lfs fetch
       # Make local files to have the real content on them
       - ./git-lfs checkout
-      # ROS Build
-      - sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
-      - apt install curl # if you haven't already installed curl
-      - curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | apt-key add -
-      - apt update
-      - apt install ros-noetic-desktop-full -y
 
 # Build documentation in the docs/ directory with Sphinx
 sphinx:
