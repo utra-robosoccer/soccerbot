@@ -19,3 +19,4 @@ find_package(
 )
 
 catkin_package()
+catkin_python_setup()
