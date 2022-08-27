@@ -17,6 +17,7 @@ from soccer_localization.src.field_lines_ukf import FieldLinesUKF
 def test_simple():
     f = FieldLinesUKF()
     plt.figure()
+    plt.axes().set_facecolor("limegreen")
     src_path = os.path.dirname(os.path.realpath(__file__))
     test_path = src_path + "/../test/localization.bag"
     bag = rosbag.Bag(test_path)
@@ -44,10 +45,11 @@ def test_simple():
     # Add the patch to the Axes
 
     plt.plot(track[:, 0], track[:, 1], color="k", lw=2)
-    xs = [-4.5, 4.5, 4.5, -4.5, -4.5]
-    ys = [-3, -3, 3, 3, -3]
-    plt.plot(xs, ys, color="red")
+    xs = [-4.5, 4.5, 4.5, -4.5, -4.5, 0, 0]
+    ys = [-3, -3, 3, 3, -3, -3, 3]
+    plt.plot(xs, ys, color="white")
     plt.axis("equal")
+
     plt.title("UKF Robot localization")
     plt.show()
 
