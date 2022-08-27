@@ -15,7 +15,7 @@ from timeout_decorator import timeout_decorator
 
 from soccer_common.camera import Camera
 from soccer_msgs.msg import BoundingBoxes, RobotState
-from soccer_strategy.src.team import Team
+from soccer_strategy.src.soccer_strategy.team import Team
 
 RUN_LOCALLY = "pycharm" in sys.argv[0]
 

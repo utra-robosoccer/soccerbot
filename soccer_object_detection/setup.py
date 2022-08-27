@@ -4,7 +4,7 @@ from catkin_pkg.python_setup import generate_distutils_setup
 
 # fmt: off
 d = generate_distutils_setup(
-    packages=['soccer_strategy'],
+    packages=['soccer_object_detection'],
     scripts=[],
     package_dir={'': 'src'}
 )

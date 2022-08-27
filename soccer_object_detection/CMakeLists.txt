@@ -8,5 +8,6 @@ find_package(
 )
 
 catkin_package(CATKIN_DEPENDS)
+catkin_python_setup()
 
 include_directories(${catkin_INCLUDE_DIRS})

@@ -1,10 +1,12 @@
-.. soccerbot documentation master file, created by
-   sphinx-quickstart on Mon Nov  1 18:42:38 2021.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
 
 Soccerbot
 ===========
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
+
+   api
 
 **University of Toronto's first humanoid robotics team**
 
@@ -138,9 +140,3 @@ Sponsors
 .. image:: ./images/sponsors/uoft.png
   :width: 200
   :alt: UofT
-
-
-
-.. toctree::
-   :maxdepth: 2
-   :caption: Contents:

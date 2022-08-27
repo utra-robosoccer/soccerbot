@@ -20,9 +20,14 @@ class Transformation(np.ndarray):
         **kwargs
     ):
         """
-        Constructor for the H-transform object, inherits from numpy array
-        :param position: translation component of the transform, defaults to zero
-        :param quaternion: rotational component of the transform in quaternion of form [x y z w], defaults to no rotation
+        Return a list of random ingredients as strings.
+
+        :param kind: Optional "kind" of ingredients.
+        :type kind: list[str] or None
+        :raise lumache.InvalidKindError: If the kind is invalid.
+        :return: The ingredients list.
+        :rtype: list[str]
+
         """
         cls = np.eye(4).view(cls)
 
@@ -148,10 +153,14 @@ class Transformation(np.ndarray):
     @staticmethod
     def distance(t1, t2) -> float:
         """
-        Gives the translational distance between 2 H-transforms
-        :param t1: first H-transform
-        :param t2: second H-transform
-        :return:
+        Return a list of random ingredients as strings.
+
+        :param kind: Optional "kind" of ingredients.
+        :type kind: list[str] or None
+        :raise lumache.InvalidKindError: If the kind is invalid.
+        :return: The ingredients list.
+        :rtype: list[str]
+
         """
         return np.linalg.norm(t1[0:3, 3] - t2[0:3, 3])
 
