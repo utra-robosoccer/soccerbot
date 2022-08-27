@@ -53,6 +53,7 @@ jobs:
       - name: Build Sphinx Documentation
         run: |
           cd $HOME/catkin_ws/src/soccerbot/docs
+          pip install -r requirements.txt
           make html
       - name: Setup Pages
         uses: actions/configure-pages@v2
