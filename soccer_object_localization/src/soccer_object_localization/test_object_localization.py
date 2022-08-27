@@ -114,7 +114,7 @@ class TestObjectLocalization(TestCase):
         cvbridge = CvBridge()
 
         src_path = os.path.dirname(os.path.realpath(__file__))
-        test_path = src_path + "/../images"
+        test_path = src_path + "/../../images"
         for file_name in os.listdir(test_path):
             # file_name = "img0_-0.6805418953941712_-0.19657546078618005_-1.049088190788794.png"
 
@@ -167,7 +167,7 @@ class TestObjectLocalization(TestCase):
         hMin = sMin = vMin = hMax = sMax = vMax = 0
         phMin = psMin = pvMin = phMax = psMax = pvMax = 0
 
-        img = cv2.imread("../images/img14_-0.4107905429521215_2.4511358573282696_-0.8450607115290163.png")
+        img = cv2.imread("../../images/img14_-0.4107905429521215_2.4511358573282696_-0.8450607115290163.png")
         output = img
         waitTime = 33
 

@@ -157,7 +157,7 @@ class Trajectory:
 class SoccerTrajectoryClass:
     def __init__(self):
         rospy.init_node("soccer_trajectories")
-        default_path = os.path.join(os.path.dirname(__file__), "../trajectories/bez1")
+        default_path = os.path.join(os.path.dirname(__file__), "../../trajectories/bez1")
         self.trajectory_path = rospy.get_param("~trajectory_path", default_path)
         self.trajectory_complete = True
         self.trajectory = None

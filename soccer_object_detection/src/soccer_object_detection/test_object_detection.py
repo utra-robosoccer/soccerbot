@@ -43,9 +43,10 @@ class Test(TestCase):
         Camera.reset_position = MagicMock()
         tf2_ros.TransformListener = MagicMock()
         rospy.Time.now = MagicMock(return_value=0)
-        from object_detect_node import ObjectDetectionNode
         from sensor_msgs.msg import CameraInfo
         from soccer_msgs_mock.msg import RobotState
+
+        from soccer_object_detection.object_detect_node import ObjectDetectionNode
 
         src_path = os.path.dirname(os.path.realpath(__file__))
         model_path = src_path + "/small_model/July14.pt"
