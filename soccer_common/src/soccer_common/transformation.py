@@ -6,6 +6,10 @@ from scipy.spatial.transform import Slerp
 
 
 class Transformation(np.ndarray):
+    """
+    3D transformation or pose of an object represented as a 4x4 matrix, but can take in many formats
+    """
+
     def __new__(
         cls,
         position=(0.0, 0.0, 0.0),
@@ -20,14 +24,20 @@ class Transformation(np.ndarray):
         **kwargs
     ):
         """
-        Return a list of random ingredients as strings.
+        Constructor for the Transformation object
 
-        :param kind: Optional "kind" of ingredients.
-        :type kind: list[str] or None
-        :raise lumache.InvalidKindError: If the kind is invalid.
-        :return: The ingredients list.
-        :rtype: list[str]
-
+        :param position: Position represented as (x, y, z) in meters
+        :param quaternion: Quaternions represented in (x, y, z, w)
+        :param rotation_matrix: 3x3 rotation matrix of the transform, can be used in conjunction with position
+        :param matrix: 4x4 transformation matrix, includes both position and rotation
+        :param euler: Orientation represented in euler format (roll, pitch, yaw)
+        :param pos_theta: 2D position and theta format (x, y, theta/yaw)
+        :param pose: Takes a geometry_msg.Pose object and converts it
+        :type pose: :class:`Transformation`
+        :param dh: (d, theta, r, alpha)
+        See `DH <https://en.wikipedia.org/wiki/Field_of_view>`_
+        :param args: Additional arguments, passed down to the numpy array object
+        :param kwargs: Additional keyword arguments, passed down to the numpy array object
         """
         cls = np.eye(4).view(cls)
 
@@ -67,6 +77,9 @@ class Transformation(np.ndarray):
 
     @property
     def matrix(self) -> np.ndarray:
+        """
+        Representation of the transformation in quaternion in 4x4 transformation matrix
+        """
         return np.array(self)
 
     @matrix.setter
@@ -75,7 +88,9 @@ class Transformation(np.ndarray):
 
     @property
     def position(self) -> np.ndarray:
-        # Position in form [x y z]
+        """
+        Representation of the position of the transformation in quaternion in form [x y z]
+        """
         return np.array(self[0:3, 3])
 
     @position.setter
@@ -84,7 +99,9 @@ class Transformation(np.ndarray):
 
     @property
     def quaternion(self) -> np.ndarray:
-        # Quaternion in form [x y z w]
+        """
+        Representation of the rotation of the transformation in quaternion in form [x y z w]
+        """
         r = R.from_matrix(self[0:3, 0:3])
         return r.as_quat()
 
@@ -95,7 +112,9 @@ class Transformation(np.ndarray):
 
     @property
     def orientation_euler(self, orientation="ZYX") -> np.ndarray:
-        # Quaternion in form [yaw pitch roll]
+        """
+        Representation of the rotation of the transformation in euler coordinates [yaw, pitch, roll]
+        """
         e = R.from_matrix(self[0:3, 0:3])
         return e.as_euler(orientation, degrees=False)
 
@@ -106,6 +125,9 @@ class Transformation(np.ndarray):
 
     @property
     def rotation_matrix(self) -> np.array:
+        """
+        Representation of the rotation of the transformation in 3x3 rotation matrix
+        """
         return np.array(self[0:3, 0:3])
 
     @rotation_matrix.setter
@@ -114,7 +136,9 @@ class Transformation(np.ndarray):
 
     @property
     def pos_theta(self):
-        # Field in form [x, y, yaw]
+        """
+        Representation of the transformation in the form  [x, y, yaw]
+        """
         return np.array([self.position[0], self.position[1], self.orientation_euler[0]])
 
     @pos_theta.setter
@@ -124,6 +148,9 @@ class Transformation(np.ndarray):
 
     @property
     def pose(self) -> Pose:
+        """
+        Representation of the transformation in the ros Pose format
+        """
         position = self.position
         quaternion = self.quaternion
 
@@ -144,6 +171,9 @@ class Transformation(np.ndarray):
 
     @property
     def pose_stamped(self) -> PoseStamped:
+        """
+        The transformation represented in the PoseStamped format
+        """
         t = PoseStamped()
         t.header.stamp = rospy.Time.now()
         t.header.frame_id = "world"
@@ -153,14 +183,12 @@ class Transformation(np.ndarray):
     @staticmethod
     def distance(t1, t2) -> float:
         """
-        Return a list of random ingredients as strings.
-
-        :param kind: Optional "kind" of ingredients.
-        :type kind: list[str] or None
-        :raise lumache.InvalidKindError: If the kind is invalid.
-        :return: The ingredients list.
-        :rtype: list[str]
-
+        Returns the distance between two transformations
+        :param t1: transformation 1
+        :type t1: Transformation
+        :param t2: transformation 2
+        :type t1: Transformation
+        :return: The distance in meters
         """
         return np.linalg.norm(t1[0:3, 3] - t2[0:3, 3])
 
@@ -168,6 +196,7 @@ class Transformation(np.ndarray):
     def get_euler_from_quaternion(quaternion, seq="ZYX"):
         """
         Get the quaternion representation of euler angle rotations
+
         :param euler_array: array of 3 angles for rotation
         :param sequence: order and type of rotation, see intrinsic vs extrinsic for capital and small case letter
         :return: quaternion in the form of [x y z w]
@@ -179,6 +208,7 @@ class Transformation(np.ndarray):
     def get_quaternion_from_axis_angle(vector, angle):
         """
         Gives the quaternion representation of axis-angle rotation
+
         :param vector: vector around which the rotation takes place
         :param angle: angle by which is rotated around the vector
         :return: quaternion in the form of [x y z w]
@@ -190,6 +220,7 @@ class Transformation(np.ndarray):
     def get_axis_angle_from_quaternion(quaternion):
         """
         Gives the axis-angle representation of rotation from a quaternion
+
         :param quaternion: quaternion in the form of [x y z w]
         :return: angle and vector
         """
@@ -207,6 +238,7 @@ class Transformation(np.ndarray):
         Interpolates between two transforms. Inclination is based on a ratio.
         Ratio = 0, t_start shall be returned
         Ratio = 1, t_end shall be returned
+
         :param t_start: start H-transform
         :param t_end: end H-transform
         :param ratio: a number between 0 and 1

@@ -11,12 +11,26 @@ from soccer_common.transformation import Transformation
 
 
 class Camera:
+    """
+    This is a reusable class that instantiates an instance of a Camera object that listens to the camera related topics
+    related to a robot and has useful functions that use geometry to determine the 3d/2d projection and location of things
+
+    """
+
+    diagonal_fov: float
+
     def __init__(self, robot_name: str):
-        self.robot_name = robot_name
-        self.pose = Transformation()
-        self.camera_info = None
-        self.diagonal_fov = 1.523
-        self.focal_length = 3.67  # 3.67
+        """
+        Initializes the camera object
+
+        :param robot_name: Name of the robot, to be used in subscribers
+        """
+
+        self.robot_name = robot_name  #: Name of the robot
+        self.pose = Transformation()  #: Pose of the camera
+        self.camera_info = None  #: Camera info object recieved from the subscriber
+        self.diagonal_fov = 1.523  #: Diagonal Field of Vision for the camera
+        self.focal_length = 3.67  #: Focal length of the camera (meters) distance to the camera plane as projected in 3D
 
         self.camera_info_subscriber = Subscriber("/" + robot_name + "/camera/camera_info", CameraInfo, self.cameraInfoCallback)
 
@@ -25,10 +39,22 @@ class Camera:
         self.init_time = rospy.Time.now()
 
     def ready(self) -> bool:
+        """
+        Function to determine when the camera object has recieved the necessary information and is ready to be used
+
+        :return: True if the camera is ready, else False
+        """
         return self.pose is not None and self.resolution_x is not None and self.resolution_y is not None and self.camera_info is not None
 
     def reset_position(self, from_world_frame=False, timestamp=rospy.Time(0), camera_frame="/camera", skip_if_not_found=False):
+        """
+        Resets the position of the camera, it uses a series of methods that fall back on each other to get the location of the camera
 
+        :param from_world_frame: If this is set to true, the camera position transformation will be from the world instead of the robot odom frame
+        :param timestamp: What time do we want the camera tf frame, rospy.Time(0) if get the latest transform
+        :param camera_frame: The name of the camera frame
+        :param skip_if_not_found: If set to true, then will not wait if it cannot find the camera transform after the specified duration (1 second), it will just return
+        """
         if from_world_frame:
             base_frame = "world"
             target_frame = self.robot_name + camera_frame
@@ -93,30 +119,56 @@ class Camera:
             rospy.logerr_throttle(10, str(ex))
 
     def cameraInfoCallback(self, camera_info: CameraInfo):
+        """
+        Callback function for the camera info subscriber
+
+        :param camera_info: from the camera info topic
+        """
         self.camera_info = camera_info
 
     @property
-    def resolution_x(self):
+    def resolution_x(self) -> int:
+        """
+        The X resolution of the camera or the width of the screen in pixels
+
+        :return: width in pixels
+        """
         return self.camera_info.width
 
     @property
     def resolution_y(self):
+        """
+        The Y resolution of the camera or the height of the screen in pixels
+
+        :return: height in pixels
+        """
         return self.camera_info.height
 
-    # From a camera pixel, get a coordinate on the floor
     def findFloorCoordinate(self, pos: [int]) -> [int]:
+        """
+        From a camera pixel, get a coordinate on the floor
+
+        :param pos: The position on the screen in pixels (x, y)
+        :return: The 3D coordinate of the pixel as projected to the floor
+        """
+
         tx, ty = self.imageToWorldFrame(pos[0], pos[1])
         pixel_pose = Transformation((self.focal_length, tx, ty), (0, 0, 0, 1))
         camera_pose = self.pose
         pixel_world_pose = camera_pose @ pixel_pose
-        ratio = (self.pose.position[2] - pixel_world_pose.position[2]) / self.pose.position[2]  # Fix divide by 0 problem
+        ratio = (self.pose.position[2] - pixel_world_pose.position[2]) / self.pose.position[2]  # TODO Fix divide by 0 problem
         x_delta = (pixel_world_pose.position[0] - self.pose.position[0]) / ratio
         y_delta = (pixel_world_pose.position[1] - self.pose.position[1]) / ratio
 
         return [x_delta + camera_pose.position[0], y_delta + camera_pose.position[1], 0]
 
-    # From a 3d position on the field, get the camera coordinate
     def findCameraCoordinate(self, pos: [int]) -> [int]:
+        """
+        From a 3d position on the field, get the camera coordinate, opposite of :func:`~soccer_common.Camera.findFloorCoordinate`
+
+        :param pos: The 3D coordinate of the object
+        :return: The 2D pixel (x, y) on the camera, if the object was projected on the camera
+        """
         pos3d = Transformation(pos)
         camera_pose = self.pose
         pos3d_tr = np.linalg.inv(camera_pose) @ pos3d
@@ -124,6 +176,13 @@ class Camera:
         return self.findCameraCoordinateFixedCamera(pos3d_tr.position)
 
     def findCameraCoordinateFixedCamera(self, pos: [int]) -> [int]:
+        """
+        Helper function for :func:`~soccer_common.Camera.findFloorCoordinate`, finds the camera coordinate if the camera were fixed at the origin
+
+        :param pos: The 3D coordinate of the object
+        :return: The 2D pixel (x, y) on the camera, if the object was projected on the camera and the camera is placed at the origin
+        """
+
         pos = Transformation(pos)
 
         ratio = self.focal_length / pos.position[0]
@@ -133,40 +192,91 @@ class Camera:
         x, y = self.worldToImageFrame(tx, ty)
         return [x, y]
 
+    @property
     def verticalFOV(self):
+        """
+        The vertical field of vision of the camera.
+        See `Field of View <https://en.wikipedia.org/wiki/Field_of_view>`_
+        """
         f = math.sqrt(self.resolution_x**2 + self.resolution_y**2) / (2 * (1 / math.tan(self.diagonal_fov / 2)))
         return 2 * math.atan2(self.resolution_y / 2.0, f)
 
+    @property
     def horizontalFOV(self):
+        """
+        The horizontal field of vision of the camera.
+        See `Field of View <https://en.wikipedia.org/wiki/Field_of_view>`_
+        """
         f = math.sqrt(self.resolution_x**2 + self.resolution_y**2) / (2 * (1 / math.tan(self.diagonal_fov / 2)))
         return 2 * math.atan2(self.resolution_x / 2, f)
 
+    @property
     def imageSensorHeight(self):
-        return math.tan(self.verticalFOV() / 2.0) * 2.0 * self.focal_length
+        """
+        The height of the image sensor (m)
+        """
+        return math.tan(self.verticalFOV / 2.0) * 2.0 * self.focal_length
 
+    @property
     def imageSensorWidth(self):
-        return math.tan(self.horizontalFOV() / 2.0) * 2.0 * self.focal_length
+        """
+        The width of the image sensor (m)
+        """
+        return math.tan(self.horizontalFOV / 2.0) * 2.0 * self.focal_length
 
+    @property
     def pixelHeight(self):
-        return self.imageSensorHeight() / self.resolution_y
+        """
+        The height of a pixel in real 3d measurements (m)
+        """
+        return self.imageSensorHeight / self.resolution_y
 
+    @property
     def pixelWidth(self):
-        return self.imageSensorWidth() / self.resolution_x
+        """
+        The wdith of a pixel in real 3d measurements (m)
+        """
+        return self.imageSensorWidth / self.resolution_x
         pass
 
     def imageToWorldFrame(self, pos_x: int, pos_y: int) -> tuple:
+        """
+        From image pixel coordinates, get the coordinates of the pixel as if they have been projected ot the camera plane, which is
+        positioned at (0,0) in 3D world coordinates
+
+        :param pos_x: x pixel of the camera
+        :param pos_y: y pixel of the camera
+        :return: 3D position (X, Y) of the pixel in meters
+        """
         return (
-            (self.resolution_x / 2.0 - pos_x) * self.pixelWidth(),
-            (self.resolution_y / 2.0 - pos_y) * self.pixelHeight(),
+            (self.resolution_x / 2.0 - pos_x) * self.pixelWidth,
+            (self.resolution_y / 2.0 - pos_y) * self.pixelHeight,
         )
 
     def worldToImageFrame(self, pos_x: float, pos_y: float) -> tuple:
+        """
+        Reverse function for  :func:`~soccer_common.Camera.imageToWorldFrame`, takes the 3D world coordinates of the camera plane
+        and returns pixels
+
+        :param pos_x: X position of the pixel on the world plane in meters
+        :param pos_y: Y position of the pixel on the world plane in meters
+        :return: Tuple (x, y) of the pixel coordinates of in the image
+        """
         return (
-            (self.resolution_x / 2.0 + pos_x / self.pixelWidth()),
-            (self.resolution_y / 2.0 + pos_y / self.pixelHeight()),
+            (self.resolution_x / 2.0 + pos_x / self.pixelWidth),
+            (self.resolution_y / 2.0 + pos_y / self.pixelHeight),
         )
 
     def calculateBoundingBoxesFromBall(self, ball_position: Transformation, ball_radius: float = 0.07):
+        """
+        Takes a 3D ball transformation and returns the bounding boxes of the ball if seen on camera
+
+        :param ball_position: 3D coordinates of the ball stored in the :class:`Transformation` format
+        :param ball_radius: The radious of the ball in centimeters
+        :return: The bounding boxes of the ball on the camera in the format [[x1,y1], [x1,y1]] which are the top left
+        and bottom right of the bounding box respectively
+        """
+
         camera_pose = self.pose
         pos3d_tr = np.linalg.inv(camera_pose) @ ball_position
 
@@ -209,6 +319,16 @@ class Camera:
         return bounding_box
 
     def calculateBallFromBoundingBoxes(self, ball_radius: float = 0.07, bounding_boxes: [float] = []) -> Transformation:
+        """
+        Reverse function for  :func:`~soccer_common.Camera.calculateBoundingBoxesFromBall`, takes the bounding boxes
+        of the ball as seen on the camera and return the 3D position of the ball assuming that the ball is on the ground
+
+        :param ball_radius: The radius of the ball in meters
+        :param bounding_boxes: The bounding boxes of the ball on the camera in the format [[x1,y1], [x1,y1]] which are the top left
+        and bottom right of the bounding box respectively
+        :return: 3D coordinates of the ball stored in the :class:`Transformation` format
+        """
+
         # bounding boxes [(y1, z1), (y2, z2)]
         r = ball_radius
 
@@ -266,6 +386,12 @@ class Camera:
         return tr_cam
 
     def calculateHorizonCoverArea(self) -> int:
+        """
+        Given the camera's position, return the area that is covered by the horizon (that is not the field area) in pixels
+        from the top position
+        :return: Pixel length from the top of the image to the point where it meets the horizon
+        """
+
         pitch = self.pose.orientation_euler[1]
         d = math.sin(pitch) * self.focal_length
 
