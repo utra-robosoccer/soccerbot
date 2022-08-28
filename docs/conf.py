@@ -12,6 +12,7 @@
 import os
 import sys
 sys.path.insert(0, os.path.abspath('../../../devel/lib/python3/dist-packages/'))
+sys.path.insert(0, os.path.abspath('/opt/ros/noetic/lib/python3'))
 sys.path.insert(0, os.path.abspath('..'))
 
 
