@@ -54,7 +54,6 @@ class Camera:
         :param timestamp: What time do we want the camera tf frame, rospy.Time(0) if get the latest transform
         :param camera_frame: The name of the camera frame
         :param skip_if_not_found: If set to true, then will not wait if it cannot find the camera transform after the specified duration (1 second), it will just return
-        :return:
         """
         if from_world_frame:
             base_frame = "world"
