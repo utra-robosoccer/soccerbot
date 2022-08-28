@@ -31,9 +31,13 @@ author = 'Jason Wang'
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.autosummary',
+    'sphinx.ext.viewcode',
+    'sphinx.ext.napoleon',
     'sphinxcontrib.youtube',
     'sphinxcontrib.slide'
 ]
+autosummary_generate = True  # Turn on sphinx.ext.autosummary
+
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
