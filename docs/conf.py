@@ -33,7 +33,6 @@ extensions = [
     'sphinx.ext.autosummary',
     'sphinx.ext.viewcode',
     'sphinx.ext.napoleon',
-    'enum_tools.autoenum',
     'sphinxcontrib.youtube',
     'sphinxcontrib.slide'
 ]
