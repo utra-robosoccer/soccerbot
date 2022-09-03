@@ -25,8 +25,7 @@ class Navigator:
         Initialize the Navigator
 
         :param display: Whether or not to show the pybullet visualization, turned off for quick unit tests
-        :param useCalibration: Whether or not to use movement calibration files located in config/robot_model.yaml, which
-        adjusts the calibration to the movement given
+        :param useCalibration: Whether or not to use movement calibration files located in config/robot_model.yaml, which adjusts the calibration to the movement given
         """
         self.display = display
         if display:

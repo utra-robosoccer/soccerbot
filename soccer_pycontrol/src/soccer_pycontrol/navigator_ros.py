@@ -22,8 +22,7 @@ class NavigatorRos(Navigator):
         """
         Initializes The NavigatorRos class
 
-        :param useCalibration: Whether or not to use movement calibration files located in config/robot_model.yaml, which
-        adjusts the calibration to the movement given
+        :param useCalibration: Whether or not to use movement calibration files located in config/robot_model.yaml, which adjusts the calibration to the movement given
         """
         self.client_id = pb.connect(pb.DIRECT)
         pb.setAdditionalSearchPath(pybullet_data.getDataPath())  # optionally
