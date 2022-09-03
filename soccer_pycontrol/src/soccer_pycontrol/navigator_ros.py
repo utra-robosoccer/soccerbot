@@ -7,13 +7,23 @@ from rospy import ROSInterruptException
 from std_msgs.msg import Bool, Empty
 
 from soccer_msgs.msg import RobotState
+from soccer_pycontrol.navigator import *
 from soccer_pycontrol.path_section import PathSection
-from soccer_pycontrol.soccerbot_controller import *
 from soccer_pycontrol.soccerbot_ros import SoccerbotRos
 
 
-class SoccerbotControllerRos(SoccerbotController):
+class NavigatorRos(Navigator):
+    """
+    The Navigator class, receives commands from ROS and executes them in real life and in webots simulation. For functions
+    common to both ROS and pybullet simulation, see :class:`Navigator`
+    """
+
     def __init__(self, useCalibration=True):
+        """
+        Initializes The NavigatorRos class
+
+        :param useCalibration: Whether or not to use movement calibration files located in config/robot_model.yaml, which adjusts the calibration to the movement given
+        """
         self.client_id = pb.connect(pb.DIRECT)
         pb.setAdditionalSearchPath(pybullet_data.getDataPath())  # optionally
         pb.resetDebugVisualizerCamera(cameraDistance=0.5, cameraYaw=0, cameraPitch=0, cameraTargetPosition=[0, 0, 0.25])
@@ -30,7 +40,14 @@ class SoccerbotControllerRos(SoccerbotController):
 
         self.tf_listener = tf.TransformListener()
 
-    def update_robot_pose(self, footprint_name="/base_footprint"):
+    def update_robot_pose(self, footprint_name="/base_footprint") -> bool:
+        """
+        Function to update the location of the robot based on odometry. Called before movement to make sure the starting
+        position is correct
+
+        :param footprint_name:
+        :return: True if the position is updated, otherwise False
+        """
         try:
             (trans, rot) = self.tf_listener.lookupTransform("world", os.environ["ROS_NAMESPACE"] + footprint_name, rospy.Time(0))
         except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException) as e:
@@ -39,9 +56,6 @@ class SoccerbotControllerRos(SoccerbotController):
 
         self.robot_pose = Transformation(position=trans, quaternion=rot).pose_stamped
         return True
-
-    def ready(self):
-        pass
 
     def setPose(self, pose: Transformation):
         [r, p, y] = pose.orientation_euler
@@ -77,12 +91,19 @@ class SoccerbotControllerRos(SoccerbotController):
 
     def wait(self, steps: int):
         for i in range(steps):
-            rospy.sleep(SoccerbotController.PYBULLET_STEP)
+            rospy.sleep(Navigator.PYBULLET_STEP)
 
-    def goal_callback(self, pose: PoseStamped):
+    def goal_callback(self, pose: PoseStamped) -> None:
+        """
+        Callback function for when a new goal arrives. It creates the path in the callback function and dynamically
+        updates the current path if it exists (currently not working). Note the path computation occurs here
+        instead of run because the computation will disturb the main thread. Main thread should still be running
+
+        :param pose: The pose sent by the strategy for the robot to go to
+        """
 
         # Update existing path
-        # Note the code is here instead of run because the computation will disturb the main thread. Main thread should still be running
+        #
         if self.soccerbot.robot_path is not None:
             print("Updating New Goal")
             start = time.time()
@@ -105,7 +126,7 @@ class SoccerbotControllerRos(SoccerbotController):
 
     def run(self, single_trajectory=False):
         self.t = 0
-        r = rospy.Rate(1 / SoccerbotController.PYBULLET_STEP)
+        r = rospy.Rate(1 / Navigator.PYBULLET_STEP)
         stable_count = 5
 
         if single_trajectory:
@@ -193,11 +214,11 @@ class SoccerbotControllerRos(SoccerbotController):
                 self.soccerbot.robot_path = self.new_path
 
             if self.soccerbot.robot_path is not None and 0 <= self.t <= self.soccerbot.robot_path.duration():
-                self.soccerbot.stepPath(self.t, verbose=False)
+                self.soccerbot.stepPath(self.t)
 
                 # IMU feedback while walking (Average Time: 0.00017305118281667)
                 if self.soccerbot.imu_ready:
-                    self.soccerbot.apply_imu_feedback(self.t, self.soccerbot.get_imu())
+                    self.soccerbot.apply_imu_feedback(self.soccerbot.get_imu())
 
                 self.soccerbot.current_step_time = self.t
 
@@ -207,7 +228,7 @@ class SoccerbotControllerRos(SoccerbotController):
             # Walk completed
             if (
                 self.soccerbot.robot_path is not None
-                and self.t <= self.soccerbot.robot_path.duration() < self.t + SoccerbotController.PYBULLET_STEP
+                and self.t <= self.soccerbot.robot_path.duration() < self.t + Navigator.PYBULLET_STEP
                 and not self.terminated
             ):
                 walk_time = rospy.Time.now().secs + (rospy.Time.now().nsecs / 100000000) - (time_now.secs + (time_now.nsecs / 100000000))
@@ -263,13 +284,13 @@ class SoccerbotControllerRos(SoccerbotController):
             self.soccerbot.publishAngles()
 
             time_end = time.time()
-            if time_end - time_start > SoccerbotController.PYBULLET_STEP * 1.2:
+            if time_end - time_start > Navigator.PYBULLET_STEP * 1.2:
                 rospy.logerr_throttle(
                     10,
-                    f"Step Delta took longer than expected {time_end - time_start}. Control Frequency {SoccerbotController.PYBULLET_STEP}. Desired Steps Per Second: {PathSection.steps_per_second_default}",
+                    f"Step Delta took longer than expected {time_end - time_start}. Control Frequency {Navigator.PYBULLET_STEP}. Desired Steps Per Second: {PathSection.steps_per_second_default}",
                 )
 
-            self.t = self.t + SoccerbotController.PYBULLET_STEP
+            self.t = self.t + Navigator.PYBULLET_STEP
 
             try:
                 r.sleep()

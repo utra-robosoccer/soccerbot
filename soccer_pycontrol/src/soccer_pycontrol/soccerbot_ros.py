@@ -14,6 +14,10 @@ from soccer_pycontrol.soccerbot import *
 
 
 class SoccerbotRos(Soccerbot):
+    """
+    The main class for the robot, which receives and sends information to ROS
+    """
+
     def __init__(self, position, useFixedBase=False, useCalibration=True):
 
         super().__init__(position, useFixedBase, useCalibration)
@@ -21,7 +25,7 @@ class SoccerbotRos(Soccerbot):
         self.motor_publishers = {}
         self.pub_all_motor = rospy.Publisher("joint_command", JointState, queue_size=1)
         self.odom_publisher = rospy.Publisher("odom", Odometry, queue_size=1)
-        self.odom_pose = tr()
+        self.odom_pose = Transformation()
         self.torso_height_publisher = rospy.Publisher("torso_height", Float64, queue_size=1, latch=True)
         self.path_publisher = rospy.Publisher("path", Path, queue_size=1, latch=True)
         self.path_odom_publisher = rospy.Publisher("path_odom", Path, queue_size=1, latch=True)
@@ -43,16 +47,57 @@ class SoccerbotRos(Soccerbot):
         self.robot_state.status = RobotState.STATUS_DISCONNECTED
 
     def state_callback(self, robot_state: RobotState):
+        """
+        Callback function for information about the robot's state
+
+        :param robot_state: A class which tells you information about the robot, disconnected etc
+        """
         self.robot_state = robot_state
 
     def imu_callback(self, msg: Imu):
+        """
+        Callback function for IMU information
+
+        :param msg: IMU Message
+        """
         self.imu_msg = msg
         self.imu_ready = True
 
     def ball_pixel_callback(self, msg: Pose2D):
+        """
+        Callback function for ball pixel, used for head rotation calculations
+
+        :param msg: The location of the pixel of the center of the ball in the Camera
+        """
+
         self.ball_pixel = msg
 
+    def updateRobotConfiguration(self) -> None:
+        """
+        Reads the joint_states message and resets all the positions of all the joints
+        """
+
+        self.configuration_offset = [0] * len(Joints)
+        try:
+            joint_state = rospy.wait_for_message("joint_states", JointState, timeout=3)
+            indexes = [joint_state.name.index(motor_name) for motor_name in self.motor_names]
+            self.configuration[0:18] = [joint_state.position[i] for i in indexes]
+        except (ROSException, KeyError, AttributeError) as ex:
+            rospy.logerr(ex)
+        except ValueError as ex:
+            print(ex)
+            rospy.logerr("Not all joint states are reported, cable disconnect?")
+            rospy.logerr("Joint States")
+            rospy.logerr(joint_state)
+            rospy.logerr("Motor Names")
+            print(self.motor_names)
+            self.configuration[0:18] = [0] * len(Joints)
+
     def publishAngles(self):
+        """
+        Send the robot angles based on self.configuration + self.configuration_offset to ROS
+        """
+
         js = JointState()
         js.name = []
         js.header.stamp = rospy.Time.now()
@@ -69,16 +114,22 @@ class SoccerbotRos(Soccerbot):
             print(ex)
             exit(0)
 
-    def stepPath(self, t, verbose=False):
-        super(SoccerbotRos, self).stepPath(t, verbose=verbose)
+    def stepPath(self, t):
+        super(SoccerbotRos, self).stepPath(t)
 
         # Get odom from odom_path
         t_adjusted = t * self.robot_odom_path.duration() / self.robot_path.duration()
-        crotch_position = self.robot_odom_path.crotchPosition(t_adjusted) @ self.torso_offset
+        crotch_position = self.robot_odom_path.torsoPosition(t_adjusted) @ self.torso_offset
 
-        self.odom_pose = tr(position=crotch_position.position, quaternion=crotch_position.quaternion)
+        self.odom_pose = Transformation(position=crotch_position.position, quaternion=crotch_position.quaternion)
 
     def publishPath(self, robot_path=None):
+        """
+        Publishes the robot path to rviz for debugging and visualization
+
+        :param robot_path: The path to publish, leave empty to publish the robot's current path
+        """
+
         if robot_path is None:
             robot_path = self.robot_path
 
@@ -86,8 +137,8 @@ class SoccerbotRos(Soccerbot):
             p = Path()
             p.header.frame_id = "world"
             p.header.stamp = rospy.Time.now()
-            for i in range(0, robot_path.bodyStepCount(), 1):
-                step = robot_path.getBodyStepPose(i)
+            for i in range(0, robot_path.torsoStepCount(), 1):
+                step = robot_path.getTorsoStepPose(i)
                 position = step.position
                 orientation = step.quaternion
                 pose = PoseStamped()
@@ -109,6 +160,10 @@ class SoccerbotRos(Soccerbot):
             self.path_odom_publisher.publish(createPath(self.robot_odom_path))
 
     def publishOdometry(self):
+        """
+        Send the odometry of the robot to be used in localization by ROS
+        """
+
         o = Odometry()
         o.header.stamp = rospy.Time.now()
         o.header.frame_id = os.environ["ROS_NAMESPACE"][1:] + "/odom"
@@ -129,14 +184,24 @@ class SoccerbotRos(Soccerbot):
         pass
 
     def publishHeight(self):
+        """
+        Publish the height of the center of the torso of the robot (used for camera vision calculations and odometry)
+        """
+
         f = Float64()
         f.data = self.pose.position[2]
         self.torso_height_publisher.publish(f)
         pass
 
     def get_imu(self):
+        """
+        Gets the IMU at the IMU link location.
+
+        :return: calculated orientation of the center of the torso of the robot
+        """
+
         assert self.imu_ready
-        return tr(
+        return Transformation(
             [0, 0, 0],
             [
                 self.imu_msg.orientation.x,
@@ -146,16 +211,13 @@ class SoccerbotRos(Soccerbot):
             ],
         )
 
-    def is_fallen(self) -> bool:
-        pose = self.get_imu()
-        [roll, pitch, yaw] = pose.orientation_euler
-        return not np.pi / 6 > pitch > -np.pi / 6
-
     def get_foot_pressure_sensors(self, floor):
         # TODO subscribe to foot pressure sensors
         pass
 
+    #: Frequency for the head's yaw while searching and relocalizing (left and right movement)
     HEAD_YAW_FREQ = rospy.get_param("head_yaw_freq", 0.005)
+    #: Frequency for the head's while searching and relocalizing yaw (up and down movement)
     HEAD_PITCH_FREQ = rospy.get_param("head_pitch_freq", 0.005)
 
     def apply_head_rotation(self):

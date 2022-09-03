@@ -6,16 +6,15 @@ if "ROS_NAMESPACE" not in os.environ:
 import numpy as np
 import rospy
 
-from soccer_pycontrol.soccerbot_controller_ros import SoccerbotControllerRos
+from soccer_pycontrol.navigator_ros import NavigatorRos
 
 np.set_printoptions(precision=3)
 
 
 if __name__ == "__main__":
-
     rospy.init_node("soccer_control")
     rospy.loginfo("Initializing Soccer Control")
-    walker = SoccerbotControllerRos()
+    walker = NavigatorRos()
     rospy.loginfo("Starting Control Loop")
     try:
         walker.run()

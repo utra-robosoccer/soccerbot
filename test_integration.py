@@ -147,6 +147,8 @@ class IntegrationTestInitial(IntegrationTest):
         self.distance = np.inf
 
         def processMsg(data: RobotState):
+            if data.role == RobotState.ROLE_UNASSIGNED:
+                return
             coords = self.team.formations["ready"][data.role]
             self.distance = np.linalg.norm([coords[0] - data.pose.position.x, coords[1] - data.pose.position.y])
 

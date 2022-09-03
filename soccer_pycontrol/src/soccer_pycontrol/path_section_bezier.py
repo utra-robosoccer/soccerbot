@@ -9,17 +9,22 @@ from soccer_pycontrol.path_section import PathSection
 
 
 class PathSectionBezier(PathSection):
+    """
+    A path section made up of bezier curves
+    """
+
+    #: The amount of torso steps it takes to make the starting and final turn
     turn_duration = rospy.get_param("turn_duration", 3)
 
     def __init__(self, start_transform: Transformation, end_transform: Transformation):
         self.start_transform: Transformation = start_transform
         self.end_transform: Transformation = end_transform
         if self.isWalkingBackwards():
-            bodystep_size = self.bodystep_size_default * self.backwards_bodystep_size_ratio
+            torso_step_length = self.torso_step_length_default * self.backwards_torso_step_length_ratio
         else:
-            bodystep_size = self.bodystep_size_default
+            torso_step_length = self.torso_step_length_default
 
-        super().__init__(start_transform, end_transform, bodystep_size)
+        super().__init__(start_transform, end_transform, torso_step_length)
 
     def poseAtRatio(self, r):
         pose = self.bezierPositionAtRatio(self.start_transform, self.end_transform, r)
@@ -64,7 +69,7 @@ class PathSectionBezier(PathSection):
         return Transformation(position)
 
     def getRatioFromStep(self, step_num):
-        idx = np.argmin(np.abs((step_num * self.bodystep_size) - self.distanceMap[:, 1]))
+        idx = np.argmin(np.abs((step_num * self.torso_step_length) - self.distanceMap[:, 1]))
         return self.distanceMap[idx, 0]
 
     def duration(self):
@@ -78,5 +83,5 @@ class PathSectionBezier(PathSection):
             return True
         return False
 
-    def bodyStepCount(self):
+    def torsoStepCount(self):
         return self.linearStepCount()

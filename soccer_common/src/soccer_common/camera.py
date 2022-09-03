@@ -324,8 +324,7 @@ class Camera:
         of the ball as seen on the camera and return the 3D position of the ball assuming that the ball is on the ground
 
         :param ball_radius: The radius of the ball in meters
-        :param bounding_boxes: The bounding boxes of the ball on the camera in the format [[x1,y1], [x1,y1]] which are the top left
-        and bottom right of the bounding box respectively
+        :param bounding_boxes: The bounding boxes of the ball on the camera in the format [[x1,y1], [x1,y1]] which are the top left and bottom right of the bounding box respectively
         :return: 3D coordinates of the ball stored in the :class:`Transformation` format
         """
 
@@ -387,8 +386,7 @@ class Camera:
 
     def calculateHorizonCoverArea(self) -> int:
         """
-        Given the camera's position, return the area that is covered by the horizon (that is not the field area) in pixels
-        from the top position
+        Given the camera's position, return the area that is covered by the horizon (that is not the field area) in pixels from the top position
         :return: Pixel length from the top of the image to the point where it meets the horizon
         """
 
