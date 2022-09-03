@@ -214,7 +214,7 @@ class NavigatorRos(Navigator):
                 self.soccerbot.robot_path = self.new_path
 
             if self.soccerbot.robot_path is not None and 0 <= self.t <= self.soccerbot.robot_path.duration():
-                self.soccerbot.stepPath(self.t, verbose=False)
+                self.soccerbot.stepPath(self.t)
 
                 # IMU feedback while walking (Average Time: 0.00017305118281667)
                 if self.soccerbot.imu_ready:
