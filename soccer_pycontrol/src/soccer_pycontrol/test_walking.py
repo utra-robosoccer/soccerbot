@@ -37,11 +37,11 @@ from soccer_common.mock_ros import mock_ros
 
 mock_ros(robot_model=robot_model, real_robot=real_robot, config_path=config_path)
 
-import soccer_pycontrol.soccerbot_controller
+import soccer_pycontrol.navigator
 from soccer_pycontrol.calibration import adjust_navigation_transform
+from soccer_pycontrol.navigator import Navigator
+from soccer_pycontrol.navigator_ros import NavigatorRos
 from soccer_pycontrol.soccerbot import Links
-from soccer_pycontrol.soccerbot_controller import SoccerbotController
-from soccer_pycontrol.soccerbot_controller_ros import SoccerbotControllerRos
 
 
 class TestWalking:
@@ -64,17 +64,17 @@ class TestWalking:
         robot_model = request.param
 
         if run_in_ros:
-            c = SoccerbotControllerRos()
+            c = NavigatorRos()
         else:
             TestWalking.reset_attributes()
-            c = SoccerbotController(display=display)
+            c = Navigator(display=display)
         yield c
         del c
 
     @pytest.mark.timeout(TEST_TIMEOUT)
     @pytest.mark.flaky(reruns=1)
     @pytest.mark.parametrize("walker", ["bez1", "bez3"], indirect=True)
-    def test_ik(self, walker: SoccerbotController):
+    def test_ik(self, walker: Navigator):
         walker.soccerbot.configuration[Links.RIGHT_LEG_1 : Links.RIGHT_LEG_6 + 1] = walker.soccerbot.inverseKinematicsRightFoot(
             np.copy(walker.soccerbot.right_foot_init_position)
         )
@@ -94,7 +94,7 @@ class TestWalking:
             pb.stepSimulation()
 
     @pytest.mark.parametrize("walker", ["bez1", "bez3"], indirect=True)
-    def test_walk_1(self, walker: SoccerbotController):
+    def test_walk_1(self, walker: Navigator):
         walker.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
         walker.ready()
         walker.wait(200)
@@ -111,7 +111,7 @@ class TestWalking:
 
     @pytest.mark.timeout(TEST_TIMEOUT)
     @pytest.mark.flaky(reruns=1)
-    def test_walk_2(self, walker: SoccerbotController):
+    def test_walk_2(self, walker: Navigator):
         walker.setPose(Transformation([-0.7384, -0.008, 0], [0.00000, 0, 0, 1]))
         walker.ready()
         walker.wait(100)
@@ -121,7 +121,7 @@ class TestWalking:
 
     @pytest.mark.timeout(TEST_TIMEOUT)
     @pytest.mark.flaky(reruns=1)
-    def test_walk_3(self, walker: SoccerbotController):
+    def test_walk_3(self, walker: Navigator):
         walker.setPose(Transformation([-2.404, -1.0135, 0], [0, 0, -0.9979391070307153, 0.064168050139]))
         walker.ready()
         walker.wait(100)
@@ -131,7 +131,7 @@ class TestWalking:
 
     @pytest.mark.timeout(TEST_TIMEOUT)
     @pytest.mark.flaky(reruns=1)
-    def test_walk_4(self, walker: SoccerbotController):
+    def test_walk_4(self, walker: Navigator):
         walker.setPose(Transformation([0.3275415, 0.2841, 0.321], [0.04060593, 0.0120126, 0.86708929, -0.4963497]))
         walker.ready()
         walker.wait(100)
@@ -141,7 +141,7 @@ class TestWalking:
 
     @pytest.mark.timeout(TEST_TIMEOUT)
     @pytest.mark.flaky(reruns=1)
-    def test_walk_5(self, walker: SoccerbotController):
+    def test_walk_5(self, walker: Navigator):
         walker.setPose(Transformation([0.716, -0.4188, 0.0], [0.0149, -0.085, 0.9685, 0.2483]))
         walker.ready()
         walker.wait(100)
@@ -151,7 +151,7 @@ class TestWalking:
 
     @pytest.mark.timeout(TEST_TIMEOUT)
     @pytest.mark.flaky(reruns=1)
-    def test_walk_6(self, walker: SoccerbotController):
+    def test_walk_6(self, walker: Navigator):
         walker.setPose(Transformation([2.008, -0.646, 0.0], [0.0149, -0.0474, 0.99985, -0.0072]))
         walker.wait(100)
         walker.ready()
@@ -161,7 +161,7 @@ class TestWalking:
 
     @pytest.mark.timeout(TEST_TIMEOUT)
     @pytest.mark.flaky(reruns=1)
-    def test_walk_7(self, walker: SoccerbotController):
+    def test_walk_7(self, walker: Navigator):
         walker.setPose(
             Transformation(
                 [2.082603318747387, 0.04499586647232634, 0.0],
@@ -176,7 +176,7 @@ class TestWalking:
 
     @pytest.mark.timeout(TEST_TIMEOUT)
     @pytest.mark.flaky(reruns=2)
-    def test_walk_side(self, walker: SoccerbotController):
+    def test_walk_side(self, walker: Navigator):
         walker.setPose(Transformation([0, 0, 0], [0.00000, 0, 0, 1]))
         walker.ready()
         walker.wait(100)
@@ -192,7 +192,7 @@ class TestWalking:
 
     @pytest.mark.timeout(TEST_TIMEOUT)
     @pytest.mark.flaky(reruns=2)
-    def test_walk_backward(self, walker: SoccerbotController):
+    def test_walk_backward(self, walker: Navigator):
         walker.setPose(Transformation([0, 0, 0], [0.00000, 0, 0, 1]))
         walker.ready()
         walker.wait(100)
@@ -207,7 +207,7 @@ class TestWalking:
 
     @pytest.mark.timeout(TEST_TIMEOUT)
     @pytest.mark.flaky(reruns=1)
-    def test_turn_in_place(self, walker: SoccerbotController):
+    def test_turn_in_place(self, walker: Navigator):
         walker.setPose(Transformation([0, 0, 0], [0.00000, 0, 0, 1]))
         walker.ready()
         walker.wait(100)
@@ -219,7 +219,7 @@ class TestWalking:
 
     @pytest.mark.timeout(TEST_TIMEOUT)
     @pytest.mark.flaky(reruns=1)
-    def test_small_movement_0(self, walker: SoccerbotController):
+    def test_small_movement_0(self, walker: Navigator):
         walker.setPose(Transformation([0, 0, 0], [0.00000, 0, 0, 1]))
         walker.ready()
         walker.wait(100)
@@ -232,7 +232,7 @@ class TestWalking:
 
     @pytest.mark.timeout(TEST_TIMEOUT)
     @pytest.mark.flaky(reruns=1)
-    def test_small_movement_1(self, walker: SoccerbotController):
+    def test_small_movement_1(self, walker: Navigator):
         walker.setPose(Transformation([0, 0, 0], [0.00000, 0, 0, 1]))
         walker.ready()
         walker.wait(100)
@@ -244,7 +244,7 @@ class TestWalking:
 
     @pytest.mark.timeout(TEST_TIMEOUT)
     @pytest.mark.flaky(reruns=1)
-    def test_small_movement_2(self, walker: SoccerbotController):
+    def test_small_movement_2(self, walker: Navigator):
         walker.setPose(Transformation([0, 0, 0], [0.00000, 0, 0, 1]))
         walker.ready()
         walker.wait(100)
@@ -256,7 +256,7 @@ class TestWalking:
 
     @pytest.mark.timeout(TEST_TIMEOUT)
     @pytest.mark.flaky(reruns=1)
-    def test_small_movement_3(self, walker: SoccerbotController):
+    def test_small_movement_3(self, walker: Navigator):
         walker.setPose(Transformation([0, 0, 0], [0.00000, 0, 0, 1]))
         walker.ready()
         walker.wait(100)
@@ -268,7 +268,7 @@ class TestWalking:
 
     @pytest.mark.timeout(TEST_TIMEOUT)
     @pytest.mark.flaky(reruns=1)
-    def test_small_movement_4(self, walker: SoccerbotController):
+    def test_small_movement_4(self, walker: Navigator):
         walker.setPose(Transformation([0.2489, -0.163, 0.0], [0.0284, -0.003, 0.9939, 0.01986]))
         walker.ready()
         walker.wait(100)
@@ -278,7 +278,7 @@ class TestWalking:
 
     @pytest.mark.timeout(TEST_TIMEOUT)
     @pytest.mark.flaky(reruns=1)
-    def test_small_movement_5(self, walker: SoccerbotController):
+    def test_small_movement_5(self, walker: Navigator):
         walker.setPose(
             Transformation(
                 [0.3096807057334623, 0.09374110438873018, 0.0],
@@ -293,7 +293,7 @@ class TestWalking:
 
     @pytest.mark.timeout(TEST_TIMEOUT)
     @pytest.mark.flaky(reruns=1)
-    def test_do_nothing(self, walker: SoccerbotController):
+    def test_do_nothing(self, walker: Navigator):
         walker.setPose(Transformation([0, 0, 0], [0.00000, 0, 0, 1]))
         walker.ready()
         walker.wait(100)
@@ -303,7 +303,7 @@ class TestWalking:
         assert walk_success
 
     @pytest.mark.timeout(TEST_TIMEOUT)
-    def test_walk_tiny_1(self, walker: SoccerbotController):
+    def test_walk_tiny_1(self, walker: Navigator):
         walker.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
         walker.ready()
         walker.wait(200)
@@ -312,7 +312,7 @@ class TestWalking:
         assert walk_success
 
     @pytest.mark.timeout(TEST_TIMEOUT)
-    def test_walk_tiny_2(self, walker: SoccerbotController):
+    def test_walk_tiny_2(self, walker: Navigator):
         walker.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
         walker.ready()
         walker.wait(200)
@@ -321,7 +321,7 @@ class TestWalking:
         assert walk_success
 
     @pytest.mark.timeout(TEST_TIMEOUT)
-    def test_walk_tiny_3(self, walker: SoccerbotController):
+    def test_walk_tiny_3(self, walker: Navigator):
         walker.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
         walker.ready()
         walker.wait(200)
@@ -330,7 +330,7 @@ class TestWalking:
         assert walk_success
 
     @pytest.mark.timeout(TEST_TIMEOUT)
-    def test_walk_tiny_4(self, walker: SoccerbotController):
+    def test_walk_tiny_4(self, walker: Navigator):
         walker.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
         walker.ready()
         walker.wait(200)

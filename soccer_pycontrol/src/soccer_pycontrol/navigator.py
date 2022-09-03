@@ -11,10 +11,23 @@ from soccer_pycontrol.ramp import Ramp
 from soccer_pycontrol.soccerbot import Soccerbot
 
 
-class SoccerbotController:
+class Navigator:
+    """
+    The 2D Navigator class, has a running loop that reads commands by the user and outputs actions to the soccerbot
+    class.
+    Doesn't require ROS and used for unit tests. All functions called here should be related to pybullet simulation
+    """
+
     PYBULLET_STEP = rospy.get_param("control_frequency", 0.01)
 
     def __init__(self, display=True, useCalibration=True):
+        """
+        Initialize the Navigator
+
+        :param display: Whether or not to show the pybullet visualization, turned off for quick unit tests
+        :param useCalibration: Whether or not to use movement calibration files located in config/robot_model.yaml, which
+        adjusts the calibration to the movement given
+        """
         self.display = display
         if display:
             self.client_id = pb.connect(pb.GUI)
@@ -32,27 +45,56 @@ class SoccerbotController:
         if hasattr(self, "client_id") and pb.isConnected(self.client_id):
             pb.disconnect(self.client_id)
 
-    def ready(self):
+    def ready(self) -> None:
+        """
+        Puts the robot into a ready pose to begin walking
+        """
         self.soccerbot.ready()
 
-    def setPose(self, pose: Transformation):
+    def setPose(self, pose: Transformation) -> None:
+        """
+        Relocate the robot at the certain pose
+
+        :param pose: 3D pose of the robot
+        """
         self.soccerbot.setPose(pose)
 
     def getPose(self):
+        """
+        Get the 3D pose of the robot
+
+        :return: The 3D pose of the robot
+        """
         pos_orientation = pb.getBasePositionAndOrientation(self.soccerbot.body)
         return Transformation(position=pos_orientation[0], quaternion=pos_orientation[1]).pos_theta
 
-    def setGoal(self, goal: Transformation):
-        self.soccerbot.createPathToGoal(goal)
-        # self.soccerbot.robot_path.show()
+    def setGoal(self, goal: Transformation) -> None:
+        """
+        Set the goal of the robot, will create the path to the goal that will be executed in the run() loop
 
-    def wait(self, steps):
+        :param goal: The 3D location goal for the robot
+        """
+        self.soccerbot.createPathToGoal(goal)
+
+    def wait(self, steps) -> None:
+        """
+        Make the robot wait for a few steps
+
+        :param steps: Defined by Navigator.PYBULLET_STEP, which is usually 0.01
+        """
         for i in range(steps):
             if self.display:
-                time.sleep(SoccerbotController.PYBULLET_STEP)
+                time.sleep(Navigator.PYBULLET_STEP)
             pb.stepSimulation()
 
-    def run(self, single_trajectory=False):
+    def run(self, single_trajectory=False) -> bool:
+        """
+        The main run loop for the navigator, executes goals given through setGoal and then stops
+
+        :param single_trajectory: If set to true, then the software will exit after a single trajectory is completed
+        :return: True if the robot succeeds navigating to the goal, False if it doesn't reach the goal and falls
+        """
+
         if self.soccerbot.robot_path.duration() == 0:
             return True
 
@@ -70,8 +112,8 @@ class SoccerbotController:
                     stable_count = 5
             else:
                 if self.soccerbot.current_step_time <= t <= self.soccerbot.robot_path.duration():
-                    self.soccerbot.stepPath(t, verbose=False)
-                    self.soccerbot.apply_imu_feedback(t, self.soccerbot.get_imu())
+                    self.soccerbot.stepPath(t)
+                    self.soccerbot.apply_imu_feedback(self.soccerbot.get_imu())
                     self.soccerbot.current_step_time = self.soccerbot.current_step_time + self.soccerbot.robot_path.step_precision
 
             angle_threshold = 1.25  # in radian
@@ -91,10 +133,7 @@ class SoccerbotController:
                 targetPositions=self.soccerbot.get_angles(),
             )
             pb.stepSimulation()
-            t = t + SoccerbotController.PYBULLET_STEP
+            t = t + Navigator.PYBULLET_STEP
             if self.display:
-                sleep(SoccerbotController.PYBULLET_STEP)
+                sleep(Navigator.PYBULLET_STEP)
         return True
-
-    def updateGoal(self):
-        pass

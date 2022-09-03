@@ -10,7 +10,13 @@ from soccer_pycontrol.utils import wrapToPi
 
 
 class PathSectionShort(PathSection):
+    """
+    A path section made up an initial rotation, followed by a linear path and a final rotatio
+    """
+
     steps_per_second_default = rospy.get_param("steps_per_second_default", 2.5)  # try 6 motors P = 09.25
+
+    #: How much to incrase the rotation angle when turning (for calibration purposes)
     scale_yaw = rospy.get_param("scale_yaw", 1.0)  # Increase the rotation by angle
 
     def __init__(self, start_transform: Transformation, end_transform: Transformation):
@@ -18,18 +24,18 @@ class PathSectionShort(PathSection):
         self.end_transform: Transformation = end_transform
 
         if self.isWalkingBackwards():
-            bodystep_size = rospy.get_param("bodystep_size_short_backwards", 0.025)
+            torso_step_length = rospy.get_param("torso_step_length_short_backwards", 0.025)
         else:
-            bodystep_size = rospy.get_param("bodystep_size_short_forwards", 0.035)
+            torso_step_length = rospy.get_param("torso_step_length_short_forwards", 0.035)
 
-        self.angular_bodystep_size = 0.25  # radians Radians per angular step
-        self.angular_speed = self.steps_per_second_default * self.angular_bodystep_size  # Rotational speed in radians per second
-        super().__init__(start_transform, end_transform, bodystep_size)
+        self.angular_torso_step_length = 0.25  # radians Radians per angular step
+        self.angular_speed = self.steps_per_second_default * self.angular_torso_step_length  # Rotational speed in radians per second
+        super().__init__(start_transform, end_transform, torso_step_length)
 
         if self.angle_distance != 0 and self.distance == 0:
-            self.angular_bodystep_size = self.angle_distance / np.ceil(self.angle_distance / self.angular_bodystep_size)
-            if self.bodyStepCount() <= 1:
-                self.angular_speed = self.steps_per_second_default * self.angular_bodystep_size
+            self.angular_torso_step_length = self.angle_distance / np.ceil(self.angle_distance / self.angular_torso_step_length)
+            if self.torsoStepCount() <= 1:
+                self.angular_speed = self.steps_per_second_default * self.angular_torso_step_length
 
     def poseAtRatio(self, r):
         diff_position = self.end_transform.position[0:2] - self.start_transform.position[0:2]
@@ -88,9 +94,9 @@ class PathSectionShort(PathSection):
         step_2_distance = np.linalg.norm(diff_position)
         step_3_angular_distance = abs(wrapToPi(intermediate_angle - final_angle))
 
-        step_1_steps = step_1_angular_distance / self.angular_bodystep_size
-        step_2_steps = step_2_distance / self.bodystep_size
-        step_3_steps = step_3_angular_distance / self.angular_bodystep_size
+        step_1_steps = step_1_angular_distance / self.angular_torso_step_length
+        step_2_steps = step_2_distance / self.torso_step_length
+        step_3_steps = step_3_angular_distance / self.angular_torso_step_length
         if step_1_steps + step_2_steps + step_3_steps == 0:
             ratio = 0
         else:
@@ -111,8 +117,8 @@ class PathSectionShort(PathSection):
         intermediate_angle = np.arctan2(diff_position[1], diff_position[0])
         return abs(wrapToPi(intermediate_angle - start_angle)) > np.pi / 2
 
-    def bodyStepCount(self):
+    def torsoStepCount(self):
         return self.linearStepCount() + self.angularStepCount()
 
     def angularStepCount(self):
-        return self.angle_distance / self.angular_bodystep_size
+        return self.angle_distance / self.angular_torso_step_length

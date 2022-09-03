@@ -5,11 +5,15 @@ import numpy as np
 import scipy
 
 from soccer_pycontrol.path import Path
-from soccer_pycontrol.path_crotch import PathCrotch
 from soccer_pycontrol.path_foot import PathFoot
+from soccer_pycontrol.path_torso import PathTorso
 
 
-class PathRobot(PathCrotch):
+class PathRobot(PathTorso):
+    """
+    Subclass for the robot's path, contains functions to draw the path of the robot
+    """
+
     def __init__(self, start_transform, end_transform, foot_center_to_floor):
         super().__init__(start_transform, end_transform, foot_center_to_floor)
 
@@ -21,6 +25,10 @@ class PathRobot(PathCrotch):
         plt.show()  # to interact with the path graph uncomment this
 
     def showTimingDiagram(self):
+        """
+        Displays a set of timing diagrams showing the foot step and ratios along the robot path
+        """
+
         times = np.linspace(0, self.duration(), num=math.ceil(self.duration() / self.step_precision) + 1)
         i = 0
         step_num = np.zeros(len(times))
@@ -30,7 +38,7 @@ class PathRobot(PathCrotch):
         left_foot_body_pose = np.zeros(len(times))
 
         for t in times:
-            [step_num[i], right_foot_step_ratio[i], left_foot_step_ratio[i]] = self.footHeightRatio(t)
+            [step_num[i], right_foot_step_ratio[i], left_foot_step_ratio[i]] = self.leftRightFootStepRatio(t)
             [right_foot_action, left_foot_action] = self.whatIsTheFootDoing(step_num[i])
             if len(right_foot_action) == 1:
                 right_foot_body_pose[i] = right_foot_action[0]
@@ -76,7 +84,7 @@ class PathRobot(PathCrotch):
         i = 0
         for t in times:
             [lfp[:, :, i], rfp[:, :, i]] = self.footPosition(t)
-            crp[:, :, i] = self.crotchPosition(t)
+            crp[:, :, i] = self.torsoPosition(t)
             diff_right_foot[:, :, i] = np.matmul(lfp[:, :, i], scipy.linalg.inv(crp[:, :, i]))  # lfp[:,:, i] / crp[:,:, i]
             diff_left_foot[:, :, i] = np.matmul(rfp[:, :, i], scipy.linalg.inv(crp[:, :, i]))  # rfp[:,:, i] / crp[:,:, i]
             i = i + 1

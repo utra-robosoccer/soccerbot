@@ -14,13 +14,17 @@ from rospy import ROSException
 from sensor_msgs.msg import JointState
 
 from soccer_common.pid import PID
-from soccer_common.transformation import Transformation as tr
+from soccer_common.transformation import Transformation
 from soccer_pycontrol.calibration import adjust_navigation_transform
 from soccer_pycontrol.path_robot import PathRobot
 from soccer_pycontrol.utils import wrapToPi
 
 
 class Joints(enum.IntEnum):
+    """
+    The list of joints of the robot `Joint Table <https://docs.google.com/spreadsheets/d/1KgIYwm3fNen8yjLEa-FEWq-GnRUnBjyg4z64nZ2uBv8/edit#gid=0>`_
+    """
+
     LEFT_ARM_1 = rospy.get_param("joint_indices/LEFT_ARM_1", 0)
     LEFT_ARM_2 = rospy.get_param("joint_indices/LEFT_ARM_2", 1)
     RIGHT_ARM_1 = rospy.get_param("joint_indices/RIGHT_ARM_1", 2)
@@ -44,6 +48,10 @@ class Joints(enum.IntEnum):
 
 
 class Links(enum.IntEnum):
+    """
+    The list of links of the robot `Joint Table <https://docs.google.com/spreadsheets/d/1KgIYwm3fNen8yjLEa-FEWq-GnRUnBjyg4z64nZ2uBv8/edit#gid=0>`_
+    """
+
     TORSO = rospy.get_param("joint_indices/TORSO", -1)
     LEFT_ARM_1 = rospy.get_param("joint_indices/LEFT_ARM_1", 0)
     LEFT_ARM_2 = rospy.get_param("joint_indices/LEFT_ARM_2", 1)
@@ -68,15 +76,30 @@ class Links(enum.IntEnum):
 
 
 class Soccerbot:
-    torso_height = rospy.get_param("torso_height", 0.36)  # Hardcoded for now, todo calculate this
-    walking_hip_height = rospy.get_param("walking_hip_height", 0.165)  # Hardcoded for now, todo calculate this
-    foot_box = [0.09, 0.07, 0.01474]
-    right_collision_center = [0.00385, 0.00401, -0.00737]
-    # pybullet_offset = [0.0082498, -0.0017440, -0.0522479]
-    arm_0_center = -0.45
-    arm_1_center = np.pi * 0.8
+    """
+    The main class for soccerbot, which receives and sends information to pybullet, inherited by ROS
+    """
+
+    torso_height = rospy.get_param("torso_height", 0.36)  #: Height of the robot's center of torso, while in ready pose
+    walking_hip_height = rospy.get_param("walking_hip_height", 0.165)  #: Height of the robot's hip (center of highest leg motor) while walking
+    foot_box = [0.09, 0.07, 0.01474]  #: Dimensions of the foot collision box #TODO get it from URDF
+    right_foot_joint_center_to_collision_box_center = [
+        0.00385,
+        0.00401,
+        -0.00737,
+    ]  #: Transformationansformation from the right foots joint position to the center of the collision box of the foot
+    arm_0_center = -0.45  #: Ready Pose angle for arm 1
+    arm_1_center = np.pi * 0.8  #: Ready Pose angle for arm 2
 
     def __init__(self, pose, useFixedBase=False, useCalibration=True):
+        """
+        Initialization function for soccerbot. Does a series of calculations based on the URDF file for standing, walking poses
+
+        :param pose: The position to initialize the robot
+        :param useFixedBase: Whether to fix the base_link in the air for movement testing
+        :param useCalibration: Whether to use calibration for walking path calculations
+        """
+
         self.useCalibration = useCalibration
 
         home = expanduser("~")
@@ -95,7 +118,7 @@ class Soccerbot:
         self.prev_lin_vel = [0, 0, 0]
         self.time_step_sim = 1.0 / 240
 
-        self.foot_center_to_floor = -self.right_collision_center[2] + self.foot_box[2]
+        self.foot_center_to_floor = -self.right_foot_joint_center_to_collision_box_center[2] + self.foot_box[2]
 
         # Calculate Constants
         H34 = self.get_link_transformation(Links.RIGHT_LEG_4, Links.RIGHT_LEG_3)
@@ -114,7 +137,7 @@ class Soccerbot:
         self.right_hip_to_left_hip = self.get_link_transformation(Links.LEFT_LEG_1, Links.RIGHT_LEG_1)
         self.hip_to_torso = self.get_link_transformation(Links.RIGHT_LEG_1, Links.TORSO)
 
-        pitch_correction = tr([0, 0, 0], euler=[0, rospy.get_param("torso_offset_pitch_ready", 0.0), 0])
+        pitch_correction = Transformation([0, 0, 0], euler=[0, rospy.get_param("torso_offset_pitch_ready", 0.0), 0])
 
         self.right_foot_init_position = self.get_link_transformation(Links.TORSO, Links.RIGHT_LEG_6)
         self.right_foot_init_position[2, 3] = -(self.hip_to_torso[2, 3] + self.walking_hip_height) + self.foot_center_to_floor
@@ -128,13 +151,13 @@ class Soccerbot:
 
         self.setPose(pose)
 
-        pitch_correction = tr([0, 0, 0], euler=[0, rospy.get_param("torso_offset_pitch", 0.0), 0])
-        self.torso_offset = tr([rospy.get_param("torso_offset_x", 0), 0, 0]) @ pitch_correction
+        pitch_correction = Transformation([0, 0, 0], euler=[0, rospy.get_param("torso_offset_pitch", 0.0), 0])
+        self.torso_offset = Transformation([rospy.get_param("torso_offset_x", 0), 0, 0]) @ pitch_correction
         self.robot_path: PathRobot = None
         self.robot_odom_path: PathRobot = None
 
-        self.configuration = [0.0] * len(Joints)
-        self.configuration_offset = [0.0] * len(Joints)
+        self.configuration = [0.0] * len(Joints)  #: The 18x1 float array motor angle configuration for the robot's 18 motors
+        self.configuration_offset = [0.0] * len(Joints)  #: The offset for the 18x1 motor angle configurations
         self.max_forces = []
         for i in range(0, 18):
             self.max_forces.append(pb.getJointInfo(self.body, i)[10] or rospy.get_param("max_force", 6))
@@ -154,8 +177,9 @@ class Soccerbot:
 
     def get_angles(self):
         """
-        Function for getting all the feet angles (for now?)
-        :return: All 12 angles in the dictionary form???
+        Function for getting all the angles, combines the configuration with the configuration offset
+
+        :return: All 18 angles of the robot in an array formation
         """
         angles = [wrapToPi(a + b) for a, b in zip(self.configuration, self.configuration_offset)]
         return angles
@@ -183,13 +207,13 @@ class Soccerbot:
         link2worldrev = pb.invertTransform(link2world[0], link2world[1])
 
         final_transformation = pb.multiplyTransforms(link2world[0], link2world[1], link1worldrev[0], link1worldrev[1])
-        return tr(np.round(list(final_transformation[0]), 5), np.round(list(final_transformation[1]), 5))
+        return Transformation(np.round(list(final_transformation[0]), 5), np.round(list(final_transformation[1]), 5))
 
-    def ready(self):
+    def ready(self) -> None:
         """
         Sets the robot's joint angles for the robot to standing pose.
-        :return: None
         """
+
         # Used later to calculate inverse kinematics
         position = self.pose.position
         position[2] = self.hip_to_torso[2, 3] + self.walking_hip_height
@@ -249,28 +273,12 @@ class Soccerbot:
 
         self.configuration_offset = [0] * len(Joints)
 
-    def updateRobotConfiguration(self):
-        self.configuration_offset = [0] * len(Joints)
-        try:
-            joint_state = rospy.wait_for_message("joint_states", JointState, timeout=3)
-            indexes = [joint_state.name.index(motor_name) for motor_name in self.motor_names]
-            self.configuration[0:18] = [joint_state.position[i] for i in indexes]
-        except (ROSException, KeyError, AttributeError) as ex:
-            rospy.logerr(ex)
-        except ValueError as ex:
-            print(ex)
-            rospy.logerr("Not all joint states are reported, cable disconnect?")
-            rospy.logerr("Joint States")
-            rospy.logerr(joint_state)
-            rospy.logerr("Motor Names")
-            print(self.motor_names)
-            self.configuration[0:18] = [0] * len(Joints)
-
     def inverseKinematicsRightFoot(self, transformation):
         """
-        #TODO
-        :param transformation: #TODO
-        :return: Motor angles for the right foot
+        # Does the inverse kinematics calculation for the right foot
+
+        :param transformation: The 3D transformation from the torso center to the foot center
+        :return: 6x1 Motor angles for the right foot
         """
         transformation[0:3, 3] = transformation[0:3, 3] - self.torso_to_right_hip[0:3, 3]
         invconf = scipy.linalg.inv(transformation)
@@ -282,7 +290,12 @@ class Soccerbot:
         Zd = invconf[2, 3]
 
         if np.linalg.norm([Xd, Yd, Zd]) > (d3 + d4):
-            print("IK Position Unreachable: Desired Distance: " + str(np.linalg.norm([Xd, Yd, Zd])) + ", Limited Distance: " + str(d3 + d4))
+            print(
+                "IK Position Unreachable: Desired Distance: "
+                + Transformation(np.linalg.norm([Xd, Yd, Zd]))
+                + ", Limited Distance: "
+                + Transformation(d3 + d4)
+            )
         assert np.linalg.norm([Xd, Yd, Zd]) <= (d3 + d4)
 
         theta6 = -np.arctan2(Yd, Zd)
@@ -302,15 +315,15 @@ class Soccerbot:
         beta = np.arctan2(-d3 * np.cos(tmp3), d4 + (d3 * np.sin(tmp3)))
         theta5 = np.pi / 2 - (alp - beta)
 
-        H34 = tr(dh=[self.DH[3, 0], self.DH[3, 1], self.DH[3, 2], theta4])
-        H45 = tr(dh=[self.DH[4, 0], self.DH[4, 1], self.DH[4, 2], theta5])
-        H56 = tr(dh=[self.DH[5, 0], self.DH[5, 1], self.DH[5, 2], theta6])
+        H34 = Transformation(dh=[self.DH[3, 0], self.DH[3, 1], self.DH[3, 2], theta4])
+        H45 = Transformation(dh=[self.DH[4, 0], self.DH[4, 1], self.DH[4, 2], theta5])
+        H56 = Transformation(dh=[self.DH[5, 0], self.DH[5, 1], self.DH[5, 2], theta6])
         H36 = np.matmul(H34, np.matmul(H45, H56))
-        final_rotation = tr(euler=[0, np.pi / 2, np.pi])
+        final_rotation = Transformation(euler=[0, np.pi / 2, np.pi])
         H03 = np.matmul(np.matmul(transformation, final_rotation), scipy.linalg.inv(H36))
         assert np.linalg.norm(H03[0:3, 3]) - d3 < 0.03
 
-        angles = tr(rotation_matrix=scipy.linalg.inv(H03[0:3, 0:3])).orientation_euler
+        angles = Transformation(rotation_matrix=scipy.linalg.inv(H03[0:3, 0:3])).orientation_euler
         theta3 = np.pi / 2 - angles[0]
         theta1 = -angles[1]
         theta2 = angles[2] + np.pi / 2
@@ -320,14 +333,21 @@ class Soccerbot:
     def inverseKinematicsLeftFoot(self, transformation):
         """
         Inverse kinematic function for the left foot. Works due to symmetry between left and right foot.
-        :param transformation:
+
+        :param transformation: The 3D transformation from the torso center to the foot center
         :return: Motor angles for the left foot
         """
         transformation[0:3, 3] = transformation[0:3, 3] + self.right_hip_to_left_hip[0:3, 3]
         [theta1, theta2, theta3, theta4, theta5, theta6] = self.inverseKinematicsRightFoot(transformation)
         return [-theta1, -theta2, theta3, theta4, theta5, -theta6]
 
-    def setPose(self, pose: tr):
+    def setPose(self, pose: Transformation):
+        """
+        Teleports the robot to the desired pose
+
+        :param pose: 3D position in pybullet
+        """
+
         if hasattr(self, "pose"):
             last_hip_height = self.pose.position[2]
         else:
@@ -341,16 +361,23 @@ class Soccerbot:
         if pb.isConnected():
             pb.resetBasePositionAndOrientation(self.body, self.pose.position, self.pose.quaternion)
 
-    def addTorsoHeight(self, position: tr):
+    def addTorsoHeight(self, position: Transformation):
+        """
+        Takes a 2D pose and adds the torso height to that position used for sending a position
+
+        :param position: 2D position of the robot in a 3D transformation format
+        """
+
         positionCoordinate = position.position
         positionCoordinate[2] = self.hip_to_torso[2, 3] + self.walking_hip_height
         position.position = positionCoordinate
 
-    def createPathToGoal(self, finishPosition: tr):
+    def createPathToGoal(self, finishPosition: Transformation) -> PathRobot:
         """
-        Returns the trajectories for the robot's feet and crotch. The coordinates x,y will be used only.
-        :param finishPosition: #TODO
-        :return: #TODO
+        Creates a path from the robot's current location to the goal location
+
+        :param finishPosition: 3D transformation
+        :return: Robot path
         """
         self.addTorsoHeight(finishPosition)
 
@@ -379,11 +406,17 @@ class Soccerbot:
         self.current_step_time = 0
         return self.robot_path
 
-    def stepPath(self, t, verbose=False):
+    def stepPath(self, t):
+        """
+        Updates the configuration for the robot for the next position t based on the current path
+
+        :param t: Timestep relative to the time of the first path, where t=0 is the beginning of the path
+        """
+
         assert t <= self.robot_path.duration()
 
         # Get Crotch position (Average Time: 0.0007538795471191406)
-        crotch_position = self.robot_path.crotchPosition(t) @ self.torso_offset
+        crotch_position = self.robot_path.torsoPosition(t) @ self.torso_offset
 
         # Get foot position at time (Average Time: 0.0004878044128417969)
         [right_foot_position, left_foot_position] = self.robot_path.footPosition(t)
@@ -401,74 +434,76 @@ class Soccerbot:
 
         self.pose = crotch_position
 
-    def calculate_angles(self, show=True):
+    def plot_angles(self):
+        """
+        Creates a plot of all the angles
+        """
+
         angles = []
         iterator = np.linspace(
             0,
             self.robot_path.duration(),
             num=math.ceil(self.robot_path.duration() / self.robot_path.step_precision) + 1,
         )
-        if show:
-            plot_angles = np.zeros((len(iterator), 18))
+        plot_angles = np.zeros((len(iterator), 18))
         i = 0
         for t in iterator:
             self.stepPath(t)
             angles.append((t, self.get_angles().copy()))
-            if show:
-                plot_angles[i] = np.array(self.get_angles().copy())
+            plot_angles[i] = np.array(self.get_angles().copy())
             i = i + 1
-        if show:
-            fig = plt.figure(3, tight_layout=True)
+        fig = plt.figure(3, tight_layout=True)
 
-            # Left Leg
-            plt.subplot(311)
-            plt.plot(iterator, plot_angles[:, Joints.LEFT_LEG_1], label="LEFT_LEG_1")
-            plt.plot(iterator, plot_angles[:, Joints.LEFT_LEG_2], label="LEFT_LEG_2")
-            plt.plot(iterator, plot_angles[:, Joints.LEFT_LEG_3], label="LEFT_LEG_3")
-            plt.plot(iterator, plot_angles[:, Joints.LEFT_LEG_4], label="LEFT_LEG_4")
-            plt.plot(iterator, plot_angles[:, Joints.LEFT_LEG_5], label="LEFT_LEG_5")
-            plt.plot(iterator, plot_angles[:, Joints.LEFT_LEG_6], label="LEFT_LEG_6")
-            plt.title("Left Foot")
-            plt.xlabel("time (t)")
-            plt.ylabel("Angles")
-            plt.legend()
-            plt.grid(b=True, which="both", axis="both")
+        # Left Leg
+        plt.subplot(311)
+        plt.plot(iterator, plot_angles[:, Joints.LEFT_LEG_1], label="LEFT_LEG_1")
+        plt.plot(iterator, plot_angles[:, Joints.LEFT_LEG_2], label="LEFT_LEG_2")
+        plt.plot(iterator, plot_angles[:, Joints.LEFT_LEG_3], label="LEFT_LEG_3")
+        plt.plot(iterator, plot_angles[:, Joints.LEFT_LEG_4], label="LEFT_LEG_4")
+        plt.plot(iterator, plot_angles[:, Joints.LEFT_LEG_5], label="LEFT_LEG_5")
+        plt.plot(iterator, plot_angles[:, Joints.LEFT_LEG_6], label="LEFT_LEG_6")
+        plt.title("Left Foot")
+        plt.xlabel("time (t)")
+        plt.ylabel("Angles")
+        plt.legend()
+        plt.grid(b=True, which="both", axis="both")
 
-            # Right Leg
-            plt.subplot(312)
-            plt.plot(iterator, plot_angles[:, Joints.RIGHT_LEG_1], label="RIGHT_LEG_1")
-            plt.plot(iterator, plot_angles[:, Joints.RIGHT_LEG_2], label="RIGHT_LEG_2")
-            plt.plot(iterator, plot_angles[:, Joints.RIGHT_LEG_3], label="RIGHT_LEG_3")
-            plt.plot(iterator, plot_angles[:, Joints.RIGHT_LEG_4], label="RIGHT_LEG_4")
-            plt.plot(iterator, plot_angles[:, Joints.RIGHT_LEG_5], label="RIGHT_LEG_5")
-            plt.plot(iterator, plot_angles[:, Joints.RIGHT_LEG_6], label="RIGHT_LEG_6")
-            plt.title("Right Foot")
-            plt.xlabel("time (t)")
-            plt.ylabel("Angles")
-            plt.legend()
-            plt.grid(b=True, which="both", axis="both")
+        # Right Leg
+        plt.subplot(312)
+        plt.plot(iterator, plot_angles[:, Joints.RIGHT_LEG_1], label="RIGHT_LEG_1")
+        plt.plot(iterator, plot_angles[:, Joints.RIGHT_LEG_2], label="RIGHT_LEG_2")
+        plt.plot(iterator, plot_angles[:, Joints.RIGHT_LEG_3], label="RIGHT_LEG_3")
+        plt.plot(iterator, plot_angles[:, Joints.RIGHT_LEG_4], label="RIGHT_LEG_4")
+        plt.plot(iterator, plot_angles[:, Joints.RIGHT_LEG_5], label="RIGHT_LEG_5")
+        plt.plot(iterator, plot_angles[:, Joints.RIGHT_LEG_6], label="RIGHT_LEG_6")
+        plt.title("Right Foot")
+        plt.xlabel("time (t)")
+        plt.ylabel("Angles")
+        plt.legend()
+        plt.grid(b=True, which="both", axis="both")
 
-            # Head & Arms
-            plt.subplot(313)
-            plt.plot(iterator, plot_angles[:, Joints.HEAD_1], label="HEAD_1")
-            plt.plot(iterator, plot_angles[:, Joints.HEAD_2], label="HEAD_2")
-            plt.plot(iterator, plot_angles[:, Joints.RIGHT_ARM_1], label="RIGHT_ARM_1")
-            plt.plot(iterator, plot_angles[:, Joints.RIGHT_ARM_2], label="RIGHT_ARM_2")
-            plt.plot(iterator, plot_angles[:, Joints.LEFT_ARM_1], label="LEFT_ARM_1")
-            plt.plot(iterator, plot_angles[:, Joints.LEFT_ARM_2], label="LEFT_ARM_2")
-            plt.title("Head & Arms")
-            plt.xlabel("time (t)")
-            plt.ylabel("Angles")
-            plt.legend()
-            plt.grid(b=True, which="both", axis="both")
+        # Head & Arms
+        plt.subplot(313)
+        plt.plot(iterator, plot_angles[:, Joints.HEAD_1], label="HEAD_1")
+        plt.plot(iterator, plot_angles[:, Joints.HEAD_2], label="HEAD_2")
+        plt.plot(iterator, plot_angles[:, Joints.RIGHT_ARM_1], label="RIGHT_ARM_1")
+        plt.plot(iterator, plot_angles[:, Joints.RIGHT_ARM_2], label="RIGHT_ARM_2")
+        plt.plot(iterator, plot_angles[:, Joints.LEFT_ARM_1], label="LEFT_ARM_1")
+        plt.plot(iterator, plot_angles[:, Joints.LEFT_ARM_2], label="LEFT_ARM_2")
+        plt.title("Head & Arms")
+        plt.xlabel("time (t)")
+        plt.ylabel("Angles")
+        plt.legend()
+        plt.grid(b=True, which="both", axis="both")
 
-            fig.canvas.draw()
-            plt.show()
+        fig.canvas.draw()
+        plt.show()
 
     def get_imu_raw(self, verbose=False):
         """
         Simulates the IMU at the IMU link location.
         TODO: Add noise model, make the refresh rate vary (currently in sync with the PyBullet time steps)
+
         :param verbose: Optional - Set to True to print the linear acceleration and angular velocity
         :return: concatenated 3-axes values for linear acceleration and angular velocity
         """
@@ -494,7 +529,7 @@ class Soccerbot:
         """
         Simulates the IMU at the IMU link location.
         TODO: Add noise model, make the refresh rate vary (currently in sync with the PyBullet time steps)
-        :param verbose: Optional - Set to True to print the linear acceleration and angular velocity
+
         :return: concatenated 3-axes values for linear acceleration and angular velocity
         """
         if rospy.get_param("merge_fixed_links", False):
@@ -502,19 +537,19 @@ class Soccerbot:
         else:
             [quat_pos, quat_orientation] = pb.getLinkState(self.body, linkIndex=Links.IMU, computeLinkVelocity=1)[4:6]
 
-        return tr(quat_pos, quat_orientation)
+        return Transformation(quat_pos, quat_orientation)
 
     def get_foot_pressure_sensors(self, floor):
         """
-        Checks if 4 corners of the each feet are in contact with ground
+        Checks if 4 corners of the each feet are in contact with ground #TODO fix docstring
 
-        Indicies for looking from above on the feet plates:
-          Left         Right
-        4-------5    0-------1
-        |   ^   |    |   ^   |      ^
-        |   |   |    |   |   |      | : forward direction
-        |       |    |       |
-        6-------7    2-------3
+        | Indices for looking from above on the feet plates
+        |   Left         Right
+        | 4-------5    0-------1
+        | |   ^   |    |   ^   |      ^
+        | |   |   |    |   |   |      | forward direction
+        | |       |    |       |
+        | 6-------7    2-------3
 
         :param floor: PyBullet body id of the plane the robot is walking on.
         :return: boolean array of 8 contact points on both feet, True: that point is touching the ground False: otherwise
@@ -524,8 +559,8 @@ class Soccerbot:
         left_pts = pb.getContactPoints(bodyA=self.body, bodyB=floor, linkIndexA=Links.LEFT_LEG_6)
         right_center = np.array(pb.getLinkState(self.body, linkIndex=Links.RIGHT_LEG_6)[4])
         left_center = np.array(pb.getLinkState(self.body, linkIndex=Links.LEFT_LEG_6)[4])
-        right_tr = tr(quaternion=pb.getLinkState(self.body, linkIndex=Links.RIGHT_LEG_6)[5]).rotation_matrix
-        left_tr = tr(quaternion=pb.getLinkState(self.body, linkIndex=Links.LEFT_LEG_6)[5]).rotation_matrix
+        right_tr = Transformation(quaternion=pb.getLinkState(self.body, linkIndex=Links.RIGHT_LEG_6)[5]).rotation_matrix
+        left_tr = Transformation(quaternion=pb.getLinkState(self.body, linkIndex=Links.LEFT_LEG_6)[5]).rotation_matrix
         for point in right_pts:
             index = np.signbit(np.matmul(right_tr, point[5] - right_center))[0:2]
             locations[index[1] + index[0] * 2] = True
@@ -534,6 +569,7 @@ class Soccerbot:
             locations[index[1] + (index[0] * 2) + 4] = True
         return locations
 
+    #: PID values to adjust the torso's front and back movement while walking
     walking_pid = PID(
         Kp=rospy.get_param("walking_Kp", 0.8),
         Kd=rospy.get_param("walking_Kd", 0.0),
@@ -542,16 +578,24 @@ class Soccerbot:
         output_limits=(-1.57, 1.57),
     )
 
-    def apply_imu_feedback(self, t: float, pose: tr):
+    def apply_imu_feedback(self, pose: Transformation):
+        """
+        Adds IMU feedback while the robot is moving to the arms
+
+        :param pose: Pose of the torso
+        :return: The value for the walking_pid controller
+        """
+
         if pose is None:
             return
 
-        [roll, pitch, yaw] = pose.orientation_euler
+        [_, pitch, _] = pose.orientation_euler
         F = self.walking_pid.update(pitch)
         self.configuration_offset[Joints.LEFT_ARM_1] = 5 * F
         self.configuration_offset[Joints.RIGHT_ARM_1] = 5 * F
         return F
 
+    #: PID values to adjust the torso's front and back movement while standing, getting ready to walk, and post walk
     standing_pid = PID(
         Kp=rospy.get_param("standing_Kp", 0.15),
         Kd=rospy.get_param("standing_Kd", 0.0),
@@ -560,7 +604,14 @@ class Soccerbot:
         output_limits=(-1.57, 1.57),
     )
 
-    def apply_imu_feedback_standing(self, pose: tr):
+    def apply_imu_feedback_standing(self, pose: Transformation):
+        """
+        Adds IMU feedback while the robot is standing or getting ready to the arms
+
+        :param pose: Pose of the torso
+        :return: The value for the walking_pid controller
+        """
+
         if pose is None:
             return
         [roll, pitch, yaw] = pose.orientation_euler
@@ -570,13 +621,27 @@ class Soccerbot:
         return pitch
 
     def reset_imus(self):
+        """
+        Reset the walking and standing PID values
+        """
+
         self.walking_pid.reset()
         self.standing_pid.reset()
 
     def apply_head_rotation(self):
+        """
+        Does head rotation for the robot, robot will try to face the ball if it is ready, otherwise rotate around
+        if its relocalizing or finding the ball
+        """
         pass
 
     def apply_foot_pressure_sensor_feedback(self, floor):
+        """
+        Add foot pressure sensor feedback (Currently not implemented)
+
+        :param floor: The floor object
+        """
+
         foot_pressure_values = self.get_foot_pressure_sensors(floor)
 
         motor_forces = deepcopy(self.max_forces)
@@ -595,4 +660,6 @@ class Soccerbot:
         return motor_forces
 
     def publishAngles(self):
-        pass
+        """
+        Publishes angles to ros
+        """
