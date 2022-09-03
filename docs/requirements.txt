@@ -3,6 +3,3 @@ sphinx-rtd-theme
 sphinxcontrib.youtube
 sphinxcontrib.slide
 markupsafe==2.0.1
-enum_tools
-sphinx_toolbox
-jinja2
