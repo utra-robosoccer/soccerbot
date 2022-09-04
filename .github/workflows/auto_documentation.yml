@@ -62,7 +62,7 @@ jobs:
         with:
           path: /home/runner/catkin_ws/src/soccerbot/docs/_build/html
       - name: Setup tmate session
-        if: failure()
+        if: ${{ failure() }}
         uses: mxschmitt/action-tmate@v3
   # Deployment job
   deploy:
