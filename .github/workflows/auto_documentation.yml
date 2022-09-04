@@ -57,13 +57,13 @@ jobs:
           make html
       - name: Setup Pages
         uses: actions/configure-pages@v2
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:
-          path: $HOME/catkin_ws/src/soccerbot/docs/_build/html
-
+          path: /home/runner/catkin_ws/src/soccerbot/docs/_build/html
+      - name: Setup tmate session
+        if: failure()
+        uses: mxschmitt/action-tmate@v3
   # Deployment job
   deploy:
     environment:
