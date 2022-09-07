@@ -12,7 +12,7 @@ The initial efforts to form new team within UTRA began summer 2016. However, it 
 
 By the end of 2017, our team grew to more than 20 members, all engineering undergraduates at the University of Toronto. Around that time, we were highly focused on achieving the basic requirements to qualify for the 2018 RoboCup competition in Montreal that upcoming summer. After several sleepless February nights, the video below was produced along with a concise paper.
 
-##### Robot Model for Bez1
+##### Robot Model (Bez1)
 
 ![Bez robot model](https://media.githubusercontent.com/media/utra-robosoccer/soccerbot/master/docs/images/bez1/bez1_0.jpg)
 
