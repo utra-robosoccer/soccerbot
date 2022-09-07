@@ -22,7 +22,6 @@ pytest-rerunfailures
 ruamel.yaml
 
 # object detection
-pandas
 Pillow==9.0.1
 tqdm
 torch==1.12.1; platform_machine == 'x86_64'
