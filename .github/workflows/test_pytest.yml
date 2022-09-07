@@ -26,8 +26,6 @@ jobs:
         run: |
           mkdir -p $HOME/catkin_ws/src/soccerbot
           mv $GITHUB_WORKSPACE/* $HOME/catkin_ws/src/soccerbot
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
       - name: Install dependencies
         run: |
           cd $HOME/catkin_ws/src/soccerbot
