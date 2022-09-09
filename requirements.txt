@@ -20,8 +20,10 @@ timeout_decorator
 pytest-timeout
 pytest-rerunfailures
 ruamel.yaml
+pyOpenSSL==22.0.0
 
 # object detection
+tensorboard
 Pillow==9.0.1
 tqdm
 torch==1.12.0; platform_machine == 'x86_64'
