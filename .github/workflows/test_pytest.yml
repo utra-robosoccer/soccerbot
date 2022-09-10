@@ -31,9 +31,9 @@ jobs:
           sudo apt-get update
           sudo apt-get install -q -y software-properties-common
           sudo add-apt-repository ppa:apt-fast/stable -y
-          echo debconf apt-fast/maxdownloads string 16 | debconf-set-selections
-          echo debconf apt-fast/dlflag boolean true | debconf-set-selections
-          echo debconf apt-fast/aptmanager string apt-get | debconf-set-selections
+          echo debconf apt-fast/maxdownloads string 16 | sudo debconf-set-selections
+          echo debconf apt-fast/dlflag boolean true | sudo debconf-set-selections
+          echo debconf apt-fast/aptmanager string apt-get | sudo debconf-set-selections
           sudo apt-get install -q -y apt-fast
           sudo apt-get clean
       - name: Install ros dependencies
@@ -41,9 +41,9 @@ jobs:
           cd $HOME/catkin_ws/src/soccerbot
           source /opt/ros/noetic/setup.bash
           rosdep update
-          rosdep install --from-paths . --ignore-src -r -s  | grep 'apt-get install' | awk '{print $3}' | sort  >  /tmp/catkin_install_list
+          rosdep install --from-paths . --ignore-src -r -s  | grep 'apt-get install' | awk '{print $5}' | sort  >  /tmp/catkin_install_list
           sudo apt-fast install -y --no-install-recommends $(cat /tmp/catkin_install_list)
-          sudo apt-get install -y python3-catkin-tools
+          sudo apt-fast install -y python3-catkin-tools
       - name: Install dependencies
         run: |
           cd $HOME/catkin_ws/src/soccerbot
