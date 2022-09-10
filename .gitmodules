@@ -8,3 +8,6 @@
 [submodule "soccer_strategy/src/game_controller/RobocupProtocol"]
 	path = soccer_strategy/src/game_controller/RobocupProtocol
 	url = git@github.com:utra-robosoccer/RobocupProtocol.git
+[submodule "external/soccerbot_pycharm_settings"]
+	path = external/soccerbot_pycharm_settings
+	url = git@github.com:utra-robosoccer/soccerbot_pycharm_settings.git
