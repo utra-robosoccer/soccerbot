@@ -20,7 +20,6 @@ By the end of 2017, our team grew to more than 20 members, all engineering under
 
 ![Bez kicking Gif](https://github.com/utra-robosoccer/soccerbot/blob/master/docs/images/bez1/kick.gif?raw=true)
 
-
 #### Join Us
 
 https://github.com/utra-robosoccer/soccerbot/wiki
