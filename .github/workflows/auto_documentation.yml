@@ -17,7 +17,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build_documentation:
+  build:
     runs-on: ubuntu-latest
     timeout-minutes: 60
 
@@ -81,7 +81,7 @@ jobs:
         if: ${{ failure() }}
         uses: mxschmitt/action-tmate@v3
   # Deployment job
-  deploy_documentation:
+  deploy:
     if: github.ref == 'refs/heads/master'
     environment:
       name: github-pages
