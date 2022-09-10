@@ -5,9 +5,9 @@ import unittest
 
 import numpy as np
 from matplotlib import pyplot as plt
-from soccer_msgs_mock.msg import RobotState
 
 from soccer_common.mock_ros import mock_ros
+from soccer_msgs.msg import RobotState
 
 if "ROS_NAMESPACE" not in os.environ:
     os.environ["ROS_NAMESPACE"] = "/robot1"

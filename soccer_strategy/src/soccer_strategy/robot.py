@@ -2,12 +2,8 @@ import enum
 
 import numpy
 
+from soccer_msgs.msg import RobotState
 from soccer_strategy.ball import Ball
-
-try:
-    from soccer_msgs.msg import RobotState
-except:
-    from soccer_msgs_mock.msg import RobotState
 
 
 # Root class for robot used by 2D, 3D and 3D friendly robots

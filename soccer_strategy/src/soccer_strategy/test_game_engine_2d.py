@@ -20,7 +20,6 @@ class Test(TestCase):
             self.display = False
 
     def test_dummy_vs_stationary_strategy(self):
-        sys.modules["soccer_msgs"] = __import__("soccer_msgs_mock")
         from soccer_strategy.game_engine_2d import GameEngine2D
         from soccer_strategy.strategy.strategy_dummy import StrategyDummy
         from soccer_strategy.strategy.strategy_stationary import StrategyStationary
@@ -33,7 +32,6 @@ class Test(TestCase):
         assert not (friendly_points == 0 and opponent_points == 0)
 
     def test_dummy_vs_dummy_strategy(self):
-        sys.modules["soccer_msgs"] = __import__("soccer_msgs_mock")
         from soccer_strategy.game_engine_2d import GameEngine2D
         from soccer_strategy.strategy.strategy_dummy import StrategyDummy
 
@@ -130,7 +128,6 @@ class Test(TestCase):
 
     @unittest.skip("Under Development")
     def test_formation_strategy(self):
-        sys.modules["soccer_msgs"] = __import__("soccer_msgs_mock")
         from soccer_strategy.game_engine_2d import GameEngine2D
         from soccer_strategy.strategy.decision_tree.strategy_decision_tree import (
             StrategyDecisionTree,

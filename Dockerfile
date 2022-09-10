@@ -113,13 +113,6 @@ RUN mkdir -p /home/$USER/.cache/torch/hub/ &&  \
     mv yolov5-master ultralytics_yolov5_master && \
     rm -rf master.zip
 
-# Build C++ ROS Packages such as AMCL first
-RUN mkdir -p src/soccerbot/amcl
-COPY --from=dependencies --chown=$USER /root/src/amcl src/soccerbot/amcl
-RUN source /opt/ros/noetic/setup.bash && catkin config --cmake-args -DCMAKE_BUILD_TYPE=Release
-RUN source /opt/ros/noetic/setup.bash && catkin build --no-status amcl
-RUN rm -rf src/soccerbot/
-
 # Build Python ROS Packages
 COPY --from=dependencies --chown=$USER /root/src src/soccerbot
 RUN source /opt/ros/noetic/setup.bash && catkin config --cmake-args -DCMAKE_BUILD_TYPE=Debug

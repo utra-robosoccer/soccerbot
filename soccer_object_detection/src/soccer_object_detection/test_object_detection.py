@@ -7,6 +7,7 @@ from cv2 import Mat
 
 from soccer_common import Transformation
 from soccer_common.mock_ros import mock_ros
+from soccer_msgs.msg import RobotState
 
 mock_ros()
 
@@ -44,7 +45,6 @@ class Test(TestCase):
         tf2_ros.TransformListener = MagicMock()
         rospy.Time.now = MagicMock(return_value=0)
         from sensor_msgs.msg import CameraInfo
-        from soccer_msgs_mock.msg import RobotState
 
         from soccer_object_detection.object_detect_node import ObjectDetectionNode
 

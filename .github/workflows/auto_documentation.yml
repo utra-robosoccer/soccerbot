@@ -13,7 +13,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: "pages"
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
@@ -36,15 +36,31 @@ jobs:
         run: |
           mkdir -p $HOME/catkin_ws/src/soccerbot
           mv $GITHUB_WORKSPACE/* $HOME/catkin_ws/src/soccerbot
-      - name: Install dependencies
+      - name: Install apt fast
+        run: |
+          sudo apt-get update
+          sudo apt-get install -q -y software-properties-common
+          sudo add-apt-repository ppa:apt-fast/stable -y
+          echo debconf apt-fast/maxdownloads string 16 | sudo debconf-set-selections
+          echo debconf apt-fast/dlflag boolean true | sudo debconf-set-selections
+          echo debconf apt-fast/aptmanager string apt-get | sudo debconf-set-selections
+          sudo apt-get install -q -y apt-fast
+          sudo apt-get clean
+      - name: Install ros dependencies
         run: |
           cd $HOME/catkin_ws/src/soccerbot
           source /opt/ros/noetic/setup.bash
           rosdep update
-          rosdep install --from-path -i -y .
+          rosdep install --from-paths . --ignore-src -r -s  | grep 'apt-get install' | awk '{print $5}' | sort  >  /tmp/catkin_install_list
+          sudo apt-fast install -y --no-install-recommends $(cat /tmp/catkin_install_list)
+          sudo apt-fast install -y python3-catkin-tools
+      - name: Install python dependencies
+        run: |
+          cd $HOME/catkin_ws/src/soccerbot
+          source /opt/ros/noetic/setup.bash
+          pip install pyOpenSSL==22.0.0
           pip install --trusted-host=pypi.org --trusted-host=files.pythonhosted.org --trusted-host=pytorch.org --trusted-host=download.pytorch.org --trusted-host=files.pypi.org --trusted-host=files.pytorch.org \
             -r requirements.txt --find-links https://download.pytorch.org/whl/cu113/torch_stable.html
-          sudo apt-get install -y python3-catkin-tools
       - name: Build Soccerbot
         run: |
           cd $HOME/catkin_ws
@@ -54,6 +70,8 @@ jobs:
       - name: Build Sphinx Documentation
         run: |
           cd $HOME/catkin_ws/src/soccerbot/docs
+          source /opt/ros/noetic/setup.bash
+          source $HOME/catkin_ws/devel/setup.bash
           pip install -r requirements.txt
           make html
       - name: Setup Pages
