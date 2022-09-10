@@ -1,6 +1,6 @@
 osrf-pycommon
 pip>=21.0.1
-matplotlib
+matplotlib==3.5.3
 numpy>=1.20.2
 roslibpy
 scipy>=1.6.2
@@ -21,7 +21,9 @@ pytest-timeout
 pytest-rerunfailures
 ruamel.yaml
 
-# object detection
+# object detectionq
+requests==2.28.1
+ipython==8.4.0
 seaborn
 tensorboard
 Pillow==9.0.1

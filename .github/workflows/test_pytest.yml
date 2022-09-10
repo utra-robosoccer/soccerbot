@@ -61,6 +61,7 @@ jobs:
         run: |
           cd $HOME/catkin_ws/src/soccerbot
           source /opt/ros/noetic/setup.bash
+          source $HOME/catkin_ws/devel/setup.bash
           export PYTHONPATH=$PYTHONPATH:soccer_common/src:soccer_pycontrol/src
           pytest -s --cache-clear --ignore=soccer_embedded --ignore=external --ignore=soccer_rlcontrol --ignore=test_integration.py --ignore=soccer_webots
       - name: Setup tmate session
