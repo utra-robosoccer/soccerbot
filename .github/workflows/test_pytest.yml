@@ -30,7 +30,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -q -y software-properties-common
-          add-apt-repository ppa:apt-fast/stable -y
+          sudo add-apt-repository ppa:apt-fast/stable -y
           echo debconf apt-fast/maxdownloads string 16 | debconf-set-selections
           echo debconf apt-fast/dlflag boolean true | debconf-set-selections
           echo debconf apt-fast/aptmanager string apt-get | debconf-set-selections
