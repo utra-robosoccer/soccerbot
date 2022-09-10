@@ -9,7 +9,7 @@ on:
 jobs:
   pytest:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 30
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
       cancel-in-progress: true
@@ -33,6 +33,12 @@ jobs:
           pip install pyOpenSSL==22.0.0
           pip install --trusted-host=pypi.org --trusted-host=files.pythonhosted.org --trusted-host=pytorch.org --trusted-host=download.pytorch.org --trusted-host=files.pypi.org --trusted-host=files.pytorch.org \
             -r requirements.txt --find-links https://download.pytorch.org/whl/cu113/torch_stable.html
+      - name: Build Soccerbot
+        run: |
+          cd $HOME/catkin_ws
+          source /opt/ros/noetic/setup.bash
+          catkin init
+          catkin build
       - name: Pytest
         run: |
           cd $HOME/catkin_ws/src/soccerbot

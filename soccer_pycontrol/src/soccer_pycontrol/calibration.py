@@ -24,7 +24,6 @@ def setup_calibration():
     import yaml
 
     sys.modules["rospy"] = MagicMock()
-    sys.modules["soccer_msgs"] = __import__("soccer_msgs_mock")
     import rospy
 
     rospy.Time = MagicMock()
