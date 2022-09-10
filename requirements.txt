@@ -20,9 +20,9 @@ timeout_decorator
 pytest-timeout
 pytest-rerunfailures
 ruamel.yaml
-pyOpenSSL==22.0.0
 
 # object detection
+seaborn
 tensorboard
 Pillow==9.0.1
 tqdm
