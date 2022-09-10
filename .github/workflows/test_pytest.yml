@@ -26,12 +26,28 @@ jobs:
         run: |
           mkdir -p $HOME/catkin_ws/src/soccerbot
           mv $GITHUB_WORKSPACE/* $HOME/catkin_ws/src/soccerbot
-      - name: Install dependencies
+      - name: Install apt fast
+        run: |
+          sudo apt-get update
+          sudo apt-get install -q -y software-properties-common
+          add-apt-repository ppa:apt-fast/stable -y
+          echo debconf apt-fast/maxdownloads string 16 | debconf-set-selections
+          echo debconf apt-fast/dlflag boolean true | debconf-set-selections
+          echo debconf apt-fast/aptmanager string apt-get | debconf-set-selections
+          sudo apt-get install -q -y apt-fast
+          sudo apt-get clean
+      - name: Install ros dependencies
         run: |
           cd $HOME/catkin_ws/src/soccerbot
           source /opt/ros/noetic/setup.bash
           rosdep update
-          rosdep install --from-path -i -y .
+          rosdep install --from-paths . --ignore-src -r -s  | grep 'apt-get install' | awk '{print $3}' | sort  >  /tmp/catkin_install_list
+          sudo apt-fast install -y --no-install-recommends $(cat /tmp/catkin_install_list)
+          sudo apt-get install -y python3-catkin-tools
+      - name: Install dependencies
+        run: |
+          cd $HOME/catkin_ws/src/soccerbot
+          source /opt/ros/noetic/setup.bash
           pip install pyOpenSSL==22.0.0
           pip install --trusted-host=pypi.org --trusted-host=files.pythonhosted.org --trusted-host=pytorch.org --trusted-host=download.pytorch.org --trusted-host=files.pypi.org --trusted-host=files.pytorch.org \
             -r requirements.txt --find-links https://download.pytorch.org/whl/cu113/torch_stable.html
