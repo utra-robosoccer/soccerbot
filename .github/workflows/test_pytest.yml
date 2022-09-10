@@ -44,7 +44,7 @@ jobs:
           rosdep install --from-paths . --ignore-src -r -s  | grep 'apt-get install' | awk '{print $5}' | sort  >  /tmp/catkin_install_list
           sudo apt-fast install -y --no-install-recommends $(cat /tmp/catkin_install_list)
           sudo apt-fast install -y python3-catkin-tools
-      - name: Install dependencies
+      - name: Install python dependencies
         run: |
           cd $HOME/catkin_ws/src/soccerbot
           source /opt/ros/noetic/setup.bash
