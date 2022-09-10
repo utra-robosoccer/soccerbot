@@ -12,6 +12,7 @@ services:
       file: docker-compose.yaml
       service: simulator
     volumes:
+      - changes I want
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
       - /dev/dri:/dev/dri:rw
       - /dev/snd:/dev/snd:rw
