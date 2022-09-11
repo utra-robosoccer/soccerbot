@@ -1,10 +1,6 @@
 import math
 
 import numpy as np
-import rospy
-from geometry_msgs.msg import Pose, PoseStamped
-from scipy.spatial.transform import Rotation as R
-from scipy.spatial.transform import Slerp
 
 
 class Transformation2D(np.ndarray):

@@ -14,12 +14,14 @@ class Transformation(np.ndarray):
         cls,
         position=(0.0, 0.0, 0.0),
         quaternion=(0.0, 0.0, 0.0, 1.0),
-        rotation_matrix=None,
-        matrix=None,
-        euler=None,
-        pos_theta=None,
-        pose=None,
-        dh=None,
+        rotation_matrix: np.array = None,
+        matrix: np.array = None,
+        euler: np.array = None,
+        pos_theta: np.array = None,
+        pose: Pose = None,
+        pose_stamped: PoseStamped = None,
+        dh: np.array = None,
+        timestamp: rospy.Time = None,
         *args,
         **kwargs
     ):
@@ -40,6 +42,8 @@ class Transformation(np.ndarray):
         :param kwargs: Additional keyword arguments, passed down to the numpy array object
         """
         cls = np.eye(4).view(cls)
+
+        cls.timestamp = timestamp
 
         if matrix is not None:
             cls.matrix = matrix
@@ -70,6 +74,9 @@ class Transformation(np.ndarray):
             cls.pos_theta = pos_theta
         elif pose is not None:
             cls.pose = pose
+        elif pose_stamped is not None:
+            cls.pose = pose_stamped.pose
+            cls.timestamp = pose_stamped.header.stamp
         else:
             cls.position = position
             cls.quaternion = quaternion

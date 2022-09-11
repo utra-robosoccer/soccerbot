@@ -21,7 +21,7 @@ pytest-timeout
 pytest-rerunfailures
 ruamel.yaml
 filterpy
-bagpy
+gdown
 
 # object detectionq
 requests==2.28.1
