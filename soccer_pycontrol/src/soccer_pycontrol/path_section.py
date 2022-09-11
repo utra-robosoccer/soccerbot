@@ -11,18 +11,35 @@ from soccer_common.utils import wrapTo2Pi, wrapToPi
 
 
 class PathSection(ABC):
-    backwards_bodystep_size_ratio = rospy.get_param("backwards_bodystep_size_ratio", 0.5)  # How much smaller the body step is for backwards movement
-    bodystep_size_default = rospy.get_param("bodystep_size_default", 0.04)
+    """
+    Base class for a Path Section
+    """
+
+    #: How much smaller the body step is for backwards movement
+    backwards_torso_step_length_ratio = rospy.get_param("backwards_torso_step_length_ratio", 0.5)
+
+    #: How much distance is a torso step (equivalent to a half step)
+    torso_step_length_default = rospy.get_param("torso_step_length_default", 0.04)
+
+    #: How many torso steps per second, approximately equivalent to foot steps per second
     steps_per_second_default = rospy.get_param("steps_per_second_default", 3.5)
 
-    def __init__(self, start_transform: Transformation, end_transform: Transformation, bodystep_size=bodystep_size_default):
+    def __init__(self, start_transform: Transformation, end_transform: Transformation, torso_step_length=torso_step_length_default):
+        """
+        Initializes the Path Section
+
+        :param start_transform: Start Transform
+        :param end_transform: End Transform
+        :param torso_step_length: Length of a torso step
+        """
+
         self.start_transform: Transformation = start_transform
         self.end_transform: Transformation = end_transform
 
-        self.bodystep_size = bodystep_size
+        self.torso_step_length = torso_step_length
         self.steps_per_second = PathSection.steps_per_second_default
-        self.speed = self.steps_per_second * self.bodystep_size
-        self.precision = 0.05 * self.bodystep_size
+        self.speed = self.steps_per_second * self.torso_step_length
+        self.precision = 0.05 * self.torso_step_length
 
         # Calculate distance and angular distance
         precisions = np.linspace(self.precision, 1.0, num=(int(1.0 / self.precision) + 1))
@@ -46,22 +63,43 @@ class PathSection(ABC):
 
         # Adjusting body step size to account for extra distance
         if self.distance != 0:
-            self.bodystep_size = self.distance / math.ceil(self.distance / bodystep_size)
-            if self.bodyStepCount() <= 1:
-                self.speed = self.steps_per_second * self.bodystep_size
+            self.torso_step_length = self.distance / math.ceil(self.distance / torso_step_length)
+            if self.torsoStepCount() <= 1:
+                self.speed = self.steps_per_second * self.torso_step_length
 
     @abc.abstractmethod
-    def poseAtRatio(self, r):
+    def poseAtRatio(self, r: float) -> Transformation:
+        """
+        Get the pose of the torso between the ratio
+
+        :param r: float between [0, 1]
+        :return: pose of the torso between the ratio
+        """
         pass
 
     def linearStepCount(self) -> int:
-        return self.distance / self.bodystep_size
+        """
+        How many steps in the forward and backwards direction
+
+        :return: Number of steps in float, indicates half steps
+        """
+        return self.distance / self.torso_step_length
 
     def angularStepCount(self):
+        """
+        How many steps are made for rotating on spot
+
+        :return: Number of steps in float, indicates half steps
+        """
         return 0
 
     @abc.abstractmethod
-    def getRatioFromStep(self, step_num):
+    def getRatioFromStep(self, step_num: int):
+        """
+        Get the ratio of the Path Section
+        :param step_num:
+        :return: float ratio
+        """
         pass
 
     def getBodyStepPose(self, step_num):
@@ -70,13 +108,30 @@ class PathSection(ABC):
 
     @abc.abstractmethod
     def duration(self):
+        """
+        The total time of the path section
+
+        :return: Duration in seconds
+        """
         pass
 
     @abc.abstractmethod
     @functools.lru_cache
     def isWalkingBackwards(self):
+        """
+        Whether of not the robot is walking backwards
+
+        :return: True if backwards, else False
+        """
+
         pass
 
     @abc.abstractmethod
-    def bodyStepCount(self):
+    def torsoStepCount(self):
+        """
+        Total number of torso steps
+
+        :return: Torso steps
+        """
+
         pass

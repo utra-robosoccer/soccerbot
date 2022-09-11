@@ -15,7 +15,7 @@ from timeout_decorator import timeout_decorator
 
 from soccer_common.camera import Camera
 from soccer_msgs.msg import BoundingBoxes, RobotState
-from soccer_strategy.src.team import Team
+from soccer_strategy.src.soccer_strategy.team import Team
 
 RUN_LOCALLY = "pycharm" in sys.argv[0]
 
@@ -147,6 +147,8 @@ class IntegrationTestInitial(IntegrationTest):
         self.distance = np.inf
 
         def processMsg(data: RobotState):
+            if data.role == RobotState.ROLE_UNASSIGNED:
+                return
             coords = self.team.formations["ready"][data.role]
             self.distance = np.linalg.norm([coords[0] - data.pose.position.x, coords[1] - data.pose.position.y])
 

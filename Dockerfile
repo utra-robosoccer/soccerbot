@@ -101,9 +101,9 @@ RUN groupadd -g 1000 $USER && \
     echo "$USER ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \
     usermod --append --groups 29,20,104,46,5,44 $USER
 
-WORKDIR /home/$USER/catkin_ws
-RUN chown -R $USER /home/$USER/catkin_ws
 USER $USER
+RUN mkdir -p /home/$USER/catkin_ws/src
+WORKDIR /home/$USER/catkin_ws
 
 # Predownload neural networks
 RUN mkdir -p /home/$USER/.cache/torch/hub/ &&  \
@@ -112,12 +112,6 @@ RUN mkdir -p /home/$USER/.cache/torch/hub/ &&  \
     unzip /home/$USER/.cache/torch/hub/master.zip && \
     mv yolov5-master ultralytics_yolov5_master && \
     rm -rf master.zip
-
-# Build C++ ROS Packages such as AMCL first
-COPY --from=dependencies --chown=$USER /root/src/amcl src/soccerbot/amcl
-RUN source /opt/ros/noetic/setup.bash && catkin config --cmake-args -DCMAKE_BUILD_TYPE=Release
-RUN source /opt/ros/noetic/setup.bash && catkin build --no-status amcl
-RUN rm -rf src/soccerbot
 
 # Build Python ROS Packages
 COPY --from=dependencies --chown=$USER /root/src src/soccerbot

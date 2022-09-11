@@ -1,2 +1,0 @@
-class FixedTrajectoryCommand:
-    pass

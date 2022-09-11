@@ -29,7 +29,7 @@
     <node pkg="soccer_object_localization" type="detector_objects.py" name="ball_detector" output="screen">
         <rosparam file="$(find soccer_object_localization)/config/$(arg param_file_name).yaml" command="load" />
     </node>
-    <node name="object_detector" pkg="soccer_object_detection" type="object_detect_node.py" output="screen" args="--model $(find soccer_object_detection)/src/small_model/July14.pt" unless="$(arg fake_localization)">
+    <node name="object_detector" pkg="soccer_object_detection" type="object_detect_node.py" output="screen" args="--model $(find soccer_object_detection)/src/soccer_object_detection/small_model/July14.pt" unless="$(arg fake_localization)">
         <rosparam file="$(find soccer_object_detection)/config/$(arg param_file_name).yaml" command="load" />
     </node>
 
