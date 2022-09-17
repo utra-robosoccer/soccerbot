@@ -53,9 +53,6 @@ class RobotControlled3D(RobotControlled):
 
         self.node_init_time = rospy.Time.now()
 
-    def set_kick_velocity(self, kick_velocity):
-        pass
-
     def set_navigation_position(self, goal_position):
         goal_position = self.shorten_navigation_position(goal_position)
 

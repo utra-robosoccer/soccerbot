@@ -31,6 +31,12 @@ class RobotControlled2D(RobotControlled):
         self.path = None
 
     def set_kick_velocity(self, kick_velocity):
+        """
+        Set's a kick velocity for the ball
+        :param kick_velocity:
+        :return:
+        """
+
         kick_angle_rand = np.random.normal(0, 0.2)
         kick_force_rand = max(np.random.normal(0.4, 0.3), 0)
         if kick_force_rand == 0:

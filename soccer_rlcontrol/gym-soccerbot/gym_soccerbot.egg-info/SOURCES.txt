@@ -1,6 +1,0 @@
-setup.py
-gym_soccerbot.egg-info/PKG-INFO
-gym_soccerbot.egg-info/SOURCES.txt
-gym_soccerbot.egg-info/dependency_links.txt
-gym_soccerbot.egg-info/requires.txt
-gym_soccerbot.egg-info/top_level.txt

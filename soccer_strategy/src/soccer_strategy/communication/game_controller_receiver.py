@@ -15,7 +15,11 @@ from soccer_strategy.communication.gamestate import (
 )
 
 
-class GameStateReceiver(object):
+class GameStateReceiver:
+    """
+    Get information about the GameState and publish to /robotx/game_state
+    """
+
     team_id = int(os.getenv("ROBOCUP_TEAM_ID", 16))
     robot_id = int(os.getenv("ROBOCUP_ROBOT_ID", 2))
 
@@ -28,8 +32,6 @@ class GameStateReceiver(object):
         rospy.loginfo("We are playing as player {} in team {}".format(self.robot_id, self.team_id))
 
         self.state_publisher = rospy.Publisher("gamestate", GameStateMsg, queue_size=1)
-        self.execute_game_interruption_subscriber = rospy.Subscriber("execute_game_interruption", Empty, self.game_interruption_callback)
-        self.execute_game_interruption = False
 
         self.receiver_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.receiver_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -47,6 +49,10 @@ class GameStateReceiver(object):
         self.send_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
 
     def receive_forever(self):
+        """
+        Runs the main loop and gets information from the game controller
+        """
+
         connected = False
         while not rospy.is_shutdown():
             try:
@@ -87,10 +93,12 @@ class GameStateReceiver(object):
         self.send_socket.close()
 
     def answer_to_gamecontroller(self, peer):
-        return_message = 2
+        """
+        Answer the game controller information it requires
+        :param peer: Don't know
+        """
 
-        if self.execute_game_interruption:
-            return_message = 4
+        return_message = 2
 
         data = Container(
             header=b"RGrt",
@@ -104,6 +112,11 @@ class GameStateReceiver(object):
         self.send_socket.sendto(ReturnData.build(data), destination)
 
     def on_new_gamestate(self, state):
+        """
+        Publish information about the game state
+        :param state: state of the game
+        :return:
+        """
         if state.teams[0].team_number == self.team_id:
             own_team = state.teams[0]
             rival_team = state.teams[1]
@@ -119,10 +132,6 @@ class GameStateReceiver(object):
         except IndexError:
             rospy.logerr("Robot {} not playing".format(self.robot_id))
             return
-
-        # reset execute game interruption if gamestate back to normal
-        if state.secondary_state == GameState.secondary_state.STATE_NORMAL and self.execute_game_interruption:
-            self.execute_game_interruption = False
 
         msg = GameStateMsg()
         msg.header.stamp = rospy.Time.now()
@@ -146,9 +155,6 @@ class GameStateReceiver(object):
         msg.singleShots = own_team.single_shots
         msg.coach_message = own_team.coach_message
         self.state_publisher.publish(msg)
-
-    def game_interruption_callback(self, data):
-        self.execute_game_interruption = True
 
 
 if __name__ == "__main__":
