@@ -1,3 +1,4 @@
+import os
 import sys
 import unittest
 from unittest import TestCase
@@ -16,7 +17,7 @@ class Test(TestCase):
 
         super().setUpClass()
         self.display = True
-        if "pytest" in sys.argv[0]:
+        if "DISPLAY" not in os.environ:
             self.display = False
 
     def test_dummy_vs_stationary_strategy(self):
@@ -125,24 +126,3 @@ class Test(TestCase):
                             ball_position = goal_position - numpy.array([ball_x, ball_y])
                             Actions.navigate_to_position_with_offset = MagicMock()
                             Actions.navigate_to_scoring_position(robot, ball_position, goal_position)
-
-    @unittest.skip("Under Development")
-    def test_formation_strategy(self):
-        from soccer_strategy.game_engine_2d import GameEngine2D
-        from soccer_strategy.strategy.decision_tree.strategy_decision_tree import (
-            StrategyDecisionTree,
-        )
-        from soccer_strategy.strategy.strategy_stationary import StrategyStationary
-
-        mock_ros(robot_model="bez1", real_robot=False, config_path="")
-
-        friendly_wins = 0
-        opponent_wins = 0
-        for i in range(1):
-            g = GameEngine2D(display=self.display, team_1_strategy=StrategyDecisionTree, team_2_strategy=StrategyStationary)
-            friendly_points, opponent_points = g.run()
-            if friendly_points > opponent_points:
-                friendly_wins += 1
-            elif friendly_points < opponent_points:
-                opponent_wins += 1
-        print(f"Friendly: {friendly_wins}, opponent: {opponent_wins}")

@@ -22,36 +22,6 @@ class Actions:
                 robot.status = Robot.Status.READY
 
     @staticmethod
-    def kick(robot: [Robot], ball: Ball, target_position):
-        player_position = robot.position[0:2]
-        ball_position = np.array(ball.position)
-        player_angle = robot.position[2]
-        diff = ball_position - target_position
-        diff_unit = diff / np.linalg.norm(diff)
-        diff_angle = math.atan2(-diff_unit[1], -diff_unit[0])
-
-        nav_angle__diff = math.atan2(math.sin(player_angle - diff_angle), math.cos(player_angle - diff_angle))
-        distance_of_player_to_ball = np.linalg.norm(player_position - ball_position)
-
-        if distance_of_player_to_ball < 0.18 and abs(nav_angle__diff) < 0.15 and robot.path.isFinished(robot.path_time):
-            if nav_angle__diff > 0.03:
-                # right foot
-                robot.kick_with_right_foot = True
-            else:
-                robot.kick_with_right_foot = False
-
-            delta = target_position - ball_position
-            unit = delta / np.linalg.norm(delta)
-
-            robot.status = Robot.Status.KICKING
-            robot.set_kick_velocity(unit * robot.max_kick_speed)
-
-    @staticmethod
-    def navigation_to_formation(team: Team, formation: str):
-        for robot in team.robots:
-            Actions.navigation_to_position(robot, team.formations[formation][robot.role])
-
-    @staticmethod
     def navigation_to_position(robot: RobotControlled, position):
         robot.set_navigation_position(position)
 

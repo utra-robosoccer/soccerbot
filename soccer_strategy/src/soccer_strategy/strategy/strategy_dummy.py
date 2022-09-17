@@ -6,7 +6,6 @@ import rospy
 from soccer_msgs.msg import GameState
 from soccer_strategy.robot import Robot
 from soccer_strategy.strategy.interfaces.actions import Actions
-from soccer_strategy.strategy.interfaces.evaluations import Evaluations
 from soccer_strategy.strategy.strategy import (
     Strategy,
     get_back_up,
@@ -49,7 +48,7 @@ class StrategyDummy(Strategy):
             goal_position = friendly_team.enemy_goal_position
             ball = friendly_team.average_ball_position
 
-            current_closest = Evaluations.who_has_the_ball(friendly_team.robots, ball)  # Guess who has the ball
+            current_closest = self.who_has_the_ball(friendly_team.robots, ball)  # Guess who has the ball
             if current_closest is None:
                 pass
             elif current_closest.robot_id == this_robot.robot_id:

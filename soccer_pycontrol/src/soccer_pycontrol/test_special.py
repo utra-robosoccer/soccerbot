@@ -18,8 +18,7 @@ from soccer_common.transformation import Transformation
 
 run_in_ros = False
 display = True
-if "pytest" in sys.argv[0]:
-    run_in_ros = False
+if "DISPLAY" in os.environ:
     display = False
 else:
     import rospy

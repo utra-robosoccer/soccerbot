@@ -1,11 +1,12 @@
-import abc
+import math
 
+import numpy as np
 import rospy
 
 from soccer_msgs.msg import GameState
+from soccer_strategy.ball import Ball
 from soccer_strategy.robot import Robot
 from soccer_strategy.robot_controlled import RobotControlled
-from soccer_strategy.robot_controlled_2d import RobotControlled2D
 from soccer_strategy.team import Team
 
 
@@ -57,3 +58,16 @@ class Strategy:
                 return robot
 
         raise AssertionError
+
+    def who_has_the_ball(self, robots: [Robot], ball: Ball) -> Robot:
+        closest_dist = math.inf
+        current_closest = None
+        for robot in robots:
+            if robot.status not in [Robot.Status.READY, Robot.Status.WALKING, Robot.Status.KICKING]:
+                continue
+
+            dist = np.linalg.norm(ball.position[0:2] - robot.position[0:2])
+            if dist < closest_dist:
+                closest_dist = dist
+                current_closest = robot
+        return current_closest

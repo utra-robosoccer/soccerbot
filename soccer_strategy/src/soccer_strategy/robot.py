@@ -6,8 +6,19 @@ from soccer_msgs.msg import RobotState
 from soccer_strategy.ball import Ball
 
 
-# Root class for robot used by 2D, 3D and 3D friendly robots
 class Robot:
+    """
+    Root class for robot used by 2D, 3D and 3D friendly robots
+           Robot
+         /        \
+    RobotObserved   Robot Controlled
+                    /                  \
+             Robot Controlled 2D     Robot Controlled 3D
+
+    Robot Controlled 2D is only used for the 2D simulation and should be used with game_engine_2d
+    Robot Controlled 3D is only used for the real robot and webots simulation and used with game_engine_3d
+    """
+
     class Team(enum.IntEnum):
         UNKNOWN = 0
         FRIENDLY = 1
@@ -50,6 +61,15 @@ class Robot:
         status=Status.DISCONNECTED,
         position=numpy.array([0, 0, 0]),
     ):
+        """
+        Initializes the robot structure
+
+        :param robot_id: Integer representing the robot's id
+        :param team: Which team the robot is on
+        :param role: Which role on the field
+        :param status: What is the current status of the robot
+        :param position: X, Y position of the robot where Y is the short length of the field and X is the long length
+        """
         self.team = team
         self.role = role
         self.status = status

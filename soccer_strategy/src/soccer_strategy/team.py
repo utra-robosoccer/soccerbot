@@ -44,6 +44,10 @@ DEFAULT_FORMATIONS = {
 
 
 class Team:
+    """
+    Contains all information about a team
+    """
+
     def __init__(self, robots):
         self.robots = robots
         self.average_ball_position: Ball = None
@@ -55,6 +59,9 @@ class Team:
         self.enemy_goal_position = [4.5, 0]
 
     def flip_positions(self):
+        """
+        Function to flip all the formations used for switching team
+        """
         self.enemy_goal_position[0] = -self.enemy_goal_position[0]
         for formation in self.formations:
             for role in self.formations[formation]:
@@ -62,8 +69,11 @@ class Team:
                 self.formations[formation][role][2] = -3.14
 
     def update_average_ball_position(self):
-        # get estimated ball position with tf information from 4 robots and average them
-        # this needs to be team-dependent in the future, for now just use the current robot's position
+        """
+        Get estimated ball position with tf information from 4 robots and average them
+        This needs to be team-dependent in the future, for now just use the current robot's position
+        :return:
+        """
 
         for robot in self.robots:
             if robot.robot_id == int(os.getenv("ROBOCUP_ROBOT_ID", 1)):
@@ -78,6 +88,10 @@ class Team:
         return False
 
     def log(self):
+        """
+        Log all the information about all the robots on a team
+        """
+
         np.set_printoptions(precision=3)
         for robot in self.robots:
             if robot.status != Robot.Status.DISCONNECTED:

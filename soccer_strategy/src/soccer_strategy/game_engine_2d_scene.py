@@ -16,8 +16,13 @@ green = Color("#50bb00")
 black = Color("#000000")
 
 
-# Rules and Dimensions https://cdn.robocup.org/hl/wp/2021/04/V-HL21_Rules_changesMarked.pdf
 class Scene:
+    """
+    Scene used by the 2d simulator, contains drawing functions
+
+    Rules and Dimensions https://cdn.robocup.org/hl/wp/2021/04/V-HL21_Rules_changesMarked.pdf
+    """
+
     def __init__(self, robots, ball):
         self.canvas = scene.SceneCanvas()
         self.canvas.size = 800, 400
@@ -30,6 +35,9 @@ class Scene:
         self.init_actors(robots, ball)
 
     def draw_field(self):
+        """
+        Draws the soccer field
+        """
         scene.Rectangle(center=(0, 0), width=10, height=7, color=green, parent=self.view.scene)
         scene.Ellipse(center=(0, 0), radius=1.3 / 2, color=green, border_color=white, border_width=2, parent=self.view.scene)
         scene.Line(pos=np.array([[0, 3.5], [0, -3.5]]), width=2, color=white, parent=self.view.scene)
@@ -42,6 +50,11 @@ class Scene:
         )
 
     def get_robot_polygon(self, robot: RobotControlled2D):
+        """
+        Creates a robot polygon shape dimensions from the robot
+        :return: list of points for the polygon in real world coordinates
+        """
+
         l = 0.085000 / 2
         w = (0.145000 + 0.047760 * 2) / 2
         a = robot.position[0:2]
@@ -55,6 +68,12 @@ class Scene:
         return [p1, p2, p3, p4]
 
     def init_actors(self, robots: [RobotControlled2D], ball: Ball):
+        """
+        Initializes the robot and ball positions in the visualization
+        :param robots: A list of robots
+        :param ball: The ball
+        """
+
         self.ball = scene.Ellipse(center=(ball.position[0], ball.position[1]), radius=0.07, color=blue, parent=self.view.scene)
         self.robots = []
         for robot in robots:
@@ -125,18 +144,3 @@ class Scene:
 
         self.canvas.update()
         app.process_events()
-
-    def plot_vectors(self, field_vectors):
-        arrows = []
-        pos = []
-        for k in range(0, len(field_vectors)):
-            if field_vectors[k] is not None:
-                for i in range(0, len(field_vectors[k][0])):
-                    x1 = field_vectors[k][0][i][0]
-                    y1 = field_vectors[k][0][i][1]
-                    x2 = x1 + field_vectors[k][1][i][0]
-                    y2 = y1 + field_vectors[k][1][i][1]
-                    arrows.append([x1, y1, x2, y2])
-                    pos.append([x1, y1])
-                    pos.append([x2, y2])
-        self.field_vectors.set_data(pos=np.array(pos), arrows=np.array(arrows))
