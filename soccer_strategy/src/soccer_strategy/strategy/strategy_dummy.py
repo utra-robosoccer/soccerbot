@@ -5,16 +5,20 @@ import rospy
 
 from soccer_msgs.msg import GameState
 from soccer_strategy.robot import Robot
-from soccer_strategy.strategy.interfaces.actions import Actions
 from soccer_strategy.strategy.strategy import (
     Strategy,
     get_back_up,
     update_average_ball_position,
 )
+from soccer_strategy.strategy.utils import Utility
 from soccer_strategy.team import Team
 
 
 class StrategyDummy(Strategy):
+    """
+    Very basic strategy used, simply kick and go
+    """
+
     def __init__(self):
         self.time_of_end_of_action = rospy.Time.now()
         self.update_frequency = 1
@@ -22,8 +26,16 @@ class StrategyDummy(Strategy):
 
     @get_back_up
     @update_average_ball_position
-    def update_next_strategy(self, friendly_team: Team, opponent_team: Team, game_state: GameState):
-        super().update_next_strategy(friendly_team, opponent_team, game_state)
+    def step_strategy(self, friendly_team: Team, opponent_team: Team, game_state: GameState):
+        """
+        Looks for the ball if it doesn't see the ball, if it sees, then kick the ball towards the net
+
+        :param friendly_team: The friendly Team
+        :param opponent_team: The opponent Team
+        :param game_state: The GameState from the game controller
+        """
+
+        super().step_strategy(friendly_team, opponent_team, game_state)
 
         this_robot = self.get_current_robot(friendly_team)
 
@@ -67,7 +79,7 @@ class StrategyDummy(Strategy):
                         2
                     ) and this_robot.status != Robot.Status.WALKING:
                         rospy.loginfo("Navigation to ball")
-                        Actions.navigate_to_scoring_position(this_robot, np.array(ball.position[0:2]), goal_position)
+                        Utility.navigate_to_scoring_position(this_robot, np.array(ball.position[0:2]), goal_position)
 
             pass
 

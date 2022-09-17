@@ -1,6 +1,4 @@
 import os
-import sys
-import unittest
 from unittest import TestCase
 from unittest.mock import MagicMock
 
@@ -43,78 +41,78 @@ class Test(TestCase):
         print(f"Friendly: {friendly_points}, opponent: {opponent_points}")
 
     def test_navigate_to_scoring_position_with_offset_case_1(self):
-        from soccer_strategy.strategy.interfaces.actions import Actions
+        from soccer_strategy.strategy.utils import Utility
 
         robot = MagicMock()
         goal_position = numpy.array([5, 0])
 
         robot.position = goal_position - numpy.array([0.4, 0.2])
         ball_position = goal_position - numpy.array([0.2, 0.4])
-        Actions.navigate_to_position_with_offset = MagicMock()
-        Actions.navigate_to_scoring_position(robot, ball_position, goal_position)
-        assert Actions.navigate_to_position_with_offset.call_args[0][0] == robot
-        assert np.array_equal(Actions.navigate_to_position_with_offset.call_args[0][1], ball_position)
-        assert np.array_equal(Actions.navigate_to_position_with_offset.call_args[0][2], np.array([5, -0.6]))
+        Utility.navigate_to_position_with_offset = MagicMock()
+        Utility.navigate_to_scoring_position(robot, ball_position, goal_position)
+        assert Utility.navigate_to_position_with_offset.call_args[0][0] == robot
+        assert np.array_equal(Utility.navigate_to_position_with_offset.call_args[0][1], ball_position)
+        assert np.array_equal(Utility.navigate_to_position_with_offset.call_args[0][2], np.array([5, -0.6]))
 
     def test_navigate_to_scoring_position_with_offset_case_2a(self):
-        from soccer_strategy.strategy.interfaces.actions import Actions
+        from soccer_strategy.strategy.utils import Utility
 
         robot = MagicMock()
         goal_position = numpy.array([5, 0])
 
         robot.position = goal_position - numpy.array([1, 1.0])
         ball_position = goal_position - numpy.array([0.4, 1.2])
-        Actions.navigate_to_position_with_offset = MagicMock()
-        Actions.navigate_to_scoring_position(robot, ball_position, goal_position)
-        assert Actions.navigate_to_position_with_offset.call_args[0][0] == robot
-        assert np.array_equal(Actions.navigate_to_position_with_offset.call_args[0][1], ball_position)
-        assert np.array_equal(Actions.navigate_to_position_with_offset.call_args[0][2], np.array([5, -1.2]))
+        Utility.navigate_to_position_with_offset = MagicMock()
+        Utility.navigate_to_scoring_position(robot, ball_position, goal_position)
+        assert Utility.navigate_to_position_with_offset.call_args[0][0] == robot
+        assert np.array_equal(Utility.navigate_to_position_with_offset.call_args[0][1], ball_position)
+        assert np.array_equal(Utility.navigate_to_position_with_offset.call_args[0][2], np.array([5, -1.2]))
 
     def test_navigate_to_scoring_position_with_offset_case_2b(self):
-        from soccer_strategy.strategy.interfaces.actions import Actions
+        from soccer_strategy.strategy.utils import Utility
 
         robot = MagicMock()
         goal_position = numpy.array([5, 0])
 
         robot.position = goal_position - numpy.array([0.4, 1.0])
         ball_position = goal_position - numpy.array([0.4, 1.2])
-        Actions.navigate_to_position_with_offset = MagicMock()
-        Actions.navigate_to_scoring_position(robot, ball_position, goal_position)
-        assert Actions.navigate_to_position_with_offset.call_args[0][0] == robot
-        assert np.array_equal(Actions.navigate_to_position_with_offset.call_args[0][1], ball_position)
-        assert np.array_equal(Actions.navigate_to_position_with_offset.call_args[0][2], np.array([5, -1.2]))
-        assert Actions.navigate_to_position_with_offset.call_args.kwargs["offset"] == 0.3
+        Utility.navigate_to_position_with_offset = MagicMock()
+        Utility.navigate_to_scoring_position(robot, ball_position, goal_position)
+        assert Utility.navigate_to_position_with_offset.call_args[0][0] == robot
+        assert np.array_equal(Utility.navigate_to_position_with_offset.call_args[0][1], ball_position)
+        assert np.array_equal(Utility.navigate_to_position_with_offset.call_args[0][2], np.array([5, -1.2]))
+        assert Utility.navigate_to_position_with_offset.call_args.kwargs["offset"] == 0.3
 
     def test_navigate_to_scoring_position_with_offset_case_3_out_of_the_edge(self):
-        from soccer_strategy.strategy.interfaces.actions import Actions
+        from soccer_strategy.strategy.utils import Utility
 
         robot = MagicMock()
         goal_position = numpy.array([5, 0])
 
         robot.position = goal_position - numpy.array([0.5, 1.0])
         ball_position = goal_position - numpy.array([0.4, 1.4])
-        Actions.navigate_to_position_with_offset = MagicMock()
-        Actions.navigate_to_scoring_position(robot, ball_position, goal_position)
-        assert Actions.navigate_to_position_with_offset.call_args[0][0] == robot
-        assert np.array_equal(Actions.navigate_to_position_with_offset.call_args[0][1], ball_position)
-        assert np.array_equal(Actions.navigate_to_position_with_offset.call_args[0][2], goal_position)
+        Utility.navigate_to_position_with_offset = MagicMock()
+        Utility.navigate_to_scoring_position(robot, ball_position, goal_position)
+        assert Utility.navigate_to_position_with_offset.call_args[0][0] == robot
+        assert np.array_equal(Utility.navigate_to_position_with_offset.call_args[0][1], ball_position)
+        assert np.array_equal(Utility.navigate_to_position_with_offset.call_args[0][2], goal_position)
 
     def test_navigate_to_scoring_position_with_offset_case_3_regular(self):
-        from soccer_strategy.strategy.interfaces.actions import Actions
+        from soccer_strategy.strategy.utils import Utility
 
         robot = MagicMock()
         goal_position = numpy.array([5, 0])
 
         robot.position = goal_position - numpy.array([1.0, 1.0])
         ball_position = goal_position - numpy.array([0.8, 0.5])
-        Actions.navigate_to_position_with_offset = MagicMock()
-        Actions.navigate_to_scoring_position(robot, ball_position, goal_position)
-        assert Actions.navigate_to_position_with_offset.call_args[0][0] == robot
-        assert np.array_equal(Actions.navigate_to_position_with_offset.call_args[0][1], ball_position)
-        assert np.array_equal(Actions.navigate_to_position_with_offset.call_args[0][2], goal_position)
+        Utility.navigate_to_position_with_offset = MagicMock()
+        Utility.navigate_to_scoring_position(robot, ball_position, goal_position)
+        assert Utility.navigate_to_position_with_offset.call_args[0][0] == robot
+        assert np.array_equal(Utility.navigate_to_position_with_offset.call_args[0][1], ball_position)
+        assert np.array_equal(Utility.navigate_to_position_with_offset.call_args[0][2], goal_position)
 
     def test_navigate_to_scoring_position_no_crash(self):
-        from soccer_strategy.strategy.interfaces.actions import Actions
+        from soccer_strategy.strategy.utils import Utility
 
         robot = MagicMock()
         for goal_position in [numpy.array([5, 0]), numpy.array([-5, 0])]:
@@ -124,5 +122,5 @@ class Test(TestCase):
                         for ball_y in np.linspace(-3, 3, 5):
                             robot.position = goal_position - numpy.array([robot_x, robot_y])
                             ball_position = goal_position - numpy.array([ball_x, ball_y])
-                            Actions.navigate_to_position_with_offset = MagicMock()
-                            Actions.navigate_to_scoring_position(robot, ball_position, goal_position)
+                            Utility.navigate_to_position_with_offset = MagicMock()
+                            Utility.navigate_to_scoring_position(robot, ball_position, goal_position)

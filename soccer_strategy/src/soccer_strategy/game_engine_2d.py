@@ -23,7 +23,7 @@ class GameEngine2D:
     PHYSICS_UPDATE_INTERVAL = 0.25  # 4 Times per second
     DISPLAY_UPDATE_INTERVAL = 0.5  # Every 5 seconds
 
-    def __init__(self, display=True, team_1_strategy: Strategy = StrategyDummy, team_2_strategy: Strategy = StrategyDummy, game_duration: float = 20):
+    def __init__(self, display=True, team_1_strategy: type = StrategyDummy, team_2_strategy: type = StrategyDummy, game_duration: float = 20):
         """
 
         :param display: Whether to show the visualizer
@@ -67,7 +67,7 @@ class GameEngine2D:
                 ),
             ]
         )
-        self.team1.strategy = team_1_strategy
+        self.team1.strategy = team_1_strategy()
 
         self.team1_init = copy.deepcopy(self.team1)
 
@@ -103,7 +103,7 @@ class GameEngine2D:
                 ),
             ]
         )
-        self.team2.strategy = team_2_strategy
+        self.team2.strategy = team_2_strategy()
         self.team2.flip_positions()
         self.team2_init = copy.deepcopy(self.team2)
 
@@ -142,14 +142,14 @@ class GameEngine2D:
                 for robot in self.team1.robots:
                     robot.active = True
                     robot.observed_ball = self.ball
-                    self.team1.strategy.update_next_strategy(self.team1, self.team2, self.gameState)
+                    self.team1.strategy.step_strategy(self.team1, self.team2, self.gameState)
                     robot.active = False
 
             if step % self.team2.strategy.update_frequency == 0:
                 for robot in self.team2.robots:
                     robot.active = True
                     robot.observed_ball = self.ball
-                    self.team2.strategy.update_next_strategy(self.team2, self.team1, self.gameState)
+                    self.team2.strategy.step_strategy(self.team2, self.team1, self.gameState)
                     robot.active = False
 
             # Check victory condition
