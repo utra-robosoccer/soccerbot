@@ -1,10 +1,10 @@
-# Undegraduate Thesis Project
+# Ball and Robot Detection Package
 
-Convolutional Neural Networks for Ball and Robot detection in Robocup Humanoid Kid-Size league.
+We are using YOLOv5 model trained with Ultralytics tools.
+Checkout their website for steps on training a mode: https://docs.ultralytics.com/tutorials/train-custom-datasets/
 
-![Alt text](outputs/sample.png?raw=true "Activations with bounding boxes")
-
-## Download Dataset
+Previously we used a custom U-net type model based on Bit Bot's old [paper](https://robocup.informatik.uni-hamburg.de/wp-content/uploads/2018/06/2018_Speck_Ball_Localization.pdf).
+We didn't get good detection rate, with false negatives when ball was small and far away. We used below dataset to train the old model. The data set can be reused to train newer models:
 
 ### train dataset
 
@@ -24,5 +24,3 @@ Convolutional Neural Networks for Ball and Robot detection in Robocup Humanoid K
 
 1. https://imagetagger.bit-bots.de/images/imageset/833/ #test-wolves-01
 2. https://imagetagger.bit-bots.de/images/imageset/835/ #test-nagoya-game-02
-
-This work builds on top of Team Hamburg Bit Bots [model](https://robocup.informatik.uni-hamburg.de/wp-content/uploads/2018/06/2018_Speck_Ball_Localization.pdf).
