@@ -11,6 +11,10 @@ from soccer_strategy.team import Team
 
 
 class StrategyDetermineSide(Strategy):
+    """
+    Initial strategy to determine the position and side of the robot
+    """
+
     def __init__(self):
         super().__init__()
         self.average_goal_post_y = 0
@@ -20,8 +24,17 @@ class StrategyDetermineSide(Strategy):
         self.tf_listener = tf.TransformListener()
 
     @get_back_up
-    def update_next_strategy(self, friendly_team: Team, opponent_team: Team, game_state: GameState):
-        super().update_next_strategy(friendly_team, opponent_team, game_state)
+    def step_strategy(self, friendly_team: Team, opponent_team: Team, game_state: GameState):
+        """
+        Runs a step in the strategy with the frequency update frequency. First tries to get determine the robot's position
+        via the goal post information, and if it is not there then timeout and guess the robot's position. Next
+        it determines roles based on proximity, and information from other robots
+
+        :param friendly_team: The friendly Team
+        :param opponent_team: The opponent Team
+        :param game_state: The GameState from the game controller
+        """
+        super().step_strategy(friendly_team, opponent_team, game_state)
 
         current_robot = self.get_current_robot(friendly_team)
 
@@ -58,7 +71,11 @@ class StrategyDetermineSide(Strategy):
             self.complete = True
 
     def determine_side(self, current_robot):
-        # Determine robot position (assuming the robot is always on the left side
+        """
+        Determine robot position (assuming the robot is always on the left side
+
+        :param current_robot: The current robot
+        """
         x = current_robot.position_default[0]
         y = current_robot.position_default[1]
         theta = current_robot.position_default[2]
@@ -71,7 +88,13 @@ class StrategyDetermineSide(Strategy):
         current_robot.reset_initial_position()
 
     def determine_role(self, current_robot, friendly_team):
-        # Determining robot role automatically based on distance to role position and other robots
+        """
+        Determining robot role automatically based on distance to role position and other robots
+
+        :param current_robot: The current robot
+        :param friendly_team: The friendly team
+        :return:
+        """
         if current_robot.role == Robot.Role.UNASSIGNED:
             available_roles = []
             for role in friendly_team.formations["ready"]:

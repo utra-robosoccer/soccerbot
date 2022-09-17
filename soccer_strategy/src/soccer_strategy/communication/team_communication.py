@@ -10,6 +10,10 @@ import rospy
 from soccer_msgs.msg import RobotState
 from soccer_strategy.communication import robot_state_pb2
 
+"""
+Sends information between robots using a mirror port
+"""
+
 if __name__ == "__main__":
     rospy.init_node("team_communication")
     rospy.loginfo("Initializing team_communication...", logger_name="team_comm")

@@ -4,9 +4,12 @@ from soccer_strategy.team import Team
 
 
 class StrategyPenaltykick(StrategyFreekick):
-    # preparation if we are not the kicking team
-    def update_next_strategy(self, friendly_team: Team, opponent_team: Team, game_state: GameState):
-        super().update_next_strategy(friendly_team, opponent_team, game_state)
+    """
+    TODO Strategy used when a penalty kick is called
+    """
+
+    def step_strategy(self, friendly_team: Team, opponent_team: Team, game_state: GameState):
+        super().step_strategy(friendly_team, opponent_team, game_state)
 
         if friendly_team.average_ball_position is None:
             return

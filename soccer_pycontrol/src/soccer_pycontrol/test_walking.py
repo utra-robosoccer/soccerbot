@@ -13,7 +13,10 @@ from soccer_common.transformation import Transformation
 
 real_robot = False
 run_in_ros = False
-display = False
+display = True
+if "DISPLAY" not in os.environ:
+    display = False
+
 robot_model = "bez1"
 TEST_TIMEOUT = 60
 
