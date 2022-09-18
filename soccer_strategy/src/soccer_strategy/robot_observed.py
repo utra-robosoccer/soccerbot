@@ -14,6 +14,11 @@ class RobotObserved(Robot):
         self.robot_state_subscriber = rospy.Subscriber("/robot" + str(self.robot_id) + "/state", RobotState, self.robot_state_callback)
 
     def robot_state_callback(self, r: RobotState):
+        """
+        Callback function updates the information about other observed robots based on the robot
+        :param r: Information about other robots
+        """
+
         self.robot_id = r.player_id
         self.status = Robot.Status(r.status)
         self.role = Robot.Role(r.role)
@@ -22,6 +27,3 @@ class RobotObserved(Robot):
 
         self.observed_ball.position[0] = r.ball_pose.x
         self.observed_ball.position[1] = r.ball_pose.y
-
-    def set_navigation_position(self, position):
-        pass

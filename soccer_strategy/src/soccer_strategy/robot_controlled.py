@@ -5,6 +5,7 @@ import numpy as np
 import rospy
 
 from soccer_common.transformation import Transformation
+from soccer_strategy.ball import Ball
 from soccer_strategy.robot import Robot
 
 
@@ -30,6 +31,12 @@ class RobotControlled(Robot):
         self.kick_with_right_foot = True
 
     def shorten_navigation_position(self, goal_position):
+        """
+        Limits the length of the navigation, for example a goal given 3 meters will return a goal determined by
+        the shorten_navigation_limit parameter, if it is 1 then 1 meter max navigation limit
+        :param goal_position: [x, y, theta] of the robot's goal position
+        """
+
         shorten_navigation_limit = rospy.get_param("shorten_navigation_limit", 3)
         distance_xy = np.linalg.norm(self.position[0:2] - goal_position[0:2])
         if distance_xy < shorten_navigation_limit:
@@ -45,6 +52,11 @@ class RobotControlled(Robot):
         return np.array([diff_unit[0], diff_unit[1], diff_angle] + self.position)
 
     def set_navigation_position(self, goal_position):
+        """
+        Set's the robot's navigation position for the robot to go to
+        :param goal_position: goal_position: [x, y, theta] of the robot's goal position
+        """
+
         if self.status == Robot.Status.WALKING:
             if self.goal_position is not None and np.linalg.norm(np.array(self.goal_position[0:2]) - np.array(goal_position[0:2])) < 0.05:
                 rospy.logwarn("New Goal too close to previous goal: New " + str(self.goal_position) + " Old " + str(goal_position))
@@ -57,7 +69,15 @@ class RobotControlled(Robot):
         self.status = Robot.Status.WALKING
         return True
 
-    def can_kick(self, ball, goal_position):
+    def can_kick(self, ball: Ball, goal_position):
+        """
+        Whether the robot can kick the ball based on the robot and ball position
+
+        :param ball: Ball object
+        :param goal_position: [x, y, theta] of the robot's goal position
+        :return: True if the robot can kick the ball
+        """
+
         if ball is None or ball.position is None:
             return False
 
@@ -93,16 +113,35 @@ class RobotControlled(Robot):
 
     @abc.abstractmethod
     def terminate_walk(self):
+        """
+        Send a command to stop the robot's walking
+        """
         pass
 
     @abc.abstractmethod
     def kick(self):
+        """
+        Send a command to kick the ball
+        """
         pass
 
     @abc.abstractmethod
     def get_back_up(self, type: str = "getupback"):
+        """
+        Send a command get back up, based on the get up type
+        """
         pass
 
     @abc.abstractmethod
     def reset_initial_position(self):
+        """
+        Set's the robot's position based on the amcl_pose
+        :return:
+        """
+        pass
+
+    def set_kick_velocity(self, kick_velocity):
+        """
+        TODO deprecate and delete
+        """
         pass

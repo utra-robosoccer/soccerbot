@@ -6,19 +6,31 @@ import numpy as np
 from soccer_common import Transformation
 from soccer_msgs.msg import GameState
 from soccer_strategy.ball import Ball
-from soccer_strategy.game_engine_scene import Scene
+from soccer_strategy.game_engine_2d_scene import Scene
 from soccer_strategy.robot import Robot
 from soccer_strategy.robot_controlled_2d import RobotControlled2D
+from soccer_strategy.strategy.strategy import Strategy
 from soccer_strategy.strategy.strategy_dummy import StrategyDummy
 from soccer_strategy.strategy.strategy_stationary import StrategyStationary
 from soccer_strategy.team import Team
 
 
 class GameEngine2D:
+    """
+    2D simualtor for the game engine, used for testing strategy quickly without interfacing with webots
+    """
+
     PHYSICS_UPDATE_INTERVAL = 0.25  # 4 Times per second
     DISPLAY_UPDATE_INTERVAL = 0.5  # Every 5 seconds
 
-    def __init__(self, display=True, team_1_strategy=StrategyDummy, team_2_strategy=StrategyDummy, game_duration=20):
+    def __init__(self, display=True, team_1_strategy: type = StrategyDummy, team_2_strategy: type = StrategyDummy, game_duration: float = 20):
+        """
+
+        :param display: Whether to show the visualizer
+        :param team_1_strategy: What strategy the team 1 will use
+        :param team_2_strategy: What strategy the team 2 will use
+        :param game_duration: How long to run the game (in minutes)
+        """
         self.display = display
         self.game_duration = game_duration
 
@@ -106,8 +118,11 @@ class GameEngine2D:
         self.gameState.gameState = GameState.GAMESTATE_PLAYING
         self.gameState.secondaryState = GameState.STATE_NORMAL
 
-    # TODO it is slow because it is re-pathing whenever the ball changes its position
     def run(self):
+        """
+        Main loop for the 2D strategy executor, runs the strategies for both team against a vispy simulator
+        """
+
         game_period_seconds = int(
             self.game_duration * 60 / GameEngine2D.PHYSICS_UPDATE_INTERVAL
         )  # 2 Periods of 10 minutes each, each step is a second
@@ -127,14 +142,14 @@ class GameEngine2D:
                 for robot in self.team1.robots:
                     robot.active = True
                     robot.observed_ball = self.ball
-                    self.team1.strategy.update_next_strategy(self.team1, self.team2, self.gameState)
+                    self.team1.strategy.step_strategy(self.team1, self.team2, self.gameState)
                     robot.active = False
 
             if step % self.team2.strategy.update_frequency == 0:
                 for robot in self.team2.robots:
                     robot.active = True
                     robot.observed_ball = self.ball
-                    self.team2.strategy.update_next_strategy(self.team2, self.team1, self.gameState)
+                    self.team2.strategy.step_strategy(self.team2, self.team1, self.gameState)
                     robot.active = False
 
             # Check victory condition
@@ -156,7 +171,15 @@ class GameEngine2D:
         print(f"Game Finished: Friendly: {friendly_points}, Opponent: {opponent_points}")
         return friendly_points, opponent_points
 
-    def update_estimated_physics(self, robots, ball):
+    def update_estimated_physics(self, robots: [Robot], ball: Ball):
+        """
+        Executes the world physics step, robot's movement, ball movement, and for fairness it runs through the priority
+        for kicks in a random fashion.
+
+        :param robots: The list of all robots including enemy robots
+        :param ball: The ball in the game
+        """
+
         # Robot do action in a random priority order
         for robot in sorted(robots, key=lambda _: random.random()):
             robot.observe_ball(ball)
@@ -201,6 +224,9 @@ class GameEngine2D:
                 self.ball.velocity = np.array([0, 0])
 
     def reset_robots(self):
+        """
+        Reset's the robot and the team back to their initial state, so a new game happen
+        """
         self.team1 = copy.deepcopy(self.team1_init)
         self.team2 = copy.deepcopy(self.team2_init)
         self.ball = copy.deepcopy(self.ball_init)
