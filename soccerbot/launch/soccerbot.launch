@@ -32,11 +32,15 @@
 
     <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" />
 
-    <include file="$(find soccerbot)/launch/modules/sensors.launch" unless="$(arg simulation)" />
+    <include file="$(find soccerbot)/launch/modules/sensors.launch" unless="$(arg simulation)">
+        <arg name="robot_model" value="$(arg robot_model)" />
+    </include>
 
     <include file="$(find soccerbot)/launch/modules/communication.launch" if="$(arg simulation)">
         <arg name="robot_name" value="$(arg robot_name)" />
     </include>
+
+    <node pkg="soccer_strategy" type="game_controller_receiver.py" name="game_controller_receiver" output="screen" />
 
     <include file="$(find soccerbot)/launch/modules/localization.launch">
         <arg name="robot_name" value="$(arg robot_name)" />
@@ -45,6 +49,8 @@
         <arg name="a_pos" value="$(arg a_pos)" />
         <arg name="map_name" value="robocup" if="$(arg simulation)" />
         <arg name="map_name" value="test" unless="$(arg simulation)" />
+        <arg name="simulation" value="$(arg simulation)" />
+        <arg name="robot_model" value="$(arg robot_model)" />
     </include>
 
     <include file="$(find soccerbot)/launch/modules/navigation.launch">
@@ -57,6 +63,8 @@
         <arg name="y_pos" value="$(arg y_pos)" />
         <arg name="a_pos" value="$(arg a_pos)" />
         <arg name="robot_id" value="$(arg robot_id)" />
+        <arg name="robot_model" value="$(arg robot_model)" />
+        <arg name="simulation" value="$(arg simulation)" />
     </include>
 
     <!-- prettier-ignore -->
@@ -68,7 +76,6 @@
         /$(arg robot_name)/command
         /$(arg robot_name)/detected_robot_pose
         /$(arg robot_name)/detection_image
-        /$(arg robot_name)/execute_game_interruption
         /$(arg robot_name)/gamestate
         /$(arg robot_name)/goal
         /$(arg robot_name)/head_centered_on_ball

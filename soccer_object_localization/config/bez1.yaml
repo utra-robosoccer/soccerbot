@@ -1,0 +1,1 @@
+first_ball_detection_confidence_threshold: 0.78 # Detection confidence required for a initially detected ball to detected as a ball

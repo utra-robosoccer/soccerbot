@@ -7,16 +7,15 @@ from unittest import TestCase
 import numpy as np
 import rospy
 import tf
+import tf2_ros
 from geometry_msgs.msg import PoseStamped
-from robot import Robot
 from rosgraph_msgs.msg import Clock
 from scipy.spatial.transform import Rotation as R
 from timeout_decorator import timeout_decorator
 
 from soccer_common.camera import Camera
-from soccer_msgs.msg import RobotState
-from soccer_object_detection.msg import BoundingBoxes
-from soccer_strategy.src.team import Team
+from soccer_msgs.msg import BoundingBoxes, RobotState
+from soccer_strategy.src.soccer_strategy.team import Team
 
 RUN_LOCALLY = "pycharm" in sys.argv[0]
 
@@ -142,61 +141,32 @@ class IntegrationTest(TestCase):
 class IntegrationTestInitial(IntegrationTest):
     START_PLAY = "false"
 
+    @timeout_decorator.timeout(60 * 10)
     def test_game_start(self):
         self.team = Team(None)
         self.distance = np.inf
 
-        DIST_TOLERANCE = 2
-
         def processMsg(data: RobotState):
-            printlog("processMsg, status {}, role {}".format(data.status, data.role))
-            coords = [np.inf, np.inf, np.inf]  # Placeholder
-            if data.role == RobotState.ROLE_GOALIE:
-                coords = self.team.formations["ready"][Robot.Role.GOALIE]
-                printlog("Robot.Role.GOALIE - {}".format(coords))
-            elif data.role == RobotState.ROLE_LEFT_WING:
-                coords = self.team.formations["ready"][Robot.Role.LEFT_WING]
-                printlog("Robot.Role.LEFT_WING - {}".format(coords))
-            elif data.role == RobotState.ROLE_RIGHT_WING:
-                coords = self.team.formations["ready"][Robot.Role.RIGHT_WING]
-                printlog("Robot.Role.RIGHT_WING - {}".format(coords))
-            elif data.role == RobotState.ROLE_STRIKER:
-                coords = self.team.formations["ready"][Robot.Role.STRIKER]
-                printlog("Robot.Role.STRIKER - {}".format(coords))
+            if data.role == RobotState.ROLE_UNASSIGNED:
+                return
+            coords = self.team.formations["ready"][data.role]
             self.distance = np.linalg.norm([coords[0] - data.pose.position.x, coords[1] - data.pose.position.y])
-            printlog("processMsg distance: {}".format(self.distance))
+
+        rospy.Subscriber("/robot1/state", RobotState, processMsg)
 
         while not rospy.is_shutdown():
-            # Validate that the robot publishes robot????
+            printlog(f"Distance to destination: {self.distance}")
             rospy.sleep(1)
-            try:
-                rospy.wait_for_message("/robot1/state", RobotState, 10)
-            except rospy.ROSException:
-                printlog("Connection Failed")
-
-            handle = rospy.Subscriber("/robot1/state", RobotState, processMsg)
-            rospy.wait_for_message("/robot1/state", RobotState, 120)
-            assert handle.get_num_connections() > 0
-            printlog("Connection looks okay")
-            # Validate that the robot moves towards the goal
-            for i in range(0, 200):  # 100s timeout
-                printlog("dist: {}, cycle: {}".format(self.distance, i))
-                rospy.sleep(1)
-                if self.distance < DIST_TOLERANCE:
-                    break
-            assert self.distance < DIST_TOLERANCE
-            printlog("Goal reached")
-
-            # Validates that the robot kicks the ball
-            # TODO
-            break
+            if self.distance < 2:
+                break
+        printlog("Goal reached")
 
 
 class IntegrationTestPlaying(IntegrationTest):
     START_PLAY = "true"
 
     # Place the ball right in front of the robot, should kick right foot
-    @timeout_decorator.timeout(10000)
+    @timeout_decorator.timeout(60 * 5)
     def test_kick_right(self):
         self.set_robot_pose(4.0, 0.0, 0)
         self.set_ball_pose(4.16, -0.04)
@@ -216,7 +186,7 @@ class IntegrationTestPlaying(IntegrationTest):
 
             rospy.sleep(2)
 
-    @timeout_decorator.timeout(10000)
+    @timeout_decorator.timeout(60 * 15)
     def test_walk_and_kick_right(self):
         self.set_robot_pose(3.5, 0.0, 0)
         self.set_ball_pose(4.16, -0.04)
@@ -235,3 +205,121 @@ class IntegrationTestPlaying(IntegrationTest):
                 printlog("Ball not found")
 
             rospy.sleep(2)
+
+    # Run this to generate many ball and robot locations and test that the localization are correct
+    # 1. Run roslaunch soccerbot soccerbot_multi.launch competition:=false fake_localization:=true
+    # If complaining missing opencv make sure LD_LIBRARY_PATH env is set
+    def test_annotate_ball(self, num_samples=100, create_localization_labels=True):
+        import math
+        import os
+        import random
+        import time
+
+        import cv2
+        import numpy as np
+        import rospy
+        import tf
+        from cv_bridge import CvBridge
+        from sensor_msgs.msg import Image
+        from tf import TransformListener
+
+        from soccer_common.transformation import Transformation
+
+        if not os.path.exists("soccer_object_localization/images"):
+            os.makedirs("soccer_object_localization/images")
+
+        j = 0
+        for file in [
+            f for f in os.listdir("soccer_object_localization/images") if os.path.isfile(os.path.join("soccer_object_localization/images", f))
+        ]:
+            if "border" in file:
+                continue
+            num = int(file.split("_")[0].replace("img", ""))
+            if j < num:
+                j = num
+
+        os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_pycontrol'")
+        os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_strategy'")
+        os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_trajectories'")
+
+        self.camera = Camera("robot1")
+
+        field_width = 2.5  # m
+        field_height = 1.5
+        ball_radius = 0.07
+
+        while not rospy.is_shutdown() and not self.camera.ready():
+            print("Waiting for camera info")
+
+        tf_listener = TransformListener()
+
+        for i in range(num_samples):
+            robot_x = random.uniform(-field_height, field_height)
+            robot_y = random.uniform(-field_width, field_width)
+
+            robot_position = [robot_x, robot_y]
+            robot_theta = random.uniform(-math.pi, math.pi)
+
+            ball_distance_offset = random.uniform(0.8, 3)
+            ball_angle_offset = random.uniform(-math.pi / 5, math.pi / 5)
+
+            ball_offset = [
+                math.cos(robot_theta + ball_angle_offset) * ball_distance_offset,
+                math.sin(robot_theta + ball_angle_offset) * ball_distance_offset,
+                0,
+            ]
+
+            ball_position = [ball_offset[0] + robot_position[0], ball_offset[1] + robot_position[1], 0.0783]
+
+            print(robot_position, robot_theta)
+            self.set_robot_pose(robot_position[0], robot_position[1], robot_theta)
+            self.set_ball_pose(ball_position[0], ball_position[1])
+            time.sleep(0.5)
+            # Calculate the frame in the camera
+            image_msg = rospy.wait_for_message("/robot1/camera/image_raw", Image)
+
+            # Save the image
+            rgb_image = CvBridge().imgmsg_to_cv2(image_msg, desired_encoding="rgb8")
+            camera_info_K = np.array(self.camera.camera_info.K).reshape([3, 3])
+            camera_info_D = np.array(self.camera.camera_info.D)
+            image = cv2.undistort(rgb_image, camera_info_K, camera_info_D)
+
+            # Annotate the image automatically
+            # Set the camera
+            try:
+                if tf_listener.waitForTransform("world", "robot1/ball_gt", image_msg.header.stamp, rospy.Duration(1)):
+                    (ball_position, rot) = tf_listener.lookupTransform("world", "robot1/ball_gt", image_msg.header.stamp)
+            except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException, tf2_ros.TransformException):
+                rospy.logwarn_throttle(2, "Cannot find ball transform")
+                continue
+
+            self.camera.reset_position(from_world_frame=True, camera_frame="/camera_gt", timestamp=image_msg.header.stamp)
+            label = self.camera.calculateBoundingBoxesFromBall(Transformation(ball_position), ball_radius)
+
+            # Draw the rectangle
+            pt1 = (round(label[0][0]), round(label[0][1]))
+            pt2 = (round(label[1][0]), round(label[1][1]))
+            image_rect = cv2.rectangle(image.copy(), pt1, pt2, color=(0, 0, 0), thickness=1)
+
+            # cv2.imshow("ball", image_rect)
+            # key = cv2.waitKey(0)
+            # print(key)
+            # if key != 32:
+            #     continue
+
+            if create_localization_labels:
+                filePath = f"soccer_object_localization/images/img{j}_{robot_x}_{robot_y}_{robot_theta}.png"
+                if os.path.exists(filePath):
+                    os.remove(filePath)
+                cv2.imwrite(filePath, image)
+            else:
+                filePath = f"soccer_object_localization/images/img{j}_{pt1[0]}_{pt1[1]}_{pt2[0]}_{pt2[1]}.png"
+                if os.path.exists(filePath):
+                    os.remove(filePath)
+                cv2.imwrite(filePath, image)
+                filePath2 = f"images/imgborder{j}_{pt1[0]}_{pt1[1]}_{pt2[0]}_{pt2[1]}.png"
+                if os.path.exists(filePath2):
+                    os.remove(filePath2)
+                cv2.imwrite(filePath2, image_rect)
+
+            j = j + 1

@@ -6,6 +6,10 @@
       <sourceFolder url="file://$MODULE_DIR$/soccer_pycontrol/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/soccer_strategy/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/external/webots/lib/controller/python38" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/soccer_object_detection/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/soccer_object_localization/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/soccer_trajectories/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/soccer_webots/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/external" />
       <excludeFolder url="file://$MODULE_DIR$/docs" />
       <excludeFolder url="file://$MODULE_DIR$/.github" />
@@ -16,9 +20,8 @@
     <orderEntry type="library" name="workspace" level="project" />
     <orderEntry type="library" name="ROS" level="project" />
   </component>
-  <component name="PyDocumentationSettings">
-    <option name="format" value="PLAIN" />
-    <option name="myDocStringFormat" value="Plain" />
+  <component name="ReSTService">
+    <option name="DOC_DIR" value="$MODULE_DIR$/docs" />
   </component>
   <component name="TemplatesService">
     <option name="TEMPLATE_FOLDERS">

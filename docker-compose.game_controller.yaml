@@ -1,0 +1,16 @@
+version: "3.3"
+
+networks:
+  soccer_network:
+    ipam:
+      config:
+        - subnet: 172.18.0.0/24
+
+services:
+  game_controller:
+    extends:
+      file: docker-compose.yaml
+      service: simulator
+    command: bash -c "cd GameController/build/jar/ && java -jar GameController.jar"
+    volumes:
+      - ./soccer_webots/config/teams.cfg:/usr/local/GameController/build/jar/config/hl_kid/teams.cfg

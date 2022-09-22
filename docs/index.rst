@@ -1,20 +1,15 @@
-.. soccerbot documentation master file, created by
-   sphinx-quickstart on Mon Nov  1 18:42:38 2021.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
 
-Welcome to soccerbot's documentation!
-=====================================
+.. include:: home.rst
+
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 4
    :caption: Contents:
+   :hidden:
 
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+   home
+   Repository <https://github.com/utra-robosoccer/soccerbot>
+   Prospective Members <https://github.com/utra-robosoccer/soccerbot/wiki/Recruitment>
+   Setup Instructions <https://github.com/utra-robosoccer/soccerbot/wiki/Onboarding>
+   Youtube <https://www.youtube.com/channel/UC_af3dSeV57YdquCT_VQmDA>
+   api

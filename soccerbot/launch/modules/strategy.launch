@@ -3,6 +3,11 @@
     <arg name="y_pos" />
     <arg name="a_pos" />
     <arg name="robot_id" />
+    <arg name="robot_model" />
+    <arg name="simulation" />
+
+    <arg name="param_file_name" value="$(arg robot_model)_sim" if="$(arg simulation)" />
+    <arg name="param_file_name" value="$(arg robot_model)" unless="$(arg simulation)" />
 
     <env name="ROBOCUP_TEAM_ID" value="$(optenv ROBOCUP_TEAM_ID 16)" />
     <env name="ROBOCUP_TEAM_COLOR" value="$(optenv ROBOCUP_TEAM_COLOR red)" />
@@ -14,6 +19,8 @@
         <param name="a_pos" value="$(arg a_pos)" />
         <param name="robot_id" value="$(arg robot_id)" />
     </node>
+
+    <rosparam command="load" file="$(find soccer_strategy)/config/$(arg param_file_name).yaml" />
 
     <node name="team_communication" pkg="soccer_strategy" type="team_communication.py" output="screen" if="$(optenv COMPETITION false)" />
 </launch>

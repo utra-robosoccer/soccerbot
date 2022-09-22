@@ -5,9 +5,9 @@ import unittest
 
 import numpy as np
 from matplotlib import pyplot as plt
-from soccer_msgs_mock.msg import RobotState
 
 from soccer_common.mock_ros import mock_ros
+from soccer_msgs.msg import RobotState
 
 if "ROS_NAMESPACE" not in os.environ:
     os.environ["ROS_NAMESPACE"] = "/robot1"
@@ -18,8 +18,7 @@ from soccer_common.transformation import Transformation
 
 run_in_ros = False
 display = True
-if "pytest" in sys.argv[0]:
-    run_in_ros = False
+if "DISPLAY" in os.environ:
     display = False
 else:
     import rospy
@@ -34,17 +33,17 @@ file_path = os.path.dirname(os.path.abspath(__file__))
 config_path = f"{file_path}/../../config/bez1_sim_pybullet.yaml"
 mock_ros(robot_model="bez1", real_robot=False, config_path=config_path)
 
+from soccer_pycontrol.navigator import Navigator
+from soccer_pycontrol.navigator_ros import NavigatorRos
 from soccer_pycontrol.path import Path
-from soccer_pycontrol.soccerbot_controller import SoccerbotController
-from soccer_pycontrol.soccerbot_controller_ros import SoccerbotControllerRos
 
 
 class TestSpecial(TestCase):
     def setUp(self) -> None:
         if run_in_ros:
-            self.walker = SoccerbotControllerRos()
+            self.walker = NavigatorRos()
         else:
-            self.walker = SoccerbotController(display=display)
+            self.walker = Navigator(display=display)
         super().setUp()
 
     def tearDown(self) -> None:
@@ -66,7 +65,7 @@ class TestSpecial(TestCase):
         while t <= self.walker.soccerbot.robot_path.duration():
             if self.walker.soccerbot.current_step_time <= t <= self.walker.soccerbot.robot_path.duration():
                 self.walker.soccerbot.stepPath(t, verbose=True)
-                pitch = self.walker.soccerbot.get_imu().get_orientation_euler()[1]
+                pitch = self.walker.soccerbot.get_imu().orientation_euler[1]
                 pitches.append(pitch)
                 times.append(t)
                 self.walker.soccerbot.apply_imu_feedback(self.walker.soccerbot.get_imu())
@@ -93,7 +92,7 @@ class TestSpecial(TestCase):
     @unittest.skip("Not integrated in CI")
     def test_imu_feedback_webots(self):
         import pybullet as pb
-        from soccerbot_controller import SoccerbotController
+        from navigator import Navigator
 
         self.walker.setPose(Transformation([0, 0, 0], [0, 0, 0, 1]))
         self.walker.ready()
@@ -111,12 +110,12 @@ class TestSpecial(TestCase):
         pitches = []
         times = []
         t = 0
-        r = rospy.Rate(1 / SoccerbotController.PYBULLET_STEP)
+        r = rospy.Rate(1 / Navigator.PYBULLET_STEP)
 
         while t <= self.walker.soccerbot.robot_path.duration():
             if self.walker.soccerbot.current_step_time <= t <= self.walker.soccerbot.robot_path.duration():
                 self.walker.soccerbot.stepPath(t, verbose=True)
-                pitch = self.walker.soccerbot.get_imu().get_orientation_euler()[1]
+                pitch = self.walker.soccerbot.get_imu().orientation_euler[1]
                 f = self.walker.soccerbot.apply_imu_feedback(t, self.walker.soccerbot.get_imu())
 
                 times.append(t)

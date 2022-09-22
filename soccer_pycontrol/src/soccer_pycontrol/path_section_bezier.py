@@ -9,33 +9,37 @@ from soccer_pycontrol.path_section import PathSection
 
 
 class PathSectionBezier(PathSection):
+    """
+    A path section made up of bezier curves
+    """
+
+    #: The amount of torso steps it takes to make the starting and final turn
     turn_duration = rospy.get_param("turn_duration", 3)
 
     def __init__(self, start_transform: Transformation, end_transform: Transformation):
-        self.start_transform = start_transform
-        self.end_transform = end_transform
+        self.start_transform: Transformation = start_transform
+        self.end_transform: Transformation = end_transform
         if self.isWalkingBackwards():
-            bodystep_size = PathSection.bodystep_size_default * PathSection.backwards_bodystep_size_ratio
+            torso_step_length = self.torso_step_length_default * self.backwards_torso_step_length_ratio
         else:
-            bodystep_size = PathSection.bodystep_size_default
+            torso_step_length = self.torso_step_length_default
 
-        super().__init__(start_transform, end_transform, bodystep_size)
+        super().__init__(start_transform, end_transform, torso_step_length)
 
     def poseAtRatio(self, r):
         pose = self.bezierPositionAtRatio(self.start_transform, self.end_transform, r)
         pose_del = self.bezierPositionAtRatio(self.start_transform, self.end_transform, r + 0.001)
 
         if self.isWalkingBackwards():
-            del_pose = pose.get_position() - pose_del.get_position()
+            del_pose = pose.position - pose_del.position
         else:
-            del_pose = pose_del.get_position() - pose.get_position()
+            del_pose = pose_del.position - pose.position
 
         # If walking backwards
         del_theta = np.arctan2(del_pose[1], del_pose[0])
         del_psi = np.arctan2(del_pose[2], np.linalg.norm(del_pose[0:2]))
 
-        orientation = Transformation.get_quaternion_from_euler([del_theta, -del_psi, 0.0])
-        pose.set_orientation(orientation)
+        pose.orientation_euler = [del_theta, -del_psi, 0.0]
         return pose
 
     def bezierPositionAtRatio(self, start_transform, end_transform, r):
@@ -50,10 +54,10 @@ class PathSectionBezier(PathSection):
             p3 = np.matmul(end_transform, Transformation([-self.speed * PathSectionBezier.turn_duration, 0.0, 0.0]))
         p4 = end_transform
 
-        p1_pos = p1.get_position()
-        p2_pos = p2.get_position()
-        p3_pos = p3.get_position()
-        p4_pos = p4.get_position()
+        p1_pos = p1.position
+        p2_pos = p2.position
+        p3_pos = p3.position
+        p4_pos = p4.position
 
         position = np.array([0.0, 0.0, 0.0])
         for d in range(0, 3):
@@ -65,7 +69,7 @@ class PathSectionBezier(PathSection):
         return Transformation(position)
 
     def getRatioFromStep(self, step_num):
-        idx = np.argmin(np.abs((step_num * self.bodystep_size) - self.distanceMap[:, 1]))
+        idx = np.argmin(np.abs((step_num * self.torso_step_length) - self.distanceMap[:, 1]))
         return self.distanceMap[idx, 0]
 
     def duration(self):
@@ -73,11 +77,11 @@ class PathSectionBezier(PathSection):
 
     @functools.lru_cache
     def isWalkingBackwards(self):
-        start_angle = self.start_transform.get_orientation_euler()[0]
-        del_pose = self.end_transform.get_position() - self.start_transform.get_position()
+        start_angle = self.start_transform.orientation_euler[0]
+        del_pose = self.end_transform.position - self.start_transform.position
         if np.dot([np.cos(start_angle), np.sin(start_angle)], del_pose[0:2]) < 0:
             return True
         return False
 
-    def bodyStepCount(self):
+    def torsoStepCount(self):
         return self.linearStepCount()

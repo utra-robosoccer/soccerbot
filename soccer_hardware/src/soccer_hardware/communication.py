@@ -33,12 +33,12 @@ class Communication:
         self._motor_map = rp.get_param("~motor_mapping")
         self._imu_calibration = rp.get_param("~imu_calibration")
 
-        self._joint_command_sub = rp.Subscriber("joint_command", JointState, self.joint_command_callback)
+        self._joint_command_sub = rp.Subscriber("joint_command", JointState, self.joint_command_callback, queue_size=1)
 
         for motor in self._motor_map:
             self._motor_map[motor]["value"] = 0.0
 
-        self._publish_timer = rp.Timer(rp.Duration(nsecs=10000000), self.send_angles)
+        self._publish_timer = rp.Timer(rp.Duration(nsecs=25000000), self.send_angles)
 
     def run(self):
         self._rx_thread.start()

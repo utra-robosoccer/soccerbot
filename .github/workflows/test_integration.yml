@@ -39,32 +39,48 @@ jobs:
           docker-compose pull
           docker-compose build --progress=plain
       - name: Walking Integration Test
+        timeout-minutes: 10
         run: |
+          chmod -R o+w .
           docker-compose -f docker-compose.test.yaml up --exit-code-from friendly
       - name: Get integration test logs
         if: always()
         run: |
           docker-compose logs
+          docker cp soccerbot_simulator_1:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/textures/ soccerbot/bags || echo "Unable to find logs"
+          docker cp soccerbot_simulator_1:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/bouncing_log.txt soccerbot/bags || echo "Unable to find logs"
+          docker cp soccerbot_simulator_1:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/log.txt soccerbot/bags || echo "Unable to find logs"
+          docker cp soccerbot_simulator_1:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/recording.html soccerbot/bags || echo "Unable to find logs"
+          docker cp soccerbot_simulator_1:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/recording.json soccerbot/bags || echo "Unable to find logs"
+          docker cp soccerbot_simulator_1:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/recording.x3d soccerbot/bags || echo "Unable to find logs"
       - name: Get rosbag
         if: always()
         uses: actions/upload-artifact@v3
         with:
-          name: Rosbags_Walking
+          name: RosbagsWalking
           path: soccerbot/bags
       - name: Kick Integration Test
+        timeout-minutes: 10
         run: |
           docker-compose -f docker-compose.test.kick.yaml up --exit-code-from friendly
       - name: Get integration test logs
         if: always()
         run: |
           docker-compose logs
+          docker cp soccerbot_simulator_1:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/textures/ soccerbot/bags || echo "Unable to find logs"
+          docker cp soccerbot_simulator_1:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/bouncing_log.txt soccerbot/bags || echo "Unable to find logs"
+          docker cp soccerbot_simulator_1:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/log.txt soccerbot/bags || echo "Unable to find logs"
+          docker cp soccerbot_simulator_1:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/recording.html soccerbot/bags || echo "Unable to find logs"
+          docker cp soccerbot_simulator_1:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/recording.json soccerbot/bags || echo "Unable to find logs"
+          docker cp soccerbot_simulator_1:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/recording.x3d soccerbot/bags || echo "Unable to find logs"
       - name: Get rosbag
         if: always()
         uses: actions/upload-artifact@v3
         with:
-          name: Rosbags_Kick
+          name: RosbagsKick
           path: soccerbot/bags
       - name: Kick and Walk Integration Test
+        timeout-minutes: 15
         env:
           ROBOT_X: 3.5
           TEST_NAME: test_walk_and_kick_right
@@ -74,9 +90,15 @@ jobs:
         if: always()
         run: |
           docker-compose logs
+          docker cp soccerbot_simulator_1:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/textures/ soccerbot/bags || echo "Unable to find logs"
+          docker cp soccerbot_simulator_1:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/bouncing_log.txt soccerbot/bags || echo "Unable to find logs"
+          docker cp soccerbot_simulator_1:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/log.txt soccerbot/bags || echo "Unable to find logs"
+          docker cp soccerbot_simulator_1:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/recording.html soccerbot/bags || echo "Unable to find logs"
+          docker cp soccerbot_simulator_1:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/recording.json soccerbot/bags || echo "Unable to find logs"
+          docker cp soccerbot_simulator_1:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/recording.x3d soccerbot/bags || echo "Unable to find logs"
       - name: Get rosbag
         if: always()
         uses: actions/upload-artifact@v3
         with:
-          name: Rosbags_Walk_and_Kick
+          name: RosbagsWalkAndKick
           path: soccerbot/bags

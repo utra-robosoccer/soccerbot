@@ -24,7 +24,6 @@ def setup_calibration():
     import yaml
 
     sys.modules["rospy"] = MagicMock()
-    sys.modules["soccer_msgs"] = __import__("soccer_msgs_mock")
     import rospy
 
     rospy.Time = MagicMock()
@@ -64,16 +63,16 @@ def calibrate_x():
 
     import pybullet as pb
 
-    from soccer_pycontrol.soccerbot_controller import SoccerbotController
-    from soccer_pycontrol.soccerbot_controller_ros import SoccerbotControllerRos
+    from soccer_pycontrol.navigator import Navigator
+    from soccer_pycontrol.navigator_ros import NavigatorRos
 
     start_positions = []
     final_positions = []
     for x in np.linspace(0.0, 0.2, 21):
         if run_in_ros:
-            walker = SoccerbotControllerRos(useCalibration=False)
+            walker = NavigatorRos(useCalibration=False)
         else:
-            walker = SoccerbotController(display=False, useCalibration=False)
+            walker = Navigator(display=False, useCalibration=False)
         walker.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
         walker.ready()
         walker.wait(200)
@@ -91,7 +90,7 @@ def calibrate_x():
 
         print(f"Final Transformation {final_transformation}")
 
-        start_positions.append(goal_position.get_position())
+        start_positions.append(goal_position.position)
         final_positions.append(final_transformation)
 
         walker.wait(100)
@@ -129,16 +128,16 @@ def calibrate_theta():
     if not run_in_ros:
         setup_calibration()
 
-    from soccer_pycontrol.soccerbot_controller import SoccerbotController
-    from soccer_pycontrol.soccerbot_controller_ros import SoccerbotControllerRos
+    from soccer_pycontrol.navigator import Navigator
+    from soccer_pycontrol.navigator_ros import NavigatorRos
 
     start_angles = []
     final_angles = []
     for theta in np.linspace(-np.pi / 2, np.pi / 2, 21):
         if run_in_ros:
-            walker = SoccerbotControllerRos(useCalibration=False)
+            walker = NavigatorRos(useCalibration=False)
         else:
-            walker = SoccerbotController(display=False, useCalibration=False)
+            walker = Navigator(display=False, useCalibration=False)
 
         walker.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
         walker.ready()
@@ -146,7 +145,7 @@ def calibrate_theta():
 
         actual_start_position = walker.getPose()
 
-        goal_position = Transformation([0, 0, 0], Transformation.get_quaternion_from_euler([theta, 0, 0]))
+        goal_position = Transformation([0, 0, 0], euler=[theta, 0, 0])
         walker.setGoal(goal_position)
         walk_success = walker.run(single_trajectory=True)
         if not walk_success:
@@ -193,19 +192,19 @@ def adjust_navigation_transform(start_transform: Transformation, end_transform: 
     calibration_rot_a = rospy.get_param("calibration_rot_a", 1)
 
     def isWalkingBackwards():
-        start_angle = start_transform.get_orientation_euler()[0]
-        del_pose = end_transform.get_position() - start_transform.get_position()
+        start_angle = start_transform.orientation_euler[0]
+        del_pose = end_transform.position - start_transform.position
         if np.dot([np.cos(start_angle), np.sin(start_angle)], del_pose[0:2]) < 0:
             return True
         return False
 
-    diff_position = end_transform.get_position()[0:2] - start_transform.get_position()[0:2]
-    start_angle = start_transform.get_orientation_euler()[0]
+    diff_position = end_transform.position[0:2] - start_transform.position[0:2]
+    start_angle = start_transform.orientation_euler[0]
     intermediate_angle = np.arctan2(diff_position[1], diff_position[0])
 
     if isWalkingBackwards():
         intermediate_angle = wrapToPi(intermediate_angle + np.pi)
-    final_angle = end_transform.get_orientation_euler()[0]
+    final_angle = end_transform.orientation_euler[0]
 
     step_1_angular_distance = wrapToPi(intermediate_angle - start_angle)
     step_2_distance = np.linalg.norm(diff_position)
@@ -225,9 +224,9 @@ def adjust_navigation_transform(start_transform: Transformation, end_transform: 
     step_1_angular_distance_new = trimToPi(step_1_angular_distance_new)
     step_3_angular_distance_new = trimToPi(step_3_angular_distance_new)
 
-    rot1 = Transformation((0, 0, 0), Transformation.get_quaternion_from_euler([step_1_angular_distance_new, 0, 0]))
+    rot1 = Transformation((0, 0, 0), euler=[step_1_angular_distance_new, 0, 0])
     trans = Transformation((step_2_distance_new, 0, 0)) if not isWalkingBackwards() else Transformation((-step_2_distance_new, 0, 0))
-    rot2 = Transformation((0, 0, 0), Transformation.get_quaternion_from_euler([step_3_angular_distance_new, 0, 0]))
+    rot2 = Transformation((0, 0, 0), euler=[step_3_angular_distance_new, 0, 0])
 
     end_transform_new = start_transform @ rot1 @ trans @ rot2
     end_transform_new.is_walking_backwards = isWalkingBackwards()  # HACK needed to pass the calibrated walking over :(

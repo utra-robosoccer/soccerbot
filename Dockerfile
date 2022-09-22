@@ -74,14 +74,24 @@ RUN pip install --no-cache-dir --upgrade pip Cython pybullet
 
 RUN curl -sSL https://get.docker.com/ | sh
 
-COPY soccerbot/scripts/install_mxnet.sh install_mxnet.sh
-RUN bash install_mxnet.sh
+RUN if [[ "$(dpkg --print-architecture)" == "arm64" ]] ; then \
+    apt-get update && \
+    apt-get install -y libomp5 libopenblas-dev && \
+    pip install gdown && \
+    gdown https://drive.google.com/uc?id=1AQQuBS9skNk1mgZXMp0FmTIwjuxc81WY && \
+    gdown https://drive.google.com/uc?id=1BaBhpAizP33SV_34-l3es9MOEFhhS1i2 && \
+    pip install torch-1.11.0a0+gitbc2c6ed-cp38-cp38-linux_aarch64.whl && \
+    pip install torchvision-0.12.0a0+9b5a3fe-cp38-cp38-linux_aarch64.whl && \
+    rm -rf torch-1.11.0a0+gitbc2c6ed-cp38-cp38-linux_aarch64.whl && \
+    rm -rf torchvision-0.12.0a0+9b5a3fe-cp38-cp38-linux_aarch64.whl; fi
 
 COPY requirements.txt /tmp/requirements.txt
-RUN pip install -r /tmp/requirements.txt
+RUN pip3 install -r /tmp/requirements.txt --extra-index-url https://download.pytorch.org/whl/cu117
 
 COPY --from=dependencies /tmp/catkin_install_list /tmp/catkin_install_list
-RUN apt-get update && apt-fast install -y --no-install-recommends $(cat /tmp/catkin_install_list)
+RUN (apt-get update || echo "Apt Error") && apt-fast install -y --no-install-recommends $(cat /tmp/catkin_install_list)
+
+
 
 # Create User
 ARG USER="robosoccer"
@@ -91,20 +101,17 @@ RUN groupadd -g 1000 $USER && \
     echo "$USER ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \
     usermod --append --groups 29,20,104,46,5,44 $USER
 
-WORKDIR /home/$USER/catkin_ws
-RUN chown -R $USER /home/$USER/catkin_ws
 USER $USER
+RUN mkdir -p /home/$USER/catkin_ws/src
+WORKDIR /home/$USER/catkin_ws
 
-# Predownload yolo3 mobilenet
-RUN curl https://apache-mxnet.s3-accelerate.dualstack.amazonaws.com/gluon/models/yolo3_mobilenet1.0_coco-66dbbae6.zip \
-    --create-dirs --output /home/$USER/.mxnet/models/yolo3_mobilenet1.0_coco-66dbbae6.zip && \
-    unzip /home/$USER/.mxnet/models/yolo3_mobilenet1.0_coco-66dbbae6.zip -d /home/$USER/.mxnet/models/
-
-# Build C++ ROS Packages such as AMCL first
-COPY --from=dependencies --chown=$USER /root/src/amcl src/soccerbot/amcl
-RUN source /opt/ros/noetic/setup.bash && catkin config --cmake-args -DCMAKE_BUILD_TYPE=Release
-RUN source /opt/ros/noetic/setup.bash && catkin build --no-status amcl
-RUN rm -rf src/soccerbot
+# Predownload neural networks
+RUN mkdir -p /home/$USER/.cache/torch/hub/ &&  \
+    cd /home/$USER/.cache/torch/hub/ && \
+    wget https://github.com/ultralytics/yolov5/archive/master.zip && \
+    unzip /home/$USER/.cache/torch/hub/master.zip && \
+    mv yolov5-master ultralytics_yolov5_master && \
+    rm -rf master.zip
 
 # Build Python ROS Packages
 COPY --from=dependencies --chown=$USER /root/src src/soccerbot
@@ -112,4 +119,4 @@ RUN source /opt/ros/noetic/setup.bash && catkin config --cmake-args -DCMAKE_BUIL
 RUN source /opt/ros/noetic/setup.bash && catkin build --no-status soccerbot
 RUN echo "source /home/$USER/catkin_ws/devel/setup.bash" >> ~/.bashrc
 
-ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/aarch64-linux-gnu/tegra:/home/$USER/.local/mxnet
+ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/aarch64-linux-gnu/tegra:/usr/local/cuda/targets/aarch64-linux/lib/

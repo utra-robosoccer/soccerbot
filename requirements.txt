@@ -1,6 +1,6 @@
 osrf-pycommon
 pip>=21.0.1
-matplotlib
+matplotlib==3.5.3
 numpy>=1.20.2
 roslibpy
 scipy>=1.6.2
@@ -17,14 +17,18 @@ keras
 gluoncv
 pre-commit
 timeout_decorator
-torch
-torchvision
 pytest-timeout
 pytest-rerunfailures
 ruamel.yaml
 
-# object detection
+# object detectionq
+requests==2.28.1
+ipython==8.4.0
+seaborn
+tensorboard
 Pillow==9.0.1
 tqdm
-mxnet-cu112; platform_machine == 'x86_64'
+psutil==5.9.2; platform_machine == 'x86_64'
+torch==1.12.0; platform_machine == 'x86_64'
+torchvision; platform_machine == 'x86_64'
 pybullet
