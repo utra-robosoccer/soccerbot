@@ -119,9 +119,9 @@ class SoccerbotRos(Soccerbot):
 
         # Get odom from odom_path
         t_adjusted = t * self.robot_odom_path.duration() / self.robot_path.duration()
-        crotch_position = self.robot_odom_path.torsoPosition(t_adjusted) @ self.torso_offset
+        torso_position = self.robot_odom_path.torsoPosition(t_adjusted) @ self.torso_offset
 
-        self.odom_pose = Transformation(position=crotch_position.position, quaternion=crotch_position.quaternion)
+        self.odom_pose = Transformation(position=torso_position.position, quaternion=torso_position.quaternion)
 
     def publishPath(self, robot_path=None):
         """

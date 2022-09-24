@@ -1,6 +1,7 @@
 import numpy as np
 import rospy
 from geometry_msgs.msg import Pose, PoseStamped
+from geometry_msgs.msg import Transform as GeometryMsgsTransform
 from scipy.spatial.transform import Rotation as R
 from scipy.spatial.transform import Slerp
 
@@ -20,6 +21,7 @@ class Transformation(np.ndarray):
         pos_theta: np.array = None,
         pose: Pose = None,
         pose_stamped: PoseStamped = None,
+        geometry_msgs_transform: GeometryMsgsTransform = None,
         dh: np.array = None,
         timestamp: rospy.Time = None,
         *args,
@@ -74,6 +76,8 @@ class Transformation(np.ndarray):
             cls.pos_theta = pos_theta
         elif pose is not None:
             cls.pose = pose
+        elif geometry_msgs_transform is not None:
+            cls.geometry_msgs_transform = geometry_msgs_transform
         elif pose_stamped is not None:
             cls.pose = pose_stamped.pose
             cls.timestamp = pose_stamped.header.stamp
@@ -175,6 +179,34 @@ class Transformation(np.ndarray):
     def pose(self, pose: Pose):
         self.position = [pose.position.x, pose.position.y, pose.position.z]
         self.quaternion = [pose.orientation.x, pose.orientation.y, pose.orientation.z, pose.orientation.w]
+
+    @property
+    def geometry_msgs_transform(self) -> GeometryMsgsTransform:
+        """
+        Representation of the transformation in the ros geometry_msgs Transform format
+        """
+        position = self.position
+        quaternion = self.quaternion
+
+        p = GeometryMsgsTransform()
+        p.translation.x = position[0]
+        p.translation.y = position[1]
+        p.translation.z = position[2]
+        p.rotation.x = quaternion[0]
+        p.rotation.y = quaternion[1]
+        p.rotation.z = quaternion[2]
+        p.rotation.w = quaternion[3]
+        return p
+
+    @geometry_msgs_transform.setter
+    def geometry_msgs_transform(self, geometry_msgs_transform: GeometryMsgsTransform):
+        self.position = [geometry_msgs_transform.translation.x, geometry_msgs_transform.translation.y, geometry_msgs_transform.translation.z]
+        self.quaternion = [
+            geometry_msgs_transform.rotation.x,
+            geometry_msgs_transform.rotation.y,
+            geometry_msgs_transform.rotation.z,
+            geometry_msgs_transform.rotation.w,
+        ]
 
     @property
     def pose_stamped(self) -> PoseStamped:

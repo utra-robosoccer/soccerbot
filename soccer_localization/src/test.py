@@ -30,33 +30,49 @@ def test_simple():
 
     path_ukf = []
     path_odom = []
+    path_gt = []
 
     odom_t_previous = None
-    for topic, msg, t in bag.read_messages(topics=["/robot1/odom_combined"]):
-        if odom_t_previous is None:
-            odom_t_previous = Transformation(pose=msg.pose.pose, timestamp=t)
-            continue
-        odom_t = Transformation(pose=msg.pose.pose, timestamp=t)
+    predict_it = 0
+    for topic, msg, t in bag.read_messages(topics=["/robot1/odom_combined", "/tf"]):
+        if topic == "/tf":
+            # Process ground truth information
+            for transform in msg.transforms:
+                if transform.child_frame_id == "robot1/base_footprint_gt":
+                    transform_gt = Transformation(geometry_msgs_transform=transform.transform)
+                    path_gt.append(transform_gt.pos_theta)
+                    pass
+                pass
+        else:
+            if odom_t_previous is None:
+                odom_t_previous = Transformation(pose=msg.pose.pose, timestamp=t)
+                continue
+            odom_t = Transformation(pose=msg.pose.pose, timestamp=t)
 
-        diff_transformation: Transformation = np.linalg.inv(odom_t_previous) @ odom_t
-        dt = odom_t.timestamp - odom_t_previous.timestamp
-        dt_secs = dt.secs + dt.nsecs * 1e-9
-        if dt_secs == 0:
-            continue
+            diff_transformation: Transformation = np.linalg.inv(odom_t_previous) @ odom_t
+            dt = odom_t.timestamp - odom_t_previous.timestamp
+            dt_secs = dt.secs + dt.nsecs * 1e-9
+            if dt_secs == 0:
+                continue
 
-        f.predict(diff_transformation.pos_theta / dt_secs, dt_secs)
+            f.predict(diff_transformation.pos_theta / dt_secs, dt_secs)
+            predict_it += 1
+            if predict_it % 50 == 0:
+                f.draw_covariance()
 
-        path_ukf.append(f.ukf.x)
-        path_odom.append((initial_pose @ odom_t).pos_theta)
-
-        odom_t_previous = odom_t
+            path_ukf.append(f.ukf.x)
+            path_odom.append((initial_pose @ odom_t).pos_theta)
+            odom_t_previous = odom_t
 
     path_ukf = np.array(path_ukf)
     path_odom = np.array(path_odom)
+    path_gt = np.array(path_gt)
 
     # Add the patch to the Axes
-    plt.plot(path_odom[:, 0], path_odom[:, 1], color="k", linewidth=0.5)
-    plt.plot(path_ukf[:, 0], path_ukf[:, 1], color="red", linewidth=0.5)
+    plt.plot(path_odom[:, 0], path_odom[:, 1], color="yellow", linewidth=0.5, label="Odom Path")
+    plt.plot(path_ukf[:, 0], path_ukf[:, 1], color="red", linewidth=0.5, label="UKF Path")
+    plt.plot(path_gt[:, 0], path_gt[:, 1], color="brown", linewidth=0.5, label="Ground Truth Path")
+    plt.legend()
 
     xs = [-4.5, 4.5, 4.5, -4.5, -4.5, 0, 0]
     ys = [-3, -3, 3, 3, -3, -3, 3]
@@ -65,6 +81,8 @@ def test_simple():
     plt.xlabel("Y (m)")
     plt.ylabel("X (m)")
     plt.title("UKF Robot localization")
-    plt.show()
+    plt.show(block=True)
+
+    plt.figure("Error X, Y, Z")
 
     pass

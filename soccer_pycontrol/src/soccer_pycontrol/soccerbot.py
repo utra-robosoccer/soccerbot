@@ -416,14 +416,14 @@ class Soccerbot:
         assert t <= self.robot_path.duration()
 
         # Get Crotch position (Average Time: 0.0007538795471191406)
-        crotch_position = self.robot_path.torsoPosition(t) @ self.torso_offset
+        torso_position = self.robot_path.torsoPosition(t) @ self.torso_offset
 
         # Get foot position at time (Average Time: 0.0004878044128417969)
         [right_foot_position, left_foot_position] = self.robot_path.footPosition(t)
 
         # Calcualate the feet position relative from torso (Average Time: 0.000133514404296875)
-        torso_to_left_foot = scipy.linalg.lstsq(crotch_position, left_foot_position, lapack_driver="gelsy")[0]
-        torso_to_right_foot = scipy.linalg.lstsq(crotch_position, right_foot_position, lapack_driver="gelsy")[0]
+        torso_to_left_foot = scipy.linalg.lstsq(torso_position, left_foot_position, lapack_driver="gelsy")[0]
+        torso_to_right_foot = scipy.linalg.lstsq(torso_position, right_foot_position, lapack_driver="gelsy")[0]
 
         # Inverse kinematics for both feet (Average Time: 0.0015840530395507812)
         thetas = self.inverseKinematicsRightFoot(torso_to_right_foot)
@@ -432,7 +432,7 @@ class Soccerbot:
         thetas = self.inverseKinematicsLeftFoot(torso_to_left_foot)
         self.configuration[Links.LEFT_LEG_1 : Links.LEFT_LEG_6 + 1] = thetas[0:6]
 
-        self.pose = crotch_position
+        self.pose = torso_position
 
     def plot_angles(self):
         """

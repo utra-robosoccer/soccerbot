@@ -18,10 +18,7 @@ sigma_bearing = 0.05
 
 
 class FieldLinesUKF:
-    def __init__(self, debug=True):
-        self.debug = debug
-
-        self.step = 0  # The current step of the UKF
+    def __init__(self):
 
         points = MerweScaledSigmaPoints(n=3, alpha=0.00001, beta=2, kappa=0, subtract=self.residual_x)
         landmarks = 1
@@ -116,23 +113,10 @@ class FieldLinesUKF:
         return x
 
     def predict(self, u, dt):
-        draw_covariance_interval = 150
-
-        # Prediction and drop covariance
         self.ukf.predict(dt=dt, u=u)
 
-        if self.debug and self.step % draw_covariance_interval == 0:
-            plot_covariance((self.ukf.x[0], self.ukf.x[1]), self.ukf.P[0:2, 0:2], std=2, facecolor="k", alpha=0.1)
-
-        self.step = self.step + 1
-
     def update(self, z, landmarks):
-        draw_covariance_interval = 10
-
-        # Update and draw covariance
         self.ukf.update(z, landmarks=landmarks)
 
-        if self.debug and self.step % draw_covariance_interval == 0:
-            plot_covariance((self.ukf.x[0], self.ukf.x[1]), self.ukf.P[0:2, 0:2], std=3, facecolor="g", alpha=0.8)
-
-        self.step = self.step + 1
+    def draw_covariance(self):
+        plot_covariance((self.ukf.x[0], self.ukf.x[1]), self.ukf.P[0:2, 0:2], std=1, facecolor="k", alpha=0.1)
