@@ -10,6 +10,7 @@
       <sourceFolder url="file://$MODULE_DIR$/soccer_object_localization/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/soccer_trajectories/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/soccer_webots/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/soccer_localization/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/external" />
       <excludeFolder url="file://$MODULE_DIR$/docs" />
       <excludeFolder url="file://$MODULE_DIR$/.github" />

@@ -17,10 +17,10 @@ sigma_range = 0.05
 sigma_bearing = 0.05
 
 
+# Adapted from https://github.com/rlabbe/Kalman-and-Bayesian-Filters-in-Python/blob/master/10-Unscented-Kalman-Filter.ipynb
 class FieldLinesUKF:
     def __init__(self):
-
-        points = MerweScaledSigmaPoints(n=3, alpha=0.00001, beta=2, kappa=0, subtract=self.residual_x)
+        points_fn = MerweScaledSigmaPoints(n=3, alpha=0.1, beta=2, kappa=0, subtract=self.residual_x)
         landmarks = 1
         self.ukf = UKF(
             dim_x=3,
@@ -28,7 +28,7 @@ class FieldLinesUKF:
             fx=self.move,
             hx=self.Hx,
             dt=dt,
-            points=points,
+            points=points_fn,
             x_mean_fn=self.state_mean,
             z_mean_fn=self.z_mean,
             residual_x=self.residual_x,
@@ -36,9 +36,9 @@ class FieldLinesUKF:
         )
 
         self.ukf.x = np.array([-4, -3.15, 1.57])
-        self.ukf.P = np.diag([0.0001, 0.0001, 0.0001])
+        self.ukf.P = np.diag([0.0001, 0.0001, 0.01])
         # self.ukf.R = np.diag([sigma_range**2, sigma_bearing**2] * len(landmarks))
-        self.ukf.Q = np.eye(3) * 0.0001
+        self.ukf.Q = np.diag([1e-4, 1e-4, 1e-6])  # Error per time step (1mm per step)
 
         # ROS information
         self.map_subscriber = rospy.Subscriber("map", OccupancyGrid, self.map_update)

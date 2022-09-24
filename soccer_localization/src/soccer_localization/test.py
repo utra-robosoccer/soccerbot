@@ -8,14 +8,14 @@ import numpy as np
 import rosbag
 
 from soccer_common.transformation import Transformation
-from soccer_localization.src.field_lines_ukf import FieldLinesUKF
+from soccer_localization.field_lines_ukf import FieldLinesUKF
 
 
 def test_simple():
     plt.figure("Localization")
     plt.axes().set_facecolor("limegreen")
     src_path = os.path.dirname(os.path.realpath(__file__))
-    test_path = src_path + "/../test/localization.bag"
+    test_path = src_path + "/test/localization.bag"
     bag_path = Path(test_path)
     if not bag_path.is_file():
         print(f"Bag not found at {test_path}. Downloading ...")
@@ -57,7 +57,7 @@ def test_simple():
 
             f.predict(diff_transformation.pos_theta / dt_secs, dt_secs)
             predict_it += 1
-            if predict_it % 50 == 0:
+            if predict_it % 40 == 0:
                 f.draw_covariance()
 
             path_ukf.append(f.ukf.x)
@@ -70,8 +70,8 @@ def test_simple():
 
     # Add the patch to the Axes
     plt.plot(path_odom[:, 0], path_odom[:, 1], color="yellow", linewidth=0.5, label="Odom Path")
-    plt.plot(path_ukf[:, 0], path_ukf[:, 1], color="red", linewidth=0.5, label="UKF Path")
-    plt.plot(path_gt[:, 0], path_gt[:, 1], color="brown", linewidth=0.5, label="Ground Truth Path")
+    plt.plot(path_ukf[:, 0], path_ukf[:, 1], color="white", linewidth=0.5, label="UKF Path")
+    plt.plot(path_gt[:, 0], path_gt[:, 1], color="orange", linewidth=0.5, label="Ground Truth Path")
     plt.legend()
 
     xs = [-4.5, 4.5, 4.5, -4.5, -4.5, 0, 0]
@@ -86,3 +86,12 @@ def test_simple():
     plt.figure("Error X, Y, Z")
 
     pass
+
+
+def test_show_ukf_stuff():
+    import soccer_localization.utils.ukf_internal as ukf_internal
+
+    f = FieldLinesUKF()
+    f.draw_covariance()
+    ukf_internal.plot_sigmas(f.ukf.points_fn, x=f.ukf.x, cov=f.ukf.P)
+    plt.show()
