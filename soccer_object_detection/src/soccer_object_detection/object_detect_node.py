@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import enum
 import os
 
 from rospy.impl.tcpros_base import DEFAULT_BUFF_SIZE
@@ -18,7 +19,13 @@ from sensor_msgs.msg import Image
 
 from soccer_common.camera import Camera
 from soccer_msgs.msg import BoundingBox, BoundingBoxes, RobotState
-from soccer_object_detection.model import Label
+
+
+class Label(enum.IntEnum):
+    # Defines output channels of model
+    BALL = 0
+    ROBOT = 1
+    OTHER = 2
 
 
 class bcolors:
@@ -103,7 +110,7 @@ class ObjectDetectionNode(object):
                 x1, y1, x2, y2, confidence, img_class = prediction.cpu().numpy()
                 y1 += h + 1
                 y2 += h + 1
-                if img_class == self.SOCCER_BALL and confidence > self.CONFIDENCE_THRESHOLD:
+                if img_class == Label.BALL.value and confidence > self.CONFIDENCE_THRESHOLD:
                     bb_msg = BoundingBox()
                     bb_msg.xmin = round(x1)
                     bb_msg.ymin = round(y1)
