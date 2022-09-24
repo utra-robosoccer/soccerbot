@@ -17,7 +17,7 @@ display = True
 if "DISPLAY" not in os.environ:
     display = False
 
-robot_model = "bez1"
+robot_model = "bez3"
 TEST_TIMEOUT = 60
 
 file_path = os.path.dirname(os.path.abspath(__file__))
@@ -96,7 +96,7 @@ class TestWalking:
                 _ = _
             pb.stepSimulation()
 
-    @pytest.mark.parametrize("walker", ["bez1", "bez3"], indirect=True)
+    @pytest.mark.parametrize("walker", ["bez3"], indirect=True)
     def test_walk_1(self, walker: Navigator):
         walker.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
         walker.ready()

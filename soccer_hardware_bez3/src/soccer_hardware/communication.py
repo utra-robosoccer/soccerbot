@@ -1,5 +1,10 @@
+#!/usr/bin/env python
+# import time
+# time.sleep(30)
 import math
 import os
+if "ROS_NAMESPACE" not in os.environ:
+    os.environ["ROS_NAMESPACE"] = "/robot3"
 from threading import Lock
 
 import rospy as rp
@@ -118,6 +123,7 @@ class Communication:
         # IMU FEEDBACK
         imu = Imu()
         imu.header.stamp = rp.rostime.get_rostime()
+        # print(os.environ)
         imu.header.frame_id = os.environ["ROS_NAMESPACE"][1:] + "/imu_link"
 
         # TODO autocalibrate

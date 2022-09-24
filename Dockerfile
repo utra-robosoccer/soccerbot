@@ -68,7 +68,7 @@ RUN wget --progress=dot:mega https://developer.download.nvidia.com/compute/cuda/
     apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/${OS}/$ARCHITECTURE/3bf863cc.pub && \
     add-apt-repository "deb https://developer.download.nvidia.com/compute/cuda/repos/${OS}/$ARCHITECTURE/ /" && \
     apt-get update
-RUN DEBIAN_FRONTEND=noninteractive apt-fast -yq --no-install-recommends install cuda libcudnn8 libcudnn8-dev libnccl2 libnccl-dev
+RUN DEBIAN_FRONTEND=noninteractive apt-fast -yq --no-install-recommends install cuda=11.2.0-1 libcudnn8=8.1.0.77-1+cuda11.2 libcudnn8-dev=8.1.0.77-1+cuda11.2 libnccl2=2.8.4-1+cuda11.2 libnccl-dev=2.8.4-1+cuda11.2
 
 RUN pip install --no-cache-dir --upgrade pip Cython pybullet
 
