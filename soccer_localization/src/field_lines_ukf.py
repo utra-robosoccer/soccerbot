@@ -9,10 +9,10 @@ from filterpy.kalman import UnscentedKalmanFilter as UKF
 from filterpy.stats import plot_covariance
 from nav_msgs.msg import OccupancyGrid
 
+from soccer_common.transformation import Transformation
 from soccer_common.utils import wrapToPi
 
 dt = 0.5
-wheelbase = 0.1
 sigma_range = 0.05
 sigma_bearing = 0.05
 
@@ -39,7 +39,7 @@ class FieldLinesUKF:
         )
 
         self.ukf.x = np.array([-4, -3.15, 1.57])
-        self.ukf.P = np.diag([0.01, 0.01, 0.01])
+        self.ukf.P = np.diag([0.0001, 0.0001, 0.0001])
         # self.ukf.R = np.diag([sigma_range**2, sigma_bearing**2] * len(landmarks))
         self.ukf.Q = np.eye(3) * 0.0001
 
@@ -63,24 +63,8 @@ class FieldLinesUKF:
         lm = ((lm - np.array(img.shape) / 2) / np.array(img.shape)) * np.array([6 + 2, 9 + 2])
         return np.fliplr(lm[::10])
 
-    def move(self, x: [float], dt: float, u: [float], wheelbase: float = 0.0001) -> [float]:
-        # x = [x, y, theta]
-        # u = [v, alpha] (alpha is the steering angle
-        # Returns the next position
-        theta = x[2]
-        vel = u[0]
-        steering_angle = u[1]
-        dist = vel * dt
-
-        if abs(steering_angle) > 0.001:  # is robot turning?
-            beta = (dist / wheelbase) * tan(steering_angle)
-            r = wheelbase / tan(steering_angle)  # radius
-
-            sinh, sinhb = sin(theta), sin(theta + beta)
-            cosh, coshb = cos(theta), cos(theta + beta)
-            return x + np.array([-r * sinh + r * sinhb, r * cosh - r * coshb, beta])
-        else:  # moving in straight line
-            return x + np.array([dist * cos(theta), dist * sin(theta), 0])
+    def move(self, x: [float], dt: float, u: [float]) -> [float]:
+        return (Transformation(pos_theta=x) @ Transformation(pos_theta=u * dt)).pos_theta
 
     def residual_h(self, a, b):
         y = a - b
@@ -135,7 +119,7 @@ class FieldLinesUKF:
         draw_covariance_interval = 150
 
         # Prediction and drop covariance
-        self.ukf.predict(dt=dt, u=u, wheelbase=wheelbase)
+        self.ukf.predict(dt=dt, u=u)
 
         if self.debug and self.step % draw_covariance_interval == 0:
             plot_covariance((self.ukf.x[0], self.ukf.x[1]), self.ukf.P[0:2, 0:2], std=2, facecolor="k", alpha=0.1)
