@@ -102,7 +102,7 @@ def test_simple():
                 rotation_matrix @ point_cloud_array[:, 0:2].T
             )
             if t.secs == 10 and t.nsecs == 544000000:
-                plt.scatter(world_frame_points[0, :], world_frame_points[1, :], marker=".", s=1, label="Points")
+                plt.scatter(world_frame_points[0, :], world_frame_points[1, :], marker=".", s=1, label="Points", color="yellow")
             pass
         if topic == "/tf":
             # Process ground truth information
