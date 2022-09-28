@@ -37,6 +37,9 @@ class Communication:
         jx_ser._motor_lock = (
             Lock()
         )  # TODO improve on this hacky exclusive lock over the serial port for motor TX/RX (which always requires flushing the RX buffer via the state machine due to echo, hence exclusive lock)
+
+        # TODO: Serial fail handling
+        #    e.g. put all thread creation in a conditional timed loop, so if the serial temporarily disconnects we can reconnect and restart the thread. Alternatively, give the threads the serial object factory
         self._tx_servo_thread = Transmitter(name="tx_servo_th", jx_ser=jx_ser, pwm_ser=imu_pwm_servo_ser)
         self._rx_servo_thread = MotorReceiver(name="rx_servo_th", ser=jx_ser)
         self._rx_servo_thread.set_timeout(0.04)

@@ -31,10 +31,10 @@ JX_JOINTS = [
     "left_leg_motor_5",
 ]
 GOBILDA_JOINTS = [
-    "left_arm_motor_0",
-    "left_arm_motor_1",
     "right_arm_motor_0",
     "right_arm_motor_1",
+    "left_arm_motor_0",
+    "left_arm_motor_1",
     "head_motor_0",
     "head_motor_1",
 ]
@@ -57,8 +57,7 @@ class Transmitter(Thread):
         # return
         with self._jx_ser._motor_lock:
             jx_servo_util.uart_transact(self._jx_ser, [1600, 1, 15] * 13, CMDS.PID_COEFF, RWS.WRITE)  # push initial PID gains
-            jx_servo_util.uart_transact(self._jx_ser, [500] * 13, CMDS.MAX_DRIVE, RWS.WRITE)  # push initial maximum drive (out of 4096)
-            # pass
+            jx_servo_util.uart_transact(self._jx_ser, [1300] * 13, CMDS.MAX_DRIVE, RWS.WRITE)  # push initial maximum drive (out of 4096)
 
     def stop(self):
         """
@@ -89,10 +88,10 @@ class Transmitter(Thread):
             for idx, v in gobilda_goal_angles:
                 flat_gobilda_goal_angles[int(idx - GOBILDA_IDX_BASE)] = constrain(int(v * ANGLE2GOBILDA_PWM), 0, 0xFFF)
                 # print(int(v * ANGLE2GOBILDA_PWM), constrain(int(v * ANGLE2GOBILDA_PWM), 0, 0xFFF))
-                pass
+                # pass
             # print(flat_gobilda_goal_angles)
             # flat_gobilda_goal_angles = [0x800] * int(np.amax(gobilda_goal_angles[:, 0]) - GOBILDA_IDX_BASE + 1)
-            # gobilda_servo_util.uart_transact(self._pwm_ser, flat_gobilda_goal_angles)
+            gobilda_servo_util.uart_transact(self._pwm_ser, flat_gobilda_goal_angles)
 
     def get_num_tx(self):
         with self._num_tx_lock:

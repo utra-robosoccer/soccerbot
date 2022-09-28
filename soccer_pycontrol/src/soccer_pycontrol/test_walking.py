@@ -11,11 +11,13 @@ if "ROS_NAMESPACE" not in os.environ:
 
 from soccer_common.transformation import Transformation
 
-real_robot = False
-run_in_ros = False
-display = True
+real_robot = True
+run_in_ros = True
+
 if "DISPLAY" not in os.environ:
     display = False
+else:
+    display = os.environ['DISPLAY']
 
 robot_model = "bez3"
 TEST_TIMEOUT = 60
@@ -48,7 +50,7 @@ from soccer_pycontrol.soccerbot import Links
 
 
 class TestWalking:
-    robot_models = ["bez1"]
+    robot_models = ["bez3"]
 
     @staticmethod
     def reset_attributes():
@@ -100,7 +102,7 @@ class TestWalking:
     def test_walk_1(self, walker: Navigator):
         walker.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
         walker.ready()
-        walker.wait(200)
+        walker.wait(int(2E2))
         goal_position = Transformation([1, 0, 0], [0, 0, 0, 1])
         walker.setGoal(goal_position)
         walk_success = walker.run(single_trajectory=True)
