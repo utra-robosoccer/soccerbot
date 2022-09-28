@@ -137,9 +137,12 @@ def uart_transact(ser, B, cmd, rw, timeout=INF):
             expect_len = max(0, (w - (l % w)))  # both full and empty frames will trigger a full frame read
 
         if uart_state != UART_STATES.ENDED:
-            ser.timeout = EXPECT_BYTE_RX_TIME * expect_len
-            # print(ser.timeout)
-            r0 = ser.read(expect_len)
+            try:
+                ser.timeout = EXPECT_BYTE_RX_TIME * expect_len
+                # print(ser.timeout)
+                r0 = ser.read(expect_len)
+            except ValueError as e:
+                pass
 
     checked_servo_frames = {si: (((le_crc(s[:-1]) ^ s[-1]) & 0x3F) == 0, s) for si, s in servo_frames.items() if len(s) == CMD_WIDTHS[cmd.value] + 2}
 
