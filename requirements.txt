@@ -29,6 +29,6 @@ tensorboard
 Pillow==9.0.1
 tqdm
 psutil==5.9.2; platform_machine == 'x86_64'
-torch==1.12.0; platform_machine == 'x86_64'
+torch==1.12.1; platform_machine == 'x86_64'
 torchvision; platform_machine == 'x86_64'
 pybullet
