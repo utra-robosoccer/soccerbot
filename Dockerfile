@@ -97,6 +97,7 @@ USER $USER
 RUN mkdir -p /home/$USER/catkin_ws/src
 WORKDIR /home/$USER/catkin_ws
 
+# Install dependencies
 COPY requirements.txt /tmp/requirements.txt
 RUN pip3 install -r /tmp/requirements.txt --extra-index-url https://download.pytorch.org/whl/cu117
 
