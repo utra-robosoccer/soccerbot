@@ -43,11 +43,14 @@ def mock_ros(robot_model="bez1", real_robot=False, param_path=None):
         for param_path in param_paths:
             with open(param_path, "r") as g:
                 y = yaml.safe_load(g)
+                found = True
                 for c in a.split("/"):
                     if y is None or c not in y:
-                        return b
+                        found = False
+                        break
                     y = y[c]
-                return y
+                if found:
+                    return y
 
         return b
 
