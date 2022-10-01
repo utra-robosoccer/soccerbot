@@ -102,7 +102,7 @@ jobs:
         with:
           name: RosbagsWalkAndKick
           path: soccerbot/bags
-#      - name: Setup tmate session
-#        timeout-minutes: 15
-#        if: ${{ failure() }}
-#        uses: mxschmitt/action-tmate@v3
+      - name: Setup tmate session
+        timeout-minutes: 15
+        if: ${{ failure() }}
+        uses: mxschmitt/action-tmate@v3
