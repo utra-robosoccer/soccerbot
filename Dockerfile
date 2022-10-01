@@ -85,25 +85,23 @@ RUN if [[ "$(dpkg --print-architecture)" == "arm64" ]] ; then \
     rm -rf torch-1.11.0a0+gitbc2c6ed-cp38-cp38-linux_aarch64.whl && \
     rm -rf torchvision-0.12.0a0+9b5a3fe-cp38-cp38-linux_aarch64.whl; fi
 
-COPY requirements.txt /tmp/requirements.txt
-RUN pip3 install -r /tmp/requirements.txt --extra-index-url https://download.pytorch.org/whl/cu117
-
-COPY --from=dependencies /tmp/catkin_install_list /tmp/catkin_install_list
-RUN (apt-get update || echo "Apt Error") && apt-fast install -y --no-install-recommends $(cat /tmp/catkin_install_list)
-
-
-
 # Create User
 ARG USER="robosoccer"
 RUN groupadd -g 1000 $USER && \
     useradd -u 1000 -g 1000 -mrs /bin/bash -b /home -p $(openssl passwd -1 $USER) $USER && \
     usermod -aG sudo $USER && \
     echo "$USER ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \
-    usermod --append --groups 29,20,104,46,5,44 $USER
+    usermod --append --groups 29,20,104,46,5,44 $USER \
 
 USER $USER
 RUN mkdir -p /home/$USER/catkin_ws/src
 WORKDIR /home/$USER/catkin_ws
+
+COPY requirements.txt /tmp/requirements.txt
+RUN pip3 install -r /tmp/requirements.txt --extra-index-url https://download.pytorch.org/whl/cu117
+
+COPY --from=dependencies /tmp/catkin_install_list /tmp/catkin_install_list
+RUN (sudo apt-get update || echo "Apt Error") && sudo apt-fast install -y --no-install-recommends $(cat /tmp/catkin_install_list)
 
 # Predownload neural networks
 RUN mkdir -p /home/$USER/.cache/torch/hub/ &&  \
