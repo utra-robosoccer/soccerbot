@@ -36,7 +36,7 @@ jobs:
           password: ${{ secrets.DOCKER_TOKEN }}
       - name: Build the Docker images
         run: |
-          docker-compose pull
+          docker-compose pull -q
           docker-compose build --progress=plain
       - name: Walking Integration Test
         timeout-minutes: 10
