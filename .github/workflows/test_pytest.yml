@@ -57,6 +57,12 @@ jobs:
           source /opt/ros/noetic/setup.bash
           catkin init
           catkin build
+      - name: Initialize fake display and roscore
+        run: |
+          roscore &
+          sudo apt-fast install -y python3-tk
+          Xvfb :1 -screen 0 1024x768x24 & # Fake display
+          export DISPLAY=unix:1
       - name: Pytest
         run: |
           cd $HOME/catkin_ws/src/soccerbot

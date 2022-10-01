@@ -1,18 +1,18 @@
 def mock_ros(robot_model="bez1", real_robot=False, config_path=""):
-    import sys
     from os.path import exists
     from unittest.mock import MagicMock
 
     import yaml
 
     if not real_robot:
-        sys.modules["rospy"] = MagicMock()
         import rospy
 
         rospy.Time = MagicMock()
         joint_state = MagicMock()
         joint_state.position = [0.0] * 18
+        rospy.set_param("/use_sim_time", False)
         rospy.wait_for_message = MagicMock(return_value=joint_state)
+        rospy.init_node("test")
         rospy.Time.now = MagicMock(return_value=0)
         rospy.get_namespace = MagicMock(return_value="/robot1/")
         rospy.Duration = lambda a: a

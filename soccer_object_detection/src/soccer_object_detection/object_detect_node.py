@@ -53,7 +53,7 @@ class ObjectDetectionNode(object):
         self.SOCCER_BALL = 0
         self.CONFIDENCE_THRESHOLD = rospy.get_param("~ball_confidence_threshold", 0.75)
 
-        self.model = torch.hub.load("ultralytics/yolov5", "custom", path=model_path)
+        self.model = torch.hub.load("ultralytics/yolov5", "custom", path=model_path, force_reload=True)
         if torch.cuda.is_available():
             rospy.loginfo(f"{bcolors.OKGREEN}Using CUDA for object detection{bcolors.ENDC}")
             self.model.cuda()
@@ -125,7 +125,7 @@ class ObjectDetectionNode(object):
             try:
                 if self.pub_detection.get_num_connections() > 0:
                     results.render()
-                    self.pub_detection.publish(self.br.cv2_to_imgmsg(results.imgs[0], encoding="bgr8"))
+                    self.pub_detection.publish(self.br.cv2_to_imgmsg(results.ims[0], encoding="bgr8"))
 
                 if self.pub_boundingbox.get_num_connections() > 0 and len(bbs_msg.bounding_boxes) > 0:
                     self.pub_boundingbox.publish(bbs_msg)
@@ -137,7 +137,7 @@ class ObjectDetectionNode(object):
 
 if __name__ == "__main__":
     parser = ArgumentParser()
-    parser.add_argument("--model", dest="model_path", default="outputs/model3_feat10", help="pytorch model")
+    parser.add_argument("--model", dest="model_path", default="small_model/July14.pt", help="pytorch model")
     parser.add_argument("--num-feat", dest="num_feat", default=10, help="specify model size of the neural network")
     args, unknown = parser.parse_known_args()
 

@@ -5,7 +5,6 @@ from unittest.mock import MagicMock
 import cv2
 from cv2 import Mat
 
-from soccer_common import Transformation
 from soccer_common.mock_ros import mock_ros
 from soccer_msgs.msg import RobotState
 

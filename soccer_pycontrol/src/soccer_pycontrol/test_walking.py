@@ -13,7 +13,7 @@ from soccer_common.transformation import Transformation
 
 real_robot = False
 run_in_ros = False
-display = True
+display = False
 if "DISPLAY" not in os.environ:
     display = False
 
@@ -29,12 +29,9 @@ else:
         config_path = f"{file_path}/../../config/{robot_model}_sim_pybullet.yaml"
 
 if run_in_ros:
-    import rospy
-
-    rospy.init_node("soccer_control_test")
-    os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_strategy'")
-    os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_pycontrol'")
-    os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_trajectories'")
+    os.system(
+        "/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_strategy /robot1/soccer_pycontrol /robot1/soccer_trajectories'"
+    )
 
 from soccer_common.mock_ros import mock_ros
 
