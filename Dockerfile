@@ -91,7 +91,7 @@ RUN groupadd -g 1000 $USER && \
     useradd -u 1000 -g 1000 -mrs /bin/bash -b /home -p $(openssl passwd -1 $USER) $USER && \
     usermod -aG sudo $USER && \
     echo "$USER ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \
-    usermod --append --groups 29,20,104,46,5,44 $USER \
+    usermod --append --groups 29,20,104,46,5,44 $USER
 
 USER $USER
 RUN mkdir -p /home/$USER/catkin_ws/src
