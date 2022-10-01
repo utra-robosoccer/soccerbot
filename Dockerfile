@@ -99,6 +99,7 @@ WORKDIR /home/$USER/catkin_ws
 
 # Install dependencies
 COPY requirements.txt /tmp/requirements.txt
+ENV PATH=/home/$USER/.local/bin:$PATH
 RUN pip3 install -r /tmp/requirements.txt --extra-index-url https://download.pytorch.org/whl/cu117
 
 COPY --from=dependencies /tmp/catkin_install_list /tmp/catkin_install_list
