@@ -35,7 +35,7 @@ if run_in_ros:
 
 from soccer_common.mock_ros import mock_ros
 
-mock_ros(robot_model=robot_model, real_robot=real_robot, config_path=config_path)
+mock_ros(robot_model=robot_model, real_robot=real_robot, param_path=config_path)
 
 import soccer_pycontrol.navigator
 from soccer_pycontrol.calibration import adjust_navigation_transform

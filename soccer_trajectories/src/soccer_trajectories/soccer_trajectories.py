@@ -81,12 +81,7 @@ class Trajectory:
                 else:
                     joint_values = list(map(float, row[1:]))
 
-                    try:
-                        param = "~motor_mapping/{}/initial_state".format(joint_name)
-                        last_pose_value = float(rospy.get_param(param))
-                    except:
-                        param = "/robot1/soccer_hardware/motor_mapping/{}/initial_state".format(joint_name)
-                        last_pose_value = float(rospy.get_param(param))
+                    last_pose_value = float(rospy.get_param(f"motor_mapping/{joint_name}/initial_state"))
 
                     # last_pose_value = 0.0
                     joint_values = [last_pose_value] + joint_values + [last_pose_value]
@@ -156,8 +151,7 @@ class Trajectory:
 
 class SoccerTrajectoryClass:
     def __init__(self):
-        default_path = os.path.join(os.path.dirname(__file__), "../../trajectories/bez1")
-        self.trajectory_path = rospy.get_param("~trajectory_path", default_path)
+        self.trajectory_path = os.path.join(os.path.dirname(__file__), "../../trajectories/bez1")
         self.trajectory_complete = True
         self.trajectory = None
         self.command_sub = rospy.Subscriber("command", FixedTrajectoryCommand, self.run_trajectory, queue_size=1)

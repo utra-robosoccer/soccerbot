@@ -30,7 +30,7 @@ if run_in_ros:
 
 file_path = os.path.dirname(os.path.abspath(__file__))
 config_path = f"{file_path}/../../config/bez1_sim_pybullet.yaml"
-mock_ros(robot_model="bez1", real_robot=False, config_path=config_path)
+mock_ros(robot_model="bez1", real_robot=False, param_path=config_path)
 
 from soccer_pycontrol.navigator import Navigator
 from soccer_pycontrol.navigator_ros import NavigatorRos

@@ -1,4 +1,9 @@
-def mock_ros(robot_model="bez1", real_robot=False, config_path=""):
+from typing import List
+
+param_paths: List[str] = []
+
+
+def mock_ros(robot_model="bez1", real_robot=False, param_path=None):
     from os.path import exists
     from unittest.mock import MagicMock
 
@@ -23,23 +28,27 @@ def mock_ros(robot_model="bez1", real_robot=False, config_path=""):
     else:
         import rospy
 
-    if not exists(config_path):
-        print(f"Config Path {config_path} does not exist")
+    if param_path is not None:
+        if not exists(param_path):
+            print(f"Config Path {param_path} does not exist")
+        else:
+            if param_path not in param_paths:
+                param_paths.append(param_path)
 
     def get_param(a, b=None):
         a = a.lstrip("~")
         if a == "robot_model":
             return robot_model
 
-        if not exists(config_path):
-            return b
+        for param_path in param_paths:
+            with open(param_path, "r") as g:
+                y = yaml.safe_load(g)
+                for c in a.split("/"):
+                    if y is None or c not in y:
+                        return b
+                    y = y[c]
+                return y
 
-        with open(config_path, "r") as g:
-            y = yaml.safe_load(g)
-            for c in a.split("/"):
-                if y is None or c not in y:
-                    return b
-                y = y[c]
-            return y
+        return b
 
     rospy.get_param = get_param
