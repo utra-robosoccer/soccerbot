@@ -15,6 +15,7 @@ x-gpu: &gpu
 x-soccerbot: &soccerbot #  <<: *gpu
   image: utrarobosoccer/soccerbot
   privileged: true
+  user: "1000"
   build:
     context: .
     target: builder

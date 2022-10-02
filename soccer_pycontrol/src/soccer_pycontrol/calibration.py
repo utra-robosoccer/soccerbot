@@ -236,10 +236,9 @@ def adjust_navigation_transform(start_transform: Transformation, end_transform: 
 
 if __name__ == "__main__":
     if run_in_ros:
-
-        os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_strategy'")
-        os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_pycontrol'")
-        os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_trajectories'")
+        os.system(
+            "/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_strategy /robot1/soccer_pycontrol /robot1/soccer_trajectories'"
+        )
         rospy.init_node("soccer_control_calibration")
         rospy.loginfo("Initializing Soccer Control Calibration")
 

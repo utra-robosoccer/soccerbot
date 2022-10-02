@@ -36,7 +36,7 @@ jobs:
           password: ${{ secrets.DOCKER_TOKEN }}
       - name: Build the Docker images
         run: |
-          docker-compose pull
+          docker-compose pull -q
           docker-compose build --progress=plain
       - name: Walking Integration Test
         timeout-minutes: 10
@@ -102,3 +102,7 @@ jobs:
         with:
           name: RosbagsWalkAndKick
           path: soccerbot/bags
+#      - name: Setup tmate session
+#        timeout-minutes: 15
+#        if: ${{ failure() }}
+#        uses: mxschmitt/action-tmate@v3

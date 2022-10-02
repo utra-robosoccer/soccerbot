@@ -18,7 +18,7 @@ from soccer_msgs.msg import FixedTrajectoryCommand, RobotState
 class Trajectory:
     """Interpolates a CSV trajectory for multiple joints."""
 
-    def __init__(self, trajectory_path, mirror=False):
+    def __init__(self, trajectory_path: str, mirror=False):
         """Initialize a Trajectory from a CSV file at trajectory_path.
         if it's getup trajectory append the desired final pose so the robot is ready for next action
         expects rectangular shape for csv table"""
@@ -81,12 +81,7 @@ class Trajectory:
                 else:
                     joint_values = list(map(float, row[1:]))
 
-                    try:
-                        param = "~motor_mapping/{}/initial_state".format(joint_name)
-                        last_pose_value = float(rospy.get_param(param))
-                    except:
-                        param = "/robot1/soccer_hardware/motor_mapping/{}/initial_state".format(joint_name)
-                        last_pose_value = float(rospy.get_param(param))
+                    last_pose_value = float(rospy.get_param(f"motor_mapping/{joint_name}/initial_state"))
 
                     # last_pose_value = 0.0
                     joint_values = [last_pose_value] + joint_values + [last_pose_value]
@@ -156,9 +151,7 @@ class Trajectory:
 
 class SoccerTrajectoryClass:
     def __init__(self):
-        rospy.init_node("soccer_trajectories")
-        default_path = os.path.join(os.path.dirname(__file__), "../../trajectories/bez1")
-        self.trajectory_path = rospy.get_param("~trajectory_path", default_path)
+        self.trajectory_path = rospy.get_param("~trajectory_path", os.path.join(os.path.dirname(__file__), "../../trajectories/bez1"))
         self.trajectory_complete = True
         self.trajectory = None
         self.command_sub = rospy.Subscriber("command", FixedTrajectoryCommand, self.run_trajectory, queue_size=1)
@@ -178,6 +171,7 @@ class SoccerTrajectoryClass:
         path = self.trajectory_path + "/" + command.trajectory_name + ".csv"
 
         if not os.path.exists(path):
+            rospy.logerr(f"Trajectory doesn't exist in path {path}")
             self.trajectory_complete = True
             return
 
@@ -191,5 +185,6 @@ class SoccerTrajectoryClass:
 
 
 if __name__ == "__main__":
+    rospy.init_node("soccer_trajectories")
     trajectory_class = SoccerTrajectoryClass()
     rospy.spin()

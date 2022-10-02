@@ -26,3 +26,4 @@ slave.py
 venv/
 /docs/_build/
 /docs/generated/
+*.bag
