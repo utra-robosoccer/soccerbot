@@ -18,7 +18,7 @@ from soccer_msgs.msg import FixedTrajectoryCommand, RobotState
 class Trajectory:
     """Interpolates a CSV trajectory for multiple joints."""
 
-    def __init__(self, trajectory_path, mirror=False):
+    def __init__(self, trajectory_path: str, mirror=False):
         """Initialize a Trajectory from a CSV file at trajectory_path.
         if it's getup trajectory append the desired final pose so the robot is ready for next action
         expects rectangular shape for csv table"""
@@ -151,7 +151,7 @@ class Trajectory:
 
 class SoccerTrajectoryClass:
     def __init__(self):
-        self.trajectory_path = os.path.join(os.path.dirname(__file__), "../../trajectories/bez1")
+        self.trajectory_path = rospy.get_param("~trajectory_path", os.path.join(os.path.dirname(__file__), "../../trajectories/bez1"))
         self.trajectory_complete = True
         self.trajectory = None
         self.command_sub = rospy.Subscriber("command", FixedTrajectoryCommand, self.run_trajectory, queue_size=1)
@@ -171,6 +171,7 @@ class SoccerTrajectoryClass:
         path = self.trajectory_path + "/" + command.trajectory_name + ".csv"
 
         if not os.path.exists(path):
+            rospy.logerr(f"Trajectory doesn't exist in path {path}")
             self.trajectory_complete = True
             return
 
