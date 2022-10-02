@@ -93,17 +93,18 @@ RUN groupadd -g 1000 $USER && \
     echo "$USER ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \
     usermod --append --groups 29,20,104,46,5,44 $USER
 
-USER $USER
-RUN mkdir -p /home/$USER/catkin_ws/src
-WORKDIR /home/$USER/catkin_ws
+# Install apt dependencies
+COPY --from=dependencies /tmp/catkin_install_list /tmp/catkin_install_list
+RUN (apt-get update || echo "Apt Error") && apt-fast install -y --no-install-recommends $(cat /tmp/catkin_install_list)
 
-# Install dependencies
+# Install python dependencies
+USER $USER
 COPY requirements.txt /tmp/requirements.txt
 ENV PATH=/home/$USER/.local/bin:$PATH
 RUN pip3 install -r /tmp/requirements.txt --extra-index-url https://download.pytorch.org/whl/cu117
 
-COPY --from=dependencies /tmp/catkin_install_list /tmp/catkin_install_list
-RUN (sudo apt-get update || echo "Apt Error") && sudo apt-fast install -y --no-install-recommends $(cat /tmp/catkin_install_list)
+RUN mkdir -p /home/$USER/catkin_ws/src
+WORKDIR /home/$USER/catkin_ws
 
 # Predownload neural networks
 RUN mkdir -p /home/$USER/.cache/torch/hub/ &&  \
