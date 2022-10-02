@@ -47,6 +47,8 @@ services:
   simulator:
     <<: *gpu
     image: utrarobosoccer/webots
+    stop_signal: SIGINT
+    stop_grace_period: 10s
     privileged: true
     build:
       context: external
