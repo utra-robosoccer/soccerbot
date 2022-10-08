@@ -6,10 +6,10 @@ import scipy
 
 from soccer_pycontrol.path import Path
 from soccer_pycontrol.path_foot import PathFoot
-from soccer_pycontrol.path_hip import PathHip
+from soccer_pycontrol.path_torso import PathTorso
 
 
-class PathRobot(PathHip):
+class PathRobot(PathTorso):
     """
     Subclass for the robot's path, contains functions to draw the path of the robot
     """
@@ -84,7 +84,7 @@ class PathRobot(PathHip):
         i = 0
         for t in times:
             [lfp[:, :, i], rfp[:, :, i]] = self.footPosition(t)
-            crp[:, :, i] = self.hipPosition(t)
+            crp[:, :, i] = self.torsoPosition(t)
             diff_right_foot[:, :, i] = np.matmul(lfp[:, :, i], scipy.linalg.inv(crp[:, :, i]))  # lfp[:,:, i] / crp[:,:, i]
             diff_left_foot[:, :, i] = np.matmul(rfp[:, :, i], scipy.linalg.inv(crp[:, :, i]))  # rfp[:,:, i] / crp[:,:, i]
             i = i + 1

@@ -122,7 +122,7 @@ class SoccerbotRos(Soccerbot):
 
         # Get odom from odom_path
         t_adjusted = t * self.robot_odom_path.duration() / self.robot_path.duration()
-        torsoPosition = self.robot_odom_path.hipPosition(t_adjusted) @ self.torso_offset
+        torsoPosition = self.robot_odom_path.torsoPosition(t_adjusted) @ self.torso_offset
 
         self.odom_pose = Transformation(position=torsoPosition.position, quaternion=torsoPosition.quaternion)
 
@@ -141,7 +141,7 @@ class SoccerbotRos(Soccerbot):
             p.header.frame_id = "world"
             p.header.stamp = rospy.Time.now()
             for i in range(0, robot_path.torsoStepCount(), 1):
-                step = robot_path.getHipStepPose(i)
+                step = robot_path.getTorsoStepPose(i)
                 position = step.position
                 orientation = step.quaternion
                 pose = PoseStamped()

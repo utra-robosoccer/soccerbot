@@ -210,7 +210,7 @@ class PathFoot(Path):
         :return: Position given as a transformation
         """
 
-        torsostep = self.getHipStepPose(n)
+        torsostep = self.getTorsoStepPose(n)
 
         bodypos = torsostep.position
         transformToLeftFoot = Transformation([0, -self.foot_separation, -bodypos[2] + self.foot_center_to_floor])
@@ -225,7 +225,7 @@ class PathFoot(Path):
         :return: Position given as a transformation
         """
 
-        torsostep = self.getHipStepPose(n)
+        torsostep = self.getTorsoStepPose(n)
 
         bodypos = torsostep.position
         transformToRightFoot = Transformation([0, self.foot_separation, -bodypos[2] + self.foot_center_to_floor])

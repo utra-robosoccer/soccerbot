@@ -82,7 +82,7 @@ class Soccerbot:
     The main class for soccerbot, which receives and sends information to pybullet, inherited by ROS
     """
 
-    walking_torso_height = rospy.get_param("walking_torso_height", 0.3)  #: Height of the robot's hip (center of highest leg motor) while walking
+    walking_torso_height = rospy.get_param("walking_torso_height", 0.3)  #: Height of the robot's torso (center between two arms) while walking
     foot_box = [0.09, 0.07, 0.01474]  #: Dimensions of the foot collision box #TODO get it from URDF
     right_foot_joint_center_to_collision_box_center = [
         0.00385,
@@ -266,12 +266,12 @@ class Soccerbot:
 
         self.configuration_offset = [0] * len(Joints)
 
-    def setWalkingHipHeight(self, pose: Transformation) -> Transformation:
+    def setWalkingTorsoHeight(self, pose: Transformation) -> Transformation:
         """
-        Takes a 2D pose and sets the height of the pose to the height of the hip
+        Takes a 2D pose and sets the height of the pose to the height of the torso
         https://docs.google.com/presentation/d/10DKYteySkw8dYXDMqL2Klby-Kq4FlJRnc4XUZyJcKsw/edit#slide=id.g163c1c67b73_0_0
 
-        :param position: 2D position of the robot's hip in a 3D transformation format
+        :param position: 2D position of the robot's torso in a 3D transformation format
         """
 
         p = pose
@@ -355,7 +355,7 @@ class Soccerbot:
         :param pose: 3D position in pybullet
         """
 
-        self.pose = self.setWalkingHipHeight(pose)
+        self.pose = self.setWalkingTorsoHeight(pose)
 
         # Remove the roll and yaw from the pose
         [r, p, y] = pose.orientation_euler
@@ -370,8 +370,8 @@ class Soccerbot:
         :param endPose: 3D transformation
         :return: Robot path
         """
-        startPose = self.setWalkingHipHeight(self.pose)
-        endPose = self.setWalkingHipHeight(endPose)
+        startPose = self.setWalkingTorsoHeight(self.pose)
+        endPose = self.setWalkingTorsoHeight(endPose)
 
         # Remove the roll and yaw from the designated position
         [r, p, y] = endPose.orientation_euler
@@ -407,15 +407,15 @@ class Soccerbot:
 
         assert t <= self.robot_path.duration()
 
-        # Get Hip position (Average Time: 0.0007538795471191406)
-        hip_position = self.robot_path.hipPosition(t) @ self.torso_offset
+        # Get Torso position (Average Time: 0.0007538795471191406)
+        torso_position = self.robot_path.torsoPosition(t) @ self.torso_offset
 
         # Get foot position at time (Average Time: 0.0004878044128417969)
         [right_foot_position, left_foot_position] = self.robot_path.footPosition(t)
 
         # Calcualate the feet position relative from torso (Average Time: 0.000133514404296875)
-        torso_to_left_foot = scipy.linalg.lstsq(hip_position, left_foot_position, lapack_driver="gelsy")[0]
-        torso_to_right_foot = scipy.linalg.lstsq(hip_position, right_foot_position, lapack_driver="gelsy")[0]
+        torso_to_left_foot = scipy.linalg.lstsq(torso_position, left_foot_position, lapack_driver="gelsy")[0]
+        torso_to_right_foot = scipy.linalg.lstsq(torso_position, right_foot_position, lapack_driver="gelsy")[0]
 
         # Inverse kinematics for both feet (Average Time: 0.0015840530395507812)
         thetas = self.inverseKinematicsRightFoot(torso_to_right_foot)
@@ -424,7 +424,7 @@ class Soccerbot:
         thetas = self.inverseKinematicsLeftFoot(torso_to_left_foot)
         self.configuration[Links.LEFT_LEG_1 : Links.LEFT_LEG_6 + 1] = thetas[0:6]
 
-        self.pose = hip_position
+        self.pose = torso_position
 
     def plot_angles(self):
         """

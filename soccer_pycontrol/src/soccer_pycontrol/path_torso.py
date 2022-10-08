@@ -8,16 +8,16 @@ from soccer_common.transformation import Transformation
 from soccer_pycontrol.path_foot import PathFoot
 
 
-class PathHip(PathFoot):
+class PathTorso(PathFoot):
 
     #: How much the torso bounces up and down while following the torso trajectory (m)
-    hip_zdiff_sway = rospy.get_param("hip_zdiff_sway", 0.00)
+    torso_zdiff_sway = rospy.get_param("torso_zdiff_sway", 0.00)
 
     #: How much the torso sways left and right while following the torso trajectory  (m)
-    hip_sidediff_sway = rospy.get_param("hip_sidediff_sway", -0.025)
+    torso_sidediff_sway = rospy.get_param("torso_sidediff_sway", -0.025)
 
     #: How much the torso rotates while following the torso trajectory (yaw, pitch, roll)
-    hip_thetadiff_sway = rospy.get_param("hip_thetadiff_sway", [0.0, 0.0, 0.0])
+    torso_thetadiff_sway = rospy.get_param("torso_thetadiff_sway", [0.0, 0.0, 0.0])
 
     def __init__(self, start_transform, end_transform, foot_center_to_floor):
         super().__init__(start_transform, end_transform, foot_center_to_floor)
@@ -32,7 +32,7 @@ class PathHip(PathFoot):
         else:
             self.first_step_left = 1
 
-    def hipPosition(self, t: float) -> Transformation:
+    def torsoPosition(self, t: float) -> Transformation:
         """
         Retrieves the torso position at a given time of the path
 
@@ -49,21 +49,21 @@ class PathHip(PathFoot):
 
         # Base position for the torso
         if step_num == 0:
-            _from = self.getHipStepPose(0)
-            _to = self.getHipStepPose(1)
+            _from = self.getTorsoStepPose(0)
+            _to = self.getTorsoStepPose(1)
             body_movement_ratio = ratio / 2
         elif step_num == self.num_steps() - 1:
-            _from = self.getHipStepPose(step_num - 1)
-            _to = self.getHipStepPose(step_num)
+            _from = self.getTorsoStepPose(step_num - 1)
+            _to = self.getTorsoStepPose(step_num)
             body_movement_ratio = (ratio / 2) + (1 / 2)
         else:
             if ratio < 0.5:
-                _from = self.getHipStepPose(step_num - 1)
-                _to = self.getHipStepPose(step_num)
+                _from = self.getTorsoStepPose(step_num - 1)
+                _to = self.getTorsoStepPose(step_num)
                 body_movement_ratio = ratio + 0.5
             else:
-                _from = self.getHipStepPose(step_num)
-                _to = self.getHipStepPose(step_num + 1)
+                _from = self.getTorsoStepPose(step_num)
+                _to = self.getTorsoStepPose(step_num + 1)
                 body_movement_ratio = ratio - 0.5
 
         position = self.parabolicPath(_from, _to, 0.0, 0.0, 0.0, body_movement_ratio)
@@ -76,11 +76,11 @@ class PathHip(PathFoot):
             ratio = left_foot_ratio
 
         if t < self.half_step_time():
-            zdiff = self.hip_zdiff_sway * (1 - np.cos(ratio * np.pi))
+            zdiff = self.torso_zdiff_sway * (1 - np.cos(ratio * np.pi))
         elif t > self.duration() - self.half_step_time():
-            zdiff = self.hip_zdiff_sway * (1 - np.cos((ratio * np.pi) + np.pi))
+            zdiff = self.torso_zdiff_sway * (1 - np.cos((ratio * np.pi) + np.pi))
         else:
-            zdiff = self.hip_zdiff_sway * (1 - np.cos((ratio * 2 * np.pi) + np.pi))
+            zdiff = self.torso_zdiff_sway * (1 - np.cos((ratio * 2 * np.pi) + np.pi))
 
         # Horizontal Sway (exponential decay)
         [_, right_foot_ratio, left_foot_ratio] = self.leftRightFootStepRatio(t, 3)
@@ -92,8 +92,8 @@ class PathHip(PathFoot):
             is_right_foot = 1
 
         r = -4 * (ratio**2) + 4 * ratio
-        ydiff = r * self.hip_sidediff_sway * is_right_foot
-        thetadiff = ydiff / self.hip_sidediff_sway * np.array(self.hip_thetadiff_sway)
+        ydiff = r * self.torso_sidediff_sway * is_right_foot
+        thetadiff = ydiff / self.torso_sidediff_sway * np.array(self.torso_thetadiff_sway)
 
         H = Transformation(euler=thetadiff)  # H = eul2tform(thetadiff)
         H.position = [-0.005, ydiff, zdiff]
@@ -104,7 +104,7 @@ class PathHip(PathFoot):
 
     def show(self, fig=None):
         """
-        Draws the hip position
+        Draws the torso position
 
         :param fig: Figure Handle
         """
@@ -112,6 +112,6 @@ class PathHip(PathFoot):
         iterator = np.linspace(0, self.duration(), num=math.ceil(self.duration() / self.step_precision) + 1)
         tfInterp = np.zeros((4, 4, len(iterator)))
         for t in iterator:
-            tfInterp[:, :, i] = self.hipPosition(t)
+            tfInterp[:, :, i] = self.torsoPosition(t)
             i = i + 1
         self.show_tf(fig, tfInterp, len(iterator))

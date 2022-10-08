@@ -108,7 +108,7 @@ class NavigatorRos(Navigator):
             print("Updating New Goal")
             start = time.time()
             goal_position = Transformation(pose=pose.pose)
-            self.soccerbot.setWalkingHipHeight(goal_position)
+            self.soccerbot.setWalkingTorsoHeight(goal_position)
             self.new_path = copy.deepcopy(self.soccerbot.robot_path)
 
             try:
