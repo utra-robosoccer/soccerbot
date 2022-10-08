@@ -59,8 +59,6 @@ class DetectorFieldline(Detector):
         if not self.camera.ready():
             return
 
-        pts = []
-
         self.camera.reset_position(timestamp=img.header.stamp)
         rospy.loginfo_once("Started Publishing Fieldlines")
 

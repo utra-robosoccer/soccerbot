@@ -108,7 +108,7 @@ class NavigatorRos(Navigator):
             print("Updating New Goal")
             start = time.time()
             goal_position = Transformation(pose=pose.pose)
-            self.soccerbot.addTorsoHeight(goal_position)
+            self.soccerbot.setWalkingTorsoHeight(goal_position)
             self.new_path = copy.deepcopy(self.soccerbot.robot_path)
 
             try:
@@ -237,7 +237,6 @@ class NavigatorRos(Navigator):
                 self.completed_walk_publisher.publish(e)
 
             if self.soccerbot.robot_path is None or self.t > self.soccerbot.robot_path.duration():
-                self.soccerbot.pose[2, 3] = 0.334  # TODO remove hardcode
                 self.soccerbot.publishHeight()
                 self.soccerbot.apply_head_rotation()
                 self.soccerbot.robot_path = None

@@ -1,7 +1,6 @@
 # Path parameters
 
-torso_height: 0.46
-walking_hip_height: 0.26
+walking_torso_height: 0.46
 joint_indices:
   LEFT_ARM_1: 12
   LEFT_ARM_2: 13

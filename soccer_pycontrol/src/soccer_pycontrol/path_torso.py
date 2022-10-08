@@ -108,7 +108,6 @@ class PathTorso(PathFoot):
 
         :param fig: Figure Handle
         """
-        # Draw the torso position
         i = 0
         iterator = np.linspace(0, self.duration(), num=math.ceil(self.duration() / self.step_precision) + 1)
         tfInterp = np.zeros((4, 4, len(iterator)))
