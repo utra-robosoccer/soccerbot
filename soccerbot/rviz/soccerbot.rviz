@@ -217,8 +217,8 @@ Visualization Manager:
               Queue Size: 10
               Selectable: false
               Size (Pixels): 4
-              Size (m): 0.007000000216066837
-              Style: Points
+              Size (m): 0.004999999888241291
+              Style: Flat Squares
               Topic: /robot1/field_point_cloud
               Unreliable: false
               Use Fixed Frame: true
@@ -976,7 +976,7 @@ Visualization Manager:
   Value: true
   Views:
     Current:
-      Angle: -0.0650000274181366
+      Angle: -0.0350000336766243
       Class: rviz/TopDownOrtho
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
@@ -986,10 +986,10 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Scale: 438.7626953125
+      Scale: 1177.6522216796875
       Target Frame: <Fixed Frame>
-      X: -3.7372262477874756
-      Y: -2.6754488945007324
+      X: -4.299924850463867
+      Y: -2.3909432888031006
     Saved: ~
 Window Geometry:
   Displays:
