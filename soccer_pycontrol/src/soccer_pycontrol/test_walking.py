@@ -110,7 +110,7 @@ class TestWalking:
                 assert distance_offset < 0.08
 
     @pytest.mark.timeout(TEST_TIMEOUT)
-    # @pytest.mark.flaky(reruns=1)
+    @pytest.mark.flaky(reruns=1)
     def test_walk_2(self, walker: Navigator):
         walker.setPose(Transformation([-0.7384, -0.008, 0], [0.00000, 0, 0, 1]))
         walker.ready()
