@@ -5,6 +5,7 @@ import os
 import time
 from copy import deepcopy
 from os.path import expanduser
+from typing import Union
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -81,14 +82,13 @@ class Soccerbot:
     The main class for soccerbot, which receives and sends information to pybullet, inherited by ROS
     """
 
-    torso_height = rospy.get_param("torso_height", 0.36)  #: Height of the robot's center of torso, while in ready pose
-    walking_hip_height = rospy.get_param("walking_hip_height", 0.165)  #: Height of the robot's hip (center of highest leg motor) while walking
+    walking_torso_height = rospy.get_param("walking_torso_height", 0.3)  #: Height of the robot's hip (center of highest leg motor) while walking
     foot_box = [0.09, 0.07, 0.01474]  #: Dimensions of the foot collision box #TODO get it from URDF
     right_foot_joint_center_to_collision_box_center = [
         0.00385,
         0.00401,
         -0.00737,
-    ]  #: Transformationansformation from the right foots joint position to the center of the collision box of the foot
+    ]  #: Transformations from the right foots joint position to the center of the collision box of the foot (https://docs.google.com/presentation/d/10DKYteySkw8dYXDMqL2Klby-Kq4FlJRnc4XUZyJcKsw/edit#slide=id.g163c1c67b73_0_0)
     arm_0_center = -0.45  #: Ready Pose angle for arm 1
     arm_1_center = np.pi * 0.8  #: Ready Pose angle for arm 2
 
@@ -96,7 +96,7 @@ class Soccerbot:
         """
         Initialization function for soccerbot. Does a series of calculations based on the URDF file for standing, walking poses
 
-        :param pose: The position to initialize the robot
+        :param pose: The position to initialize the robot, Z doesn't matter here as it will be set automatically
         :param useFixedBase: Whether to fix the base_link in the air for movement testing
         :param useCalibration: Whether to use calibration for walking path calculations
         """
@@ -109,7 +109,7 @@ class Soccerbot:
             + f"/catkin_ws/src/soccerbot/{rospy.get_param('~robot_model', 'bez1')}_description/urdf/{rospy.get_param('~robot_model', 'bez1')}.urdf",
             useFixedBase=useFixedBase,
             flags=pb.URDF_USE_INERTIA_FROM_FILE | (pb.URDF_MERGE_FIXED_LINKS if rospy.get_param("merge_fixed_links", False) else 0),
-            basePosition=[pose.position[0], pose.position[1], Soccerbot.torso_height],
+            basePosition=[pose.position[0], pose.position[1], pose.position[2]],
             baseOrientation=pose.quaternion,
         )
         self.pybullet_offset = pb.getBasePositionAndOrientation(self.body)[0][:2] + (0,)  # pb.getLinkState(self.body, Links.TORSO)[4:6]
@@ -136,17 +136,17 @@ class Soccerbot:
         )
         self.torso_to_right_hip = self.get_link_transformation(Links.TORSO, Links.RIGHT_LEG_1)
         self.right_hip_to_left_hip = self.get_link_transformation(Links.LEFT_LEG_1, Links.RIGHT_LEG_1)
-        self.hip_to_torso = self.get_link_transformation(Links.RIGHT_LEG_1, Links.TORSO)
+        self.hip_to_torso = abs(self.get_link_transformation(Links.RIGHT_LEG_1, Links.TORSO)[2, 3])
 
         pitch_correction = Transformation([0, 0, 0], euler=[0, rospy.get_param("torso_offset_pitch_ready", 0.0), 0])
 
         self.right_foot_init_position = self.get_link_transformation(Links.TORSO, Links.RIGHT_LEG_6)
-        self.right_foot_init_position[2, 3] = -(self.hip_to_torso[2, 3] + self.walking_hip_height) + self.foot_center_to_floor
+        self.right_foot_init_position[2, 3] = -self.walking_torso_height + self.foot_center_to_floor
         self.right_foot_init_position[0, 3] -= rospy.get_param("torso_offset_x_ready", 0.0)
         self.right_foot_init_position = pitch_correction @ self.right_foot_init_position
 
         self.left_foot_init_position = self.get_link_transformation(Links.TORSO, Links.LEFT_LEG_6)
-        self.left_foot_init_position[2, 3] = -(self.hip_to_torso[2, 3] + self.walking_hip_height) + self.foot_center_to_floor
+        self.left_foot_init_position[2, 3] = -self.walking_torso_height + self.foot_center_to_floor
         self.left_foot_init_position[0, 3] -= rospy.get_param("torso_offset_x_ready", 0.0)
         self.left_foot_init_position = pitch_correction @ self.left_foot_init_position
 
@@ -154,8 +154,8 @@ class Soccerbot:
 
         pitch_correction = Transformation([0, 0, 0], euler=[0, rospy.get_param("torso_offset_pitch", 0.0), 0])
         self.torso_offset = Transformation([rospy.get_param("torso_offset_x", 0), 0, 0]) @ pitch_correction
-        self.robot_path: PathRobot = None
-        self.robot_odom_path: PathRobot = None
+        self.robot_path: Union[PathRobot, None] = None
+        self.robot_odom_path: Union[PathRobot, None] = None
 
         self.configuration = [0.0] * len(Joints)  #: The 18x1 float array motor angle configuration for the robot's 18 motors
         self.configuration_offset = [0.0] * len(Joints)  #: The offset for the 18x1 motor angle configurations
@@ -193,19 +193,16 @@ class Soccerbot:
         :return: H-transform from starting link to the ending link
         """
         if link1 == Links.TORSO:
-            link1world = pb.getBasePositionAndOrientation(self.body)
-            link1world = (tuple(np.subtract(link1world[0], tuple(self.pybullet_offset))), (0, 0, 0, 1))
+            link1world = ((0, 0, 0), (0, 0, 0, 1))
         else:
             link1world = pb.getLinkState(self.body, link1)[4:6]
 
         if link2 == Links.TORSO:
-            link2world = pb.getBasePositionAndOrientation(self.body)
-            link2world = (tuple(np.subtract(link2world[0], tuple(self.pybullet_offset))), (0, 0, 0, 1))
+            link2world = ((0, 0, 0), (0, 0, 0, 1))
         else:
             link2world = pb.getLinkState(self.body, link2)[4:6]
 
         link1worldrev = pb.invertTransform(link1world[0], link1world[1])
-        link2worldrev = pb.invertTransform(link2world[0], link2world[1])
 
         final_transformation = pb.multiplyTransforms(link2world[0], link2world[1], link1worldrev[0], link1worldrev[1])
         return Transformation(np.round(list(final_transformation[0]), 5), np.round(list(final_transformation[1]), 5))
@@ -271,21 +268,15 @@ class Soccerbot:
 
     def setWalkingHipHeight(self, pose: Transformation) -> Transformation:
         """
-        Takes a 2D pose and sets the height of the pose to the height used for walking
+        Takes a 2D pose and sets the height of the pose to the height of the hip
+        https://docs.google.com/presentation/d/10DKYteySkw8dYXDMqL2Klby-Kq4FlJRnc4XUZyJcKsw/edit#slide=id.g163c1c67b73_0_0
 
-        :param position: 2D position of the robot in a 3D transformation format
+        :param position: 2D position of the robot's hip in a 3D transformation format
         """
 
         p = pose
         position = p.position
-        position[2] = self.hip_to_torso[2, 3] + self.walking_hip_height
-        p.position = position
-        return p
-
-    def hipToTorsoPosition(self, pose: Transformation) -> Transformation:
-        p = pose
-        position = p.position
-        position[2] = self.foot_center_to_floor + position[2]
+        position[2] = self.walking_torso_height
         p.position = position
         return p
 
@@ -364,12 +355,7 @@ class Soccerbot:
         :param pose: 3D position in pybullet
         """
 
-        if hasattr(self, "pose"):
-            last_hip_height = self.pose.position[2]
-        else:
-            self.pose = pose
-            last_hip_height = Soccerbot.torso_height
-        self.pose.position = [pose.position[0], pose.position[1], last_hip_height]
+        self.pose = self.setWalkingHipHeight(pose)
 
         # Remove the roll and yaw from the pose
         [r, p, y] = pose.orientation_euler
@@ -438,7 +424,7 @@ class Soccerbot:
         thetas = self.inverseKinematicsLeftFoot(torso_to_left_foot)
         self.configuration[Links.LEFT_LEG_1 : Links.LEFT_LEG_6 + 1] = thetas[0:6]
 
-        self.pose = self.hipToTorsoPosition(hip_position)
+        self.pose = hip_position
 
     def plot_angles(self):
         """

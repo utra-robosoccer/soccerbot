@@ -119,7 +119,7 @@ class SoccerbotRos(Soccerbot):
 
         # Get odom from odom_path
         t_adjusted = t * self.robot_odom_path.duration() / self.robot_path.duration()
-        torsoPosition = self.hipToTorsoPosition(self.robot_odom_path.hipPosition(t_adjusted) @ self.torso_offset)
+        torsoPosition = self.robot_odom_path.hipPosition(t_adjusted) @ self.torso_offset
 
         self.odom_pose = Transformation(position=torsoPosition.position, quaternion=torsoPosition.quaternion)
 
