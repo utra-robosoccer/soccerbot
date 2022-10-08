@@ -119,9 +119,9 @@ class SoccerbotRos(Soccerbot):
 
         # Get odom from odom_path
         t_adjusted = t * self.robot_odom_path.duration() / self.robot_path.duration()
-        crotch_position = self.robot_odom_path.torsoPosition(t_adjusted) @ self.torso_offset
+        torsoPosition = self.hipToTorsoPosition(self.robot_odom_path.hipPosition(t_adjusted) @ self.torso_offset)
 
-        self.odom_pose = Transformation(position=crotch_position.position, quaternion=crotch_position.quaternion)
+        self.odom_pose = Transformation(position=torsoPosition.position, quaternion=torsoPosition.quaternion)
 
     def publishPath(self, robot_path=None):
         """
@@ -138,7 +138,7 @@ class SoccerbotRos(Soccerbot):
             p.header.frame_id = "world"
             p.header.stamp = rospy.Time.now()
             for i in range(0, robot_path.torsoStepCount(), 1):
-                step = robot_path.getTorsoStepPose(i)
+                step = robot_path.getHipStepPose(i)
                 position = step.position
                 orientation = step.quaternion
                 pose = PoseStamped()

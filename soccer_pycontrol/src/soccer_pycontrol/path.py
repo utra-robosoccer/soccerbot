@@ -124,7 +124,7 @@ class Path:
         return floor(torsoStepCount)
 
     @functools.lru_cache
-    def getTorsoStepPose(self, step_num) -> Transformation:
+    def getHipStepPose(self, step_num) -> Transformation:
         """
         Get the torso position given a certain torso step
 
@@ -292,7 +292,7 @@ class Path:
             raise Exception("There is not enough time to update the position, current time { t } , duration of current path { self.duration()}")
 
         t_new, ratio, path_distance, path_section, step = self.getTimePathOfNextStep(t_change)
-        start_transform = self.getTorsoStepPose(step)
+        start_transform = self.getHipStepPose(step)
 
         # TODO allow bezier paths to go to short paths and vice versa
         if self.isShortPath(start_transform, end_transform):
@@ -319,7 +319,7 @@ class Path:
             section_color_map[i] = np.append(np.random.rand(3), 1)
 
         for i in range(0, self.torsoStepCount(), 1):  # i = 0:1: obj.torsoStepCount
-            step = self.getTorsoStepPose(i)
+            step = self.getHipStepPose(i)
             position[i, 0:3] = step.position
             orientation[i, 0:3] = (step[0:3, 0:3] @ np.reshape(np.array([0.015, 0.0, 0.0]), (3, 1)))[:, 0]
 
