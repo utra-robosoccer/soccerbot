@@ -100,7 +100,7 @@ class ObjectDetectionNode(object):
             # 1. preprocess image
             img = image[:, :, :3]  # get rid of alpha channel
             img = img[..., ::-1]  # convert bgr to rgb
-            img = img[max(0, h + 1) : -1, :]
+            img = img[max(0, h + 1) :, :]
             # 2. inference
 
             results = self.model(img)
