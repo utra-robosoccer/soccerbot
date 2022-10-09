@@ -51,9 +51,9 @@ class TestObjectLocalization(TestCase):
         c.camera_info = ci
 
         p2 = c.findFloorCoordinate([360 / 2, 240 / 2])
-        self.assertAlmostEqual(p2[0], 0.5)
-        self.assertAlmostEqual(p2[1], 0)
-        self.assertAlmostEqual(p2[2], 0)
+        self.assertAlmostEqual(p2[0], 0.5, delta=0.005)
+        self.assertAlmostEqual(p2[1], 0, delta=0.005)
+        self.assertAlmostEqual(p2[2], 0, delta=0.005)
 
     @unittest.mock.patch("soccer_common.camera.TransformListener")
     @unittest.mock.patch("soccer_common.camera.rospy.Time.now")
@@ -67,8 +67,8 @@ class TestObjectLocalization(TestCase):
         c.camera_info = ci
 
         p2 = c.findCameraCoordinate([0.5, 0, 0])
-        self.assertAlmostEqual(p2[0], 360 / 2)
-        self.assertAlmostEqual(p2[1], 240 / 2)
+        self.assertAlmostEqual(p2[0], 360 / 2, delta=0.5)
+        self.assertAlmostEqual(p2[1], 240 / 2, delta=0.5)
 
     @unittest.mock.patch("soccer_common.camera.TransformListener")
     @unittest.mock.patch("soccer_common.camera.rospy.Time.now")
@@ -82,8 +82,8 @@ class TestObjectLocalization(TestCase):
         c.camera_info = ci
 
         p3 = c.findCameraCoordinate([0.5, 0, 0.5])
-        self.assertAlmostEqual(p3[0], 360 / 2)
-        self.assertAlmostEqual(p3[1], 240 / 2)
+        self.assertAlmostEqual(p3[0], 360 / 2, delta=0.5)
+        self.assertAlmostEqual(p3[1], 240 / 2, delta=0.5)
 
     @unittest.mock.patch("soccer_common.camera.TransformListener")
     @unittest.mock.patch("soccer_common.camera.rospy.Time.now")
