@@ -139,7 +139,7 @@ class TestObjectLocalization(TestCase):
         src_path = os.path.dirname(os.path.realpath(__file__))
         test_path = src_path + "/../../images/fieldlines"
         for file_name in os.listdir(test_path):
-            # file_name = "img0_-0.6805418953941712_-0.19657546078618005_-1.049088190788794.png"
+            # file_name = "img17_-3.8480280226689674_-3.15_1.5860068115632215.png"
 
             print(file_name)
             img: Mat = cv2.imread(os.path.join(test_path, file_name))
@@ -155,10 +155,12 @@ class TestObjectLocalization(TestCase):
 
             if "DISPLAY" in os.environ:
                 cv2.imshow("Before", img)
+                cv2.imwrite("/tmp/before.png", img)
 
                 if d.image_publisher.publish.call_count != 0:
                     img_out = cvbridge.imgmsg_to_cv2(d.image_publisher.publish.call_args[0][0])
                     cv2.imshow("After", img_out)
+                    cv2.imwrite("/tmp/after.png", img_out)
 
                 cv2.waitKey(0)
 
