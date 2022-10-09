@@ -82,7 +82,7 @@ class Soccerbot:
     The main class for soccerbot, which receives and sends information to pybullet, inherited by ROS
     """
 
-    walking_torso_height = rospy.get_param("walking_torso_height", 0.3)  #: Height of the robot's torso (center between two arms) while walking
+    walking_torso_height = rospy.get_param("walking_torso_height", 0.321)  #: Height of the robot's torso (center between two arms) while walking
     foot_box = [0.09, 0.07, 0.01474]  #: Dimensions of the foot collision box #TODO get it from URDF
     right_foot_joint_center_to_collision_box_center = [
         0.00385,
