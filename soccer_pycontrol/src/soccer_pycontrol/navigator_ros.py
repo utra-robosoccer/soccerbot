@@ -40,6 +40,8 @@ class NavigatorRos(Navigator):
 
         self.tf_listener = tf.TransformListener()
 
+        self.t = 0
+
     def update_robot_pose(self, footprint_name="/base_footprint") -> bool:
         """
         Function to update the location of the robot based on odometry. Called before movement to make sure the starting
