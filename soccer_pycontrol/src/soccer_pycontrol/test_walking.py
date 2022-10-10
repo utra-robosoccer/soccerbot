@@ -3,9 +3,6 @@ import os
 if "ROS_NAMESPACE" not in os.environ:
     os.environ["ROS_NAMESPACE"] = "/robot1"
 
-from importlib import reload
-from types import ModuleType
-
 import numpy as np
 import pybullet as pb
 import pytest
@@ -32,7 +29,7 @@ class TestWalking:
         if "DISPLAY" not in os.environ:
             c = Navigator(display=False, real_time=False)
         else:
-            c = Navigator(display=False, real_time=False)
+            c = Navigator(display=True, real_time=False)
 
         yield c
         del c
@@ -176,33 +173,6 @@ class TestWalking:
         walker.ready()
         walker.wait(100)
         walker.setGoal(Transformation([0.0859, -0.016, 0.0], [0, 0, 0.998, 0.0176]))
-        walk_success = walker.run(single_trajectory=True)
-        assert walk_success
-
-    @pytest.mark.timeout(30)
-    @pytest.mark.flaky(reruns=1)
-    @pytest.mark.parametrize("walker", ["bez1"], indirect=True)
-    def test_walk_6(self, walker: Navigator):
-        walker.setPose(Transformation([2.008, -0.646, 0.0], [0.0149, -0.0474, 0.99985, -0.0072]))
-        walker.wait(100)
-        walker.ready()
-        walker.setGoal(Transformation([0.00736, 0.0356, 0.0], [0, 0, 0.998, 0.0176]))
-        walk_success = walker.run(single_trajectory=True)
-        assert walk_success
-
-    @pytest.mark.timeout(30)
-    @pytest.mark.flaky(reruns=1)
-    @pytest.mark.parametrize("walker", ["bez1"], indirect=True)
-    def test_walk_7(self, walker: Navigator):
-        walker.setPose(
-            Transformation(
-                [2.082603318747387, 0.04499586647232634, 0.0],
-                [0.07888602209666294, -0.03018659995378454, 0.9054426772657052, 0.41597995490997813],
-            )
-        )
-        walker.ready()
-        walker.wait(100)
-        walker.setGoal(Transformation([2.5901226468203067, 0.7938447967981127, 0.0], [0, 0, -0.9987013856398979, 0.050946465244882694]))
         walk_success = walker.run(single_trajectory=True)
         assert walk_success
 
