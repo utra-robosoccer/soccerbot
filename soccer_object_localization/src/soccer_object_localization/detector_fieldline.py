@@ -70,11 +70,14 @@ class DetectorFieldline(Detector):
         image = CvBridge().imgmsg_to_cv2(img, desired_encoding="rgb8")
         h = self.camera.calculateHorizonCoverArea()
         image_crop = image[h + 1 :, :, :]
+        # image_crop_blurred = cv2.GaussianBlur(image_crop, (3, 3), 0)
+        image_crop_blurred = cv2.bilateralFilter(image_crop, 9, 75, 75)
 
-        hsv = cv2.cvtColor(src=image_crop, code=cv2.COLOR_BGR2HSV)
+        hsv = cv2.cvtColor(src=image_crop_blurred, code=cv2.COLOR_BGR2HSV)
 
         if debug:
             cv2.imshow("CVT Color", image_crop)
+            cv2.imshow("CVT Color Contrast", image_crop_blurred)
             cv2.waitKey(0)
 
         def circular_mask(radius: int):
