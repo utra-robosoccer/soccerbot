@@ -22,14 +22,15 @@ get_ready_rate: 0.03
 #pre_footstep_ratio: 0.05
 post_footstep_ratio: 0.2
 
-walking_Kp: 0.3
+walking_Kp: 3.0
 walking_Ki: 0.0000
-walking_Kd: 0.0
-walking_setpoint: 0.2
+walking_Kd: 20.2
+walking_setpoint: 0.02
 
-standing_Kp: 0.15
-standing_Ki: 0.001
-standing_Kd: 0.0
+standing_Kp: 2.0
+standing_Ki: 0.015
+standing_Kd: 10.5
+standing_setpoint: 0.0
 
 # Head rotation parameters
 head_rotation_yaw_center: 0.205

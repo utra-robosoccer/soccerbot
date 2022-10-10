@@ -288,7 +288,7 @@ class NavigatorRos(Navigator):
             if time_end - time_start > Navigator.PYBULLET_STEP * 1.2:
                 rospy.logerr_throttle(
                     10,
-                    f"Step Delta took longer than expected {time_end - time_start}. Control Frequency {Navigator.PYBULLET_STEP}. Desired Steps Per Second: {PathSection.steps_per_second_default}",
+                    f"Step Delta took longer than expected {time_end - time_start}. Control Frequency {self.PYBULLET_STEP}",
                 )
 
             self.t = self.t + Navigator.PYBULLET_STEP
