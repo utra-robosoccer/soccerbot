@@ -42,6 +42,8 @@ def mock_ros(robot_model="bez1", real_robot=False, param_path=None):
         if a == "robot_model":
             return robot_model
 
+        if robot_model not in param_paths:
+            return b
         for param_path in param_paths[robot_model]:
             with open(param_path, "r") as g:
                 y = yaml.safe_load(g)
