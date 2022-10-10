@@ -52,13 +52,13 @@ class Soccerbot:
         self.arm_1_center = rospy.get_param("arm_0_center", np.pi * 0.8)
 
         self.useCalibration = useCalibration
-
+        self.merged_fixed_links = rospy.get_param("merge_fixed_links", False)
         home = expanduser("~")
         self.body = pb.loadURDF(
             home
             + f"/catkin_ws/src/soccerbot/{rospy.get_param('~robot_model', 'bez1')}_description/urdf/{rospy.get_param('~robot_model', 'bez1')}.urdf",
             useFixedBase=useFixedBase,
-            flags=pb.URDF_USE_INERTIA_FROM_FILE | (pb.URDF_MERGE_FIXED_LINKS if rospy.get_param("merge_fixed_links", False) else 0),
+            flags=pb.URDF_USE_INERTIA_FROM_FILE | (pb.URDF_MERGE_FIXED_LINKS if self.merged_fixed_links else 0),
             basePosition=[pose.position[0], pose.position[1], pose.position[2]],
             baseOrientation=pose.quaternion,
         )
@@ -143,6 +143,8 @@ class Soccerbot:
             setpoint=rospy.get_param("walking_setpoint", -0.01),
             output_limits=(-1.57, 1.57),
         )
+
+        self.get_ready_rate = rospy.get_param("get_ready_rate", 0.02)
 
     def get_angles(self):
         """
@@ -231,7 +233,8 @@ class Soccerbot:
                     forces=self.max_forces,
                 )
                 pb.stepSimulation()
-            rospy.sleep(rospy.get_param("get_ready_rate", 0.02))
+            else:
+                rospy.sleep(self.get_ready_rate)
 
         self.configuration_offset = [0] * len(Joints)
 
@@ -493,7 +496,7 @@ class Soccerbot:
 
         :return: concatenated 3-axes values for linear acceleration and angular velocity
         """
-        if rospy.get_param("merge_fixed_links", False):
+        if self.merged_fixed_links:
             [quat_pos, quat_orientation] = pb.getBasePositionAndOrientation(self.body)[0:2]
         else:
             [quat_pos, quat_orientation] = pb.getLinkState(self.body, linkIndex=Links.IMU, computeLinkVelocity=1)[4:6]
