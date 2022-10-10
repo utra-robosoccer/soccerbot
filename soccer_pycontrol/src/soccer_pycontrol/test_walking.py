@@ -21,18 +21,6 @@ from soccer_pycontrol.navigator_ros import NavigatorRos
 
 class TestWalking:
     @staticmethod
-    def reset_attributes():
-        import soccer_pycontrol
-
-        for i in range(2):
-            for attribute_name in dir(soccer_pycontrol):
-                if attribute_name == __name__.replace(__package__ + ".", ""):
-                    continue
-                attribute = getattr(soccer_pycontrol, attribute_name)
-                if type(attribute) is ModuleType:
-                    reload(attribute)
-
-    @staticmethod
     @pytest.fixture
     def walker(request) -> Navigator:
         robot_model = request.param
@@ -41,11 +29,10 @@ class TestWalking:
         config_folder_path = f"{file_path}/../../config/"
         config_path = config_folder_path + f"{robot_model}_sim_pybullet.yaml"
         mock_ros(robot_model=robot_model, real_robot=False, param_path=config_path)
-        TestWalking.reset_attributes()
         if "DISPLAY" not in os.environ:
             c = Navigator(display=False, real_time=False)
         else:
-            c = Navigator(display=True, real_time=False)
+            c = Navigator(display=False, real_time=False)
 
         yield c
         del c
@@ -62,7 +49,6 @@ class TestWalking:
         config_folder_path = f"{file_path}/../../config/"
         config_path = config_folder_path + f"{robot_model}_sim.yaml"
         mock_ros(robot_model=robot_model, real_robot=False, param_path=config_path)
-        TestWalking.reset_attributes()
 
         c = NavigatorRos()
 
@@ -81,7 +67,6 @@ class TestWalking:
         config_folder_path = f"{file_path}/../../config/"
         config_path = config_folder_path + f"{robot_model}.yaml"
         mock_ros(robot_model=robot_model, real_robot=True, param_path=config_path)
-        TestWalking.reset_attributes()
 
         c = NavigatorRos()
         yield c
@@ -249,7 +234,7 @@ class TestWalking:
         walk_success = walker.run(single_trajectory=True)
         final_position = walker.getPose()
         distance_offset = np.linalg.norm((final_position - goal_position.position)[0:2])
-        assert distance_offset < 0.08
+        assert distance_offset < 0.16
         assert walk_success
 
     @pytest.mark.timeout(30)
