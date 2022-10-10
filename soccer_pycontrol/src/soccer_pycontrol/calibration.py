@@ -75,7 +75,6 @@ def calibrate_x():
             walker = Navigator(display=False, useCalibration=False)
         walker.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
         walker.ready()
-        walker.wait(200)
 
         actual_start_position = walker.getPose()
 
@@ -92,8 +91,6 @@ def calibrate_x():
 
         start_positions.append(goal_position.position)
         final_positions.append(final_transformation)
-
-        walker.wait(100)
 
         del walker
 

@@ -9,4 +9,4 @@ calibration_trans_a2: 0.6888511983169123
 
 # Rotation calibration parameters
 # Xactual = a * Xdesired
-calibration_rot_a: 0.7278137949435823
+calibration_rot_a: 0.70413757560118
