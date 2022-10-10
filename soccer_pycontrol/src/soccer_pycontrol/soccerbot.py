@@ -1,8 +1,4 @@
-import copy
-import enum
 import math
-import os
-import time
 from copy import deepcopy
 from os.path import expanduser
 from typing import Union
@@ -18,79 +14,16 @@ from sensor_msgs.msg import JointState
 from soccer_common.pid import PID
 from soccer_common.transformation import Transformation
 from soccer_pycontrol.calibration import adjust_navigation_transform
+from soccer_pycontrol.joints import Joints
+from soccer_pycontrol.links import Links
 from soccer_pycontrol.path_robot import PathRobot
 from soccer_pycontrol.utils import wrapToPi
-
-
-class Joints(enum.IntEnum):
-    """
-    The list of joints of the robot `Joint Table <https://docs.google.com/spreadsheets/d/1KgIYwm3fNen8yjLEa-FEWq-GnRUnBjyg4z64nZ2uBv8/edit#gid=0>`_
-    """
-
-    LEFT_ARM_1 = rospy.get_param("joint_indices/LEFT_ARM_1", 0)
-    LEFT_ARM_2 = rospy.get_param("joint_indices/LEFT_ARM_2", 1)
-    RIGHT_ARM_1 = rospy.get_param("joint_indices/RIGHT_ARM_1", 2)
-    RIGHT_ARM_2 = rospy.get_param("joint_indices/RIGHT_ARM_2", 3)
-    LEFT_LEG_1 = rospy.get_param("joint_indices/LEFT_LEG_1", 4)
-    LEFT_LEG_2 = rospy.get_param("joint_indices/LEFT_LEG_2", 5)
-    LEFT_LEG_3 = rospy.get_param("joint_indices/LEFT_LEG_3", 6)
-    LEFT_LEG_4 = rospy.get_param("joint_indices/LEFT_LEG_4", 7)
-    LEFT_LEG_5 = rospy.get_param("joint_indices/LEFT_LEG_5", 8)
-    LEFT_LEG_6 = rospy.get_param("joint_indices/LEFT_LEG_6", 9)
-    RIGHT_LEG_1 = rospy.get_param("joint_indices/RIGHT_LEG_1", 10)
-    RIGHT_LEG_2 = rospy.get_param("joint_indices/RIGHT_LEG_2", 11)
-    RIGHT_LEG_3 = rospy.get_param("joint_indices/RIGHT_LEG_3", 12)
-    RIGHT_LEG_4 = rospy.get_param("joint_indices/RIGHT_LEG_4", 13)
-    RIGHT_LEG_5 = rospy.get_param("joint_indices/RIGHT_LEG_5", 14)
-    RIGHT_LEG_6 = rospy.get_param("joint_indices/RIGHT_LEG_6", 15)
-    HEAD_1 = rospy.get_param("joint_indices/HEAD_1", 16)  # Left Right (Yaw)
-    HEAD_2 = rospy.get_param("joint_indices/HEAD_2", 17)  # Up Down (Pitch)
-    # HEAD_CAMERA = rospy.get_param("joint_indices/HEAD_CAMERA", 18)
-    # IMU = rospy.get_param("joint_indices/IMU", 19)
-
-
-class Links(enum.IntEnum):
-    """
-    The list of links of the robot `Joint Table <https://docs.google.com/spreadsheets/d/1KgIYwm3fNen8yjLEa-FEWq-GnRUnBjyg4z64nZ2uBv8/edit#gid=0>`_
-    """
-
-    TORSO = rospy.get_param("joint_indices/TORSO", -1)
-    LEFT_ARM_1 = rospy.get_param("joint_indices/LEFT_ARM_1", 0)
-    LEFT_ARM_2 = rospy.get_param("joint_indices/LEFT_ARM_2", 1)
-    RIGHT_ARM_1 = rospy.get_param("joint_indices/RIGHT_ARM_1", 2)
-    RIGHT_ARM_2 = rospy.get_param("joint_indices/RIGHT_ARM_2", 3)
-    LEFT_LEG_1 = rospy.get_param("joint_indices/LEFT_LEG_1", 4)
-    LEFT_LEG_2 = rospy.get_param("joint_indices/LEFT_LEG_2", 5)
-    LEFT_LEG_3 = rospy.get_param("joint_indices/LEFT_LEG_3", 6)
-    LEFT_LEG_4 = rospy.get_param("joint_indices/LEFT_LEG_4", 7)
-    LEFT_LEG_5 = rospy.get_param("joint_indices/LEFT_LEG_5", 8)
-    LEFT_LEG_6 = rospy.get_param("joint_indices/LEFT_LEG_6", 9)
-    RIGHT_LEG_1 = rospy.get_param("joint_indices/RIGHT_LEG_1", 10)
-    RIGHT_LEG_2 = rospy.get_param("joint_indices/RIGHT_LEG_2", 11)
-    RIGHT_LEG_3 = rospy.get_param("joint_indices/RIGHT_LEG_3", 12)
-    RIGHT_LEG_4 = rospy.get_param("joint_indices/RIGHT_LEG_4", 13)
-    RIGHT_LEG_5 = rospy.get_param("joint_indices/RIGHT_LEG_5", 14)
-    RIGHT_LEG_6 = rospy.get_param("joint_indices/RIGHT_LEG_6", 15)
-    HEAD_1 = rospy.get_param("joint_indices/HEAD_1", 16)
-    HEAD_2 = rospy.get_param("joint_indices/HEAD_2", 17)
-    HEAD_CAMERA = rospy.get_param("joint_indices/HEAD_CAMERA", 18)
-    IMU = rospy.get_param("joint_indices/IMU", 19)
 
 
 class Soccerbot:
     """
     The main class for soccerbot, which receives and sends information to pybullet, inherited by ROS
     """
-
-    walking_torso_height = rospy.get_param("walking_torso_height", 0.3)  #: Height of the robot's torso (center between two arms) while walking
-    foot_box = [0.09, 0.07, 0.01474]  #: Dimensions of the foot collision box #TODO get it from URDF
-    right_foot_joint_center_to_collision_box_center = [
-        0.00385,
-        0.00401,
-        -0.00737,
-    ]  #: Transformations from the right foots joint position to the center of the collision box of the foot (https://docs.google.com/presentation/d/10DKYteySkw8dYXDMqL2Klby-Kq4FlJRnc4XUZyJcKsw/edit#slide=id.g163c1c67b73_0_0)
-    arm_0_center = -0.45  #: Ready Pose angle for arm 1
-    arm_1_center = np.pi * 0.8  #: Ready Pose angle for arm 2
 
     def __init__(self, pose, useFixedBase=False, useCalibration=True):
         """
@@ -101,14 +34,31 @@ class Soccerbot:
         :param useCalibration: Whether to use calibration for walking path calculations
         """
 
-        self.useCalibration = useCalibration
+        #: Height of the robot's torso (center between two arms) while walking
+        self.walking_torso_height = rospy.get_param("walking_torso_height", 0.315)
 
+        #: Dimensions of the foot collision box #TODO get it from URDF
+        self.foot_box = rospy.get_param("foot_box", [0.09, 0.07, 0.01474])
+
+        #: Transformations from the right foots joint position to the center of the collision box of the foot (https://docs.google.com/presentation/d/10DKYteySkw8dYXDMqL2Klby-Kq4FlJRnc4XUZyJcKsw/edit#slide=id.g163c1c67b73_0_0)
+        self.right_foot_joint_center_to_collision_box_center = rospy.get_param(
+            "right_foot_joint_center_to_collision_box_center", [0.00385, 0.00401, -0.00737]
+        )
+
+        #: Ready Pose angle for arm 1
+        self.arm_0_center = rospy.get_param("arm_0_center", -0.45)
+
+        #: Ready Pose angle for arm 2
+        self.arm_1_center = rospy.get_param("arm_0_center", np.pi * 0.8)
+
+        self.useCalibration = useCalibration
+        self.merged_fixed_links = rospy.get_param("merge_fixed_links", False)
         home = expanduser("~")
         self.body = pb.loadURDF(
             home
             + f"/catkin_ws/src/soccerbot/{rospy.get_param('~robot_model', 'bez1')}_description/urdf/{rospy.get_param('~robot_model', 'bez1')}.urdf",
             useFixedBase=useFixedBase,
-            flags=pb.URDF_USE_INERTIA_FROM_FILE | (pb.URDF_MERGE_FIXED_LINKS if rospy.get_param("merge_fixed_links", False) else 0),
+            flags=pb.URDF_USE_INERTIA_FROM_FILE | (pb.URDF_MERGE_FIXED_LINKS if self.merged_fixed_links else 0),
             basePosition=[pose.position[0], pose.position[1], pose.position[2]],
             baseOrientation=pose.quaternion,
         )
@@ -176,6 +126,26 @@ class Soccerbot:
         # For head rotation
         self.head_step = 0.0
 
+        #: PID values to adjust the torso's front and back movement while standing, getting ready to walk, and post walk
+        self.standing_pid = PID(
+            Kp=rospy.get_param("standing_Kp", 0.15),
+            Kd=rospy.get_param("standing_Kd", 0.0),
+            Ki=rospy.get_param("standing_Ki", 0.001),
+            setpoint=rospy.get_param("standing_setpoint", -0.01),
+            output_limits=(-1.57, 1.57),
+        )
+
+        #: PID values to adjust the torso's front and back movement while walking
+        self.walking_pid = PID(
+            Kp=rospy.get_param("walking_Kp", 0.8),
+            Kd=rospy.get_param("walking_Kd", 0.0),
+            Ki=rospy.get_param("walking_Ki", 0.0005),
+            setpoint=rospy.get_param("walking_setpoint", -0.01),
+            output_limits=(-1.57, 1.57),
+        )
+
+        self.get_ready_rate = rospy.get_param("get_ready_rate", 0.02)
+
     def get_angles(self):
         """
         Function for getting all the angles, combines the configuration with the configuration offset
@@ -214,10 +184,10 @@ class Soccerbot:
 
         # hands
         configuration = [0.0] * len(Joints)
-        configuration[Joints.RIGHT_ARM_1] = Soccerbot.arm_0_center
-        configuration[Joints.LEFT_ARM_1] = Soccerbot.arm_0_center
-        configuration[Joints.RIGHT_ARM_2] = Soccerbot.arm_1_center
-        configuration[Joints.LEFT_ARM_2] = Soccerbot.arm_1_center
+        configuration[Joints.RIGHT_ARM_1] = self.arm_0_center
+        configuration[Joints.LEFT_ARM_1] = self.arm_0_center
+        configuration[Joints.RIGHT_ARM_2] = self.arm_1_center
+        configuration[Joints.LEFT_ARM_2] = self.arm_1_center
 
         # right leg
         thetas = self.inverseKinematicsRightFoot(np.copy(self.right_foot_init_position))
@@ -262,7 +232,9 @@ class Soccerbot:
                     targetPositions=self.get_angles(),
                     forces=self.max_forces,
                 )
-            rospy.sleep(rospy.get_param("get_ready_rate", 0.02))
+                pb.stepSimulation()
+            else:
+                rospy.sleep(self.get_ready_rate)
 
         self.configuration_offset = [0] * len(Joints)
 
@@ -524,7 +496,7 @@ class Soccerbot:
 
         :return: concatenated 3-axes values for linear acceleration and angular velocity
         """
-        if rospy.get_param("merge_fixed_links", False):
+        if self.merged_fixed_links:
             [quat_pos, quat_orientation] = pb.getBasePositionAndOrientation(self.body)[0:2]
         else:
             [quat_pos, quat_orientation] = pb.getLinkState(self.body, linkIndex=Links.IMU, computeLinkVelocity=1)[4:6]
@@ -561,15 +533,6 @@ class Soccerbot:
             locations[index[1] + (index[0] * 2) + 4] = True
         return locations
 
-    #: PID values to adjust the torso's front and back movement while walking
-    walking_pid = PID(
-        Kp=rospy.get_param("walking_Kp", 0.8),
-        Kd=rospy.get_param("walking_Kd", 0.0),
-        Ki=rospy.get_param("walking_Ki", 0.0005),
-        setpoint=rospy.get_param("walking_setpoint", -0.01),
-        output_limits=(-1.57, 1.57),
-    )
-
     def apply_imu_feedback(self, pose: Transformation):
         """
         Adds IMU feedback while the robot is moving to the arms
@@ -583,18 +546,9 @@ class Soccerbot:
 
         [_, pitch, _] = pose.orientation_euler
         F = self.walking_pid.update(pitch)
-        self.configuration_offset[Joints.LEFT_ARM_1] = 5 * F
-        self.configuration_offset[Joints.RIGHT_ARM_1] = 5 * F
+        self.configuration_offset[Joints.LEFT_LEG_3] = F
+        self.configuration_offset[Joints.RIGHT_LEG_3] = F
         return F
-
-    #: PID values to adjust the torso's front and back movement while standing, getting ready to walk, and post walk
-    standing_pid = PID(
-        Kp=rospy.get_param("standing_Kp", 0.15),
-        Kd=rospy.get_param("standing_Kd", 0.0),
-        Ki=rospy.get_param("standing_Ki", 0.001),
-        setpoint=-0.01,
-        output_limits=(-1.57, 1.57),
-    )
 
     def apply_imu_feedback_standing(self, pose: Transformation):
         """

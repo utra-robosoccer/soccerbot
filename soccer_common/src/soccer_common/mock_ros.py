@@ -1,6 +1,6 @@
-from typing import List
+from typing import Dict, List
 
-param_paths: List[str] = []
+param_paths: Dict[str, List[str]] = {}
 
 
 def mock_ros(robot_model="bez1", real_robot=False, param_path=None):
@@ -32,15 +32,19 @@ def mock_ros(robot_model="bez1", real_robot=False, param_path=None):
         if not exists(param_path):
             print(f"Config Path {param_path} does not exist")
         else:
-            if param_path not in param_paths:
-                param_paths.append(param_path)
+            if robot_model not in param_paths:
+                param_paths[robot_model] = []
+            if param_path not in param_paths[robot_model]:
+                param_paths[robot_model].append(param_path)
 
     def get_param(a, b=None):
         a = a.lstrip("~")
         if a == "robot_model":
             return robot_model
 
-        for param_path in param_paths:
+        if robot_model not in param_paths:
+            return b
+        for param_path in param_paths[robot_model]:
             with open(param_path, "r") as g:
                 y = yaml.safe_load(g)
                 found = True

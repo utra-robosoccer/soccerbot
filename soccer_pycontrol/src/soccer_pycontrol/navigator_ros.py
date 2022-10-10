@@ -40,6 +40,8 @@ class NavigatorRos(Navigator):
 
         self.tf_listener = tf.TransformListener()
 
+        self.t = 0
+
     def update_robot_pose(self, footprint_name="/base_footprint") -> bool:
         """
         Function to update the location of the robot based on odometry. Called before movement to make sure the starting
@@ -67,7 +69,7 @@ class NavigatorRos(Navigator):
         resetPublisher.publish(pose_stamped)
         self.robot_pose = pose_stamped
 
-        rospy.sleep(0.5)
+        rospy.sleep(0.2)
 
         p = PoseWithCovarianceStamped()
         p.header.frame_id = "world"
@@ -75,7 +77,7 @@ class NavigatorRos(Navigator):
         p.pose.pose = pose_stamped.pose
         initialPosePublisher.publish(p)
 
-        rospy.sleep(0.5)
+        rospy.sleep(0.2)
 
     def getPose(self, footprint_name="/base_footprint_gt"):
         try:
@@ -286,7 +288,7 @@ class NavigatorRos(Navigator):
             if time_end - time_start > Navigator.PYBULLET_STEP * 1.2:
                 rospy.logerr_throttle(
                     10,
-                    f"Step Delta took longer than expected {time_end - time_start}. Control Frequency {Navigator.PYBULLET_STEP}. Desired Steps Per Second: {PathSection.steps_per_second_default}",
+                    f"Step Delta took longer than expected {time_end - time_start}. Control Frequency {self.PYBULLET_STEP}",
                 )
 
             self.t = self.t + Navigator.PYBULLET_STEP
