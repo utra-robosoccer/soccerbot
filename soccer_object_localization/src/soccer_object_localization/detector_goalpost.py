@@ -43,110 +43,55 @@ class DetectorGoalPost(Detector):
         self.camera.reset_position(timestamp=img.header.stamp)
 
         image = CvBridge().imgmsg_to_cv2(img, desired_encoding="rgb8")
-        hsv = cv2.cvtColor(src=image, code=cv2.COLOR_BGR2HSV)
+        image_blurred = cv2.bilateralFilter(image, 9, 75, 75)
+        image_hsv = cv2.cvtColor(src=image_blurred, code=cv2.COLOR_BGR2HSV)
+        image_hsv_filter = cv2.inRange(image_hsv, (0, 0, 150), (255, 50, 255))
 
         h = self.camera.calculateHorizonCoverArea()
-        cv2.rectangle(image, [0, 0], [640, int(h * 7 / 10.0)], [0, 0, 0], cv2.FILLED)
-        horizon_img = image if debug else None
+        image_crop = image_hsv[h + 1 :, :, :]
+        grass_only = cv2.inRange(image_crop, (35, 85, 0), (115, 255, 255))
+        grass_only = cv2.vconcat([np.zeros((h + 1, grass_only.shape[1]), dtype=grass_only.dtype), grass_only])
 
-        # Field line detection
-        mask2 = cv2.inRange(hsv, (0, 0, 255 - 65), (255, 65, 255))
-        out = cv2.bitwise_and(image, image, mask=mask2)
-        no_green_img = out if debug else None
+        # Use odd numbers for all circular masks otherwise the line will shift location
+        grass_only_0 = cv2.morphologyEx(grass_only, cv2.MORPH_OPEN, self.circular_mask(5))
+        grass_only_1 = cv2.morphologyEx(grass_only, cv2.MORPH_CLOSE, self.circular_mask(5))
+        grass_only_2 = cv2.morphologyEx(grass_only_1, cv2.MORPH_OPEN, self.circular_mask(21))
+        grass_only_3 = cv2.morphologyEx(grass_only_2, cv2.MORPH_CLOSE, self.circular_mask(61))
 
-        kernel = np.ones((7, 7), np.uint8)
-        out = cv2.morphologyEx(out, cv2.MORPH_CLOSE, kernel)
-        filtered_img = out if debug else None
+        grass_only_morph = cv2.morphologyEx(grass_only_3, cv2.MORPH_ERODE, self.circular_mask(9))
+        grass_only_flipped = cv2.bitwise_not(grass_only_morph)
 
-        cdst = cv2.cvtColor(out, cv2.COLOR_BGR2GRAY)
-        retval, dst = cv2.threshold(cdst, 127, 255, cv2.THRESH_BINARY)
-        edges = cv2.Canny(dst, 50, 150)
-        canny_img = cdst if debug else None
-
+        image_bw = cv2.bitwise_and(image, image, mask=image_hsv_filter)
+        image_bw = cv2.bitwise_and(image_bw, image_bw, mask=grass_only_flipped)
+        image_bw = cv2.cvtColor(image_bw, cv2.COLOR_BGR2GRAY)
+        image_bw_eroded = cv2.morphologyEx(image_bw, cv2.MORPH_ERODE, self.circular_mask(5))
+        image_edges = cv2.Canny(image_bw_eroded, 50, 150, apertureSize=3)
         lines = cv2.HoughLinesP(
-            edges,
-            rho=DetectorFieldline.HOUGH_RHO,
-            theta=DetectorFieldline.HOUGH_THETA,
-            threshold=DetectorFieldline.HOUGH_THRESHOLD,
-            minLineLength=DetectorFieldline.HOUGH_MIN_LINE_LENGTH,
-            maxLineGap=DetectorFieldline.HOUGH_MAX_LINE_GAP,
+            image_edges,
+            rho=1,
+            theta=np.pi / 180,
+            threshold=100,
+            minLineLength=100,
+            maxLineGap=10,
         )
-
-        ccdst = cv2.cvtColor(cdst, cv2.COLOR_GRAY2RGB)
-
-        if lines is None:
-            return
-
-        computed_lines = []
-        vert_x_max, vert_x_min, vert_y_max, vert_y_min = 0, 1000, 0, 1000
-        for l in lines:
-            x1, y1, x2, y2 = l[0]
-            # computing magnitude and angle of the line
-            mag = np.sqrt((x2 - x1) ** 2.0 + (y2 - y1) ** 2.0)
-            if x2 == x1:
-                angle = 0
-            else:
-                angle = np.rad2deg(np.arctan((y2 - y1) / (x2 - x1)))
-
-            computed_lines += [(mag, angle)]
-
-            pt1 = (x1, y1)
-            pt2 = (x2, y2)
-            if abs(angle) < 10:  # Horizontal
-                cv2.line(ccdst, pt1, pt2, (255, 0, 0), thickness=3, lineType=cv2.LINE_AA)
-            elif abs(abs(angle) - 90) < 10:  # Vertical
-                cv2.line(ccdst, pt1, pt2, (0, 255, 0), thickness=3, lineType=cv2.LINE_AA)
-                vert_x_max = max(vert_x_max, x1, x2)
-                vert_x_min = min(vert_x_min, x1, x2)
-                vert_y_max = max(vert_y_max, y1, y2)
-                vert_y_min = min(vert_y_min, y1, y2)
-            else:
-                cv2.line(ccdst, pt1, pt2, (0, 0, 255), thickness=3, lineType=cv2.LINE_AA)
-
-        computed_lines = np.array(computed_lines)
-
-        # an image has a goalpost if two perpendicular lines with 0 degrees and 90 degrees intersect
-        vertical_line = len(computed_lines[(abs(abs(computed_lines[:, 1]) - 90) < 10)]) > 0
-
-        if vertical_line:
-            w = vert_y_max - vert_y_min
-            l = vert_x_max - vert_x_min
-            area = w * l
-            if area < 50000:
-                cv2.rectangle(ccdst, [vert_x_min, vert_y_min], [vert_x_max, vert_y_max], [0, 255, 255], thickness=2)
-                x_avg = (vert_x_max + vert_x_min) / 2
-                [floor_center_x, floor_center_y, _] = self.camera.findFloorCoordinate([x_avg, vert_y_max])
-                [floor_close_x, floor_close_y, _] = self.camera.findFloorCoordinate([x_avg, vert_y_max])
-
-                camera_pose = self.camera.pose
-
-                distance = ((floor_center_x - camera_pose.position[0]) ** 2 + (floor_center_y - camera_pose.position[1]) ** 2) ** 0.5
-                theta = math.atan2(distance, camera_pose.position[2])
-                ratio = math.tan(theta) ** 2
-                ratio2 = 1 / (1 + ratio)
-                if 1 < ratio2 < 0:
-                    print("here")  # TODO
-
-                floor_x = floor_close_x * (1 - ratio2) + floor_center_x * ratio2
-                floor_y = floor_close_y * (1 - ratio2) + floor_center_y * ratio2
-                if floor_x > 0.0:
-                    self.br.sendTransform(
-                        (floor_x, floor_y, 0),
-                        (0, 0, 0, 1),
-                        img.header.stamp,
-                        self.robot_name + "/goal_post",
-                        self.robot_name + "/base_footprint",
-                    )
+        for x1, y1, x2, y2 in lines[0]:
+            cv2.line(image, (x1, y1), (x2, y2), (0, 255, 0), 2)
 
         if debug:
-            cv2.imshow("horizon_img", horizon_img)
-            cv2.imshow("no_green_img", no_green_img)
-            cv2.imshow("filtered_img", filtered_img)
-            cv2.imshow("canny_img", canny_img)
+            cv2.imshow("image_blurred", image_blurred)
+            cv2.imshow("image_hsv", image_hsv)
+            cv2.imshow("image_hsv_filter", image_hsv_filter)
+            cv2.imshow("grass_only", grass_only_flipped)
+
+            cv2.imshow("image_bw", image_bw)
+            cv2.imshow("image_bw_eroded", image_bw_eroded)
+            cv2.imshow("image_edges", image_edges)
+            cv2.imshow("image_hough", image)
+
             cv2.waitKey(0)
 
         if self.image_publisher.get_num_connections() > 0:
-            img_out = CvBridge().cv2_to_imgmsg(ccdst)
+            img_out = CvBridge().cv2_to_imgmsg(image_hsv)
             img_out.header = img.header
             self.image_publisher.publish(img_out)
 

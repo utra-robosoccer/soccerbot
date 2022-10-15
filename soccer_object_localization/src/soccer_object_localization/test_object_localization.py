@@ -137,9 +137,9 @@ class TestObjectLocalization(TestCase):
         cvbridge = CvBridge()
 
         src_path = os.path.dirname(os.path.realpath(__file__))
-        test_path = src_path + "/../../images/fieldlines"
+        test_path = src_path + "/../../images/goal_net"
         for file_name in os.listdir(test_path):
-            # file_name = "img17_-3.8480280226689674_-3.15_1.5860068115632215.png"
+            file_name = "img160_-1.452993567956688_-3.15_0.7763055830612666.png"
 
             print(file_name)
             img: Mat = cv2.imread(os.path.join(test_path, file_name))
@@ -151,7 +151,7 @@ class TestObjectLocalization(TestCase):
 
             img_msg: Image = cvbridge.cv2_to_imgmsg(img, encoding="rgb8")
             d.image_publisher.publish = MagicMock()
-            d.image_callback(img_msg, debug=False)
+            d.image_callback(img_msg, debug=True)
 
             if "DISPLAY" in os.environ:
                 cv2.imshow("Before", img)
@@ -188,7 +188,7 @@ class TestObjectLocalization(TestCase):
         src_path = os.path.dirname(os.path.realpath(__file__))
         test_path = src_path + "/../../images/goal_net"
         for file_name in os.listdir(test_path):
-            # file_name = "img0_2.392288305963447_3.15_-0.7246104310987069"
+            file_name = "img160_-1.452993567956688_-3.15_0.7763055830612666.png"
 
             print(f"Loading {file_name} from goal_net dataset")
             file_name_no_ext = os.path.splitext(file_name)[0]
@@ -196,6 +196,9 @@ class TestObjectLocalization(TestCase):
             print(f"Parsed (x, y, yaw): ({x}, {y}, {yaw}) from filename.")
 
             img: Mat = cv2.imread(os.path.join(test_path, file_name))
+
+            if "DISPLAY" in os.environ:
+                cv2.imshow("Before", img)
 
             c = CameraInfo()
             c.height = img.shape[0]
@@ -207,15 +210,13 @@ class TestObjectLocalization(TestCase):
             d.image_callback(img_msg, debug=True)
 
             if "DISPLAY" in os.environ:
-                cv2.imshow("Before", img)
-
                 if d.image_publisher.publish.call_count != 0:
                     img_out = cvbridge.imgmsg_to_cv2(d.image_publisher.publish.call_args[0][0])
                     cv2.imshow("After", img_out)
 
                 cv2.waitKey(0)
 
-    @pytest.mark.skip
+    # @pytest.mark.skip
     def test_hsv_filter(self):
         import cv2
         import numpy as np
@@ -243,7 +244,7 @@ class TestObjectLocalization(TestCase):
         hMin = sMin = vMin = hMax = sMax = vMax = 0
         phMin = psMin = pvMin = phMax = psMax = pvMax = 0
 
-        img = cv2.imread("../../images/img14_-0.4107905429521215_2.4511358573282696_-0.8450607115290163.png")
+        img = cv2.imread("../../images/goal_net/img160_-1.452993567956688_-3.15_0.7763055830612666.png")
         output = img
         waitTime = 33
 
