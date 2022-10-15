@@ -162,8 +162,56 @@ class TestObjectLocalization(TestCase):
 
                 cv2.waitKey(0)
 
-    def test_goalpost_detection(self):
+    @unittest.mock.patch("soccer_common.camera.TransformListener")
+    @unittest.mock.patch("soccer_common.camera.rospy.Time.now")
+    def test_goalpost_detection(self, mock_tf_listener, now):
+        from sensor_msgs.msg import CameraInfo, Image
+
+        from soccer_object_localization.detector_goalpost import DetectorGoalPost
+
         download_dataset(url="https://drive.google.com/uc?id=17qdnW7egoopXHvakiNnUUufP2MOjyZ18", folder_name="goal_net")
+
+        Camera.reset_position = MagicMock()
+        Camera.ready = MagicMock()
+        d = DetectorGoalPost()
+        d.robot_state.status = RobotState.STATUS_DETERMINING_SIDE
+        d.image_publisher.get_num_connections = MagicMock(return_value=1)
+
+        import cv2
+        from cv2 import Mat
+        from cv_bridge import CvBridge
+
+        cvbridge = CvBridge()
+
+        src_path = os.path.dirname(os.path.realpath(__file__))
+        test_path = src_path + "/../../images/goal_net"
+        for file_name in os.listdir(test_path):
+            # file_name = "img0_2.392288305963447_3.15_-0.7246104310987069"
+
+            print(f"Loading {file_name} from goal_net dataset")
+            file_name_no_ext = os.path.splitext(file_name)[0]
+            x, y, yaw = file_name_no_ext.split("_")[1:]
+            print(f"Parsed (x, y, yaw): ({x}, {y}, {yaw}) from filename.")
+
+            img: Mat = cv2.imread(os.path.join(test_path, file_name))
+
+            c = CameraInfo()
+            c.height = img.shape[0]
+            c.width = img.shape[1]
+            d.camera.camera_info = c
+
+            img_msg: Image = cvbridge.cv2_to_imgmsg(img, encoding="rgb8")
+            d.image_publisher.publish = MagicMock()
+            d.image_callback(img_msg, debug=True)
+
+            if "DISPLAY" in os.environ:
+                cv2.imshow("Before", img)
+
+                if d.image_publisher.publish.call_count != 0:
+                    img_out = cvbridge.imgmsg_to_cv2(d.image_publisher.publish.call_args[0][0])
+                    cv2.imshow("After", img_out)
+
+                cv2.waitKey(0)
 
     @pytest.mark.skip
     def test_hsv_filter(self):

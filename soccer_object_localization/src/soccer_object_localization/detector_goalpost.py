@@ -31,7 +31,7 @@ class DetectorGoalPost(Detector):
         cv2.setRNGSeed(12345)
         pass
 
-    def image_callback(self, img: Image):
+    def image_callback(self, img: Image, debug=False):
         t_start = time.time()
 
         if self.robot_state.status is not RobotState.STATUS_DETERMINING_SIDE:
@@ -47,17 +47,21 @@ class DetectorGoalPost(Detector):
 
         h = self.camera.calculateHorizonCoverArea()
         cv2.rectangle(image, [0, 0], [640, int(h * 7 / 10.0)], [0, 0, 0], cv2.FILLED)
+        horizon_img = image if debug else None
 
         # Field line detection
         mask2 = cv2.inRange(hsv, (0, 0, 255 - 65), (255, 65, 255))
         out = cv2.bitwise_and(image, image, mask=mask2)
+        no_green_img = out if debug else None
 
         kernel = np.ones((7, 7), np.uint8)
         out = cv2.morphologyEx(out, cv2.MORPH_CLOSE, kernel)
+        filtered_img = out if debug else None
 
         cdst = cv2.cvtColor(out, cv2.COLOR_BGR2GRAY)
         retval, dst = cv2.threshold(cdst, 127, 255, cv2.THRESH_BINARY)
         edges = cv2.Canny(dst, 50, 150)
+        canny_img = cdst if debug else None
 
         lines = cv2.HoughLinesP(
             edges,
@@ -133,6 +137,13 @@ class DetectorGoalPost(Detector):
                         self.robot_name + "/goal_post",
                         self.robot_name + "/base_footprint",
                     )
+
+        if debug:
+            cv2.imshow("horizon_img", horizon_img)
+            cv2.imshow("no_green_img", no_green_img)
+            cv2.imshow("filtered_img", filtered_img)
+            cv2.imshow("canny_img", canny_img)
+            cv2.waitKey(0)
 
         if self.image_publisher.get_num_connections() > 0:
             img_out = CvBridge().cv2_to_imgmsg(ccdst)
