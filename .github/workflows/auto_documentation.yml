@@ -70,6 +70,7 @@ jobs:
           source /opt/ros/noetic/setup.bash
           source $HOME/catkin_ws/devel/setup.bash
           pip install -r requirements.txt
+          roscore &
           make html
       - name: Setup Pages
         uses: actions/configure-pages@v2

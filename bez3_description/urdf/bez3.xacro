@@ -1144,6 +1144,106 @@
   <child link="$(arg tf_prefix)/torso"/>
 </joint>
 
+<joint name="Rigid26" type="fixed">
+  <origin xyz="-0.021 0.1025 -0.0365" rpy="0 0 0"/>
+  <parent link="$(arg tf_prefix)/torso"/>
+  <child link="$(arg tf_prefix)/25t-servo-hub_1"/>
+</joint>
+
+<joint name="left_arm_motor_0" type="continuous">
+  <origin xyz="0.0 0.002794 0.0" rpy="0 0 0"/>
+  <parent link="$(arg tf_prefix)/25t-servo-hub_1"/>
+  <child link="$(arg tf_prefix)/gobilda-servo_1"/>
+  <axis xyz="0.0 -1.0 0.0"/>
+</joint>
+
+<joint name="Rigid28" type="fixed">
+  <origin xyz="-0.0075 0.0369 0.0075" rpy="0 0 0"/>
+  <parent link="$(arg tf_prefix)/gobilda-servo_1"/>
+  <child link="$(arg tf_prefix)/left_bicep_1"/>
+</joint>
+
+<joint name="Rigid29" type="fixed">
+  <origin xyz="0.0 0.0 -0.0703" rpy="0 0 0"/>
+  <parent link="$(arg tf_prefix)/left_bicep_1"/>
+  <child link="$(arg tf_prefix)/gobilda-servo_3"/>
+</joint>
+
+<joint name="left_arm_motor_1" type="continuous">
+  <origin xyz="0.0075 -0.0369 -0.0075" rpy="0 0 0"/>
+  <parent link="$(arg tf_prefix)/gobilda-servo_3"/>
+  <child link="$(arg tf_prefix)/25t-servo-hub_2"/>
+  <axis xyz="-0.0 -1.0 -0.0"/>
+</joint>
+
+<joint name="Rigid31" type="fixed">
+  <origin xyz="0.0 -0.002794 0.0" rpy="0 0 0"/>
+  <parent link="$(arg tf_prefix)/25t-servo-hub_2"/>
+  <child link="$(arg tf_prefix)/elbow-attach_1"/>
+</joint>
+
+<joint name="Rigid32" type="fixed">
+  <origin xyz="-0.0275 0.002 0.01" rpy="0 0 0"/>
+  <parent link="$(arg tf_prefix)/elbow-attach_1"/>
+  <child link="$(arg tf_prefix)/left_forearm_1"/>
+</joint>
+
+<joint name="Rigid33" type="fixed">
+  <origin xyz="0.0 0.044674 0.0" rpy="0 0 0"/>
+  <parent link="$(arg tf_prefix)/left_forearm_1"/>
+  <child link="$(arg tf_prefix)/elbow-bearing_1"/>
+</joint>
+
+<joint name="Rigid34" type="fixed">
+  <origin xyz="-0.021 -0.1125 -0.0365" rpy="0 0 0"/>
+  <parent link="$(arg tf_prefix)/torso"/>
+  <child link="$(arg tf_prefix)/25t-servo-hub_Mirror__1"/>
+</joint>
+
+<joint name="right_arm_motor_0" type="continuous">
+  <origin xyz="0.0 -0.002794 0.0" rpy="0 0 0"/>
+  <parent link="$(arg tf_prefix)/25t-servo-hub_Mirror__1"/>
+  <child link="$(arg tf_prefix)/gobilda-servo_Mirror__1"/>
+  <axis xyz="0.0 -1.0 0.0"/>
+</joint>
+
+<joint name="Rigid36" type="fixed">
+  <origin xyz="-0.0075 -0.0369 0.0075" rpy="0 0 0"/>
+  <parent link="$(arg tf_prefix)/gobilda-servo_Mirror__1"/>
+  <child link="$(arg tf_prefix)/right_bicep_1"/>
+</joint>
+
+<joint name="Rigid37" type="fixed">
+  <origin xyz="0.0 0.0 -0.0703" rpy="0 0 0"/>
+  <parent link="$(arg tf_prefix)/right_bicep_1"/>
+  <child link="$(arg tf_prefix)/gobilda-servo_Mirror__2"/>
+</joint>
+
+<joint name="right_arm_motor_1" type="continuous">
+  <origin xyz="0.0075 0.0369 -0.0075" rpy="0 0 0"/>
+  <parent link="$(arg tf_prefix)/gobilda-servo_Mirror__2"/>
+  <child link="$(arg tf_prefix)/25t-servo-hub_Mirror__2"/>
+  <axis xyz="-0.0 -1.0 0.0"/>
+</joint>
+
+<joint name="Rigid39" type="fixed">
+  <origin xyz="0.0 0.002794 0.0" rpy="0 0 0"/>
+  <parent link="$(arg tf_prefix)/25t-servo-hub_Mirror__2"/>
+  <child link="$(arg tf_prefix)/elbow-attach_Mirror__1"/>
+</joint>
+
+<joint name="Rigid40" type="fixed">
+  <origin xyz="-0.0275 -0.002 0.01" rpy="0 0 0"/>
+  <parent link="$(arg tf_prefix)/elbow-attach_Mirror__1"/>
+  <child link="$(arg tf_prefix)/right_forearm_1"/>
+</joint>
+
+<joint name="Rigid41" type="fixed">
+  <origin xyz="0.0 -0.044674 0.0" rpy="0 0 0"/>
+  <parent link="$(arg tf_prefix)/right_forearm_1"/>
+  <child link="$(arg tf_prefix)/elbow-bearing_Mirror__1"/>
+</joint>
+
 <joint name="Rigid2" type="fixed">
   <origin xyz="-0.0225 0.0495 -0.13699" rpy="0 0 0"/>
   <parent link="$(arg tf_prefix)/torso"/>
@@ -1298,106 +1398,6 @@
   <parent link="$(arg tf_prefix)/JX_servo_v12_19"/>
   <child link="$(arg tf_prefix)/right_foot_1"/>
   <axis xyz="-1.0 0.0 -0.0"/>
-</joint>
-
-<joint name="Rigid26" type="fixed">
-  <origin xyz="-0.021 0.1025 -0.0365" rpy="0 0 0"/>
-  <parent link="$(arg tf_prefix)/torso"/>
-  <child link="$(arg tf_prefix)/25t-servo-hub_1"/>
-</joint>
-
-<joint name="left_arm_motor_0" type="continuous">
-  <origin xyz="0.0 0.002794 0.0" rpy="0 0 0"/>
-  <parent link="$(arg tf_prefix)/25t-servo-hub_1"/>
-  <child link="$(arg tf_prefix)/gobilda-servo_1"/>
-  <axis xyz="0.0 -1.0 0.0"/>
-</joint>
-
-<joint name="Rigid28" type="fixed">
-  <origin xyz="-0.0075 0.0369 0.0075" rpy="0 0 0"/>
-  <parent link="$(arg tf_prefix)/gobilda-servo_1"/>
-  <child link="$(arg tf_prefix)/left_bicep_1"/>
-</joint>
-
-<joint name="Rigid29" type="fixed">
-  <origin xyz="0.0 0.0 -0.0703" rpy="0 0 0"/>
-  <parent link="$(arg tf_prefix)/left_bicep_1"/>
-  <child link="$(arg tf_prefix)/gobilda-servo_3"/>
-</joint>
-
-<joint name="left_arm_motor_1" type="continuous">
-  <origin xyz="0.0075 -0.0369 -0.0075" rpy="0 0 0"/>
-  <parent link="$(arg tf_prefix)/gobilda-servo_3"/>
-  <child link="$(arg tf_prefix)/25t-servo-hub_2"/>
-  <axis xyz="-0.0 -1.0 -0.0"/>
-</joint>
-
-<joint name="Rigid31" type="fixed">
-  <origin xyz="0.0 -0.002794 0.0" rpy="0 0 0"/>
-  <parent link="$(arg tf_prefix)/25t-servo-hub_2"/>
-  <child link="$(arg tf_prefix)/elbow-attach_1"/>
-</joint>
-
-<joint name="Rigid32" type="fixed">
-  <origin xyz="-0.0275 0.002 0.01" rpy="0 0 0"/>
-  <parent link="$(arg tf_prefix)/elbow-attach_1"/>
-  <child link="$(arg tf_prefix)/left_forearm_1"/>
-</joint>
-
-<joint name="Rigid33" type="fixed">
-  <origin xyz="0.0 0.044674 0.0" rpy="0 0 0"/>
-  <parent link="$(arg tf_prefix)/left_forearm_1"/>
-  <child link="$(arg tf_prefix)/elbow-bearing_1"/>
-</joint>
-
-<joint name="Rigid34" type="fixed">
-  <origin xyz="-0.021 -0.1125 -0.0365" rpy="0 0 0"/>
-  <parent link="$(arg tf_prefix)/torso"/>
-  <child link="$(arg tf_prefix)/25t-servo-hub_Mirror__1"/>
-</joint>
-
-<joint name="right_arm_motor_0" type="continuous">
-  <origin xyz="0.0 -0.002794 0.0" rpy="0 0 0"/>
-  <parent link="$(arg tf_prefix)/25t-servo-hub_Mirror__1"/>
-  <child link="$(arg tf_prefix)/gobilda-servo_Mirror__1"/>
-  <axis xyz="0.0 -1.0 0.0"/>
-</joint>
-
-<joint name="Rigid36" type="fixed">
-  <origin xyz="-0.0075 -0.0369 0.0075" rpy="0 0 0"/>
-  <parent link="$(arg tf_prefix)/gobilda-servo_Mirror__1"/>
-  <child link="$(arg tf_prefix)/right_bicep_1"/>
-</joint>
-
-<joint name="Rigid37" type="fixed">
-  <origin xyz="0.0 0.0 -0.0703" rpy="0 0 0"/>
-  <parent link="$(arg tf_prefix)/right_bicep_1"/>
-  <child link="$(arg tf_prefix)/gobilda-servo_Mirror__2"/>
-</joint>
-
-<joint name="right_arm_motor_1" type="continuous">
-  <origin xyz="0.0075 0.0369 -0.0075" rpy="0 0 0"/>
-  <parent link="$(arg tf_prefix)/gobilda-servo_Mirror__2"/>
-  <child link="$(arg tf_prefix)/25t-servo-hub_Mirror__2"/>
-  <axis xyz="-0.0 -1.0 0.0"/>
-</joint>
-
-<joint name="Rigid39" type="fixed">
-  <origin xyz="0.0 0.002794 0.0" rpy="0 0 0"/>
-  <parent link="$(arg tf_prefix)/25t-servo-hub_Mirror__2"/>
-  <child link="$(arg tf_prefix)/elbow-attach_Mirror__1"/>
-</joint>
-
-<joint name="Rigid40" type="fixed">
-  <origin xyz="-0.0275 -0.002 0.01" rpy="0 0 0"/>
-  <parent link="$(arg tf_prefix)/elbow-attach_Mirror__1"/>
-  <child link="$(arg tf_prefix)/right_forearm_1"/>
-</joint>
-
-<joint name="Rigid41" type="fixed">
-  <origin xyz="0.0 -0.044674 0.0" rpy="0 0 0"/>
-  <parent link="$(arg tf_prefix)/right_forearm_1"/>
-  <child link="$(arg tf_prefix)/elbow-bearing_Mirror__1"/>
 </joint>
 
 <joint name="Rigid42" type="fixed">

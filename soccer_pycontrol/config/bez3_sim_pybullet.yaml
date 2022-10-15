@@ -1,0 +1,21 @@
+# Path parameters
+
+walking_torso_height: 0.45
+steps_per_second_default: 1.1
+bodystep_size_default: 0.05
+foot_separation: 0.06
+torso_offset_x_ready: -0.02 # positive is forward
+torso_offset_x: 0.02
+merge_fixed_links: true
+foot_box: [0.09, 0.07, 0.05]
+right_foot_joint_center_to_collision_box_center: [0.00385, 0.00401, -0.00737]
+
+walking_Kp: 0
+walking_Ki: 0.0000
+walking_Kd: 0
+walking_setpoint: 0.02
+
+standing_Kp: 0
+standing_Ki: 0
+standing_Kd: 0
+standing_setpoint: 0.0
