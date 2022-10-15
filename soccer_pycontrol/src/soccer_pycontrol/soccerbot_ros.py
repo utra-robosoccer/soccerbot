@@ -80,8 +80,9 @@ class SoccerbotRos(Soccerbot):
         self.configuration_offset = [0] * len(Joints)
         try:
             joint_state = rospy.wait_for_message("joint_states", JointState, timeout=3)
-            indexes = [joint_state.name.index(motor_name) for motor_name in self.motor_names]
-            self.configuration[0:18] = [joint_state.position[i] for i in indexes]
+            joint_pos = { j: p for j, p in zip(joint_state.name, joint_state.position) }
+
+            self.configuration[0:18] = [joint_pos[name] if name in joint_pos else self.configuration[i] for i, name in enumerate(self._motor_map.keys())] # coerce to existing configuration value if there is no response from that joint
         except (ROSException, KeyError, AttributeError) as ex:
             rospy.logerr(ex)
         except ValueError as ex:

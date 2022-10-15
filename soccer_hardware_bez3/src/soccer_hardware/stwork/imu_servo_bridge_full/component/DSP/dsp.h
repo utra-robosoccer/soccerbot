@@ -19,7 +19,8 @@
 
 /********************************* Includes **********************************/
 #define ARM_MATH_CM4
-#include "arm_math.h" // Include CMSIS header
+// no idea why it isn't able to find this relatively. Try to debug sometime, preferably pre-commit
+#include "/home/q/catkin_ws/src/soccerbot/soccer_hardware_bez3/src/soccer_hardware/stwork/imu_servo_bridge_full/Drivers/CMSIS/DSP/Include/arm_math.h" // Include CMSIS header
 
 
 

@@ -57,7 +57,7 @@ class Transmitter(Thread):
         # return
         with self._jx_ser._motor_lock:
             jx_servo_util.uart_transact(self._jx_ser, [1600, 1, 15] * 13, CMDS.PID_COEFF, RWS.WRITE)  # push initial PID gains
-            jx_servo_util.uart_transact(self._jx_ser, [1300] * 13, CMDS.MAX_DRIVE, RWS.WRITE)  # push initial maximum drive (out of 4096)
+            jx_servo_util.uart_transact(self._jx_ser, [2640] * 13, CMDS.MAX_DRIVE, RWS.WRITE)  # push initial maximum drive (out of 4096)
 
     def stop(self):
         """

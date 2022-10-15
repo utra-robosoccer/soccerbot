@@ -25,5 +25,5 @@ joint_indices:
 steps_per_second_default: 1.0
 bodystep_size_default: 0.05
 foot_separation: 0.06
-torso_offset_x: 0.03
+torso_offset_x: 0.05
 merge_fixed_links: true

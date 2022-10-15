@@ -175,6 +175,8 @@ class Soccerbot:
         # For head rotation
         self.head_step = 0.0
 
+        self._motor_map = rospy.get_param('~motor_mapping') # make the definitive ordering of motor keys from the param file to allow for incomplete joint_states
+
     def get_angles(self):
         """
         Function for getting all the angles, combines the configuration with the configuration offset
@@ -242,8 +244,8 @@ class Soccerbot:
         previous_configuration = self.configuration
         try:
             joint_state = rospy.wait_for_message("joint_states", JointState, timeout=3)
-            indexes = [joint_state.name.index(motor_name) for motor_name in self.motor_names]
-            previous_configuration = [joint_state.position[i] for i in indexes]
+            joint_pos = { j: p for j, p in zip(joint_state.name, joint_state.position) }
+            previous_configuration = [joint_pos[name] if name in joint_pos else 0 for name in self._motor_map.keys()] # not sure if 0 as an original value is great, but we can't fallback on a history of tracking position so it'll have to do for now
         except (ROSException, AttributeError) as ex:
             rospy.logerr(ex)
         except ValueError as ex:
