@@ -101,7 +101,7 @@ class Communication:
         for motor in self._motor_map:
             servo_idx = int(self._motor_map[motor]["id"])
             # print(servo_idx, str(type(list(received_angles.keys())[0])), servo_idx in received_angles)
-            if int(servo_idx) < 12 and servo_idx in received_angles:
+            if servo_idx in received_angles:
                 angle = received_angles[servo_idx]
                 if math.isnan(angle):  # TODO fix this
                     continue

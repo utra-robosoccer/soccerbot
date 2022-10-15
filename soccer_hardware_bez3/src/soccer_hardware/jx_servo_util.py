@@ -28,8 +28,8 @@ class UART_STATES(Enum):
 
 CMD_WIDTHS = [2, 2, 7, 6, 2]
 BAUD = int(1e6)
-EXPECT_BYTE_RX_TIME = 15e-6  # based on servo microcontroller nominal wait width per byte plus margin
-EXPECT_BYTE_TX_TIME = 15e-6
+EXPECT_BYTE_RX_TIME = 25e-6  # based on servo microcontroller nominal wait width per byte plus margin
+EXPECT_BYTE_TX_TIME = 25e-6
 MAX_JX_SERVO_IDX = 12
 
 
