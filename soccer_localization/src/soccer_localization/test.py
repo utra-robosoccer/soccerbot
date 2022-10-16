@@ -9,16 +9,15 @@ import rosbag
 import sensor_msgs.point_cloud2 as pcl2
 
 from soccer_common.transformation import Transformation
+from soccer_localization.field import Field
 from soccer_localization.field_lines_ukf import FieldLinesUKF
-from soccer_localization.map import Map
 
 
 def test_simple():
     plt.figure("Localization")
 
-    map = Map()
+    map = Field()
     map.draw()
-
     src_path = os.path.dirname(os.path.realpath(__file__))
     test_path = src_path + "/test/localization.bag"
     bag_path = Path(test_path)
@@ -45,14 +44,8 @@ def test_simple():
             point_cloud = pcl2.read_points_list(msg)
             point_cloud_array = np.array(point_cloud)
             current_transform = Transformation(pos_theta=f.ukf.x)
-            rotation_matrix = current_transform.matrix[0:2, 0:2]
-            # world_frame_points = (rotation_matrix @ point_cloud_array[:, 0:2].T)
-            world_frame_points = np.stack([current_transform.position[0:2]] * len(point_cloud_array), axis=1) + (
-                rotation_matrix @ point_cloud_array[:, 0:2].T
-            )
-            map.matchPointsWithMap(world_frame_points)
-            if t.secs == 10 and t.nsecs == 432000000:
-                plt.scatter(world_frame_points[0, :], world_frame_points[1, :], marker=".", s=1, label="Points", color="red")
+            map.matchPointsWithMap(current_transform, point_cloud_array)
+            break
             pass
         if topic == "/tf":
             # Process ground truth information
@@ -91,6 +84,9 @@ def test_simple():
     plt.plot(path_odom[:, 0], path_odom[:, 1], color="yellow", linewidth=0.5, label="Odom Path")
     plt.plot(path_ukf[:, 0], path_ukf[:, 1], color="white", linewidth=0.5, label="UKF Path")
     plt.plot(path_gt[:, 0], path_gt[:, 1], color="orange", linewidth=0.5, label="Ground Truth Path")
+    plt.xlim((-5, 5))
+    plt.ylim((-4, 4))
+    plt.tight_layout()
     plt.legend()
 
     plt.show(block=True)

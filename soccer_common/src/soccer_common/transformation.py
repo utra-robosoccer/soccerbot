@@ -109,6 +109,11 @@ class Transformation(np.ndarray):
         self[0:3, 3] = position
 
     @property
+    def norm_squared(self) -> float:
+        position = self.position
+        return position[0] ** 2 + position[1] ** 2 + position[2] ** 2
+
+    @property
     def quaternion(self) -> np.ndarray:
         """
         Representation of the rotation of the transformation in quaternion in form [x y z w]
