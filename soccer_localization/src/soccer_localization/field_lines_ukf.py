@@ -120,3 +120,6 @@ class FieldLinesUKF:
 
     def draw_covariance(self):
         plot_covariance((self.ukf.x[0], self.ukf.x[1]), self.ukf.P[0:2, 0:2], std=1, facecolor="k", alpha=0.1)
+
+    def match_points_with_map(self):
+        pass

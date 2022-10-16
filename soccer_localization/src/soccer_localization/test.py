@@ -10,65 +10,14 @@ import sensor_msgs.point_cloud2 as pcl2
 
 from soccer_common.transformation import Transformation
 from soccer_localization.field_lines_ukf import FieldLinesUKF
+from soccer_localization.map import Map
 
 
 def test_simple():
     plt.figure("Localization")
 
-    # Draw field
-    plt.axes().set_facecolor("limegreen")
-
-    # Dimensions given here https://cdn.robocup.org/hl/wp/2021/06/V-HL21_Rules_v4.pdf
-    lw = 0.05
-    A = 9
-    B = 6
-    C = 0.6
-    D = 2.6
-    E = 1
-    F = 3
-    G = 1.5
-    H = 1.5
-    I = 1
-    J = 2
-    K = 5
-
-    # Circle
-    plt.gca().add_patch(plt.Circle((0, 0), H / 2 + lw / 2, color="white"))
-    plt.gca().add_patch(plt.Circle((0, 0), H / 2 - lw / 2, color="limegreen"))
-
-    # Outer rectangle
-    plt.fill_between(x=[-A / 2 - lw / 2, A / 2 + lw / 2], y1=B / 2 - lw / 2, y2=B / 2 + lw / 2, color="white")
-    plt.fill_between(x=[-A / 2 - lw / 2, A / 2 + lw / 2], y1=-B / 2 - lw / 2, y2=-B / 2 + lw / 2, color="white")
-    plt.fill_betweenx(y=[-B / 2 - lw / 2, B / 2 + lw / 2], x1=-A / 2 - lw / 2, x2=-A / 2 + lw / 2, color="white")
-    plt.fill_betweenx(y=[-B / 2 - lw / 2, B / 2 + lw / 2], x1=A / 2 - lw / 2, x2=A / 2 + lw / 2, color="white")
-    plt.fill_betweenx(y=[-B / 2 - lw / 2, B / 2 + lw / 2], x1=-lw / 2, x2=lw / 2, color="white")
-
-    # Penalty Area (large box)
-    def draw_double_boxes(h, v):
-        plt.fill_between(x=[-A / 2, -A / 2 + h], y1=v / 2 - lw / 2, y2=v / 2 + lw / 2, color="white")
-        plt.fill_between(x=[-A / 2, -A / 2 + h], y1=-v / 2 - lw / 2, y2=-v / 2 + lw / 2, color="white")
-        plt.fill_between(x=[A / 2 - h, A / 2], y1=v / 2 - lw / 2, y2=v / 2 + lw / 2, color="white")
-        plt.fill_between(x=[A / 2 - h, A / 2], y1=-v / 2 - lw / 2, y2=-v / 2 + lw / 2, color="white")
-        plt.fill_betweenx(y=[-v / 2 - lw / 2, v / 2 + lw / 2], x1=-A / 2 + h - lw / 2, x2=-A / 2 + h + lw / 2, color="white")
-        plt.fill_betweenx(y=[-v / 2 - lw / 2, v / 2 + lw / 2], x1=A / 2 - h - lw / 2, x2=A / 2 - h + lw / 2, color="white")
-
-    draw_double_boxes(J, K)
-    draw_double_boxes(E, F)
-    draw_double_boxes(-C, D)
-
-    # Crosses
-    def draw_cross(pos_x):
-        plt.fill_between(x=[pos_x - 0.1, pos_x + 0.1], y1=-lw / 2, y2=lw / 2, color="white")
-        plt.fill_betweenx(y=[-0.1, 0.1], x1=pos_x - lw / 2, x2=pos_x + lw / 2, color="white")
-
-    draw_cross(A / 2 - G)
-    draw_cross(-A / 2 + G)
-    draw_cross(0)
-
-    plt.axis("equal")
-    plt.xlabel("Y (m)")
-    plt.ylabel("X (m)")
-    plt.title("UKF Robot localization")
+    map = Map()
+    map.draw()
 
     src_path = os.path.dirname(os.path.realpath(__file__))
     test_path = src_path + "/test/localization.bag"
@@ -101,8 +50,9 @@ def test_simple():
             world_frame_points = np.stack([current_transform.position[0:2]] * len(point_cloud_array), axis=1) + (
                 rotation_matrix @ point_cloud_array[:, 0:2].T
             )
-            if t.secs == 10 and t.nsecs == 544000000:
-                plt.scatter(world_frame_points[0, :], world_frame_points[1, :], marker=".", s=1, label="Points", color="yellow")
+            map.matchPointsWithMap(world_frame_points)
+            if t.secs == 10 and t.nsecs == 432000000:
+                plt.scatter(world_frame_points[0, :], world_frame_points[1, :], marker=".", s=1, label="Points", color="red")
             pass
         if topic == "/tf":
             # Process ground truth information

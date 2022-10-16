@@ -59,12 +59,12 @@ class DetectorFieldline(Detector):
         if not self.camera.ready():
             return
 
-        self.camera.reset_position(timestamp=img.header.stamp)
+        # self.camera.reset_position(timestamp=img.header.stamp)
         # Uncomment for ground truth
-        # if not self.publish_point_cloud:
-        #     self.camera.reset_position(timestamp=img.header.stamp)
-        # else:
-        #     self.camera.reset_position(timestamp=img.header.stamp, from_world_frame=True, camera_frame="/camera_gt")
+        if not self.publish_point_cloud:
+            self.camera.reset_position(timestamp=img.header.stamp)
+        else:
+            self.camera.reset_position(timestamp=img.header.stamp, from_world_frame=True, camera_frame="/camera_gt")
         rospy.loginfo_once("Started Publishing Fieldlines")
 
         image = CvBridge().imgmsg_to_cv2(img, desired_encoding="rgb8")
@@ -142,10 +142,10 @@ class DetectorFieldline(Detector):
             header.stamp = img.header.stamp
             header.frame_id = self.robot_name + "/odom"
             # Uncomment for ground truth
-            # if not self.publish_point_cloud:
-            #     header.frame_id = self.robot_name + "/odom"
-            # else:
-            #     header.frame_id = "world"
+            if not self.publish_point_cloud:
+                header.frame_id = self.robot_name + "/odom"
+            else:
+                header.frame_id = "world"
             point_cloud_msg = pcl2.create_cloud_xyz32(header, points3d)
             self.point_cloud_publisher.publish(point_cloud_msg)
 
