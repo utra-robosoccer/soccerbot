@@ -61,21 +61,18 @@ def calibrate_x():
     if not run_in_ros:
         setup_calibration()
 
-    import pybullet as pb
-
     from soccer_pycontrol.navigator import Navigator
     from soccer_pycontrol.navigator_ros import NavigatorRos
 
     start_positions = []
     final_positions = []
-    for x in np.linspace(0.0, 0.2, 21):
+    for x in np.linspace(0.0, 0.25, 26):
         if run_in_ros:
             walker = NavigatorRos(useCalibration=False)
         else:
-            walker = Navigator(display=False, useCalibration=False)
+            walker = Navigator(display=False, real_time=False, useCalibration=False)
         walker.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
         walker.ready()
-        walker.wait(200)
 
         actual_start_position = walker.getPose()
 
@@ -92,8 +89,6 @@ def calibrate_x():
 
         start_positions.append(goal_position.position)
         final_positions.append(final_transformation)
-
-        walker.wait(100)
 
         del walker
 
@@ -119,7 +114,8 @@ def calibrate_x():
     def func(x, a):
         return a * x
 
-    popt2, pcov2 = curve_fit(func, x[int(len(x) / 2) : -1], y[int(len(y) / 2) : -1])
+    fs = 8  # Final samples used to approximate linear fit after 0.25
+    popt2, pcov2 = curve_fit(func, x[-fs:] - x[-fs], y[-fs:] - y[-fs])
 
     return popt[0], popt[1], popt2[0]
 
@@ -213,7 +209,7 @@ def adjust_navigation_transform(start_transform: Transformation, end_transform: 
     step_1_angular_distance_new = (1 / calibration_rot_a) * step_1_angular_distance
     step_3_angular_distance_new = (1 / calibration_rot_a) * step_3_angular_distance
 
-    max_x = calibration_trans_a * 0.2**2 + calibration_trans_b * 0.2
+    max_x = calibration_trans_a * 0.25**2 + calibration_trans_b * 0.25
     c = min(max_x, step_2_distance)
     c_remainder = max(0.0, step_2_distance - max_x)
 
@@ -236,14 +232,15 @@ def adjust_navigation_transform(start_transform: Transformation, end_transform: 
 
 if __name__ == "__main__":
     if run_in_ros:
-
-        os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_strategy'")
-        os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_pycontrol'")
-        os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_trajectories'")
+        os.system(
+            "/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_strategy /robot1/soccer_pycontrol /robot1/soccer_trajectories'"
+        )
         rospy.init_node("soccer_control_calibration")
         rospy.loginfo("Initializing Soccer Control Calibration")
+        config_file_path = os.path.dirname(__file__).replace("src/soccer_pycontrol", f"config/{robot_model}_sim.yaml")
+    else:
+        config_file_path = os.path.dirname(__file__).replace("src/soccer_pycontrol", f"config/{robot_model}_sim_pybullet.yaml")
 
-    config_file_path = os.path.dirname(__file__).replace("src/soccer_pycontrol", f"config/{robot_model}_sim.yaml")
     yaml = ruamel.yaml.YAML()
 
     # Calibrate translation

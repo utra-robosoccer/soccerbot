@@ -24,14 +24,13 @@ else:
     import rospy
 
 if run_in_ros:
-    rospy.init_node("soccer_control")
-    os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_strategy'")
-    os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_pycontrol'")
-    os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_trajectories'")
+    os.system(
+        "/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_strategy /robot1/soccer_pycontrol /robot1/soccer_trajectories'"
+    )
 
 file_path = os.path.dirname(os.path.abspath(__file__))
 config_path = f"{file_path}/../../config/bez1_sim_pybullet.yaml"
-mock_ros(robot_model="bez1", real_robot=False, config_path=config_path)
+mock_ros(robot_model="bez1", real_robot=False, param_path=config_path)
 
 from soccer_pycontrol.navigator import Navigator
 from soccer_pycontrol.navigator_ros import NavigatorRos
@@ -49,45 +48,6 @@ class TestSpecial(TestCase):
     def tearDown(self) -> None:
         super().tearDown()
         del self.walker
-
-    @unittest.skip("Not integrated in CI")
-    def test_imu_feedback(self):
-        import pybullet as pb
-
-        self.walker.setPose(Transformation([0, 0, 0], [0, 0, 0, 1]))
-        self.walker.ready()
-        self.walker.wait(100)
-        self.walker.setGoal(Transformation([2, 0, 0], [0, 0, 0, 1]))
-
-        pitches = []
-        times = []
-        t = 0
-        while t <= self.walker.soccerbot.robot_path.duration():
-            if self.walker.soccerbot.current_step_time <= t <= self.walker.soccerbot.robot_path.duration():
-                self.walker.soccerbot.stepPath(t, verbose=True)
-                pitch = self.walker.soccerbot.get_imu().orientation_euler[1]
-                pitches.append(pitch)
-                times.append(t)
-                self.walker.soccerbot.apply_imu_feedback(self.walker.soccerbot.get_imu())
-
-                forces = self.walker.soccerbot.apply_foot_pressure_sensor_feedback(self.walker.ramp.plane)
-                pb.setJointMotorControlArray(
-                    bodyIndex=self.walker.soccerbot.body,
-                    controlMode=pb.POSITION_CONTROL,
-                    jointIndices=list(range(0, 18, 1)),
-                    targetPositions=self.walker.soccerbot.get_angles(),
-                    forces=forces,
-                )
-                self.walker.soccerbot.current_step_time = self.walker.soccerbot.current_step_time + self.walker.soccerbot.robot_path.step_precision
-
-            pb.stepSimulation()
-            t = t + self.walker.PYBULLET_STEP
-
-        plt.plot(times, pitches)
-        plt.xlabel("Time (t)")
-        plt.ylabel("Forward pitch of robot in radians")
-        plt.grid(which="minor")
-        plt.show()
 
     @unittest.skip("Not integrated in CI")
     def test_imu_feedback_webots(self):

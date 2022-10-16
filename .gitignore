@@ -22,8 +22,10 @@ cmake-build-debug
 
 soccerbot/bags/*
 !soccerbot/bags/*.sh
+!soccerbot/bags/*.py
 slave.py
 venv/
 /docs/_build/
 /docs/generated/
 *.bag
+/soccer_object_localization/images/

@@ -23,9 +23,6 @@ class Path:
     Consists of a list of bezier or short path sections
     """
 
-    #: How precise the curves are calculated. The amount of movement per given step_precision is calculated (s)
-    step_precision = rospy.get_param("step_precision", 0.02)
-
     def __init__(self, start_transform: Transformation, end_transform: Transformation):
         """
         Initialization function for Path, creates a single path section, other path sections are only added when the route needs
@@ -34,6 +31,9 @@ class Path:
         :param start_transform: Starting Robot Position
         :param end_transform: Ending Robot Position
         """
+
+        #: How precise the curves are calculated. The amount of movement per given step_precision is calculated (s)
+        self.step_precision = rospy.get_param("step_precision", 0.02)
 
         self.start_transform: Transformation = start_transform
         self.end_transform: Transformation = end_transform

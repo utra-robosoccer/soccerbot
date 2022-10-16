@@ -1,12 +1,11 @@
 import time
-from time import sleep
 
-import numpy as np
 import pybullet as pb
 import pybullet_data
 import rospy
 
 from soccer_common.transformation import Transformation
+from soccer_pycontrol.links import Links
 from soccer_pycontrol.ramp import Ramp
 from soccer_pycontrol.soccerbot import Soccerbot
 
@@ -20,7 +19,7 @@ class Navigator:
 
     PYBULLET_STEP = rospy.get_param("control_frequency", 0.01)
 
-    def __init__(self, display=True, useCalibration=True):
+    def __init__(self, real_time=True, display=True, useCalibration=True):
         """
         Initialize the Navigator
 
@@ -28,6 +27,7 @@ class Navigator:
         :param useCalibration: Whether or not to use movement calibration files located in config/robot_model.yaml, which adjusts the calibration to the movement given
         """
         self.display = display
+        self.real_time = real_time
         if display:
             self.client_id = pb.connect(pb.GUI)
         else:
@@ -40,6 +40,8 @@ class Navigator:
 
         self.soccerbot = Soccerbot(Transformation(), useFixedBase=False, useCalibration=useCalibration)
         self.terminate_walk = False
+
+        self.t = 0
 
     def __del__(self):
         if hasattr(self, "client_id") and pb.isConnected(self.client_id):
@@ -65,8 +67,8 @@ class Navigator:
 
         :return: The 3D pose of the robot
         """
-        pos_orientation = pb.getBasePositionAndOrientation(self.soccerbot.body)
-        return Transformation(position=pos_orientation[0], quaternion=pos_orientation[1]).pos_theta
+        [position, quaternion] = pb.getLinkState(self.soccerbot.body, linkIndex=Links.LEFT_LEG_6)[4:6]
+        return Transformation(position=position, quaternion=quaternion).pos_theta
 
     def setGoal(self, goal: Transformation) -> None:
         """
@@ -83,7 +85,7 @@ class Navigator:
         :param steps: Defined by Navigator.PYBULLET_STEP, which is usually 0.01
         """
         for i in range(steps):
-            if self.display:
+            if self.real_time:
                 time.sleep(Navigator.PYBULLET_STEP)
             pb.stepSimulation()
 
@@ -98,11 +100,11 @@ class Navigator:
         if self.soccerbot.robot_path.duration() == 0:
             return True
 
-        t = -5
+        self.t = -2
         stable_count = 20
 
-        while t <= self.soccerbot.robot_path.duration():
-            if t < 0:
+        while self.t <= self.soccerbot.robot_path.duration():
+            if self.t < 0:
                 pitch = self.soccerbot.apply_imu_feedback_standing(self.soccerbot.get_imu())
                 if abs(pitch - self.soccerbot.standing_pid.setpoint) < 0.025:
                     stable_count = stable_count - 1
@@ -111,8 +113,8 @@ class Navigator:
                 else:
                     stable_count = 5
             else:
-                if self.soccerbot.current_step_time <= t <= self.soccerbot.robot_path.duration():
-                    self.soccerbot.stepPath(t)
+                if self.soccerbot.current_step_time <= self.t <= self.soccerbot.robot_path.duration():
+                    self.soccerbot.stepPath(self.t)
                     self.soccerbot.apply_imu_feedback(self.soccerbot.get_imu())
                     self.soccerbot.current_step_time = self.soccerbot.current_step_time + self.soccerbot.robot_path.step_precision
 
@@ -133,7 +135,7 @@ class Navigator:
                 targetPositions=self.soccerbot.get_angles(),
             )
             pb.stepSimulation()
-            t = t + Navigator.PYBULLET_STEP
-            if self.display:
-                sleep(Navigator.PYBULLET_STEP)
+            self.t = self.t + Navigator.PYBULLET_STEP
+            if self.real_time:
+                time.sleep(Navigator.PYBULLET_STEP)
         return True
