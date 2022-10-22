@@ -188,7 +188,7 @@ class TestObjectLocalization(TestCase):
         src_path = os.path.dirname(os.path.realpath(__file__))
         test_path = src_path + "/../../images/goal_net"
         for file_name in os.listdir(test_path):
-            file_name = "img160_-1.452993567956688_-3.15_0.7763055830612666.png"
+            # file_name = "img160_-1.452993567956688_-3.15_0.7763055830612666.png"
 
             print(f"Loading {file_name} from goal_net dataset")
             file_name_no_ext = os.path.splitext(file_name)[0]
@@ -215,6 +215,85 @@ class TestObjectLocalization(TestCase):
                     cv2.imshow("After", img_out)
 
                 cv2.waitKey(0)
+
+    # @pytest.mark.skip
+    @unittest.mock.patch("soccer_common.camera.TransformListener")
+    @unittest.mock.patch("soccer_common.camera.rospy.Time.now")
+    def test_goalpost_detection_tune(self, mock_tf_listener, now):
+        from sensor_msgs.msg import CameraInfo, Image
+
+        from soccer_object_localization.detector_goalpost import DetectorGoalPost
+
+        download_dataset(url="https://drive.google.com/uc?id=17qdnW7egoopXHvakiNnUUufP2MOjyZ18", folder_name="goal_net")
+
+        Camera.reset_position = MagicMock()
+        Camera.ready = MagicMock()
+        d = DetectorGoalPost()
+
+        import cv2
+        import numpy as np
+        from cv2 import Mat
+
+        src_path = os.path.dirname(os.path.realpath(__file__))
+        test_path = src_path + "/../../images/goal_net"
+        file_name = "img160_-1.452993567956688_-3.15_0.7763055830612666.png"
+
+        print(f"Loading {file_name} from goal_net dataset")
+        file_name_no_ext = os.path.splitext(file_name)[0]
+        x, y, yaw = file_name_no_ext.split("_")[1:]
+        print(f"Parsed (x, y, yaw): ({x}, {y}, {yaw}) from filename.")
+
+        img: Mat = cv2.imread(os.path.join(test_path, file_name))
+
+        c = CameraInfo()
+        c.height = img.shape[0]
+        c.width = img.shape[1]
+        d.camera.camera_info = c
+
+        # Create a window
+        cv2.namedWindow("image")
+
+        def nothing(x):
+            pass
+
+        # create trackbars for hough line parameters
+        default_vline_angle_tol_deg = 3
+        default_theta = np.pi / 180
+        default_threshold = 50
+        default_min_line_length = 30
+        default_max_line_gap = 10
+        cv2.createTrackbar("vLineAngleTolDeg", "image", 0, 15, nothing)
+        cv2.createTrackbar("threshold", "image", 0, 255, nothing)
+        cv2.createTrackbar("minLineLength", "image", 0, 250, nothing)
+        cv2.createTrackbar("maxLineGap", "image", 0, 20, nothing)
+
+        # Set default value for MAX HSV trackbars.
+        cv2.setTrackbarPos("vLineAngleTolDeg", "image", default_vline_angle_tol_deg)
+        cv2.setTrackbarPos("threshold", "image", default_threshold)
+        cv2.setTrackbarPos("minLineLength", "image", default_min_line_length)
+        cv2.setTrackbarPos("maxLineGap", "image", default_max_line_gap)
+
+        while True:
+            # get current positions of all trackbars
+            vline_angle_tol_deg = cv2.getTrackbarPos("vLineAngleTolDeg", "image")
+            threshold = cv2.getTrackbarPos("threshold", "image")
+            min_line_length = cv2.getTrackbarPos("minLineLength", "image")
+            max_line_gap = cv2.getTrackbarPos("maxLineGap", "image")
+
+            img_out = d.get_vlines_from_img(
+                img,
+                debug=False,
+                angle_tol_deg=vline_angle_tol_deg,
+                hough_theta=default_theta,
+                hough_threshold=threshold,
+                hough_min_line_length=min_line_length,
+                hough_max_line_gap=max_line_gap,
+            )
+            cv2.imshow("image", img_out)
+
+            if cv2.waitKey(33) & 0xFF == ord("n"):
+                file_name = "newfile"
+                break
 
     # @pytest.mark.skip
     def test_hsv_filter(self):
