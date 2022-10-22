@@ -163,17 +163,27 @@ class Field:
         closest_dist = np.min(distance_matrix, axis=0)
         index_meets_dist_threshold = np.where(closest_dist < self.max_detected_line_perpendicular_offset_error**2)
 
-        center_of_all_points = np.average(world_frame_points, axis=1)
-
         index_array = np.arange(len(closest_line))
 
         closest_line_diff_x = diff_x[closest_line, index_array]
         closest_line_diff_y = diff_y[closest_line, index_array]
+        points_meet_dist_threshold = world_frame_points.T[index_meets_dist_threshold].T
         closest_line_diff_x = closest_line_diff_x[index_meets_dist_threshold]
         closest_line_diff_y = closest_line_diff_y[index_meets_dist_threshold]
 
         diff_x_avg = np.average(closest_line_diff_x)
         diff_y_avg = np.average(closest_line_diff_y)
 
+        center_of_all_points = np.average(points_meet_dist_threshold, axis=1)
+        points_meet_dist_threshold_delta = np.subtract(points_meet_dist_threshold, np.expand_dims(center_of_all_points, axis=1))
+        points_meet_dist_threshold_shift = points_meet_dist_threshold_delta + np.concatenate([[closest_line_diff_x], [closest_line_diff_y]])
+
+        angle_original = np.arctan2(points_meet_dist_threshold_delta[1, :], points_meet_dist_threshold_delta[0, :])
+        angle_new = np.arctan2(points_meet_dist_threshold_shift[1, :], points_meet_dist_threshold_shift[0, :])
+        angle_diff = angle_new - angle_original
+        angle_diff_avg = np.average(angle_diff)
+
         plt.scatter(world_frame_points[0, :], world_frame_points[1, :], marker=".", s=1, label="Points", color="red")
-        pass
+
+        points_delta = Transformation(pos_theta=[diff_x_avg, diff_y_avg, angle_diff_avg])
+        return points_delta
