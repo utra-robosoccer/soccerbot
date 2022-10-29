@@ -36,6 +36,7 @@ def test_simple():
     path_ukf = []
     path_odom = []
     path_gt = []
+    path_vo = []  # Path Point Cloud
 
     odom_t_previous = None
     predict_it = 0
@@ -44,8 +45,10 @@ def test_simple():
             point_cloud = pcl2.read_points_list(msg)
             point_cloud_array = np.array(point_cloud)
             current_transform = Transformation(pos_theta=f.ukf.x)
-            map.matchPointsWithMap(current_transform, point_cloud_array)
-            break
+            offset_transform = map.matchPointsWithMap(current_transform, point_cloud_array)
+            if offset_transform is not None:
+                vo_transform = current_transform @ offset_transform
+                path_vo.append(vo_transform.pos_theta)
             pass
         if topic == "/tf":
             # Process ground truth information
@@ -79,11 +82,13 @@ def test_simple():
     path_ukf = np.array(path_ukf)
     path_odom = np.array(path_odom)
     path_gt = np.array(path_gt)
+    path_vo = np.array(path_vo)
 
     # Add the patch to the Axes
     plt.plot(path_odom[:, 0], path_odom[:, 1], color="yellow", linewidth=0.5, label="Odom Path")
     plt.plot(path_ukf[:, 0], path_ukf[:, 1], color="white", linewidth=0.5, label="UKF Path")
     plt.plot(path_gt[:, 0], path_gt[:, 1], color="orange", linewidth=0.5, label="Ground Truth Path")
+    plt.plot(path_vo[:, 0], path_vo[:, 1], color="red", linewidth=0.5, label="VO Points")
     plt.xlim((-5, 5))
     plt.ylim((-4, 4))
     plt.tight_layout()

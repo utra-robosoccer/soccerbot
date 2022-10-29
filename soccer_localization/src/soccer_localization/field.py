@@ -1,3 +1,4 @@
+import time
 from collections import namedtuple
 from functools import cached_property
 from typing import List, Union
@@ -30,6 +31,7 @@ class Field:
     def __init__(self):
         # Dimensions given here https://cdn.robocup.org/hl/wp/2021/06/V-HL21_Rules_v4.pdf
 
+        self.distance_point_threshold = 2
         self.max_detected_line_parallel_offset_error = 0.1
         self.max_detected_line_perpendicular_offset_error = 0.3
         pass
@@ -108,8 +110,16 @@ class Field:
         plt.ylabel("X (m)")
         plt.title("UKF Robot localization")
 
-    def matchPointsWithMap(self, current_transform: Transformation, point_cloud_array: np.array) -> Transformation:
+    def matchPointsWithMap(self, current_transform: Transformation, point_cloud_array: np.array) -> Union[Transformation, None]:
+        start = time.time()
         # Filter points by distance from current transform
+        points_distance_from_current_sq = point_cloud_array[:, 0] ** 2 + point_cloud_array[:, 1] ** 2
+        point_cloud_meets_dist_threshold_index = np.where(points_distance_from_current_sq < self.distance_point_threshold**2)
+        tmp = point_cloud_array[point_cloud_meets_dist_threshold_index, :]
+        point_cloud_array = np.reshape(tmp, tmp.shape[1:])
+        if len(point_cloud_array) == 0:
+            return None
+
         rotation_matrix = current_transform.matrix[0:2, 0:2]
         world_frame_points = np.stack([current_transform.position[0:2]] * len(point_cloud_array), axis=1) + (
             rotation_matrix @ point_cloud_array[:, 0:2].T
@@ -163,6 +173,9 @@ class Field:
         closest_dist = np.min(distance_matrix, axis=0)
         index_meets_dist_threshold = np.where(closest_dist < self.max_detected_line_perpendicular_offset_error**2)
 
+        if len(index_meets_dist_threshold[0]) == 0:
+            return None
+
         index_array = np.arange(len(closest_line))
 
         closest_line_diff_x = diff_x[closest_line, index_array]
@@ -183,7 +196,10 @@ class Field:
         angle_diff = angle_new - angle_original
         angle_diff_avg = np.average(angle_diff)
 
-        plt.scatter(world_frame_points[0, :], world_frame_points[1, :], marker=".", s=1, label="Points", color="red")
+        # plt.scatter(world_frame_points[0, :], world_frame_points[1, :], marker=".", s=1, label="Points", color="red")
 
-        points_delta = Transformation(pos_theta=[diff_x_avg, diff_y_avg, angle_diff_avg])
-        return points_delta
+        offset_transform = Transformation(pos_theta=[diff_x_avg, diff_y_avg, angle_diff_avg])
+
+        end = time.time()
+        print(f"Offset Transform: {offset_transform.pos_theta}. Time took {(end - start)}")
+        return offset_transform
