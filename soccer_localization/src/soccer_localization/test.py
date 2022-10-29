@@ -49,6 +49,7 @@ def test_simple():
             if offset_transform is not None:
                 vo_transform = current_transform @ offset_transform
                 path_vo.append(vo_transform.pos_theta)
+                f.update(offset_transform.pos_theta)
             pass
         if topic == "/tf":
             # Process ground truth information
