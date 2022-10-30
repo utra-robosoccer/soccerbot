@@ -1,9 +1,11 @@
 import math
 import os
 import unittest
+from pathlib import Path
 from unittest import TestCase
 from unittest.mock import MagicMock
 
+import gdown
 import pytest
 
 from soccer_common.mock_ros import mock_ros
@@ -15,6 +17,25 @@ from sensor_msgs.msg import CameraInfo
 from soccer_common.camera import Camera
 from soccer_common.transformation import Transformation
 from soccer_msgs.msg import RobotState
+
+
+def download_dataset(url, folder_name):
+    # Collect the dataset from the web (https://drive.google.com/drive/u/2/folders/1amhnKBSxHFzkH7op1SusShJckcu-jiUn)
+    src_path = os.path.dirname(os.path.realpath(__file__))
+    test_path = src_path + f"/../../images/{folder_name}"
+    bag_path = Path(test_path)
+
+    if not bag_path.is_dir():
+        print(f"Dataset not found at {test_path}. Downloading ...")
+        os.makedirs(bag_path)
+
+        zipfilepath = test_path + "/dataset.zip"
+        gdown.download(url=url, output=zipfilepath, quiet=False)
+        import zipfile
+
+        with zipfile.ZipFile(zipfilepath, "r") as zip_ref:
+            zip_ref.extractall(test_path)
+        os.remove(zipfilepath)
 
 
 class TestObjectLocalization(TestCase):
@@ -30,9 +51,9 @@ class TestObjectLocalization(TestCase):
         c.camera_info = ci
 
         p2 = c.findFloorCoordinate([360 / 2, 240 / 2])
-        self.assertAlmostEqual(p2[0], 0.5)
-        self.assertAlmostEqual(p2[1], 0)
-        self.assertAlmostEqual(p2[2], 0)
+        self.assertAlmostEqual(p2[0], 0.5, delta=0.005)
+        self.assertAlmostEqual(p2[1], 0, delta=0.005)
+        self.assertAlmostEqual(p2[2], 0, delta=0.005)
 
     @unittest.mock.patch("soccer_common.camera.TransformListener")
     @unittest.mock.patch("soccer_common.camera.rospy.Time.now")
@@ -46,8 +67,8 @@ class TestObjectLocalization(TestCase):
         c.camera_info = ci
 
         p2 = c.findCameraCoordinate([0.5, 0, 0])
-        self.assertAlmostEqual(p2[0], 360 / 2)
-        self.assertAlmostEqual(p2[1], 240 / 2)
+        self.assertAlmostEqual(p2[0], 360 / 2, delta=0.5)
+        self.assertAlmostEqual(p2[1], 240 / 2, delta=0.5)
 
     @unittest.mock.patch("soccer_common.camera.TransformListener")
     @unittest.mock.patch("soccer_common.camera.rospy.Time.now")
@@ -61,8 +82,8 @@ class TestObjectLocalization(TestCase):
         c.camera_info = ci
 
         p3 = c.findCameraCoordinate([0.5, 0, 0.5])
-        self.assertAlmostEqual(p3[0], 360 / 2)
-        self.assertAlmostEqual(p3[1], 240 / 2)
+        self.assertAlmostEqual(p3[0], 360 / 2, delta=0.5)
+        self.assertAlmostEqual(p3[1], 240 / 2, delta=0.5)
 
     @unittest.mock.patch("soccer_common.camera.TransformListener")
     @unittest.mock.patch("soccer_common.camera.rospy.Time.now")
@@ -94,10 +115,12 @@ class TestObjectLocalization(TestCase):
 
     @unittest.mock.patch("soccer_common.camera.TransformListener")
     @unittest.mock.patch("soccer_common.camera.rospy.Time.now")
-    def test_fieldine_detection(self, mock_tf_listener, now):
+    def test_fieldline_detection(self, mock_tf_listener, now):
         from sensor_msgs.msg import CameraInfo, Image
 
         from soccer_object_localization.detector_fieldline import DetectorFieldline
+
+        download_dataset(url="https://drive.google.com/uc?id=1nJX6ySks_a7mESvCm3sNllmJTNpm-x2_", folder_name="fieldlines")
 
         Camera.reset_position = MagicMock()
         Camera.ready = MagicMock()
@@ -114,9 +137,9 @@ class TestObjectLocalization(TestCase):
         cvbridge = CvBridge()
 
         src_path = os.path.dirname(os.path.realpath(__file__))
-        test_path = src_path + "/../../images"
+        test_path = src_path + "/../../images/fieldlines"
         for file_name in os.listdir(test_path):
-            # file_name = "img0_-0.6805418953941712_-0.19657546078618005_-1.049088190788794.png"
+            # file_name = "img17_-3.8480280226689674_-3.15_1.5860068115632215.png"
 
             print(file_name)
             img: Mat = cv2.imread(os.path.join(test_path, file_name))
@@ -132,12 +155,17 @@ class TestObjectLocalization(TestCase):
 
             if "DISPLAY" in os.environ:
                 cv2.imshow("Before", img)
+                cv2.imwrite("/tmp/before.png", img)
 
                 if d.image_publisher.publish.call_count != 0:
                     img_out = cvbridge.imgmsg_to_cv2(d.image_publisher.publish.call_args[0][0])
                     cv2.imshow("After", img_out)
+                    cv2.imwrite("/tmp/after.png", img_out)
 
                 cv2.waitKey(0)
+
+    def test_goalpost_detection(self):
+        download_dataset(url="https://drive.google.com/uc?id=17qdnW7egoopXHvakiNnUUufP2MOjyZ18", folder_name="goal_net")
 
     @pytest.mark.skip
     def test_hsv_filter(self):

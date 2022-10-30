@@ -59,54 +59,64 @@ class DetectorFieldline(Detector):
         if not self.camera.ready():
             return
 
-        pts = []
-
         self.camera.reset_position(timestamp=img.header.stamp)
+        # Uncomment for ground truth
+        # if not self.publish_point_cloud:
+        #     self.camera.reset_position(timestamp=img.header.stamp)
+        # else:
+        #     self.camera.reset_position(timestamp=img.header.stamp, from_world_frame=True, camera_frame="/camera_gt")
         rospy.loginfo_once("Started Publishing Fieldlines")
 
         image = CvBridge().imgmsg_to_cv2(img, desired_encoding="rgb8")
         h = self.camera.calculateHorizonCoverArea()
-        image_crop = image[h + 1 : -1, :, :]
+        image_crop = image[h + 1 :, :, :]
+        # image_crop_blurred = cv2.GaussianBlur(image_crop, (3, 3), 0)
+        image_crop_blurred = cv2.bilateralFilter(image_crop, 9, 75, 75)
 
-        hsv = cv2.cvtColor(src=image_crop, code=cv2.COLOR_BGR2HSV)
+        hsv = cv2.cvtColor(src=image_crop_blurred, code=cv2.COLOR_BGR2HSV)
 
         if debug:
             cv2.imshow("CVT Color", image_crop)
+            cv2.imshow("CVT Color Contrast", image_crop_blurred)
             cv2.waitKey(0)
 
         def circular_mask(radius: int):
-            mask = np.ones((radius, radius), np.uint8)
-            for i in range(mask.shape[0]):
-                for j in range(mask.shape[1]):
-                    if np.sqrt((i - radius / 2) ** 2 + (j - radius / 2) ** 2) > radius / 2:
-                        mask[i, j] = 0
-            return mask
+            return cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (radius, radius))
 
         # Grass Mask
         # Hue > 115 needed
         grass_only = cv2.inRange(hsv, (35, 85, 0), (115, 255, 255))
-        grass_only = cv2.vconcat([np.zeros((h + 2, grass_only.shape[1]), dtype=grass_only.dtype), grass_only])
+        grass_only = cv2.vconcat([np.zeros((h + 1, grass_only.shape[1]), dtype=grass_only.dtype), grass_only])
 
-        grass_only_0 = cv2.morphologyEx(grass_only, cv2.MORPH_OPEN, circular_mask(4))
-        grass_only_1 = cv2.morphologyEx(grass_only, cv2.MORPH_CLOSE, circular_mask(4))
-        grass_only_2 = cv2.morphologyEx(grass_only_1, cv2.MORPH_OPEN, circular_mask(20))
-        grass_only_3 = cv2.morphologyEx(grass_only_2, cv2.MORPH_CLOSE, circular_mask(60))
+        # Use odd numbers for all circular masks otherwise the line will shift location
+        grass_only_0 = cv2.morphologyEx(grass_only, cv2.MORPH_OPEN, circular_mask(5))
+        grass_only_1 = cv2.morphologyEx(grass_only, cv2.MORPH_CLOSE, circular_mask(5))
+        grass_only_2 = cv2.morphologyEx(grass_only_1, cv2.MORPH_OPEN, circular_mask(21))
+        grass_only_3 = cv2.morphologyEx(grass_only_2, cv2.MORPH_CLOSE, circular_mask(61))
 
-        grass_only_morph = cv2.morphologyEx(grass_only_3, cv2.MORPH_ERODE, circular_mask(8))
+        grass_only_morph = cv2.morphologyEx(grass_only_3, cv2.MORPH_ERODE, circular_mask(9))
         grass_only_flipped = cv2.bitwise_not(grass_only)
 
         lines_only = cv2.bitwise_and(grass_only_flipped, grass_only_flipped, mask=grass_only_morph)
-        lines_only = cv2.morphologyEx(lines_only, cv2.MORPH_CLOSE, circular_mask(4))
+        lines_only = cv2.morphologyEx(lines_only, cv2.MORPH_CLOSE, circular_mask(5))
 
         if debug:
             cv2.imshow("grass_only", grass_only)
+            cv2.imwrite("/tmp/grass_only.png", grass_only)
             cv2.imshow("grass_only_0", grass_only_0)
+            cv2.imwrite("/tmp/grass_only_0.png", grass_only_0)
             cv2.imshow("grass_only_1", grass_only_1)
+            cv2.imwrite("/tmp/grass_only_1.png", grass_only_1)
             cv2.imshow("grass_only_2", grass_only_2)
+            cv2.imwrite("/tmp/grass_only_2.png", grass_only_2)
             cv2.imshow("grass_only_3", grass_only_3)
+            cv2.imwrite("/tmp/grass_only_3.png", grass_only_3)
             cv2.imshow("grass_only_morph", grass_only_morph)
+            cv2.imwrite("/tmp/grass_only_morph.png", grass_only_morph)
             cv2.imshow("grass_only_flipped", grass_only_flipped)
+            cv2.imwrite("/tmp/grass_only_flipped.png", grass_only_flipped)
             cv2.imshow("lines_only", lines_only)
+            cv2.imwrite("/tmp/lines_only.png", lines_only)
             cv2.waitKey(0)
 
         # No line detection simply publish all white points
@@ -131,6 +141,11 @@ class DetectorFieldline(Detector):
             header = Header()
             header.stamp = img.header.stamp
             header.frame_id = self.robot_name + "/odom"
+            # Uncomment for ground truth
+            # if not self.publish_point_cloud:
+            #     header.frame_id = self.robot_name + "/odom"
+            # else:
+            #     header.frame_id = "world"
             point_cloud_msg = pcl2.create_cloud_xyz32(header, points3d)
             self.point_cloud_publisher.publish(point_cloud_msg)
 

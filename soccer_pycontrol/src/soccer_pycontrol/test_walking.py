@@ -1,80 +1,75 @@
 import os
-from importlib import reload
-from types import ModuleType
-
-import numpy as np
-import pybullet as pb
-import pytest
 
 if "ROS_NAMESPACE" not in os.environ:
     os.environ["ROS_NAMESPACE"] = "/robot1"
 
-from soccer_common.transformation import Transformation
-
-real_robot = False
-run_in_ros = False
-display = True
-if "DISPLAY" not in os.environ:
-    display = False
-
-robot_model = "bez1"
-TEST_TIMEOUT = 60
-
-file_path = os.path.dirname(os.path.abspath(__file__))
-if real_robot:
-    config_path = f"{file_path}/../../config/{robot_model}.yaml"
-else:
-    config_path = f"{file_path}/../../config/{robot_model}_sim.yaml"
-    if robot_model == "bez1":
-        config_path = f"{file_path}/../../config/{robot_model}_sim_pybullet.yaml"
-
-if run_in_ros:
-    import rospy
-
-    rospy.init_node("soccer_control_test")
-    os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_strategy'")
-    os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_pycontrol'")
-    os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_trajectories'")
+import numpy as np
+import pybullet as pb
+import pytest
+from matplotlib import pyplot as plt
 
 from soccer_common.mock_ros import mock_ros
-
-mock_ros(robot_model=robot_model, real_robot=real_robot, config_path=config_path)
-
-import soccer_pycontrol.navigator
+from soccer_common.transformation import Transformation
 from soccer_pycontrol.calibration import adjust_navigation_transform
+from soccer_pycontrol.links import Links
 from soccer_pycontrol.navigator import Navigator
 from soccer_pycontrol.navigator_ros import NavigatorRos
-from soccer_pycontrol.soccerbot import Links
 
 
 class TestWalking:
-    robot_models = ["bez1"]
-
     @staticmethod
-    def reset_attributes():
-        for i in range(2):
-            for attribute_name in dir(soccer_pycontrol):
-                if attribute_name == __name__.replace(__package__ + ".", ""):
-                    continue
-                attribute = getattr(soccer_pycontrol, attribute_name)
-                if type(attribute) is ModuleType:
-                    reload(attribute)
-
-    @staticmethod
-    @pytest.fixture(params=robot_models)
-    def walker(request):
-        global robot_model
+    @pytest.fixture
+    def walker(request) -> Navigator:
         robot_model = request.param
 
-        if run_in_ros:
-            c = NavigatorRos()
+        file_path = os.path.dirname(os.path.abspath(__file__))
+        config_folder_path = f"{file_path}/../../config/"
+        config_path = config_folder_path + f"{robot_model}_sim_pybullet.yaml"
+        mock_ros(robot_model=robot_model, real_robot=False, param_path=config_path)
+        if "DISPLAY" not in os.environ:
+            c = Navigator(display=False, real_time=False)
         else:
-            TestWalking.reset_attributes()
-            c = Navigator(display=display)
+            c = Navigator(display=True, real_time=False)
+
         yield c
         del c
 
-    @pytest.mark.timeout(TEST_TIMEOUT)
+    @staticmethod
+    @pytest.fixture
+    def walker_ros(request) -> NavigatorRos:
+        robot_model = request.param
+
+        os.system(
+            "/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_strategy /robot1/soccer_pycontrol /robot1/soccer_trajectories'"
+        )
+        file_path = os.path.dirname(os.path.abspath(__file__))
+        config_folder_path = f"{file_path}/../../config/"
+        config_path = config_folder_path + f"{robot_model}_sim.yaml"
+        mock_ros(robot_model=robot_model, real_robot=False, param_path=config_path)
+
+        c = NavigatorRos()
+
+        yield c
+        del c
+
+    @staticmethod
+    @pytest.fixture
+    def walker_real_robot(request) -> NavigatorRos:
+        robot_model = request.param
+
+        os.system(
+            "/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_strategy /robot1/soccer_pycontrol /robot1/soccer_trajectories'"
+        )
+        file_path = os.path.dirname(os.path.abspath(__file__))
+        config_folder_path = f"{file_path}/../../config/"
+        config_path = config_folder_path + f"{robot_model}.yaml"
+        mock_ros(robot_model=robot_model, real_robot=True, param_path=config_path)
+
+        c = NavigatorRos()
+        yield c
+        del c
+
+    @pytest.mark.timeout(30)
     @pytest.mark.flaky(reruns=1)
     @pytest.mark.parametrize("walker", ["bez1", "bez3"], indirect=True)
     def test_ik(self, walker: Navigator):
@@ -106,14 +101,40 @@ class TestWalking:
         walk_success = walker.run(single_trajectory=True)
         assert walk_success
 
-        if not run_in_ros:
-            final_position = walker.getPose()
-            distance_offset = np.linalg.norm((final_position - goal_position.position)[0:2])
-            if robot_model == "bez1":
-                assert distance_offset < 0.08
+        final_position = walker.getPose()
+        distance_offset = np.linalg.norm((final_position - goal_position.position)[0:2])
+        assert distance_offset < 0.12
 
-    @pytest.mark.timeout(TEST_TIMEOUT)
+    @pytest.mark.skip
+    def test_walk_1_ros(self, walker_ros: NavigatorRos):
+        walker_ros.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
+        walker_ros.ready()
+        walker_ros.wait(200)
+        goal_position = Transformation([1, 0, 0], [0, 0, 0, 1])
+        walker_ros.setGoal(goal_position)
+        walk_success = walker_ros.run(single_trajectory=True)
+        assert walk_success
+
+        final_position = walker_ros.getPose()
+        distance_offset = np.linalg.norm((final_position - goal_position.position)[0:2])
+        print(f"Final distance offset {distance_offset}")
+
+    @pytest.mark.skip
+    def test_walk_1_real_robot(self, walker_ros: NavigatorRos):
+        walker_ros.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
+        walker_ros.ready()
+        walker_ros.wait(200)
+        goal_position = Transformation([1, 0, 0], [0, 0, 0, 1])
+        walker_ros.setGoal(goal_position)
+        walk_success = walker_ros.run(single_trajectory=True)
+        assert walk_success
+
+        final_position = walker_ros.getPose()
+        distance_offset = np.linalg.norm((final_position - goal_position.position)[0:2])
+
+    @pytest.mark.timeout(30)
     @pytest.mark.flaky(reruns=1)
+    @pytest.mark.parametrize("walker", ["bez1"], indirect=True)
     def test_walk_2(self, walker: Navigator):
         walker.setPose(Transformation([-0.7384, -0.008, 0], [0.00000, 0, 0, 1]))
         walker.ready()
@@ -122,8 +143,9 @@ class TestWalking:
         walk_success = walker.run(single_trajectory=True)
         assert walk_success
 
-    @pytest.mark.timeout(TEST_TIMEOUT)
+    @pytest.mark.timeout(30)
     @pytest.mark.flaky(reruns=1)
+    @pytest.mark.parametrize("walker", ["bez1"], indirect=True)
     def test_walk_3(self, walker: Navigator):
         walker.setPose(Transformation([-2.404, -1.0135, 0], [0, 0, -0.9979391070307153, 0.064168050139]))
         walker.ready()
@@ -132,8 +154,9 @@ class TestWalking:
         walk_success = walker.run(single_trajectory=True)
         assert walk_success
 
-    @pytest.mark.timeout(TEST_TIMEOUT)
+    @pytest.mark.timeout(30)
     @pytest.mark.flaky(reruns=1)
+    @pytest.mark.parametrize("walker", ["bez1"], indirect=True)
     def test_walk_4(self, walker: Navigator):
         walker.setPose(Transformation([0.3275415, 0.2841, 0.321], [0.04060593, 0.0120126, 0.86708929, -0.4963497]))
         walker.ready()
@@ -142,8 +165,9 @@ class TestWalking:
         walk_success = walker.run(single_trajectory=True)
         assert walk_success
 
-    @pytest.mark.timeout(TEST_TIMEOUT)
+    @pytest.mark.timeout(30)
     @pytest.mark.flaky(reruns=1)
+    @pytest.mark.parametrize("walker", ["bez1"], indirect=True)
     def test_walk_5(self, walker: Navigator):
         walker.setPose(Transformation([0.716, -0.4188, 0.0], [0.0149, -0.085, 0.9685, 0.2483]))
         walker.ready()
@@ -152,33 +176,9 @@ class TestWalking:
         walk_success = walker.run(single_trajectory=True)
         assert walk_success
 
-    @pytest.mark.timeout(TEST_TIMEOUT)
-    @pytest.mark.flaky(reruns=1)
-    def test_walk_6(self, walker: Navigator):
-        walker.setPose(Transformation([2.008, -0.646, 0.0], [0.0149, -0.0474, 0.99985, -0.0072]))
-        walker.wait(100)
-        walker.ready()
-        walker.setGoal(Transformation([0.00736, 0.0356, 0.0], [0, 0, 0.998, 0.0176]))
-        walk_success = walker.run(single_trajectory=True)
-        assert walk_success
-
-    @pytest.mark.timeout(TEST_TIMEOUT)
-    @pytest.mark.flaky(reruns=1)
-    def test_walk_7(self, walker: Navigator):
-        walker.setPose(
-            Transformation(
-                [2.082603318747387, 0.04499586647232634, 0.0],
-                [0.07888602209666294, -0.03018659995378454, 0.9054426772657052, 0.41597995490997813],
-            )
-        )
-        walker.ready()
-        walker.wait(100)
-        walker.setGoal(Transformation([2.5901226468203067, 0.7938447967981127, 0.0], [0, 0, -0.9987013856398979, 0.050946465244882694]))
-        walk_success = walker.run(single_trajectory=True)
-        assert walk_success
-
-    @pytest.mark.timeout(TEST_TIMEOUT)
+    @pytest.mark.timeout(30)
     @pytest.mark.flaky(reruns=2)
+    @pytest.mark.parametrize("walker", ["bez1"], indirect=True)
     def test_walk_side(self, walker: Navigator):
         walker.setPose(Transformation([0, 0, 0], [0.00000, 0, 0, 1]))
         walker.ready()
@@ -190,11 +190,11 @@ class TestWalking:
 
         final_position = walker.getPose()
         distance_offset = np.linalg.norm((final_position - goal_position.position)[0:2])
-        if robot_model == "bez1":
-            assert distance_offset < 0.08
+        assert distance_offset < 0.15
 
-    @pytest.mark.timeout(TEST_TIMEOUT)
+    @pytest.mark.timeout(30)
     @pytest.mark.flaky(reruns=2)
+    @pytest.mark.parametrize("walker", ["bez1"], indirect=True)
     def test_walk_backward(self, walker: Navigator):
         walker.setPose(Transformation([0, 0, 0], [0.00000, 0, 0, 1]))
         walker.ready()
@@ -204,12 +204,12 @@ class TestWalking:
         walk_success = walker.run(single_trajectory=True)
         final_position = walker.getPose()
         distance_offset = np.linalg.norm((final_position - goal_position.position)[0:2])
-        if robot_model == "bez1":
-            assert distance_offset < 0.08
+        assert distance_offset < 0.16
         assert walk_success
 
-    @pytest.mark.timeout(TEST_TIMEOUT)
+    @pytest.mark.timeout(30)
     @pytest.mark.flaky(reruns=1)
+    @pytest.mark.parametrize("walker", ["bez1"], indirect=True)
     def test_turn_in_place(self, walker: Navigator):
         walker.setPose(Transformation([0, 0, 0], [0.00000, 0, 0, 1]))
         walker.ready()
@@ -220,8 +220,9 @@ class TestWalking:
         walk_success = walker.run(single_trajectory=True)
         assert walk_success
 
-    @pytest.mark.timeout(TEST_TIMEOUT)
+    @pytest.mark.timeout(30)
     @pytest.mark.flaky(reruns=1)
+    @pytest.mark.parametrize("walker", ["bez1"], indirect=True)
     def test_small_movement_0(self, walker: Navigator):
         walker.setPose(Transformation([0, 0, 0], [0.00000, 0, 0, 1]))
         walker.ready()
@@ -233,8 +234,9 @@ class TestWalking:
         walk_success = walker.run(single_trajectory=True)
         assert walk_success
 
-    @pytest.mark.timeout(TEST_TIMEOUT)
+    @pytest.mark.timeout(30)
     @pytest.mark.flaky(reruns=1)
+    @pytest.mark.parametrize("walker", ["bez1"], indirect=True)
     def test_small_movement_1(self, walker: Navigator):
         walker.setPose(Transformation([0, 0, 0], [0.00000, 0, 0, 1]))
         walker.ready()
@@ -245,8 +247,9 @@ class TestWalking:
         walk_success = walker.run(single_trajectory=True)
         assert walk_success
 
-    @pytest.mark.timeout(TEST_TIMEOUT)
+    @pytest.mark.timeout(30)
     @pytest.mark.flaky(reruns=1)
+    @pytest.mark.parametrize("walker", ["bez1"], indirect=True)
     def test_small_movement_2(self, walker: Navigator):
         walker.setPose(Transformation([0, 0, 0], [0.00000, 0, 0, 1]))
         walker.ready()
@@ -257,8 +260,9 @@ class TestWalking:
         walk_success = walker.run(single_trajectory=True)
         assert walk_success
 
-    @pytest.mark.timeout(TEST_TIMEOUT)
+    @pytest.mark.timeout(30)
     @pytest.mark.flaky(reruns=1)
+    @pytest.mark.parametrize("walker", ["bez1"], indirect=True)
     def test_small_movement_3(self, walker: Navigator):
         walker.setPose(Transformation([0, 0, 0], [0.00000, 0, 0, 1]))
         walker.ready()
@@ -269,8 +273,9 @@ class TestWalking:
         walk_success = walker.run(single_trajectory=True)
         assert walk_success
 
-    @pytest.mark.timeout(TEST_TIMEOUT)
+    @pytest.mark.timeout(30)
     @pytest.mark.flaky(reruns=1)
+    @pytest.mark.parametrize("walker", ["bez1"], indirect=True)
     def test_small_movement_4(self, walker: Navigator):
         walker.setPose(Transformation([0.2489, -0.163, 0.0], [0.0284, -0.003, 0.9939, 0.01986]))
         walker.ready()
@@ -279,8 +284,9 @@ class TestWalking:
         walk_success = walker.run(single_trajectory=True)
         assert walk_success
 
-    @pytest.mark.timeout(TEST_TIMEOUT)
+    @pytest.mark.timeout(30)
     @pytest.mark.flaky(reruns=1)
+    @pytest.mark.parametrize("walker", ["bez1"], indirect=True)
     def test_small_movement_5(self, walker: Navigator):
         walker.setPose(
             Transformation(
@@ -294,8 +300,9 @@ class TestWalking:
         walk_success = walker.run(single_trajectory=True)
         assert walk_success
 
-    @pytest.mark.timeout(TEST_TIMEOUT)
+    @pytest.mark.timeout(30)
     @pytest.mark.flaky(reruns=1)
+    @pytest.mark.parametrize("walker", ["bez1"], indirect=True)
     def test_do_nothing(self, walker: Navigator):
         walker.setPose(Transformation([0, 0, 0], [0.00000, 0, 0, 1]))
         walker.ready()
@@ -305,7 +312,8 @@ class TestWalking:
         walk_success = walker.run(single_trajectory=True)
         assert walk_success
 
-    @pytest.mark.timeout(TEST_TIMEOUT)
+    @pytest.mark.timeout(30)
+    @pytest.mark.parametrize("walker", ["bez1"], indirect=True)
     def test_walk_tiny_1(self, walker: Navigator):
         walker.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
         walker.ready()
@@ -314,7 +322,8 @@ class TestWalking:
         walk_success = walker.run(single_trajectory=True)
         assert walk_success
 
-    @pytest.mark.timeout(TEST_TIMEOUT)
+    @pytest.mark.timeout(30)
+    @pytest.mark.parametrize("walker", ["bez1"], indirect=True)
     def test_walk_tiny_2(self, walker: Navigator):
         walker.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
         walker.ready()
@@ -323,7 +332,8 @@ class TestWalking:
         walk_success = walker.run(single_trajectory=True)
         assert walk_success
 
-    @pytest.mark.timeout(TEST_TIMEOUT)
+    @pytest.mark.timeout(30)
+    @pytest.mark.parametrize("walker", ["bez1"], indirect=True)
     def test_walk_tiny_3(self, walker: Navigator):
         walker.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
         walker.ready()
@@ -332,7 +342,8 @@ class TestWalking:
         walk_success = walker.run(single_trajectory=True)
         assert walk_success
 
-    @pytest.mark.timeout(TEST_TIMEOUT)
+    @pytest.mark.timeout(30)
+    @pytest.mark.parametrize("walker", ["bez1"], indirect=True)
     def test_walk_tiny_4(self, walker: Navigator):
         walker.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
         walker.ready()
@@ -380,3 +391,53 @@ class TestWalking:
         new_end_transform = adjust_navigation_transform(start_transform, end_transform)
         assert new_end_transform.orientation_euler[0] > np.pi / 4
         assert np.linalg.norm(new_end_transform.position[0:2]) > 1
+
+    @pytest.mark.timeout(30)
+    @pytest.mark.parametrize("walker", ["bez1"], indirect=True)
+    def test_imu_feedback(self, walker: Navigator):
+        walker.setPose(Transformation([0, 0, 0], [0, 0, 0, 1]))
+        walker.real_time = False
+        walker.ready()
+        walker.wait(100)
+        walker.setGoal(Transformation([1.5, 0, 0], [0, 0, 0, 1]))
+
+        get_imu_original = walker.soccerbot.get_imu
+        pitches = []
+        times = []
+
+        def walker_get_imu_patch():
+            imu_transform = get_imu_original()
+            pitches.append(imu_transform.orientation_euler[1])
+            times.append(walker.t)
+            return imu_transform
+
+        walker.soccerbot.get_imu = walker_get_imu_patch
+
+        walk_success = walker.run(single_trajectory=True)
+        assert walk_success
+        plt.plot(times, pitches, label="Pitch of robot over time")
+
+        times_after_walk = [t for t in times if t < 0]
+        pitches_after_walk = pitches[len(times_after_walk) :]
+        max_pitch_offset = round(max(pitches_after_walk) - walker.soccerbot.walking_pid.setpoint, 5)
+        min_pitch_offset = round(min(pitches_after_walk) - walker.soccerbot.walking_pid.setpoint, 5)
+        plt.axhline(max(pitches_after_walk), color="red", label=f"Max Pitch Offset {max_pitch_offset} rad")
+        plt.axhline(min(pitches_after_walk), color="red", label=f"Min Pitch Offset {min_pitch_offset} rad")
+        plt.axhline(walker.soccerbot.walking_pid.setpoint, color="green", label="Walking set point")
+        assert abs(max_pitch_offset) < 0.03
+        assert abs(min_pitch_offset) < 0.03
+
+        times_before_walk = [t for t in times if t < 0]
+        pitches_before_walk = pitches[0 : len(times_before_walk)]
+        max_pitch_pre_walk = round(max(pitches_before_walk), 5)
+        min_pitch_pre_walk = round(min(pitches_before_walk), 5)
+        assert abs(max_pitch_pre_walk) < 0.01
+        plt.axhline(max(pitches_before_walk), color="yellow", label=f"Max Pitch Pre Walk Offset {max_pitch_pre_walk} rad")
+        plt.axhline(min(pitches_before_walk), color="yellow", label=f"Min Pitch Pre Walk Offset {min_pitch_pre_walk} rad")
+
+        plt.xlabel("Time (t)")
+        plt.ylabel("Forward pitch of robot in radians")
+        plt.grid()
+        plt.legend()
+        if "DISPLAY" in os.environ:
+            plt.show()

@@ -11,7 +11,7 @@ from soccer_common.mock_ros import mock_ros
 class Test(TestCase):
     def setUp(self) -> None:
 
-        mock_ros(robot_model="bez1", real_robot=False, config_path="")
+        mock_ros(robot_model="bez1", real_robot=False, param_path="")
 
         super().setUpClass()
         self.display = True
@@ -23,7 +23,7 @@ class Test(TestCase):
         from soccer_strategy.strategy.strategy_dummy import StrategyDummy
         from soccer_strategy.strategy.strategy_stationary import StrategyStationary
 
-        mock_ros(robot_model="bez1", real_robot=False, config_path="")
+        mock_ros(robot_model="bez1", real_robot=False, param_path="")
 
         g = GameEngine2D(display=self.display, team_1_strategy=StrategyDummy, team_2_strategy=StrategyStationary, game_duration=2)
         friendly_points, opponent_points = g.run()
@@ -34,7 +34,7 @@ class Test(TestCase):
         from soccer_strategy.game_engine_2d import GameEngine2D
         from soccer_strategy.strategy.strategy_dummy import StrategyDummy
 
-        mock_ros(robot_model="bez1", real_robot=False, config_path="")
+        mock_ros(robot_model="bez1", real_robot=False, param_path="")
 
         g = GameEngine2D(display=self.display, team_1_strategy=StrategyDummy, team_2_strategy=StrategyDummy, game_duration=2)
         friendly_points, opponent_points = g.run()

@@ -100,7 +100,7 @@ class ObjectDetectionNode(object):
             # 1. preprocess image
             img = image[:, :, :3]  # get rid of alpha channel
             img = img[..., ::-1]  # convert bgr to rgb
-            img = img[max(0, h + 1) : -1, :]
+            img = img[max(0, h + 1) :, :]
             # 2. inference
 
             results = self.model(img)
@@ -137,7 +137,7 @@ class ObjectDetectionNode(object):
 
 if __name__ == "__main__":
     parser = ArgumentParser()
-    parser.add_argument("--model", dest="model_path", default="outputs/model3_feat10", help="pytorch model")
+    parser.add_argument("--model", dest="model_path", default="small_model/July14.pt", help="pytorch model")
     parser.add_argument("--num-feat", dest="num_feat", default=10, help="specify model size of the neural network")
     args, unknown = parser.parse_known_args()
 

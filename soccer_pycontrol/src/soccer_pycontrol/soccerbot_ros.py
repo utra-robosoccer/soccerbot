@@ -1,14 +1,13 @@
 import copy
+import os
 
-import rospy
 import tf
 import tf2_py
 from geometry_msgs.msg import Pose2D, PoseStamped
 from nav_msgs.msg import Odometry, Path
-from sensor_msgs.msg import Imu, JointState
+from sensor_msgs.msg import Imu
 from std_msgs.msg import Empty, Float64
 
-from soccer_common import Transformation
 from soccer_msgs.msg import RobotState
 from soccer_pycontrol.soccerbot import *
 
@@ -22,6 +21,9 @@ class SoccerbotRos(Soccerbot):
 
         super().__init__(position, useFixedBase, useCalibration)
 
+        self.grass_and_cleats_offset = rospy.get_param(
+            "grass_and_cleats_offset", 0.015
+        )  #: Additional height added by cleats and grass, consists of 1cm grass and 0.5cm cleats
         self.motor_publishers = {}
         self.pub_all_motor = rospy.Publisher("joint_command", JointState, queue_size=1)
         self.odom_publisher = rospy.Publisher("odom", Odometry, queue_size=1)
@@ -45,6 +47,12 @@ class SoccerbotRos(Soccerbot):
         self.robot_state_subscriber = rospy.Subscriber("state", RobotState, self.state_callback)
         self.robot_state = RobotState()
         self.robot_state.status = RobotState.STATUS_DISCONNECTED
+
+        #: Frequency for the head's yaw while searching and relocalizing (left and right movement)
+        self.head_yaw_freq = rospy.get_param("head_yaw_freq", 0.005)
+
+        #: Frequency for the head's while searching and relocalizing yaw (up and down movement)
+        self.head_pitch_freq = rospy.get_param("head_pitch_freq", 0.005)
 
     def state_callback(self, robot_state: RobotState):
         """
@@ -119,9 +127,9 @@ class SoccerbotRos(Soccerbot):
 
         # Get odom from odom_path
         t_adjusted = t * self.robot_odom_path.duration() / self.robot_path.duration()
-        crotch_position = self.robot_odom_path.torsoPosition(t_adjusted) @ self.torso_offset
+        torsoPosition = self.robot_odom_path.torsoPosition(t_adjusted) @ self.torso_offset
 
-        self.odom_pose = Transformation(position=crotch_position.position, quaternion=crotch_position.quaternion)
+        self.odom_pose = Transformation(position=torsoPosition.position, quaternion=torsoPosition.quaternion)
 
     def publishPath(self, robot_path=None):
         """
@@ -189,7 +197,7 @@ class SoccerbotRos(Soccerbot):
         """
 
         f = Float64()
-        f.data = self.pose.position[2]
+        f.data = self.pose.position[2] + self.grass_and_cleats_offset
         self.torso_height_publisher.publish(f)
         pass
 
@@ -215,14 +223,9 @@ class SoccerbotRos(Soccerbot):
         # TODO subscribe to foot pressure sensors
         pass
 
-    #: Frequency for the head's yaw while searching and relocalizing (left and right movement)
-    HEAD_YAW_FREQ = rospy.get_param("head_yaw_freq", 0.005)
-    #: Frequency for the head's while searching and relocalizing yaw (up and down movement)
-    HEAD_PITCH_FREQ = rospy.get_param("head_pitch_freq", 0.005)
-
     def apply_head_rotation(self):
         if self.robot_state.status in [self.robot_state.STATUS_DETERMINING_SIDE, self.robot_state.STATUS_PENALIZED]:
-            self.configuration[Joints.HEAD_1] = math.sin(-self.head_step * SoccerbotRos.HEAD_YAW_FREQ * 3) * (math.pi * 0.05)
+            self.configuration[Joints.HEAD_1] = math.sin(-self.head_step * self.head_yaw_freq * 3) * (math.pi * 0.05)
             self.head_step += 1
         elif self.robot_state.status == self.robot_state.STATUS_READY:
             try:
@@ -324,16 +327,16 @@ class SoccerbotRos(Soccerbot):
 
             else:
                 rospy.loginfo_throttle(5, "Searching for ball again")
-                self.configuration[Joints.HEAD_1] = math.sin(self.head_step * SoccerbotRos.HEAD_YAW_FREQ) * (math.pi / 4)
+                self.configuration[Joints.HEAD_1] = math.sin(self.head_step * self.head_yaw_freq) * (math.pi / 4)
                 self.configuration[Joints.HEAD_2] = math.pi * rospy.get_param("head_rotation_yaw_center", 0.185) - math.cos(
-                    self.head_step * SoccerbotRos.HEAD_PITCH_FREQ
+                    self.head_step * self.head_yaw_freq
                 ) * math.pi * rospy.get_param("head_rotation_yaw_range", 0.15)
                 self.head_step += 1
 
         elif self.robot_state.status == RobotState.STATUS_LOCALIZING:
-            self.configuration[Joints.HEAD_1] = math.cos(self.head_step * SoccerbotRos.HEAD_YAW_FREQ) * (math.pi / 4)
+            self.configuration[Joints.HEAD_1] = math.cos(self.head_step * self.head_yaw_freq) * (math.pi / 4)
             self.configuration[Joints.HEAD_2] = math.pi * rospy.get_param("head_rotation_yaw_center", 0.175) - math.sin(
-                self.head_step * SoccerbotRos.HEAD_PITCH_FREQ
+                self.head_step * self.head_yaw_freq
             ) * math.pi * rospy.get_param("head_rotation_yaw_range", 0.15)
             self.head_step += 1
         else:
