@@ -1,4 +1,3 @@
-import copy
 import os
 from pathlib import Path
 
@@ -36,6 +35,7 @@ def test_simple():
     path_ukf = []
     path_odom = []
     path_gt = []
+    path_amcl_odom = []
     path_vo = []  # Path Point Cloud
 
     odom_t_previous = None
@@ -51,14 +51,23 @@ def test_simple():
                 path_vo.append(vo_transform.pos_theta)
                 f.update(offset_transform.pos_theta)
             pass
+
+            if "DISPLAY" in os.environ:
+                map.drawPointsOnMap(current_transform, point_cloud_array)
+                plt.title(f"UKF Robot localization (t = {round(t.secs + t.nsecs * 1e-9)})")
+                plt.xlim((-5, 0))
+                plt.ylim((-4, 0))
+                plt.draw()
+                plt.waitforbuttonpress()
+
         if topic == "/tf":
             # Process ground truth information
             for transform in msg.transforms:
                 if transform.child_frame_id == "robot1/base_footprint_gt":
                     transform_gt = Transformation(geometry_msgs_transform=transform.transform)
                     path_gt.append(transform_gt.pos_theta)
-                    pass
-                pass
+                    map.drawGroundTruthOnMap(transform_gt)
+
         elif topic == "/robot1/odom_combined":
             if odom_t_previous is None:
                 odom_t_previous = Transformation(pose=msg.pose.pose, timestamp=t)

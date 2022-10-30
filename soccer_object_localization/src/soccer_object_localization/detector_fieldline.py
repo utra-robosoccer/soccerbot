@@ -146,10 +146,10 @@ class DetectorFieldline(Detector):
             # Publish fieldlines in laserscan format
             header = Header()
             header.stamp = img.header.stamp
-            header.frame_id = self.robot_name + "/odom"
+            header.frame_id = self.robot_name + "/base_footprint"
             if self.ground_truth:
                 if not self.publish_point_cloud:
-                    header.frame_id = self.robot_name + "/odom"
+                    header.frame_id = self.robot_name + "/base_footprint"
                 else:
                     header.frame_id = "world"
             point_cloud_msg = pcl2.create_cloud_xyz32(header, points3d)

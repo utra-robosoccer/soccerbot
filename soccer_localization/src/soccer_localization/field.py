@@ -1,10 +1,11 @@
 import time
 from collections import namedtuple
 from functools import cached_property
-from typing import List, Union
+from typing import List, Optional, Union
 
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib.collections import PathCollection
 
 from soccer_common import Transformation
 
@@ -34,6 +35,12 @@ class Field:
         self.distance_point_threshold = 2
         self.max_detected_line_parallel_offset_error = 0.1
         self.max_detected_line_perpendicular_offset_error = 0.3
+
+        self.points_scatter: Optional[PathCollection] = None
+        self.path_ground_truth: Optional[PathCollection] = None
+        self.points_ground_truth: [] = []
+        self.path_odom: Optional[PathCollection] = None
+        self.points_odom: [] = []
         pass
 
     @cached_property
@@ -109,14 +116,13 @@ class Field:
         plt.xlabel("Y (m)")
         plt.ylabel("X (m)")
         plt.title("UKF Robot localization")
+        plt.show(block=False)
 
-    def matchPointsWithMap(self, current_transform: Transformation, point_cloud_array: np.array) -> Union[Transformation, None]:
-        start = time.time()
+    def filterWorldFramePoints(self, current_transform: Transformation, point_cloud_array: np.array) -> Optional[np.array]:
         # Filter points by distance from current transform
         points_distance_from_current_sq = point_cloud_array[:, 0] ** 2 + point_cloud_array[:, 1] ** 2
         point_cloud_meets_dist_threshold_index = np.where(points_distance_from_current_sq < self.distance_point_threshold**2)
-        tmp = point_cloud_array[point_cloud_meets_dist_threshold_index, :]
-        point_cloud_array = np.reshape(tmp, tmp.shape[1:])
+        point_cloud_array = point_cloud_array[point_cloud_meets_dist_threshold_index]
         if len(point_cloud_array) == 0:
             return None
 
@@ -124,7 +130,14 @@ class Field:
         world_frame_points = np.stack([current_transform.position[0:2]] * len(point_cloud_array), axis=1) + (
             rotation_matrix @ point_cloud_array[:, 0:2].T
         )
+        return world_frame_points
 
+    def matchPointsWithMap(self, current_transform: Transformation, point_cloud_array: np.array) -> Union[Transformation, None]:
+        start = time.time()
+        # Filter points by distance from current transform
+        world_frame_points = self.filterWorldFramePoints(current_transform, point_cloud_array)
+        if world_frame_points is None:
+            return
         # Get closest line to each point
         distance_matrix = np.zeros((len(self.lines), world_frame_points.shape[1]))
         diff_x = np.zeros((len(self.lines), world_frame_points.shape[1]))
@@ -196,10 +209,30 @@ class Field:
         angle_diff = angle_new - angle_original
         angle_diff_avg = np.average(angle_diff)
 
-        # plt.scatter(world_frame_points[0, :], world_frame_points[1, :], marker=".", s=1, label="Points", color="red")
-
         offset_transform = Transformation(pos_theta=[diff_x_avg, diff_y_avg, angle_diff_avg])
 
         end = time.time()
         print(f"Offset Transform: {offset_transform.pos_theta}. Time took {(end - start)}")
         return offset_transform
+
+    def drawPointsOnMap(self, current_transform: Transformation, point_cloud_array: np.array):
+        world_frame_points = self.filterWorldFramePoints(current_transform, point_cloud_array)
+
+        if self.points_scatter is not None:
+            self.points_scatter.remove()
+
+        if self.path_odom is not None:
+            self.path_odom.remove()
+
+        self.points_odom.append(current_transform.pos_theta)
+        a = np.array(self.points_odom)
+        self.path_odom = plt.scatter(a[:, 0], a[:, 1], marker=".", s=1, label="Robot Odom", color="orange")
+        self.points_scatter = plt.scatter(world_frame_points[0, :], world_frame_points[1, :], marker=".", s=1, label="Points", color="red")
+
+    def drawGroundTruthOnMap(self, current_transform: Transformation):
+        if self.path_ground_truth is not None:
+            self.path_ground_truth.remove()
+
+        self.points_ground_truth.append(current_transform.pos_theta)
+        a = np.array(self.points_ground_truth)
+        self.path_ground_truth = plt.scatter(a[:, 0], a[:, 1], marker=".", s=1, label="Robot Ground Truth", color="yellow")
