@@ -3,6 +3,7 @@ import math
 
 import numpy as np
 import rospy
+import rviz
 
 from soccer_common.transformation import Transformation
 from soccer_strategy.ball import Ball
@@ -98,11 +99,9 @@ class RobotControlled(Robot):
 
         header = Header()
         header.stamp = rospy.Time.now()
-        header.frame_id = "world"
-        ang = Range(header, 1, abs(nav_angle_diff), 3, 5, 5)
+        header.frame_id = f"robot{self.robot_id}/torso"
+        ang = Range(header, 1, abs(nav_angle_diff), 1, 2, 2)
         self.kick_angle_pub.publish(ang)
-
-        print(ang)
 
         if distance_of_player_to_ball < rospy.get_param("min_kick_distance", 0.20) and abs(nav_angle_diff) < rospy.get_param("min_kick_angle", 0.4):
             if nav_angle_diff > 0:
