@@ -95,6 +95,7 @@
         /$(arg robot_name)/set_pose
         /$(arg robot_name)/state
         /$(arg robot_name)/torso_height
+        /$(arg robot_name)/strategy/kick_ang
         /reset_ball
         /tf
         /tf_static

@@ -7,7 +7,8 @@ import rospy
 from soccer_common.transformation import Transformation
 from soccer_strategy.ball import Ball
 from soccer_strategy.robot import Robot
-
+from sensor_msgs.msg import Range
+from std_msgs.msg import Header
 
 class RobotControlled(Robot):
     def __init__(
@@ -17,6 +18,7 @@ class RobotControlled(Robot):
         role=Robot.Role.UNASSIGNED,
         status=Robot.Status.DISCONNECTED,
         position=np.array([0, 0, 0]),
+
     ):
         super().__init__(robot_id=robot_id, team=team, role=role, status=status, position=position)
 
@@ -29,6 +31,7 @@ class RobotControlled(Robot):
         self.max_kick_speed = 2
         self.navigation_goal_localized_time = rospy.Time.now()
         self.kick_with_right_foot = True
+        self.kick_angle_pub = rospy.Publisher("strategy/kick_ang", Range, queue_size=1, latch=True)
 
     def shorten_navigation_position(self, goal_position):
         """
@@ -92,6 +95,14 @@ class RobotControlled(Robot):
 
         nav_angle_diff = player_angle - robot_ball_angle
         distance_of_player_to_ball = np.linalg.norm(player_position - ball_position)
+
+        header = Header()
+        header.stamp = rospy.Time.now()
+        header.frame_id = "world"
+        ang = Range(header, 1, abs(nav_angle_diff), 3, 5, 5)
+        self.kick_angle_pub.publish(ang)
+
+        print(ang)
 
         if distance_of_player_to_ball < rospy.get_param("min_kick_distance", 0.20) and abs(nav_angle_diff) < rospy.get_param("min_kick_angle", 0.4):
             if nav_angle_diff > 0:
