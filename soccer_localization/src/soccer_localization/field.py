@@ -41,6 +41,13 @@ class Field:
         self.points_ground_truth: [] = []
         self.path_odom: Optional[PathCollection] = None
         self.points_odom: [] = []
+
+        self.path_odom_uncorrected: Optional[PathCollection] = None
+        self.points_odom_uncorrected: [] = []
+
+        self.path_vo: Optional[PathCollection] = None
+        self.points_vo: [] = []
+
         pass
 
     @cached_property
@@ -236,3 +243,19 @@ class Field:
         self.points_ground_truth.append(current_transform.pos_theta)
         a = np.array(self.points_ground_truth)
         self.path_ground_truth = plt.scatter(a[:, 0], a[:, 1], marker=".", s=1, label="Robot Ground Truth", color="yellow")
+
+    def drawUncorrectedOdom(self, current_transform: Transformation):
+        if self.path_odom_uncorrected is not None:
+            self.path_odom_uncorrected.remove()
+
+        self.points_odom_uncorrected.append(current_transform.pos_theta)
+        a = np.array(self.points_odom_uncorrected)
+        self.path_odom_uncorrected = plt.scatter(a[:, 0], a[:, 1], marker=".", s=1, label="Robot Odom Uncorrected", color="blue")
+
+    def drawVoOnMap(self, current_transform: Transformation):
+        if self.path_vo is not None:
+            self.path_vo.remove()
+
+        self.points_vo.append(current_transform.pos_theta)
+        a = np.array(self.points_vo)
+        self.path_vo = plt.scatter(a[:, 0], a[:, 1], marker=".", s=1, label="Robot Visual Odometry", color="red")

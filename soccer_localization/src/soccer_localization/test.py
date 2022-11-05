@@ -35,7 +35,6 @@ def test_simple():
     path_ukf = []
     path_odom = []
     path_gt = []
-    path_amcl_odom = []
     path_vo = []  # Path Point Cloud
 
     odom_t_previous = None
@@ -48,15 +47,18 @@ def test_simple():
             offset_transform = map.matchPointsWithMap(current_transform, point_cloud_array)
             if offset_transform is not None:
                 vo_transform = current_transform @ offset_transform
-                path_vo.append(vo_transform.pos_theta)
-                f.update(offset_transform.pos_theta)
+                vo_pos_theta = vo_transform.pos_theta
+                path_vo.append(vo_pos_theta)
+                map.drawVoOnMap(vo_transform)
+                f.update(vo_pos_theta)
             pass
 
             if "DISPLAY" in os.environ:
                 map.drawPointsOnMap(current_transform, point_cloud_array)
                 plt.title(f"UKF Robot localization (t = {round(t.secs + t.nsecs * 1e-9)})")
-                plt.xlim((-5, 0))
-                plt.ylim((-4, 0))
+                plt.xlim((-5, -3))
+                plt.ylim((-3.5, 1))
+                plt.legend()
                 plt.draw()
                 plt.waitforbuttonpress()
 
@@ -86,7 +88,9 @@ def test_simple():
                 f.draw_covariance()
 
             path_ukf.append(f.ukf.x)
-            path_odom.append((initial_pose @ odom_t).pos_theta)
+            odom_uncorrected = initial_pose @ odom_t
+            path_odom.append(odom_uncorrected.pos_theta)
+            map.drawUncorrectedOdom(odom_uncorrected)
             odom_t_previous = odom_t
 
     path_ukf = np.array(path_ukf)
