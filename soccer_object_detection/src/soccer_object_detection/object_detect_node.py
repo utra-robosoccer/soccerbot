@@ -92,6 +92,9 @@ class ObjectDetectionNode(object):
         ]:
             return
 
+        if self.game_state.gameState != GameState.GAMESTATE_PLAYING:
+            return
+
         rospy.loginfo_once("Object Detection Receiving image")
         # width x height x channels (bgra8)
         image = self.br.imgmsg_to_cv2(msg)
@@ -132,11 +135,7 @@ class ObjectDetectionNode(object):
                     results.render()
                     self.pub_detection.publish(self.br.cv2_to_imgmsg(results.ims[0], encoding="bgr8"))
 
-                if (
-                    self.pub_boundingbox.get_num_connections() > 0
-                    and len(bbs_msg.bounding_boxes) > 0
-                    and self.game_state.gameState == GameState.GAMESTATE_PLAYING
-                ):
+                if self.pub_boundingbox.get_num_connections() > 0 and len(bbs_msg.bounding_boxes) > 0:
                     self.pub_boundingbox.publish(bbs_msg)
 
             except ROSException as re:
