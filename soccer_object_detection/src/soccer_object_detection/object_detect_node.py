@@ -18,7 +18,7 @@ from rospy import ROSException
 from sensor_msgs.msg import Image
 
 from soccer_common.camera import Camera
-from soccer_msgs.msg import BoundingBox, BoundingBoxes, RobotState
+from soccer_msgs.msg import BoundingBox, BoundingBoxes, GameState, RobotState
 
 
 class Label(enum.IntEnum):
@@ -74,6 +74,11 @@ class ObjectDetectionNode(object):
         )  # Large buff size (https://answers.ros.org/question/220502/image-subscriber-lag-despite-queue-1/)
         self.robot_state_subscriber = rospy.Subscriber("state", RobotState, self.robot_state_callback)
         self.robot_state = RobotState()
+        self.game_state_subscriber = rospy.Subscriber("gamestate", GameState, self.game_state_callback)
+        self.game_state = GameState()
+
+    def game_state_callback(self, game_state: GameState):
+        self.game_state = game_state
 
     def robot_state_callback(self, robot_state: RobotState):
         self.robot_state = robot_state
@@ -127,7 +132,11 @@ class ObjectDetectionNode(object):
                     results.render()
                     self.pub_detection.publish(self.br.cv2_to_imgmsg(results.ims[0], encoding="bgr8"))
 
-                if self.pub_boundingbox.get_num_connections() > 0 and len(bbs_msg.bounding_boxes) > 0:
+                if (
+                    self.pub_boundingbox.get_num_connections() > 0
+                    and len(bbs_msg.bounding_boxes) > 0
+                    and self.game_state.gameState == GameState.GAMESTATE_PLAYING
+                ):
                     self.pub_boundingbox.publish(bbs_msg)
 
             except ROSException as re:
