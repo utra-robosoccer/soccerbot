@@ -167,6 +167,87 @@ class TestObjectLocalization(TestCase):
     @unittest.mock.patch("soccer_common.camera.TransformListener")
     @unittest.mock.patch("soccer_common.camera.rospy.Time.now")
     def test_goalpost_detection(self, mock_tf_listener, now):
+        import numpy as np
+
+        # Draws viewcone lines from the robot's position to the left or right goaline to check whether either post is
+        # visible to the robot
+        def check_net(robot_x, robot_y, robot_yaw, check_left_net=True):
+            camera_fov = 1.39626  # rads
+            left_net_coords = [[-4.5, 1.3], [-4.5, -1.3]]
+            right_net_coords = [[4.5, 1.3], [4.5, -1.3]]
+            if check_left_net:
+                net_coords = left_net_coords
+                net_str = "Left net"
+            else:  # Check right net
+                net_coords = right_net_coords
+                net_str = "Right net"
+
+            x_dist = net_coords[0][0] - robot_x
+            top_post_y = net_coords[0][1]
+            bottom_post_y = net_coords[1][1]
+
+            # Get slope of viewcone edge lines
+            vcone_l_edge_slope = math.tan(robot_yaw + camera_fov / 2)
+            vcone_r_edge_slope = math.tan(robot_yaw - camera_fov / 2)
+
+            vcone_l_edge_goal_line_y = vcone_l_edge_slope * x_dist + robot_y
+            vcone_r_edge_goal_line_y = vcone_r_edge_slope * x_dist + robot_y
+
+            # TODO Need some intelligence for dealing with the viewcone line intersection being behind the robot:
+            # ex: https://www.desmos.com/calculator/b9lndsb1bl, black line has positive slope
+            # maybe check if POI is greater than abs(robot_y)?
+            y_u_bound = max(vcone_r_edge_goal_line_y, vcone_l_edge_goal_line_y)
+            y_l_bound = min(vcone_r_edge_goal_line_y, vcone_l_edge_goal_line_y)
+
+            is_net_visible = False
+            if y_l_bound <= top_post_y <= y_u_bound:
+                print(f"{net_str}'s top post in viewcone")
+                is_net_visible = True
+            if y_l_bound <= bottom_post_y <= y_u_bound:
+                print(f"{net_str}'s bottom post in viewcone")
+                is_net_visible = True
+
+            return is_net_visible
+
+        def check_left_net(robot_pose):
+            robot_x, robot_y, robot_yaw = robot_pose
+            is_net_visible = check_net(robot_x, robot_y, robot_yaw, check_left_net=True)
+            visible_net = "LEFT" if is_net_visible else None
+            return visible_net
+
+        def check_right_net(robot_pose):
+            robot_x, robot_y, robot_yaw = robot_pose
+            is_net_visible = check_net(robot_x, robot_y, robot_yaw, check_left_net=False)
+            visible_net = "RIGHT" if is_net_visible else None
+            return visible_net
+
+        # Determines which net is visible, if any, returning "RIGHT", "LEFT" or None
+        def determine_net_side(robot_x, robot_y, robot_yaw):
+            robot_pose = [robot_x, robot_y, robot_yaw]
+            if robot_y <= 0:
+                if robot_yaw > np.pi / 2:
+                    visible_net = check_left_net(robot_pose)
+                elif robot_yaw < np.pi / 2:
+                    visible_net = check_right_net(robot_pose)
+                else:  # robot_yaw == np.pi / 2
+                    if robot_x >= 0:
+                        visible_net = check_right_net(robot_pose)
+                    else:  # robot_x < 0:
+                        visible_net = check_left_net(robot_pose)
+
+            else:  # robot_y > 0
+                if robot_yaw > -np.pi / 2:
+                    visible_net = check_right_net(robot_pose)
+                elif robot_yaw < -np.pi / 2:
+                    visible_net = check_left_net(robot_pose)
+                else:  # robot_yaw == -np.pi / 2
+                    if robot_x >= 0:
+                        visible_net = check_right_net(robot_pose)
+                    else:  # robot_x < 0:
+                        visible_net = check_left_net(robot_pose)
+
+            return visible_net
+
         from sensor_msgs.msg import CameraInfo, Image
 
         from soccer_object_localization.detector_goalpost import DetectorGoalPost
@@ -194,6 +275,8 @@ class TestObjectLocalization(TestCase):
             file_name_no_ext = os.path.splitext(file_name)[0]
             x, y, yaw = file_name_no_ext.split("_")[1:]
             print(f"Parsed (x, y, yaw): ({x}, {y}, {yaw}) from filename.")
+            visible_net = determine_net_side(float(x), float(y), float(yaw))
+            print(f"{visible_net} is visible")
 
             img: Mat = cv2.imread(os.path.join(test_path, file_name))
 
