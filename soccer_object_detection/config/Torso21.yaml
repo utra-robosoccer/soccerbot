@@ -1,0 +1,34 @@
+# YOLOv5 🚀 by Ultralytics, GPL-3.0 license
+# COCO 2017 dataset http://cocodataset.org by Microsoft
+# Example usage: python train.py --data coco.yaml
+# parent
+# ├── yolov5
+# └── datasets
+#     └── coco  ← downloads here (20.1 GB)
+
+# Train/val/test sets as 1) dir: path/to/imgs, 2) file: path/to/imgs.txt, or 3) list: [path/to/imgs1, path/to/imgs2, ..]
+train: /home/robosoccer/hdd/dataset/data/train/data # train images 8000 images
+val: /home/robosoccer/hdd/dataset/data/validation # val images 1000 images
+test: /home/robosoccer/hdd/dataset/data/test/data # test 1000 images
+
+nc: 7
+
+# Classes
+names:
+  [
+    "ball",
+    "goalpost",
+    "robot",
+    "L-Intersection",
+    "T-Intersection",
+    "X-Intersection",
+    "top_bar",
+  ]
+#names:
+#  0: ball
+#  1: goalpost
+#  2: robot
+#  3: L-Intersection
+#  4: T-Intersection
+#  5: X-Intersection
+#  6: top_bar
