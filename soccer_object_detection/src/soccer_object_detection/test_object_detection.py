@@ -11,7 +11,7 @@ import yaml
 from cv2 import Mat
 
 from soccer_common.mock_ros import mock_ros
-from soccer_msgs.msg import RobotState
+from soccer_msgs.msg import GameState, RobotState
 
 mock_ros()
 
@@ -72,6 +72,7 @@ class Test(TestCase):
             n.pub_boundingbox.publish = MagicMock()
 
             n.robot_state.status = RobotState.STATUS_READY
+            n.game_state.gameState = GameState.GAMESTATE_PLAYING
 
             ci = CameraInfo()
             ci.height = img.shape[0]
