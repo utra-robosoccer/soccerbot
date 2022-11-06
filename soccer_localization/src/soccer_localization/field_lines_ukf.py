@@ -35,7 +35,7 @@ class FieldLinesUKF:
 
         self.ukf.x = np.array([-4, -3.15, 1.57])  # Initial state
         self.ukf.P = np.diag([0.0001, 0.0001, 0.01])  # Initial covariance
-        self.ukf.R = np.diag([1e4, 1e4, 1e4])  # Noise from measurement updates (x, y, theta)
+        self.ukf.R = np.diag([1e1, 1e1, 1e4])  # Noise from measurement updates (x, y, theta)
         self.ukf.Q = np.diag([1e-4, 1e-4, 1e-6])  # Noise from navigation movements
 
         # ROS information

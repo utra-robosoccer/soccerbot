@@ -46,19 +46,20 @@ def test_points_correction(t_start):
             if t.secs < t_start:
                 continue
 
-            map.drawGroundTruthOnMap(transform_gt)
+            map.drawPathOnMap(transform_gt, label="Ground Truth", color="brown")
 
             point_cloud = pcl2.read_points_list(msg)
             point_cloud_array = np.array(point_cloud)
             current_transform = Transformation(pos_theta=transform_gt.pos_theta)
             offset_transform = map.matchPointsWithMap(current_transform, point_cloud_array)
             if offset_transform is not None:
-                vo_transform = current_transform @ offset_transform
-                map.drawVoOnMap(vo_transform)
-            pass
-
-            if "DISPLAY" in os.environ:
-                map.drawPointsOnMap(current_transform, point_cloud_array)
+                # pp = offset_transform.pos_theta
+                # pp[2] = 0
+                # offset_transform.pos_theta = pp
+                vo_transform = offset_transform @ current_transform
+                map.drawPathOnMap(vo_transform, label="VO Odometry", color="blue")
+                map.drawPointsOnMap(current_transform, point_cloud_array, label="Odom Points", color="brown")
+                map.drawPointsOnMap(vo_transform, point_cloud_array, label="Odom Points Adjusted", color="red")
                 plt.title(f"UKF Robot localization (t = {round(t.secs + t.nsecs * 1e-9)})")
                 plt.xlim((-5, -3))
                 plt.ylim((-3.5, 1))
@@ -93,15 +94,13 @@ def test_simple():
             current_transform = Transformation(pos_theta=f.ukf.x)
             offset_transform = map.matchPointsWithMap(current_transform, point_cloud_array)
             if offset_transform is not None:
-                vo_transform = current_transform @ offset_transform
+                vo_transform = offset_transform @ current_transform
                 vo_pos_theta = vo_transform.pos_theta
                 path_vo.append(vo_pos_theta)
-                map.drawVoOnMap(vo_transform)
+                map.drawPathOnMap(vo_transform, label="VO Odometry", color="red")
                 f.update(vo_pos_theta)
-            pass
-
-            if "DISPLAY" in os.environ:
-                map.drawPointsOnMap(current_transform, point_cloud_array)
+                map.drawPathOnMap(Transformation(pos_theta=f.ukf.x), label="VO Odometry", color="orange")
+                map.drawPointsOnMap(current_transform, point_cloud_array, label="Odom Points", color="red")
                 plt.title(f"UKF Robot localization (t = {round(t.secs + t.nsecs * 1e-9)})")
                 plt.xlim((-5, -3))
                 plt.ylim((-3.5, 1))
@@ -115,7 +114,7 @@ def test_simple():
                 if transform.child_frame_id == "robot1/base_footprint_gt":
                     transform_gt = Transformation(geometry_msgs_transform=transform.transform)
                     path_gt.append(transform_gt.pos_theta)
-                    map.drawGroundTruthOnMap(transform_gt)
+                    map.drawPathOnMap(transform_gt, label="Ground Truth", color="black")
 
         elif topic == "/robot1/odom_combined":
             if odom_t_previous is None:
@@ -137,7 +136,7 @@ def test_simple():
             path_ukf.append(f.ukf.x)
             odom_uncorrected = initial_pose @ odom_t
             path_odom.append(odom_uncorrected.pos_theta)
-            map.drawUncorrectedOdom(odom_uncorrected)
+            map.drawPathOnMap(odom_uncorrected, label="Uncorrected Odom", color="blue")
             odom_t_previous = odom_t
 
     path_ukf = np.array(path_ukf)

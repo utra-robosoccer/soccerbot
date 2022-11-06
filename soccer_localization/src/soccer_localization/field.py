@@ -1,7 +1,7 @@
 import time
 from collections import namedtuple
 from functools import cached_property
-from typing import List, Optional, Union
+from typing import Dict, List, Optional, Tuple, Union
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -36,19 +36,8 @@ class Field:
         self.max_detected_line_parallel_offset_error = 0.1
         self.max_detected_line_perpendicular_offset_error = 0.3
 
-        self.points_scatter: Optional[PathCollection] = None
-        self.path_ground_truth: Optional[PathCollection] = None
-        self.points_ground_truth: [] = []
-        self.path_odom: Optional[PathCollection] = None
-        self.points_odom: [] = []
-
-        self.path_odom_uncorrected: Optional[PathCollection] = None
-        self.points_odom_uncorrected: [] = []
-
-        self.path_vo: Optional[PathCollection] = None
-        self.points_vo: [] = []
-
-        pass
+        self.path_plots: Dict[str, PathCollection] = {}
+        self.path_points: Dict[str, list] = {}
 
     @cached_property
     def lines(self) -> List[Union[Line, Circle]]:
@@ -77,6 +66,17 @@ class Field:
         lines.append(Line(Point(x=-(A - 2 * E) / 2, y=-F / 2), Point(x=-(A - 2 * E) / 2, y=F / 2)))
         lines.append(Line(Point(x=(A - 2 * E) / 2, y=-F / 2), Point(x=(A - 2 * E) / 2, y=F / 2)))
 
+        # Crosses
+        def create_cross(pos_x):
+            plt.fill_between(x=[pos_x - 0.1, pos_x + 0.1], y1=-lw / 2, y2=lw / 2, color="white")
+            plt.fill_betweenx(y=[-0.1, 0.1], x1=pos_x - lw / 2, x2=pos_x + lw / 2, color="white")
+            lines.append(Line(Point(pos_x - 0.1, y=0), Point(pos_x + 0.1, y=0)))
+            lines.append(Line(Point(pos_x, y=-0.1), Point(pos_x, y=0.1)))
+
+        # create_cross(A / 2 - G)
+        # create_cross(-A / 2 + G)
+        # create_cross(0)
+
         # Circle
         lines.append(Circle(center=Point(x=0, y=0), radius=H))
 
@@ -88,40 +88,22 @@ class Field:
         plt.axes().set_facecolor("limegreen")
 
         # Circle
-        plt.gca().add_patch(plt.Circle((0, 0), H / 2 + lw / 2, color="white"))
-        plt.gca().add_patch(plt.Circle((0, 0), H / 2 - lw / 2, color="limegreen"))
+        for line in self.lines:
+            if type(line) is Circle:
+                plt.gca().add_patch(plt.Circle(line.center, line.radius + lw / 2, color="white"))
+                plt.gca().add_patch(plt.Circle(line.center, line.radius - lw / 2, color="limegreen"))
+                break
 
-        # Outer rectangle
-        plt.fill_between(x=[-A / 2 - lw / 2, A / 2 + lw / 2], y1=B / 2 - lw / 2, y2=B / 2 + lw / 2, color="white")
-        plt.fill_between(x=[-A / 2 - lw / 2, A / 2 + lw / 2], y1=-B / 2 - lw / 2, y2=-B / 2 + lw / 2, color="white")
-        plt.fill_betweenx(y=[-B / 2 - lw / 2, B / 2 + lw / 2], x1=-A / 2 - lw / 2, x2=-A / 2 + lw / 2, color="white")
-        plt.fill_betweenx(y=[-B / 2 - lw / 2, B / 2 + lw / 2], x1=A / 2 - lw / 2, x2=A / 2 + lw / 2, color="white")
-        plt.fill_betweenx(y=[-B / 2 - lw / 2, B / 2 + lw / 2], x1=-lw / 2, x2=lw / 2, color="white")
+        # Lines
+        for line in self.lines:
+            if type(line) is Line:
+                if abs(line.p2.x - line.p1.x) > abs(line.p2.y - line.p1.y):
+                    plt.fill_between(x=[line.p1.x - lw / 2, line.p2.x + lw / 2], y1=line.p1.y - lw / 2, y2=line.p1.y + lw / 2, color="white")
+                else:
+                    plt.fill_betweenx(y=[line.p1.y - lw / 2, line.p2.y + lw / 2], x1=line.p1.x - lw / 2, x2=line.p1.x + lw / 2, color="white")
 
-        # Penalty Area (large box)
-        def draw_double_boxes(h, v):
-            plt.fill_between(x=[-A / 2, -A / 2 + h], y1=v / 2 - lw / 2, y2=v / 2 + lw / 2, color="white")
-            plt.fill_between(x=[-A / 2, -A / 2 + h], y1=-v / 2 - lw / 2, y2=-v / 2 + lw / 2, color="white")
-            plt.fill_between(x=[A / 2 - h, A / 2], y1=v / 2 - lw / 2, y2=v / 2 + lw / 2, color="white")
-            plt.fill_between(x=[A / 2 - h, A / 2], y1=-v / 2 - lw / 2, y2=-v / 2 + lw / 2, color="white")
-            plt.fill_betweenx(y=[-v / 2 - lw / 2, v / 2 + lw / 2], x1=-A / 2 + h - lw / 2, x2=-A / 2 + h + lw / 2, color="white")
-            plt.fill_betweenx(y=[-v / 2 - lw / 2, v / 2 + lw / 2], x1=A / 2 - h - lw / 2, x2=A / 2 - h + lw / 2, color="white")
-
-        draw_double_boxes(J, K)
-        draw_double_boxes(E, F)
-        draw_double_boxes(-C, D)
-
-        # Crosses
-        def draw_cross(pos_x):
-            plt.fill_between(x=[pos_x - 0.1, pos_x + 0.1], y1=-lw / 2, y2=lw / 2, color="white")
-            plt.fill_betweenx(y=[-0.1, 0.1], x1=pos_x - lw / 2, x2=pos_x + lw / 2, color="white")
-
-        draw_cross(A / 2 - G)
-        draw_cross(-A / 2 + G)
-        draw_cross(0)
-
-        plt.xlabel("Y (m)")
-        plt.ylabel("X (m)")
+        plt.xlabel("X (m)")
+        plt.ylabel("Y (m)")
         plt.title("UKF Robot localization")
         plt.show(block=False)
 
@@ -174,7 +156,7 @@ class Field:
                     y_top = line.p2.y + lw / 2 + self.max_detected_line_parallel_offset_error
                     x = line.p1.x
 
-                    x_diff = world_frame_points[1, :] - x
+                    x_diff = world_frame_points[0, :] - x
                     distance_matrix[line_id, :] = np.where(
                         (world_frame_points[1, :] >= y_bottom) & (world_frame_points[1, :] <= y_top), x_diff**2, float("inf")
                     )
@@ -204,8 +186,8 @@ class Field:
         closest_line_diff_x = closest_line_diff_x[index_meets_dist_threshold]
         closest_line_diff_y = closest_line_diff_y[index_meets_dist_threshold]
 
-        diff_x_avg = np.average(closest_line_diff_x)
-        diff_y_avg = np.average(closest_line_diff_y)
+        diff_x_avg = np.sum(closest_line_diff_x) / np.count_nonzero(closest_line_diff_x)
+        diff_y_avg = np.sum(closest_line_diff_y) / np.count_nonzero(closest_line_diff_y)
 
         center_of_all_points = np.average(points_meet_dist_threshold, axis=1)
         points_meet_dist_threshold_delta = np.subtract(points_meet_dist_threshold, np.expand_dims(center_of_all_points, axis=1))
@@ -216,46 +198,28 @@ class Field:
         angle_diff = angle_new - angle_original
         angle_diff_avg = np.average(angle_diff)
 
-        offset_transform = Transformation(pos_theta=[diff_x_avg, diff_y_avg, angle_diff_avg])
+        offset_transform = Transformation(pos_theta=[-diff_x_avg, -diff_y_avg, 0])
 
         end = time.time()
         print(f"Offset Transform: {offset_transform.pos_theta}. Time took {(end - start)}")
         return offset_transform
 
-    def drawPointsOnMap(self, current_transform: Transformation, point_cloud_array: np.array):
+    def drawPointsOnMap(self, current_transform: Transformation, point_cloud_array: np.array, label: str, color: str):
         world_frame_points = self.filterWorldFramePoints(current_transform, point_cloud_array)
 
-        if self.points_scatter is not None:
-            self.points_scatter.remove()
+        if label in self.path_plots:
+            self.path_plots[label].remove()
 
-        if self.path_odom is not None:
-            self.path_odom.remove()
+        self.path_plots[label] = plt.scatter(world_frame_points[0, :], world_frame_points[1, :], marker=".", s=1, label=label, color=color)
 
-        self.points_odom.append(current_transform.pos_theta)
-        a = np.array(self.points_odom)
-        self.path_odom = plt.scatter(a[:, 0], a[:, 1], marker=".", s=1, label="Robot Odom", color="orange")
-        self.points_scatter = plt.scatter(world_frame_points[0, :], world_frame_points[1, :], marker=".", s=1, label="Points", color="red")
+    def drawPathOnMap(self, current_transform: Transformation, label: str, color: str):
+        if label not in self.path_points:
+            self.path_points[label] = []
 
-    def drawGroundTruthOnMap(self, current_transform: Transformation):
-        if self.path_ground_truth is not None:
-            self.path_ground_truth.remove()
+        self.path_points[label].append(current_transform.pos_theta)
 
-        self.points_ground_truth.append(current_transform.pos_theta)
-        a = np.array(self.points_ground_truth)
-        self.path_ground_truth = plt.scatter(a[:, 0], a[:, 1], marker=".", s=1, label="Robot Ground Truth", color="yellow")
+        if label in self.path_plots:
+            self.path_plots[label].remove()
 
-    def drawUncorrectedOdom(self, current_transform: Transformation):
-        if self.path_odom_uncorrected is not None:
-            self.path_odom_uncorrected.remove()
-
-        self.points_odom_uncorrected.append(current_transform.pos_theta)
-        a = np.array(self.points_odom_uncorrected)
-        self.path_odom_uncorrected = plt.scatter(a[:, 0], a[:, 1], marker=".", s=1, label="Robot Odom Uncorrected", color="blue")
-
-    def drawVoOnMap(self, current_transform: Transformation):
-        if self.path_vo is not None:
-            self.path_vo.remove()
-
-        self.points_vo.append(current_transform.pos_theta)
-        a = np.array(self.points_vo)
-        self.path_vo = plt.scatter(a[:, 0], a[:, 1], marker=".", s=1, label="Robot Visual Odometry", color="red")
+        a = np.array(self.path_points[label])
+        self.path_plots[label] = plt.scatter(a[:, 0], a[:, 1], marker=".", s=1, label=label, color=color)
