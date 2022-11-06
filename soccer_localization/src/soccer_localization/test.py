@@ -4,6 +4,7 @@ from pathlib import Path
 import gdown
 import matplotlib.pyplot as plt
 import numpy as np
+import pytest
 import rosbag
 import sensor_msgs.point_cloud2 as pcl2
 
@@ -12,21 +13,67 @@ from soccer_localization.field import Field
 from soccer_localization.field_lines_ukf import FieldLinesUKF
 
 
+def retrieve_bag():
+    src_path = os.path.dirname(os.path.realpath(__file__))
+    test_path = src_path + "/test/localization.bag"
+    bag_path = Path(test_path)
+    if not bag_path.is_file():
+        print(f"Bag not found at {test_path}. Downloading ...")
+        url = "https://drive.google.com/uc?id=1HpBAFg1FFYhiCaEN5K81b2sQ3rq9i3Nx"
+        gdown.download(url, test_path, quiet=False)
+    return test_path
+
+
+@pytest.mark.parametrize("t_start", [(10), (20), (30)])
+def test_points_correction(t_start):
+    plt.figure("Localization")
+
+    map = Field()
+    map.draw()
+
+    bag = rosbag.Bag(retrieve_bag())
+
+    transform_gt = None
+    for topic, msg, t in bag.read_messages(topics=["/robot1/odom_combined", "/tf", "/robot1/field_point_cloud"]):
+
+        if topic == "/tf":
+            # Process ground truth information
+            for transform in msg.transforms:
+                if transform.child_frame_id == "robot1/base_footprint_gt":
+                    transform_gt = Transformation(geometry_msgs_transform=transform.transform)
+
+        elif topic == "/robot1/field_point_cloud":
+            if t.secs < t_start:
+                continue
+
+            map.drawGroundTruthOnMap(transform_gt)
+
+            point_cloud = pcl2.read_points_list(msg)
+            point_cloud_array = np.array(point_cloud)
+            current_transform = Transformation(pos_theta=transform_gt.pos_theta)
+            offset_transform = map.matchPointsWithMap(current_transform, point_cloud_array)
+            if offset_transform is not None:
+                vo_transform = current_transform @ offset_transform
+                map.drawVoOnMap(vo_transform)
+            pass
+
+            if "DISPLAY" in os.environ:
+                map.drawPointsOnMap(current_transform, point_cloud_array)
+                plt.title(f"UKF Robot localization (t = {round(t.secs + t.nsecs * 1e-9)})")
+                plt.xlim((-5, -3))
+                plt.ylim((-3.5, 1))
+                plt.legend()
+                plt.draw()
+                plt.waitforbuttonpress()
+
+
 def test_simple():
     plt.figure("Localization")
 
     map = Field()
     map.draw()
-    src_path = os.path.dirname(os.path.realpath(__file__))
-    test_path = src_path + "/test/localization.bag"
-    bag_path = Path(test_path)
 
-    if not bag_path.is_file():
-        print(f"Bag not found at {test_path}. Downloading ...")
-        url = "https://drive.google.com/uc?id=1HpBAFg1FFYhiCaEN5K81b2sQ3rq9i3Nx"
-        gdown.download(url, test_path, quiet=False)
-
-    bag = rosbag.Bag(test_path)
+    bag = rosbag.Bag(retrieve_bag())
 
     f = FieldLinesUKF()
     initial_pose = Transformation(pos_theta=[-4, -3.15, np.pi / 2])
@@ -62,7 +109,7 @@ def test_simple():
                 plt.draw()
                 plt.waitforbuttonpress()
 
-        if topic == "/tf":
+        elif topic == "/tf":
             # Process ground truth information
             for transform in msg.transforms:
                 if transform.child_frame_id == "robot1/base_footprint_gt":
