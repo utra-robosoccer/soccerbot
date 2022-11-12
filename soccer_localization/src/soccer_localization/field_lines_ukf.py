@@ -1,5 +1,6 @@
+import math
 import os
-from math import atan2, cos, sin, sqrt, tan
+from math import atan2, cos, nan, sin, sqrt, tan
 from typing import Optional
 
 import cv2
@@ -13,8 +14,6 @@ from nav_msgs.msg import OccupancyGrid
 from soccer_common.transformation import Transformation
 from soccer_common.utils import wrapToPi
 
-dt = 0.5
-
 
 # Adapted from https://github.com/rlabbe/Kalman-and-Bayesian-Filters-in-Python/blob/master/10-Unscented-Kalman-Filter.ipynb
 class FieldLinesUKF:
@@ -25,7 +24,7 @@ class FieldLinesUKF:
             dim_z=3,
             fx=self.move,
             hx=self.Hx,
-            dt=dt,
+            dt=0.01,
             points=points_fn,
             x_mean_fn=self.state_mean,
             z_mean_fn=self.z_mean,
@@ -37,10 +36,6 @@ class FieldLinesUKF:
         self.ukf.P = np.diag([0.0001, 0.0001, 0.01])  # Initial covariance
         self.ukf.R = np.diag([1e1, 1e1, 1e4])  # Noise from measurement updates (x, y, theta)
         self.ukf.Q = np.diag([1e-4, 1e-4, 1e-6])  # Noise from navigation movements
-
-        # ROS information
-        self.map_subscriber = rospy.Subscriber("map", OccupancyGrid, self.map_update)
-        self.map: Optional[OccupancyGrid] = None
 
     def map_update(self, map: OccupancyGrid):
         self.map = map
@@ -90,9 +85,12 @@ class FieldLinesUKF:
     def predict(self, u, dt):
         assert dt >= 0
         self.ukf.predict(dt=dt, u=u)
+        assert not math.isnan(self.ukf.x[0])
 
     def update(self, z):
+        assert not any((math.isnan(z[i]) for i in range(0, 3)))
         self.ukf.update(z)
+        assert not math.isnan(self.ukf.x[0])
 
     def draw_covariance(self):
         plot_covariance((self.ukf.x[0], self.ukf.x[1]), self.ukf.P[0:2, 0:2], std=1, facecolor="k", alpha=0.1)

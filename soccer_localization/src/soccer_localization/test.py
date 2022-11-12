@@ -24,7 +24,7 @@ def retrieve_bag():
     return test_path
 
 
-@pytest.mark.parametrize("t_start", [(10), (20), (30)])
+@pytest.mark.parametrize("t_start", [(60)])
 def test_points_correction(t_start):
     plt.figure("Localization")
 
@@ -70,6 +70,7 @@ def test_points_correction(t_start):
 
 def test_simple():
     plt.figure("Localization")
+    debug = False
 
     map = Field()
     map.draw()
@@ -97,16 +98,17 @@ def test_simple():
                 vo_transform = offset_transform @ current_transform
                 vo_pos_theta = vo_transform.pos_theta
                 path_vo.append(vo_pos_theta)
-                map.drawPathOnMap(vo_transform, label="VO Odometry", color="red")
                 f.update(vo_pos_theta)
-                map.drawPathOnMap(Transformation(pos_theta=f.ukf.x), label="VO Odometry", color="orange")
-                map.drawPointsOnMap(current_transform, point_cloud_array, label="Odom Points", color="red")
-                plt.title(f"UKF Robot localization (t = {round(t.secs + t.nsecs * 1e-9)})")
-                plt.xlim((-5, -3))
-                plt.ylim((-3.5, 1))
-                plt.legend()
-                plt.draw()
-                plt.waitforbuttonpress()
+                if debug:
+                    map.drawPathOnMap(vo_transform, label="VO Odometry", color="red")
+                    map.drawPathOnMap(Transformation(pos_theta=f.ukf.x), label="VO Odometry", color="orange")
+                    map.drawPointsOnMap(current_transform, point_cloud_array, label="Odom Points", color="red")
+                    plt.title(f"UKF Robot localization (t = {round(t.secs + t.nsecs * 1e-9)})")
+                    plt.xlim((-5, -3))
+                    plt.ylim((-3.5, 1))
+                    plt.legend()
+                    plt.draw()
+                    plt.waitforbuttonpress()
 
         elif topic == "/tf":
             # Process ground truth information
@@ -114,7 +116,8 @@ def test_simple():
                 if transform.child_frame_id == "robot1/base_footprint_gt":
                     transform_gt = Transformation(geometry_msgs_transform=transform.transform)
                     path_gt.append(transform_gt.pos_theta)
-                    map.drawPathOnMap(transform_gt, label="Ground Truth", color="black")
+                    if debug:
+                        map.drawPathOnMap(transform_gt, label="Ground Truth", color="black")
 
         elif topic == "/robot1/odom_combined":
             if odom_t_previous is None:
@@ -136,7 +139,8 @@ def test_simple():
             path_ukf.append(f.ukf.x)
             odom_uncorrected = initial_pose @ odom_t
             path_odom.append(odom_uncorrected.pos_theta)
-            map.drawPathOnMap(odom_uncorrected, label="Uncorrected Odom", color="blue")
+            if debug:
+                map.drawPathOnMap(odom_uncorrected, label="Uncorrected Odom", color="blue")
             odom_t_previous = odom_t
 
     path_ukf = np.array(path_ukf)

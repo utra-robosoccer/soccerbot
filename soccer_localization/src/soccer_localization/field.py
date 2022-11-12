@@ -32,7 +32,7 @@ class Field:
     def __init__(self):
         # Dimensions given here https://cdn.robocup.org/hl/wp/2021/06/V-HL21_Rules_v4.pdf
 
-        self.distance_point_threshold = 2
+        self.distance_point_threshold = 2.2
         self.max_detected_line_parallel_offset_error = 0.1
         self.max_detected_line_perpendicular_offset_error = 0.3
 
@@ -73,8 +73,8 @@ class Field:
             lines.append(Line(Point(pos_x - 0.1, y=0), Point(pos_x + 0.1, y=0)))
             lines.append(Line(Point(pos_x, y=-0.1), Point(pos_x, y=0.1)))
 
-        # create_cross(A / 2 - G)
-        # create_cross(-A / 2 + G)
+        create_cross(A / 2 - G)
+        create_cross(-A / 2 + G)
         # create_cross(0)
 
         # Circle
@@ -186,8 +186,18 @@ class Field:
         closest_line_diff_x = closest_line_diff_x[index_meets_dist_threshold]
         closest_line_diff_y = closest_line_diff_y[index_meets_dist_threshold]
 
-        diff_x_avg = np.sum(closest_line_diff_x) / np.count_nonzero(closest_line_diff_x)
-        diff_y_avg = np.sum(closest_line_diff_y) / np.count_nonzero(closest_line_diff_y)
+        closest_line_diff_x_valid_count = np.count_nonzero(closest_line_diff_x)
+        closest_line_diff_y_valid_count = np.count_nonzero(closest_line_diff_y)
+        if closest_line_diff_x_valid_count > 0:
+            diff_x_avg = np.sum(closest_line_diff_x) / closest_line_diff_x_valid_count
+        else:
+            diff_x_avg = 0
+        if closest_line_diff_y_valid_count > 0:
+            diff_y_avg = np.sum(closest_line_diff_y) / closest_line_diff_y_valid_count
+        else:
+            diff_y_avg = 0
+        assert not np.isnan(diff_x_avg)
+        assert not np.isnan(diff_y_avg)
 
         center_of_all_points = np.average(points_meet_dist_threshold, axis=1)
         points_meet_dist_threshold_delta = np.subtract(points_meet_dist_threshold, np.expand_dims(center_of_all_points, axis=1))
