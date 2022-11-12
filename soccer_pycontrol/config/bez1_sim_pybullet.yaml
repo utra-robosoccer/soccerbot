@@ -11,10 +11,17 @@ calibration_trans_a2: 0.6773232887293177
 # Xactual = a * Xdesired
 calibration_rot_a: 0.7511609891960288
 
-walking_Kp: 3.0
+# below sets the pitch of the body. 0.01 means 0.01 radian forward (pitch angle)
+walking_Kp: 3
 walking_Ki: 0.0000
 walking_Kd: 20.2
-walking_setpoint: 0.02
+walking_setpoint: 0.01
+
+# The parameters for the left right PID controller for the robot
+walking_lr_Kp: 0.3
+walking_lr_Ki: 0.02
+walking_lr_Kd: 0.25
+walking_lr_setpoint: 0
 
 standing_Kp: 2.0
 standing_Ki: 0.015

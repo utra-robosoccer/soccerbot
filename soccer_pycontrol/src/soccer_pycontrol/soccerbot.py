@@ -144,6 +144,15 @@ class Soccerbot:
             output_limits=(-1.57, 1.57),
         )
 
+        #: PID values to adjust the torso's front and back movement while walking
+        self.walking_lr_pid = PID(
+            Kp=rospy.get_param("walking_lr_Kp", 0.8),
+            Kd=rospy.get_param("walking_lr_Kd", 0.0),
+            Ki=rospy.get_param("walking_lr_Ki", 0.0005),
+            setpoint=rospy.get_param("walking_lr_setpoint", -0.01),
+            output_limits=(-1.57, 1.57),
+        )
+
         self.get_ready_rate = rospy.get_param("get_ready_rate", 0.02)
 
     def get_angles(self):
@@ -544,10 +553,19 @@ class Soccerbot:
         if pose is None:
             return
 
-        [_, pitch, _] = pose.orientation_euler
+        [roll, pitch, yaw] = pose.orientation_euler
+
+        # Front back PID control using the leg motors
         F = self.walking_pid.update(pitch)
         self.configuration_offset[Joints.LEFT_LEG_3] = F
         self.configuration_offset[Joints.RIGHT_LEG_3] = F
+
+        # Left Right PID control using the leg motors
+        G = self.walking_lr_pid.update(roll)
+        self.configuration_offset[Joints.LEFT_LEG_1] = G
+        self.configuration_offset[Joints.RIGHT_LEG_1] = G
+        # self.configuration_offset[Joints.LEFT_LEG_5] = G
+        # self.configuration_offset[Joints.RIGHT_LEG_5] = G
         return F
 
     def apply_imu_feedback_standing(self, pose: Transformation):

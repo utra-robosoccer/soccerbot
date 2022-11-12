@@ -3,6 +3,10 @@
 # Translation calibration parameters
 # Xactual = a * Xdesired^2 + b * Xdesired (between 0 and 0.2m)
 # Xactual = a2 * Xdesired (after 0.2m)
+#calibration_trans_a: 1.4096852899498937
+#calibration_trans_b: 0.4569002790963995
+#calibration_trans_a2: 0.6888511983169123
+
 calibration_trans_a: 1.4096852899498937
 calibration_trans_b: 0.4569002790963995
 calibration_trans_a2: 0.6888511983169123
