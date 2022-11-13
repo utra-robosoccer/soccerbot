@@ -6,11 +6,13 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pytest
 import rosbag
+import rospy
 import sensor_msgs.point_cloud2 as pcl2
 
 from soccer_common.transformation import Transformation
 from soccer_localization.field import Field
 from soccer_localization.field_lines_ukf import FieldLinesUKF
+from soccer_localization.field_lines_ukf_ros import FieldLinesUKFROS
 
 
 def retrieve_bag():
@@ -68,7 +70,9 @@ def test_points_correction(t_start):
                 plt.waitforbuttonpress()
 
 
-def test_simple():
+def test_walk_forward():
+    rospy.init_node("test")
+
     plt.figure("Localization")
     debug = False
 
@@ -77,27 +81,28 @@ def test_simple():
 
     bag = rosbag.Bag(retrieve_bag())
 
-    f = FieldLinesUKF()
+    f = FieldLinesUKFROS()
     initial_pose = Transformation(pos_theta=[-4, -3.15, np.pi / 2])
     f.ukf.x = initial_pose.pos_theta
 
     path_ukf = []
+    path_ukf_t = []
     path_odom = []
+    path_odom_t = []
     path_gt = []
+    path_gt_t = []
     path_vo = []  # Path Point Cloud
+    path_vo_t = []
 
     odom_t_previous = None
     predict_it = 0
     for topic, msg, t in bag.read_messages(topics=["/robot1/odom_combined", "/tf", "/robot1/field_point_cloud"]):
         if topic == "/robot1/field_point_cloud":
-            point_cloud = pcl2.read_points_list(msg)
-            point_cloud_array = np.array(point_cloud)
             current_transform = Transformation(pos_theta=f.ukf.x)
-            offset_transform = map.matchPointsWithMap(current_transform, point_cloud_array)
-            if offset_transform is not None:
-                vo_transform = offset_transform @ current_transform
-                vo_pos_theta = vo_transform.pos_theta
+            point_cloud_array, vo_transform, vo_pos_theta = f.field_point_cloud_callback(msg)
+            if vo_pos_theta is not None:
                 path_vo.append(vo_pos_theta)
+                path_vo_t.append(t.to_sec())
                 f.update(vo_pos_theta)
                 if debug:
                     map.drawPathOnMap(vo_transform, label="VO Odometry", color="red")
@@ -116,37 +121,40 @@ def test_simple():
                 if transform.child_frame_id == "robot1/base_footprint_gt":
                     transform_gt = Transformation(geometry_msgs_transform=transform.transform)
                     path_gt.append(transform_gt.pos_theta)
+                    path_gt_t.append(t.to_sec())
                     if debug:
                         map.drawPathOnMap(transform_gt, label="Ground Truth", color="black")
 
         elif topic == "/robot1/odom_combined":
-            if odom_t_previous is None:
-                odom_t_previous = Transformation(pose=msg.pose.pose, timestamp=t)
-                continue
-            odom_t = Transformation(pose=msg.pose.pose, timestamp=t)
-
-            diff_transformation: Transformation = np.linalg.inv(odom_t_previous) @ odom_t
-            dt = odom_t.timestamp - odom_t_previous.timestamp
-            dt_secs = dt.secs + dt.nsecs * 1e-9
-            if dt_secs == 0:
+            odom_t = f.odom_callback(msg)
+            if odom_t is None:
                 continue
 
-            f.predict(diff_transformation.pos_theta / dt_secs, dt_secs)
+            # Draw covariance
             predict_it += 1
             if predict_it % 40 == 0:
                 f.draw_covariance()
 
+            # Add path UKF
             path_ukf.append(f.ukf.x)
+            path_ukf_t.append(t.to_sec())
+
+            # Draw uncorrect odom
             odom_uncorrected = initial_pose @ odom_t
             path_odom.append(odom_uncorrected.pos_theta)
+            path_odom_t.append(t.to_sec())
             if debug:
                 map.drawPathOnMap(odom_uncorrected, label="Uncorrected Odom", color="blue")
-            odom_t_previous = odom_t
 
     path_ukf = np.array(path_ukf)
     path_odom = np.array(path_odom)
     path_gt = np.array(path_gt)
     path_vo = np.array(path_vo)
+
+    path_ukf_t = np.array(path_ukf_t)
+    path_odom_t = np.array(path_odom_t)
+    path_gt_t = np.array(path_gt_t)
+    path_vo_t = np.array(path_vo_t)
 
     # Add the patch to the Axes
     plt.plot(path_odom[:, 0], path_odom[:, 1], color="yellow", linewidth=0.5, label="Odom Path")
@@ -158,9 +166,25 @@ def test_simple():
     plt.tight_layout()
     plt.legend()
 
-    plt.show(block=True)
+    plt.show(block=False)
 
-    plt.figure("Error X, Y, Z")
+    def plt_dim_error(dim=0, label="X"):
+        plt.figure(f"{label} Error")
+        plt.plot(path_odom_t, path_odom[:, dim], color="yellow", linewidth=0.5, label="Odom Path")
+        plt.plot(path_ukf_t, path_ukf[:, dim], color="green", linewidth=0.5, label="UKF Path")
+        plt.plot(path_gt_t, path_gt[:, dim], color="orange", linewidth=0.5, label="Ground Truth Path")
+        plt.scatter(path_vo_t, path_vo[:, dim], color="red", marker=".", s=1, label="VO Points")
+        plt.grid(visible=True)
+        plt.legend()
+        plt.xlabel("t (s)")
+        plt.ylabel(label)
+
+    # Plot X Error
+    plt_dim_error(0, "X")
+    plt_dim_error(1, "Y")
+    plt_dim_error(2, "Theta")
+
+    plt.show(block=True)
 
     pass
 

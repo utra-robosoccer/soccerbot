@@ -1,6 +1,6 @@
 import numpy as np
 import rospy
-from geometry_msgs.msg import Pose, PoseStamped
+from geometry_msgs.msg import Pose, PoseStamped, PoseWithCovarianceStamped
 from geometry_msgs.msg import Transform as GeometryMsgsTransform
 from scipy.spatial.transform import Rotation as R
 from scipy.spatial.transform import Slerp
@@ -21,6 +21,7 @@ class Transformation(np.ndarray):
         pos_theta: np.array = None,
         pose: Pose = None,
         pose_stamped: PoseStamped = None,
+        pose_with_covariance_stamped: PoseWithCovarianceStamped = None,
         geometry_msgs_transform: GeometryMsgsTransform = None,
         dh: np.array = None,
         timestamp: rospy.Time = None,
@@ -81,6 +82,10 @@ class Transformation(np.ndarray):
         elif pose_stamped is not None:
             cls.pose = pose_stamped.pose
             cls.timestamp = pose_stamped.header.stamp
+        elif pose_with_covariance_stamped is not None:
+            cls.pose = pose_with_covariance_stamped.pose.pose
+            cls.pose_covariance = pose_with_covariance_stamped.pose.covariance
+            cls.timestamp = pose_with_covariance_stamped.header.stamp
         else:
             cls.position = position
             cls.quaternion = quaternion
@@ -167,6 +172,10 @@ class Transformation(np.ndarray):
         self.orientation_euler = [pos_theta[2], 0, 0]
 
     @property
+    def pose_theta_covariance_array(self) -> np.array:
+        return self.pose_covariance_array[(0, 1, 5), :][:, (0, 1, 5)]
+
+    @property
     def pose(self) -> Pose:
         """
         Representation of the transformation in the ros Pose format
@@ -227,6 +236,22 @@ class Transformation(np.ndarray):
         t.header.frame_id = "world"
         t.pose = self.pose
         return t
+
+    @property
+    def pose_covariance_array(self) -> np.array:
+        return np.reshape(self.pose_covariance, (6, 6))
+
+    @property
+    def pose_with_covariance_stamped(self) -> PoseWithCovarianceStamped:
+        """
+        The transformation represented in the PoseStamped format
+        """
+        p = PoseWithCovarianceStamped()
+        p.header.stamp = rospy.Time.now()
+        p.header.frame_id = "world"
+        p.pose.pose = self.pose
+        p.pose.covariance = self.pose_covariance
+        return p
 
     @staticmethod
     def distance(t1, t2) -> float:

@@ -180,11 +180,11 @@ class SoccerbotRos(Soccerbot):
         o.pose.pose.position.z = 0
 
         # fmt: off
-        o.pose.covariance = [1E-2, 0, 0, 0, 0, 0,
-                             0, 1E-2, 0, 0, 0, 0,
-                             0, 0, 1E-6, 0, 0, 0,
-                             0, 0, 0, 1E-6, 0, 0,
-                             0, 0, 0, 0, 1E-6, 0,
+        o.pose.covariance = [1e-4, 0, 0, 0, 0, 0,
+                             0, 1e-4, 0, 0, 0, 0,
+                             0, 0, 1E6, 0, 0, 0,
+                             0, 0, 0, 1E6, 0, 0,
+                             0, 0, 0, 0, 1E6, 0,
                              0, 0, 0, 0, 0, 1E-2]
         # fmt: on
         self.odom_publisher.publish(o)
