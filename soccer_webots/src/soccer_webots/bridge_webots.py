@@ -28,7 +28,7 @@ from soccer_webots import messages_pb2
 class GameControllerBridge:
     def __init__(self):
         rospy.init_node("game_controller_bridge")
-        robot_name = rospy.get_param("robot_name", "robot1")
+        robot_name = os.environ["ROS_NAMESPACE"].replace("/", "")
         self.base_frame = robot_name
         self.MIN_FRAME_STEP = 16  # ms
         self.MIN_CONTROL_STEP = 8  # ms

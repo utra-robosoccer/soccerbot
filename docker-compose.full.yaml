@@ -18,6 +18,7 @@ services:
       - ./external/webots/projects/samples/contests/robocup/controllers/referee/team_1.json:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/team_1.json:rw
       - ./external/webots/projects/samples/contests/robocup/controllers/referee/team_2.json:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/team_2.json:rw
       - ./external/webots/projects/samples/contests/robocup/protos/:/usr/local/webots/projects/samples/contests/robocup/protos/:rw
+      - ./external/webots/projects/samples/contests/robocup/controllers/referee/game.json:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/game.json:rw
 
   friendly1:
     extends:
