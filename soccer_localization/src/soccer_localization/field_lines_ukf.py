@@ -34,8 +34,8 @@ class FieldLinesUKF:
 
         self.ukf.x = np.array([-4, -3.15, 1.57])  # Initial state
         self.ukf.P = np.diag([0.0004, 0.0004, 0.002])  # Initial covariance (2cm, 2cm, 3 degrees)
-        self.ukf.R = np.diag([1, 0.04, 1e1])  # Noise from measurement updates (x, y, theta), trust the y more than the x
-        self.ukf.Q = np.diag([4e-5, 4e-5, 2e-5])  # Noise from navigation movements
+        self.ukf.R = np.diag([1, 1, 1e1])  # Noise from measurement updates (x, y, theta), trust the y more than the x
+        self.ukf.Q = np.diag([4e-4, 4e-4, 2e-5])  # Noise from navigation movements (2cm 2cm)
 
     def map_update(self, map: OccupancyGrid):
         self.map = map
@@ -93,4 +93,4 @@ class FieldLinesUKF:
         assert not math.isnan(self.ukf.x[0])
 
     def draw_covariance(self):
-        plot_covariance((self.ukf.x[0], self.ukf.x[1]), self.ukf.P[0:2, 0:2], std=3, facecolor="k", alpha=0.1)
+        plot_covariance((self.ukf.x[0], self.ukf.x[1]), self.ukf.P[0:2, 0:2], std=1, facecolor="k", alpha=0.1)

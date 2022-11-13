@@ -19,6 +19,7 @@ class FieldLinesUKFROS(FieldLinesUKF):
     def __init__(self):
         super().__init__()
 
+        self.initial_pose_initiated = False
         self.odom_subscriber = rospy.Subscriber("odom_combined", PoseWithCovarianceStamped, self.odom_callback, queue_size=1)
         self.field_point_cloud_subscriber = rospy.Subscriber("field_point_cloud", PointCloud2, self.field_point_cloud_callback, queue_size=1)
         self.initial_pose_subscriber = rospy.Subscriber("initialpose", PoseWithCovarianceStamped, self.initial_pose_callback, queue_size=1)
@@ -72,6 +73,8 @@ class FieldLinesUKFROS(FieldLinesUKF):
         return None, None, None
 
     def broadcast_tf_position(self, timestamp):
+        if not self.initial_pose_initiated:
+            return
 
         odom_to_base_footprint = Transformation(pos_theta=self.ukf.x) @ scipy.linalg.inv(self.odom_t_previous)
 
@@ -84,6 +87,8 @@ class FieldLinesUKFROS(FieldLinesUKF):
         )
 
     def publish_amcl_pose(self, timestamp):
+        if not self.initial_pose_initiated:
+            return
         amcl_pose = Transformation(pos_theta=self.ukf.x, pose_theta_covariance_array=self.ukf.P).pose_with_covariance_stamped
         amcl_pose.header.stamp = timestamp
         self.amcl_pose_publisher.publish(amcl_pose)
@@ -91,3 +96,5 @@ class FieldLinesUKFROS(FieldLinesUKF):
     def initial_pose_callback(self, pose_stamped: PoseWithCovarianceStamped):
         self.initial_pose = Transformation(pose_with_covariance_stamped=pose_stamped)
         self.ukf.x = self.initial_pose.pos_theta
+        self.ukf.P = self.initial_pose.pose_theta_covariance_array
+        self.initial_pose_initiated = True

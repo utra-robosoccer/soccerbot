@@ -170,6 +170,7 @@ def test_walk_forward():
 
     def plt_dim_error(dim=0, label="X"):
         plt.figure(f"{label} Error")
+        plt.title(f"{label} Dimension Odom, UKF estimate, Ground Truth and Visual Odometry")
         plt.plot(path_odom_t, path_odom[:, dim], color="yellow", linewidth=0.5, label="Odom Path")
         plt.plot(path_ukf_t, path_ukf[:, dim], color="green", linewidth=0.5, label="UKF Path")
         plt.plot(path_gt_t, path_gt[:, dim], color="orange", linewidth=0.5, label="Ground Truth Path")
