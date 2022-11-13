@@ -3,9 +3,10 @@ from typing import Optional
 
 import numpy as np
 import rospy
+import scipy.linalg
 import sensor_msgs.point_cloud2 as pcl2
 import tf
-from geometry_msgs.msg import PoseStamped, PoseWithCovarianceStamped
+from geometry_msgs.msg import PoseWithCovarianceStamped
 from sensor_msgs.msg import PointCloud2
 
 # Adapted from https://github.com/rlabbe/Kalman-and-Bayesian-Filters-in-Python/blob/master/10-Unscented-Kalman-Filter.ipynb
@@ -20,7 +21,8 @@ class FieldLinesUKFROS(FieldLinesUKF):
 
         self.odom_subscriber = rospy.Subscriber("odom_combined", PoseWithCovarianceStamped, self.odom_callback, queue_size=1)
         self.field_point_cloud_subscriber = rospy.Subscriber("field_point_cloud", PointCloud2, self.field_point_cloud_callback, queue_size=1)
-        self.initial_pose_subscriber = rospy.Subscriber("initialpose", PoseStamped, self.initial_pose_callback, queue_size=1)
+        self.initial_pose_subscriber = rospy.Subscriber("initialpose", PoseWithCovarianceStamped, self.initial_pose_callback, queue_size=1)
+        self.amcl_pose_publisher = rospy.Publisher("amcl_pose", PoseWithCovarianceStamped, queue_size=1)
         self.map = Field()
 
         self.initial_pose = Transformation(pos_theta=[-4, -3.15, np.pi / 2])  # TODO get this
@@ -48,10 +50,13 @@ class FieldLinesUKFROS(FieldLinesUKF):
         self.predict(u=diff_transformation.pos_theta / dt_secs, dt=dt_secs)
         self.odom_t_previous = odom_t
 
-        self.broadcast_tf_position()
+        self.broadcast_tf_position(pose_msg.header.stamp)
+        self.publish_amcl_pose(timestamp=pose_msg.header.stamp)
+
         return odom_t
 
     def field_point_cloud_callback(self, point_cloud: PointCloud2):
+        stamp = point_cloud.header.stamp
         point_cloud = pcl2.read_points_list(point_cloud)
         point_cloud_array = np.array(point_cloud)
         current_transform = Transformation(pos_theta=self.ukf.x)
@@ -61,14 +66,28 @@ class FieldLinesUKFROS(FieldLinesUKF):
             vo_transform = offset_transform @ current_transform
             vo_pos_theta = vo_transform.pos_theta
             self.update(vo_pos_theta)
-            self.broadcast_tf_position()
+            self.broadcast_tf_position(timestamp=stamp)
+            self.publish_amcl_pose(timestamp=stamp)
             return point_cloud_array, vo_transform, vo_pos_theta
         return None, None, None
 
-    def broadcast_tf_position(self):
-        t = Transformation(pos_theta=self.ukf.x)
-        self.br.sendTransform(t.position, t.quaternion, rospy.Time.now(), f"{os.environ.get('ROS_NAMESPACE', 'robot1')}/odom", "world")
+    def broadcast_tf_position(self, timestamp):
 
-    def initial_pose_callback(self, pose_stamped: PoseStamped):
-        self.initial_pose = Transformation(pose_stamped=pose_stamped)
+        odom_to_base_footprint = Transformation(pos_theta=self.ukf.x) @ scipy.linalg.inv(self.odom_t_previous)
+
+        self.br.sendTransform(
+            odom_to_base_footprint.position,
+            odom_to_base_footprint.quaternion,
+            timestamp,
+            f"{os.environ.get('ROS_NAMESPACE', 'robot1')}/odom",
+            "world",
+        )
+
+    def publish_amcl_pose(self, timestamp):
+        amcl_pose = Transformation(pos_theta=self.ukf.x, pose_theta_covariance_array=self.ukf.P).pose_with_covariance_stamped
+        amcl_pose.header.stamp = timestamp
+        self.amcl_pose_publisher.publish(amcl_pose)
+
+    def initial_pose_callback(self, pose_stamped: PoseWithCovarianceStamped):
+        self.initial_pose = Transformation(pose_with_covariance_stamped=pose_stamped)
         self.ukf.x = self.initial_pose.pos_theta

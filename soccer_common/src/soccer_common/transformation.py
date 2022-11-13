@@ -19,6 +19,7 @@ class Transformation(np.ndarray):
         matrix: np.array = None,
         euler: np.array = None,
         pos_theta: np.array = None,
+        pose_theta_covariance_array: np.array = None,
         pose: Pose = None,
         pose_stamped: PoseStamped = None,
         pose_with_covariance_stamped: PoseWithCovarianceStamped = None,
@@ -37,7 +38,10 @@ class Transformation(np.ndarray):
         :param matrix: 4x4 transformation matrix, includes both position and rotation
         :param euler: Orientation represented in euler format (roll, pitch, yaw)
         :param pos_theta: 2D position and theta format (x, y, theta/yaw)
+        :param pose_theta_covariance_array: Covariance matrix for position and theta format etc diag([x_var, y_var, theta/yaw_var])
         :param pose: Takes a geometry_msg.Pose object and converts it
+        :param pose_stamped: Takes a geometry_msg.PoseStamped object and converts it
+        :param pose_with_covariance_stamped: Takes a geometry_msg.PoseWithCovarianceStamped object and converts it
         :type pose: :class:`Transformation`
         :param dh: (d, theta, r, alpha)
         See `DH <https://en.wikipedia.org/wiki/Field_of_view>`_
@@ -75,6 +79,8 @@ class Transformation(np.ndarray):
             cls.position = position
         elif pos_theta is not None:
             cls.pos_theta = pos_theta
+            if pose_theta_covariance_array is not None:
+                cls.pose_theta_covariance_array = pose_theta_covariance_array
         elif pose is not None:
             cls.pose = pose
         elif geometry_msgs_transform is not None:
@@ -175,6 +181,11 @@ class Transformation(np.ndarray):
     def pose_theta_covariance_array(self) -> np.array:
         return self.pose_covariance_array[(0, 1, 5), :][:, (0, 1, 5)]
 
+    @pose_theta_covariance_array.setter
+    def pose_theta_covariance_array(self, pose_theta_covariance_array):
+        full_matrix = np.insert(np.insert(pose_theta_covariance_array, [2, 2, 2], 0, axis=1), [2, 2, 2], 0, axis=0)
+        self.pose_covariance = full_matrix.flatten()
+
     @property
     def pose(self) -> Pose:
         """
@@ -250,7 +261,7 @@ class Transformation(np.ndarray):
         p.header.stamp = rospy.Time.now()
         p.header.frame_id = "world"
         p.pose.pose = self.pose
-        p.pose.covariance = self.pose_covariance
+        p.pose.covariance = list(self.pose_covariance)
         return p
 
     @staticmethod

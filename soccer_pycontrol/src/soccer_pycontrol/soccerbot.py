@@ -25,7 +25,7 @@ class Soccerbot:
     The main class for soccerbot, which receives and sends information to pybullet, inherited by ROS
     """
 
-    def __init__(self, pose, useFixedBase=False, useCalibration=True):
+    def __init__(self, pose: Transformation, useFixedBase=False, useCalibration=True):
         """
         Initialization function for soccerbot. Does a series of calculations based on the URDF file for standing, walking poses
 
@@ -145,6 +145,9 @@ class Soccerbot:
         )
 
         self.get_ready_rate = rospy.get_param("get_ready_rate", 0.02)
+
+        #: Odom pose, always starts at (0,0) and is the odometry of the robot's movement. All odom paths start from odom pose
+        self.odom_pose = Transformation()
 
     def get_angles(self):
         """
@@ -361,7 +364,7 @@ class Soccerbot:
         )
 
         self.robot_path = PathRobot(startPose, endPoseCalibrated, self.foot_center_to_floor)
-        self.robot_odom_path = PathRobot(startPose, endPose, self.foot_center_to_floor)
+        self.robot_odom_path = PathRobot(self.odom_pose, self.odom_pose @ (scipy.linalg.inv(startPose) @ endPose), self.foot_center_to_floor)
 
         # obj.rate = rateControl(1 / obj.robot_path.step_size); -- from findPath
         self.rate = 1 / self.robot_path.step_precision

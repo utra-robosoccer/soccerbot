@@ -9,7 +9,7 @@
     <arg name="x_pos" default="0" />
     <arg name="y_pos" default="0" />
     <arg name="a_pos" default="0" />
-    <arg name="use_amcl" default="true" />
+    <arg name="use_amcl" default="false" />
     <!-- If don't use amcl will use the soccer_localization ukf -->
 
     <arg name="param_file_name" value="$(arg robot_model)_sim" if="$(arg simulation)" />
@@ -54,7 +54,7 @@
         <rosparam file="$(find soccerbot)/config/robot_localization_ekf_map.yaml" command="load" />
         <param name="odom_frame" value="$(arg robot_name)/odom" />
         <param name="base_link_frame" value="$(arg robot_name)/base_footprint" />
-        <param name="pose0" value="$(arg robot_name)/amcl_pose" />
+        <param name="pose0" value="amcl_pose" />
     </node>
 
     <node name="torso_height_publisher" pkg="bez1_description" type="base_footprint_to_torso.py" />
