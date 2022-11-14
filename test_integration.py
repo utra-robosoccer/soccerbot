@@ -17,9 +17,6 @@ from soccer_common.camera import Camera
 from soccer_msgs.msg import BoundingBoxes, RobotState
 from soccer_strategy.src.soccer_strategy.team import Team
 
-from sensor_msgs.msg import Range
-from std_msgs.msg import Header
-
 RUN_LOCALLY = "pycharm" in sys.argv[0]
 
 
@@ -184,7 +181,7 @@ class IntegrationTestPlaying(IntegrationTest):
 
                 if gt_ball_pose[0] > 4.5:
                     printlog("Goal Scored")
-                    #return
+                    return
             else:
                 printlog("Ball not found")
 
