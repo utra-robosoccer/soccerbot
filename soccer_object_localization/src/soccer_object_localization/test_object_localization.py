@@ -167,86 +167,56 @@ class TestObjectLocalization(TestCase):
     @unittest.mock.patch("soccer_common.camera.TransformListener")
     @unittest.mock.patch("soccer_common.camera.rospy.Time.now")
     def test_goalpost_detection(self, mock_tf_listener, now):
+        import math
+
         import numpy as np
 
-        # Draws viewcone lines from the robot's position to the left or right goaline to check whether either post is
-        # visible to the robot
-        def check_net(robot_x, robot_y, robot_yaw, check_left_net=True):
+        def get_post_visibility(robot_pose, post_coords):
+            robot_x, robot_y, robot_yaw = robot_pose
+            post_x, post_y = post_coords
+
+            post_yaw = math.atan2(post_y - robot_y, post_x - robot_x)
             camera_fov = 1.39626  # rads
-            left_net_coords = [[-4.5, 1.3], [-4.5, -1.3]]
-            right_net_coords = [[4.5, 1.3], [4.5, -1.3]]
-            if check_left_net:
-                net_coords = left_net_coords
-                net_str = "Left net"
-            else:  # Check right net
-                net_coords = right_net_coords
-                net_str = "Right net"
 
-            x_dist = net_coords[0][0] - robot_x
-            top_post_y = net_coords[0][1]
-            bottom_post_y = net_coords[1][1]
+            # Both yaw angles are between -pi and pi
+            delta_yaw = post_yaw - robot_yaw
 
-            # Get slope of viewcone edge lines
-            vcone_l_edge_slope = math.tan(robot_yaw + camera_fov / 2)
-            vcone_r_edge_slope = math.tan(robot_yaw - camera_fov / 2)
+            # TODO Wrap delta_yaw to pi? https://stackoverflow.com/questions/15927755/opposite-of-numpy-unwrap
+            # delta_yaw = (delta_yaw + np.pi) % (2 * np.pi) - np.pi
 
-            vcone_l_edge_goal_line_y = vcone_l_edge_slope * x_dist + robot_y
-            vcone_r_edge_goal_line_y = vcone_r_edge_slope * x_dist + robot_y
+            # Check if the post is within the view cone
+            # No equals case as the post wouldn't be fully visible
+            is_post_visible = -camera_fov / 2.0 < delta_yaw < camera_fov / 2.0
 
-            # TODO Need some intelligence for dealing with the viewcone line intersection being behind the robot:
-            # ex: https://www.desmos.com/calculator/b9lndsb1bl, black line has positive slope
-            # maybe check if POI is greater than abs(robot_y)?
-            y_u_bound = max(vcone_r_edge_goal_line_y, vcone_l_edge_goal_line_y)
-            y_l_bound = min(vcone_r_edge_goal_line_y, vcone_l_edge_goal_line_y)
+            return is_post_visible
 
-            is_net_visible = False
-            if y_l_bound <= top_post_y <= y_u_bound:
-                print(f"{net_str}'s top post in viewcone")
-                is_net_visible = True
-            if y_l_bound <= bottom_post_y <= y_u_bound:
-                print(f"{net_str}'s bottom post in viewcone")
-                is_net_visible = True
+        # Returns a dictionary that stores booleans indicating whether each post is visible
+        # Visual reference: https://www.desmos.com/calculator/b9lndsb1bl
+        # Example: both posts of the left net are visible
+        # visible_posts = {
+        #     "LEFT_NET": {
+        #         "TOP_POST": True,
+        #         "BOTTOM_POST": True
+        #     },
+        #     "RIGHT_NET": {
+        #         "TOP_POST": False,
+        #         "BOTTOM_POST": False
+        #     }
+        # }
+        def get_visible_posts(robot_x, robot_y, robot_yaw):
+            visible_posts = {"LEFT_NET": {"TOP_POST": False, "BOTTOM_POST": False}, "RIGHT_NET": {"TOP_POST": False, "BOTTOM_POST": False}}
 
-            return is_net_visible
+            net_coords = {
+                "LEFT_NET": {"TOP_POST": [-4.5, 1.3], "BOTTOM_POST": [-4.5, -1.3]},
+                "RIGHT_NET": {"TOP_POST": [4.5, 1.3], "BOTTOM_POST": [4.5, -1.3]},
+            }
 
-        def check_left_net(robot_pose):
-            robot_x, robot_y, robot_yaw = robot_pose
-            is_net_visible = check_net(robot_x, robot_y, robot_yaw, check_left_net=True)
-            visible_net = "LEFT" if is_net_visible else None
-            return visible_net
+            for net in net_coords.keys():
+                post_coords = net_coords[net]
+                for post in post_coords.keys():
+                    net_coords[net][post] = get_post_visibility((robot_x, robot_y, robot_yaw), post_coords[post])
 
-        def check_right_net(robot_pose):
-            robot_x, robot_y, robot_yaw = robot_pose
-            is_net_visible = check_net(robot_x, robot_y, robot_yaw, check_left_net=False)
-            visible_net = "RIGHT" if is_net_visible else None
-            return visible_net
-
-        # Determines which net is visible, if any, returning "RIGHT", "LEFT" or None
-        def determine_net_side(robot_x, robot_y, robot_yaw):
-            robot_pose = [robot_x, robot_y, robot_yaw]
-            if robot_y <= 0:
-                if robot_yaw > np.pi / 2:
-                    visible_net = check_left_net(robot_pose)
-                elif robot_yaw < np.pi / 2:
-                    visible_net = check_right_net(robot_pose)
-                else:  # robot_yaw == np.pi / 2
-                    if robot_x >= 0:
-                        visible_net = check_right_net(robot_pose)
-                    else:  # robot_x < 0:
-                        visible_net = check_left_net(robot_pose)
-
-            else:  # robot_y > 0
-                if robot_yaw > -np.pi / 2:
-                    visible_net = check_right_net(robot_pose)
-                elif robot_yaw < -np.pi / 2:
-                    visible_net = check_left_net(robot_pose)
-                else:  # robot_yaw == -np.pi / 2
-                    if robot_x >= 0:
-                        visible_net = check_right_net(robot_pose)
-                    else:  # robot_x < 0:
-                        visible_net = check_left_net(robot_pose)
-
-            return visible_net
+            return visible_posts
 
         from sensor_msgs.msg import CameraInfo, Image
 
@@ -275,8 +245,11 @@ class TestObjectLocalization(TestCase):
             file_name_no_ext = os.path.splitext(file_name)[0]
             x, y, yaw = file_name_no_ext.split("_")[1:]
             print(f"Parsed (x, y, yaw): ({x}, {y}, {yaw}) from filename.")
-            visible_net = determine_net_side(float(x), float(y), float(yaw))
-            print(f"{visible_net} is visible")
+            visible_posts = get_visible_posts(float(x), float(y), float(yaw))
+            for net in visible_posts.keys():
+                for post in visible_posts[net].keys():
+                    if visible_posts[net][post]:
+                        print(f"{visible_posts[net][post]} is visible")
 
             img: Mat = cv2.imread(os.path.join(test_path, file_name))
 
