@@ -62,7 +62,7 @@ class Communication:
         #     self._motor_map[motor]["subscriber"] = rp.Subscriber(motor + "/command", Float64, self.trajectory_callback, motor)
         #     self._motor_map[motor]["publisher"] = rp.Publisher(motor + "/state", JointControllerState, queue_size=1)
 
-        self._publish_timer = rp.Timer(rp.Duration(nsecs=10000000), self.send_angles)
+        self._publish_timer = rp.Timer(rp.Duration(nsecs=int(3E6)), self.send_angles)
 
     def run(self):
         self._rx_servo_thread.start()

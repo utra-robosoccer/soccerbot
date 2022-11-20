@@ -15,7 +15,7 @@ from utility import log_string
 class MotorReceiver(Receiver):
     def _receive_packet_from_mcu(self, timeout):
         with self._ser._motor_lock:  # NOTE: possibly replace with acquire-release with timeout
-            valid, raw_pos = jx_servo_util.uart_transact(self._ser, [], CMDS.POSITION, RWS.READ, timeout)
+            valid, raw_pos = jx_servo_util.uart_transact(self._ser, [], CMDS.POSITION, RWS.READ, preflush=True)
             pos = {}
             if valid:
                 # print('!!!!!!!RX!!!!!!!')

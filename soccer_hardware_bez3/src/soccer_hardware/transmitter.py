@@ -56,8 +56,10 @@ class Transmitter(Thread):
         super().start(*args, **kwargs)
         # return
         with self._jx_ser._motor_lock:
-            jx_servo_util.uart_transact(self._jx_ser, [1600, 1, 15] * 13, CMDS.PID_COEFF, RWS.WRITE)  # push initial PID gains
-            jx_servo_util.uart_transact(self._jx_ser, [2640] * 13, CMDS.MAX_DRIVE, RWS.WRITE)  # push initial maximum drive (out of 4096)
+            jx_servo_util.uart_transact(self._jx_ser, [1600, 1, 15] * 13, CMDS.PID_COEFF,
+                                        RWS.WRITE)  # push initial PID gains
+            jx_servo_util.uart_transact(self._jx_ser, [2640] * 13, CMDS.MAX_DRIVE,
+                                        RWS.WRITE)  # push initial maximum drive (out of 4096)
 
     def stop(self):
         """
@@ -80,7 +82,7 @@ class Transmitter(Thread):
             flat_jx_goal_angles = [0] * int(np.amax(jx_goal_angles[:, 0]) + 1)
             for idx, v in jx_goal_angles:
                 flat_jx_goal_angles[int(idx)] = constrain(int(v * ANGLE2JX_POT_VOLTS), 0, 0xFFF)
-            jx_servo_util.uart_transact(self._jx_ser, flat_jx_goal_angles, CMDS.POSITION, RWS.WRITE, 0.01)
+            jx_servo_util.uart_transact(self._jx_ser, flat_jx_goal_angles, CMDS.POSITION, RWS.WRITE, preflush=True)
 
         with self._pwm_ser._motor_lock:  # NOTE: possibly replace with acquire-release with timeout
             GOBILDA_IDX_BASE = np.amin(gobilda_goal_angles[:, 0])
