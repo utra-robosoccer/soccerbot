@@ -10,11 +10,8 @@ debug: false
 publish_tf: false
 
 map_frame: world
-odom_frame: robot1/odom
-base_link_frame: robot1/base_footprint
 world_frame: world
 
-pose0: /robot1/amcl_pose
 pose0_config: [true,  true,  false,
                false, false, true,
                false, false, false,
