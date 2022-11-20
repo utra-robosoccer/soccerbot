@@ -48,6 +48,16 @@ class FieldLinesUKFROS(FieldLinesUKF):
         if dt_secs == 0:
             return
 
+        if np.all(diff_transformation.pos_theta < 0.001):
+            self.ukf.Q = self.Q_do_nothing
+            self.ukf.R = self.R_localizing
+        elif np.all(diff_transformation.pos_theta[0:2] < 0.001):
+            self.ukf.Q = self.Q_localizing
+            self.ukf.R = self.R_localizing
+        else:
+            self.ukf.Q = self.Q_walking
+            self.ukf.R = self.R_walking
+
         self.predict(u=diff_transformation.pos_theta / dt_secs, dt=dt_secs)
         self.odom_t_previous = odom_t
 

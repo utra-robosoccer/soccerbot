@@ -96,8 +96,8 @@ def test_walk_forward():
     path_gt_t = []
     path_vo = []  # Path Point Cloud
     path_vo_t = []
+    path_covariance = []
 
-    odom_t_previous = None
     predict_it = 0
     for topic, msg, t in bag.read_messages(topics=["/robot1/odom_combined", "/tf", "/robot1/field_point_cloud"]):
         if topic == "/robot1/field_point_cloud":
@@ -141,6 +141,7 @@ def test_walk_forward():
 
             # Add path UKF
             path_ukf.append(f.ukf.x)
+            path_covariance.append(np.sqrt(np.diag(f.ukf.P)))
             path_ukf_t.append(t.to_sec())
 
             # Draw uncorrect odom
@@ -154,6 +155,7 @@ def test_walk_forward():
     path_odom = np.array(path_odom)
     path_gt = np.array(path_gt)
     path_vo = np.array(path_vo)
+    path_covariance = np.array(path_covariance)
 
     path_ukf_t = np.array(path_ukf_t)
     path_odom_t = np.array(path_odom_t)
@@ -175,7 +177,14 @@ def test_walk_forward():
     def plt_dim_error(dim=0, label="X"):
         plt.figure(f"{label} Error")
         plt.title(f"{label} Dimension Odom, UKF estimate, Ground Truth and Visual Odometry")
-        plt.plot(path_odom_t, path_odom[:, dim], color="yellow", linewidth=0.5, label="Odom Path")
+        plt.fill_between(
+            path_ukf_t,
+            path_ukf[:, dim] + path_covariance[:, dim],
+            path_ukf[:, dim] - path_covariance[:, dim],
+            color="yellow",
+            label="Variance for odom path",
+        )
+        plt.plot(path_odom_t, path_odom[:, dim], color="blue", linewidth=0.5, label="Odom Path")
         plt.plot(path_ukf_t, path_ukf[:, dim], color="green", linewidth=0.5, label="UKF Path")
         plt.plot(path_gt_t, path_gt[:, dim], color="orange", linewidth=0.5, label="Ground Truth Path")
         plt.scatter(path_vo_t, path_vo[:, dim], color="red", marker=".", s=1, label="VO Points")

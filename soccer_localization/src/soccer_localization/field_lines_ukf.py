@@ -34,8 +34,15 @@ class FieldLinesUKF:
 
         self.ukf.x = np.array([-4, -3.15, 1.57])  # Initial state
         self.ukf.P = np.diag([0.0004, 0.0004, 0.002])  # Initial covariance (2cm, 2cm, 3 degrees)
-        self.ukf.R = np.diag([10, 10, 1e16])  # Noise from measurement updates (x, y, theta), trust the y more than the x
-        self.ukf.Q = np.diag([4e-4, 4e-4, 2e-5])  # Noise from navigation movements (2cm 2cm)
+
+        self.R_walking = np.diag([1, 1, 4e4])
+        self.R_localizing = np.diag([1.5, 1.5, 0.25])
+        self.ukf.R = self.R_walking  # Noise from measurement updates (x, y, theta), trust the y more than the x
+
+        self.Q_walking = np.diag([1e-4, 1e-4, 1e-4])
+        self.Q_localizing = np.diag([1e-18, 1e-18, 4e-4])
+        self.Q_do_nothing = np.diag([1e-18, 1e-18, 1e-18])
+        self.ukf.Q = self.Q_walking  # Noise from navigation movements (2cm 2cm)
 
     def map_update(self, map: OccupancyGrid):
         self.map = map
@@ -82,9 +89,9 @@ class FieldLinesUKF:
         x[2] = np.arctan2(np.sum(np.sin(sigmas[:, 2])) / len(sigmas), np.sum(np.cos(sigmas[:, 2])) / len(sigmas))
         return x
 
-    def predict(self, u, dt, UT=None):
+    def predict(self, u, dt):
         assert dt >= 0
-        self.ukf.predict(dt=dt, u=u, UT=UT)
+        self.ukf.predict(dt=dt, u=u)
         assert not math.isnan(self.ukf.x[0])
 
     def update(self, z):
