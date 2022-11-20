@@ -8,6 +8,7 @@ import numpy as np
 from matplotlib.collections import PathCollection
 
 from soccer_common import Transformation
+from soccer_common.utils import wrapToPi
 
 Point = namedtuple("Point", "x y")
 Transform2D = namedtuple("Transform2D", "dx dy dtheta")
@@ -119,9 +120,12 @@ class Field:
         world_frame_points = np.stack([current_transform.position[0:2]] * len(point_cloud_array), axis=1) + (
             rotation_matrix @ point_cloud_array[:, 0:2].T
         )
+
+        # TODO filter density
         return world_frame_points
 
     def matchPointsWithMap(self, current_transform: Transformation, point_cloud_array: np.array) -> Union[Transformation, None]:
+
         start = time.time()
         # Filter points by distance from current transform
         world_frame_points = self.filterWorldFramePoints(current_transform, point_cloud_array)
@@ -129,8 +133,8 @@ class Field:
             return
         # Get closest line to each point
         distance_matrix = np.zeros((len(self.lines), world_frame_points.shape[1]))
-        diff_x = np.zeros((len(self.lines), world_frame_points.shape[1]))
-        diff_y = np.zeros((len(self.lines), world_frame_points.shape[1]))
+        diff_x = np.zeros((len(self.lines), world_frame_points.shape[1]))  # real points - line
+        diff_y = np.zeros((len(self.lines), world_frame_points.shape[1]))  # real points - line
 
         for line_id, line in enumerate(self.lines):
             if type(line) is Line:
@@ -201,14 +205,23 @@ class Field:
 
         center_of_all_points = np.average(points_meet_dist_threshold, axis=1)
         points_meet_dist_threshold_delta = np.subtract(points_meet_dist_threshold, np.expand_dims(center_of_all_points, axis=1))
-        points_meet_dist_threshold_shift = points_meet_dist_threshold_delta + np.concatenate([[closest_line_diff_x], [closest_line_diff_y]])
+        points_meet_dist_threshold_shift = points_meet_dist_threshold_delta - np.concatenate([[closest_line_diff_x], [closest_line_diff_y]])
 
         angle_original = np.arctan2(points_meet_dist_threshold_delta[1, :], points_meet_dist_threshold_delta[0, :])
         angle_new = np.arctan2(points_meet_dist_threshold_shift[1, :], points_meet_dist_threshold_shift[0, :])
         angle_diff = angle_new - angle_original
+        angle_diff = wrapToPi(angle_diff)
         angle_diff_avg = np.average(angle_diff)
 
-        offset_transform = Transformation(pos_theta=[-diff_x_avg, -diff_y_avg, 0])
+        transform_delta_center_to_robot = np.linalg.inv(current_transform) @ Transformation(
+            pos_theta=[center_of_all_points[0], center_of_all_points[1], 0]
+        )
+
+        offset_transform = (
+            transform_delta_center_to_robot
+            @ Transformation(pos_theta=[-diff_x_avg, -diff_y_avg, angle_diff_avg])
+            @ np.linalg.inv(transform_delta_center_to_robot)
+        )
 
         end = time.time()
         print(f"Offset Transform: {offset_transform.pos_theta}. Time took {(end - start)}")

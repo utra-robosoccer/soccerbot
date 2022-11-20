@@ -64,7 +64,7 @@ class FieldLinesUKFROS(FieldLinesUKF):
         offset_transform = self.map.matchPointsWithMap(current_transform, point_cloud_array)
 
         if offset_transform is not None:
-            vo_transform = offset_transform @ current_transform
+            vo_transform = current_transform @ offset_transform
             vo_pos_theta = vo_transform.pos_theta
             self.update(vo_pos_theta)
             self.broadcast_tf_position(timestamp=stamp)

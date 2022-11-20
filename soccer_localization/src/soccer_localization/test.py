@@ -36,6 +36,9 @@ def test_points_correction(t_start):
     bag = rosbag.Bag(retrieve_bag())
 
     transform_gt = None
+    transform_gt_offset = Transformation(pos_theta=[0.05, 0.05, 0.05])
+    # transform_gt_offset = Transformation()
+
     for topic, msg, t in bag.read_messages(topics=["/robot1/odom_combined", "/tf", "/robot1/field_point_cloud"]):
 
         if topic == "/tf":
@@ -52,7 +55,7 @@ def test_points_correction(t_start):
 
             point_cloud = pcl2.read_points_list(msg)
             point_cloud_array = np.array(point_cloud)
-            current_transform = Transformation(pos_theta=transform_gt.pos_theta)
+            current_transform = transform_gt_offset @ Transformation(pos_theta=transform_gt.pos_theta)
             offset_transform = map.matchPointsWithMap(current_transform, point_cloud_array)
             if offset_transform is not None:
                 # pp = offset_transform.pos_theta
@@ -64,7 +67,7 @@ def test_points_correction(t_start):
                 map.drawPointsOnMap(vo_transform, point_cloud_array, label="Odom Points Adjusted", color="red")
                 plt.title(f"UKF Robot localization (t = {round(t.secs + t.nsecs * 1e-9)})")
                 plt.xlim((-5, -3))
-                plt.ylim((-3.5, 1))
+                plt.ylim((-3.5, 2))
                 plt.legend()
                 plt.draw()
                 plt.waitforbuttonpress()
@@ -107,7 +110,8 @@ def test_walk_forward():
                 if debug:
                     map.drawPathOnMap(vo_transform, label="VO Odometry", color="red")
                     map.drawPathOnMap(Transformation(pos_theta=f.ukf.x), label="VO Odometry", color="orange")
-                    map.drawPointsOnMap(current_transform, point_cloud_array, label="Odom Points", color="red")
+                    map.drawPointsOnMap(current_transform, point_cloud_array, label="Odom Points", color="brown")
+                    map.drawPointsOnMap(vo_transform, point_cloud_array, label="Odom Points Corrected", color="orange")
                     plt.title(f"UKF Robot localization (t = {round(t.secs + t.nsecs * 1e-9)})")
                     plt.xlim((-5, -3))
                     plt.ylim((-3.5, 1))
