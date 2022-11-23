@@ -3,16 +3,18 @@ from typing import Optional
 
 import numpy as np
 import rospy
-import scipy.linalg
+import scipy
 import sensor_msgs.point_cloud2 as pcl2
 import tf
 from geometry_msgs.msg import PoseWithCovarianceStamped
 from sensor_msgs.msg import PointCloud2
 
-# Adapted from https://github.com/rlabbe/Kalman-and-Bayesian-Filters-in-Python/blob/master/10-Unscented-Kalman-Filter.ipynb
 from soccer_common import Transformation
 from soccer_localization.field import Field
 from soccer_localization.field_lines_ukf import FieldLinesUKF
+
+# Adapted from https://github.com/rlabbe/Kalman-and-Bayesian-Filters-in-Python/blob/master/10-Unscented-Kalman-Filter.ipynb
+from soccer_msgs.msg import RobotState
 
 
 class FieldLinesUKFROS(FieldLinesUKF):
@@ -32,17 +34,31 @@ class FieldLinesUKFROS(FieldLinesUKF):
         self.odom_t_previous = None
 
         self.br = tf.TransformBroadcaster()
+        self.timestamp_last = rospy.Time(0)
+
+        self.robot_state_subscriber = rospy.Subscriber("state", RobotState, self.robot_state_callback)
+        self.robot_state = RobotState()
 
         rospy.loginfo("Soccer Localization UFK initiated")
 
+    def robot_state_callback(self, robot_state: RobotState):
+        self.robot_state = robot_state
+
     def odom_callback(self, pose_msg: PoseWithCovarianceStamped):
-        t = pose_msg.header.stamp
+        if self.robot_state.status not in [
+            RobotState.STATUS_LOCALIZING,
+            RobotState.STATUS_READY,
+            RobotState.STATUS_DETERMINING_SIDE,
+            RobotState.STATUS_WALKING,
+        ]:
+            return
+
         if self.odom_t_previous is None:
             self.odom_t_previous = Transformation(pose_with_covariance_stamped=pose_msg)
             return
         odom_t = Transformation(pose_with_covariance_stamped=pose_msg)
 
-        diff_transformation: Transformation = np.linalg.inv(self.odom_t_previous) @ odom_t
+        diff_transformation: Transformation = scipy.linalg.inv(self.odom_t_previous) @ odom_t
         dt = odom_t.timestamp - self.odom_t_previous.timestamp
         dt_secs = dt.secs + dt.nsecs * 1e-9
         if dt_secs == 0:
@@ -67,6 +83,14 @@ class FieldLinesUKFROS(FieldLinesUKF):
         return odom_t
 
     def field_point_cloud_callback(self, point_cloud: PointCloud2):
+        if self.robot_state.status not in [
+            RobotState.STATUS_LOCALIZING,
+            RobotState.STATUS_READY,
+            RobotState.STATUS_DETERMINING_SIDE,
+            RobotState.STATUS_WALKING,
+        ]:
+            return
+
         stamp = point_cloud.header.stamp
         point_cloud = pcl2.read_points_list(point_cloud)
         point_cloud_array = np.array(point_cloud)
@@ -85,6 +109,16 @@ class FieldLinesUKFROS(FieldLinesUKF):
     def broadcast_tf_position(self, timestamp):
         if not self.initial_pose_initiated:
             return
+
+        if self.odom_t_previous is None:
+            rospy.logerr_throttle(1, "Odom not published")
+            return
+
+        # Prevent rebroadcasting same or older timestamp
+        if timestamp <= self.timestamp_last:
+            return
+        else:
+            self.timestamp_last = timestamp
 
         odom_to_base_footprint = Transformation(pos_theta=self.ukf.x) @ scipy.linalg.inv(self.odom_t_previous)
 

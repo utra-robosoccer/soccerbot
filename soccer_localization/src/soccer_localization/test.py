@@ -198,7 +198,7 @@ def test_walk_forward():
     plt_dim_error(1, "Y")
     plt_dim_error(2, "Theta")
 
-    plt.show(block=True)
+    # plt.show(block=True)
 
     pass
 

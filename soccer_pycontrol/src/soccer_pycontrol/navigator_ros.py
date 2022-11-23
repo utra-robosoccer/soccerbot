@@ -149,6 +149,9 @@ class NavigatorRos(Navigator):
         while not rospy.is_shutdown():
             time_start = time.time()
 
+            # Always publish odometry no matter what state
+            self.soccerbot.publishOdometry()
+
             if self.soccerbot.robot_state.status in [
                 RobotState.STATUS_DISCONNECTED,
                 RobotState.STATUS_DETERMINING_SIDE,
@@ -160,7 +163,6 @@ class NavigatorRos(Navigator):
             ]:
                 self.soccerbot.robot_path = None
                 self.goal = self.new_goal
-                self.soccerbot.publishOdometry()
                 self.soccerbot.reset_imus()
                 self.soccerbot.updateRobotConfiguration()
                 r.sleep()
@@ -224,9 +226,6 @@ class NavigatorRos(Navigator):
                     self.soccerbot.apply_imu_feedback(self.soccerbot.get_imu())
 
                 self.soccerbot.current_step_time = self.t
-
-                # Publish robot's position and height (Average Time: 0.00030437924645164)
-                self.soccerbot.publishOdometry()
 
             # Walk completed
             if (

@@ -48,7 +48,8 @@ class FieldLinesUKF:
         self.map = map
 
     def move(self, x: [float], dt: float, u: [float]) -> [float]:
-        return (Transformation(pos_theta=x) @ Transformation(pos_theta=u * dt)).pos_theta
+        pos = np.array([[cos(x[2]), -sin(x[2])], [sin(x[2]), cos(x[2])]]) @ np.array([u[0] * dt, u[1] * dt]) + np.array(x[0:2])
+        return [pos[0], pos[1], x[2] + u[2] * dt]
 
     def residual_h(self, a, b):
         y = a - b

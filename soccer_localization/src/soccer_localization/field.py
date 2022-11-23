@@ -5,6 +5,7 @@ from typing import Dict, List, Optional, Tuple, Union
 
 import matplotlib.pyplot as plt
 import numpy as np
+import scipy
 from matplotlib.collections import PathCollection
 
 from soccer_common import Transformation
@@ -69,8 +70,6 @@ class Field:
 
         # Crosses
         def create_cross(pos_x):
-            plt.fill_between(x=[pos_x - 0.1, pos_x + 0.1], y1=-lw / 2, y2=lw / 2, color="white")
-            plt.fill_betweenx(y=[-0.1, 0.1], x1=pos_x - lw / 2, x2=pos_x + lw / 2, color="white")
             lines.append(Line(Point(pos_x - 0.1, y=0), Point(pos_x + 0.1, y=0)))
             lines.append(Line(Point(pos_x, y=-0.1), Point(pos_x, y=0.1)))
 
@@ -213,18 +212,18 @@ class Field:
         angle_diff = wrapToPi(angle_diff)
         angle_diff_avg = np.average(angle_diff)
 
-        transform_delta_center_to_robot = np.linalg.inv(current_transform) @ Transformation(
+        transform_delta_center_to_robot = scipy.linalg.inv(current_transform) @ Transformation(
             pos_theta=[center_of_all_points[0], center_of_all_points[1], 0]
         )
 
         offset_transform = (
             transform_delta_center_to_robot
             @ Transformation(pos_theta=[-diff_x_avg, -diff_y_avg, angle_diff_avg])
-            @ np.linalg.inv(transform_delta_center_to_robot)
+            @ scipy.linalg.inv(transform_delta_center_to_robot)
         )
 
         end = time.time()
-        print(f"Offset Transform: {offset_transform.pos_theta}. Time took {(end - start)}")
+        print(f"Time took {(end - start)}")
         return offset_transform
 
     def drawPointsOnMap(self, current_transform: Transformation, point_cloud_array: np.array, label: str, color: str):
