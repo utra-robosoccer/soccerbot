@@ -1,4 +1,7 @@
 import os
+from unittest.mock import MagicMock
+
+import rospy
 
 if "ROS_NAMESPACE" not in os.environ:
     os.environ["ROS_NAMESPACE"] = "/robot1"
@@ -8,12 +11,16 @@ import pybullet as pb
 import pytest
 from matplotlib import pyplot as plt
 
-from soccer_common.mock_ros import mock_ros
+from soccer_common.mock_ros import mock_ros, set_rosparam_from_yaml_file
 from soccer_common.transformation import Transformation
 from soccer_pycontrol.calibration import adjust_navigation_transform
 from soccer_pycontrol.links import Links
 from soccer_pycontrol.navigator import Navigator
 from soccer_pycontrol.navigator_ros import NavigatorRos
+
+joint_state = MagicMock()
+joint_state.position = [0.0] * 18
+rospy.wait_for_message = MagicMock(return_value=joint_state)
 
 
 class TestWalking:
@@ -25,7 +32,8 @@ class TestWalking:
         file_path = os.path.dirname(os.path.abspath(__file__))
         config_folder_path = f"{file_path}/../../config/"
         config_path = config_folder_path + f"{robot_model}_sim_pybullet.yaml"
-        mock_ros(robot_model=robot_model, real_robot=False, param_path=config_path)
+        set_rosparam_from_yaml_file(params_path=config_path)
+        rospy.init_node("test")
         if "DISPLAY" not in os.environ:
             c = Navigator(display=False, real_time=False)
         else:
@@ -45,7 +53,9 @@ class TestWalking:
         file_path = os.path.dirname(os.path.abspath(__file__))
         config_folder_path = f"{file_path}/../../config/"
         config_path = config_folder_path + f"{robot_model}_sim.yaml"
-        mock_ros(robot_model=robot_model, real_robot=False, param_path=config_path)
+        mock_ros()
+        rospy.init_node("test")
+        set_rosparam_from_yaml_file(params_path=config_path)
 
         c = NavigatorRos()
 
@@ -63,7 +73,7 @@ class TestWalking:
         file_path = os.path.dirname(os.path.abspath(__file__))
         config_folder_path = f"{file_path}/../../config/"
         config_path = config_folder_path + f"{robot_model}.yaml"
-        mock_ros(robot_model=robot_model, real_robot=True, param_path=config_path)
+        set_rosparam_from_yaml_file(params_path=config_path)
 
         c = NavigatorRos()
         yield c

@@ -1,61 +1,32 @@
-from typing import Dict, List
+from os import path
 
-param_paths: Dict[str, List[str]] = {}
+import rospy
+import yaml
 
 
-def mock_ros(robot_model="bez1", real_robot=False, param_path=None):
-    from os.path import exists
+def set_rosparam_from_yaml_file(params_path: str):
+    rospy.get_param = rospy.get_param_cached
+
+    def post_to_rospy(param_name, param_value, parent_name):
+        if type(param_value) is dict:
+            for sub_name, sub_value in param_value.items():
+                post_to_rospy(sub_name, sub_value, f"{parent_name}/{sub_name}")
+        rospy.set_param(param_name, param_value)
+
+    hivebot_info_path = f"{params_path}.yaml"
+    if path.exists(hivebot_info_path):
+        with open(hivebot_info_path) as f:
+            hivebot_info = yaml.safe_load(f)
+            for name, value in hivebot_info.items():
+                post_to_rospy(name, value, f"{name}")
+
+
+def mock_ros():
     from unittest.mock import MagicMock
 
-    import yaml
-
-    if not real_robot:
-        import rospy
-
-        rospy.Time = MagicMock()
-        joint_state = MagicMock()
-        joint_state.position = [0.0] * 18
-        rospy.wait_for_message = MagicMock(return_value=joint_state)
-        rospy.init_node("test")
-        rospy.set_param("/use_sim_time", False)
-        rospy.Time.now = MagicMock(return_value=0)
-        rospy.get_namespace = MagicMock(return_value="/robot1/")
-        rospy.Duration = lambda a: a
-        rospy.loginfo_throttle = lambda a, b: None
-        rospy.loginfo = lambda a: print(a)
-        rospy.logwarn = lambda a: print(a)
-        rospy.logerr = lambda a: print(a)
-    else:
-        import rospy
-
-    if param_path is not None:
-        if not exists(param_path):
-            print(f"Config Path {param_path} does not exist")
-        else:
-            if robot_model not in param_paths:
-                param_paths[robot_model] = []
-            if param_path not in param_paths[robot_model]:
-                param_paths[robot_model].append(param_path)
-
-    def get_param(a, b=None):
-        a = a.lstrip("~")
-        if a == "robot_model":
-            return robot_model
-
-        if robot_model not in param_paths:
-            return b
-        for param_path in param_paths[robot_model]:
-            with open(param_path, "r") as g:
-                y = yaml.safe_load(g)
-                found = True
-                for c in a.split("/"):
-                    if y is None or c not in y:
-                        found = False
-                        break
-                    y = y[c]
-                if found:
-                    return y
-
-        return b
-
-    rospy.get_param = get_param
+    rospy.set_param("/use_sim_time", False)
+    rospy.get_namespace = MagicMock(return_value="/robot1/")
+    rospy.loginfo_throttle = lambda a, b: None
+    rospy.loginfo = lambda a: print(a)
+    rospy.logwarn = lambda a: print(a)
+    rospy.logerr = lambda a: print(a)
