@@ -22,7 +22,6 @@ else:
     from soccer_common.utils_rosparam import set_rosparam_from_yaml_file
 
     file_path = os.path.dirname(os.path.abspath(__file__))
-
     config_path = f"{file_path}/../../../{robot_model}_description/config/motor_mapping.yaml"
 
     from unittest.mock import MagicMock
@@ -34,55 +33,12 @@ from soccer_trajectories.soccer_trajectories import SoccerTrajectoryClass
 
 
 class TestTrajectory:
-    robot_models = ["bez1"]
-
-    @staticmethod
-    @pytest.fixture(params=robot_models)
-    def trajectory(request):
-        global robot_model
-        robot_model = request.param
-
+    @pytest.mark.parametrize("trajectory_name", ["getupfront", "getupback", "getupside", "rightkick"])
+    def test_getupfront(self, trajectory_name: str):
         c = SoccerTrajectoryClass()
-
-        yield c
-        del c
-
-    @pytest.mark.parametrize("trajectory", ["bez1"], indirect=True)
-    def test_getupfront(self, trajectory: SoccerTrajectoryClass):
+        rospy.init_node("test")
         msg = FixedTrajectoryCommand()
-        msg.trajectory_name = "getupfront"
+        msg.trajectory_name = trajectory_name
         msg.mirror = False
-        traj_success = trajectory.run_trajectory(command=msg)
-        assert traj_success
-
-    @pytest.mark.parametrize("trajectory", ["bez1"], indirect=True)
-    def test_getupback(self, trajectory: SoccerTrajectoryClass):
-        msg = FixedTrajectoryCommand()
-        msg.trajectory_name = "getupback"
-        msg.mirror = False
-        traj_success = trajectory.run_trajectory(command=msg)
-        assert traj_success
-
-    @pytest.mark.parametrize("trajectory", ["bez1"], indirect=True)
-    def test_getupside(self, trajectory: SoccerTrajectoryClass):
-        msg = FixedTrajectoryCommand()
-        msg.trajectory_name = "getupside"
-        msg.mirror = False
-        traj_success = trajectory.run_trajectory(command=msg)
-        assert traj_success
-
-    @pytest.mark.parametrize("trajectory", ["bez1"], indirect=True)
-    def test_rightkick(self, trajectory: SoccerTrajectoryClass):
-        msg = FixedTrajectoryCommand()
-        msg.trajectory_name = "rightkick"
-        msg.mirror = False
-        traj_success = trajectory.run_trajectory(command=msg)
-        assert traj_success
-
-    @pytest.mark.parametrize("trajectory", ["bez1"], indirect=True)
-    def test_leftkick(self, trajectory: SoccerTrajectoryClass):
-        msg = FixedTrajectoryCommand()
-        msg.trajectory_name = "rightkick"
-        msg.mirror = True
-        traj_success = trajectory.run_trajectory(command=msg)
+        traj_success = c.run_trajectory(command=msg)
         assert traj_success
