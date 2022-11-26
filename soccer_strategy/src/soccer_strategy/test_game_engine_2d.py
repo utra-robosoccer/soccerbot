@@ -8,9 +8,10 @@ from unittest.mock import MagicMock
 import numpy
 import numpy as np
 import rospy
+from vispy import app, scene
 
 
-class Test(TestCase):
+class TestGameEngine2D(TestCase):
     def setUp(self) -> None:
 
         super().setUpClass()
@@ -28,6 +29,7 @@ class Test(TestCase):
         g = GameEngine2D(display=self.display, team_1_strategy=StrategyDummy, team_2_strategy=StrategyStationary, game_duration=2)
         friendly_points, opponent_points = g.run()
         print(f"Friendly: {friendly_points}, opponent: {opponent_points}")
+        g.scene.canvas.close()
         assert not (friendly_points == 0 and opponent_points == 0)
 
     def test_dummy_vs_dummy_strategy(self):
@@ -38,6 +40,7 @@ class Test(TestCase):
 
         g = GameEngine2D(display=self.display, team_1_strategy=StrategyDummy, team_2_strategy=StrategyDummy, game_duration=2)
         friendly_points, opponent_points = g.run()
+        g.scene.canvas.close()
         print(f"Friendly: {friendly_points}, opponent: {opponent_points}")
 
     def test_navigate_to_scoring_position_with_offset_case_1(self):
