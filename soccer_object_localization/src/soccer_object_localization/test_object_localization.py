@@ -171,6 +171,8 @@ class TestObjectLocalization(TestCase):
 
         import numpy as np
 
+        from soccer_pycontrol.utils import wrapToPi
+
         def get_post_visibility(robot_pose, post_coords):
             robot_x, robot_y, robot_yaw = robot_pose
             post_x, post_y = post_coords
@@ -179,10 +181,7 @@ class TestObjectLocalization(TestCase):
             camera_fov = 1.39626  # rads
 
             # Both yaw angles are between -pi and pi
-            delta_yaw = post_yaw - robot_yaw
-
-            # TODO Wrap delta_yaw to pi? https://stackoverflow.com/questions/15927755/opposite-of-numpy-unwrap
-            # delta_yaw = (delta_yaw + np.pi) % (2 * np.pi) - np.pi
+            delta_yaw = wrapToPi(post_yaw - robot_yaw)
 
             # Check if the post is within the view cone
             # No equals case as the post wouldn't be fully visible
@@ -194,27 +193,27 @@ class TestObjectLocalization(TestCase):
         # Visual reference: https://www.desmos.com/calculator/b9lndsb1bl
         # Example: both posts of the left net are visible
         # visible_posts = {
-        #     "LEFT_NET": {
-        #         "TOP_POST": True,
-        #         "BOTTOM_POST": True
+        #     "NEG_X_NET": {
+        #         "POS_Y_POST": True,
+        #         "NEG_Y_POST": True
         #     },
-        #     "RIGHT_NET": {
-        #         "TOP_POST": False,
-        #         "BOTTOM_POST": False
+        #     "POS_X_NET": {
+        #         "POS_Y_POST": False,
+        #         "NEG_Y_POST": False
         #     }
         # }
         def get_visible_posts(robot_x, robot_y, robot_yaw):
-            visible_posts = {"LEFT_NET": {"TOP_POST": False, "BOTTOM_POST": False}, "RIGHT_NET": {"TOP_POST": False, "BOTTOM_POST": False}}
+            visible_posts = {"NEG_X_NET": {"POS_Y_POST": True, "NEG_Y_POST": True}, "POS_X_NET": {"POS_Y_POST": False, "NEG_Y_POST": False}}
 
             net_coords = {
-                "LEFT_NET": {"TOP_POST": [-4.5, 1.3], "BOTTOM_POST": [-4.5, -1.3]},
-                "RIGHT_NET": {"TOP_POST": [4.5, 1.3], "BOTTOM_POST": [4.5, -1.3]},
+                "NEG_X_NET": {"POS_Y_POST": [-4.5, 1.3], "NEG_Y_POST": [-4.5, -1.3]},
+                "POS_X_NET": {"POS_Y_POST": [4.5, 1.3], "NEG_Y_POST": [4.5, -1.3]},
             }
 
             for net in net_coords.keys():
                 post_coords = net_coords[net]
                 for post in post_coords.keys():
-                    net_coords[net][post] = get_post_visibility((robot_x, robot_y, robot_yaw), post_coords[post])
+                    visible_posts[net][post] = get_post_visibility((robot_x, robot_y, robot_yaw), net_coords[net][post])
 
             return visible_posts
 
@@ -249,7 +248,7 @@ class TestObjectLocalization(TestCase):
             for net in visible_posts.keys():
                 for post in visible_posts[net].keys():
                     if visible_posts[net][post]:
-                        print(f"{visible_posts[net][post]} is visible")
+                        print(f"{net}, {post} is visible")
 
             img: Mat = cv2.imread(os.path.join(test_path, file_name))
 
@@ -263,7 +262,7 @@ class TestObjectLocalization(TestCase):
 
             img_msg: Image = cvbridge.cv2_to_imgmsg(img, encoding="rgb8")
             d.image_publisher.publish = MagicMock()
-            d.image_callback(img_msg, debug=True)
+            d.image_callback(img_msg)
 
             if "DISPLAY" in os.environ:
                 if d.image_publisher.publish.call_count != 0:
@@ -336,7 +335,7 @@ class TestObjectLocalization(TestCase):
             min_line_length = cv2.getTrackbarPos("minLineLength", "image")
             max_line_gap = cv2.getTrackbarPos("maxLineGap", "image")
 
-            img_out = d.get_vlines_from_img(
+            vertical_lines, img_out = d.get_vlines_from_img(
                 img,
                 debug=False,
                 angle_tol_deg=vline_angle_tol_deg,

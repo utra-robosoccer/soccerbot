@@ -43,7 +43,9 @@ class DetectorGoalPost(Detector):
         self.camera.reset_position(timestamp=img.header.stamp)
 
         image = CvBridge().imgmsg_to_cv2(img, desired_encoding="rgb8")
-        image_out = self.get_vlines_from_img(image, debug=debug)
+        vertical_lines, image_out = self.get_vlines_from_img(image, debug=debug)
+
+        is_net_detected, image_out = DetectorGoalPost.detect_net_in_vlines(vertical_lines, image)
 
         if self.image_publisher.get_num_connections() > 0:
             img_out = CvBridge().cv2_to_imgmsg(image_out)
@@ -83,13 +85,17 @@ class DetectorGoalPost(Detector):
             for line in lines:
                 x1, y1, x2, y2 = line[0]
                 cv2.line(image_hough, (x1, y1), (x2, y2), (0, 255, 0), 2)
+
         angle_tol_rad = np.radians(angle_tol_deg)  # +-deg from vertical
         image_out = image.copy()
+
+        vertical_lines = []
         for line in lines:
             x1, y1, x2, y2 = line[0]
             abs_slope = abs((y2 - y1) / (x2 - x1))  # Use abs so all angles in first 2 quadrants
             abs_line_angle = math.atan(abs_slope)
             if abs(abs_line_angle - np.pi / 2) < angle_tol_rad:
+                vertical_lines.append(line[0])
                 cv2.line(image_out, (x1, y1), (x2, y2), (0, 255, 0), 2)
         if debug:
             cv2.imshow("image_blurred", image_blurred)
@@ -103,7 +109,47 @@ class DetectorGoalPost(Detector):
             cv2.imshow("image_hough", image_hough)
 
             cv2.waitKey(0)
-        return image_out
+        return vertical_lines, image_out
+
+    @staticmethod
+    def cluster_vlines(vlines, max_y_gap, min_x_gap):
+        """Arrange sorted vertical line data into groups where successive elements
+        must have similar y values and a gap between their x values
+        Based on: https://stackoverflow.com/questions/14783947/grouping-clustering-numbers-in-python
+        """
+        groups = [[vlines[0]]]
+        for d in vlines[1:]:
+            is_x1s_dissimilar = abs(d["x1"] - groups[-1][-1]["x1"]) >= min_x_gap
+            is_y1s_similar = abs(d["y1"] - groups[-1][-1]["y1"]) <= max_y_gap
+            is_y2s_similar = abs(d["y2"] - groups[-1][-1]["y2"]) <= max_y_gap
+            is_x2s_dissimilar = abs(d["x2"] - groups[-1][-1]["x2"]) >= min_x_gap
+            if is_x1s_dissimilar and is_y1s_similar and is_x2s_dissimilar and is_y2s_similar:
+                groups[-1].append(d)
+            else:
+                groups.append([d])
+        return groups
+
+    @staticmethod
+    def detect_net_in_vlines(vertical_lines, base_img, length_similarity_threshold=20, min_post_separation=10):
+        # Check for a net by looking for lines that start and end at similar y values and are a sufficient x distance
+        # apart
+        is_net_in_vlines = False
+        # TODO remove dict conversion
+        vlines = []
+        for line in vertical_lines:
+            x1, y1, x2, y2 = line
+            if y1 > y2:  # want y1 to be the smaller y value when we sort
+                (x1, y1, x2, y2) = (x2, y2, x1, y1)
+            vlines.append({"x1": x1, "y1": y1, "x2": x2, "y2": y2})
+        vlines_sorted_by_y1 = sorted(vlines, key=lambda d: d["y1"])
+        clustered_vlines = DetectorGoalPost.cluster_vlines(vlines_sorted_by_y1, length_similarity_threshold, min_post_separation)
+        net_line_img = base_img
+        for v_line_group in clustered_vlines:
+            if len(v_line_group) > 1:
+                for d in v_line_group:
+                    cv2.line(net_line_img, (d["x1"], d["y1"]), (d["x2"], d["y2"]), (255, 0, 0), 2)
+                is_net_in_vlines = True
+        return is_net_in_vlines, net_line_img
 
 
 if __name__ == "__main__":
