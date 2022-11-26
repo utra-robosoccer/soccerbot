@@ -1,6 +1,7 @@
 # Transmitter.py
 
 import struct
+import time
 from queue import Queue
 from threading import Event, Lock, Thread
 
@@ -118,6 +119,7 @@ class Transmitter(Thread):
                     self._send_packet_to_mcu(goal_motor_angles)
                     with self._num_tx_lock:
                         self._num_tx = self._num_tx + 1
+                time.sleep(0)
         except serial.serialutil.SerialException as e:
             log_string("Serial exception in thread {0}".format(self._name))
             print(e)

@@ -18,7 +18,6 @@ class MotorReceiver(Receiver):
             valid, raw_pos = jx_servo_util.uart_transact(self._ser, [], CMDS.POSITION, RWS.READ, preflush=True)
             pos = {}
             if valid:
-                # print('!!!!!!!RX!!!!!!!')
                 for servo_idx, (p_valid, p) in raw_pos.items():
                     if p_valid:
                         pos[servo_idx] = unpack6(p[1:3], False) / 0xFFF * 180.0  # note: we use degrees for motor angles
