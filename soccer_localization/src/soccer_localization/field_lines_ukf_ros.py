@@ -89,7 +89,7 @@ class FieldLinesUKFROS(FieldLinesUKF):
             RobotState.STATUS_DETERMINING_SIDE,
             RobotState.STATUS_WALKING,
         ]:
-            return
+            return None, None, None
 
         stamp = point_cloud.header.stamp
         point_cloud = pcl2.read_points_list(point_cloud)

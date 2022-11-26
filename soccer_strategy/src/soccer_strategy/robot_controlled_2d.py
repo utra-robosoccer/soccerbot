@@ -1,10 +1,12 @@
 import math
+from typing import Optional
 
 import numpy as np
 import rospy
 
 from soccer_common.transformation import Transformation
 from soccer_pycontrol import path
+from soccer_strategy.ball import Ball
 from soccer_strategy.robot import Robot
 from soccer_strategy.robot_controlled import RobotControlled
 
@@ -57,7 +59,7 @@ class RobotControlled2D(RobotControlled):
             opponent_goal = np.array([0, -4.5])
         return opponent_goal
 
-    def observe_ball(self, ball) -> bool:
+    def observe_ball(self, ball: Optional[Ball]) -> bool:
         if ball is None or ball.position is None:
             return False
         theta = self.position[2]  # TODO change this to direction vector?
@@ -72,5 +74,6 @@ class RobotControlled2D(RobotControlled):
         if angle < self.ObservationConstants.FOV / 2 and distance < self.ObservationConstants.VISION_RANGE:
             self.observed_ball.position = ball_position
             self.navigation_goal_localized_time = rospy.Time.now()
+            ball.last_observed_time_stamp = rospy.Time.now()
 
         # TODO can add noise here

@@ -1,3 +1,4 @@
+import os
 import time
 from collections import namedtuple
 from functools import cached_property
@@ -105,7 +106,8 @@ class Field:
         plt.xlabel("X (m)")
         plt.ylabel("Y (m)")
         plt.title("UKF Robot localization")
-        plt.show(block=False)
+        if "DISPLAY" in os.environ:
+            plt.show(block=False)
 
     def filterWorldFramePoints(self, current_transform: Transformation, point_cloud_array: np.array) -> Optional[np.array]:
         # Filter points by distance from current transform
