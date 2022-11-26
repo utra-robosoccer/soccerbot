@@ -27,7 +27,7 @@ def retrieve_bag():
     return test_path
 
 
-@pytest.mark.parametrize("t_start", [(60)])
+@pytest.mark.parametrize("t_start", [(80)])
 def test_points_correction(t_start):
     plt.figure("Localization")
 
@@ -73,7 +73,9 @@ def test_points_correction(t_start):
 
                 if "DISPLAY" in os.environ:
                     plt.draw()
-                    plt.waitforbuttonpress()
+                    plt.waitforbuttonpress(timeout=0.01)
+
+    plt.close()
 
 
 def test_walk_forward():
@@ -202,7 +204,9 @@ def test_walk_forward():
     plt_dim_error(2, "Theta")
 
     if "DISPLAY" in os.environ:
-        plt.show(block=True)
+        plt.show(block=False)
+        plt.waitforbuttonpress(timeout=10)
+        plt.close("all")
 
 
 def test_show_ukf_stuff():
@@ -213,4 +217,6 @@ def test_show_ukf_stuff():
     ukf_internal.plot_sigmas(f.ukf.points_fn, x=f.ukf.x, cov=f.ukf.P)
 
     if "DISPLAY" in os.environ:
-        plt.show()
+        plt.show(block=False)
+        plt.waitforbuttonpress(timeout=10)
+        plt.close("all")

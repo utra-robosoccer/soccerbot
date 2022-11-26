@@ -1,6 +1,7 @@
 import os
 
 import pytest
+import rospy
 
 if "ROS_NAMESPACE" not in os.environ:
     os.environ["ROS_NAMESPACE"] = "/robot1"
@@ -18,7 +19,7 @@ robot_model = "bez1"
 if real_robot:
     from soccer_msgs.msg import FixedTrajectoryCommand
 else:
-    from soccer_common.mock_ros import mock_ros
+    from soccer_common.utils_rosparam import set_rosparam_from_yaml_file
 
     file_path = os.path.dirname(os.path.abspath(__file__))
 
@@ -26,7 +27,7 @@ else:
 
     from unittest.mock import MagicMock
 
-    mock_ros(robot_model=robot_model, real_robot=real_robot, param_path=config_path)
+    set_rosparam_from_yaml_file(param_path=config_path)
     FixedTrajectoryCommand = MagicMock()
 
 from soccer_trajectories.soccer_trajectories import SoccerTrajectoryClass

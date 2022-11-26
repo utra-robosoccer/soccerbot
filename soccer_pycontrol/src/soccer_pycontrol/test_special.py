@@ -6,7 +6,7 @@ import unittest
 import numpy as np
 from matplotlib import pyplot as plt
 
-from soccer_common.mock_ros import mock_ros, set_rosparam_from_yaml_file
+from soccer_common.utils_rosparam import set_rosparam_from_yaml_file
 from soccer_msgs.msg import RobotState
 
 if "ROS_NAMESPACE" not in os.environ:
@@ -30,8 +30,7 @@ if run_in_ros:
 
 file_path = os.path.dirname(os.path.abspath(__file__))
 config_path = f"{file_path}/../../config/bez1_sim_pybullet.yaml"
-mock_ros(real_robot=False)
-set_rosparam_from_yaml_file(params_path=config_path)
+set_rosparam_from_yaml_file(param_path=config_path)
 
 from soccer_pycontrol.navigator import Navigator
 from soccer_pycontrol.navigator_ros import NavigatorRos

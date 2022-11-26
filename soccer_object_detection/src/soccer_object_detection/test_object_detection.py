@@ -5,10 +5,10 @@ from unittest.mock import MagicMock
 import cv2
 from cv2 import Mat
 
-from soccer_common.mock_ros import mock_ros
+from soccer_common.utils_rosparam import set_rosparam_from_yaml_file
 from soccer_msgs.msg import GameState, RobotState
 
-mock_ros()
+set_rosparam_from_yaml_file()
 
 
 def IoU(boxA, boxB):

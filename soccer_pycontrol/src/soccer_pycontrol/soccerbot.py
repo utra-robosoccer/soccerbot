@@ -56,7 +56,7 @@ class Soccerbot:
         home = expanduser("~")
         self.body = pb.loadURDF(
             home
-            + f"/catkin_ws/src/soccerbot/{rospy.get_param('~robot_model', 'bez1')}_description/urdf/{rospy.get_param('~robot_model', 'bez1')}.urdf",
+            + f"/catkin_ws/src/soccerbot/{rospy.get_param('robot_model', 'bez1')}_description/urdf/{rospy.get_param('robot_model', 'bez1')}.urdf",
             useFixedBase=useFixedBase,
             flags=pb.URDF_USE_INERTIA_FROM_FILE | (pb.URDF_MERGE_FIXED_LINKS if self.merged_fixed_links else 0),
             basePosition=[pose.position[0], pose.position[1], pose.position[2]],
@@ -272,12 +272,7 @@ class Soccerbot:
         Zd = invconf[2, 3]
 
         if np.linalg.norm([Xd, Yd, Zd]) > (d3 + d4):
-            print(
-                "IK Position Unreachable: Desired Distance: "
-                + Transformation(np.linalg.norm([Xd, Yd, Zd]))
-                + ", Limited Distance: "
-                + Transformation(d3 + d4)
-            )
+            print("IK Position Unreachable: Desired Distance: " + str(np.linalg.norm([Xd, Yd, Zd])) + ", Limited Distance: " + str(d3 + d4))
         assert np.linalg.norm([Xd, Yd, Zd]) <= (d3 + d4)
 
         theta6 = -np.arctan2(Yd, Zd)

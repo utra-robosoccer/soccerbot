@@ -1,5 +1,8 @@
-import math
 import os
+
+os.environ["ROS_NAMESPACE"] = "/robot1"
+
+import math
 import unittest
 from pathlib import Path
 from unittest import TestCase
@@ -7,11 +10,6 @@ from unittest.mock import MagicMock
 
 import gdown
 import pytest
-
-from soccer_common.mock_ros import mock_ros
-
-mock_ros()
-
 from sensor_msgs.msg import CameraInfo
 
 from soccer_common.camera import Camera
@@ -163,6 +161,7 @@ class TestObjectLocalization(TestCase):
                     cv2.imwrite("/tmp/after.png", img_out)
 
                 cv2.waitKey(0)
+        cv2.destroyAllWindows()
 
     def test_goalpost_detection(self):
         download_dataset(url="https://drive.google.com/uc?id=17qdnW7egoopXHvakiNnUUufP2MOjyZ18", folder_name="goal_net")
