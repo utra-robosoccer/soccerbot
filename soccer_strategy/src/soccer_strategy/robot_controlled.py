@@ -31,7 +31,7 @@ class RobotControlled(Robot):
         self.max_kick_speed = 2
         self.navigation_goal_localized_time = rospy.Time.now()
         self.kick_with_right_foot = True
-        self.kicking_range_publisher = rospy.Publisher("strategy/kicking_range", Range, queue_size=1, latch=True)
+        self.kicking_range_publisher = rospy.Publisher("strategy/kicking_angle", Range, queue_size=1, latch=True)
 
     def shorten_navigation_position(self, goal_position):
         """
@@ -100,8 +100,13 @@ class RobotControlled(Robot):
         kicking_angle_header = Header()
         kicking_angle_header.stamp = rospy.Time.now()
         kicking_angle_header.frame_id = f"robot{self.robot_id}/torso"
-        kicking_angle = Range(header = kicking_angle_header, radiation_type = 1, field_of_view = abs(nav_angle_diff), min_range = 1, max_range = 2, range = 2)
-        
+        radiation_type = 1
+        field_of_view = abs(nav_angle_diff)
+        min_range = 1
+        max_range = 2
+        range = 2
+        kicking_angle = Range(kicking_angle_header, radiation_type, field_of_view, min_range, max_range, range)
+
         # Publishing range to topic /strategy/kicking_angle
 
         self.kicking_range_publisher.publish(kicking_angle)
