@@ -1,5 +1,4 @@
 from soccer_common.transformation import Transformation
-from soccer_common.transformation2d import Transformation2D
 
 try:
     from soccer_common.camera import Camera

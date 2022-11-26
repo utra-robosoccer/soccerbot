@@ -1,6 +1,7 @@
 from unittest import TestCase
 from unittest.mock import MagicMock
 
+import numpy as np
 import tf2_ros
 
 tf2_ros.TransformListener = MagicMock()
@@ -15,6 +16,11 @@ from soccer_common.transformation import Transformation
 
 
 class Test(TestCase):
+    def test_transformation(self):
+        t = Transformation(quaternion=[0, 0, 1, 0]) @ Transformation(position=[1, 0, 0])
+        assert np.all(t.quaternion == [0, 0, 1, 0])
+        assert np.all(t.position == [-1, 0, 0])
+
     def test_calculate_bounding_boxes_from_ball(self):
         for cam_angle in [0, 0.1, -0.1]:
 
