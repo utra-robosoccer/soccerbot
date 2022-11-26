@@ -34,7 +34,7 @@ from soccer_trajectories.soccer_trajectories import SoccerTrajectoryClass
 
 class TestTrajectory:
     @pytest.mark.parametrize("trajectory_name", ["getupfront", "getupback", "getupside", "rightkick"])
-    def test_getupfront(self, trajectory_name: str):
+    def test_all_trajectories(self, trajectory_name: str):
         c = SoccerTrajectoryClass()
         rospy.init_node("test")
         msg = FixedTrajectoryCommand()

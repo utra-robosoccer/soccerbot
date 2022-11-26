@@ -3,8 +3,6 @@ import os
 
 if "ROS_NAMESPACE" not in os.environ:
     os.environ["ROS_NAMESPACE"] = "/robot1"
-import sys
-
 import numpy as np
 import rospy
 import ruamel.yaml
@@ -12,48 +10,23 @@ from scipy.optimize import curve_fit
 
 from soccer_common.transformation import Transformation
 from soccer_common.utils import trimToPi, wrapToPi
+from soccer_common.utils_rosparam import set_rosparam_from_yaml_file
 
 robot_model = "bez1"
 run_in_ros = False
 
 
 def setup_calibration():
-    from os.path import exists
     from unittest.mock import MagicMock
 
-    import yaml
-
-    sys.modules["rospy"] = MagicMock()
     import rospy
 
-    rospy.Time = MagicMock()
     joint_state = MagicMock()
     joint_state.position = [0.0] * 18
     rospy.wait_for_message = MagicMock(return_value=joint_state)
-    rospy.loginfo_throttle = lambda a, b: None
 
-    robot_model = "bez1"
-
-    def f(a, b):
-        a = a.lstrip("~")
-        if a == "robot_model":
-            return robot_model
-
-        config_path = f"../../config/{robot_model}_sim.yaml"
-        if not exists(config_path):
-            return b
-
-        with open(config_path, "r") as g:
-
-            y = yaml.safe_load(g)
-            for c in a.split("/"):
-                if y is None or c not in y:
-                    return b
-                y = y[c]
-            return y
-
-    rospy.get_param = f
-
+    param_path = f"../../config/{robot_model}_sim.yaml"
+    set_rosparam_from_yaml_file(param_path=param_path)
     pass
 
 
