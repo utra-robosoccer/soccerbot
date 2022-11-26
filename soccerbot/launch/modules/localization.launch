@@ -72,9 +72,6 @@
     <!-- UKF localization -->
     <node pkg="soccer_localization" type="main.py" name="soccer_ukf" respawn="$(optenv COMPETITION false)" unless="$(eval fake_localization or use_amcl)" output="log" />
 
-    <!-- UKF localization -->
-    <node pkg="soccer_localization" type="main.py" name="soccer_ukf" respawn="$(optenv COMPETITION false)" unless="$(eval fake_localization or use_amcl)" output="log" />
-
     <node pkg="tf" type="static_transform_publisher" name="imu_to_robot_base" args="0 0 0 0 0 0 $(arg robot_name)/odom $(arg robot_name)/base_footprint 100" if="$(arg fake_localization)" />
 
     <node pkg="fake_localization" type="fake_localization" name="fake_localization" if="$(arg fake_localization)">
