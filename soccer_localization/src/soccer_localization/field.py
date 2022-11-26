@@ -225,7 +225,7 @@ class Field:
         )
 
         end = time.time()
-        print(f"Time took {(end - start)}")
+        rospy.loginfo_throttle(60, f"Match Points with Map rate (s) :  {(end - start)}")
         return offset_transform
 
     def drawPointsOnMap(self, current_transform: Transformation, point_cloud_array: np.array, label: str, color: str):
