@@ -38,6 +38,7 @@ class DetectorFieldline(Detector):
         self.image_publisher = rospy.Publisher("camera/line_image", Image, queue_size=1)
         self.point_cloud_publisher = rospy.Publisher("field_point_cloud", PointCloud2, queue_size=1)
         self.publish_point_cloud = False
+        self.ground_truth = False
         cv2.setRNGSeed(12345)
         pass
 
@@ -59,12 +60,14 @@ class DetectorFieldline(Detector):
         if not self.camera.ready():
             return
 
-        self.camera.reset_position(timestamp=img.header.stamp)
+        if self.ground_truth:
+            if not self.publish_point_cloud:
+                self.camera.reset_position(timestamp=img.header.stamp)
+            else:
+                self.camera.reset_position(timestamp=img.header.stamp, from_world_frame=True, camera_frame="/camera_gt")
+        else:
+            self.camera.reset_position(timestamp=img.header.stamp)
         # Uncomment for ground truth
-        # if not self.publish_point_cloud:
-        #     self.camera.reset_position(timestamp=img.header.stamp)
-        # else:
-        #     self.camera.reset_position(timestamp=img.header.stamp, from_world_frame=True, camera_frame="/camera_gt")
         rospy.loginfo_once("Started Publishing Fieldlines")
 
         image = CvBridge().imgmsg_to_cv2(img, desired_encoding="rgb8")
@@ -135,17 +138,20 @@ class DetectorFieldline(Detector):
                 i = i + 1
                 if i % 30 == 0:
                     camToPoint = Transformation(self.camera.findFloorCoordinate([px, py]))
-                    points3d.append(camToPoint.position)
+
+                    # Exclude points too far away
+                    if camToPoint.norm_squared < 4:
+                        points3d.append(camToPoint.position)
 
             # Publish fieldlines in laserscan format
             header = Header()
             header.stamp = img.header.stamp
-            header.frame_id = self.robot_name + "/odom"
-            # Uncomment for ground truth
-            # if not self.publish_point_cloud:
-            #     header.frame_id = self.robot_name + "/odom"
-            # else:
-            #     header.frame_id = "world"
+            header.frame_id = self.robot_name + "/base_footprint"
+            if self.ground_truth:
+                if not self.publish_point_cloud:
+                    header.frame_id = self.robot_name + "/base_footprint"
+                else:
+                    header.frame_id = "world"
             point_cloud_msg = pcl2.create_cloud_xyz32(header, points3d)
             self.point_cloud_publisher.publish(point_cloud_msg)
 

@@ -240,12 +240,12 @@ class RobotControlled3D(RobotControlled):
             p.pose.pose.orientation.w = q[3]
             rospy.loginfo_throttle_identical(10, "Setting " + self.robot_name + " localization position " + str(position) + " orientation " + str(q))
             # fmt: off
-            p.pose.covariance = [0.0025, 0.0, 0.0, 0.0, 0.0, 0.0,
-                                 0.0, 0.0025, 0.0, 0.0, 0.0, 0.0,
+            p.pose.covariance = [0.0004, 0.0, 0.0, 0.0, 0.0, 0.0,
+                                 0.0, 0.0004, 0.0, 0.0, 0.0, 0.0,
                                  0.0, 0.0, 0, 0.0, 0.0, 0.0,
                                  0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
                                  0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                                 0.0, 0.0, 0.0, 0.0, 0.0, 0.01]
+                                 0.0, 0.0, 0.0, 0.0, 0.0, 0.0001]
             # fmt: on
             self.robot_initial_pose_publisher.publish(p)
             rospy.sleep(1)
