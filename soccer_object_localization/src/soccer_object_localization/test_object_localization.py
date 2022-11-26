@@ -1,20 +1,22 @@
 import os
 
+import rospy
+
 os.environ["ROS_NAMESPACE"] = "/robot1"
 
 import math
-import unittest
 from pathlib import Path
 from unittest import TestCase
 from unittest.mock import MagicMock
 
 import gdown
 import pytest
-from sensor_msgs.msg import CameraInfo
+from sensor_msgs.msg import CameraInfo, Image
 
 from soccer_common.camera import Camera
 from soccer_common.transformation import Transformation
 from soccer_msgs.msg import RobotState
+from soccer_object_localization.detector_fieldline import DetectorFieldline
 
 
 def download_dataset(url, folder_name):
@@ -37,9 +39,8 @@ def download_dataset(url, folder_name):
 
 
 class TestObjectLocalization(TestCase):
-    @unittest.mock.patch("soccer_common.camera.TransformListener")
-    @unittest.mock.patch("soccer_common.camera.rospy.Time.now")
-    def test_camera_find_floor_coordinate(self, mock_tf_listener, now):
+    def test_camera_find_floor_coordinate(self):
+        rospy.init_node("test")
         p = Transformation([0, 0, 0.5], euler=[0, math.pi / 4, 0])
         c = Camera("robot1")
         c.pose = p
@@ -53,9 +54,8 @@ class TestObjectLocalization(TestCase):
         self.assertAlmostEqual(p2[1], 0, delta=0.005)
         self.assertAlmostEqual(p2[2], 0, delta=0.005)
 
-    @unittest.mock.patch("soccer_common.camera.TransformListener")
-    @unittest.mock.patch("soccer_common.camera.rospy.Time.now")
-    def test_camera_find_camera_coordinate(self, mock_tf_listener, now):
+    def test_camera_find_camera_coordinate(self):
+        rospy.init_node("test")
         p = Transformation([0, 0, 0.5], euler=[0, math.pi / 4, 0])
         c = Camera("robot1")
         c.pose = p
@@ -68,9 +68,8 @@ class TestObjectLocalization(TestCase):
         self.assertAlmostEqual(p2[0], 360 / 2, delta=0.5)
         self.assertAlmostEqual(p2[1], 240 / 2, delta=0.5)
 
-    @unittest.mock.patch("soccer_common.camera.TransformListener")
-    @unittest.mock.patch("soccer_common.camera.rospy.Time.now")
-    def test_camera_find_camera_coordinate_2(self, mock_tf_listener, now):
+    def test_camera_find_camera_coordinate_2(self):
+        rospy.init_node("test")
         p = Transformation([0, 0, 0.5], euler=[0, 0, 0])
         c = Camera("robot1")
         c.pose = p
@@ -83,10 +82,8 @@ class TestObjectLocalization(TestCase):
         self.assertAlmostEqual(p3[0], 360 / 2, delta=0.5)
         self.assertAlmostEqual(p3[1], 240 / 2, delta=0.5)
 
-    @unittest.mock.patch("soccer_common.camera.TransformListener")
-    @unittest.mock.patch("soccer_common.camera.rospy.Time.now")
-    def test_calculate_bounding_boxes_from_ball(self, mock_tf_listener, now):
-        from sensor_msgs.msg import CameraInfo
+    def test_calculate_bounding_boxes_from_ball(self):
+        rospy.init_node("test")
 
         for cam_angle in [0, 0.1, -0.1]:
             for cam_position in [[0, 0, 0], [0, 0, 0.1], [0, 0, -0.1]]:
@@ -111,12 +108,8 @@ class TestObjectLocalization(TestCase):
                     self.assertAlmostEqual(position.position[1], ball_pose.position[1], delta=0.001)
                     self.assertAlmostEqual(position.position[2], ball_pose.position[2], delta=0.001)
 
-    @unittest.mock.patch("soccer_common.camera.TransformListener")
-    @unittest.mock.patch("soccer_common.camera.rospy.Time.now")
-    def test_fieldline_detection(self, mock_tf_listener, now):
-        from sensor_msgs.msg import CameraInfo, Image
-
-        from soccer_object_localization.detector_fieldline import DetectorFieldline
+    def test_fieldline_detection(self):
+        rospy.init_node("test")
 
         download_dataset(url="https://drive.google.com/uc?id=1nJX6ySks_a7mESvCm3sNllmJTNpm-x2_", folder_name="fieldlines")
 
