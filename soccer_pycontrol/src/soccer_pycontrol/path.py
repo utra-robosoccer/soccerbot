@@ -11,10 +11,10 @@ from mpl_toolkits.mplot3d import (
 )
 
 from soccer_common import Transformation
+from soccer_common.utils import wrapToPi
 from soccer_pycontrol.path_section import PathSection
 from soccer_pycontrol.path_section_bezier import PathSectionBezier
 from soccer_pycontrol.path_section_short import PathSectionShort
-from soccer_pycontrol.utils import wrapToPi
 
 
 class Path:

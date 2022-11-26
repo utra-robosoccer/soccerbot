@@ -20,8 +20,9 @@ timeout_decorator
 pytest-timeout
 pytest-rerunfailures
 ruamel.yaml
-pybullet
+filterpy
 gdown
+pybullet
 
 # object detection
 requests==2.28.1

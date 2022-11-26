@@ -11,7 +11,7 @@ import ruamel.yaml
 from scipy.optimize import curve_fit
 
 from soccer_common.transformation import Transformation
-from soccer_pycontrol.utils import trimToPi, wrapToPi
+from soccer_common.utils import trimToPi, wrapToPi
 
 robot_model = "bez1"
 run_in_ros = False

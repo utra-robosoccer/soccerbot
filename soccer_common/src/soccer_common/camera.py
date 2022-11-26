@@ -62,7 +62,7 @@ class Camera:
             target_frame = self.robot_name + camera_frame
             timeout_duration = rospy.Duration(nsecs=1000000)
         else:
-            base_frame = self.robot_name + "/odom"
+            base_frame = self.robot_name + "/base_footprint"
             target_frame = self.robot_name + camera_frame
             timeout_duration = rospy.Duration(secs=1)
 

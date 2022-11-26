@@ -59,7 +59,7 @@ class RobotControlled2D(RobotControlled):
 
     def observe_ball(self, ball) -> bool:
         if ball is None or ball.position is None:
-            return
+            return False
         theta = self.position[2]  # TODO change this to direction vector?
         arrow_len = 0.3
         arrow_end_x = math.cos(theta) * arrow_len
