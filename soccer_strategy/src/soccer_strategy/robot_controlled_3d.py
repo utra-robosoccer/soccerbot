@@ -6,11 +6,13 @@ import rospy
 import tf2_py
 import tf.transformations
 from geometry_msgs.msg import Pose, PoseArray, PoseStamped, PoseWithCovarianceStamped
-from sensor_msgs.msg import Imu
+from sensor_msgs.msg import Imu, Range
 from std_msgs.msg import Bool, Empty
 
 from soccer_common import Transformation
 from soccer_msgs.msg import FixedTrajectoryCommand, RobotState
+
+from soccer_strategy.ball import Ball
 from soccer_strategy.robot import Robot
 from soccer_strategy.robot_controlled import RobotControlled
 
@@ -36,6 +38,7 @@ class RobotControlled3D(RobotControlled):
         self.robot_initial_pose_publisher = rospy.Publisher("initialpose", PoseWithCovarianceStamped, queue_size=1, latch=True)
         self.goal_publisher = rospy.Publisher("goal", PoseStamped, queue_size=1, latch=True)
         self.trajectory_publisher = rospy.Publisher("command", FixedTrajectoryCommand, queue_size=1, latch=True)
+        self.kicking_range_publisher = rospy.Publisher("kicking_angle", Range, queue_size=1, latch=True)
 
         self.tf_listener = tf.TransformListener()
 
@@ -286,3 +289,17 @@ class RobotControlled3D(RobotControlled):
             obstacles.append(obstacle_position)
             pass
         return obstacles
+
+    def can_kick(self, **kwargs):
+        # Initialize and create a Range visualizer for kicking angle
+        r = Range()
+        r.header.stamp = rospy.Time.now()
+        r.header.frame_id = f"robot{self.robot_id}/base_footprint"
+        r.field_of_view = self.min_kick_angle*2
+        r.min_range = 0
+        r.max_range = self.min_kick_angle
+        r.range = self.min_kick_distance
+        r.radiation_type = 1
+        self.kicking_range_publisher.publish(r)
+
+        super().can_kick(**kwargs)

@@ -7,7 +7,6 @@ import rospy
 from soccer_common.transformation import Transformation
 from soccer_strategy.ball import Ball
 from soccer_strategy.robot import Robot
-from sensor_msgs.msg import Range
 
 class RobotControlled(Robot):
     def __init__(
@@ -30,7 +29,9 @@ class RobotControlled(Robot):
         self.max_kick_speed = 2
         self.navigation_goal_localized_time = rospy.Time.now()
         self.kick_with_right_foot = True
-        self.kicking_range_publisher = rospy.Publisher("kicking_angle", Range, queue_size=1, latch=True)
+
+        self.min_kick_distance = rospy.get_param("min_kick_distance", 0.20)
+        self.min_kick_angle = rospy.get_param("min_kick_angle", 0.4)
 
     def shorten_navigation_position(self, goal_position):
         """
@@ -95,23 +96,8 @@ class RobotControlled(Robot):
         nav_angle_diff = player_angle - robot_ball_angle
         distance_of_player_to_ball = np.linalg.norm(player_position - ball_position)
 
-        # Initialize and create a Range visualizer for kicking angle
-        min_kick_distance = rospy.get_param("min_kick_distance", 0.20)
-        min_kick_angle = rospy.get_param("min_kick_angle", 0.4)
-
-        # Publishing range to topic kicking_angle
-        r = Range()
-        r.header.stamp = rospy.Time.now()
-        r.header.frame_id = f"robot{self.robot_id}/base_footprint"
-        r.field_of_view = min_kick_angle*2
-        r.min_range = 0
-        r.max_range = min_kick_angle
-        r.range = min_kick_distance
-        r.radiation_type = 1
-        self.kicking_range_publisher.publish(r)
-
         # Evaluate kicking angle is correct
-        if distance_of_player_to_ball < min_kick_distance and abs(nav_angle_diff) < min_kick_angle:
+        if distance_of_player_to_ball < self.min_kick_distance and abs(nav_angle_diff) < self.min_kick_angle:
             if nav_angle_diff > 0:
                 self.kick_with_right_foot = True
             else:
