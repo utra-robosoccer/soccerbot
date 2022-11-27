@@ -102,8 +102,8 @@ class RobotControlled(Robot):
         # Publishing range to topic kicking_angle
         r = Range()
         r.header.stamp = rospy.Time.now()
-        r.header.frame_id = f"robot{self.robot_id}/torso"
-        r.field_of_view = min_kick_angle
+        r.header.frame_id = f"robot{self.robot_id}/base_footprint"
+        r.field_of_view = min_kick_angle*2
         r.min_range = 0
         r.max_range = min_kick_angle
         r.range = min_kick_distance
