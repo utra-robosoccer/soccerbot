@@ -18,6 +18,8 @@ from soccer_msgs.msg import FixedTrajectoryCommand, RobotState
 class Trajectory:
     """Interpolates a CSV trajectory for multiple joints."""
 
+    RATE = 100
+
     def __init__(self, trajectory_path: str, mirror=False):
         """Initialize a Trajectory from a CSV file at trajectory_path.
         if it's getup trajectory append the desired final pose so the robot is ready for next action
@@ -99,7 +101,7 @@ class Trajectory:
 
     def run(self):
         pub_all_motor = rospy.Publisher("joint_command", JointState, queue_size=10)
-        rate = rospy.Rate(100)
+        rate = rospy.Rate(Trajectory.RATE)
         t = 0
         while not rospy.is_shutdown() and t < self.max_time and not self.terminate:
             js = JointState()

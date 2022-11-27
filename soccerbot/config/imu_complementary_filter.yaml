@@ -4,3 +4,4 @@ bias_alpha: 0.001
 do_bias_estimation: true
 do_adaptive_gain: true
 publish_debug_topics: true
+orientation_stddev: 0.08376290109
