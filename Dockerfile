@@ -102,7 +102,7 @@ USER $USER
 COPY requirements.txt /tmp/requirements.txt
 ENV PATH=/home/$USER/.local/bin:$PATH
 RUN pip3 install -r /tmp/requirements.txt --extra-index-url https://download.pytorch.org/whl/cu117
-RUN if [[ "$(dpkg --print-architecture)" == "x86_64" ]] ; then \
+RUN if [[ "$(dpkg --print-architecture)" == "amd64" ]] ; then \
     pip3 install cuda-python torch==1.11.0+cu115 torchvision==0.12.0+cu115 torchaudio==0.11.0+cu115 -f https://download.pytorch.org/whl/torch_stable.html; fi
 
 RUN mkdir -p /home/$USER/catkin_ws/src
