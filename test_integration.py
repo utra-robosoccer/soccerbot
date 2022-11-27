@@ -178,6 +178,7 @@ class IntegrationTestPlaying(IntegrationTest):
             gt_ball_pose = self.get_ball_pose(gt=False)
             if gt_ball_pose is not None:
                 printlog(f"Current ball location: {gt_ball_pose}")
+
                 if gt_ball_pose[0] > 4.5:
                     printlog("Goal Scored")
                     return
