@@ -282,7 +282,7 @@ Visualization Manager:
               Enabled: true
               Name: Range
               Queue Size: 1
-              Topic: /robot1/strategy/kicking_angle
+              Topic: /robot1/kicking_angle
               Unreliable: false
               Value: true
           Enabled: true

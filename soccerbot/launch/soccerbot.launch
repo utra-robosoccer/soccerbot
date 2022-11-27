@@ -92,7 +92,7 @@
         /$(arg robot_name)/set_pose
         /$(arg robot_name)/state
         /$(arg robot_name)/torso_height
-        /$(arg robot_name)/strategy/kick_ang
+        /$(arg robot_name)/kicking_angle
         /reset_ball
         /tf
         /tf_static

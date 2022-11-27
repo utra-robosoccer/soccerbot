@@ -8,7 +8,6 @@ from soccer_common.transformation import Transformation
 from soccer_strategy.ball import Ball
 from soccer_strategy.robot import Robot
 from sensor_msgs.msg import Range
-from std_msgs.msg import Header
 
 class RobotControlled(Robot):
     def __init__(
@@ -31,7 +30,7 @@ class RobotControlled(Robot):
         self.max_kick_speed = 2
         self.navigation_goal_localized_time = rospy.Time.now()
         self.kick_with_right_foot = True
-        self.kicking_range_publisher = rospy.Publisher("strategy/kicking_angle", Range, queue_size=1, latch=True)
+        self.kicking_range_publisher = rospy.Publisher("kicking_angle", Range, queue_size=1, latch=True)
 
     def shorten_navigation_position(self, goal_position):
         """
@@ -97,21 +96,22 @@ class RobotControlled(Robot):
         distance_of_player_to_ball = np.linalg.norm(player_position - ball_position)
 
         # Initialize and create a Range visualizer for kicking angle
-        kicking_angle_header = Header()
-        kicking_angle_header.stamp = rospy.Time.now()
-        kicking_angle_header.frame_id = f"robot{self.robot_id}/torso"
-        radiation_type = 1
-        field_of_view = abs(nav_angle_diff)
-        min_range = 1
-        max_range = 2
-        range = 2
-        kicking_angle = Range(kicking_angle_header, radiation_type, field_of_view, min_range, max_range, range)
+        min_kick_distance = rospy.get_param("min_kick_distance", 0.20)
+        min_kick_angle = rospy.get_param("min_kick_angle", 0.4)
 
-        # Publishing range to topic /strategy/kicking_angle
+        # Publishing range to topic kicking_angle
+        r = Range()
+        r.header.stamp = rospy.Time.now()
+        r.header.frame_id = f"robot{self.robot_id}/torso"
+        r.field_of_view = min_kick_angle
+        r.min_range = 0
+        r.max_range = min_kick_angle
+        r.range = min_kick_distance
+        r.radiation_type = 1
+        self.kicking_range_publisher.publish(r)
 
-        self.kicking_range_publisher.publish(kicking_angle)
-
-        if distance_of_player_to_ball < rospy.get_param("min_kick_distance", 0.20) and abs(nav_angle_diff) < rospy.get_param("min_kick_angle", 0.4):
+        # Evaluate kicking angle is correct
+        if distance_of_player_to_ball < min_kick_distance and abs(nav_angle_diff) < min_kick_angle:
             if nav_angle_diff > 0:
                 self.kick_with_right_foot = True
             else:
