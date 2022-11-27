@@ -290,7 +290,7 @@ class RobotControlled3D(RobotControlled):
             pass
         return obstacles
 
-    def can_kick(self, **kwargs):
+    def can_kick(self, *args, **kwargs):
         # Initialize and create a Range visualizer for kicking angle
         r = Range()
         r.header.stamp = rospy.Time.now()
@@ -302,4 +302,4 @@ class RobotControlled3D(RobotControlled):
         r.radiation_type = 1
         self.kicking_range_publisher.publish(r)
 
-        super().can_kick(**kwargs)
+        super().can_kick(*args, **kwargs)
