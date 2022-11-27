@@ -7,7 +7,7 @@ import numpy as np
 import rospy
 
 from soccer_common.transformation import Transformation
-from soccer_pycontrol.utils import wrapTo2Pi, wrapToPi
+from soccer_common.utils import wrapTo2Pi, wrapToPi
 
 
 class PathSection(ABC):
