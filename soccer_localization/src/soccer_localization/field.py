@@ -7,6 +7,7 @@ from typing import Dict, List, Optional, Tuple, Union
 import matplotlib.pyplot as plt
 import numpy as np
 import scipy
+import rospy
 from matplotlib.collections import PathCollection
 
 from soccer_common import Transformation
