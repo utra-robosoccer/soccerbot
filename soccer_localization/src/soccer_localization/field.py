@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import rospy
 import numpy as np
 import scipy
+import rospy
 from matplotlib.collections import PathCollection
 
 from soccer_common import Transformation
