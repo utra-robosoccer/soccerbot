@@ -302,4 +302,4 @@ class RobotControlled3D(RobotControlled):
         r.radiation_type = 1
         self.kicking_range_publisher.publish(r)
 
-        super().can_kick(*args, **kwargs)
+        return super().can_kick(*args, **kwargs)
