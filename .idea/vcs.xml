@@ -11,7 +11,5 @@
     <mapping directory="$PROJECT_DIR$/external/webots/resources/webots_ros" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/external/webots/src/glm" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/external/webots/src/stb" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/soccer_object_detection/src/soccer_object_detection/tensorrtx" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/soccer_object_detection/src/soccer_object_detection/yolov5" vcs="Git" />
   </component>
 </project>
