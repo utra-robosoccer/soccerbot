@@ -1,6 +1,7 @@
 # Transmitter.py
 
 import struct
+import time
 from queue import Queue
 from threading import Event, Lock, Thread
 
@@ -31,10 +32,10 @@ JX_JOINTS = [
     "left_leg_motor_5",
 ]
 GOBILDA_JOINTS = [
-    "left_arm_motor_0",
-    "left_arm_motor_1",
     "right_arm_motor_0",
     "right_arm_motor_1",
+    "left_arm_motor_0",
+    "left_arm_motor_1",
     "head_motor_0",
     "head_motor_1",
 ]
@@ -56,9 +57,10 @@ class Transmitter(Thread):
         super().start(*args, **kwargs)
         # return
         with self._jx_ser._motor_lock:
-            jx_servo_util.uart_transact(self._jx_ser, [1600, 1, 15] * 13, CMDS.PID_COEFF, RWS.WRITE)  # push initial PID gains
-            jx_servo_util.uart_transact(self._jx_ser, [500] * 13, CMDS.MAX_DRIVE, RWS.WRITE)  # push initial maximum drive (out of 4096)
-            # pass
+            jx_servo_util.uart_transact(self._jx_ser, [1600, 1, 15] * 13, CMDS.PID_COEFF,
+                                        RWS.WRITE)  # push initial PID gains
+            jx_servo_util.uart_transact(self._jx_ser, [2640] * 13, CMDS.MAX_DRIVE,
+                                        RWS.WRITE)  # push initial maximum drive (out of 4096)
 
     def stop(self):
         """
@@ -81,7 +83,7 @@ class Transmitter(Thread):
             flat_jx_goal_angles = [0] * int(np.amax(jx_goal_angles[:, 0]) + 1)
             for idx, v in jx_goal_angles:
                 flat_jx_goal_angles[int(idx)] = constrain(int(v * ANGLE2JX_POT_VOLTS), 0, 0xFFF)
-            jx_servo_util.uart_transact(self._jx_ser, flat_jx_goal_angles, CMDS.POSITION, RWS.WRITE, 0.01)
+            jx_servo_util.uart_transact(self._jx_ser, flat_jx_goal_angles, CMDS.POSITION, RWS.WRITE, preflush=True)
 
         with self._pwm_ser._motor_lock:  # NOTE: possibly replace with acquire-release with timeout
             GOBILDA_IDX_BASE = np.amin(gobilda_goal_angles[:, 0])
@@ -89,10 +91,10 @@ class Transmitter(Thread):
             for idx, v in gobilda_goal_angles:
                 flat_gobilda_goal_angles[int(idx - GOBILDA_IDX_BASE)] = constrain(int(v * ANGLE2GOBILDA_PWM), 0, 0xFFF)
                 # print(int(v * ANGLE2GOBILDA_PWM), constrain(int(v * ANGLE2GOBILDA_PWM), 0, 0xFFF))
-                pass
+                # pass
             # print(flat_gobilda_goal_angles)
             # flat_gobilda_goal_angles = [0x800] * int(np.amax(gobilda_goal_angles[:, 0]) - GOBILDA_IDX_BASE + 1)
-            # gobilda_servo_util.uart_transact(self._pwm_ser, flat_gobilda_goal_angles)
+            gobilda_servo_util.uart_transact(self._pwm_ser, flat_gobilda_goal_angles)
 
     def get_num_tx(self):
         with self._num_tx_lock:
@@ -117,6 +119,7 @@ class Transmitter(Thread):
                     self._send_packet_to_mcu(goal_motor_angles)
                     with self._num_tx_lock:
                         self._num_tx = self._num_tx + 1
+                time.sleep(0)
         except serial.serialutil.SerialException as e:
             log_string("Serial exception in thread {0}".format(self._name))
             print(e)

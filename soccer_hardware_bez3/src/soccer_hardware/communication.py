@@ -1,5 +1,10 @@
+#!/usr/bin/env python
+# import time
+# time.sleep(30)
 import math
 import os
+if "ROS_NAMESPACE" not in os.environ:
+    os.environ["ROS_NAMESPACE"] = "/robot3"
 from threading import Lock
 
 import rospy as rp
@@ -32,6 +37,9 @@ class Communication:
         jx_ser._motor_lock = (
             Lock()
         )  # TODO improve on this hacky exclusive lock over the serial port for motor TX/RX (which always requires flushing the RX buffer via the state machine due to echo, hence exclusive lock)
+
+        # TODO: Serial fail handling
+        #    e.g. put all thread creation in a conditional timed loop, so if the serial temporarily disconnects we can reconnect and restart the thread. Alternatively, give the threads the serial object factory
         self._tx_servo_thread = Transmitter(name="tx_servo_th", jx_ser=jx_ser, pwm_ser=imu_pwm_servo_ser)
         self._rx_servo_thread = MotorReceiver(name="rx_servo_th", ser=jx_ser)
         self._rx_servo_thread.set_timeout(0.04)
@@ -54,7 +62,7 @@ class Communication:
         #     self._motor_map[motor]["subscriber"] = rp.Subscriber(motor + "/command", Float64, self.trajectory_callback, motor)
         #     self._motor_map[motor]["publisher"] = rp.Publisher(motor + "/state", JointControllerState, queue_size=1)
 
-        self._publish_timer = rp.Timer(rp.Duration(nsecs=10000000), self.send_angles)
+        self._publish_timer = rp.Timer(rp.Duration(nsecs=int(3E6)), self.send_angles)
 
     def run(self):
         self._rx_servo_thread.start()
@@ -93,18 +101,17 @@ class Communication:
         for motor in self._motor_map:
             servo_idx = int(self._motor_map[motor]["id"])
             # print(servo_idx, str(type(list(received_angles.keys())[0])), servo_idx in received_angles)
-            if int(servo_idx) < 12 and (servo_idx + 1) in received_angles:
-                angle = received_angles[servo_idx + 1]
+            if servo_idx in received_angles:
+                angle = received_angles[servo_idx]
                 if math.isnan(angle):  # TODO fix this
                     continue
                 angle = (angle - float(self._motor_map[motor]["offset"])) * float(self._motor_map[motor]["direction"])
                 angle = np.deg2rad(angle)
-            else:
-                angle = self._motor_map[motor]["value"]
 
-            # Joint State
-            joint_state.name.append(motor)
-            joint_state.position.append(angle)
+                # NOTE: only publish if we receive a valid angle from the servos, as opposed to whatever is in `_motor_map.value` [why were we doing that anyways?! sample-and-hold is a much better estimate.] (-DL 2022-09-28)
+                joint_state.name.append(motor)
+                joint_state.position.append(angle)
+
         # print(joint_state)
         self._pub_joint_states.publish(joint_state)
         # self.publish_sensor_data(self._last_angles, self._last_imu)
@@ -118,6 +125,7 @@ class Communication:
         # IMU FEEDBACK
         imu = Imu()
         imu.header.stamp = rp.rostime.get_rostime()
+        # print(os.environ)
         imu.header.frame_id = os.environ["ROS_NAMESPACE"][1:] + "/imu_link"
 
         # TODO autocalibrate

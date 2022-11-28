@@ -1,6 +1,7 @@
+import math
 from enum import Enum
-# import pygame
-# import pygame.locals
+import pygame
+import pygame.locals
 import serial
 import sys
 import struct
@@ -18,6 +19,19 @@ BAUD = int(1E6)
 NUM_SERVOS = 13
 EXPECT_BYTE_RX_TIME = 15E-6 # based on servo microcontroller nominal wait width per byte plus margin
 EXPECT_BYTE_TX_TIME = 15E-6
+
+def unpack6(bs, _signed=True):
+    # little-endian
+    c = 0
+    for i, b in enumerate(bs):
+        c |= (b & 0x3F) << (i * 6)
+
+    if _signed:
+        sign_bit = 1 << (len(bs) * 6 - 1)
+        if c & sign_bit:
+            c -= sign_bit << 1
+
+    return c
 
 def crc32mpeg2(buf, crc=0xffffffff):
 	CRC32_POLY = 0x104c11db7
@@ -98,7 +112,7 @@ def uart_transact(ser, B, cmd, rw):
 	servo_frames = {}
 	master_frame = []
 	empty_frames = 0
-	MAX_EMPTY_FRAMES = 13
+	MAX_EMPTY_FRAMES = 9
 	_saw_master_start = False
 	while uart_state != UART_STATES.ENDED and empty_frames < MAX_EMPTY_FRAMES:
 		for ri, r in enumerate(r0):
@@ -142,7 +156,7 @@ def uart_transact(ser, B, cmd, rw):
 			expect_len = max(0, (w - (l % w))) # both full and empty frames will trigger a full frame read
 
 		if uart_state != UART_STATES.ENDED:
-			ser.timeout = EXPECT_BYTE_RX_TIME * max(0, expect_len)
+			ser.timeout = EXPECT_BYTE_RX_TIME * expect_len
 			# print(ser.timeout)
 			r0 = ser.read(expect_len)
 
@@ -192,7 +206,8 @@ def test(ser):
 		# screen = pygame.display.set_mode((SW, SH))
 		# uart_transact(ser, [7], CMD_SERVO_IDX, RW_WRITE)
 		uart_transact(ser, [1024, 2, 1] * NUM_SERVOS, CMD_PID_COEFF, RW_WRITE) # int(y / SH * (P[1] - P[0]) + P[0])
-		# clock = pygame.time.Clock()
+		uart_transact(ser, [2600] * NUM_SERVOS, CMD_MAX_DRIVE, RW_WRITE) # int(y / SH * (P[1] - P[0]) + P[0])
+		clock = pygame.time.Clock()
 		it = 0
 		while True:
 			it += 1
@@ -213,11 +228,13 @@ def test(ser):
 			# uart_transact(ser, [0x800] * 2 + [0xFFF] + [0x800] * 3, CMD_POSITION, RW_WRITE)
 			# print(time.time() - t0)
 
+			uart_transact(ser, [int(a / 180.0 * 0xFFF) for a in [80 , 92, 90, 102, 0, 90, 80, 83, 110 , 90, 94, 92, 110,]], CMD_POSITION, RW_WRITE)
+			res_raw = uart_transact(ser, [], CMD_POSITION, RW_READ)
+			print("\t".join([str((a[0], int(unpack6(a[1:3], False) / 0xFFF * 180))) for _, (__, a) in res_raw[1].items()]))
+			
 			rxs = [CMD_POSITION] # , CMD_PID_COEFF, CMD_PID_STATE]
 			for rx in rxs:
 				# packet_fails += uart_transact(ser, [], rx, RW_READ)[1]
-				res_raw = uart_transact(ser, [], rx, RW_READ)
-				print(res_raw)
 				break
 
 				try:
