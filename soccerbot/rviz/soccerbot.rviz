@@ -9,6 +9,8 @@ Panels:
         - /Grid1/Offset1
         - /Friendly 11
         - /Friendly 11/Localization1
+        - /Friendly 11/Localization1/Range1
+        - /Friendly 11/Localization1/Range1/Status1
         - /Friendly 31/Localization1/Map1
         - /Friendly 31/Planning1/Goal1
         - /Friendly 31/Planning1/Path1
@@ -272,6 +274,16 @@ Visualization Manager:
               Unreliable: false
               Use Fixed Frame: true
               Use rainbow: true
+              Value: true
+            - Alpha: 0.5
+              Buffer Length: 1
+              Class: rviz/Range
+              Color: 239; 41; 41
+              Enabled: true
+              Name: Range
+              Queue Size: 1
+              Topic: /robot1/kicking_angle
+              Unreliable: false
               Value: true
           Enabled: true
           Name: Localization
@@ -945,7 +957,7 @@ Visualization Manager:
 Window Geometry:
   Displays:
     collapsed: false
-  Height: 1016
+  Height: 1136
   Hide Left Dock: false
   Hide Right Dock: true
   Image Raw:
@@ -963,6 +975,6 @@ Window Geometry:
     collapsed: false
   Views:
     collapsed: true
-  Width: 1848
-  X: 72
+  Width: 1920
+  X: 0
   Y: 27
