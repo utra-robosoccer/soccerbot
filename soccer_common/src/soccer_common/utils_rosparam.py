@@ -15,7 +15,7 @@ def set_rosparam_from_yaml_file(param_path: str = ""):
     rospy.logwarn = lambda a: print(a)
     rospy.logerr = lambda a: print(a)
 
-    rosparam.delete_param("/")
+    # rosparam.delete_param("/")
     if path.exists(param_path):
         with open(param_path) as f:
             param_info = yaml.safe_load(f)

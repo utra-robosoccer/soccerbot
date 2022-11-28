@@ -149,7 +149,7 @@ class Soccerbot:
         #: Odom pose, always starts at (0,0) and is the odometry of the robot's movement. All odom paths start from odom pose
         self.odom_pose = Transformation()
 
-        self._motor_map = rospy.get_param('~motor_mapping') # make the definitive ordering of motor keys from the param file to allow for incomplete joint_states
+        self._motor_map = rospy.get_param('motor_mapping') # make the definitive ordering of motor keys from the param file to allow for incomplete joint_states
 
     def get_angles(self):
         """
