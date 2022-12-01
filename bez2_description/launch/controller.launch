@@ -1,0 +1,9 @@
+<launch>
+
+<rosparam file="$(find bez2_description)/launch/controller.yaml" command="load"/>
+<node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" ns="bez2" args="Rev1_position_controller Rev2_position_controller Rev3_position_controller Rev4_position_controller Rev5_position_controller Rev6_position_controller Rev7_position_controller Rev8_position_controller Rev9_position_controller Rev10_position_controller Rev17_position_controller Rev18_position_controller Rev20_position_controller Rev21_position_controller Rev22_position_controller Rev23_position_controller Rev25_position_controller Rev26_position_controller joint_state_controller "/>
+<node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen">
+  <remap from="/joint_states" to="/bez2/joint_states"/>
+</node>
+
+</launch>
