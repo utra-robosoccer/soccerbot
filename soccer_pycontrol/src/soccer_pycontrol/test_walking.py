@@ -128,7 +128,7 @@ class TestWalking:
         distance_offset = np.linalg.norm((final_position - goal_position.position)[0:2])
         print(f"Final distance offset {distance_offset}")
 
-    # @pytest.mark.skip
+    @pytest.mark.skip
     @pytest.mark.parametrize("walker_real_robot", ["bez1", "bez3"], indirect=True)
     def test_walk_1_real_robot(self, walker_real_robot: NavigatorRos):
         walker_real_robot.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
