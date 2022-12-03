@@ -7,6 +7,7 @@ from unittest.mock import MagicMock
 
 import cv2
 import numpy as np
+import pytest
 import yaml
 from cv2 import Mat
 
@@ -102,7 +103,7 @@ class Test(TestCase):
                 cv2.waitKey(1)
                 cv2.destroyAllWindows()
 
-    @pytest.mark.skip(reason="annotation_path not found")
+    @pytest.mark.skip(reason="annotation _path could not be found")
     def test_visualize_annotations(self):
         src_path = os.path.dirname(os.path.realpath(__file__))
 
