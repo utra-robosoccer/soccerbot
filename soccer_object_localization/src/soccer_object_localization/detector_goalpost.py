@@ -72,10 +72,12 @@ class DetectorGoalPost(Detector):
         grass_only_3 = cv2.morphologyEx(grass_only_2, cv2.MORPH_CLOSE, self.circular_mask(61))
         grass_only_morph = cv2.morphologyEx(grass_only_3, cv2.MORPH_ERODE, self.circular_mask(9))
         grass_only_flipped = cv2.bitwise_not(grass_only_morph)
+
         image_bw = cv2.bitwise_and(image, image, mask=image_hsv_filter)
         image_bw = cv2.bitwise_and(image_bw, image_bw, mask=grass_only_flipped)
         image_bw = cv2.cvtColor(image_bw, cv2.COLOR_BGR2GRAY)
         image_bw_eroded = cv2.morphologyEx(image_bw, cv2.MORPH_ERODE, self.circular_mask(5))
+
         image_edges = cv2.Canny(image_bw_eroded, 50, 150, apertureSize=3)
         lines = cv2.HoughLinesP(
             image_edges, rho=1, theta=hough_theta, threshold=hough_threshold, minLineLength=hough_min_line_length, maxLineGap=hough_max_line_gap
@@ -85,6 +87,15 @@ class DetectorGoalPost(Detector):
             for line in lines:
                 x1, y1, x2, y2 = line[0]
                 cv2.line(image_hough, (x1, y1), (x2, y2), (0, 255, 0), 2)
+
+        # TODO improve field edge detection to serve as a baseline for a post starting point
+        field_edges = cv2.Canny(grass_only_flipped, 50, 150, apertureSize=3)
+        field_edge_lines = cv2.HoughLinesP(field_edges, rho=1, theta=hough_theta, threshold=10, minLineLength=70, maxLineGap=20)
+        if debug:
+            field_edge_lines_img = image.copy()
+            for line in field_edge_lines:
+                x1, y1, x2, y2 = line[0]
+                cv2.line(field_edge_lines_img, (x1, y1), (x2, y2), (0, 255, 0), 2)
 
         angle_tol_rad = np.radians(angle_tol_deg)  # +-deg from vertical
         image_out = image.copy()
@@ -102,6 +113,8 @@ class DetectorGoalPost(Detector):
             cv2.imshow("image_hsv", image_hsv)
             cv2.imshow("image_hsv_filter", image_hsv_filter)
             cv2.imshow("grass_only", grass_only_flipped)
+            cv2.imshow("field_edges", field_edges)
+            cv2.imshow("field_edge_lines", field_edge_lines_img)
 
             cv2.imshow("image_bw", image_bw)
             cv2.imshow("image_bw_eroded", image_bw_eroded)

@@ -169,8 +169,6 @@ class TestObjectLocalization(TestCase):
     def test_goalpost_detection(self, mock_tf_listener, now):
         import math
 
-        import numpy as np
-
         from soccer_pycontrol.utils import wrapToPi
 
         def get_post_visibility(robot_pose, post_coords):
@@ -262,7 +260,7 @@ class TestObjectLocalization(TestCase):
 
             img_msg: Image = cvbridge.cv2_to_imgmsg(img, encoding="rgb8")
             d.image_publisher.publish = MagicMock()
-            d.image_callback(img_msg)
+            d.image_callback(img_msg, debug=True)
 
             if "DISPLAY" in os.environ:
                 if d.image_publisher.publish.call_count != 0:
@@ -291,7 +289,7 @@ class TestObjectLocalization(TestCase):
 
         src_path = os.path.dirname(os.path.realpath(__file__))
         test_path = src_path + "/../../images/goal_net"
-        file_name = "img160_-1.452993567956688_-3.15_0.7763055830612666.png"
+        file_name = "img43_2.5076008803714904_-3.15_2.563808871082455.png"
 
         print(f"Loading {file_name} from goal_net dataset")
         file_name_no_ext = os.path.splitext(file_name)[0]
