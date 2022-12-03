@@ -13,7 +13,7 @@
     <option name="ADD_SOURCE_ROOTS" value="true" />
     <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
     <option name="SCRIPT_NAME" value="$PROJECT_DIR$/external/yolov5/train.py" />
-    <option name="PARAMETERS" value="--img 300 --batch 50 --epochs 5 --data Torso21.yaml --weights yolov5s.pt --name yolov5s_b50_ep5 --data ../../soccer_object_detection/config/Torso21.yaml" />
+    <option name="PARAMETERS" value="--img 400 --batch 50 --epochs 150 --data Torso21.yaml --weights yolov5s.pt --name yolov5s_b50_ep150_ --data ../../soccer_object_detection/config/Torso21.yaml" />
     <option name="SHOW_COMMAND_LINE" value="false" />
     <option name="EMULATE_TERMINAL" value="false" />
     <option name="MODULE_MODE" value="false" />
