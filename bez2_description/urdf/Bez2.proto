@@ -1,13 +1,13 @@
-#VRML_SIM R2022b utf8
+#VRML_SIM R2021a utf8
 # license: Apache License 2.0
 # license url: http://www.apache.org/licenses/LICENSE-2.0
-# This is a proto file for Webots for the bez2
+# This is a proto file for Webots for the Bez2
 # Extracted from: /home/nam/catkin_ws/src/soccerbot/bez2_description/urdf/bez2_simple.urdf
 
-PROTO bez2 [
+PROTO Bez2 [
   field  SFVec3f     translation     0 0 0
   field  SFRotation  rotation        0 0 1 0
-  field  SFString    name            "bez2"  # Is `Robot.name`.
+  field  SFString    name            "Bez2"  # Is `Robot.name`.
   field  SFString    controller      "void"  # Is `Robot.controller`.
   field  MFString    controllerArgs  []      # Is `Robot.controllerArgs`.
   field  SFString    customData      ""      # Is `Robot.customData`.
@@ -109,8 +109,14 @@ PROTO bez2 [
                   }
                 ]
                 name "Arm_Assembly-bez3_v12_2"
-                boundingObject Box {
-                   size 0.050000 0.056674 0.197500
+                boundingObject Transform {
+                  translation 0.024337 0.007000 -0.078700
+                  rotation 0.707107 0.707107 0.000000 3.141593
+                  children [
+                    Box {
+                       size 0.050000 0.056674 0.197500
+                    }
+                  ]
                 }
                 physics Physics {
                   density -1
@@ -125,8 +131,14 @@ PROTO bez2 [
             }
           ]
           name "biceps_v3_1"
-          boundingObject Box {
-             size 0.036000 0.056674 0.125200
+          boundingObject Transform {
+            translation 0.028337 -0.000000 -0.045300
+            rotation 0.707107 -0.707107 -0.000000 3.141593
+            children [
+              Box {
+                 size 0.036000 0.056674 0.125200
+              }
+            ]
           }
           physics Physics {
             density -1
@@ -197,8 +209,14 @@ PROTO bez2 [
                   }
                 ]
                 name "Arm_Assembly-bez3_v12_1"
-                boundingObject Box {
-                   size 0.050000 0.056674 0.197500
+                boundingObject Transform {
+                  translation -0.024337 0.007000 -0.078700
+                  rotation 0.707107 0.707107 0.000000 3.141593
+                  children [
+                    Box {
+                       size 0.050000 0.056674 0.197500
+                    }
+                  ]
                 }
                 physics Physics {
                   density -1
@@ -213,8 +231,14 @@ PROTO bez2 [
             }
           ]
           name "biceps_v3_2"
-          boundingObject Box {
-             size 0.036000 0.056674 0.125200
+          boundingObject Transform {
+            translation -0.028337 -0.000000 -0.045300
+            rotation -0.707107 0.707107 -0.000000 3.141593
+            children [
+              Box {
+                 size 0.036000 0.056674 0.125200
+              }
+            ]
           }
           physics Physics {
             density -1
@@ -408,8 +432,14 @@ PROTO bez2 [
                                           }
                                         ]
                                         name "New_left_foot_upperhalf_v5_1"
-                                        boundingObject Box {
-                                           size 0.043000 0.090000 0.170000
+                                        boundingObject Transform {
+                                          translation -0.015000 -0.052160 -0.005500
+                                          rotation 0.577350 0.577350 -0.577350 2.094395
+                                          children [
+                                            Box {
+                                               size 0.043000 0.090000 0.170000
+                                            }
+                                          ]
                                         }
                                         physics Physics {
                                           density -1
@@ -424,8 +454,14 @@ PROTO bez2 [
                                     }
                                   ]
                                   name "ankle_motors_v4_2"
-                                  boundingObject Box {
-                                     size 0.051457 0.062100 0.109915
+                                  boundingObject Transform {
+                                    translation -0.023331 0.033902 0.017050
+                                    rotation 0.023211 -0.706916 -0.706916 3.095179
+                                    children [
+                                      Box {
+                                         size 0.051457 0.062100 0.109915
+                                      }
+                                    ]
                                   }
                                   physics Physics {
                                     density -1
@@ -440,8 +476,14 @@ PROTO bez2 [
                               }
                             ]
                             name "lower_leg_v4_1"
-                            boundingObject Box {
-                               size 0.040200 0.054604 0.137714
+                            boundingObject Transform {
+                              translation -0.023233 -0.000000 -0.054667
+                              rotation -0.004148 0.004148 -0.999983 1.570814
+                              children [
+                                Box {
+                                   size 0.040200 0.054604 0.137714
+                                }
+                              ]
                             }
                             physics Physics {
                               density -1
@@ -456,8 +498,14 @@ PROTO bez2 [
                         }
                       ]
                       name "Upper_left_leg_support__bottom__v8_2"
-                      boundingObject Box {
-                         size 0.028000 0.054000 0.119600
+                      boundingObject Transform {
+                        translation -0.019500 -0.000000 -0.046900
+                        rotation -0.000000 -0.000000 -1.000000 1.570796
+                        children [
+                          Box {
+                             size 0.028000 0.054000 0.119600
+                          }
+                        ]
                       }
                       physics Physics {
                         density -1
@@ -472,8 +520,14 @@ PROTO bez2 [
                   }
                 ]
                 name "hip_motors_v4_1"
-                boundingObject Box {
-                   size 0.041000 0.046500 0.076900
+                boundingObject Transform {
+                  translation 0.001500 0.000550 -0.012000
+                  rotation 0.000000 0.707107 0.707107 3.141593
+                  children [
+                    Box {
+                       size 0.041000 0.046500 0.076900
+                    }
+                  ]
                 }
                 physics Physics {
                   density -1
@@ -488,8 +542,14 @@ PROTO bez2 [
             }
           ]
           name "Hip_Printable_v2_v10_1"
-          boundingObject Box {
-             size 0.026000 0.045000 0.050000
+          boundingObject Transform {
+            translation 0.000000 -0.000000 -0.022500
+            rotation 0.000000 0.707107 0.707107 3.141593
+            children [
+              Box {
+                 size 0.026000 0.045000 0.050000
+              }
+            ]
           }
           physics Physics {
             density -1
@@ -678,8 +738,14 @@ PROTO bez2 [
                                           }
                                         ]
                                         name "New_right_foot_upperhalf_v3_1"
-                                        boundingObject Box {
-                                           size 0.043000 0.090000 0.170000
+                                        boundingObject Transform {
+                                          translation 0.015000 -0.052160 -0.005500
+                                          rotation -0.577350 -0.577350 -0.577350 2.094395
+                                          children [
+                                            Box {
+                                               size 0.043000 0.090000 0.170000
+                                            }
+                                          ]
                                         }
                                         physics Physics {
                                           density -1
@@ -694,8 +760,14 @@ PROTO bez2 [
                                     }
                                   ]
                                   name "ankle_motors_v4_1"
-                                  boundingObject Box {
-                                     size 0.051457 0.062100 0.109915
+                                  boundingObject Transform {
+                                    translation 0.023332 0.033902 0.017050
+                                    rotation 0.023211 0.706916 0.706916 3.095179
+                                    children [
+                                      Box {
+                                         size 0.051457 0.062100 0.109915
+                                      }
+                                    ]
                                   }
                                   physics Physics {
                                     density -1
@@ -710,8 +782,14 @@ PROTO bez2 [
                               }
                             ]
                             name "lower_leg_v4_2"
-                            boundingObject Box {
-                               size 0.040200 0.054604 0.137714
+                            boundingObject Transform {
+                              translation 0.023234 -0.000000 -0.054667
+                              rotation 0.004148 -0.004148 -0.999983 1.570814
+                              children [
+                                Box {
+                                   size 0.040200 0.054604 0.137714
+                                }
+                              ]
                             }
                             physics Physics {
                               density -1
@@ -726,8 +804,14 @@ PROTO bez2 [
                         }
                       ]
                       name "Upper_left_leg_support__bottom__v8_1"
-                      boundingObject Box {
-                         size 0.028000 0.054000 0.119600
+                      boundingObject Transform {
+                        translation 0.019500 -0.000000 -0.046900
+                        rotation -0.000000 -0.000000 -1.000000 1.570796
+                        children [
+                          Box {
+                             size 0.028000 0.054000 0.119600
+                          }
+                        ]
                       }
                       physics Physics {
                         density -1
@@ -742,8 +826,14 @@ PROTO bez2 [
                   }
                 ]
                 name "hip_motors_v4_2"
-                boundingObject Box {
-                   size 0.041000 0.046500 0.076900
+                boundingObject Transform {
+                  translation -0.001500 0.000550 -0.012000
+                  rotation 1.000000 0.000000 0.000000 1.570796
+                  children [
+                    Box {
+                       size 0.041000 0.046500 0.076900
+                    }
+                  ]
                 }
                 physics Physics {
                   density -1
@@ -758,8 +848,14 @@ PROTO bez2 [
             }
           ]
           name "Hip_Printable_v2_v10_2"
-          boundingObject Box {
-             size 0.026000 0.045000 0.050000
+          boundingObject Transform {
+            translation 0.000000 -0.000000 -0.022500
+            rotation 0.000000 0.707107 0.707107 3.141593
+            children [
+              Box {
+                 size 0.026000 0.045000 0.050000
+              }
+            ]
           }
           physics Physics {
             density -1
@@ -876,8 +972,14 @@ PROTO bez2 [
                             }
                           ]
                           name "camera_point_1"
-                          boundingObject Box {
-                             size 0.004000 0.004000 0.004000
+                          boundingObject Transform {
+                            translation -0.000000 0.001000 -0.000000
+                            rotation 0.000000 1.000000 -0.000000 1.570796
+                            children [
+                              Box {
+                                 size 0.004000 0.004000 0.004000
+                              }
+                            ]
                           }
                           physics Physics {
                             density -1
@@ -888,8 +990,14 @@ PROTO bez2 [
                       }
                     ]
                     name "head_v4_1"
-                    boundingObject Box {
-                       size 0.076100 0.076500 0.094000
+                    boundingObject Transform {
+                      translation 0.025674 0.002650 0.024250
+                      rotation -0.577350 0.577350 -0.577350 2.094395
+                      children [
+                        Box {
+                           size 0.076100 0.076500 0.094000
+                        }
+                      ]
                     }
                     physics Physics {
                       density -1
@@ -904,8 +1012,14 @@ PROTO bez2 [
                 }
               ]
               name "custom_servo_support__middle_neck__v9_1"
-              boundingObject Box {
-                 size 0.035000 0.048253 0.056374
+              boundingObject Transform {
+                translation 0.002000 -0.000000 0.024127
+                rotation 0.577350 -0.577350 -0.577350 2.094395
+                children [
+                  Box {
+                     size 0.035000 0.048253 0.056374
+                  }
+                ]
               }
               physics Physics {
                 density -1
@@ -920,8 +1034,14 @@ PROTO bez2 [
           }
         ]
         name "neck_v4_1"
-        boundingObject Box {
-           size 0.040000 0.046674 0.054300
+        boundingObject Transform {
+          translation 0.015000 0.014350 0.023337
+          rotation -0.000000 -0.707107 0.707107 3.141593
+          children [
+            Box {
+               size 0.040000 0.046674 0.054300
+            }
+          ]
         }
         physics Physics {
           density -1
@@ -964,8 +1084,14 @@ PROTO bez2 [
             }
           ]
           name "imu_1"
-          boundingObject Box {
-             size 0.004000 0.004000 0.004000
+          boundingObject Transform {
+            translation 0.000000 -0.040000 -0.043000
+            rotation 0.000000 0.000000 1.000000 3.141593
+            children [
+              Box {
+                 size 0.004000 0.004000 0.004000
+              }
+            ]
           }
           physics Physics {
             density -1
@@ -976,8 +1102,14 @@ PROTO bez2 [
       }
     ]
     name IS name
-    boundingObject Box {
-       size 0.124000 0.145000 0.174000
+    boundingObject Transform {
+      translation 0.072159 0.069444 0.013556
+      rotation 0.707107 0.707107 0.000000 3.141593
+      children [
+        Box {
+           size 0.124000 0.145000 0.174000
+        }
+      ]
     }
     physics Physics {
       density -1
