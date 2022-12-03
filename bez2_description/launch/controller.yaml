@@ -5,75 +5,83 @@ bez2_controller:
     publish_rate: 50
 
   # Position Controllers --------------------------------------
-  Rev1_position_controller:
+  left_arm_motor_0_position_controller:
     type: effort_controllers/JointPositionController
-    joint: Rev1
+    joint: left_arm_motor_0
     pid: {p: 100.0, i: 0.01, d: 10.0}
-  Rev2_position_controller:
+  left_arm_motor_1_position_controller:
     type: effort_controllers/JointPositionController
-    joint: Rev2
+    joint: left_arm_motor_1
     pid: {p: 100.0, i: 0.01, d: 10.0}
-  Rev3_position_controller:
+  right_arm_motor_0_position_controller:
     type: effort_controllers/JointPositionController
-    joint: Rev3
+    joint: right_arm_motor_0
     pid: {p: 100.0, i: 0.01, d: 10.0}
-  Rev4_position_controller:
+  right_arm_motor_1_position_controller:
     type: effort_controllers/JointPositionController
-    joint: Rev4
+    joint: right_arm_motor_1
     pid: {p: 100.0, i: 0.01, d: 10.0}
-  Rev5_position_controller:
+  right_leg_motor_0_position_controller:
     type: effort_controllers/JointPositionController
-    joint: Rev5
+    joint: right_leg_motor_0
     pid: {p: 100.0, i: 0.01, d: 10.0}
-  Rev6_position_controller:
+  left_leg_motor_0_position_controller:
     type: effort_controllers/JointPositionController
-    joint: Rev6
+    joint: left_leg_motor_0
     pid: {p: 100.0, i: 0.01, d: 10.0}
-  Rev7_position_controller:
+  right_leg_motor_1_position_controller:
     type: effort_controllers/JointPositionController
-    joint: Rev7
+    joint: right_leg_motor_1
     pid: {p: 100.0, i: 0.01, d: 10.0}
-  Rev8_position_controller:
+  left_leg_motor_1_position_controller:
     type: effort_controllers/JointPositionController
-    joint: Rev8
+    joint: left_leg_motor_1
     pid: {p: 100.0, i: 0.01, d: 10.0}
-  Rev9_position_controller:
+  left_leg_motor_2_position_controller:
     type: effort_controllers/JointPositionController
-    joint: Rev9
+    joint: left_leg_motor_2
     pid: {p: 100.0, i: 0.01, d: 10.0}
-  Rev10_position_controller:
+  right_leg_motor_2_position_controller:
     type: effort_controllers/JointPositionController
-    joint: Rev10
+    joint: right_leg_motor_2
     pid: {p: 100.0, i: 0.01, d: 10.0}
-  Rev17_position_controller:
+  right_leg_motor_5_position_controller:
     type: effort_controllers/JointPositionController
-    joint: Rev17
+    joint: right_leg_motor_5
     pid: {p: 100.0, i: 0.01, d: 10.0}
-  Rev18_position_controller:
+  left_leg_motor_5_position_controller:
     type: effort_controllers/JointPositionController
-    joint: Rev18
+    joint: left_leg_motor_5
     pid: {p: 100.0, i: 0.01, d: 10.0}
-  Rev20_position_controller:
+  head_motor_0_position_controller:
     type: effort_controllers/JointPositionController
-    joint: Rev20
+    joint: head_motor_0
     pid: {p: 100.0, i: 0.01, d: 10.0}
-  Rev21_position_controller:
+  head_motor_1_position_controller:
     type: effort_controllers/JointPositionController
-    joint: Rev21
+    joint: head_motor_1
     pid: {p: 100.0, i: 0.01, d: 10.0}
-  Rev22_position_controller:
+  right_leg_motor_3_position_controller:
     type: effort_controllers/JointPositionController
-    joint: Rev22
+    joint: right_leg_motor_3
     pid: {p: 100.0, i: 0.01, d: 10.0}
-  Rev23_position_controller:
+  left_leg_motor_3_position_controller:
     type: effort_controllers/JointPositionController
-    joint: Rev23
+    joint: left_leg_motor_3
     pid: {p: 100.0, i: 0.01, d: 10.0}
-  Rev25_position_controller:
+  left_leg_motor_4_position_controller:
     type: effort_controllers/JointPositionController
-    joint: Rev25
+    joint: left_leg_motor_4
     pid: {p: 100.0, i: 0.01, d: 10.0}
-  Rev26_position_controller:
+  right_leg_motor_4_position_controller:
     type: effort_controllers/JointPositionController
-    joint: Rev26
+    joint: right_leg_motor_4
+    pid: {p: 100.0, i: 0.01, d: 10.0}
+  camera_joint_position_controller:
+    type: effort_controllers/JointPositionController
+    joint: camera_joint
+    pid: {p: 100.0, i: 0.01, d: 10.0}
+  imu_joint_position_controller:
+    type: effort_controllers/JointPositionController
+    joint: imu_joint
     pid: {p: 100.0, i: 0.01, d: 10.0}

@@ -6,9 +6,9 @@
 <xacro:include filename="$(find bez2_description)/urdf/bez2.gazebo" />
 <link name="base_link">
   <inertial>
-    <origin xyz="0.07226346929359313 0.07145981340933207 0.03052377805008874" rpy="0 0 0"/>
-    <mass value="19.222054389299405"/>
-    <inertia ixx="0.055868" iyy="0.06663" izz="0.056107" ixy="-1.7e-05" iyz="0.002149" ixz="0.000158"/>
+    <origin xyz="0.07343372628291743 0.07159927292954832 0.020872010814779768" rpy="0 0 0"/>
+    <mass value="1.3874949527504563"/>
+    <inertia ixx="0.004586" iyy="0.005498" izz="0.00387" ixy="-8e-06" iyz="0.000146" ixz="0.000118"/>
   </inertial>
   <visual>
     <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -25,535 +25,591 @@
   </collision>
 </link>
 
-<link name="biceps_v2_1">
+<link name="biceps_v3_1">
   <inertial>
-    <origin xyz="0.028967421829123152 -1.0338258438213899e-07 -0.041589282843954946" rpy="0 0 0"/>
-    <mass value="0.4812023462616311"/>
-    <inertia ixx="0.000718" iyy="0.000776" izz="9.3e-05" ixy="-0.0" iyz="0.0" ixz="3.8e-05"/>
+    <origin xyz="0.026300253416251113 -1.0338235605089618e-07 -0.03838594777031868" rpy="0 0 0"/>
+    <mass value="0.25825416029102555"/>
+    <inertia ixx="0.000394" iyy="0.000437" izz="6.4e-05" ixy="-0.0" iyz="0.0" ixz="3.3e-05"/>
   </inertial>
   <visual>
     <origin xyz="-0.144659 -0.075444 -0.072056" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez2_description/meshes/biceps_v2_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez2_description/meshes/biceps_v3_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="steel_satin"/>
+    <material name="plastic_glossy_black"/>
   </visual>
   <collision>
     <origin xyz="-0.144659 -0.075444 -0.072056" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez2_description/meshes/biceps_v2_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez2_description/meshes/biceps_v3_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
-<link name="Arm_Assembly-bez3_v10_2">
+<link name="Arm_Assembly-bez3_v12_2">
   <inertial>
-    <origin xyz="0.02377578012690784 0.012006216401902609 -0.012141480437552529" rpy="0 0 0"/>
-    <mass value="1.0556766109367164"/>
-    <inertia ixx="0.008653" iyy="0.008654" izz="0.00041" ixy="-7e-06" iyz="0.000768" ixz="4.2e-05"/>
+    <origin xyz="0.02284504145700883 0.005329912793864702 0.029751383749166617" rpy="0 0 0"/>
+    <mass value="0.32110352957731503"/>
+    <inertia ixx="0.002137" iyy="0.002148" izz="0.000103" ixy="-3e-06" iyz="0.000175" ixz="1.6e-05"/>
   </inertial>
   <visual>
     <origin xyz="-0.152659 -0.075444 0.018544" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez2_description/meshes/Arm_Assembly-bez3_v10_2.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez2_description/meshes/Arm_Assembly-bez3_v12_2.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="steel_satin"/>
+    <material name="abs_white"/>
   </visual>
   <collision>
     <origin xyz="-0.152659 -0.075444 0.018544" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez2_description/meshes/Arm_Assembly-bez3_v10_2.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez2_description/meshes/Arm_Assembly-bez3_v12_2.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
-<link name="biceps_v2_2">
+<link name="biceps_v3_2">
   <inertial>
-    <origin xyz="-0.02896677776874408 -1.0338310509061532e-07 -0.041589282843954946" rpy="0 0 0"/>
-    <mass value="0.4812023462616311"/>
-    <inertia ixx="0.000718" iyy="0.000776" izz="9.3e-05" ixy="-0.0" iyz="-0.0" ixz="-3.8e-05"/>
+    <origin xyz="-0.026299609355872014 -1.0338333342185813e-07 -0.03838594777031868" rpy="0 0 0"/>
+    <mass value="0.25825416029102555"/>
+    <inertia ixx="0.000394" iyy="0.000437" izz="6.4e-05" ixy="-0.0" iyz="-0.0" ixz="-3.3e-05"/>
   </inertial>
   <visual>
     <origin xyz="0.000341 -0.075444 -0.072056" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez2_description/meshes/biceps_v2_2.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez2_description/meshes/biceps_v3_2.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="steel_satin"/>
+    <material name="plastic_glossy_black"/>
   </visual>
   <collision>
     <origin xyz="0.000341 -0.075444 -0.072056" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez2_description/meshes/biceps_v2_2.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez2_description/meshes/biceps_v3_2.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
-<link name="Arm_Assembly-bez3_v10_1">
+<link name="Arm_Assembly-bez3_v12_1">
   <inertial>
-    <origin xyz="-0.024898219873093895 0.012006216401910838 -0.012141480437554357" rpy="0 0 0"/>
-    <mass value="1.0556766109367164"/>
-    <inertia ixx="0.008653" iyy="0.008654" izz="0.00041" ixy="-7e-06" iyz="0.000768" ixz="4.2e-05"/>
+    <origin xyz="-0.025828958542993025 0.005329912793873015 0.02975138374916475" rpy="0 0 0"/>
+    <mass value="0.32110352957731503"/>
+    <inertia ixx="0.002137" iyy="0.002148" izz="0.000103" ixy="-3e-06" iyz="0.000175" ixz="1.6e-05"/>
   </inertial>
   <visual>
     <origin xyz="0.008341 -0.075444 0.018544" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez2_description/meshes/Arm_Assembly-bez3_v10_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez2_description/meshes/Arm_Assembly-bez3_v12_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="steel_satin"/>
+    <material name="abs_white"/>
   </visual>
   <collision>
     <origin xyz="0.008341 -0.075444 0.018544" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez2_description/meshes/Arm_Assembly-bez3_v10_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez2_description/meshes/Arm_Assembly-bez3_v12_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
-<link name="Hip_Printable_v2_v9_1">
+<link name="Hip_Printable_v2_v10_1">
   <inertial>
     <origin xyz="3.220301637574252e-07 -4.2278800908499004e-05 -0.014017264198397453" rpy="0 0 0"/>
-    <mass value="0.007614509245765126"/>
-    <inertia ixx="5e-06" iyy="2e-06" izz="4e-06" ixy="-0.0" iyz="-0.0" ixz="-0.0"/>
+    <mass value="0.010089224750638792"/>
+    <inertia ixx="6e-06" iyy="2e-06" izz="5e-06" ixy="-0.0" iyz="-0.0" ixz="-0.0"/>
   </inertial>
   <visual>
     <origin xyz="-0.035359 -0.059474 0.072444" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez2_description/meshes/Hip_Printable_v2_v9_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez2_description/meshes/Hip_Printable_v2_v10_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="abs_white"/>
   </visual>
   <collision>
     <origin xyz="-0.035359 -0.059474 0.072444" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez2_description/meshes/Hip_Printable_v2_v9_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez2_description/meshes/Hip_Printable_v2_v10_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
-<link name="Hip_Printable_v2_v9_2">
+<link name="Hip_Printable_v2_v10_2">
   <inertial>
     <origin xyz="3.220301620365795e-07 -4.227880091287051e-05 -0.01401726419839748" rpy="0 0 0"/>
-    <mass value="0.007614509245765126"/>
-    <inertia ixx="5e-06" iyy="2e-06" izz="4e-06" ixy="-0.0" iyz="-0.0" ixz="-0.0"/>
+    <mass value="0.010089224750638792"/>
+    <inertia ixx="6e-06" iyy="2e-06" izz="5e-06" ixy="-0.0" iyz="-0.0" ixz="-0.0"/>
   </inertial>
   <visual>
     <origin xyz="-0.109859 -0.059474 0.072444" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez2_description/meshes/Hip_Printable_v2_v9_2.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez2_description/meshes/Hip_Printable_v2_v10_2.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="abs_white"/>
   </visual>
   <collision>
     <origin xyz="-0.109859 -0.059474 0.072444" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez2_description/meshes/Hip_Printable_v2_v9_2.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez2_description/meshes/Hip_Printable_v2_v10_2.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
-<link name="hip_motors_v3_1">
+<link name="hip_motors_v4_1">
   <inertial>
-    <origin xyz="2.4839556932165774e-07 -0.009182232274110635 -0.011866842676855963" rpy="0 0 0"/>
-    <mass value="1.0339580130905694"/>
-    <inertia ixx="0.00068" iyy="0.000279" izz="0.000584" ixy="0.0" iyz="2e-06" ixz="0.0"/>
+    <origin xyz="2.491527500980695e-07 -0.009088099875617373 -0.011907281385175342" rpy="0 0 0"/>
+    <mass value="0.2728199051639206"/>
+    <inertia ixx="0.000178" iyy="7.4e-05" izz="0.000153" ixy="0.0" iyz="1e-06" ixz="0.0"/>
   </inertial>
   <visual>
     <origin xyz="-0.035359 -0.082974 0.104444" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez2_description/meshes/hip_motors_v3_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez2_description/meshes/hip_motors_v4_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="silver_default"/>
   </visual>
   <collision>
     <origin xyz="-0.035359 -0.082974 0.104444" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez2_description/meshes/hip_motors_v3_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez2_description/meshes/hip_motors_v4_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
-<link name="hip_motors_v3_2">
+<link name="hip_motors_v4_2">
   <inertial>
-    <origin xyz="2.483955749699174e-07 -0.009182232274114993 -0.011866842676856004" rpy="0 0 0"/>
-    <mass value="1.0339580130905694"/>
-    <inertia ixx="0.00068" iyy="0.000279" izz="0.000584" ixy="0.0" iyz="2e-06" ixz="0.0"/>
+    <origin xyz="2.491527557740847e-07 -0.009088099875621716 -0.011907281385175342" rpy="0 0 0"/>
+    <mass value="0.2728199051639206"/>
+    <inertia ixx="0.000178" iyy="7.4e-05" izz="0.000153" ixy="0.0" iyz="1e-06" ixz="0.0"/>
   </inertial>
   <visual>
     <origin xyz="-0.109859 -0.084474 0.104444" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez2_description/meshes/hip_motors_v3_2.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez2_description/meshes/hip_motors_v4_2.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="silver_default"/>
   </visual>
   <collision>
     <origin xyz="-0.109859 -0.084474 0.104444" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez2_description/meshes/hip_motors_v3_2.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez2_description/meshes/hip_motors_v4_2.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
-<link name="Upper_left_leg_support__bottom__v7_1">
+<link name="Upper_left_leg_support__bottom__v8_1">
   <inertial>
-    <origin xyz="0.019462816432113214 -1.0283150442963462e-07 -0.048113683972305823" rpy="0 0 0"/>
-    <mass value="0.20120782224101758"/>
-    <inertia ixx="0.000162" iyy="0.000235" izz="9.9e-05" ixy="-0.0" iyz="0.0" ixz="-0.0"/>
+    <origin xyz="0.019462816432113214 -1.0283150438106237e-07 -0.048113683972305823" rpy="0 0 0"/>
+    <mass value="0.027169463894965433"/>
+    <inertia ixx="2.2e-05" iyy="3.2e-05" izz="1.3e-05" ixy="-0.0" iyz="0.0" ixz="-0.0"/>
   </inertial>
   <visual>
     <origin xyz="-0.089859 -0.060824 0.104444" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez2_description/meshes/Upper_left_leg_support__bottom__v7_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez2_description/meshes/Upper_left_leg_support__bottom__v8_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="steel_satin"/>
+    <material name="abs_white"/>
   </visual>
   <collision>
     <origin xyz="-0.089859 -0.060824 0.104444" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez2_description/meshes/Upper_left_leg_support__bottom__v7_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez2_description/meshes/Upper_left_leg_support__bottom__v8_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
-<link name="Upper_left_leg_support__bottom__v7_2">
+<link name="Upper_left_leg_support__bottom__v8_2">
   <inertial>
     <origin xyz="-0.019537183567898096 -1.028314992185253e-07 -0.048113683972305823" rpy="0 0 0"/>
-    <mass value="0.20120782224101758"/>
-    <inertia ixx="0.000162" iyy="0.000235" izz="9.9e-05" ixy="-0.0" iyz="0.0" ixz="-0.0"/>
+    <mass value="0.027169463894965433"/>
+    <inertia ixx="2.2e-05" iyy="3.2e-05" izz="1.3e-05" ixy="-0.0" iyz="0.0" ixz="-0.0"/>
   </inertial>
   <visual>
     <origin xyz="-0.055359 -0.059324 0.104444" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez2_description/meshes/Upper_left_leg_support__bottom__v7_2.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez2_description/meshes/Upper_left_leg_support__bottom__v8_2.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="steel_satin"/>
+    <material name="abs_white"/>
   </visual>
   <collision>
     <origin xyz="-0.055359 -0.059324 0.104444" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez2_description/meshes/Upper_left_leg_support__bottom__v7_2.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez2_description/meshes/Upper_left_leg_support__bottom__v8_2.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
-<link name="New_left_foot_upperhalf_v4_1">
+<link name="New_left_foot_upperhalf_v5_1">
   <inertial>
-    <origin xyz="-0.012180584726820251 -0.05139354649788158 -0.0217764734148449" rpy="0 0 0"/>
-    <mass value="0.43587091788829113"/>
-    <inertia ixx="0.001101" iyy="0.000292" izz="0.001317" ixy="1e-06" iyz="2e-06" ixz="-2e-05"/>
+    <origin xyz="-0.012180584726820248 -0.05139354649788158 -0.0217764734148449" rpy="0 0 0"/>
+    <mass value="0.0588564551543425"/>
+    <inertia ixx="0.000149" iyy="3.9e-05" izz="0.000178" ixy="0.0" iyz="0.0" ixz="-3e-06"/>
   </inertial>
   <visual>
     <origin xyz="-0.037059 -0.143624 0.304444" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez2_description/meshes/New_left_foot_upperhalf_v4_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez2_description/meshes/New_left_foot_upperhalf_v5_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="steel_satin"/>
+    <material name="abs_white"/>
   </visual>
   <collision>
     <origin xyz="-0.037059 -0.143624 0.304444" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez2_description/meshes/New_left_foot_upperhalf_v4_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez2_description/meshes/New_left_foot_upperhalf_v5_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
-<link name="New_right_foot_upperhalf_v2_1">
+<link name="New_right_foot_upperhalf_v3_1">
   <inertial>
     <origin xyz="0.060000322030201225 -0.051393547332351824 -0.021776473414845232" rpy="0 0 0"/>
-    <mass value="0.8717418357765823"/>
-    <inertia ixx="0.002201" iyy="0.002577" izz="0.004628" ixy="-0.0" iyz="5e-06" ixz="0.0"/>
+    <mass value="0.117712910308685"/>
+    <inertia ixx="0.000297" iyy="0.000348" izz="0.000625" ixy="0.0" iyz="1e-06" ixz="0.0"/>
   </inertial>
   <visual>
     <origin xyz="-0.108159 -0.145124 0.304444" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez2_description/meshes/New_right_foot_upperhalf_v2_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez2_description/meshes/New_right_foot_upperhalf_v3_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="steel_satin"/>
+    <material name="abs_white"/>
   </visual>
   <collision>
     <origin xyz="-0.108159 -0.145124 0.304444" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez2_description/meshes/New_right_foot_upperhalf_v2_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez2_description/meshes/New_right_foot_upperhalf_v3_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
-<link name="neck_v2_1">
+<link name="neck_v4_1">
   <inertial>
-    <origin xyz="0.014999956874560072 0.013704810841773656 0.02123668355471972" rpy="0 0 0"/>
-    <mass value="0.24638401500572749"/>
-    <inertia ixx="7.1e-05" iyy="4.8e-05" izz="4.6e-05" ixy="-0.0" iyz="4e-06" ixz="0.0"/>
+    <origin xyz="0.014999915739446909 0.012879582990262754 0.024886118937898494" rpy="0 0 0"/>
+    <mass value="0.10655783809755558"/>
+    <inertia ixx="3e-05" iyy="1.9e-05" izz="1.9e-05" ixy="-0.0" iyz="3e-06" ixz="0.0"/>
   </inertial>
   <visual>
     <origin xyz="-0.056826 -0.037694 -0.100556" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez2_description/meshes/neck_v2_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez2_description/meshes/neck_v4_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="steel_satin"/>
+    <material name="abs_white"/>
   </visual>
   <collision>
     <origin xyz="-0.056826 -0.037694 -0.100556" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez2_description/meshes/neck_v2_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez2_description/meshes/neck_v4_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
-<link name="custom_servo_support__middle_neck__v8_1">
+<link name="custom_servo_support__middle_neck__v9_1">
   <inertial>
     <origin xyz="0.0015600810093761297 -1.0333814156465726e-07 0.014703004853071633" rpy="0 0 0"/>
-    <mass value="0.1451172084285195"/>
-    <inertia ixx="4.4e-05" iyy="0.000103" izz="8.9e-05" ixy="0.0" iyz="0.0" ixz="1e-06"/>
+    <mass value="0.01959544470499754"/>
+    <inertia ixx="6e-06" iyy="1.4e-05" izz="1.2e-05" ixy="0.0" iyz="0.0" ixz="0.0"/>
   </inertial>
   <visual>
     <origin xyz="-0.071826 -0.042194 -0.14723" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez2_description/meshes/custom_servo_support__middle_neck__v8_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez2_description/meshes/custom_servo_support__middle_neck__v9_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="steel_satin"/>
+    <material name="abs_white"/>
   </visual>
   <collision>
     <origin xyz="-0.071826 -0.042194 -0.14723" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez2_description/meshes/custom_servo_support__middle_neck__v8_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez2_description/meshes/custom_servo_support__middle_neck__v9_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
-<link name="head_v2_1">
+<link name="head_v4_1">
   <inertial>
-    <origin xyz="0.02550042089765836 0.0013348220212865414 0.01661303627347699" rpy="0 0 0"/>
-    <mass value="0.47694495505240925"/>
-    <inertia ixx="0.00036" iyy="0.000326" izz="0.000273" ixy="-4e-06" iyz="0.00011" ixz="-3e-06"/>
+    <origin xyz="0.024245597582648673 -0.0037488657746306553 0.024987900172004557" rpy="0 0 0"/>
+    <mass value="0.29338454987270446"/>
+    <inertia ixx="0.000239" iyy="0.00023" izz="0.000194" ixy="2e-06" iyz="7.6e-05" ixz="-1.1e-05"/>
   </inertial>
   <visual>
     <origin xyz="-0.049639 -0.042194 -0.181048" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez2_description/meshes/head_v2_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez2_description/meshes/head_v4_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="plastic_glossy_black"/>
   </visual>
   <collision>
     <origin xyz="-0.049639 -0.042194 -0.181048" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez2_description/meshes/head_v2_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez2_description/meshes/head_v4_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
-<link name="lower_leg_v2_1">
+<link name="lower_leg_v4_1">
   <inertial>
-    <origin xyz="-0.023222560542468983 -9.634068400682372e-08 -0.026061056668866184" rpy="0 0 0"/>
-    <mass value="0.6984721747198837"/>
-    <inertia ixx="0.000628" iyy="0.000727" izz="0.00021" ixy="-0.0" iyz="0.0" ixz="-1e-05"/>
+    <origin xyz="-0.023191603027466604 -9.582728020818276e-08 -0.02213339724981117" rpy="0 0 0"/>
+    <mass value="0.1476733120184745"/>
+    <inertia ixx="0.000107" iyy="0.000124" izz="4.1e-05" ixy="-0.0" iyz="0.0" ixz="-2e-06"/>
   </inertial>
   <visual>
     <origin xyz="-0.059859 -0.059324 0.196144" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez2_description/meshes/lower_leg_v2_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez2_description/meshes/lower_leg_v4_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="steel_satin"/>
+    <material name="abs_white"/>
   </visual>
   <collision>
     <origin xyz="-0.059859 -0.059324 0.196144" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez2_description/meshes/lower_leg_v2_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez2_description/meshes/lower_leg_v4_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
-<link name="lower_leg_v2_2">
+<link name="lower_leg_v4_2">
   <inertial>
-    <origin xyz="0.023223204602860675 -1.0932231984950302e-07 -0.026061056668866434" rpy="0 0 0"/>
-    <mass value="0.6984721747198837"/>
-    <inertia ixx="0.000628" iyy="0.000727" izz="0.00021" ixy="-0.0" iyz="-0.0" ixz="1e-05"/>
+    <origin xyz="0.02319224708785829 -1.0983572364814398e-07 -0.02213339724981142" rpy="0 0 0"/>
+    <mass value="0.1476733120184745"/>
+    <inertia ixx="0.000107" iyy="0.000124" izz="4.1e-05" ixy="-0.0" iyz="-0.0" ixz="2e-06"/>
   </inertial>
   <visual>
     <origin xyz="-0.085359 -0.060824 0.196144" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez2_description/meshes/lower_leg_v2_2.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez2_description/meshes/lower_leg_v4_2.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="steel_satin"/>
+    <material name="abs_white"/>
   </visual>
   <collision>
     <origin xyz="-0.085359 -0.060824 0.196144" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez2_description/meshes/lower_leg_v2_2.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez2_description/meshes/lower_leg_v4_2.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
-<link name="ankle_motors_v3_1">
+<link name="ankle_motors_v4_1">
   <inertial>
-    <origin xyz="0.023300324598053007 0.020649157771031837 0.014975439548538305" rpy="0 0 0"/>
-    <mass value="1.7439474159228268"/>
-    <inertia ixx="0.002047" iyy="0.000687" izz="0.001838" ixy="-0.0" iyz="1.1e-05" ixz="-0.0"/>
+    <origin xyz="0.023300324626133573 0.020543270558517568 0.015062653184791719" rpy="0 0 0"/>
+    <mass value="0.3955604131597503"/>
+    <inertia ixx="0.000468" iyy="0.000155" izz="0.000419" ixy="-0.0" iyz="2e-06" ixz="-0.0"/>
   </inertial>
   <visual>
     <origin xyz="-0.084859 -0.060824 0.304444" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez2_description/meshes/ankle_motors_v3_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez2_description/meshes/ankle_motors_v4_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="steel_satin"/>
   </visual>
   <collision>
     <origin xyz="-0.084859 -0.060824 0.304444" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez2_description/meshes/ankle_motors_v3_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez2_description/meshes/ankle_motors_v4_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
-<link name="ankle_motors_v3_2">
+<link name="ankle_motors_v4_2">
   <inertial>
-    <origin xyz="-0.023299675401958417 0.02064915860550208 0.01497543954853836" rpy="0 0 0"/>
-    <mass value="1.7439474159228268"/>
-    <inertia ixx="0.002047" iyy="0.000687" izz="0.001838" ixy="-0.0" iyz="1.1e-05" ixz="-0.0"/>
+    <origin xyz="-0.023299675373877886 0.02054327139298781 0.01506265318479183" rpy="0 0 0"/>
+    <mass value="0.3955604131597503"/>
+    <inertia ixx="0.000468" iyy="0.000155" izz="0.000419" ixy="-0.0" iyz="2e-06" ixz="-0.0"/>
   </inertial>
   <visual>
     <origin xyz="-0.060359 -0.059324 0.304444" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez2_description/meshes/ankle_motors_v3_2.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez2_description/meshes/ankle_motors_v4_2.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="steel_satin"/>
   </visual>
   <collision>
     <origin xyz="-0.060359 -0.059324 0.304444" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://bez2_description/meshes/ankle_motors_v3_2.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://bez2_description/meshes/ankle_motors_v4_2.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
-<joint name="Rev1" type="continuous">
+<link name="camera_point_1">
+  <inertial>
+    <origin xyz="-1.1616073519737924e-08 0.000999895991307411 -4.265551301618764e-07" rpy="0 0 0"/>
+    <mass value="0.0005023999999999976"/>
+    <inertia ixx="0.0" iyy="0.0" izz="0.0" ixy="-0.0" iyz="-0.0" ixz="0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.075313 -0.007794 -0.229048" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://bez2_description/meshes/camera_point_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="steel_satin"/>
+  </visual>
+  <collision>
+    <origin xyz="-0.075313 -0.007794 -0.229048" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://bez2_description/meshes/camera_point_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="imu_1">
+  <inertial>
+    <origin xyz="3.220301867390418e-07 -0.04000010338284481 -0.04299989661715594" rpy="0 0 0"/>
+    <mass value="0.0005024000000000008"/>
+    <inertia ixx="0.0" iyy="0.0" izz="0.0" ixy="0.0" iyz="0.0" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.072159 -0.062444 -0.100556" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://bez2_description/meshes/imu_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="steel_satin"/>
+  </visual>
+  <collision>
+    <origin xyz="-0.072159 -0.062444 -0.100556" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://bez2_description/meshes/imu_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<joint name="left_arm_motor_0" type="continuous">
   <origin xyz="0.144659 0.075444 0.072056" rpy="0 0 0"/>
   <parent link="base_link"/>
-  <child link="biceps_v2_1"/>
+  <child link="biceps_v3_1"/>
   <axis xyz="-1.0 0.0 0.0"/>
 </joint>
 
-<joint name="Rev2" type="continuous">
+<joint name="left_arm_motor_1" type="continuous">
   <origin xyz="0.008 0.0 -0.0906" rpy="0 0 0"/>
-  <parent link="biceps_v2_1"/>
-  <child link="Arm_Assembly-bez3_v10_2"/>
+  <parent link="biceps_v3_1"/>
+  <child link="Arm_Assembly-bez3_v12_2"/>
   <axis xyz="-1.0 -0.0 0.0"/>
 </joint>
 
-<joint name="Rev3" type="continuous">
+<joint name="right_arm_motor_0" type="continuous">
   <origin xyz="-0.000341 0.075444 0.072056" rpy="0 0 0"/>
   <parent link="base_link"/>
-  <child link="biceps_v2_2"/>
+  <child link="biceps_v3_2"/>
   <axis xyz="1.0 -0.0 -0.0"/>
 </joint>
 
-<joint name="Rev4" type="continuous">
+<joint name="right_arm_motor_1" type="continuous">
   <origin xyz="-0.008 0.0 -0.0906" rpy="0 0 0"/>
-  <parent link="biceps_v2_2"/>
-  <child link="Arm_Assembly-bez3_v10_1"/>
+  <parent link="biceps_v3_2"/>
+  <child link="Arm_Assembly-bez3_v12_1"/>
   <axis xyz="1.0 0.0 0.0"/>
 </joint>
 
-<joint name="Rev5" type="continuous">
+<joint name="right_leg_motor_0" type="continuous">
   <origin xyz="0.035359 0.059474 -0.072444" rpy="0 0 0"/>
   <parent link="base_link"/>
-  <child link="Hip_Printable_v2_v9_1"/>
+  <child link="Hip_Printable_v2_v10_1"/>
   <axis xyz="0.0 0.0 -1.0"/>
 </joint>
 
-<joint name="Rev6" type="continuous">
+<joint name="left_leg_motor_0" type="continuous">
   <origin xyz="0.109859 0.059474 -0.072444" rpy="0 0 0"/>
   <parent link="base_link"/>
-  <child link="Hip_Printable_v2_v9_2"/>
+  <child link="Hip_Printable_v2_v10_2"/>
   <axis xyz="0.0 0.0 -1.0"/>
 </joint>
 
-<joint name="Rev7" type="continuous">
+<joint name="right_leg_motor_1" type="continuous">
   <origin xyz="0.0 0.0235 -0.032" rpy="0 0 0"/>
-  <parent link="Hip_Printable_v2_v9_1"/>
-  <child link="hip_motors_v3_1"/>
+  <parent link="Hip_Printable_v2_v10_1"/>
+  <child link="hip_motors_v4_1"/>
   <axis xyz="-0.0 -1.0 -0.0"/>
 </joint>
 
-<joint name="Rev8" type="continuous">
+<joint name="left_leg_motor_1" type="continuous">
   <origin xyz="0.0 0.025 -0.032" rpy="0 0 0"/>
-  <parent link="Hip_Printable_v2_v9_2"/>
-  <child link="hip_motors_v3_2"/>
+  <parent link="Hip_Printable_v2_v10_2"/>
+  <child link="hip_motors_v4_2"/>
   <axis xyz="-0.0 -1.0 -0.0"/>
 </joint>
 
-<joint name="Rev9" type="continuous">
+<joint name="left_leg_motor_2" type="continuous">
   <origin xyz="-0.02 -0.02365 0.0" rpy="0 0 0"/>
-  <parent link="hip_motors_v3_2"/>
-  <child link="Upper_left_leg_support__bottom__v7_1"/>
+  <parent link="hip_motors_v4_2"/>
+  <child link="Upper_left_leg_support__bottom__v8_1"/>
   <axis xyz="-1.0 -0.0 0.0"/>
 </joint>
 
-<joint name="Rev10" type="continuous">
+<joint name="right_leg_motor_2" type="continuous">
   <origin xyz="0.02 -0.02365 0.0" rpy="0 0 0"/>
-  <parent link="hip_motors_v3_1"/>
-  <child link="Upper_left_leg_support__bottom__v7_2"/>
+  <parent link="hip_motors_v4_1"/>
+  <child link="Upper_left_leg_support__bottom__v8_2"/>
   <axis xyz="1.0 0.0 0.0"/>
 </joint>
 
-<joint name="Rev17" type="continuous">
+<joint name="right_leg_motor_5" type="continuous">
   <origin xyz="-0.0233 0.0843 0.0" rpy="0 0 0"/>
-  <parent link="ankle_motors_v3_2"/>
-  <child link="New_left_foot_upperhalf_v4_1"/>
+  <parent link="ankle_motors_v4_2"/>
+  <child link="New_left_foot_upperhalf_v5_1"/>
   <axis xyz="0.0 -1.0 -0.0"/>
 </joint>
 
-<joint name="Rev18" type="continuous">
+<joint name="left_leg_motor_5" type="continuous">
   <origin xyz="0.0233 0.0843 0.0" rpy="0 0 0"/>
-  <parent link="ankle_motors_v3_1"/>
-  <child link="New_right_foot_upperhalf_v2_1"/>
+  <parent link="ankle_motors_v4_1"/>
+  <child link="New_right_foot_upperhalf_v3_1"/>
   <axis xyz="0.0 -1.0 -0.0"/>
 </joint>
 
 <joint name="Rigid19" type="fixed">
   <origin xyz="0.056826 0.037694 0.100556" rpy="0 0 0"/>
   <parent link="base_link"/>
-  <child link="neck_v2_1"/>
+  <child link="neck_v4_1"/>
 </joint>
 
-<joint name="Rev20" type="continuous">
+<joint name="head_motor_0" type="continuous">
   <origin xyz="0.015 0.0045 0.046674" rpy="0 0 0"/>
-  <parent link="neck_v2_1"/>
-  <child link="custom_servo_support__middle_neck__v8_1"/>
+  <parent link="neck_v4_1"/>
+  <child link="custom_servo_support__middle_neck__v9_1"/>
   <axis xyz="0.0 -0.0 1.0"/>
 </joint>
 
-<joint name="Rev21" type="continuous">
+<joint name="head_motor_1" type="continuous">
   <origin xyz="-0.022187 0.0 0.033818" rpy="0 0 0"/>
-  <parent link="custom_servo_support__middle_neck__v8_1"/>
-  <child link="head_v2_1"/>
+  <parent link="custom_servo_support__middle_neck__v9_1"/>
+  <child link="head_v4_1"/>
   <axis xyz="-1.0 0.0 0.0"/>
 </joint>
 
-<joint name="Rev22" type="continuous">
+<joint name="right_leg_motor_3" type="continuous">
   <origin xyz="0.0045 0.0 -0.0917" rpy="0 0 0"/>
-  <parent link="Upper_left_leg_support__bottom__v7_2"/>
-  <child link="lower_leg_v2_1"/>
+  <parent link="Upper_left_leg_support__bottom__v8_2"/>
+  <child link="lower_leg_v4_1"/>
   <axis xyz="1.0 0.0 0.0"/>
 </joint>
 
-<joint name="Rev23" type="continuous">
+<joint name="left_leg_motor_3" type="continuous">
   <origin xyz="-0.0045 0.0 -0.0917" rpy="0 0 0"/>
-  <parent link="Upper_left_leg_support__bottom__v7_1"/>
-  <child link="lower_leg_v2_2"/>
+  <parent link="Upper_left_leg_support__bottom__v8_1"/>
+  <child link="lower_leg_v4_2"/>
   <axis xyz="-1.0 -0.0 0.0"/>
 </joint>
 
-<joint name="Rev25" type="continuous">
+<joint name="left_leg_motor_4" type="continuous">
   <origin xyz="-0.0005 0.0 -0.1083" rpy="0 0 0"/>
-  <parent link="lower_leg_v2_2"/>
-  <child link="ankle_motors_v3_1"/>
+  <parent link="lower_leg_v4_2"/>
+  <child link="ankle_motors_v4_1"/>
   <axis xyz="-1.0 0.0 0.0"/>
 </joint>
 
-<joint name="Rev26" type="continuous">
+<joint name="right_leg_motor_4" type="continuous">
   <origin xyz="0.0005 0.0 -0.1083" rpy="0 0 0"/>
-  <parent link="lower_leg_v2_1"/>
-  <child link="ankle_motors_v3_2"/>
+  <parent link="lower_leg_v4_1"/>
+  <child link="ankle_motors_v4_2"/>
   <axis xyz="1.0 -0.0 0.0"/>
+</joint>
+
+<joint name="camera_joint" type="continuous">
+  <origin xyz="0.025674 -0.0344 0.048" rpy="0 0 0"/>
+  <parent link="head_v4_1"/>
+  <child link="camera_point_1"/>
+  <axis xyz="-0.0 -1.0 -0.0"/>
+</joint>
+
+<joint name="imu_joint" type="continuous">
+  <origin xyz="0.072159 0.062444 0.100556" rpy="0 0 0"/>
+  <parent link="base_link"/>
+  <child link="imu_1"/>
+  <axis xyz="-0.0 -0.0 1.0"/>
 </joint>
 
 </robot>

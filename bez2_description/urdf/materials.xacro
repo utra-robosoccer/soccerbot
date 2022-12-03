@@ -7,14 +7,14 @@
 <material name="polymide_kapton">
   <color rgba="0.7843137254901961 0.5568627450980392 0.027450980392156862 1.0"/>
 </material>
-<material name="steel_satin">
-  <color rgba="0.6274509803921569 0.6274509803921569 0.6274509803921569 1.0"/>
-</material>
-<material name="abs_white">
-  <color rgba="0.37254901960784315 0.3607843137254902 0.34509803921568627 1.0"/>
-</material>
 <material name="plastic_glossy_black">
   <color rgba="0.09803921568627451 0.09803921568627451 0.09803921568627451 1.0"/>
+</material>
+<material name="abs_white">
+  <color rgba="0.9647058823529412 0.9647058823529412 0.9529411764705882 1.0"/>
+</material>
+<material name="steel_satin">
+  <color rgba="0.6274509803921569 0.6274509803921569 0.6274509803921569 1.0"/>
 </material>
 
 </robot>
