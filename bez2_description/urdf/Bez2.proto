@@ -1,0 +1,992 @@
+#VRML_SIM R2022b utf8
+# license: Apache License 2.0
+# license url: http://www.apache.org/licenses/LICENSE-2.0
+# This is a proto file for Webots for the bez2
+# Extracted from: /home/nam/catkin_ws/src/soccerbot/bez2_description/urdf/bez2_simple.urdf
+
+PROTO bez2 [
+  field  SFVec3f     translation     0 0 0
+  field  SFRotation  rotation        0 0 1 0
+  field  SFString    name            "bez2"  # Is `Robot.name`.
+  field  SFString    controller      "void"  # Is `Robot.controller`.
+  field  MFString    controllerArgs  []      # Is `Robot.controllerArgs`.
+  field  SFString    customData      ""      # Is `Robot.customData`.
+  field  SFBool      supervisor      FALSE   # Is `Robot.supervisor`.
+  field  SFBool      synchronization TRUE    # Is `Robot.synchronization`.
+  field  SFBool      selfCollision   FALSE   # Is `Robot.selfCollision`.
+]
+{
+  Robot {
+    translation IS translation
+    rotation IS rotation
+    controller IS controller
+    controllerArgs IS controllerArgs
+    customData IS customData
+    supervisor IS supervisor
+    synchronization IS synchronization
+    selfCollision IS selfCollision
+    children [
+      Transform {
+        scale 0.001000 0.001000 0.001000
+        children [
+          Shape {
+            appearance DEF polymide_kapton PBRAppearance {
+              baseColor 0.500000 0.500000 0.500000
+              roughness 1.000000
+              metalness 0
+            }
+            geometry DEF base_link Mesh {
+              url "/home/nam/catkin_ws/src/soccerbot/bez2_description/meshes/base_link.stl"
+            }
+          }
+        ]
+      }
+      HingeJoint {
+        jointParameters HingeJointParameters {
+          axis -1.000000 0.000000 0.000000
+          anchor 0.144659 0.075444 0.072056
+        }
+        device [
+          RotationalMotor {
+            name "left_arm_motor_0"
+            maxTorque 10000
+          }
+          PositionSensor {
+            name "left_arm_motor_0_sensor"
+          }
+        ]
+        endPoint Solid {
+          translation 0.144659 0.075444 0.072056
+          children [
+            Transform {
+              translation -0.144659 -0.075444 -0.072056
+              scale 0.001000 0.001000 0.001000
+              children [
+                Shape {
+                  appearance DEF plastic_glossy_black PBRAppearance {
+                    baseColor 0.500000 0.500000 0.500000
+                    roughness 1.000000
+                    metalness 0
+                  }
+                  geometry DEF biceps_v3_1 Mesh {
+                    url "/home/nam/catkin_ws/src/soccerbot/bez2_description/meshes/biceps_v3_1.stl"
+                  }
+                }
+              ]
+            }
+            HingeJoint {
+              jointParameters HingeJointParameters {
+                axis -1.000000 -0.000000 0.000000
+                anchor 0.008000 0.000000 -0.090600
+              }
+              device [
+                RotationalMotor {
+                  name "left_arm_motor_1"
+                  maxTorque 10000
+                }
+                PositionSensor {
+                  name "left_arm_motor_1_sensor"
+                }
+              ]
+              endPoint Solid {
+                translation 0.008000 0.000000 -0.090600
+                children [
+                  Transform {
+                    translation -0.152659 -0.075444 0.018544
+                    scale 0.001000 0.001000 0.001000
+                    children [
+                      Shape {
+                        appearance DEF abs_white PBRAppearance {
+                          baseColor 0.500000 0.500000 0.500000
+                          roughness 1.000000
+                          metalness 0
+                        }
+                        geometry DEF Arm_Assembly-bez3_v12_2 Mesh {
+                          url "/home/nam/catkin_ws/src/soccerbot/bez2_description/meshes/Arm_Assembly-bez3_v12_2.stl"
+                        }
+                      }
+                    ]
+                  }
+                ]
+                name "Arm_Assembly-bez3_v12_2"
+                boundingObject Box {
+                   size 0.050000 0.056674 0.197500
+                }
+                physics Physics {
+                  density -1
+                  mass 0.321104
+                  centerOfMass [ 0.022845 0.005330 0.029751 ]
+                  inertiaMatrix [
+                    2.137000e-03 2.148000e-03 1.030000e-04
+                    -3.000000e-06 1.600000e-05 1.750000e-04
+                  ]
+                }
+              }
+            }
+          ]
+          name "biceps_v3_1"
+          boundingObject Box {
+             size 0.036000 0.056674 0.125200
+          }
+          physics Physics {
+            density -1
+            mass 0.258254
+            centerOfMass [ 0.026300 -0.000000 -0.038386 ]
+            inertiaMatrix [
+              3.940000e-04 4.370000e-04 6.400000e-05
+              -0.000000e+00 3.300000e-05 0.000000e+00
+            ]
+          }
+        }
+      }
+      HingeJoint {
+        jointParameters HingeJointParameters {
+          anchor -0.000341 0.075444 0.072056
+        }
+        device [
+          RotationalMotor {
+            name "right_arm_motor_0"
+            maxTorque 10000
+          }
+          PositionSensor {
+            name "right_arm_motor_0_sensor"
+          }
+        ]
+        endPoint Solid {
+          translation -0.000341 0.075444 0.072056
+          children [
+            Transform {
+              translation 0.000341 -0.075444 -0.072056
+              scale 0.001000 0.001000 0.001000
+              children [
+                Shape {
+                  appearance USE plastic_glossy_black
+                  geometry DEF biceps_v3_2 Mesh {
+                    url "/home/nam/catkin_ws/src/soccerbot/bez2_description/meshes/biceps_v3_2.stl"
+                  }
+                }
+              ]
+            }
+            HingeJoint {
+              jointParameters HingeJointParameters {
+                anchor -0.008000 0.000000 -0.090600
+              }
+              device [
+                RotationalMotor {
+                  name "right_arm_motor_1"
+                  maxTorque 10000
+                }
+                PositionSensor {
+                  name "right_arm_motor_1_sensor"
+                }
+              ]
+              endPoint Solid {
+                translation -0.008000 0.000000 -0.090600
+                children [
+                  Transform {
+                    translation 0.008341 -0.075444 0.018544
+                    scale 0.001000 0.001000 0.001000
+                    children [
+                      Shape {
+                        appearance USE abs_white
+                        geometry DEF Arm_Assembly-bez3_v12_1 Mesh {
+                          url "/home/nam/catkin_ws/src/soccerbot/bez2_description/meshes/Arm_Assembly-bez3_v12_1.stl"
+                        }
+                      }
+                    ]
+                  }
+                ]
+                name "Arm_Assembly-bez3_v12_1"
+                boundingObject Box {
+                   size 0.050000 0.056674 0.197500
+                }
+                physics Physics {
+                  density -1
+                  mass 0.321104
+                  centerOfMass [ -0.025829 0.005330 0.029751 ]
+                  inertiaMatrix [
+                    2.137000e-03 2.148000e-03 1.030000e-04
+                    -3.000000e-06 1.600000e-05 1.750000e-04
+                  ]
+                }
+              }
+            }
+          ]
+          name "biceps_v3_2"
+          boundingObject Box {
+             size 0.036000 0.056674 0.125200
+          }
+          physics Physics {
+            density -1
+            mass 0.258254
+            centerOfMass [ -0.026300 -0.000000 -0.038386 ]
+            inertiaMatrix [
+              3.940000e-04 4.370000e-04 6.400000e-05
+              -0.000000e+00 -3.300000e-05 -0.000000e+00
+            ]
+          }
+        }
+      }
+      HingeJoint {
+        jointParameters HingeJointParameters {
+          axis 0.000000 0.000000 -1.000000
+          anchor 0.035359 0.059474 -0.072444
+        }
+        device [
+          RotationalMotor {
+            name "right_leg_motor_0"
+            maxTorque 10000
+          }
+          PositionSensor {
+            name "right_leg_motor_0_sensor"
+          }
+        ]
+        endPoint Solid {
+          translation 0.035359 0.059474 -0.072444
+          children [
+            Transform {
+              translation -0.035359 -0.059474 0.072444
+              scale 0.001000 0.001000 0.001000
+              children [
+                Shape {
+                  appearance USE abs_white
+                  geometry DEF Hip_Printable_v2_v10_1 Mesh {
+                    url "/home/nam/catkin_ws/src/soccerbot/bez2_description/meshes/Hip_Printable_v2_v10_1.stl"
+                  }
+                }
+              ]
+            }
+            HingeJoint {
+              jointParameters HingeJointParameters {
+                axis -0.000000 -1.000000 -0.000000
+                anchor 0.000000 0.023500 -0.032000
+              }
+              device [
+                RotationalMotor {
+                  name "right_leg_motor_1"
+                  maxTorque 10000
+                }
+                PositionSensor {
+                  name "right_leg_motor_1_sensor"
+                }
+              ]
+              endPoint Solid {
+                translation 0.000000 0.023500 -0.032000
+                children [
+                  Transform {
+                    translation -0.035359 -0.082974 0.104444
+                    scale 0.001000 0.001000 0.001000
+                    children [
+                      Shape {
+                        appearance DEF silver_default PBRAppearance {
+                          baseColor 0.500000 0.500000 0.500000
+                          roughness 1.000000
+                          metalness 0
+                        }
+                        geometry DEF hip_motors_v4_1 Mesh {
+                          url "/home/nam/catkin_ws/src/soccerbot/bez2_description/meshes/hip_motors_v4_1.stl"
+                        }
+                      }
+                    ]
+                  }
+                  HingeJoint {
+                    jointParameters HingeJointParameters {
+                      anchor 0.020000 -0.023650 0.000000
+                    }
+                    device [
+                      RotationalMotor {
+                        name "right_leg_motor_2"
+                        maxTorque 10000
+                      }
+                      PositionSensor {
+                        name "right_leg_motor_2_sensor"
+                      }
+                    ]
+                    endPoint Solid {
+                      translation 0.020000 -0.023650 0.000000
+                      children [
+                        Transform {
+                          translation -0.055359 -0.059324 0.104444
+                          scale 0.001000 0.001000 0.001000
+                          children [
+                            Shape {
+                              appearance USE abs_white
+                              geometry DEF Upper_left_leg_support__bottom__v8_2 Mesh {
+                                url "/home/nam/catkin_ws/src/soccerbot/bez2_description/meshes/Upper_left_leg_support__bottom__v8_2.stl"
+                              }
+                            }
+                          ]
+                        }
+                        HingeJoint {
+                          jointParameters HingeJointParameters {
+                            anchor 0.004500 0.000000 -0.091700
+                          }
+                          device [
+                            RotationalMotor {
+                              name "right_leg_motor_3"
+                              maxTorque 10000
+                            }
+                            PositionSensor {
+                              name "right_leg_motor_3_sensor"
+                            }
+                          ]
+                          endPoint Solid {
+                            translation 0.004500 0.000000 -0.091700
+                            children [
+                              Transform {
+                                translation -0.059859 -0.059324 0.196144
+                                scale 0.001000 0.001000 0.001000
+                                children [
+                                  Shape {
+                                    appearance USE abs_white
+                                    geometry DEF lower_leg_v4_1 Mesh {
+                                      url "/home/nam/catkin_ws/src/soccerbot/bez2_description/meshes/lower_leg_v4_1.stl"
+                                    }
+                                  }
+                                ]
+                              }
+                              HingeJoint {
+                                jointParameters HingeJointParameters {
+                                  anchor 0.000500 0.000000 -0.108300
+                                }
+                                device [
+                                  RotationalMotor {
+                                    name "right_leg_motor_4"
+                                    maxTorque 10000
+                                  }
+                                  PositionSensor {
+                                    name "right_leg_motor_4_sensor"
+                                  }
+                                ]
+                                endPoint Solid {
+                                  translation 0.000500 0.000000 -0.108300
+                                  children [
+                                    Transform {
+                                      translation -0.060359 -0.059324 0.304444
+                                      scale 0.001000 0.001000 0.001000
+                                      children [
+                                        Shape {
+                                          appearance DEF steel_satin PBRAppearance {
+                                            baseColor 0.500000 0.500000 0.500000
+                                            roughness 1.000000
+                                            metalness 0
+                                          }
+                                          geometry DEF ankle_motors_v4_2 Mesh {
+                                            url "/home/nam/catkin_ws/src/soccerbot/bez2_description/meshes/ankle_motors_v4_2.stl"
+                                          }
+                                        }
+                                      ]
+                                    }
+                                    HingeJoint {
+                                      jointParameters HingeJointParameters {
+                                        axis 0.000000 -1.000000 -0.000000
+                                        anchor -0.023300 0.084300 0.000000
+                                      }
+                                      device [
+                                        RotationalMotor {
+                                          name "right_leg_motor_5"
+                                          maxTorque 10000
+                                        }
+                                        PositionSensor {
+                                          name "right_leg_motor_5_sensor"
+                                        }
+                                      ]
+                                      endPoint Solid {
+                                        translation -0.023300 0.084300 0.000000
+                                        children [
+                                          Transform {
+                                            translation -0.037059 -0.143624 0.304444
+                                            scale 0.001000 0.001000 0.001000
+                                            children [
+                                              Shape {
+                                                appearance USE abs_white
+                                                geometry DEF New_left_foot_upperhalf_v5_1 Mesh {
+                                                  url "/home/nam/catkin_ws/src/soccerbot/bez2_description/meshes/New_left_foot_upperhalf_v5_1.stl"
+                                                }
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                        name "New_left_foot_upperhalf_v5_1"
+                                        boundingObject Box {
+                                           size 0.043000 0.090000 0.170000
+                                        }
+                                        physics Physics {
+                                          density -1
+                                          mass 0.058856
+                                          centerOfMass [ -0.012181 -0.051394 -0.021776 ]
+                                          inertiaMatrix [
+                                            1.490000e-04 3.900000e-05 1.780000e-04
+                                            0.000000e+00 -3.000000e-06 0.000000e+00
+                                          ]
+                                        }
+                                      }
+                                    }
+                                  ]
+                                  name "ankle_motors_v4_2"
+                                  boundingObject Box {
+                                     size 0.051457 0.062100 0.109915
+                                  }
+                                  physics Physics {
+                                    density -1
+                                    mass 0.395560
+                                    centerOfMass [ -0.023300 0.020543 0.015063 ]
+                                    inertiaMatrix [
+                                      4.680000e-04 1.550000e-04 4.190000e-04
+                                      -0.000000e+00 -0.000000e+00 2.000000e-06
+                                    ]
+                                  }
+                                }
+                              }
+                            ]
+                            name "lower_leg_v4_1"
+                            boundingObject Box {
+                               size 0.040200 0.054604 0.137714
+                            }
+                            physics Physics {
+                              density -1
+                              mass 0.147673
+                              centerOfMass [ -0.023192 -0.000000 -0.022133 ]
+                              inertiaMatrix [
+                                1.070000e-04 1.240000e-04 4.100000e-05
+                                -0.000000e+00 -2.000000e-06 0.000000e+00
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                      name "Upper_left_leg_support__bottom__v8_2"
+                      boundingObject Box {
+                         size 0.028000 0.054000 0.119600
+                      }
+                      physics Physics {
+                        density -1
+                        mass 0.027169
+                        centerOfMass [ -0.019537 -0.000000 -0.048114 ]
+                        inertiaMatrix [
+                          2.200000e-05 3.200000e-05 1.300000e-05
+                          -0.000000e+00 -0.000000e+00 0.000000e+00
+                        ]
+                      }
+                    }
+                  }
+                ]
+                name "hip_motors_v4_1"
+                boundingObject Box {
+                   size 0.041000 0.046500 0.076900
+                }
+                physics Physics {
+                  density -1
+                  mass 0.272820
+                  centerOfMass [ 0.000000 -0.009088 -0.011907 ]
+                  inertiaMatrix [
+                    1.780000e-04 7.400000e-05 1.530000e-04
+                    0.000000e+00 0.000000e+00 1.000000e-06
+                  ]
+                }
+              }
+            }
+          ]
+          name "Hip_Printable_v2_v10_1"
+          boundingObject Box {
+             size 0.026000 0.045000 0.050000
+          }
+          physics Physics {
+            density -1
+            mass 0.010089
+            centerOfMass [ 0.000000 -0.000042 -0.014017 ]
+            inertiaMatrix [
+              6.000000e-06 2.000000e-06 5.000000e-06
+              -0.000000e+00 -0.000000e+00 -0.000000e+00
+            ]
+          }
+        }
+      }
+      HingeJoint {
+        jointParameters HingeJointParameters {
+          axis 0.000000 0.000000 -1.000000
+          anchor 0.109859 0.059474 -0.072444
+        }
+        device [
+          RotationalMotor {
+            name "left_leg_motor_0"
+            maxTorque 10000
+          }
+          PositionSensor {
+            name "left_leg_motor_0_sensor"
+          }
+        ]
+        endPoint Solid {
+          translation 0.109859 0.059474 -0.072444
+          children [
+            Transform {
+              translation -0.109859 -0.059474 0.072444
+              scale 0.001000 0.001000 0.001000
+              children [
+                Shape {
+                  appearance USE abs_white
+                  geometry DEF Hip_Printable_v2_v10_2 Mesh {
+                    url "/home/nam/catkin_ws/src/soccerbot/bez2_description/meshes/Hip_Printable_v2_v10_2.stl"
+                  }
+                }
+              ]
+            }
+            HingeJoint {
+              jointParameters HingeJointParameters {
+                axis -0.000000 -1.000000 -0.000000
+                anchor 0.000000 0.025000 -0.032000
+              }
+              device [
+                RotationalMotor {
+                  name "left_leg_motor_1"
+                  maxTorque 10000
+                }
+                PositionSensor {
+                  name "left_leg_motor_1_sensor"
+                }
+              ]
+              endPoint Solid {
+                translation 0.000000 0.025000 -0.032000
+                children [
+                  Transform {
+                    translation -0.109859 -0.084474 0.104444
+                    scale 0.001000 0.001000 0.001000
+                    children [
+                      Shape {
+                        appearance USE silver_default
+                        geometry DEF hip_motors_v4_2 Mesh {
+                          url "/home/nam/catkin_ws/src/soccerbot/bez2_description/meshes/hip_motors_v4_2.stl"
+                        }
+                      }
+                    ]
+                  }
+                  HingeJoint {
+                    jointParameters HingeJointParameters {
+                      axis -1.000000 -0.000000 0.000000
+                      anchor -0.020000 -0.023650 0.000000
+                    }
+                    device [
+                      RotationalMotor {
+                        name "left_leg_motor_2"
+                        maxTorque 10000
+                      }
+                      PositionSensor {
+                        name "left_leg_motor_2_sensor"
+                      }
+                    ]
+                    endPoint Solid {
+                      translation -0.020000 -0.023650 0.000000
+                      children [
+                        Transform {
+                          translation -0.089859 -0.060824 0.104444
+                          scale 0.001000 0.001000 0.001000
+                          children [
+                            Shape {
+                              appearance USE abs_white
+                              geometry DEF Upper_left_leg_support__bottom__v8_1 Mesh {
+                                url "/home/nam/catkin_ws/src/soccerbot/bez2_description/meshes/Upper_left_leg_support__bottom__v8_1.stl"
+                              }
+                            }
+                          ]
+                        }
+                        HingeJoint {
+                          jointParameters HingeJointParameters {
+                            axis -1.000000 -0.000000 0.000000
+                            anchor -0.004500 0.000000 -0.091700
+                          }
+                          device [
+                            RotationalMotor {
+                              name "left_leg_motor_3"
+                              maxTorque 10000
+                            }
+                            PositionSensor {
+                              name "left_leg_motor_3_sensor"
+                            }
+                          ]
+                          endPoint Solid {
+                            translation -0.004500 0.000000 -0.091700
+                            children [
+                              Transform {
+                                translation -0.085359 -0.060824 0.196144
+                                scale 0.001000 0.001000 0.001000
+                                children [
+                                  Shape {
+                                    appearance USE abs_white
+                                    geometry DEF lower_leg_v4_2 Mesh {
+                                      url "/home/nam/catkin_ws/src/soccerbot/bez2_description/meshes/lower_leg_v4_2.stl"
+                                    }
+                                  }
+                                ]
+                              }
+                              HingeJoint {
+                                jointParameters HingeJointParameters {
+                                  axis -1.000000 0.000000 0.000000
+                                  anchor -0.000500 0.000000 -0.108300
+                                }
+                                device [
+                                  RotationalMotor {
+                                    name "left_leg_motor_4"
+                                    maxTorque 10000
+                                  }
+                                  PositionSensor {
+                                    name "left_leg_motor_4_sensor"
+                                  }
+                                ]
+                                endPoint Solid {
+                                  translation -0.000500 0.000000 -0.108300
+                                  children [
+                                    Transform {
+                                      translation -0.084859 -0.060824 0.304444
+                                      scale 0.001000 0.001000 0.001000
+                                      children [
+                                        Shape {
+                                          appearance USE steel_satin
+                                          geometry DEF ankle_motors_v4_1 Mesh {
+                                            url "/home/nam/catkin_ws/src/soccerbot/bez2_description/meshes/ankle_motors_v4_1.stl"
+                                          }
+                                        }
+                                      ]
+                                    }
+                                    HingeJoint {
+                                      jointParameters HingeJointParameters {
+                                        axis 0.000000 -1.000000 -0.000000
+                                        anchor 0.023300 0.084300 0.000000
+                                      }
+                                      device [
+                                        RotationalMotor {
+                                          name "left_leg_motor_5"
+                                          maxTorque 10000
+                                        }
+                                        PositionSensor {
+                                          name "left_leg_motor_5_sensor"
+                                        }
+                                      ]
+                                      endPoint Solid {
+                                        translation 0.023300 0.084300 0.000000
+                                        children [
+                                          Transform {
+                                            translation -0.108159 -0.145124 0.304444
+                                            scale 0.001000 0.001000 0.001000
+                                            children [
+                                              Shape {
+                                                appearance USE abs_white
+                                                geometry DEF New_right_foot_upperhalf_v3_1 Mesh {
+                                                  url "/home/nam/catkin_ws/src/soccerbot/bez2_description/meshes/New_right_foot_upperhalf_v3_1.stl"
+                                                }
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                        name "New_right_foot_upperhalf_v3_1"
+                                        boundingObject Box {
+                                           size 0.043000 0.090000 0.170000
+                                        }
+                                        physics Physics {
+                                          density -1
+                                          mass 0.117713
+                                          centerOfMass [ 0.060000 -0.051394 -0.021776 ]
+                                          inertiaMatrix [
+                                            2.970000e-04 3.480000e-04 6.250000e-04
+                                            0.000000e+00 0.000000e+00 1.000000e-06
+                                          ]
+                                        }
+                                      }
+                                    }
+                                  ]
+                                  name "ankle_motors_v4_1"
+                                  boundingObject Box {
+                                     size 0.051457 0.062100 0.109915
+                                  }
+                                  physics Physics {
+                                    density -1
+                                    mass 0.395560
+                                    centerOfMass [ 0.023300 0.020543 0.015063 ]
+                                    inertiaMatrix [
+                                      4.680000e-04 1.550000e-04 4.190000e-04
+                                      -0.000000e+00 -0.000000e+00 2.000000e-06
+                                    ]
+                                  }
+                                }
+                              }
+                            ]
+                            name "lower_leg_v4_2"
+                            boundingObject Box {
+                               size 0.040200 0.054604 0.137714
+                            }
+                            physics Physics {
+                              density -1
+                              mass 0.147673
+                              centerOfMass [ 0.023192 -0.000000 -0.022133 ]
+                              inertiaMatrix [
+                                1.070000e-04 1.240000e-04 4.100000e-05
+                                -0.000000e+00 2.000000e-06 -0.000000e+00
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                      name "Upper_left_leg_support__bottom__v8_1"
+                      boundingObject Box {
+                         size 0.028000 0.054000 0.119600
+                      }
+                      physics Physics {
+                        density -1
+                        mass 0.027169
+                        centerOfMass [ 0.019463 -0.000000 -0.048114 ]
+                        inertiaMatrix [
+                          2.200000e-05 3.200000e-05 1.300000e-05
+                          -0.000000e+00 -0.000000e+00 0.000000e+00
+                        ]
+                      }
+                    }
+                  }
+                ]
+                name "hip_motors_v4_2"
+                boundingObject Box {
+                   size 0.041000 0.046500 0.076900
+                }
+                physics Physics {
+                  density -1
+                  mass 0.272820
+                  centerOfMass [ 0.000000 -0.009088 -0.011907 ]
+                  inertiaMatrix [
+                    1.780000e-04 7.400000e-05 1.530000e-04
+                    0.000000e+00 0.000000e+00 1.000000e-06
+                  ]
+                }
+              }
+            }
+          ]
+          name "Hip_Printable_v2_v10_2"
+          boundingObject Box {
+             size 0.026000 0.045000 0.050000
+          }
+          physics Physics {
+            density -1
+            mass 0.010089
+            centerOfMass [ 0.000000 -0.000042 -0.014017 ]
+            inertiaMatrix [
+              6.000000e-06 2.000000e-06 5.000000e-06
+              -0.000000e+00 -0.000000e+00 -0.000000e+00
+            ]
+          }
+        }
+      }
+      Solid {
+        translation 0.056826 0.037694 0.100556
+        children [
+          Transform {
+            translation -0.056826 -0.037694 -0.100556
+            scale 0.001000 0.001000 0.001000
+            children [
+              Shape {
+                appearance USE abs_white
+                geometry DEF neck_v4_1 Mesh {
+                  url "/home/nam/catkin_ws/src/soccerbot/bez2_description/meshes/neck_v4_1.stl"
+                }
+              }
+            ]
+          }
+          HingeJoint {
+            jointParameters HingeJointParameters {
+              axis 0.000000 -0.000000 1.000000
+              anchor 0.015000 0.004500 0.046674
+            }
+            device [
+              RotationalMotor {
+                name "head_motor_0"
+                maxTorque 10000
+              }
+              PositionSensor {
+                name "head_motor_0_sensor"
+              }
+            ]
+            endPoint Solid {
+              translation 0.015000 0.004500 0.046674
+              children [
+                Transform {
+                  translation -0.071826 -0.042194 -0.147230
+                  scale 0.001000 0.001000 0.001000
+                  children [
+                    Shape {
+                      appearance USE abs_white
+                      geometry DEF custom_servo_support__middle_neck__v9_1 Mesh {
+                        url "/home/nam/catkin_ws/src/soccerbot/bez2_description/meshes/custom_servo_support__middle_neck__v9_1.stl"
+                      }
+                    }
+                  ]
+                }
+                HingeJoint {
+                  jointParameters HingeJointParameters {
+                    axis -1.000000 0.000000 0.000000
+                    anchor -0.022187 0.000000 0.033818
+                  }
+                  device [
+                    RotationalMotor {
+                      name "head_motor_1"
+                      maxTorque 10000
+                    }
+                    PositionSensor {
+                      name "head_motor_1_sensor"
+                    }
+                  ]
+                  endPoint Solid {
+                    translation -0.022187 0.000000 0.033818
+                    children [
+                      Transform {
+                        translation -0.049639 -0.042194 -0.181048
+                        scale 0.001000 0.001000 0.001000
+                        children [
+                          Shape {
+                            appearance USE plastic_glossy_black
+                            geometry DEF head_v4_1 Mesh {
+                              url "/home/nam/catkin_ws/src/soccerbot/bez2_description/meshes/head_v4_1.stl"
+                            }
+                          }
+                        ]
+                      }
+                      HingeJoint {
+                        jointParameters HingeJointParameters {
+                          axis -0.000000 -1.000000 -0.000000
+                          anchor 0.025674 -0.034400 0.048000
+                        }
+                        device [
+                          RotationalMotor {
+                            name "camera_joint"
+                            maxTorque 10000
+                          }
+                          PositionSensor {
+                            name "camera_joint_sensor"
+                          }
+                        ]
+                        endPoint Solid {
+                          translation 0.025674 -0.034400 0.048000
+                          children [
+                            Transform {
+                              translation -0.075313 -0.007794 -0.229048
+                              scale 0.001000 0.001000 0.001000
+                              children [
+                                Shape {
+                                  appearance USE steel_satin
+                                  geometry DEF camera_point_1 Mesh {
+                                    url "/home/nam/catkin_ws/src/soccerbot/bez2_description/meshes/camera_point_1.stl"
+                                  }
+                                }
+                              ]
+                            }
+                          ]
+                          name "camera_point_1"
+                          boundingObject Box {
+                             size 0.004000 0.004000 0.004000
+                          }
+                          physics Physics {
+                            density -1
+                            mass 0.000502
+                            centerOfMass [ -0.000000 0.001000 -0.000000 ]
+                          }
+                        }
+                      }
+                    ]
+                    name "head_v4_1"
+                    boundingObject Box {
+                       size 0.076100 0.076500 0.094000
+                    }
+                    physics Physics {
+                      density -1
+                      mass 0.293385
+                      centerOfMass [ 0.024246 -0.003749 0.024988 ]
+                      inertiaMatrix [
+                        2.390000e-04 2.300000e-04 1.940000e-04
+                        2.000000e-06 -1.100000e-05 7.600000e-05
+                      ]
+                    }
+                  }
+                }
+              ]
+              name "custom_servo_support__middle_neck__v9_1"
+              boundingObject Box {
+                 size 0.035000 0.048253 0.056374
+              }
+              physics Physics {
+                density -1
+                mass 0.019595
+                centerOfMass [ 0.001560 -0.000000 0.014703 ]
+                inertiaMatrix [
+                  6.000000e-06 1.400000e-05 1.200000e-05
+                  0.000000e+00 0.000000e+00 0.000000e+00
+                ]
+              }
+            }
+          }
+        ]
+        name "neck_v4_1"
+        boundingObject Box {
+           size 0.040000 0.046674 0.054300
+        }
+        physics Physics {
+          density -1
+          mass 0.106558
+          centerOfMass [ 0.015000 0.012880 0.024886 ]
+          inertiaMatrix [
+            3.000000e-05 1.900000e-05 1.900000e-05
+            -0.000000e+00 0.000000e+00 3.000000e-06
+          ]
+        }
+      }
+      HingeJoint {
+        jointParameters HingeJointParameters {
+          axis -0.000000 -0.000000 1.000000
+          anchor 0.072159 0.062444 0.100556
+        }
+        device [
+          RotationalMotor {
+            name "imu_joint"
+            maxTorque 10000
+          }
+          PositionSensor {
+            name "imu_joint_sensor"
+          }
+        ]
+        endPoint Solid {
+          translation 0.072159 0.062444 0.100556
+          children [
+            Transform {
+              translation -0.072159 -0.062444 -0.100556
+              scale 0.001000 0.001000 0.001000
+              children [
+                Shape {
+                  appearance USE steel_satin
+                  geometry DEF imu_1 Mesh {
+                    url "/home/nam/catkin_ws/src/soccerbot/bez2_description/meshes/imu_1.stl"
+                  }
+                }
+              ]
+            }
+          ]
+          name "imu_1"
+          boundingObject Box {
+             size 0.004000 0.004000 0.004000
+          }
+          physics Physics {
+            density -1
+            mass 0.000502
+            centerOfMass [ 0.000000 -0.040000 -0.043000 ]
+          }
+        }
+      }
+    ]
+    name IS name
+    boundingObject Box {
+       size 0.124000 0.145000 0.174000
+    }
+    physics Physics {
+      density -1
+      mass 1.387495
+      centerOfMass [ 0.073434 0.071599 0.020872 ]
+      inertiaMatrix [
+        4.586000e-03 5.498000e-03 3.870000e-03
+        -8.000000e-06 1.180000e-04 1.460000e-04
+      ]
+    }
+  }
+}
