@@ -7,7 +7,7 @@ on:
 
 jobs:
   update_ros_image:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     steps:
       - name: Docker Login
