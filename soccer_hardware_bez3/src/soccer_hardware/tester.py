@@ -245,7 +245,7 @@ def test(ser):
 							res -= 0xFFF
 						print(res)
 						fout.write('%.5f,%d\n' % (time.time() - time0, res))
-				except KeyError:
+				except (KeyError):
 					pass
 
 				packets += 1
@@ -263,6 +263,6 @@ if __name__ == '__main__':
 				set_servo_idx(ser, int(sys.argv[-1]))
 			elif opt == 1:
 				test(ser)
-		except ValueError:
+		except (ValueError, IndexError):
 			test(ser)
 			

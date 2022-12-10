@@ -210,7 +210,7 @@ class Soccerbot:
         try:
             READY_TIMEOUT = 1.0
             t0 = time.time()
-            previous_configuration = [None] * 12 + [0] * 6
+            previous_configuration = [None if 'leg' in name else 0 for name in self.motor_names]
             while not all([a is not None for a in previous_configuration]):
                 if time.time() > t0 + READY_TIMEOUT:
                     previous_configuration = [p if p is not None else 0 for p in previous_configuration] # give up on polling for non-nan
