@@ -13,6 +13,7 @@ find_package(
     bez3_description
     soccer_strategy
     soccer_object_localization
+    soccer_localization
     soccer_pycontrol
     soccer_hardware
     soccer_hardware_bez3

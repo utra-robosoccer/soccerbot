@@ -13,11 +13,11 @@ from sensor_msgs.msg import JointState
 
 from soccer_common.pid import PID
 from soccer_common.transformation import Transformation
+from soccer_common.utils import wrapToPi
 from soccer_pycontrol.calibration import adjust_navigation_transform
 from soccer_pycontrol.joints import Joints
 from soccer_pycontrol.links import Links
 from soccer_pycontrol.path_robot import PathRobot
-from soccer_pycontrol.utils import wrapToPi
 
 
 class Soccerbot:
@@ -25,7 +25,7 @@ class Soccerbot:
     The main class for soccerbot, which receives and sends information to pybullet, inherited by ROS
     """
 
-    def __init__(self, pose, useFixedBase=False, useCalibration=True):
+    def __init__(self, pose: Transformation, useFixedBase=False, useCalibration=True):
         """
         Initialization function for soccerbot. Does a series of calculations based on the URDF file for standing, walking poses
 
@@ -56,7 +56,7 @@ class Soccerbot:
         home = expanduser("~")
         self.body = pb.loadURDF(
             home
-            + f"/catkin_ws/src/soccerbot/{rospy.get_param('~robot_model', 'bez1')}_description/urdf/{rospy.get_param('~robot_model', 'bez1')}.urdf",
+            + f"/catkin_ws/src/soccerbot/{rospy.get_param('robot_model', 'bez1')}_description/urdf/{rospy.get_param('robot_model', 'bez1')}.urdf",
             useFixedBase=useFixedBase,
             flags=pb.URDF_USE_INERTIA_FROM_FILE | (pb.URDF_MERGE_FIXED_LINKS if self.merged_fixed_links else 0),
             basePosition=[pose.position[0], pose.position[1], pose.position[2]],
@@ -145,6 +145,9 @@ class Soccerbot:
         )
 
         self.get_ready_rate = rospy.get_param("get_ready_rate", 0.02)
+
+        #: Odom pose, always starts at (0,0) and is the odometry of the robot's movement. All odom paths start from odom pose
+        self.odom_pose = Transformation()
 
     def get_angles(self):
         """
@@ -269,12 +272,7 @@ class Soccerbot:
         Zd = invconf[2, 3]
 
         if np.linalg.norm([Xd, Yd, Zd]) > (d3 + d4):
-            print(
-                "IK Position Unreachable: Desired Distance: "
-                + Transformation(np.linalg.norm([Xd, Yd, Zd]))
-                + ", Limited Distance: "
-                + Transformation(d3 + d4)
-            )
+            print("IK Position Unreachable: Desired Distance: " + str(np.linalg.norm([Xd, Yd, Zd])) + ", Limited Distance: " + str(d3 + d4))
         assert np.linalg.norm([Xd, Yd, Zd]) <= (d3 + d4)
 
         theta6 = -np.arctan2(Yd, Zd)
@@ -361,7 +359,7 @@ class Soccerbot:
         )
 
         self.robot_path = PathRobot(startPose, endPoseCalibrated, self.foot_center_to_floor)
-        self.robot_odom_path = PathRobot(startPose, endPose, self.foot_center_to_floor)
+        self.robot_odom_path = PathRobot(self.odom_pose, self.odom_pose @ (scipy.linalg.inv(startPose) @ endPose), self.foot_center_to_floor)
 
         # obj.rate = rateControl(1 / obj.robot_path.step_size); -- from findPath
         self.rate = 1 / self.robot_path.step_precision
