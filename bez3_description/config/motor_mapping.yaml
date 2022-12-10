@@ -16,13 +16,13 @@ motor_mapping:
   right_leg_motor_2:
     id: 9
     direction: -1 # 1 # -1 #leg goes forwards # opposite
-    offset: 90
+    offset: 85
     initial_state: 0.25
     limits: [9.67, 118.92]
   right_leg_motor_3:
     id: 10
     direction: 1 # 1 #calve goes forwards # same
-    offset: 170
+    offset: 180
     initial_state: -0.4
     # limits: [8.79, 171.21]
   right_leg_motor_4:
@@ -62,9 +62,9 @@ motor_mapping:
   left_leg_motor_3:
     id: 0
     direction: -1 # 1 # -1 # calve goes forwards # opposite
-    offset: 80 
+    offset: 10
     initial_state: -0.4
-    limits: [8.92, 162.42]
+#    limits: [8.92, 162.42]
   left_leg_motor_4:
     id: 12
     direction: -1 # 1 # -1 # foot points upwards # opposite

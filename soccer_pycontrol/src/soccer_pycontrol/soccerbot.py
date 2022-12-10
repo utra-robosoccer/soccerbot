@@ -3,6 +3,7 @@ from copy import deepcopy
 from os.path import expanduser
 from typing import Union
 
+import time
 import matplotlib.pyplot as plt
 import numpy as np
 import pybullet as pb
@@ -149,8 +150,6 @@ class Soccerbot:
         #: Odom pose, always starts at (0,0) and is the odometry of the robot's movement. All odom paths start from odom pose
         self.odom_pose = Transformation()
 
-        self._motor_map = rospy.get_param('motor_mapping') # make the definitive ordering of motor keys from the param file to allow for incomplete joint_states
-
     def get_angles(self):
         """
         Function for getting all the angles, combines the configuration with the configuration offset
@@ -209,9 +208,17 @@ class Soccerbot:
         # Slowly ease into the ready position
         previous_configuration = self.configuration
         try:
-            joint_state = rospy.wait_for_message("joint_states", JointState, timeout=3)
-            joint_pos = { j: p for j, p in zip(joint_state.name, joint_state.position) }
-            previous_configuration = [joint_pos[name] if name in joint_pos else 0 for name in self._motor_map.keys()] # not sure if 0 as an original value is great, but we can't fallback on a history of tracking position so it'll have to do for now
+            READY_TIMEOUT = 1.0
+            t0 = time.time()
+            previous_configuration = [None] * 12 + [0] * 6
+            while not all([a is not None for a in previous_configuration]):
+                if time.time() > t0 + READY_TIMEOUT:
+                    previous_configuration = [p if p is not None else 0 for p in previous_configuration] # give up on polling for non-nan
+                    # raise ValueError("Not all motors responded") # or if we're feeling very strict just die
+                    break
+                joint_state = rospy.wait_for_message("joint_states", JointState, timeout=3)
+                joint_pos = { j: p for j, p in zip(joint_state.name, joint_state.position) }
+                previous_configuration = [joint_pos[name] if name in joint_pos else p0 for p0, name in zip(previous_configuration, self.motor_names)] # not sure if 0 as an original value is great, but we can't fallback on a history of tracking position so it'll have to do for now
         except (ROSException, AttributeError) as ex:
             rospy.logerr(ex)
         except ValueError as ex:

@@ -2,9 +2,11 @@
 robot_model: bez3
 
 walking_torso_height: 0.45
-steps_per_second_default: 1.10
-bodystep_size_default: 0.05
+steps_per_second_default: 1.1
+bodystep_size_default: 0.00001
 foot_separation: 0.06
+step_height: 0.08
+torso_sidediff_sway: -0.04
 torso_offset_x_ready: -0.02 # positive is forward
 torso_offset_x: 0.02
 merge_fixed_links: true
