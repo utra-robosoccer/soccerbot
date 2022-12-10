@@ -394,7 +394,7 @@ class TestWalking:
 
     @pytest.mark.timeout(30)
     @pytest.mark.parametrize("walker", ["bez1"], indirect=True)
-    def test_imu_feedback(self, walker: Navigator):
+    def test_imu_feedback_pitch(self, walker: Navigator):
         walker.setPose(Transformation([0, 0, 0], [0, 0, 0, 1]))
         walker.real_time = False
         walker.ready()
@@ -491,6 +491,60 @@ class TestWalking:
 
         plt.xlabel("Time (t)")
         plt.ylabel("Forward yaw of robot in radians")
+        plt.grid()
+        plt.legend()
+        if "DISPLAY" in os.environ:
+            plt.show()
+
+    @pytest.mark.timeout(30)
+    @pytest.mark.parametrize("walker", ["bez1"], indirect=True)
+    def test_imu_feedback_roll(self, walker: Navigator):
+        walker.setPose(Transformation([0, 0, 0], [0, 0, 0, 1]))
+        walker.real_time = False
+        walker.ready()
+        walker.wait(100)
+        walker.setGoal(Transformation([1.5, 0, 0], [0, 0, 0, 1]))
+
+        get_imu_original = walker.soccerbot.get_imu
+        pitches = []
+        rolls = []
+        yaws = []
+        times = []
+
+        def walker_get_imu_patch():
+            imu_transform = get_imu_original()
+            pitches.append(imu_transform.orientation_euler[1])
+            yaws.append(imu_transform.orientation_euler[0])
+            rolls.append(imu_transform.orientation_euler[2])
+            times.append(walker.t)
+            return imu_transform
+
+        walker.soccerbot.get_imu = walker_get_imu_patch
+
+        walk_success = walker.run(single_trajectory=True)
+        assert walk_success
+        plt.plot(times, rolls, label="Row of robot over time")
+
+        times_after_walk = [t for t in times if t < 0]
+        rolls_after_walk = rolls[len(times_after_walk) :]
+        max_row_offset = round(max(rolls_after_walk) - walker.soccerbot.walking_pid.setpoint, 5)
+        min_row_offset = round(min(rolls_after_walk) - walker.soccerbot.walking_pid.setpoint, 5)
+        plt.axhline(max(rolls_after_walk), color="red", label=f"Max Row Offset {max_row_offset} rad")
+        plt.axhline(min(rolls_after_walk), color="red", label=f"Min Row Offset {min_row_offset} rad")
+        plt.axhline(walker.soccerbot.walking_pid.setpoint, color="green", label="Walking set point")
+        assert abs(max_row_offset) < 0.03
+        assert abs(min_row_offset) < 0.03
+
+        times_before_walk = [t for t in times if t < 0]
+        rolls_before_walk = rolls[0 : len(times_before_walk)]
+        max_roll_pre_walk = round(max(rolls_before_walk), 5)
+        min_roll_pre_walk = round(min(rolls_before_walk), 5)
+        assert abs(max_roll_pre_walk) < 0.01
+        plt.axhline(max(rolls_before_walk), color="yellow", label=f"Max Row Pre Walk Offset {max_roll_pre_walk} rad")
+        plt.axhline(min(rolls_before_walk), color="yellow", label=f"Min Row Pre Walk Offset {min_roll_pre_walk} rad")
+
+        plt.xlabel("Time (t)")
+        plt.ylabel("Forward row of robot in radians")
         plt.grid()
         plt.legend()
         if "DISPLAY" in os.environ:
