@@ -53,7 +53,7 @@ class Communication:
 
     def joint_command_callback(self, joint_command):
         for motor_name, target in zip(joint_command.name, joint_command.position):
-            if motor_name in self._motor_map:
+            if False and motor_name in self._motor_map:
                 self._motor_map[motor_name]["value"] = target
 
     def send_angles(self, event):

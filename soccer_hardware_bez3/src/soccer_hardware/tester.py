@@ -245,7 +245,7 @@ def test(ser):
 							res -= 0xFFF
 						print(res)
 						fout.write('%.5f,%d\n' % (time.time() - time0, res))
-				except KeyError:
+				except (KeyError):
 					pass
 
 				packets += 1
@@ -257,5 +257,12 @@ def set_servo_idx(ser, idx):
 
 if __name__ == '__main__':
 	with serial.Serial(sys.argv[1] if len(sys.argv) > 1 else 'COM3', BAUD, timeout=None, write_timeout=None) as ser:
-		# set_servo_idx(ser, int(sys.argv[-1]))
-		test(ser)
+		try:
+			opt = int(sys.argv[2])
+			if opt == 0:
+				set_servo_idx(ser, int(sys.argv[-1]))
+			elif opt == 1:
+				test(ser)
+		except (ValueError, IndexError):
+			test(ser)
+			

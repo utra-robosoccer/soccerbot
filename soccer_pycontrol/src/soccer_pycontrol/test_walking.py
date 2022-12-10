@@ -17,22 +17,22 @@ from soccer_pycontrol.links import Links
 from soccer_pycontrol.navigator import Navigator
 from soccer_pycontrol.navigator_ros import NavigatorRos
 
-joint_state = MagicMock()
-joint_state.position = [0.0] * 18
-rospy.wait_for_message = MagicMock(return_value=joint_state)
-
-
 class TestWalking:
     @staticmethod
     @pytest.fixture
     def walker(request) -> Navigator:
+
         robot_model = request.param
 
         file_path = os.path.dirname(os.path.abspath(__file__))
         config_folder_path = f"{file_path}/../../config/"
         config_path = config_folder_path + f"{robot_model}_sim_pybullet.yaml"
         set_rosparam_from_yaml_file(param_path=config_path)
-        set_rosparam_from_yaml_file(param_path=f"{file_path}/../../../{robot_model}_description/config/motor_mapping.yaml")
+
+        joint_state = MagicMock()
+        joint_state.position = [0.0] * 18
+        rospy.wait_for_message = MagicMock(return_value=joint_state)
+
         if "DISPLAY" not in os.environ:
             c = Navigator(display=False, real_time=False)
         else:

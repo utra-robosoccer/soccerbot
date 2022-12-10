@@ -18,12 +18,20 @@ from std_msgs.msg import Float64
 from transformations import *
 from transmitter import Transmitter
 from wait_for_ms import WaitForMs
+import time
 
 
 class Communication:
     def __init__(self, jx_ser, imu_pwm_servo_ser):
         self._last_angles = None
         self._last_imu = None
+
+        self._jx_ser = jx_ser
+        self._imu_pwm_servo_ser = imu_pwm_servo_ser
+
+        self.init_rx_imu_thread()
+        self.init_rx_servo_thread()
+        self.init_tx_servo_thread()
 
         # https://www.pieter-jan.com/node/11
         self.pitch_acc = 0
@@ -40,14 +48,6 @@ class Communication:
 
         # TODO: Serial fail handling
         #    e.g. put all thread creation in a conditional timed loop, so if the serial temporarily disconnects we can reconnect and restart the thread. Alternatively, give the threads the serial object factory
-        self._tx_servo_thread = Transmitter(name="tx_servo_th", jx_ser=jx_ser, pwm_ser=imu_pwm_servo_ser)
-        self._rx_servo_thread = MotorReceiver(name="rx_servo_th", ser=jx_ser)
-        self._rx_servo_thread.set_timeout(0.04)
-        self._rx_servo_thread.bind(self.receive_servo_callback)
-
-        self._rx_imu_thread = IMUReceiver(name="rx_imu_th", ser=imu_pwm_servo_ser)
-        self._rx_imu_thread.set_timeout(0.010)
-        self._rx_imu_thread.bind(self.receive_imu_callback)
 
         self._pub_imu = rp.Publisher("imu_raw", Imu, queue_size=1)
         self._pub_joint_states = rp.Publisher("joint_states", JointState, queue_size=1)
@@ -64,6 +64,19 @@ class Communication:
 
         self._publish_timer = rp.Timer(rp.Duration(nsecs=int(3E6)), self.send_angles)
 
+    def init_tx_servo_thread(self):
+        self._tx_servo_thread = Transmitter(name="tx_servo_th", jx_ser=self._jx_ser, pwm_ser=self._imu_pwm_servo_ser)
+
+    def init_rx_servo_thread(self):
+        self._rx_servo_thread = MotorReceiver(name="rx_servo_th", ser=self._jx_ser)
+        self._rx_servo_thread.set_timeout(0.04)
+        self._rx_servo_thread.bind(self.receive_servo_callback)
+
+    def init_rx_imu_thread(self):
+        self._rx_imu_thread = IMUReceiver(name="rx_imu_th", ser=self._imu_pwm_servo_ser)
+        self._rx_imu_thread.set_timeout(0.010)
+        self._rx_imu_thread.bind(self.receive_imu_callback)
+
     def run(self):
         self._rx_servo_thread.start()
         self._rx_imu_thread.start()
@@ -75,7 +88,19 @@ class Communication:
         # Never need to wait longer than the target time, but allow calls to
         # time.sleep for down to 3 ms less than the desired time
         tx_cycle.set_e_lim(0, -3.0)
-        rp.spin()
+
+
+        while not rp.is_shutdown():
+            if not self._tx_servo_thread.is_alive():
+                self.init_tx_servo_thread()
+                self._tx_servo_thread.start()
+            if not self._rx_imu_thread.is_alive():
+                self.init_rx_imu_thread()
+                self._rx_imu_thread.start()
+            if not self._rx_servo_thread.is_alive():
+                self.init_rx_servo_thread()
+                self._rx_servo_thread.start()
+            time.sleep(0.1)
 
     def joint_command_callback(self, joint_command):
         for motor_name, target in zip(joint_command.name, joint_command.position):
