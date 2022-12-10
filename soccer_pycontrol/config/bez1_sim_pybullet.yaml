@@ -19,8 +19,8 @@ walking_setpoint: 0.01
 
 # The parameters for the left right PID controller for the robot
 walking_lr_Kp: 0.3
-walking_lr_Ki: 0.02
-walking_lr_Kd: 0.25
+walking_lr_Ki: 0.000
+walking_lr_Kd: 3
 walking_lr_setpoint: 0
 
 standing_Kp: 2.0
