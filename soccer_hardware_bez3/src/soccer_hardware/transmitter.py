@@ -55,11 +55,13 @@ class Transmitter(Thread):
 
     def start(self, *args, **kwargs):
         super().start(*args, **kwargs)
+        self._reconfig()
         # return
+    def _reconfig(self):
         with self._jx_ser._motor_lock:
             jx_servo_util.uart_transact(self._jx_ser, [1600, 1, 15] * 13, CMDS.PID_COEFF,
                                         RWS.WRITE)  # push initial PID gains
-            jx_servo_util.uart_transact(self._jx_ser, [2640] * 13, CMDS.MAX_DRIVE,
+            jx_servo_util.uart_transact(self._jx_ser, [3200] * 13, CMDS.MAX_DRIVE,
                                         RWS.WRITE)  # push initial maximum drive (out of 4096)
 
     def stop(self):
@@ -117,6 +119,10 @@ class Transmitter(Thread):
                 while not self._cmd_queue.empty():
                     goal_motor_angles = self._cmd_queue.get()
                     self._send_packet_to_mcu(goal_motor_angles)
+
+                    if self._num_tx % 16 == 0:
+                        self._reconfig()
+
                     with self._num_tx_lock:
                         self._num_tx = self._num_tx + 1
                 time.sleep(0)
