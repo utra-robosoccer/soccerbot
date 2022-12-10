@@ -426,81 +426,39 @@ class TestWalking:
         walk_success = walker.run(single_trajectory=True)
         assert walk_success
 
-        # Pitches
-        plt.figure("Pitches")
-        plt.plot(times, pitches, label="Pitch of robot over time")
-        times_after_walk = [t for t in times if t < 0]
-        pitches_after_walk = pitches[len(times_after_walk) :]
-        max_pitch_offset = round(max(pitches_after_walk) - walker.soccerbot.walking_pid.setpoint, 5)
-        min_pitch_offset = round(min(pitches_after_walk) - walker.soccerbot.walking_pid.setpoint, 5)
-        plt.axhline(max(pitches_after_walk), color="red", label=f"Max Pitch Offset {max_pitch_offset} rad")
-        plt.axhline(min(pitches_after_walk), color="red", label=f"Min Pitch Offset {min_pitch_offset} rad")
-        plt.axhline(walker.soccerbot.walking_pid.setpoint, color="green", label="Walking set point")
-        assert abs(max_pitch_offset) < 0.03
-        assert abs(min_pitch_offset) < 0.03
+        def create_angle_plot(angle_name: str, angle_data):
+            plt.figure(angle_name)
+            plt.plot(times, angle_data, label=f"{angle_name} of robot over time")
+            times_after_walk = [t for t in times if t < 0]
+            angle_data_after_walk = angle_data[len(times_after_walk) :]
 
-        times_before_walk = [t for t in times if t < 0]
-        pitches_before_walk = pitches[0 : len(times_before_walk)]
-        max_pitch_pre_walk = round(max(pitches_before_walk), 5)
-        min_pitch_pre_walk = round(min(pitches_before_walk), 5)
-        assert abs(max_pitch_pre_walk) < 0.01
-        plt.axhline(max(pitches_before_walk), color="yellow", label=f"Max Pitch Pre Walk Offset {max_pitch_pre_walk} rad")
-        plt.axhline(min(pitches_before_walk), color="yellow", label=f"Min Pitch Pre Walk Offset {min_pitch_pre_walk} rad")
-        plt.xlabel("Time (t)")
-        plt.ylabel("Forward pitch of robot in radians")
-        plt.grid()
-        plt.legend()
+            if angle_name == "Pitches":
+                max_angle_offset = round(max(angle_data_after_walk) - walker.soccerbot.walking_pid.setpoint, 5)
+                min_angle_offset = round(min(angle_data_after_walk) - walker.soccerbot.walking_pid.setpoint, 5)
+                plt.axhline(max(angle_data_after_walk), color="red", label=f"Max {angle_name} Offset {max_angle_offset} rad")
+                plt.axhline(min(angle_data_after_walk), color="red", label=f"Min {angle_name} Offset {min_angle_offset} rad")
+                plt.axhline(walker.soccerbot.walking_pid.setpoint, color="green", label="Walking set point")
+                assert abs(max_angle_offset) < 0.03
+                assert abs(min_angle_offset) < 0.03
 
-        # Yaws
-        plt.figure("Yaws")
-        plt.plot(times, yaws, label="Yaw of robot over time")
-        times_after_walk = [t for t in times if t < 0]
-        yaws_after_walk = yaws[len(times_after_walk) :]
-        max_yaw_offset = round(max(yaws_after_walk) - walker.soccerbot.walking_pid.setpoint, 5)
-        min_yaw_offset = round(min(yaws_after_walk) - walker.soccerbot.walking_pid.setpoint, 5)
-        plt.axhline(max(yaws_after_walk), color="red", label=f"Max Yaw Offset {max_yaw_offset} rad")
-        plt.axhline(min(yaws_after_walk), color="red", label=f"Min Yaw Offset {min_yaw_offset} rad")
-        plt.axhline(walker.soccerbot.walking_pid.setpoint, color="green", label="Walking set point")
-        assert abs(max_yaw_offset) < 10
-        assert abs(min_yaw_offset) < 10
+            times_before_walk = [t for t in times if t < 0]
+            angle_data_before_walk = angle_data[0 : len(times_before_walk)]
 
-        times_before_walk = [t for t in times if t < 0]
-        yaws_before_walk = yaws[0 : len(times_before_walk)]
-        max_yaw_pre_walk = round(max(yaws_before_walk), 5)
-        min_yaw_pre_walk = round(min(yaws_before_walk), 5)
-        assert abs(max_yaw_pre_walk) < 0.01
-        plt.axhline(max(yaws_before_walk), color="yellow", label=f"Max Yaw Pre Walk Offset {max_yaw_pre_walk} rad")
-        plt.axhline(min(yaws_before_walk), color="yellow", label=f"Min Yaw Pre Walk Offset {min_yaw_pre_walk} rad")
-        plt.xlabel("Time (t)")
-        plt.ylabel("Forward yaw of robot in radians")
-        plt.grid()
-        plt.legend()
+            if angle_name == "Pitches":
+                max_pitch_pre_walk = round(max(angle_data_before_walk), 5)
+                min_pitch_pre_walk = round(min(angle_data_before_walk), 5)
+                assert abs(max_pitch_pre_walk) < 0.01
+                plt.axhline(max(angle_data_before_walk), color="yellow", label=f"Max {angle_name} Pre Walk Offset {max_pitch_pre_walk} rad")
+                plt.axhline(min(angle_data_before_walk), color="yellow", label=f"Min {angle_name} Pre Walk Offset {min_pitch_pre_walk} rad")
 
-        # Rows
-        plt.figure("Rows")
-        plt.plot(times, rolls, label="Row of robot over time")
-        times_after_walk = [t for t in times if t < 0]
-        rolls_after_walk = rolls[len(times_after_walk) :]
-        max_row_offset = round(max(rolls_after_walk) - walker.soccerbot.walking_pid.setpoint, 5)
-        min_row_offset = round(min(rolls_after_walk) - walker.soccerbot.walking_pid.setpoint, 5)
-        plt.axhline(max(rolls_after_walk), color="red", label=f"Max Row Offset {max_row_offset} rad")
-        plt.axhline(min(rolls_after_walk), color="red", label=f"Min Row Offset {min_row_offset} rad")
-        plt.axhline(walker.soccerbot.walking_pid.setpoint, color="green", label="Walking set point")
-        assert abs(max_row_offset) < 0.3
-        assert abs(min_row_offset) < 0.3
+            plt.xlabel("Time (t)")
+            plt.ylabel(f"Forward {angle_name} of robot in radians")
+            plt.grid()
+            plt.legend()
 
-        times_before_walk = [t for t in times if t < 0]
-        rolls_before_walk = rolls[0 : len(times_before_walk)]
-        max_roll_pre_walk = round(max(rolls_before_walk), 5)
-        min_roll_pre_walk = round(min(rolls_before_walk), 5)
-        assert abs(max_roll_pre_walk) < 0.3
-        plt.axhline(max(rolls_before_walk), color="yellow", label=f"Max Row Pre Walk Offset {max_roll_pre_walk} rad")
-        plt.axhline(min(rolls_before_walk), color="yellow", label=f"Min Row Pre Walk Offset {min_roll_pre_walk} rad")
-
-        plt.xlabel("Time (t)")
-        plt.ylabel("Forward row of robot in radians")
-        plt.grid()
-        plt.legend()
+        create_angle_plot("Pitches", pitches)
+        create_angle_plot("Yaws", yaws)
+        create_angle_plot("Rolls", rolls)
 
         if "DISPLAY" in os.environ:
             plt.show()
