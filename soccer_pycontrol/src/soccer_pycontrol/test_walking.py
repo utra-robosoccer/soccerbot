@@ -406,7 +406,6 @@ class TestWalking:
         walker.ready()
         walker.wait(100)
         walker.setGoal(Transformation([1.5, 0, 0], [0, 0, 0, 1]))
-        walker.soccerbot.robot_path.showTimingDiagram()
 
         get_imu_original = walker.soccerbot.get_imu
         pitches = []
