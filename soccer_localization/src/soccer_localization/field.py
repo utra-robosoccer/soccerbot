@@ -5,10 +5,9 @@ from functools import cached_property
 from typing import Dict, List, Optional, Tuple, Union
 
 import matplotlib.pyplot as plt
-import rospy
 import numpy as np
-import scipy
 import rospy
+import scipy
 from matplotlib.collections import PathCollection
 
 from soccer_common import Transformation
