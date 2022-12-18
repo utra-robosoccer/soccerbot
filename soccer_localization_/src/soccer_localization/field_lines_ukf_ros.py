@@ -8,10 +8,10 @@ import sensor_msgs.point_cloud2 as pcl2
 import tf
 from geometry_msgs.msg import PoseWithCovarianceStamped
 from sensor_msgs.msg import PointCloud2
-
-from soccer_common import Transformation
 from soccer_localization.field import Field
 from soccer_localization.field_lines_ukf import FieldLinesUKF
+
+from soccer_common import Transformation
 
 # Adapted from https://github.com/rlabbe/Kalman-and-Bayesian-Filters-in-Python/blob/master/10-Unscented-Kalman-Filter.ipynb
 from soccer_msgs.msg import RobotState
