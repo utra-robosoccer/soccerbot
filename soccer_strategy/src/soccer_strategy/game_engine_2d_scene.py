@@ -141,7 +141,8 @@ class Scene:
                 visualization_robot[f"obstacle{i}"].color = Color("#ffffff", alpha=0.0)
             for i, obstacle in enumerate(robot.observed_obstacles):
                 visualization_robot[f"obstacle{i}"].center = obstacle.position
-                visualization_robot[f"obstacle{i}"].color = Color("#ffffff", alpha=obstacle.probability)
+                color = white if robot.team == Robot.Team.FRIENDLY else red
+                visualization_robot[f"obstacle{i}"].color = Color(color, alpha=obstacle.probability * 0.75)
 
             # Draw robot path
             if robot.path is not None:
