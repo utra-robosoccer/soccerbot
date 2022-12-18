@@ -8,12 +8,11 @@ import pytest
 import rosbag
 import rospy
 import sensor_msgs.point_cloud2 as pcl2
+
+from soccer_common.transformation import Transformation
 from soccer_localization.field import Field
 from soccer_localization.field_lines_ukf import FieldLinesUKF
 from soccer_localization.field_lines_ukf_ros import FieldLinesUKFROS
-
-from soccer_common.transformation import Transformation
-from soccer_msgs.msg import RobotState
 
 
 def retrieve_bag():
@@ -27,7 +26,7 @@ def retrieve_bag():
     return test_path
 
 
-@pytest.mark.parametrize("t_start", [(80)])
+@pytest.mark.parametrize("t_start", [(60)])
 def test_points_correction(t_start):
     plt.figure("Localization")
 
@@ -70,12 +69,8 @@ def test_points_correction(t_start):
                 plt.xlim((-5, -3))
                 plt.ylim((-3.5, 2))
                 plt.legend()
-
-                if "DISPLAY" in os.environ:
-                    plt.draw()
-                    plt.waitforbuttonpress(timeout=0.01)
-
-    plt.close()
+                plt.draw()
+                plt.waitforbuttonpress()
 
 
 def test_walk_forward():
@@ -90,7 +85,6 @@ def test_walk_forward():
     bag = rosbag.Bag(retrieve_bag())
 
     f = FieldLinesUKFROS()
-    f.robot_state.status = RobotState.STATUS_READY
     initial_pose = Transformation(pos_theta=[-4, -3.15, np.pi / 2])
     f.ukf.x = initial_pose.pos_theta
 
@@ -118,7 +112,6 @@ def test_walk_forward():
                     map.drawPathOnMap(Transformation(pos_theta=f.ukf.x), label="VO Odometry", color="orange")
                     map.drawPointsOnMap(current_transform, point_cloud_array, label="Odom Points", color="brown")
                     map.drawPointsOnMap(vo_transform, point_cloud_array, label="Odom Points Corrected", color="orange")
-
                     plt.title(f"UKF Robot localization (t = {round(t.secs + t.nsecs * 1e-9)})")
                     plt.xlim((-5, -3))
                     plt.ylim((-3.5, 1))
@@ -179,6 +172,8 @@ def test_walk_forward():
     plt.tight_layout()
     plt.legend()
 
+    plt.show(block=False)
+
     def plt_dim_error(dim=0, label="X"):
         plt.figure(f"{label} Error")
         plt.title(f"{label} Dimension Odom, UKF estimate, Ground Truth and Visual Odometry")
@@ -203,10 +198,9 @@ def test_walk_forward():
     plt_dim_error(1, "Y")
     plt_dim_error(2, "Theta")
 
-    if "DISPLAY" in os.environ:
-        plt.show(block=False)
-        plt.waitforbuttonpress(timeout=10)
-        plt.close("all")
+    # plt.show(block=True)
+
+    pass
 
 
 def test_show_ukf_stuff():
@@ -215,8 +209,4 @@ def test_show_ukf_stuff():
     f = FieldLinesUKF()
     f.draw_covariance()
     ukf_internal.plot_sigmas(f.ukf.points_fn, x=f.ukf.x, cov=f.ukf.P)
-
-    if "DISPLAY" in os.environ:
-        plt.show(block=False)
-        plt.waitforbuttonpress(timeout=10)
-        plt.close("all")
+    plt.show()
