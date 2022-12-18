@@ -474,13 +474,6 @@ class TestWalking:
                 ax.grid()
                 ax.legend()
 
-            # for i in range(len(locations)):
-            # plt.plot(times, locations[i], label="Foot Presure Sensor %s of robot over time" % (i))
-            # plt.xlabel("Time (t)")
-            # plt.ylabel("Foot Pressure Sensors")
-            # plt.grid()
-            # plt.legend()
-
         create_angle_plot("Pitches", pitches)
         create_angle_plot("Yaws", yaws)
         create_angle_plot("Rolls", rolls)
