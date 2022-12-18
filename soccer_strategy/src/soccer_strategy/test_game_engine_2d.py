@@ -157,4 +157,3 @@ class TestGameEngine2D(TestCase):
 
         friendly_points, opponent_points = g.run()
         print(f"Friendly: {friendly_points}, opponent: {opponent_points}")
-        assert not (friendly_points == 0 and opponent_points == 0)
