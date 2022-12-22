@@ -54,8 +54,8 @@ class Test(TestCase):
         from soccer_object_detection.object_detect_node import ObjectDetectionNode
 
         src_path = os.path.dirname(os.path.realpath(__file__))
-        model_path = src_path + "/small_model/July14.pt"
-        test_path = src_path + "/test_image"
+        model_path = src_path + "/../../models/July14.pt"
+        test_path = src_path + "/../../images"
 
         from cv_bridge import CvBridge
 
@@ -99,8 +99,8 @@ class Test(TestCase):
 
             if "DISPLAY" in os.environ:
                 mat = cvbridge.imgmsg_to_cv2(n.pub_detection.publish.call_args[0][0])
-                cv2.imshow("res", mat)
-                cv2.waitKey(1)
+                cv2.imshow("Image", img)
+                cv2.waitKey(10)
                 cv2.destroyAllWindows()
 
     @pytest.mark.skip(reason="annotation _path could not be found")
