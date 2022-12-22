@@ -1,19 +1,25 @@
 import os
 
-if "ROS_NAMESPACE" not in os.environ:
-    os.environ["ROS_NAMESPACE"] = "/robot1"
+os.environ["ROS_NAMESPACE"] = "/robot1"
+
+from unittest.mock import MagicMock
 
 import numpy as np
 import pybullet as pb
 import pytest
+import rospy
 from matplotlib import pyplot as plt
 
-from soccer_common.mock_ros import mock_ros
 from soccer_common.transformation import Transformation
+from soccer_common.utils_rosparam import set_rosparam_from_yaml_file
 from soccer_pycontrol.calibration import adjust_navigation_transform
 from soccer_pycontrol.links import Links
 from soccer_pycontrol.navigator import Navigator
 from soccer_pycontrol.navigator_ros import NavigatorRos
+
+joint_state = MagicMock()
+joint_state.position = [0.0] * 18
+rospy.wait_for_message = MagicMock(return_value=joint_state)
 
 
 class TestWalking:
@@ -25,14 +31,14 @@ class TestWalking:
         file_path = os.path.dirname(os.path.abspath(__file__))
         config_folder_path = f"{file_path}/../../config/"
         config_path = config_folder_path + f"{robot_model}_sim_pybullet.yaml"
-        mock_ros(robot_model=robot_model, real_robot=False, param_path=config_path)
+        set_rosparam_from_yaml_file(param_path=config_path)
         if "DISPLAY" not in os.environ:
             c = Navigator(display=False, real_time=False)
         else:
             c = Navigator(display=True, real_time=False)
 
         yield c
-        del c
+        c.close()
 
     @staticmethod
     @pytest.fixture
@@ -45,7 +51,7 @@ class TestWalking:
         file_path = os.path.dirname(os.path.abspath(__file__))
         config_folder_path = f"{file_path}/../../config/"
         config_path = config_folder_path + f"{robot_model}_sim.yaml"
-        mock_ros(robot_model=robot_model, real_robot=False, param_path=config_path)
+        set_rosparam_from_yaml_file(param_path=config_path)
 
         c = NavigatorRos()
 
@@ -63,7 +69,7 @@ class TestWalking:
         file_path = os.path.dirname(os.path.abspath(__file__))
         config_folder_path = f"{file_path}/../../config/"
         config_path = config_folder_path + f"{robot_model}.yaml"
-        mock_ros(robot_model=robot_model, real_robot=True, param_path=config_path)
+        set_rosparam_from_yaml_file(param_path=config_path)
 
         c = NavigatorRos()
         yield c
@@ -394,7 +400,7 @@ class TestWalking:
 
     @pytest.mark.timeout(30)
     @pytest.mark.parametrize("walker", ["bez1"], indirect=True)
-    def test_imu_feedback_pitch(self, walker: Navigator):
+    def test_imu_feedback(self, walker: Navigator):
         walker.setPose(Transformation([0, 0, 0], [0, 0, 0, 1]))
         walker.real_time = False
         walker.ready()
@@ -405,6 +411,7 @@ class TestWalking:
         pitches = []
         rolls = []
         yaws = []
+        locations = [[] for _ in range(8)]
         times = []
 
         def walker_get_imu_patch():
@@ -413,139 +420,63 @@ class TestWalking:
             yaws.append(imu_transform.orientation_euler[0])
             rolls.append(imu_transform.orientation_euler[2])
             times.append(walker.t)
+            get_foot_pressure = walker.soccerbot.get_foot_pressure_sensors(walker.ramp.plane)
+            for i in range(len(locations)):
+                locations[i].append(int(get_foot_pressure[i]))
             return imu_transform
 
         walker.soccerbot.get_imu = walker_get_imu_patch
 
         walk_success = walker.run(single_trajectory=True)
         assert walk_success
-        plt.plot(times, pitches, label="Pitch of robot over time")
 
-        times_after_walk = [t for t in times if t < 0]
-        pitches_after_walk = pitches[len(times_after_walk) :]
-        max_pitch_offset = round(max(pitches_after_walk) - walker.soccerbot.walking_pid.setpoint, 5)
-        min_pitch_offset = round(min(pitches_after_walk) - walker.soccerbot.walking_pid.setpoint, 5)
-        plt.axhline(max(pitches_after_walk), color="red", label=f"Max Pitch Offset {max_pitch_offset} rad")
-        plt.axhline(min(pitches_after_walk), color="red", label=f"Min Pitch Offset {min_pitch_offset} rad")
-        plt.axhline(walker.soccerbot.walking_pid.setpoint, color="green", label="Walking set point")
-        assert abs(max_pitch_offset) < 0.03
-        assert abs(min_pitch_offset) < 0.03
+        def create_angle_plot(angle_name: str, angle_data):
+            plt.figure(angle_name)
+            plt.plot(times, angle_data, label=f"{angle_name} of robot over time")
+            times_after_walk = [t for t in times if t < 0]
+            angle_data_after_walk = angle_data[len(times_after_walk) :]
 
-        times_before_walk = [t for t in times if t < 0]
-        pitches_before_walk = pitches[0 : len(times_before_walk)]
-        max_pitch_pre_walk = round(max(pitches_before_walk), 5)
-        min_pitch_pre_walk = round(min(pitches_before_walk), 5)
-        assert abs(max_pitch_pre_walk) < 0.01
-        plt.axhline(max(pitches_before_walk), color="yellow", label=f"Max Pitch Pre Walk Offset {max_pitch_pre_walk} rad")
-        plt.axhline(min(pitches_before_walk), color="yellow", label=f"Min Pitch Pre Walk Offset {min_pitch_pre_walk} rad")
+            if angle_name == "Pitches":
+                max_angle_offset = round(max(angle_data_after_walk) - walker.soccerbot.walking_pid.setpoint, 5)
+                min_angle_offset = round(min(angle_data_after_walk) - walker.soccerbot.walking_pid.setpoint, 5)
+                plt.axhline(max(angle_data_after_walk), color="red", label=f"Max {angle_name} Offset {max_angle_offset} rad")
+                plt.axhline(min(angle_data_after_walk), color="red", label=f"Min {angle_name} Offset {min_angle_offset} rad")
+                plt.axhline(walker.soccerbot.walking_pid.setpoint, color="green", label="Walking set point")
+                assert abs(max_angle_offset) < 0.03
+                assert abs(min_angle_offset) < 0.03
 
-        plt.xlabel("Time (t)")
-        plt.ylabel("Forward pitch of robot in radians")
-        plt.grid()
-        plt.legend()
-        if "DISPLAY" in os.environ:
-            plt.show()
+            times_before_walk = [t for t in times if t < 0]
+            angle_data_before_walk = angle_data[0 : len(times_before_walk)]
 
-    @pytest.mark.timeout(30)
-    @pytest.mark.parametrize("walker", ["bez1"], indirect=True)
-    def test_imu_feedback_yaw(self, walker: Navigator):
-        walker.setPose(Transformation([0, 0, 0], [0, 0, 0, 1]))
-        walker.real_time = False
-        walker.ready()
-        walker.wait(100)
-        walker.setGoal(Transformation([10, 0, 0], [0, 0, 0, 1]))
+            if angle_name == "Pitches":
+                max_pitch_pre_walk = round(max(angle_data_before_walk), 5)
+                min_pitch_pre_walk = round(min(angle_data_before_walk), 5)
+                assert abs(max_pitch_pre_walk) < 0.01
+                plt.axhline(max(angle_data_before_walk), color="yellow", label=f"Max {angle_name} Pre Walk Offset {max_pitch_pre_walk} rad")
+                plt.axhline(min(angle_data_before_walk), color="yellow", label=f"Min {angle_name} Pre Walk Offset {min_pitch_pre_walk} rad")
 
-        get_imu_original = walker.soccerbot.get_imu
-        yaws = []
-        times = []
+            plt.xlabel("Time (t)")
+            plt.ylabel(f"Forward {angle_name} of robot in radians")
+            plt.grid()
+            plt.legend()
 
-        def walker_get_imu_patch():
-            imu_transform = get_imu_original()
-            yaws.append(imu_transform.orientation_euler[2])
-            times.append(walker.t)
-            return imu_transform
+        def create_foot_pressure_sensor_plot():
+            fig, axs = plt.subplots(8)
+            fig.suptitle("Foot Pressure Sensor Locations")
 
-        walker.soccerbot.get_imu = walker_get_imu_patch
+            for i in range(len(locations)):
+                axs[i].plot(times, locations[i], label="Foot Pressure Sensor %s of robot over time" % (i))
 
-        walk_success = walker.run(single_trajectory=True)
-        assert walk_success
-        plt.plot(times, yaws, label="Yaw of robot over time")
+            for ax in axs.flat:
+                ax.set(xlabel="Time (t)", ylabel="Sensor Value")
+                ax.set_xlim([0, max(times)])
+                ax.grid()
+                ax.legend()
 
-        times_after_walk = [t for t in times if t < 0]
-        yaws_after_walk = yaws[len(times_after_walk) :]
-        max_yaw_offset = round(max(yaws_after_walk) - walker.soccerbot.walking_pid.setpoint, 5)
-        min_yaw_offset = round(min(yaws_after_walk) - walker.soccerbot.walking_pid.setpoint, 5)
-        plt.axhline(max(yaws_after_walk), color="red", label=f"Max Yaw Offset {max_yaw_offset} rad")
-        plt.axhline(min(yaws_after_walk), color="red", label=f"Min Yaw Offset {min_yaw_offset} rad")
-        plt.axhline(walker.soccerbot.walking_pid.setpoint, color="green", label="Walking set point")
-        assert abs(max_yaw_offset) < 10
-        assert abs(min_yaw_offset) < 10
+        create_angle_plot("Pitches", pitches)
+        create_angle_plot("Yaws", yaws)
+        create_angle_plot("Rolls", rolls)
+        create_foot_pressure_sensor_plot()
 
-        times_before_walk = [t for t in times if t < 0]
-        yaws_before_walk = yaws[0 : len(times_before_walk)]
-        max_yaw_pre_walk = round(max(yaws_before_walk), 5)
-        min_yaw_pre_walk = round(min(yaws_before_walk), 5)
-        assert abs(max_yaw_pre_walk) < 0.01
-        plt.axhline(max(yaws_before_walk), color="yellow", label=f"Max Yaw Pre Walk Offset {max_yaw_pre_walk} rad")
-        plt.axhline(min(yaws_before_walk), color="yellow", label=f"Min Yaw Pre Walk Offset {min_yaw_pre_walk} rad")
-
-        plt.xlabel("Time (t)")
-        plt.ylabel("Forward yaw of robot in radians")
-        plt.grid()
-        plt.legend()
-        if "DISPLAY" in os.environ:
-            plt.show()
-
-    @pytest.mark.timeout(30)
-    @pytest.mark.parametrize("walker", ["bez1"], indirect=True)
-    def test_imu_feedback_roll(self, walker: Navigator):
-        walker.setPose(Transformation([0, 0, 0], [0, 0, 0, 1]))
-        walker.real_time = False
-        walker.ready()
-        walker.wait(100)
-        walker.setGoal(Transformation([1.5, 0, 0], [0, 0, 0, 1]))
-
-        get_imu_original = walker.soccerbot.get_imu
-        pitches = []
-        rolls = []
-        yaws = []
-        times = []
-
-        def walker_get_imu_patch():
-            imu_transform = get_imu_original()
-            pitches.append(imu_transform.orientation_euler[1])
-            yaws.append(imu_transform.orientation_euler[0])
-            rolls.append(imu_transform.orientation_euler[2])
-            times.append(walker.t)
-            return imu_transform
-
-        walker.soccerbot.get_imu = walker_get_imu_patch
-
-        walk_success = walker.run(single_trajectory=True)
-        assert walk_success
-        plt.plot(times, rolls, label="Row of robot over time")
-
-        times_after_walk = [t for t in times if t < 0]
-        rolls_after_walk = rolls[len(times_after_walk) :]
-        max_row_offset = round(max(rolls_after_walk) - walker.soccerbot.walking_pid.setpoint, 5)
-        min_row_offset = round(min(rolls_after_walk) - walker.soccerbot.walking_pid.setpoint, 5)
-        plt.axhline(max(rolls_after_walk), color="red", label=f"Max Row Offset {max_row_offset} rad")
-        plt.axhline(min(rolls_after_walk), color="red", label=f"Min Row Offset {min_row_offset} rad")
-        plt.axhline(walker.soccerbot.walking_pid.setpoint, color="green", label="Walking set point")
-        assert abs(max_row_offset) < 0.3
-        assert abs(min_row_offset) < 0.3
-
-        times_before_walk = [t for t in times if t < 0]
-        rolls_before_walk = rolls[0 : len(times_before_walk)]
-        max_roll_pre_walk = round(max(rolls_before_walk), 5)
-        min_roll_pre_walk = round(min(rolls_before_walk), 5)
-        assert abs(max_roll_pre_walk) < 0.3
-        plt.axhline(max(rolls_before_walk), color="yellow", label=f"Max Row Pre Walk Offset {max_roll_pre_walk} rad")
-        plt.axhline(min(rolls_before_walk), color="yellow", label=f"Min Row Pre Walk Offset {min_roll_pre_walk} rad")
-
-        plt.xlabel("Time (t)")
-        plt.ylabel("Forward row of robot in radians")
-        plt.grid()
-        plt.legend()
         if "DISPLAY" in os.environ:
             plt.show()

@@ -1,6 +1,10 @@
 name: Test Integration
 
 on:
+  push:
+    branches: [master]
+    paths-ignore:
+      - "**.md"
   pull_request:
     branches: [master]
     paths-ignore:
@@ -12,7 +16,7 @@ env:
 
 jobs:
   test_integration:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     timeout-minutes: 60
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}

@@ -17,9 +17,9 @@ class SoccerbotRos(Soccerbot):
     The main class for the robot, which receives and sends information to ROS
     """
 
-    def __init__(self, position, useFixedBase=False, useCalibration=True):
+    def __init__(self, pose: Transformation, useFixedBase=False, useCalibration=True):
 
-        super().__init__(position, useFixedBase, useCalibration)
+        super().__init__(pose, useFixedBase, useCalibration)
 
         self.grass_and_cleats_offset = rospy.get_param(
             "grass_and_cleats_offset", 0.015
@@ -27,7 +27,6 @@ class SoccerbotRos(Soccerbot):
         self.motor_publishers = {}
         self.pub_all_motor = rospy.Publisher("joint_command", JointState, queue_size=1)
         self.odom_publisher = rospy.Publisher("odom", Odometry, queue_size=1)
-        self.odom_pose = Transformation()
         self.torso_height_publisher = rospy.Publisher("torso_height", Float64, queue_size=1, latch=True)
         self.path_publisher = rospy.Publisher("path", Path, queue_size=1, latch=True)
         self.path_odom_publisher = rospy.Publisher("path_odom", Path, queue_size=1, latch=True)
@@ -164,6 +163,7 @@ class SoccerbotRos(Soccerbot):
             return p
 
         self.path_publisher.publish(createPath(robot_path))
+
         if self.robot_odom_path is not None:
             self.path_odom_publisher.publish(createPath(self.robot_odom_path))
 
@@ -180,12 +180,12 @@ class SoccerbotRos(Soccerbot):
         o.pose.pose.position.z = 0
 
         # fmt: off
-        o.pose.covariance = [1E-2, 0, 0, 0, 0, 0,
-                             0, 1E-2, 0, 0, 0, 0,
-                             0, 0, 1E-6, 0, 0, 0,
-                             0, 0, 0, 1E-6, 0, 0,
-                             0, 0, 0, 0, 1E-6, 0,
-                             0, 0, 0, 0, 0, 1E-2]
+        o.pose.covariance = [1e-4, 0, 0, 0, 0, 0,
+                             0, 1e-4, 0, 0, 0, 0,
+                             0, 0, 1e-18, 0, 0, 0,
+                             0, 0, 0, 1e-18, 0, 0,
+                             0, 0, 0, 0, 1e-18, 0,
+                             0, 0, 0, 0, 0, 1e-2]
         # fmt: on
         self.odom_publisher.publish(o)
         self.publishHeight()
