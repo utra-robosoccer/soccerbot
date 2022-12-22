@@ -134,7 +134,7 @@ class ObjectDetectionNode(object):
             bbs_msg.header = msg.header
             try:
                 if self.pub_detection.get_num_connections() > 0:
-                    detection_image = results.render()[0]
+                    detection_image = np.squeeze(results.render())
                     self.pub_detection.publish(self.br.cv2_to_imgmsg(detection_image, encoding="bgr8"))
 
                 if self.pub_boundingbox.get_num_connections() > 0 and len(bbs_msg.bounding_boxes) > 0:
