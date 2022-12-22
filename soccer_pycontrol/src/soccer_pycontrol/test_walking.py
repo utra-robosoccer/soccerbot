@@ -411,7 +411,6 @@ class TestWalking:
         pitches = []
         rolls = []
         yaws = []
-        locations = [[] for _ in range(8)]
         times = []
 
         def walker_get_imu_patch():
@@ -420,9 +419,6 @@ class TestWalking:
             yaws.append(imu_transform.orientation_euler[0])
             rolls.append(imu_transform.orientation_euler[2])
             times.append(walker.t)
-            get_foot_pressure = walker.soccerbot.get_foot_pressure_sensors(walker.ramp.plane)
-            for i in range(len(locations)):
-                locations[i].append(int(get_foot_pressure[i]))
             return imu_transform
 
         walker.soccerbot.get_imu = walker_get_imu_patch
@@ -460,23 +456,9 @@ class TestWalking:
             plt.grid()
             plt.legend()
 
-        def create_foot_pressure_sensor_plot():
-            fig, axs = plt.subplots(8)
-            fig.suptitle("Foot Pressure Sensor Locations")
-
-            for i in range(len(locations)):
-                axs[i].plot(times, locations[i], label="Foot Pressure Sensor %s of robot over time" % (i))
-
-            for ax in axs.flat:
-                ax.set(xlabel="Time (t)", ylabel="Sensor Value")
-                ax.set_xlim([0, max(times)])
-                ax.grid()
-                ax.legend()
-
         create_angle_plot("Pitches", pitches)
         create_angle_plot("Yaws", yaws)
         create_angle_plot("Rolls", rolls)
-        create_foot_pressure_sensor_plot()
 
         if "DISPLAY" in os.environ:
             plt.show()
