@@ -3,6 +3,8 @@
 import enum
 import os
 
+import numpy as np
+from matplotlib import pyplot as plt
 from rospy.impl.tcpros_base import DEFAULT_BUFF_SIZE
 
 if "ROS_NAMESPACE" not in os.environ:
@@ -132,8 +134,8 @@ class ObjectDetectionNode(object):
             bbs_msg.header = msg.header
             try:
                 if self.pub_detection.get_num_connections() > 0:
-                    results.render()
-                    self.pub_detection.publish(self.br.cv2_to_imgmsg(results.ims[0], encoding="bgr8"))
+                    detection_image = results.render()[0]
+                    self.pub_detection.publish(self.br.cv2_to_imgmsg(detection_image, encoding="bgr8"))
 
                 if self.pub_boundingbox.get_num_connections() > 0 and len(bbs_msg.bounding_boxes) > 0:
                     self.pub_boundingbox.publish(bbs_msg)

@@ -100,7 +100,9 @@ class TestObjectLocalization(TestCase):
 
         from soccer_object_localization.detector_fieldline import DetectorFieldline
 
-        download_dataset(url="https://drive.google.com/uc?id=1nJX6ySks_a7mESvCm3sNllmJTNpm-x2_", folder_name="fieldlines")
+        src_path = os.path.dirname(os.path.realpath(__file__))
+        test_path = src_path + "/../../images/fieldlines"
+        download_dataset(url="https://drive.google.com/uc?id=1nJX6ySks_a7mESvCm3sNllmJTNpm-x2_", folder_path=test_path)
 
         Camera.reset_position = MagicMock()
         Camera.ready = MagicMock()
@@ -145,7 +147,10 @@ class TestObjectLocalization(TestCase):
                 cv2.waitKey(0)
 
     def test_goalpost_detection(self):
-        download_dataset(url="https://drive.google.com/uc?id=17qdnW7egoopXHvakiNnUUufP2MOjyZ18", folder_name="goal_net")
+        src_path = os.path.dirname(os.path.realpath(__file__))
+        test_path = src_path + "/../../images/goal_net"
+
+        download_dataset(url="https://drive.google.com/uc?id=17qdnW7egoopXHvakiNnUUufP2MOjyZ18", folder_path=test_path)
 
     @pytest.mark.skip
     def test_hsv_filter(self):
