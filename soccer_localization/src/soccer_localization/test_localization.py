@@ -29,6 +29,8 @@ def retrieve_bag():
 
 @pytest.mark.parametrize("t_start", [(80)])
 def test_points_correction(t_start):
+    rospy.init_node("test")
+
     plt.figure("Localization")
 
     map = Field()
