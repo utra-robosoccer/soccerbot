@@ -323,7 +323,7 @@ class SoccerbotRos(Soccerbot):
                     return
 
                 if self.configuration[Joints.HEAD_1] != yaw:
-                    self.configuration[Joints.HEAD_1] += yaw * 0.02
+                    self.configuration[Joints.HEAD_1] += yaw * 0.0005
                 self.configuration[Joints.HEAD_2] = -pitch
 
                 rospy.loginfo_throttle(
