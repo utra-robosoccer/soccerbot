@@ -14,6 +14,7 @@ from cv2 import Mat
 from soccer_common.mock_ros import mock_ros
 from soccer_common.utils import download_dataset
 from soccer_msgs.msg import GameState, RobotState
+from soccer_object_detection.object_detect_node import Label
 
 mock_ros()
 
@@ -77,6 +78,7 @@ class Test(TestCase):
         cvbridge = CvBridge()
         for file_name in os.listdir(f"{test_path}/images"):
             img: Mat = cv2.imread(os.path.join(f"{test_path}/images", file_name))  # ground truth box = (68, 89) (257, 275)
+            img_original_size = img.size
             img = cv2.resize(img, dsize=(640, 480))
             img_msg: Image = cvbridge.cv2_to_imgmsg(img)
 
@@ -87,26 +89,47 @@ class Test(TestCase):
             n.camera.pose.orientation_euler = [0, np.pi / 8, 0]
             n.callback(img_msg)
 
-            # # Extract ground truth
-            # ground_truth_boxes = file_name[:-4].split("_")[1:]  # strip name and .png
-            # ground_truth_boxes = list(map(int, ground_truth_boxes))
-            #
-            # # Check assertion
-            # self.assertGreater(n.pub_boundingbox.publish.call_args[0][0].bounding_boxes[0].probability, n.CONFIDENCE_THRESHOLD)
-            # bounding_boxes = [
-            #     n.pub_boundingbox.publish.call_args[0][0].bounding_boxes[0].xmin,
-            #     n.pub_boundingbox.publish.call_args[0][0].bounding_boxes[0].ymin,
-            #     n.pub_boundingbox.publish.call_args[0][0].bounding_boxes[0].xmax,
-            #     n.pub_boundingbox.publish.call_args[0][0].bounding_boxes[0].ymax,
-            # ]
-            # iou = IoU(bounding_boxes, ground_truth_boxes)
-            # self.assertGreater(iou, 0.8, "bounding boxes are off by too much!")
+            with open(os.path.join(f"{test_path}/labels", file_name.replace("PNG", "txt"))) as f:
+                lines = f.readlines()
 
             if "DISPLAY" in os.environ:
                 mat = cvbridge.imgmsg_to_cv2(n.pub_detection.publish.call_args[0][0])
                 cv2.imshow("Image", mat)
                 cv2.waitKey(0)
                 cv2.destroyAllWindows()
+
+            # Check assertion
+            for bounding_box in n.pub_boundingbox.publish.call_args[0][0].bounding_boxes:
+                if bounding_box.probability >= n.CONFIDENCE_THRESHOLD and bounding_box.Class in [Label.BALL.value, Label.ROBOT.value]:
+                    bounding_boxes = [
+                        bounding_box.xmin,
+                        bounding_box.ymin,
+                        bounding_box.xmax,
+                        bounding_box.ymax,
+                    ]
+
+                    best_iou = 0
+                    for line in lines:
+                        info = line.split(" ")
+                        label = int(info[0])
+                        if label != bounding_box.Class:
+                            continue
+
+                        x = float(info[1])
+                        y = float(info[2])
+                        width = float(info[3])
+                        height = float(info[4])
+
+                        xmin = x * ci.width
+                        ymin = y * ci.height
+                        xmax = (x + width) * ci.width
+                        ymax = (y + height) * ci.height
+                        ground_truth_boxes = [xmin, ymin, xmax, ymax]
+
+                        iou = IoU(bounding_boxes, ground_truth_boxes)
+                        best_iou = max(best_iou, iou)
+
+                    self.assertGreater(best_iou, 0, "bounding boxes are off by too much!")
 
     @pytest.mark.skip(reason="annotation _path could not be found")
     def test_visualize_annotations(self):

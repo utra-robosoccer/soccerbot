@@ -25,9 +25,14 @@ from soccer_msgs.msg import BoundingBox, BoundingBoxes, GameState, RobotState
 
 class Label(enum.IntEnum):
     # Defines output channels of model
+    # Refer to class name enumeration in soccer_object_detection/config/Torso21.yaml
     BALL = 0
-    ROBOT = 1
-    OTHER = 2
+    GOALPOST = 1
+    ROBOT = 2
+    L_INTERSECTION = 3
+    T_INTERSECTION = 4
+    X_INTERSECTION = 5
+    TOPBAR = 6
 
 
 class bcolors:
@@ -116,20 +121,34 @@ class ObjectDetectionNode(object):
             results = self.model(img)
 
             bbs_msg = BoundingBoxes()
+            id = 0
             for prediction in results.xyxy[0]:
                 x1, y1, x2, y2, confidence, img_class = prediction.cpu().numpy()
                 y1 += h + 1
                 y2 += h + 1
-                if img_class == Label.BALL.value and confidence > self.CONFIDENCE_THRESHOLD:
+                if (
+                    img_class
+                    in [
+                        Label.BALL.value,
+                        Label.GOALPOST.value,
+                        Label.ROBOT.value,
+                        Label.L_INTERSECTION.value,
+                        Label.T_INTERSECTION.value,
+                        Label.X_INTERSECTION.value,
+                        Label.TOPBAR.value,
+                    ]
+                    and confidence > self.CONFIDENCE_THRESHOLD
+                ):
                     bb_msg = BoundingBox()
-                    bb_msg.xmin = round(x1)
+                    bb_msg.xmin = round(x1)  # top left of bounding box
                     bb_msg.ymin = round(y1)
-                    bb_msg.xmax = round(x2)
+                    bb_msg.xmax = round(x2)  # bottom right of bounding box
                     bb_msg.ymax = round(y2)
                     bb_msg.probability = confidence
-                    bb_msg.id = Label.BALL.value
-                    bb_msg.Class = "ball"
+                    bb_msg.id = id
+                    bb_msg.Class = int(img_class)
                     bbs_msg.bounding_boxes.append(bb_msg)
+                    id += 1
 
             bbs_msg.header = msg.header
             try:
