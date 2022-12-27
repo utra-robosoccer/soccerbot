@@ -21,7 +21,7 @@ pytest-timeout
 pytest-rerunfailures
 ruamel.yaml
 filterpy
-gdown
+gdown==4.5.4
 pybullet
 
 # object detection
