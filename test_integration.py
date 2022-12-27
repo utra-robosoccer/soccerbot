@@ -161,7 +161,6 @@ class IntegrationTestInitial(IntegrationTest):
                 break
         printlog("Goal reached")
 
-
 class IntegrationTestPlaying(IntegrationTest):
     START_PLAY = "true"
 
@@ -179,6 +178,46 @@ class IntegrationTestPlaying(IntegrationTest):
             if gt_ball_pose is not None:
                 printlog(f"Current ball location: {gt_ball_pose}")
 
+                if gt_ball_pose[0] > 4.5:
+                    printlog("Goal Scored")
+                    return
+            else:
+                printlog("Ball not found")
+
+            rospy.sleep(2)
+
+    @timeout_decorator.timeout(60 * 15)
+    def test_directional_kicking_left(self):
+        self.set_robot_pose(4.0, 0.1, -0.4)
+        self.set_ball_pose(4.16, -0.04)
+
+        while not rospy.is_shutdown():
+            if self.bounding_boxes is None:
+                rospy.sleep(0.1)
+                continue
+
+            gt_ball_pose = self.get_ball_pose(gt=False)
+            if gt_ball_pose is not None:
+                if gt_ball_pose[0] > 4.5:
+                    printlog("Goal Scored")
+                    return
+            else:
+                printlog("Ball not found")
+
+            rospy.sleep(2)
+
+    @timeout_decorator.timeout(60 * 15)
+    def test_directional_kicking_right(self):
+        self.set_robot_pose(4.0, -0.1, 0.4)
+        self.set_ball_pose(4.16, -0.04)
+
+        while not rospy.is_shutdown():
+            if self.bounding_boxes is None:
+                rospy.sleep(0.1)
+                continue
+
+            gt_ball_pose = self.get_ball_pose(gt=False)
+            if gt_ball_pose is not None:
                 if gt_ball_pose[0] > 4.5:
                     printlog("Goal Scored")
                     return
