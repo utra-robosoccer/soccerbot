@@ -60,9 +60,9 @@ class Transmitter(Thread):
 
     def _reconfig(self):
         with self._jx_ser._motor_lock:
-            jx_servo_util.uart_transact(self._jx_ser, [3100, 1, 90] * 13, CMDS.PID_COEFF,
+            jx_servo_util.uart_transact(self._jx_ser, [4095, 1, 90] * 13, CMDS.PID_COEFF,
                                         RWS.WRITE)  # push initial PID gains
-            jx_servo_util.uart_transact(self._jx_ser, [3400] * 13, CMDS.MAX_DRIVE,
+            jx_servo_util.uart_transact(self._jx_ser, [4090] * 13, CMDS.MAX_DRIVE,
                                         RWS.WRITE)  # push initial maximum drive (out of 4096)
 
     def stop(self):
