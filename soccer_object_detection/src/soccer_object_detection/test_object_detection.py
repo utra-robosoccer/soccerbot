@@ -8,15 +8,19 @@ from unittest.mock import MagicMock
 import cv2
 import numpy as np
 import pytest
+import rospy
+import tf2_ros
 import yaml
 from cv2 import Mat
+from sensor_msgs.msg import CameraInfo, Image
 
-from soccer_common.mock_ros import mock_ros
+from soccer_common import Camera
 from soccer_common.utils import download_dataset
+from soccer_common.utils_rosparam import set_rosparam_from_yaml_file
 from soccer_msgs.msg import GameState, RobotState
-from soccer_object_detection.object_detect_node import Label
+from soccer_object_detection.object_detect_node import Label, ObjectDetectionNode
 
-mock_ros()
+set_rosparam_from_yaml_file()
 
 
 def IoU(boxA, boxB):
@@ -39,25 +43,16 @@ def IoU(boxA, boxB):
     return iou
 
 
-class Test(TestCase):
+class TestObjectDetection(TestCase):
     def test_object_detection_node(self):
         src_path = os.path.dirname(os.path.realpath(__file__))
         test_path = src_path + "/../../images/simulation"
         download_dataset("https://drive.google.com/uc?id=1xpmm2Tkpru6Vt7Zcoezv6LGTdrgicJ9F", folder_path=test_path)
 
-        import numpy as np
-        import rospy
-        import tf2_ros
-        from sensor_msgs.msg import Image
-
-        from soccer_common import Camera
+        rospy.init_node("test")
 
         Camera.reset_position = MagicMock()
         tf2_ros.TransformListener = MagicMock()
-        rospy.Time.now = MagicMock(return_value=0)
-        from sensor_msgs.msg import CameraInfo
-
-        from soccer_object_detection.object_detect_node import ObjectDetectionNode
 
         src_path = os.path.dirname(os.path.realpath(__file__))
         model_path = src_path + "/../../models/best.pt"

@@ -37,7 +37,6 @@ x-soccerbot: &soccerbot #  <<: *gpu
   volumes:
     - .:/home/$USER/catkin_ws/src/soccerbot
     - .:/home/robosoccer/catkin_ws/src/soccerbot
-    - /home/$USER/.local:/home/$USER/.local
     - /tmp/.X11-unix:/tmp/.X11-unix:rw
     - /dev/dri:/dev/dri:rw
     - /dev/snd:/dev/snd:rw

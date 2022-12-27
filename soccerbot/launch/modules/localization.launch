@@ -9,6 +9,8 @@
     <arg name="x_pos" default="0" />
     <arg name="y_pos" default="0" />
     <arg name="a_pos" default="0" />
+    <arg name="use_amcl" default="false" />
+    <!-- If don't use amcl will use the soccer_localization ukf -->
 
     <arg name="param_file_name" value="$(arg robot_model)_sim" if="$(arg simulation)" />
     <arg name="param_file_name" value="$(arg robot_model)" unless="$(arg simulation)" />
@@ -20,10 +22,6 @@
 
     <node pkg="soccer_object_localization" type="detector_fieldline.py" name="detector_fieldline" output="screen" />
     <node pkg="soccer_object_localization" type="detector_goalpost.py" name="detector_goalpost" output="screen" />
-    <node pkg="pointcloud_to_laserscan" type="pointcloud_to_laserscan_node" name="pointcloud_to_laserscan" unless="$(arg fake_localization)">
-        <rosparam file="$(find soccerbot)/config/pointcloud_to_laserscan.yaml" command="load" />
-        <remap from="cloud_in" to="field_point_cloud" />
-    </node>
 
     <!-- Ball Detection -->
     <node pkg="soccer_object_localization" type="detector_objects.py" name="ball_detector" output="screen">
@@ -50,19 +48,15 @@
     </node>
     <node pkg="robot_localization" type="ekf_localization_node" name="ekf_se_map" clear_params="true" output="log">
         <rosparam file="$(find soccerbot)/config/robot_localization_ekf_map.yaml" command="load" />
-        <!--        <param name="odom0" value="/$(arg robot_name)/odom" />-->
-        <!--&lt;!&ndash;        <param name="pose1" value="odom_combined" />&ndash;&gt;-->
-
-        <!--        <param name="pose0" value="/$(arg robot_name)/amcl_pose" />-->
-        <!--        <param name="imu0" value="/$(arg robot_name)/imu_filtered" />-->
         <param name="odom_frame" value="$(arg robot_name)/odom" />
         <param name="base_link_frame" value="$(arg robot_name)/base_footprint" />
+        <param name="pose0" value="amcl_pose" />
     </node>
 
     <node name="torso_height_publisher" pkg="bez1_description" type="base_footprint_to_torso.py" />
 
-    <!-- AMCL Localization $(arg x_pos)-->
-    <node pkg="amcl" type="amcl" name="amcl" respawn="$(optenv COMPETITION false)" unless="$(arg fake_localization)" output="log">
+    <!-- AMCL Localization -->
+    <node pkg="amcl" type="amcl" name="amcl" respawn="$(optenv COMPETITION false)" if="$(eval not fake_localization and use_amcl)" output="log">
         <rosparam file="$(find soccerbot)/config/amcl.yaml" command="load" />
         <param name="initial_pose_x" value="$(arg x_pos)" />
         <param name="initial_pose_y" value="$(arg y_pos)" />
@@ -70,6 +64,13 @@
         <param name="odom_frame_id" value="$(arg robot_name)/odom" />
         <param name="base_frame_id" value="$(arg robot_name)/base_footprint" />
     </node>
+    <node pkg="pointcloud_to_laserscan" type="pointcloud_to_laserscan_node" name="pointcloud_to_laserscan" if="$(eval not fake_localization and use_amcl)">
+        <rosparam file="$(find soccerbot)/config/pointcloud_to_laserscan.yaml" command="load" />
+        <remap from="cloud_in" to="field_point_cloud" />
+    </node>
+
+    <!-- UKF localization -->
+    <node pkg="soccer_localization" type="main.py" name="soccer_ukf" respawn="$(optenv COMPETITION false)" unless="$(eval fake_localization or use_amcl)" output="log" />
 
     <node pkg="tf" type="static_transform_publisher" name="imu_to_robot_base" args="0 0 0 0 0 0 $(arg robot_name)/odom $(arg robot_name)/base_footprint 100" if="$(arg fake_localization)" />
 

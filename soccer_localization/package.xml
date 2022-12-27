@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<package format="2">
+    <name>soccer_localization</name>
+    <version>0.0.0</version>
+    <description>Localization under a known map using AMCL for walking robots</description>
+    <maintainer email="jiashen.wang@mail.utoronto.ca">Jason</maintainer>
+    <license>BSD</license>
+
+    <buildtool_depend>catkin</buildtool_depend>
+    <depend>rospy</depend>
+    <depend>soccer_common</depend>
+
+</package>

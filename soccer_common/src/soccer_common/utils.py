@@ -3,6 +3,7 @@ import zipfile
 from pathlib import Path
 
 import gdown
+import numpy as np
 
 
 def download_dataset(url, folder_path: str):
@@ -19,3 +20,31 @@ def download_dataset(url, folder_path: str):
         with zipfile.ZipFile(zipfilepath, "r") as zip_ref:
             zip_ref.extractall(folder_path)
         os.remove(zipfilepath)
+
+
+def wrapTo2Pi(num: float) -> float:
+    """
+    Wraps a angle to 2 pi, etc -5pi -> -pi
+    :param num: Angle in radians
+    """
+
+    rem = num % (2 * np.pi)
+    return rem
+
+
+def wrapToPi(num: float) -> float:
+    """
+    Wraps a angle to pi, etc -3pi -> -pi
+    :param num: Angle in radians
+    """
+    rem = (num + np.pi) % (2 * np.pi) - np.pi
+    return rem
+
+
+def trimToPi(num: float) -> float:
+    """
+    Limit a angle to be within -pi and pi
+    :param num: angle in floats
+    """
+
+    return max(min(num, np.pi), -np.pi)
