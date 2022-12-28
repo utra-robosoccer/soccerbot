@@ -166,7 +166,7 @@ class ObjectDetectionNode(object):
 
 if __name__ == "__main__":
     parser = ArgumentParser()
-    parser.add_argument("--model", dest="model_path", default="small_model/July14.pt", help="pytorch model")
+    parser.add_argument("--model", dest="model_path", default="../../models/July14.pt", help="pytorch model")
     parser.add_argument("--num-feat", dest="num_feat", default=10, help="specify model size of the neural network")
     args, unknown = parser.parse_known_args()
 
