@@ -95,7 +95,7 @@ class TestObjectDetection(TestCase):
 
             # Check assertion
             for bounding_box in n.pub_boundingbox.publish.call_args[0][0].bounding_boxes:
-                if bounding_box.probability >= n.CONFIDENCE_THRESHOLD and bounding_box.Class in [Label.BALL.value, Label.ROBOT.value]:
+                if bounding_box.probability >= n.CONFIDENCE_THRESHOLD and int(bounding_box.Class) in [Label.BALL.value, Label.ROBOT.value]:
                     bounding_boxes = [
                         bounding_box.xmin,
                         bounding_box.ymin,

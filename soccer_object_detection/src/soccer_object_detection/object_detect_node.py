@@ -146,7 +146,7 @@ class ObjectDetectionNode(object):
                     bb_msg.ymax = round(y2)
                     bb_msg.probability = confidence
                     bb_msg.id = id
-                    bb_msg.Class = int(img_class)
+                    bb_msg.Class = str(img_class)
                     bbs_msg.bounding_boxes.append(bb_msg)
                     id += 1
 
