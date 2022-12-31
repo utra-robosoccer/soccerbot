@@ -104,10 +104,11 @@ class TestObjectDetection(TestCase):
                     ]
 
                     best_iou = 0
+                    best_dimensions = None
                     for line in lines:
                         info = line.split(" ")
                         label = int(info[0])
-                        if label != bounding_box.Class:
+                        if label != int(bounding_box.Class):
                             continue
 
                         x = float(info[1])
@@ -115,16 +116,27 @@ class TestObjectDetection(TestCase):
                         width = float(info[3])
                         height = float(info[4])
 
-                        xmin = x * ci.width
-                        ymin = y * ci.height
-                        xmax = (x + width) * ci.width
-                        ymax = (y + height) * ci.height
+                        xmin = int(x * ci.width)
+                        ymin = int(y * ci.height)
+                        xmax = int((x + width) * ci.width)
+                        ymax = int((y + height) * ci.height)
                         ground_truth_boxes = [xmin, ymin, xmax, ymax]
-
                         iou = IoU(bounding_boxes, ground_truth_boxes)
-                        best_iou = max(best_iou, iou)
+                        if iou > best_iou:
+                            best_iou = iou
+                            best_dimensions = ground_truth_boxes
 
                     self.assertGreater(best_iou, 0, "bounding boxes are off by too much!")
+
+                    if "DISPLAY" in os.environ:
+                        cv2.rectangle(
+                            img=mat, pt1=(best_dimensions[0], best_dimensions[1]), pt2=(best_dimensions[2], best_dimensions[3]), color=(255, 255, 255)
+                        )
+
+            if "DISPLAY" in os.environ:
+                cv2.imshow("Image", mat)
+                cv2.waitKey(0)
+                cv2.destroyAllWindows()
 
     @pytest.mark.skip(reason="annotation _path could not be found")
     def test_visualize_annotations(self):

@@ -126,19 +126,7 @@ class ObjectDetectionNode(object):
                 x1, y1, x2, y2, confidence, img_class = prediction.cpu().numpy()
                 y1 += h + 1
                 y2 += h + 1
-                if (
-                    img_class
-                    in [
-                        Label.BALL.value,
-                        Label.GOALPOST.value,
-                        Label.ROBOT.value,
-                        Label.L_INTERSECTION.value,
-                        Label.T_INTERSECTION.value,
-                        Label.X_INTERSECTION.value,
-                        Label.TOPBAR.value,
-                    ]
-                    and confidence > self.CONFIDENCE_THRESHOLD
-                ):
+                if img_class in [label.value for label in Label] and confidence > self.CONFIDENCE_THRESHOLD:
                     bb_msg = BoundingBox()
                     bb_msg.xmin = round(x1)  # top left of bounding box
                     bb_msg.ymin = round(y1)
@@ -146,7 +134,7 @@ class ObjectDetectionNode(object):
                     bb_msg.ymax = round(y2)
                     bb_msg.probability = confidence
                     bb_msg.id = id
-                    bb_msg.Class = str(img_class)
+                    bb_msg.Class = str(int(img_class))
                     bbs_msg.bounding_boxes.append(bb_msg)
                     id += 1
 
@@ -154,6 +142,7 @@ class ObjectDetectionNode(object):
             try:
                 if self.pub_detection.get_num_connections() > 0:
                     detection_image = np.squeeze(results.render())
+                    detection_image = np.concatenate((np.zeros((h + 1, msg.width, 3), detection_image.dtype), detection_image))
                     self.pub_detection.publish(self.br.cv2_to_imgmsg(detection_image, encoding="bgr8"))
 
                 if self.pub_boundingbox.get_num_connections() > 0 and len(bbs_msg.bounding_boxes) > 0:
