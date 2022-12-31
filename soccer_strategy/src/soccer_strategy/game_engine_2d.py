@@ -1,5 +1,6 @@
 import copy
 import random
+from typing import Optional
 
 import numpy as np
 
@@ -23,7 +24,15 @@ class GameEngine2D:
     PHYSICS_UPDATE_INTERVAL = 0.25  # 4 Times per second
     DISPLAY_UPDATE_INTERVAL = 0.5  # Every 5 seconds
 
-    def __init__(self, display=True, team_1_strategy: type = StrategyDummy, team_2_strategy: type = StrategyDummy, game_duration: float = 20):
+    def __init__(
+        self,
+        display=True,
+        team_1_strategy: type = StrategyDummy,
+        team_2_strategy: type = StrategyDummy,
+        team_1: Optional[Team] = None,
+        team_2: Optional[Team] = None,
+        game_duration: float = 20,
+    ):
         """
 
         :param display: Whether to show the visualizer
@@ -67,6 +76,9 @@ class GameEngine2D:
                 ),
             ]
         )
+        if team_1 is not None:
+            self.team1 = team_1
+
         self.team1.strategy = team_1_strategy()
 
         self.team1_init = copy.deepcopy(self.team1)
@@ -103,6 +115,9 @@ class GameEngine2D:
                 ),
             ]
         )
+        if team_2 is not None:
+            self.team2 = team_2
+
         self.team2.strategy = team_2_strategy()
         self.team2.flip_positions()
         self.team2_init = copy.deepcopy(self.team2)
@@ -183,6 +198,7 @@ class GameEngine2D:
         # Robot do action in a random priority order
         for robot in sorted(robots, key=lambda _: random.random()):
             robot.observe_ball(ball)
+            robot.observe_obstacles(robots)
             if robot.status == Robot.Status.WALKING:
                 robot.path_time = robot.path_time + GameEngine2D.PHYSICS_UPDATE_INTERVAL
                 update_position_transformation: Transformation = robot.path.estimatedPositionAtTime(robot.path_time)
