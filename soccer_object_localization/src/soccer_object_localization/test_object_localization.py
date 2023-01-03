@@ -2,6 +2,7 @@ import os
 
 import rosbag
 import rospy
+import tf2_ros
 
 os.environ["ROS_NAMESPACE"] = "/robot1"
 
@@ -176,14 +177,15 @@ class TestObjectLocalization(TestCase):
         d.point_cloud_publisher.get_num_connections = MagicMock(return_value=1)
         d.publish_point_cloud = True
 
-        eulers = [0, math.atan2(0.5, 1), 0]
-
-        d.camera.pose = Transformation(euler=eulers)
-
         import cv2
+        import tf
         from cv2 import Mat
         from cv_bridge import CvBridge
 
+        tfBuffer = tf2_ros.Buffer(rospy.Duration(1000))
+        tl = tf2_ros.TransformListener(tfBuffer)
+
+        camera_detected = False
         debug = False
         cvbridge = CvBridge()
         for topic, msg, t in bag.read_messages():
@@ -192,10 +194,19 @@ class TestObjectLocalization(TestCase):
             bag_out.write(topic, msg, t)
 
             if topic == "/camera/image_raw":
+                if not camera_detected:
+                    continue
+
                 c = CameraInfo()
                 c.height = msg.height
                 c.width = msg.width
                 d.camera.camera_info = c
+
+                tf_stamped = tfBuffer.lookup_transform("camera", "map", rospy.Time())
+                d.camera.pose.geometry_msgs_transform = tf_stamped.transform
+                eulers = d.camera.pose.orientation_euler
+                eulers[1] = math.atan2(0.5, 1)
+                d.camera.pose.orientation_euler = eulers
 
                 img = cvbridge.imgmsg_to_cv2(msg)
                 d.image_publisher.publish = MagicMock()
@@ -212,7 +223,15 @@ class TestObjectLocalization(TestCase):
                         cv2.imshow("After", img_out)
                         cv2.waitKey(1)
 
-            elif topic == "tf":
+            elif topic == "/tf":
+                msg._connection_header = MagicMock()
+                msg._connection_header.get = MagicMock(return_value="default_authority")
+                tl.callback(msg)
+            elif topic == "/tf_static":
+                camera_detected = True
+                msg._connection_header = MagicMock()
+                msg._connection_header.get = MagicMock(return_value="default_authority")
+                tl.static_callback(msg)
                 pass
 
         bag_out.close()
