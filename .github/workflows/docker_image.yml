@@ -2,6 +2,12 @@ name: Docker Image
 
 on:
   workflow_dispatch:
+    inputs:
+      rebuild_from_scratch:
+        description: 'Whether we are rebuilding from scratch (will save disk space)'
+        required: false
+        default: true
+        type: boolean
   schedule:
     - cron: "0 1 1 * *"
   push:
@@ -31,9 +37,12 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
-      - name: Build the Docker image
+      - name: Pull original docker image
+        if:  ${{ inputs.rebuild_from_scratch }}
         run: |
           docker pull utrarobosoccer/soccerbot
+      - name: Build the Docker image
+        run: |
           docker buildx build . --file Dockerfile --tag utrarobosoccer/soccerbot --progress=plain --cache-from utrarobosoccer/soccerbot --build-arg BUILDKIT_INLINE_CACHE=1
       - name: Push Docker image to dockerhub
         run: docker push utrarobosoccer/soccerbot
