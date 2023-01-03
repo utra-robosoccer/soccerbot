@@ -3,7 +3,7 @@ name: Docker Image
 on:
   workflow_dispatch:
     inputs:
-      rebuild_from_scratch:
+      use_cached_image:
         description: 'Use cached image'
         required: false
         default: true
@@ -38,7 +38,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
       - name: Pull original docker image
-        if:  ${{ inputs.rebuild_from_scratch }}
+        if:  ${{ inputs.use_cached_image }}
         run: |
           docker pull utrarobosoccer/soccerbot
       - name: Build the Docker image
