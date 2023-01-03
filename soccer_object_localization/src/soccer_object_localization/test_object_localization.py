@@ -1,5 +1,6 @@
 import os
 
+import rosbag
 import rospy
 
 os.environ["ROS_NAMESPACE"] = "/robot1"
@@ -112,6 +113,59 @@ class TestObjectLocalization(TestCase):
         rospy.init_node("test")
 
         download_dataset(url="https://drive.google.com/uc?id=1nJX6ySks_a7mESvCm3sNllmJTNpm-x2_", folder_name="fieldlines")
+
+        Camera.reset_position = MagicMock()
+        Camera.ready = MagicMock()
+        d = DetectorFieldline()
+        d.robot_state.status = RobotState.STATUS_READY
+        d.image_publisher.get_num_connections = MagicMock(return_value=1)
+        # d.publish_point_cloud = True
+        # d.point_cloud_publisher.get_num_connections = MagicMock(return_value=1)
+
+        import cv2
+        from cv2 import Mat
+        from cv_bridge import CvBridge
+
+        cvbridge = CvBridge()
+
+        src_path = os.path.dirname(os.path.realpath(__file__))
+        test_path = src_path + "/../../images/fieldlines"
+        for file_name in os.listdir(test_path):
+            # file_name = "img17_-3.8480280226689674_-3.15_1.5860068115632215.png"
+
+            print(file_name)
+            img: Mat = cv2.imread(os.path.join(test_path, file_name))
+
+            c = CameraInfo()
+            c.height = img.shape[0]
+            c.width = img.shape[1]
+            d.camera.camera_info = c
+
+            img_msg: Image = cvbridge.cv2_to_imgmsg(img, encoding="rgb8")
+            d.image_publisher.publish = MagicMock()
+            d.image_callback(img_msg, debug=False)
+
+            if "DISPLAY" in os.environ:
+                cv2.imshow("Before", img)
+                cv2.imwrite("/tmp/before.png", img)
+
+                if d.image_publisher.publish.call_count != 0:
+                    img_out = cvbridge.imgmsg_to_cv2(d.image_publisher.publish.call_args[0][0])
+                    cv2.imshow("After", img_out)
+                    cv2.imwrite("/tmp/after.png", img_out)
+
+                cv2.waitKey(0)
+        cv2.destroyAllWindows()
+
+    def test_fieldline_detection_freehicle(self):
+        rospy.init_node("test")
+
+        download_dataset(url="https://drive.google.com/uc?id=1Df7FMbnvJ5d7jAx-8fPiaFiLcd5nrsT9", folder_name="freehicle")
+
+        src_path = os.path.dirname(os.path.realpath(__file__))
+        test_path = src_path + "/../../images/freehicle/freehicle.bag"
+
+        bag = rosbag.Bag("../")
 
         Camera.reset_position = MagicMock()
         Camera.ready = MagicMock()
