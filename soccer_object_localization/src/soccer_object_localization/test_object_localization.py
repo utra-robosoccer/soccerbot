@@ -164,51 +164,59 @@ class TestObjectLocalization(TestCase):
 
         src_path = os.path.dirname(os.path.realpath(__file__))
         test_path = src_path + "/../../images/freehicle/freehicle.bag"
+        test_out = src_path + "/../../images/freehicle/freehicle_out.bag"
 
-        bag = rosbag.Bag("../")
-
+        bag = rosbag.Bag(test_path)
+        bag_out = rosbag.Bag(test_out, mode="w")
         Camera.reset_position = MagicMock()
         Camera.ready = MagicMock()
         d = DetectorFieldline()
         d.robot_state.status = RobotState.STATUS_READY
         d.image_publisher.get_num_connections = MagicMock(return_value=1)
-        # d.publish_point_cloud = True
-        # d.point_cloud_publisher.get_num_connections = MagicMock(return_value=1)
+        d.point_cloud_publisher.get_num_connections = MagicMock(return_value=1)
+        d.publish_point_cloud = True
+
+        eulers = [0, math.atan2(0.5, 1), 0]
+
+        d.camera.pose = Transformation(euler=eulers)
 
         import cv2
         from cv2 import Mat
         from cv_bridge import CvBridge
 
+        debug = False
         cvbridge = CvBridge()
+        for topic, msg, t in bag.read_messages():
+            # if t.secs < 1672750997:
+            #     continue
+            bag_out.write(topic, msg, t)
 
-        src_path = os.path.dirname(os.path.realpath(__file__))
-        test_path = src_path + "/../../images/fieldlines"
-        for file_name in os.listdir(test_path):
-            # file_name = "img17_-3.8480280226689674_-3.15_1.5860068115632215.png"
+            if topic == "/camera/image_raw":
+                c = CameraInfo()
+                c.height = msg.height
+                c.width = msg.width
+                d.camera.camera_info = c
 
-            print(file_name)
-            img: Mat = cv2.imread(os.path.join(test_path, file_name))
+                img = cvbridge.imgmsg_to_cv2(msg)
+                d.image_publisher.publish = MagicMock()
+                d.point_cloud_publisher.publish = MagicMock()
+                d.image_callback(msg, debug=debug)
 
-            c = CameraInfo()
-            c.height = img.shape[0]
-            c.width = img.shape[1]
-            d.camera.camera_info = c
+                bag_out.write("field_point_cloud", d.point_cloud_publisher.publish.call_args[0][0], t)
 
-            img_msg: Image = cvbridge.cv2_to_imgmsg(img, encoding="rgb8")
-            d.image_publisher.publish = MagicMock()
-            d.image_callback(img_msg, debug=False)
+                if "DISPLAY" in os.environ:
+                    cv2.imshow("Before", img)
 
-            if "DISPLAY" in os.environ:
-                cv2.imshow("Before", img)
-                cv2.imwrite("/tmp/before.png", img)
+                    if d.image_publisher.publish.call_count != 0:
+                        img_out = cvbridge.imgmsg_to_cv2(d.image_publisher.publish.call_args[0][0])
+                        cv2.imshow("After", img_out)
+                        cv2.waitKey(1)
 
-                if d.image_publisher.publish.call_count != 0:
-                    img_out = cvbridge.imgmsg_to_cv2(d.image_publisher.publish.call_args[0][0])
-                    cv2.imshow("After", img_out)
-                    cv2.imwrite("/tmp/after.png", img_out)
+            elif topic == "tf":
+                pass
 
-                cv2.waitKey(0)
-        cv2.destroyAllWindows()
+        bag_out.close()
+        bag.close()
 
     def test_goalpost_detection(self):
         download_dataset(url="https://drive.google.com/uc?id=17qdnW7egoopXHvakiNnUUufP2MOjyZ18", folder_name="goal_net")
