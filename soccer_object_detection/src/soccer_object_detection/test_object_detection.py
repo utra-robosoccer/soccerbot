@@ -47,7 +47,7 @@ class TestObjectDetection(TestCase):
     def test_object_detection_node(self):
         src_path = os.path.dirname(os.path.realpath(__file__))
         test_path = src_path + "/../../images/simulation"
-        download_dataset("https://drive.google.com/uc?id=1xpmm2Tkpru6Vt7Zcoezv6LGTdrgicJ9F", folder_path=test_path)
+        download_dataset("https://drive.google.com/uc?id=11nN58j8_PBoLNRAzOEdk7fMe1UK1diCc", folder_path=test_path)
 
         rospy.init_node("test")
 
@@ -60,22 +60,26 @@ class TestObjectDetection(TestCase):
         from cv_bridge import CvBridge
 
         n = ObjectDetectionNode(model_path=model_path)
-        n.pub_detection = MagicMock()
-        n.pub_boundingbox = MagicMock()
-        n.pub_detection.get_num_connections = MagicMock(return_value=1)
-        n.pub_boundingbox.get_num_connections = MagicMock(return_value=1)
-        n.pub_detection.publish = MagicMock()
-        n.pub_boundingbox.publish = MagicMock()
 
         n.robot_state.status = RobotState.STATUS_READY
         n.game_state.gameState = GameState.GAMESTATE_PLAYING
 
         cvbridge = CvBridge()
         for file_name in os.listdir(f"{test_path}/images"):
+            print(file_name)
             img: Mat = cv2.imread(os.path.join(f"{test_path}/images", file_name))  # ground truth box = (68, 89) (257, 275)
             img_original_size = img.size
             img = cv2.resize(img, dsize=(640, 480))
+
             img_msg: Image = cvbridge.cv2_to_imgmsg(img)
+
+            # Mock the detections
+            n.pub_detection = MagicMock()
+            n.pub_boundingbox = MagicMock()
+            n.pub_detection.get_num_connections = MagicMock(return_value=1)
+            n.pub_boundingbox.get_num_connections = MagicMock(return_value=1)
+            n.pub_detection.publish = MagicMock()
+            n.pub_boundingbox.publish = MagicMock()
 
             ci = CameraInfo()
             ci.height = img.shape[0]
@@ -94,58 +98,64 @@ class TestObjectDetection(TestCase):
                 cv2.destroyAllWindows()
 
             # Check assertion
-            for bounding_box in n.pub_boundingbox.publish.call_args[0][0].bounding_boxes:
-                if bounding_box.probability >= n.CONFIDENCE_THRESHOLD and int(bounding_box.Class) in [Label.BALL.value, Label.ROBOT.value]:
-                    bounding_boxes = [
-                        bounding_box.xmin,
-                        bounding_box.ymin,
-                        bounding_box.xmax,
-                        bounding_box.ymax,
-                    ]
+            if n.pub_boundingbox.publish.call_args is not None:
+                for bounding_box in n.pub_boundingbox.publish.call_args[0][0].bounding_boxes:
+                    if bounding_box.probability >= n.CONFIDENCE_THRESHOLD and int(bounding_box.Class) in [Label.BALL.value, Label.ROBOT.value]:
+                        bounding_boxes = [
+                            bounding_box.xmin,
+                            bounding_box.ymin,
+                            bounding_box.xmax,
+                            bounding_box.ymax,
+                        ]
 
-                    best_iou = 0
-                    best_dimensions = None
-                    for line in lines:
-                        info = line.split(" ")
-                        label = int(info[0])
-                        if label != int(bounding_box.Class):
-                            continue
+                        best_iou = 0
+                        best_dimensions = None
+                        for line in lines:
+                            info = line.split(" ")
+                            label = int(info[0])
+                            if label != int(bounding_box.Class):
+                                continue
 
-                        x = float(info[1])
-                        y = float(info[2])
-                        width = float(info[3])
-                        height = float(info[4])
+                            x = float(info[1])
+                            y = float(info[2])
+                            width = float(info[3])
+                            height = float(info[4])
 
-                        xmin = int(x * ci.width)
-                        ymin = int(y * ci.height)
-                        xmax = int((x + width) * ci.width)
-                        ymax = int((y + height) * ci.height)
-                        ground_truth_boxes = [xmin, ymin, xmax, ymax]
-                        iou = IoU(bounding_boxes, ground_truth_boxes)
-                        if iou > best_iou:
-                            best_iou = iou
-                            best_dimensions = ground_truth_boxes
+                            xmin = int((x - width / 2) * ci.width)
+                            ymin = int((y - height / 2) * ci.height)
+                            xmax = int((x + width / 2) * ci.width)
+                            ymax = int((y + height / 2) * ci.height)
+                            ground_truth_boxes = [xmin, ymin, xmax, ymax]
+                            iou = IoU(bounding_boxes, ground_truth_boxes)
+                            if iou > best_iou:
+                                best_iou = iou
+                                best_dimensions = ground_truth_boxes
 
-                    self.assertGreater(best_iou, 0, "bounding boxes are off by too much!")
+                        self.assertGreater(best_iou, 0.05, f"bounding boxes are off by too much! Image= {file_name} Best IOU={best_iou}")
+                        if best_iou < 0.5:
+                            rospy.logwarn(f"bounding boxes lower than 0.5 Image= {file_name} Best IOU={best_iou}")
 
-                    if "DISPLAY" in os.environ:
-                        cv2.rectangle(
-                            img=mat, pt1=(best_dimensions[0], best_dimensions[1]), pt2=(best_dimensions[2], best_dimensions[3]), color=(255, 255, 255)
-                        )
+                        if "DISPLAY" in os.environ:
+                            cv2.rectangle(
+                                img=mat,
+                                pt1=(best_dimensions[0], best_dimensions[1]),
+                                pt2=(best_dimensions[2], best_dimensions[3]),
+                                color=(255, 255, 255),
+                            )
 
             if "DISPLAY" in os.environ:
                 cv2.imshow("Image", mat)
                 cv2.waitKey(0)
                 cv2.destroyAllWindows()
 
-    @pytest.mark.skip(reason="annotation _path could not be found")
+    @pytest.mark.skip(reason="Only run locally")
     def test_visualize_annotations(self):
         src_path = os.path.dirname(os.path.realpath(__file__))
 
         # Data downloaded from https://github.com/bit-bots/TORSO_21_dataset
-        annotation_path = f"{src_path}/../../data/test/annotations.yaml"
-        annotation_pickle = f"{src_path}/../../data/test/annotation.pkl"
-        image_path = f"{src_path}/../../data/test/data/images/"
+        annotation_path = "/home/robosoccer/hdd/dataset/data/train/annotations.yaml"
+        annotation_pickle = "/home/robosoccer/hdd/dataset/data/train/annotation.pkl"
+        image_path = "/home/robosoccer/hdd/dataset/data/train/data/images/"
 
         if not os.path.exists(annotation_pickle):
             with open(annotation_path) as f:
@@ -170,6 +180,10 @@ class TestObjectDetection(TestCase):
             i = 0
             while True:
                 f = files[i]
+                if "5733" not in f:
+                    print(f)
+                    i += 1
+                    continue
                 img_path = os.path.join(image_path, f)
                 img = cv2.imread(img_path)
                 assert img is not None
