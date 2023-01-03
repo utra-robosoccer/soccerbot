@@ -47,7 +47,7 @@ jobs:
       - name: Pull original docker image
         if:  ${{ inputs.use_cached_image }}
         run: |
-          docker pull utrarobosoccer/soccerbot
+          docker pull utrarobosoccer/soccerbot:arm64
       - name: Build the Docker image
         run: |
           docker buildx build . --file Dockerfile --platform linux/arm64 --progress=plain --tag utrarobosoccer/soccerbot:arm64 --push --cache-from utrarobosoccer/soccerbot:arm64 --build-arg BUILDKIT_INLINE_CACHE=1 --build-arg BASE_IMAGE=arm64v8/ros:noetic-robot --build-arg ARCHITECTURE=sbsa
