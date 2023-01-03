@@ -1,19 +1,21 @@
 import math
-from typing import Optional
+from typing import List, Optional
 
 import numpy as np
 import rospy
 
+from soccer_common.camera import Camera
 from soccer_common.transformation import Transformation
 from soccer_pycontrol import path
 from soccer_strategy.ball import Ball
+from soccer_strategy.obstacle import Obstacle
 from soccer_strategy.robot import Robot
 from soccer_strategy.robot_controlled import RobotControlled
 
 
 class RobotControlled2D(RobotControlled):
     class ObservationConstants:
-        FOV = math.pi / 4
+        FOV = Camera.HORIZONTAL_FOV
         VISION_RANGE = 3
 
     def __init__(
@@ -77,3 +79,25 @@ class RobotControlled2D(RobotControlled):
             ball.last_observed_time_stamp = rospy.Time.now()
 
         # TODO can add noise here
+
+    def observe_obstacles(self, robots: List[Robot]):
+        self.observed_obstacles.clear()
+        for robot in robots:
+            if robot.robot_id != self.robot_id:
+                theta = self.position[2]  # TODO change this to direction vector?
+                arrow_len = 0.3
+                arrow_end_x = math.cos(theta) * arrow_len
+                arrow_end_y = math.sin(theta) * arrow_len
+                robot_direction = np.array([arrow_end_x, arrow_end_y])
+                obstacle_position = robot.position[0:2]
+                obstacle_to_robot = obstacle_position - self.position[0:2]
+                angle = np.arccos(
+                    np.dot(obstacle_to_robot[0:2], robot_direction) / (np.linalg.norm(obstacle_to_robot[0:2]) * np.linalg.norm(robot_direction))
+                )
+                distance = np.linalg.norm(obstacle_to_robot)
+                if angle < self.ObservationConstants.FOV / 2 and distance < self.ObservationConstants.VISION_RANGE:
+                    o = Obstacle()
+                    o.position = robot.position[0:2]
+                    o.team = robot.team
+                    o.probability = (self.ObservationConstants.VISION_RANGE - distance) / self.ObservationConstants.VISION_RANGE
+                    self.observed_obstacles.append(o)
