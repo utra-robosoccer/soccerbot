@@ -1,5 +1,7 @@
 import os
+from functools import cached_property
 from pathlib import Path
+from typing import List, Union
 
 import gdown
 import matplotlib.pyplot as plt
@@ -10,20 +12,29 @@ import rospy
 import sensor_msgs.point_cloud2 as pcl2
 
 from soccer_common.transformation import Transformation
-from soccer_localization.field import Field
+from soccer_localization.field import Circle, Field, Line, Point
 from soccer_localization.field_lines_ukf import FieldLinesUKF
 from soccer_localization.field_lines_ukf_ros import FieldLinesUKFROS
 from soccer_msgs.msg import RobotState
 
 
-def retrieve_bag():
+def retrieve_bag(url="https://drive.google.com/uc?id=1T_oyM1rZwWgUy6A6KlsJ7Oqn8J3vpGDo", bag_name="localization"):
     src_path = os.path.dirname(os.path.realpath(__file__))
-    test_path = src_path + "/test/localization.bag"
+    folder_path = Path(src_path + "/../../data/")
+    if not folder_path.is_dir():
+        os.makedirs(folder_path)
+
+    test_path = src_path + f"/../../data/{bag_name}.bag"
     bag_path = Path(test_path)
     if not bag_path.is_file():
         print(f"Bag not found at {test_path}. Downloading ...")
-        url = "https://drive.google.com/uc?id=1HpBAFg1FFYhiCaEN5K81b2sQ3rq9i3Nx"
-        gdown.download(url, test_path, quiet=False)
+        zip_path = test_path.replace("bag", "zip")
+        gdown.download(url, zip_path, quiet=False)
+        import zipfile
+
+        with zipfile.ZipFile(zip_path, "r") as zip_ref:
+            zip_ref.extractall(folder_path)
+        os.remove(zip_path)
     return test_path
 
 
@@ -78,16 +89,7 @@ def test_points_correction(t_start):
     plt.close()
 
 
-def test_walk_forward():
-    rospy.init_node("test")
-
-    plt.figure("Localization")
-    debug = False
-
-    map = Field()
-    map.draw()
-
-    bag = rosbag.Bag(retrieve_bag())
+def display_rosbag_map(bag, map, debug=False):
 
     f = FieldLinesUKFROS()
     f.robot_state.status = RobotState.STATUS_READY
@@ -207,6 +209,47 @@ def test_walk_forward():
         plt.show(block=False)
         plt.waitforbuttonpress(timeout=10)
         plt.close("all")
+
+
+def test_walk_forward():
+    rospy.init_node("test")
+
+    plt.figure("Localization")
+
+    map = Field()
+    map.draw()
+
+    bag = rosbag.Bag(retrieve_bag())
+    display_rosbag_map(bag=bag, map=map)
+
+
+class FreehicleField(Field):
+    @cached_property
+    def lines(self) -> List[Union[Line, Circle]]:
+        lines: List[Union[Line, Circle]] = []
+        A = 1
+        B = 2
+        # Edge lines
+        lines.append(Line(Point(x=-A / 2, y=-B / 2), Point(x=A / 2, y=-B / 2)))
+        lines.append(Line(Point(x=-A / 2, y=B / 2), Point(x=A / 2, y=B / 2)))
+        lines.append(Line(Point(x=-A / 2, y=-B / 2), Point(x=-A / 2, y=B / 2)))
+        lines.append(Line(Point(x=A / 2, y=-B / 2), Point(x=A / 2, y=B / 2)))
+        lines.append(Line(Point(x=0, y=-B / 2), Point(x=0, y=B / 2)))
+
+        return lines
+
+
+def test_freehicle_movement():
+    rospy.init_node("test")
+
+    plt.figure("Localization")
+
+    map = FreehicleField()
+    map.draw()
+    plt.show(block=True)
+
+    bag = rosbag.Bag(retrieve_bag())
+    display_rosbag_map(bag=bag, map=map)
 
 
 def test_show_ukf_stuff():
