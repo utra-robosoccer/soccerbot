@@ -62,6 +62,8 @@ class Soccerbot:
             basePosition=[pose.position[0], pose.position[1], pose.position[2]],
             baseOrientation=pose.quaternion,
         )
+        rospy.loginfo("List of joints for loaded URDF")
+        rospy.loginfo([pb.getJointInfo(self.body, i)[1] for i in range(pb.getNumJoints(self.body))])
         self.pybullet_offset = pb.getBasePositionAndOrientation(self.body)[0][:2] + (0,)  # pb.getLinkState(self.body, Links.TORSO)[4:6]
         self.motor_names = [pb.getJointInfo(self.body, i)[1].decode("utf-8") for i in range(18)]
 

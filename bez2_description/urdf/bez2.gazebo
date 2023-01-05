@@ -42,13 +42,6 @@
   <selfCollide>true</selfCollide>
 </gazebo>
 
-<gazebo reference="Hip_Printable_v2_v10_1">
-  <material>${body_color}</material>
-  <mu1>0.2</mu1>
-  <mu2>0.2</mu2>
-  <selfCollide>true</selfCollide>
-</gazebo>
-
 <gazebo reference="Hip_Printable_v2_v10_2">
   <material>${body_color}</material>
   <mu1>0.2</mu1>
@@ -98,20 +91,6 @@
   <selfCollide>true</selfCollide>
 </gazebo>
 
-<gazebo reference="neck_v4_1">
-  <material>${body_color}</material>
-  <mu1>0.2</mu1>
-  <mu2>0.2</mu2>
-  <selfCollide>true</selfCollide>
-</gazebo>
-
-<gazebo reference="custom_servo_support__middle_neck__v9_1">
-  <material>${body_color}</material>
-  <mu1>0.2</mu1>
-  <mu2>0.2</mu2>
-  <selfCollide>true</selfCollide>
-</gazebo>
-
 <gazebo reference="head_v4_1">
   <material>${body_color}</material>
   <mu1>0.2</mu1>
@@ -155,6 +134,20 @@
 </gazebo>
 
 <gazebo reference="imu_1">
+  <material>${body_color}</material>
+  <mu1>0.2</mu1>
+  <mu2>0.2</mu2>
+  <selfCollide>true</selfCollide>
+</gazebo>
+
+<gazebo reference="custom_servo_support__middle_neck__v9_1">
+  <material>${body_color}</material>
+  <mu1>0.2</mu1>
+  <mu2>0.2</mu2>
+  <selfCollide>true</selfCollide>
+</gazebo>
+
+<gazebo reference="Hip_Printable_v2_v10_1">
   <material>${body_color}</material>
   <mu1>0.2</mu1>
   <mu2>0.2</mu2>

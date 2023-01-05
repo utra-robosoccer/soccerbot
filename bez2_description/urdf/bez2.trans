@@ -45,17 +45,6 @@
   </actuator>
 </transmission>
 
-<transmission name="right_leg_motor_0_tran">
-  <type>transmission_interface/SimpleTransmission</type>
-  <joint name="right_leg_motor_0">
-    <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
-  </joint>
-  <actuator name="right_leg_motor_0_actr">
-    <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
-    <mechanicalReduction>1</mechanicalReduction>
-  </actuator>
-</transmission>
-
 <transmission name="left_leg_motor_0_tran">
   <type>transmission_interface/SimpleTransmission</type>
   <joint name="left_leg_motor_0">
@@ -133,17 +122,6 @@
   </actuator>
 </transmission>
 
-<transmission name="head_motor_0_tran">
-  <type>transmission_interface/SimpleTransmission</type>
-  <joint name="head_motor_0">
-    <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
-  </joint>
-  <actuator name="head_motor_0_actr">
-    <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
-    <mechanicalReduction>1</mechanicalReduction>
-  </actuator>
-</transmission>
-
 <transmission name="head_motor_1_tran">
   <type>transmission_interface/SimpleTransmission</type>
   <joint name="head_motor_1">
@@ -199,23 +177,45 @@
   </actuator>
 </transmission>
 
-<transmission name="camera_joint_tran">
+<transmission name="head_camera_tran">
   <type>transmission_interface/SimpleTransmission</type>
-  <joint name="camera_joint">
+  <joint name="head_camera">
     <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
   </joint>
-  <actuator name="camera_joint_actr">
+  <actuator name="head_camera_actr">
     <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
     <mechanicalReduction>1</mechanicalReduction>
   </actuator>
 </transmission>
 
-<transmission name="imu_joint_tran">
+<transmission name="torso_imu_tran">
   <type>transmission_interface/SimpleTransmission</type>
-  <joint name="imu_joint">
+  <joint name="torso_imu">
     <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
   </joint>
-  <actuator name="imu_joint_actr">
+  <actuator name="torso_imu_actr">
+    <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+</transmission>
+
+<transmission name="head_motor_0_tran">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="head_motor_0">
+    <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="head_motor_0_actr">
+    <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+</transmission>
+
+<transmission name="right_leg_motor_0_tran">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="right_leg_motor_0">
+    <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="right_leg_motor_0_actr">
     <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
     <mechanicalReduction>1</mechanicalReduction>
   </actuator>
