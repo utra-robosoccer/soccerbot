@@ -46,12 +46,6 @@ with open(input_file, "r") as proto_file:
     """
     text = text.replace(target_text, replace_text)
 
-    # Boundary Object
-    target_text_list = [
-        "50.002224 56.675943 197.519905",
-        "36.000000 56.673996 125.199997",
-    ]
-
     # update STL paths
     text = text.replace(home + "/catkin_ws/src/soccerbot/bez2_description/meshes", "Bez2_meshes")
 
