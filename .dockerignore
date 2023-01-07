@@ -10,6 +10,8 @@ LICENSE
 Dockerfile
 docker-compose.*
 bez1_description/meshes/*.stl
+bez2_description/meshes/*.stl
+bez3_description/meshes/*.stl
 soccer_rlcontrol
 soccer_fieldline_detection/media
 soccerbot/bags/

@@ -8,23 +8,14 @@ PROTO Bez2 [
   field  SFVec3f     translation     0 0 0
   field  SFRotation  rotation        0 0 1 0
   field  SFString    name            "Bez2"  # Is `Robot.name`.
-  field  SFString    controller      "player"  # Is `Robot.controller`.
+  field  SFString    controller      "void"  # Is `Robot.controller`.
   field  MFString    controllerArgs  []      # Is `Robot.controllerArgs`.
   field  SFString    customData      ""      # Is `Robot.customData`.
   field  SFBool      supervisor      FALSE   # Is `Robot.supervisor`.
   field  SFBool      synchronization TRUE    # Is `Robot.synchronization`.
-  field  SFBool      selfCollision   TRUE     # Is `Robot.selfCollision`.
+  field  SFBool      selfCollision   FALSE   # Is `Robot.selfCollision`.
 ]
 {
-  %{
-    local mx28_backlash = 0.01
-    local mx28_max_torque = 3.10
-    local mx28_max_velocity = 7.02
-    local mx28_damping_constant = 0.3086
-    local mx28_static_friction = 1.03
-    local mx28_resolution = 0.00153
-  }%
-
   Robot {
     translation IS translation
     rotation IS rotation
@@ -34,7 +25,6 @@ PROTO Bez2 [
     supervisor IS supervisor
     synchronization IS synchronization
     selfCollision IS selfCollision
-
     children [
       Transform {
         scale 0.001000 0.001000 0.001000
@@ -46,7 +36,7 @@ PROTO Bez2 [
               metalness 0
             }
             geometry DEF base_link Mesh {
-              url "Bez2_meshes/base_link.stl"
+              url "/home/manx52/catkin_ws/src/soccerbot/bez2_description/meshes/base_link.stl"
             }
           }
         ]
@@ -58,7 +48,7 @@ PROTO Bez2 [
         }
         device [
           RotationalMotor {
-            name "left_arm_motor_0 [shoulder]"
+            name "left_arm_motor_0"
             maxTorque 10000
           }
           PositionSensor {
@@ -79,7 +69,7 @@ PROTO Bez2 [
                     metalness 0
                   }
                   geometry DEF biceps_v3_1 Mesh {
-                    url "Bez2_meshes/biceps_v3_1.stl"
+                    url "/home/manx52/catkin_ws/src/soccerbot/bez2_description/meshes/biceps_v3_1.stl"
                   }
                 }
               ]
@@ -112,7 +102,7 @@ PROTO Bez2 [
                           metalness 0
                         }
                         geometry DEF Arm_Assembly-bez3_v12_2 Mesh {
-                          url "Bez2_meshes/Arm_Assembly-bez3_v12_2.stl"
+                          url "/home/manx52/catkin_ws/src/soccerbot/bez2_description/meshes/Arm_Assembly-bez3_v12_2.stl"
                         }
                       }
                     ]
@@ -154,7 +144,7 @@ size 0.036000000000000004 0.056673996000000004 0.125199997          }
         }
         device [
           RotationalMotor {
-            name "right_arm_motor_0 [shoulder]"
+            name "right_arm_motor_0"
             maxTorque 10000
           }
           PositionSensor {
@@ -171,7 +161,7 @@ size 0.036000000000000004 0.056673996000000004 0.125199997          }
                 Shape {
                   appearance USE plastic_glossy_black
                   geometry DEF biceps_v3_2 Mesh {
-                    url "Bez2_meshes/biceps_v3_2.stl"
+                    url "/home/manx52/catkin_ws/src/soccerbot/bez2_description/meshes/biceps_v3_2.stl"
                   }
                 }
               ]
@@ -200,7 +190,7 @@ size 0.036000000000000004 0.056673996000000004 0.125199997          }
                       Shape {
                         appearance USE abs_white
                         geometry DEF Arm_Assembly-bez3_v12_1 Mesh {
-                          url "Bez2_meshes/Arm_Assembly-bez3_v12_1.stl"
+                          url "/home/manx52/catkin_ws/src/soccerbot/bez2_description/meshes/Arm_Assembly-bez3_v12_1.stl"
                         }
                       }
                     ]
@@ -259,7 +249,7 @@ size 0.036000000000000004 0.056673996000000004 0.125199997          }
                 Shape {
                   appearance USE abs_white
                   geometry DEF Hip_Printable_v2_v10_2 Mesh {
-                    url "Bez2_meshes/Hip_Printable_v2_v10_2.stl"
+                    url "/home/manx52/catkin_ws/src/soccerbot/bez2_description/meshes/Hip_Printable_v2_v10_2.stl"
                   }
                 }
               ]
@@ -270,7 +260,7 @@ size 0.036000000000000004 0.056673996000000004 0.125199997          }
               }
               device [
                 RotationalMotor {
-                  name "left_leg_motor_1 [hip]"
+                  name "left_leg_motor_1"
                   maxTorque 10000
                 }
                 PositionSensor {
@@ -291,7 +281,7 @@ size 0.036000000000000004 0.056673996000000004 0.125199997          }
                           metalness 0
                         }
                         geometry DEF hip_motors_v4_2 Mesh {
-                          url "Bez2_meshes/hip_motors_v4_2.stl"
+                          url "/home/manx52/catkin_ws/src/soccerbot/bez2_description/meshes/hip_motors_v4_2.stl"
                         }
                       }
                     ]
@@ -320,7 +310,7 @@ size 0.036000000000000004 0.056673996000000004 0.125199997          }
                             Shape {
                               appearance USE abs_white
                               geometry DEF Upper_left_leg_support__bottom__v8_1 Mesh {
-                                url "Bez2_meshes/Upper_left_leg_support__bottom__v8_1.stl"
+                                url "/home/manx52/catkin_ws/src/soccerbot/bez2_description/meshes/Upper_left_leg_support__bottom__v8_1.stl"
                               }
                             }
                           ]
@@ -349,7 +339,7 @@ size 0.036000000000000004 0.056673996000000004 0.125199997          }
                                   Shape {
                                     appearance USE abs_white
                                     geometry DEF lower_leg_v4_2 Mesh {
-                                      url "Bez2_meshes/lower_leg_v4_2.stl"
+                                      url "/home/manx52/catkin_ws/src/soccerbot/bez2_description/meshes/lower_leg_v4_2.stl"
                                     }
                                   }
                                 ]
@@ -382,7 +372,7 @@ size 0.036000000000000004 0.056673996000000004 0.125199997          }
                                             metalness 0
                                           }
                                           geometry DEF ankle_motors_v4_1 Mesh {
-                                            url "Bez2_meshes/ankle_motors_v4_1.stl"
+                                            url "/home/manx52/catkin_ws/src/soccerbot/bez2_description/meshes/ankle_motors_v4_1.stl"
                                           }
                                         }
                                       ]
@@ -411,7 +401,7 @@ size 0.036000000000000004 0.056673996000000004 0.125199997          }
                                               Shape {
                                                 appearance USE abs_white
                                                 geometry DEF New_right_foot_upperhalf_v3_1 Mesh {
-                                                  url "Bez2_meshes/New_right_foot_upperhalf_v3_1.stl"
+                                                  url "/home/manx52/catkin_ws/src/soccerbot/bez2_description/meshes/New_right_foot_upperhalf_v3_1.stl"
                                                 }
                                               }
                                             ]
@@ -530,7 +520,7 @@ size 0.026000968 0.045013213 0.050001365          }
                 Shape {
                   appearance USE abs_white
                   geometry DEF Hip_Printable_v2_v10_1 Mesh {
-                    url "Bez2_meshes/Hip_Printable_v2_v10_1.stl"
+                    url "/home/manx52/catkin_ws/src/soccerbot/bez2_description/meshes/Hip_Printable_v2_v10_1.stl"
                   }
                 }
               ]
@@ -542,7 +532,7 @@ size 0.026000968 0.045013213 0.050001365          }
               }
               device [
                 RotationalMotor {
-                  name "right_leg_motor_1 [hip]"
+                  name "right_leg_motor_1"
                   maxTorque 10000
                 }
                 PositionSensor {
@@ -559,7 +549,7 @@ size 0.026000968 0.045013213 0.050001365          }
                       Shape {
                         appearance USE silver_default
                         geometry DEF hip_motors_v4_1 Mesh {
-                          url "Bez2_meshes/hip_motors_v4_1.stl"
+                          url "/home/manx52/catkin_ws/src/soccerbot/bez2_description/meshes/hip_motors_v4_1.stl"
                         }
                       }
                     ]
@@ -588,7 +578,7 @@ size 0.026000968 0.045013213 0.050001365          }
                             Shape {
                               appearance USE abs_white
                               geometry DEF Upper_left_leg_support__bottom__v8_2 Mesh {
-                                url "Bez2_meshes/Upper_left_leg_support__bottom__v8_2.stl"
+                                url "/home/manx52/catkin_ws/src/soccerbot/bez2_description/meshes/Upper_left_leg_support__bottom__v8_2.stl"
                               }
                             }
                           ]
@@ -617,7 +607,7 @@ size 0.026000968 0.045013213 0.050001365          }
                                   Shape {
                                     appearance USE abs_white
                                     geometry DEF lower_leg_v4_1 Mesh {
-                                      url "Bez2_meshes/lower_leg_v4_1.stl"
+                                      url "/home/manx52/catkin_ws/src/soccerbot/bez2_description/meshes/lower_leg_v4_1.stl"
                                     }
                                   }
                                 ]
@@ -646,7 +636,7 @@ size 0.026000968 0.045013213 0.050001365          }
                                         Shape {
                                           appearance USE steel_satin
                                           geometry DEF ankle_motors_v4_2 Mesh {
-                                            url "Bez2_meshes/ankle_motors_v4_2.stl"
+                                            url "/home/manx52/catkin_ws/src/soccerbot/bez2_description/meshes/ankle_motors_v4_2.stl"
                                           }
                                         }
                                       ]
@@ -674,7 +664,7 @@ size 0.026000968 0.045013213 0.050001365          }
                                               Shape {
                                                 appearance USE abs_white
                                                 geometry DEF New_left_foot_upperhalf_v5_1 Mesh {
-                                                  url "Bez2_meshes/New_left_foot_upperhalf_v5_1.stl"
+                                                  url "/home/manx52/catkin_ws/src/soccerbot/bez2_description/meshes/New_left_foot_upperhalf_v5_1.stl"
                                                 }
                                               }
                                             ]
@@ -793,7 +783,7 @@ size 0.026002658 0.045249377 0.05000474          }
                 Shape {
                   appearance USE abs_white
                   geometry DEF custom_servo_support__middle_neck__v9_1 Mesh {
-                    url "Bez2_meshes/custom_servo_support__middle_neck__v9_1.stl"
+                    url "/home/manx52/catkin_ws/src/soccerbot/bez2_description/meshes/custom_servo_support__middle_neck__v9_1.stl"
                   }
                 }
               ]
@@ -822,7 +812,7 @@ size 0.026002658 0.045249377 0.05000474          }
                       Shape {
                         appearance USE plastic_glossy_black
                         geometry DEF head_v4_1 Mesh {
-                          url "Bez2_meshes/head_v4_1.stl"
+                          url "/home/manx52/catkin_ws/src/soccerbot/bez2_description/meshes/head_v4_1.stl"
                         }
                       }
                     ]
@@ -850,7 +840,7 @@ size 0.026002658 0.045249377 0.05000474          }
                             Shape {
                               appearance USE steel_satin
                               geometry DEF camera_point_1 Mesh {
-                                url "Bez2_meshes/camera_point_1.stl"
+                                url "/home/manx52/catkin_ws/src/soccerbot/bez2_description/meshes/camera_point_1.stl"
                               }
                             }
                           ]
@@ -917,26 +907,10 @@ size 0.035 0.048321075 0.056375022000000004          }
               translation -0.013000 0.000000 -0.028950
               scale 0.001000 0.001000 0.001000
               children [
-                Accelerometer {
-                  name "imu accelerometer"
-                  lookupTable [
-                  -19.62 -32768 0.00203
-                  19.62 32767 0.00203
-                  ]
-                  resolution 1
-                }
-                Gyro {
-                  name "imu gyro"
-                  lookupTable [
-                    -8.7266 -32768 0.00698
-                    8.7266 32767 0.00698
-                  ]
-                  resolution 1
-                }
                 Shape {
                   appearance USE steel_satin
                   geometry DEF imu_1 Mesh {
-                    url "Bez2_meshes/imu_1.stl"
+                    url "/home/manx52/catkin_ws/src/soccerbot/bez2_description/meshes/imu_1.stl"
                   }
                 }
               ]

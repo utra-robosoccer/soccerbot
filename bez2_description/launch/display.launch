@@ -1,10 +1,10 @@
 <launch>
-  <arg name="model" default="$(find bez2_description)/urdf/bez2.xacro"/>
-  <arg name="gui" default="true"/>
-  <arg name="rvizconfig" default="$(find bez2_description)/launch/urdf.rviz"/>
-  <param name="robot_description" command="$(find xacro)/xacro $(arg model)"/>
-  <param name="use_gui" value="$(arg gui)"/>
+    <arg name="model" default="$(find bez2_description)/urdf/bez2_simple.urdf" />
+    <arg name="gui" default="true" />
+    <arg name="rvizconfig" default="$(find bez2_description)/launch/urdf.rviz" />
+    <param name="robot_description" command="$(find xacro)/xacro $(arg model)" />
+    <param name="use_gui" value="$(arg gui)" />
     <node name="joint_state_publisher_gui" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui" />
-  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
-  <node name="rviz" pkg="rviz" args="-d $(arg rvizconfig)" type="rviz" required="true"/>
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+    <node name="rviz" pkg="rviz" args="-d $(arg rvizconfig)" type="rviz" required="true" />
 </launch>
