@@ -184,13 +184,14 @@ class TestObjectLocalization(TestCase):
 
         tfBuffer = tf2_ros.Buffer(rospy.Duration(1000))
         tl = tf2_ros.TransformListener(tfBuffer)
-
         camera_detected = False
         debug = False
         cvbridge = CvBridge()
         for topic, msg, t in bag.read_messages():
             # if t.secs < 1672750997:
             #     continue
+            if topic == "/odom":
+                topic = "/robot1/odom_combined"
             bag_out.write(topic, msg, t)
 
             if topic == "/camera/image_raw":
@@ -213,7 +214,7 @@ class TestObjectLocalization(TestCase):
                 d.point_cloud_publisher.publish = MagicMock()
                 d.image_callback(msg, debug=debug)
 
-                bag_out.write("field_point_cloud", d.point_cloud_publisher.publish.call_args[0][0], t)
+                bag_out.write("/robot1/field_point_cloud", d.point_cloud_publisher.publish.call_args[0][0], t)
 
                 if "DISPLAY" in os.environ:
                     cv2.imshow("Before", img)
