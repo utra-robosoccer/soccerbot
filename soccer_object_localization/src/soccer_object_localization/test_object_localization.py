@@ -160,6 +160,8 @@ class TestObjectLocalization(TestCase):
 
     def test_fieldline_detection_freehicle(self):
         rospy.init_node("test")
+        rospy.set_param("point_cloud_max_distance", 20)
+        rospy.set_param("point_cloud_spacing", 20)
 
         download_dataset(url="https://drive.google.com/uc?id=1Df7FMbnvJ5d7jAx-8fPiaFiLcd5nrsT9", folder_name="freehicle")
 
@@ -172,14 +174,13 @@ class TestObjectLocalization(TestCase):
         Camera.reset_position = MagicMock()
         Camera.ready = MagicMock()
         d = DetectorFieldline()
+        d.robot_name = "robot1"
         d.robot_state.status = RobotState.STATUS_READY
         d.image_publisher.get_num_connections = MagicMock(return_value=1)
         d.point_cloud_publisher.get_num_connections = MagicMock(return_value=1)
         d.publish_point_cloud = True
 
         import cv2
-        import tf
-        from cv2 import Mat
         from cv_bridge import CvBridge
 
         tfBuffer = tf2_ros.Buffer(rospy.Duration(1000))
@@ -187,6 +188,8 @@ class TestObjectLocalization(TestCase):
         camera_detected = False
         debug = False
         cvbridge = CvBridge()
+        original_publish = d.point_cloud_publisher.publish
+
         for topic, msg, t in bag.read_messages():
             # if t.secs < 1672750997:
             #     continue
@@ -203,18 +206,23 @@ class TestObjectLocalization(TestCase):
                 c.width = msg.width
                 d.camera.camera_info = c
 
-                tf_stamped = tfBuffer.lookup_transform("camera", "map", rospy.Time())
+                tf_stamped = tfBuffer.lookup_transform("map", "camera", rospy.Time())
                 d.camera.pose.geometry_msgs_transform = tf_stamped.transform
-                eulers = d.camera.pose.orientation_euler
-                eulers[1] = math.atan2(0.5, 1)
-                d.camera.pose.orientation_euler = eulers
-
+                position_original = d.camera.pose.position
+                orientation_euler_original = d.camera.pose.orientation_euler
+                position_original[0:2] = 0
+                orientation_euler_original[0] = 0
+                orientation_euler_original[2] = 0
+                d.camera.pose.position = position_original
+                d.camera.pose.orientation_euler = orientation_euler_original
                 img = cvbridge.imgmsg_to_cv2(msg)
                 d.image_publisher.publish = MagicMock()
+
                 d.point_cloud_publisher.publish = MagicMock()
                 d.image_callback(msg, debug=debug)
 
                 bag_out.write("/robot1/field_point_cloud", d.point_cloud_publisher.publish.call_args[0][0], t)
+                original_publish(d.point_cloud_publisher.publish.call_args[0][0])
 
                 if "DISPLAY" in os.environ:
                     cv2.imshow("Before", img)
@@ -225,11 +233,11 @@ class TestObjectLocalization(TestCase):
                         cv2.waitKey(1)
 
             elif topic == "/tf":
+                camera_detected = True
                 msg._connection_header = MagicMock()
                 msg._connection_header.get = MagicMock(return_value="default_authority")
                 tl.callback(msg)
             elif topic == "/tf_static":
-                camera_detected = True
                 msg._connection_header = MagicMock()
                 msg._connection_header.get = MagicMock(return_value="default_authority")
                 tl.static_callback(msg)

@@ -91,7 +91,7 @@ def test_points_correction(t_start):
 
 def display_rosbag_map(bag, map, debug=False, pos_theta_start=[-4, -3.15, np.pi / 2]):
 
-    f = FieldLinesUKFROS()
+    f = FieldLinesUKFROS(map=map)
     f.robot_state.status = RobotState.STATUS_READY
     initial_pose = Transformation(pos_theta=pos_theta_start)
     f.ukf.x = initial_pose.pos_theta
@@ -110,23 +110,27 @@ def display_rosbag_map(bag, map, debug=False, pos_theta_start=[-4, -3.15, np.pi 
     for topic, msg, t in bag.read_messages(topics=["/robot1/odom_combined", "/tf", "/robot1/field_point_cloud"]):
         if topic == "/robot1/field_point_cloud":
             current_transform = Transformation(pos_theta=f.ukf.x)
-            # point_cloud_array, vo_transform, vo_pos_theta = f.field_point_cloud_callback(msg)
-            # if vo_pos_theta is not None:
-            #     path_vo.append(vo_pos_theta)
-            #     path_vo_t.append(t.to_sec())
-            #     f.update(vo_pos_theta)
-            #     if debug:
-            #         map.drawPathOnMap(vo_transform, label="VO Odometry", color="red")
-            #         map.drawPathOnMap(Transformation(pos_theta=f.ukf.x), label="VO Odometry", color="orange")
-            #         map.drawPointsOnMap(current_transform, point_cloud_array, label="Odom Points", color="brown")
-            #         map.drawPointsOnMap(vo_transform, point_cloud_array, label="Odom Points Corrected", color="orange")
-            #
-            #         plt.title(f"UKF Robot localization (t = {round(t.secs + t.nsecs * 1e-9)})")
-            #         plt.xlim((-5, -3))
-            #         plt.ylim((-3.5, 1))
-            #         plt.legend()
-            #         plt.draw()
-            #         plt.waitforbuttonpress()
+            point_cloud_array, vo_transform, vo_pos_theta = f.field_point_cloud_callback(msg)
+            if vo_pos_theta is not None:
+                path_vo.append(vo_pos_theta)
+                path_vo_t.append(t.to_sec())
+                f.update(vo_pos_theta)
+
+            if debug:
+                map.drawPathOnMap(Transformation(pos_theta=f.ukf.x), label="VO Odometry", color="orange")
+
+                if vo_pos_theta is not None:
+                    map.drawPathOnMap(vo_transform, label="VO Odometry", color="red")
+                    map.drawPointsOnMap(vo_transform, point_cloud_array, label="Odom Points Corrected", color="red")
+                if point_cloud_array is not None:
+                    map.drawPointsOnMap(current_transform, point_cloud_array, label="Odom Points", color="black")
+
+                plt.title(f"UKF Robot localization (t = {round(t.secs + t.nsecs * 1e-9)})")
+                # plt.xlim((-5, -3))
+                # plt.ylim((-3.5, 1))
+                plt.legend()
+                plt.draw()
+                plt.waitforbuttonpress()
 
         elif topic == "/tf":
             # Process ground truth information
@@ -212,7 +216,7 @@ def display_rosbag_map(bag, map, debug=False, pos_theta_start=[-4, -3.15, np.pi 
 
     if "DISPLAY" in os.environ:
         plt.show(block=False)
-        plt.waitforbuttonpress(timeout=10)
+        plt.waitforbuttonpress(timeout=10000)
         plt.close("all")
 
 
@@ -233,25 +237,27 @@ class FreehicleField(Field):
     def lines(self) -> List[Union[Line, Circle]]:
         lines: List[Union[Line, Circle]] = []
 
+        linegap = 8 / 9
+        centergap = ((350 - 55 * 2) / 350 * 2) * 2
+
         for i in [-4, 4]:
-            lines.append(Line(Point(x=0, y=i), Point(x=10, y=i)))
-            for xgap in range(11):
-                lines.append(Line(Point(x=xgap * 0.8, y=-2.5 + i), Point(x=xgap * 0.8, y=2.5 + i)))
+            lines.append(Line(Point(x=0, y=i), Point(x=4.5, y=i)))
+            for xgap in range(6):
+                lines.append(Line(Point(x=xgap * linegap, y=-centergap + i), Point(x=xgap * linegap, y=centergap + i)))
 
         return lines
 
 
 def test_freehicle_movement():
     rospy.init_node("test")
-
+    rospy.set_param("distance_point_threshold", 2)
     plt.figure("Localization")
 
     map = FreehicleField()
     map.draw()
-    plt.show(block=False)
 
     bag = rosbag.Bag(retrieve_bag(url="https://drive.google.com/uc?id=1o2HGsaSvf4mQhZG_iXMhgR5Z1lXJNOGF", bag_name="freehicle_out"))
-    display_rosbag_map(bag=bag, map=map, pos_theta_start=[0.42177831, -0.24038515, 0.00179811])
+    display_rosbag_map(bag=bag, map=map, debug=False, pos_theta_start=[0, 0, 0])
 
 
 def test_show_ukf_stuff():
