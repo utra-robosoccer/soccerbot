@@ -10,6 +10,7 @@ find_package(
     soccer_trajectories
     soccer_object_detection
     bez1_description
+    bez2_description
     bez3_description
     soccer_strategy
     soccer_object_localization
