@@ -262,7 +262,10 @@ class RobotControlled3D(RobotControlled):
         if not self.kick_with_right_foot:
             f.mirror = True
         self.trajectory_publisher.publish(f)
-        self.status = Robot.Status.TRAJECTORY_IN_PROGRESS
+        if "kick" in trajectory_name:
+            self.status = Robot.Status.KICKING
+        else:
+            self.status = Robot.Status.TRAJECTORY_IN_PROGRESS
         rospy.loginfo(self.robot_name + " " + f.trajectory_name)
 
     def get_detected_obstacles(self):
