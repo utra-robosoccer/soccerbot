@@ -55,8 +55,7 @@ class TestObjectDetection(TestCase):
         tf2_ros.TransformListener = MagicMock()
 
         src_path = os.path.dirname(os.path.realpath(__file__))
-        model_path = src_path + "/../../models/best.pt"
-
+        model_path = src_path + "/../../models/half_5.pt"
         from cv_bridge import CvBridge
 
         n = ObjectDetectionNode(model_path=model_path)
@@ -153,9 +152,9 @@ class TestObjectDetection(TestCase):
         src_path = os.path.dirname(os.path.realpath(__file__))
 
         # Data downloaded from https://github.com/bit-bots/TORSO_21_dataset
-        annotation_path = "/home/robosoccer/hdd/dataset/data/train/annotations.yaml"
-        annotation_pickle = "/home/robosoccer/hdd/dataset/data/train/annotation.pkl"
-        image_path = "/home/robosoccer/hdd/dataset/data/train/data/images/"
+        annotation_path = "/home/robosoccer/hdd/dataset/dataV2/TORSO-21/simulation/train/annotations.yaml"
+        annotation_pickle = "/home/robosoccer/hdd/dataset/dataV2/TORSO-21/simulation/train/annotation.pkl"
+        image_path = "/home/robosoccer//hdd/dataset/dataV2/TORSO-21/simulation/train/images"
 
         if not os.path.exists(annotation_pickle):
             with open(annotation_path) as f:
