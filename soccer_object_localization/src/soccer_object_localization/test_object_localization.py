@@ -6,6 +6,7 @@ from unittest import TestCase
 from unittest.mock import MagicMock
 
 import gdown
+import numpy as np
 import pytest
 
 from soccer_common.mock_ros import mock_ros
@@ -225,6 +226,7 @@ class TestObjectLocalization(TestCase):
         Camera.ready = MagicMock()
         d = DetectorGoalPost()
         d.robot_state.status = RobotState.STATUS_DETERMINING_SIDE
+        d.camera.pose = Transformation(position=[0, 0, 0.46])
         d.image_publisher.get_num_connections = MagicMock(return_value=1)
 
         import cv2
@@ -241,6 +243,11 @@ class TestObjectLocalization(TestCase):
             print(f"Loading {file_name} from goal_net dataset")
             file_name_no_ext = os.path.splitext(file_name)[0]
             x, y, yaw = file_name_no_ext.split("_")[1:]
+            yaw = wrapToPi(float(yaw))
+            if yaw < 0:
+                yaw = (yaw + np.pi) % (np.pi)
+
+            d.camera.pose.orientation_euler = [yaw, 0, 0]
             print(f"Parsed (x, y, yaw): ({x}, {y}, {yaw}) from filename.")
             visible_posts = get_visible_posts(float(x), float(y), float(yaw))
             for net in visible_posts.keys():
@@ -252,6 +259,7 @@ class TestObjectLocalization(TestCase):
 
             if "DISPLAY" in os.environ:
                 cv2.imshow("Before", img)
+                cv2.waitKey(0)
 
             c = CameraInfo()
             c.height = img.shape[0]
@@ -260,7 +268,7 @@ class TestObjectLocalization(TestCase):
 
             img_msg: Image = cvbridge.cv2_to_imgmsg(img, encoding="rgb8")
             d.image_publisher.publish = MagicMock()
-            d.image_callback(img_msg, debug=True)
+            d.image_callback(img_msg, debug=False)
 
             if "DISPLAY" in os.environ:
                 if d.image_publisher.publish.call_count != 0:
