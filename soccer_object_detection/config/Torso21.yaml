@@ -7,9 +7,18 @@
 #     └── coco  ← downloads here (20.1 GB)
 
 # Train/val/test sets as 1) dir: path/to/imgs, 2) file: path/to/imgs.txt, or 3) list: [path/to/imgs1, path/to/imgs2, ..]
-train: /home/robosoccer/hdd/dataset/data/train/data # train images 8000 images
-val: /home/robosoccer/hdd/dataset/data/validation # val images 1000 images
-test: /home/robosoccer/hdd/dataset/data/test/data # test 1000 images
+train:
+  #- /home/robosoccer/hdd/dataset/data/train/data # train images 8000 images
+  - /home/robosoccer/hdd/dataset/dataV2/TORSO-21/reality/train/images # 8,894 images
+  - /home/robosoccer/hdd/dataset/dataV2/TORSO-21/simulation/half_train/images # 19,196 images
+val:
+  #- /home/robosoccer/hdd/dataset/data/validation # val images 1000 images
+  - /home/robosoccer/hdd/dataset/dataV2/TORSO-21/reality/validation/images # 1,046 images
+  - /home/robosoccer/hdd/dataset/dataV2/TORSO-21/simulation/half_validation/images # 2,400 images
+test:
+  #- /home/robosoccer/hdd/dataset/data/test/data # test 1000 images
+  - /home/robosoccer/hdd/dataset/dataV2/TORSO-21/reality/test/images # 1,570 images
+  - /home/robosoccer/hdd/dataset/dataV2/TORSO-21/simulation/half_test/images # 2,400 images
 
 nc: 7
 

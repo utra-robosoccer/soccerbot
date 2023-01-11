@@ -55,7 +55,7 @@ class DetectorBall(Detector):
         final_ball_pixel = None
         candidate_ball_counter = 1
         for box in msg.bounding_boxes:
-            if box.Class == "ball":
+            if box.Class == "0":
                 # Exclude weirdly shaped balls
                 ratio = (box.ymax - box.ymin) / (box.xmax - box.xmin)
                 if ratio > 2 or ratio < 0.5:
