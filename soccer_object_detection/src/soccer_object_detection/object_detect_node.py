@@ -112,7 +112,7 @@ class ObjectDetectionNode(object):
 
         # cover horizon to help robot ignore things outside field
         cover_horizon_up_threshold = rospy.get_param("cover_horizon_up_threshold", 30)
-        h = self.camera.calculateHorizonCoverArea() - cover_horizon_up_threshold
+        h = max(self.camera.calculateHorizonCoverArea() - cover_horizon_up_threshold, 0)
 
         if image is not None:
             # 1. preprocess image
@@ -146,6 +146,7 @@ class ObjectDetectionNode(object):
                 if self.pub_detection.get_num_connections() > 0:
                     detection_image = np.squeeze(results.render())
                     detection_image = np.concatenate((np.zeros((h + 1, msg.width, 3), detection_image.dtype), detection_image))
+
                     detection_image = detection_image[..., ::-1]  # convert rgb to bgr
                     self.pub_detection.publish(self.br.cv2_to_imgmsg(detection_image, encoding="bgr8"))
 
