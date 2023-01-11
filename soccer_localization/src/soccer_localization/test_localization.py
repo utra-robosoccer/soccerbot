@@ -216,7 +216,7 @@ def display_rosbag_map(bag, map, debug=False, pos_theta_start=[-4, -3.15, np.pi 
 
     if "DISPLAY" in os.environ:
         plt.show(block=False)
-        plt.waitforbuttonpress(timeout=10000)
+        plt.waitforbuttonpress(timeout=10)
         plt.close("all")
 
 

@@ -174,7 +174,6 @@ class TestObjectLocalization(TestCase):
         Camera.reset_position = MagicMock()
         Camera.ready = MagicMock()
         d = DetectorFieldline()
-        d.camera.HORIZONTAL_FOV = 1.3926 * 800 / 640
         d.camera.horizontalFOV = 1.3926 * 800 / 640
         d.robot_name = "robot1"
         d.robot_state.status = RobotState.STATUS_READY
