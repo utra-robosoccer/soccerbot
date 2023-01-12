@@ -172,35 +172,42 @@ class TestObjectLocalization(TestCase):
 
         from soccer_pycontrol.utils import wrapToPi
 
-        def get_post_visibility(robot_pose, post_coords):
-            robot_x, robot_y, robot_yaw = robot_pose
-            post_x, post_y = post_coords
+        """
+            Returns whether a point at a given field coordinate is visible to the robot
+        """
 
-            post_yaw = math.atan2(post_y - robot_y, post_x - robot_x)
+        def get_point_visibility(robot_pose, point_coords):
+            robot_x, robot_y, robot_yaw = robot_pose
+            point_x, point_y = point_coords
+
+            point_yaw = math.atan2(point_y - robot_y, point_x - robot_x)
             camera_fov = 1.39626  # rads
 
             # Both yaw angles are between -pi and pi
-            delta_yaw = wrapToPi(post_yaw - robot_yaw)
+            delta_yaw = wrapToPi(point_yaw - robot_yaw)
 
-            # Check if the post is within the view cone
-            # No equals case as the post wouldn't be fully visible
-            is_post_visible = -camera_fov / 2.0 < delta_yaw < camera_fov / 2.0
+            # Check if the point is within the view cone
+            # No equals case as the point wouldn't be fully visible
+            is_point_visible = -camera_fov / 2.0 < delta_yaw < camera_fov / 2.0
 
-            return is_post_visible
+            return is_point_visible
 
-        # Returns a dictionary that stores booleans indicating whether each post is visible
-        # Visual reference: https://www.desmos.com/calculator/b9lndsb1bl
-        # Example: both posts of the left net are visible
-        # visible_posts = {
-        #     "NEG_X_NET": {
-        #         "POS_Y_POST": True,
-        #         "NEG_Y_POST": True
-        #     },
-        #     "POS_X_NET": {
-        #         "POS_Y_POST": False,
-        #         "NEG_Y_POST": False
-        #     }
-        # }
+        """
+            Returns a dictionary that stores booleans indicating whether each post is visible
+            Visual reference: https://www.desmos.com/calculator/b9lndsb1bl
+            Example: both posts of the left net are visible
+            visible_posts = {
+                "NEG_X_NET": {
+                    "POS_Y_POST": True,
+                    "NEG_Y_POST": True
+                },
+                "POS_X_NET": {
+                    "POS_Y_POST": False,
+                    "NEG_Y_POST": False
+                }
+            }
+        """
+
         def get_visible_posts(robot_x, robot_y, robot_yaw):
             visible_posts = {"NEG_X_NET": {"POS_Y_POST": True, "NEG_Y_POST": True}, "POS_X_NET": {"POS_Y_POST": False, "NEG_Y_POST": False}}
 
@@ -212,9 +219,11 @@ class TestObjectLocalization(TestCase):
             for net in net_coords.keys():
                 post_coords = net_coords[net]
                 for post in post_coords.keys():
-                    visible_posts[net][post] = get_post_visibility((robot_x, robot_y, robot_yaw), net_coords[net][post])
+                    visible_posts[net][post] = get_point_visibility((robot_x, robot_y, robot_yaw), net_coords[net][post])
 
             return visible_posts
+
+        # Setup test environment:
 
         from sensor_msgs.msg import CameraInfo, Image
 
@@ -237,8 +246,10 @@ class TestObjectLocalization(TestCase):
 
         src_path = os.path.dirname(os.path.realpath(__file__))
         test_path = src_path + "/../../images/goal_net"
+
+        # Loop through test images
         for file_name in os.listdir(test_path):
-            # file_name = "img160_-1.452993567956688_-3.15_0.7763055830612666.png"
+            file_name = "img173_-0.852141317992289_3.15_-1.7125376246657054.png"
 
             print(f"Loading {file_name} from goal_net dataset")
             file_name_no_ext = os.path.splitext(file_name)[0]
@@ -268,7 +279,7 @@ class TestObjectLocalization(TestCase):
 
             img_msg: Image = cvbridge.cv2_to_imgmsg(img, encoding="rgb8")
             d.image_publisher.publish = MagicMock()
-            d.image_callback(img_msg, debug=False)
+            d.image_callback(img_msg, debug=True)
 
             if "DISPLAY" in os.environ:
                 if d.image_publisher.publish.call_count != 0:
@@ -297,7 +308,7 @@ class TestObjectLocalization(TestCase):
 
         src_path = os.path.dirname(os.path.realpath(__file__))
         test_path = src_path + "/../../images/goal_net"
-        file_name = "img43_2.5076008803714904_-3.15_2.563808871082455.png"
+        file_name = "img341_0.960470105738711_-3.15_1.3585673890175494.png"
 
         print(f"Loading {file_name} from goal_net dataset")
         file_name_no_ext = os.path.splitext(file_name)[0]
@@ -320,7 +331,7 @@ class TestObjectLocalization(TestCase):
         # create trackbars for hough line parameters
         default_vline_angle_tol_deg = 3
         default_theta = np.pi / 180
-        default_threshold = 50
+        default_threshold = 30
         default_min_line_length = 30
         default_max_line_gap = 10
         cv2.createTrackbar("vLineAngleTolDeg", "image", 0, 15, nothing)

@@ -7,6 +7,7 @@ from rospy.impl.tcpros_base import DEFAULT_BUFF_SIZE
 
 if "ROS_NAMESPACE" not in os.environ:
     os.environ["ROS_NAMESPACE"] = "/robot1"
+
 import math
 
 import cv2
@@ -83,9 +84,19 @@ class DetectorGoalPost(Detector):
         t_end = time.time()
         rospy.loginfo_throttle(60, "GoalPost detection rate: " + str(t_end - t_start))
 
+    """
+        Retrieves the vertical lines in image by isolating the grass in the field, removing it and then uses
+        Canny and Hough to detect the lines using hough_theta, hough_threshold, hough_min_line_length,
+        hough_max_line_gap and returns lines that are within angle_tol_deg of vertical.
+        Returns vertical lines as a list of lists where each line's coordinates are stored as:
+        [x_start, y_start, x_end, y_end]
+        and the original image with the vertical lines drawn on it
+    """
+
     def get_vlines_from_img(
-        self, image, debug=False, angle_tol_deg=3, hough_theta=np.pi / 180, hough_threshold=50, hough_min_line_length=30, hough_max_line_gap=10
+        self, image, debug=False, angle_tol_deg=3, hough_theta=np.pi / 180, hough_threshold=30, hough_min_line_length=30, hough_max_line_gap=10
     ):
+        # Isolate and remove field from image
         image_blurred = cv2.bilateralFilter(image, 9, 75, 75)
         image_hsv = cv2.cvtColor(src=image_blurred, code=cv2.COLOR_BGR2HSV)
         image_hsv_filter = cv2.inRange(image_hsv, (0, 0, 150), (255, 50, 255))
@@ -106,6 +117,7 @@ class DetectorGoalPost(Detector):
         image_bw = cv2.cvtColor(image_bw, cv2.COLOR_BGR2GRAY)
         image_bw_eroded = cv2.morphologyEx(image_bw, cv2.MORPH_ERODE, self.circular_mask(5))
 
+        # Isolate all lines using Canny edge detection and Hough lines with the provided settings
         image_edges = cv2.Canny(image_bw_eroded, 50, 150, apertureSize=3)
         lines = cv2.HoughLinesP(
             image_edges, rho=1, theta=hough_theta, threshold=hough_threshold, minLineLength=hough_min_line_length, maxLineGap=hough_max_line_gap
@@ -116,15 +128,7 @@ class DetectorGoalPost(Detector):
                 x1, y1, x2, y2 = line[0]
                 cv2.line(image_hough, (x1, y1), (x2, y2), (0, 255, 0), 2)
 
-        # TODO improve field edge detection to serve as a baseline for a post starting point
-        field_edges = cv2.Canny(grass_only_flipped, 50, 150, apertureSize=3)
-        field_edge_lines = cv2.HoughLinesP(field_edges, rho=1, theta=hough_theta, threshold=10, minLineLength=70, maxLineGap=20)
-        if debug:
-            field_edge_lines_img = image.copy()
-            for line in field_edge_lines:
-                x1, y1, x2, y2 = line[0]
-                cv2.line(field_edge_lines_img, (x1, y1), (x2, y2), (0, 255, 0), 2)
-
+        # Isolate vertical lines
         angle_tol_rad = np.radians(angle_tol_deg)  # +-deg from vertical
         image_out = image.copy()
 
@@ -141,8 +145,6 @@ class DetectorGoalPost(Detector):
             cv2.imshow("image_hsv", image_hsv)
             cv2.imshow("image_hsv_filter", image_hsv_filter)
             cv2.imshow("grass_only", grass_only_flipped)
-            cv2.imshow("field_edges", field_edges)
-            cv2.imshow("field_edge_lines", field_edge_lines_img)
 
             cv2.imshow("image_bw", image_bw)
             cv2.imshow("image_bw_eroded", image_bw_eroded)
