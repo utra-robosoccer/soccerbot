@@ -48,18 +48,61 @@ PROTO Bez2 [
     supervisor IS supervisor
     synchronization IS synchronization
     selfCollision IS selfCollision
-
+    
     children [
-      Shape {
-        appearance DEF polymide_kapton PBRAppearance {
-          baseColor 0.500000 0.500000 0.500000
-          roughness 1.000000
-          metalness 0
-        }
-        geometry DEF base_link Mesh {
-          url "Bez2_meshes/base_link.stl"
-        }
-      }
+          %{
+            print (fields.name.value)
+            if fields.name.value ~= '' then
+
+            -- name is supposed to be something like "red player 2" or "blue player 1"
+            local words = {}
+            for word in fields.name.value:gmatch("%w+") do table.insert(words, word) end
+
+                color = words[1]
+                number = words[3]
+                else
+                color = "blue"
+                number = 3
+                end
+
+                local text1 = '"textures/bez_' .. number .. '_' .. color .. '.png"'
+                local text2 = '"textures/bez_back_' .. number .. '_' .. color .. '.png"'
+          }%
+        Transform {
+            translation 0.010000 0.000000 0.0100000
+            rotation 0.000000 0.000000 0.000000 0
+            children [
+              JerseyFront {
+                jerseyTexture [
+                 %{=text1}%
+                ]
+              }
+            ]
+          }
+
+          Transform {
+            translation -0.020000 0.000000 0.0100000
+            rotation 0.000000 0.000000 0.000000 0
+            children [
+              JerseyBack {
+                jerseyTexture [
+                 %{=text2}%
+                ]
+              }
+            ]
+          }
+
+          Shape {
+            appearance DEF polymide_kapton PBRAppearance {
+              baseColor 0 0 0
+              roughness 1.000000
+              metalness 0
+            }
+            geometry DEF base_link Mesh {
+              url "Bez2_meshes/base_link.stl"
+            }
+          }
+            
 HingeJointWithBacklash {
         jointParameters HingeJointParameters {
           axis -0.000000 -1.000000 0.000000
@@ -89,7 +132,7 @@ HingeJointWithBacklash {
               children [
                 Shape {
                   appearance DEF plastic_glossy_black PBRAppearance {
-                    baseColor 0.500000 0.500000 0.500000
+                    baseColor 0 0 0
                     roughness 1.000000
                     metalness 0
                   }
@@ -128,7 +171,7 @@ HingeJointWithBacklash {
                     children [
                       Shape {
                         appearance DEF abs_white PBRAppearance {
-                          baseColor 0.500000 0.500000 0.500000
+                          baseColor 0 0 0
                           roughness 1.000000
                           metalness 0
                         }
@@ -173,11 +216,11 @@ HingeJointWithBacklash {
                 ]
                 name "Arm_Assembly-bez3_v12_2 [arm]"
                 boundingObject Transform {
-                  translation -0.007000 0.024337 -0.078700
+                  translation -0.012 0.024337 -0.1
                   rotation 0.000000 -1.000000 -0.000000 3.141593
                   children [
                     Box {
-                       size 0.050000 0.056674 0.197500
+                       size 0.04 0.04 0.150
                     }
                   ]
                 }
@@ -319,11 +362,11 @@ HingeJointWithBacklash {
                 ]
                 name "Arm_Assembly-bez3_v12_1 [arm]"
                 boundingObject Transform {
-                  translation -0.007000 -0.024337 -0.078700
+                  translation -0.012 -0.024337 -0.1
                   rotation 0.000000 -1.000000 -0.000000 3.141593
                   children [
                     Box {
-                       size 0.050000 0.056674 0.197500
+                       size 0.04 0.04 0.150
                     }
                   ]
                 }
@@ -423,7 +466,7 @@ HingeJointWithBacklash {
                     children [
                       Shape {
                         appearance DEF silver_default PBRAppearance {
-                          baseColor 0.500000 0.500000 0.500000
+                          baseColor 0 0 0
                           roughness 1.000000
                           metalness 0
                         }
@@ -532,7 +575,7 @@ HingeJointWithBacklash {
                                       children [
                                         Shape {
                                           appearance DEF steel_satin PBRAppearance {
-                                            baseColor 0.500000 0.500000 0.500000
+                                            baseColor 0 0 0
                                             roughness 1.000000
                                             metalness 0
                                           }
@@ -720,11 +763,11 @@ HingeJointWithBacklash {
                                         ]
                                         name "New_right_foot_upperhalf_v3_1 [foot]"
                                         boundingObject Transform {
-                                          translation 0.052160 0.015000 -0.005500
+                                          translation 0.052160 0.015000 -0.0255
                                           rotation -0.707107 0.000000 0.707107 3.141593
                                           children [
                                             Box {
-                                               size 0.043000 0.090000 0.170000
+                                               size 0.004 0.090000 0.170000
                                             }
                                           ]
                                         }
@@ -1200,11 +1243,11 @@ HingeJointWithBacklash {
                                         ]
                                         name "New_left_foot_upperhalf_v5_1 [foot]"
                                         boundingObject Transform {
-                                          translation 0.052160 -0.015000 -0.005500
+                                          translation 0.052160 -0.015000 -0.0255
                                           rotation 0.000000 1.000000 -0.000000 1.570796
                                           children [
                                             Box {
-                                               size 0.043000 0.090000 0.170000
+                                               size 0.004 0.090000 0.170000
                                             }
                                           ]
                                         }
@@ -1509,7 +1552,7 @@ HingeJointWithBacklash {
       rotation 0.000000 1.000000 0.000000 3.141593
       children [
         Box {
-           size 0.124000 0.145000 0.220674
+           size 0.124000 0.145000 0.15
         }
       ]
     }

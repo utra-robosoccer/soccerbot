@@ -6,11 +6,195 @@ home = expanduser("~")
 
 input_file = home + "/catkin_ws/src/soccerbot/bez2_description/urdf/Bez2.proto"
 target_file = (
-    home + "/catkin_ws/src/soccerbot/bez2_description/urdf/Bez2.proto"
+        home + "/catkin_ws/src/soccerbot/bez2_description/urdf/Bez2.proto"
 )  # home + '/catkin_ws/src/soccerbot/soccer_webots/robocup/protos/Bez2.proto'
 text = ""
 with open(input_file, "r") as proto_file:
     text = proto_file.read()
+
+    # Jersey
+    target_text = """children [
+      Shape {
+        appearance DEF polymide_kapton PBRAppearance {
+          baseColor 0.500000 0.500000 0.500000
+          roughness 1.000000
+          metalness 0
+        }
+        geometry DEF base_link Mesh {
+          url "/home/manx52/catkin_ws/src/soccerbot/bez2_description/meshes/base_link.stl"
+        }
+      }"""
+
+    replace_text = """children [
+          %{
+            print (fields.name.value)
+            if fields.name.value ~= '' then
+
+            -- name is supposed to be something like "red player 2" or "blue player 1"
+            local words = {}
+            for word in fields.name.value:gmatch("%w+") do table.insert(words, word) end
+
+                color = words[1]
+                number = words[3]
+                else
+                color = "blue"
+                number = 3
+                end
+
+                local text1 = '"textures/bez_' .. number .. '_' .. color .. '.png"'
+                local text2 = '"textures/bez_back_' .. number .. '_' .. color .. '.png"'
+          }%
+        Transform {
+            translation 0.010000 0.000000 0.0100000
+            rotation 0.000000 0.000000 0.000000 0
+            children [
+              JerseyFront {
+                jerseyTexture [
+                 %{=text1}%
+                ]
+              }
+            ]
+          }
+
+          Transform {
+            translation -0.020000 0.000000 0.0100000
+            rotation 0.000000 0.000000 0.000000 0
+            children [
+              JerseyBack {
+                jerseyTexture [
+                 %{=text2}%
+                ]
+              }
+            ]
+          }
+
+          Shape {
+            appearance DEF polymide_kapton PBRAppearance {
+              baseColor 0.500000 0.500000 0.500000
+              roughness 1.000000
+              metalness 0
+            }
+            geometry DEF base_link Mesh {
+              url "Bez2_meshes/base_link.stl"
+            }
+          }
+            """
+    text = text.replace(target_text, replace_text)
+
+    # Bounding boxes
+    target_text = """name "Arm_Assembly-bez3_v12_2"
+                boundingObject Transform {
+                  translation -0.007000 0.024337 -0.078700
+                  rotation 0.000000 -1.000000 -0.000000 3.141593
+                  children [
+                    Box {
+                       size 0.050000 0.056674 0.197500
+                    }
+                  ]
+                }"""
+    replace_text = """name "Arm_Assembly-bez3_v12_2"
+                boundingObject Transform {
+                  translation -0.012 0.024337 -0.1
+                  rotation 0.000000 -1.000000 -0.000000 3.141593
+                  children [
+                    Box {
+                       size 0.04 0.04 0.150
+                    }
+                  ]
+                }"""
+    text = text.replace(target_text, replace_text)
+
+    target_text = """name "Arm_Assembly-bez3_v12_1"
+                boundingObject Transform {
+                  translation -0.007000 -0.024337 -0.078700
+                  rotation 0.000000 -1.000000 -0.000000 3.141593
+                  children [
+                    Box {
+                       size 0.050000 0.056674 0.197500
+                    }
+                  ]
+                }"""
+    replace_text = """name "Arm_Assembly-bez3_v12_1"
+                boundingObject Transform {
+                  translation -0.012 -0.024337 -0.1
+                  rotation 0.000000 -1.000000 -0.000000 3.141593
+                  children [
+                    Box {
+                       size 0.04 0.04 0.150
+                    }
+                  ]
+                }"""
+
+    text = text.replace(target_text, replace_text)
+
+    target_text = """name "New_right_foot_upperhalf_v3_1"
+                                        boundingObject Transform {
+                                          translation 0.052160 0.015000 -0.005500
+                                          rotation -0.707107 0.000000 0.707107 3.141593
+                                          children [
+                                            Box {
+                                               size 0.043000 0.090000 0.170000
+                                            }
+                                          ]
+                                        }"""
+    replace_text = """name "New_right_foot_upperhalf_v3_1"
+                                        boundingObject Transform {
+                                          translation 0.052160 0.015000 -0.0255
+                                          rotation -0.707107 0.000000 0.707107 3.141593
+                                          children [
+                                            Box {
+                                               size 0.004 0.090000 0.170000
+                                            }
+                                          ]
+                                        }"""
+
+    text = text.replace(target_text, replace_text)
+
+    target_text = """name "New_left_foot_upperhalf_v5_1"
+                                        boundingObject Transform {
+                                          translation 0.052160 -0.015000 -0.005500
+                                          rotation 0.000000 1.000000 -0.000000 1.570796
+                                          children [
+                                            Box {
+                                               size 0.043000 0.090000 0.170000
+                                            }
+                                          ]
+                                        }"""
+    replace_text = """name "New_left_foot_upperhalf_v5_1 [foot]"
+                                        boundingObject Transform {
+                                          translation 0.052160 -0.015000 -0.0255
+                                          rotation 0.000000 1.000000 -0.000000 1.570796
+                                          children [
+                                            Box {
+                                               size 0.004 0.090000 0.170000
+                                            }
+                                          ]
+                                        }"""
+
+    text = text.replace(target_text, replace_text)
+
+    target_text = """name IS name
+    boundingObject Transform {
+      translation 0.006000 -0.000000 -0.034713
+      rotation 0.000000 1.000000 0.000000 3.141593
+      children [
+        Box {
+           size 0.124000 0.145000 0.220674
+        }
+      ]
+    }"""
+    replace_text = """name IS name
+    boundingObject Transform {
+      translation 0.006000 -0.000000 -0.034713
+      rotation 0.000000 1.000000 0.000000 3.141593
+      children [
+        Box {
+           size 0.124000 0.145000 0.15
+        }
+      ]
+    }"""
+
+    text = text.replace(target_text, replace_text)
 
     # insert camera
     target_text = """HingeJoint {
@@ -171,7 +355,8 @@ with open(input_file, "r") as proto_file:
 
     # update main proto fields
     text = text.replace('field  SFString    name            "Bez2"', 'field  SFString    name            ""')
-    text = text.replace("  field  SFBool      selfCollision   FALSE   ", "  field  SFBool      selfCollision   TRUE     ")
+    text = text.replace("  field  SFBool      selfCollision   FALSE   ",
+                        "  field  SFBool      selfCollision   TRUE     ")
 
     # Motor Specs
     target_text = """Robot {
@@ -219,74 +404,7 @@ with open(input_file, "r") as proto_file:
     """
     text = text.replace(target_text, replace_text)
 
-    # Jersey
-    target_text = """children [
-      Shape {
-        appearance DEF polymide_kapton PBRAppearance {
-          baseColor 0.500000 0.500000 0.500000
-          roughness 1.000000
-          metalness 0
-        }
-        geometry DEF base_link Mesh {
-          url "Bez2_meshes/base_link.stl"
-        }
-      }"""
 
-    replace_text = """children [
-      %{
-        print (fields.name.value)
-        if fields.name.value ~= '' then
-
-        -- name is supposed to be something like "red player 2" or "blue player 1"
-        local words = {}
-        for word in fields.name.value:gmatch("%w+") do table.insert(words, word) end
-
-            color = words[1]
-            number = words[3]
-            else
-            color = "blue"
-            number = 3
-            end
-
-            local text1 = '"textures/bez_' .. number .. '_' .. color .. '.png"'
-            local text2 = '"textures/bez_back_' .. number .. '_' .. color .. '.png"'
-      }%
-    Transform {
-        translation 0.010000 0.000000 0.0100000
-        rotation 0.000000 0.000000 0.000000 0
-        children [
-          JerseyFront {
-            jerseyTexture [
-             %{=text1}%
-            ]
-          }
-        ]
-      }
-
-      Transform {
-        translation -0.020000 0.000000 0.0100000
-        rotation 0.000000 0.000000 0.000000 0
-        children [
-          JerseyBack {
-            jerseyTexture [
-             %{=text2}%
-            ]
-          }
-        ]
-      }
-
-      Shape {
-        appearance DEF polymide_kapton PBRAppearance {
-          baseColor 0.500000 0.500000 0.500000
-          roughness 1.000000
-          metalness 0
-        }
-        geometry DEF base_link Mesh {
-          url "Bez2_meshes/base_link.stl"
-        }
-      }
-        """
-    text = text.replace(target_text, replace_text)
 
     # update STL paths
     text = text.replace(home + "/catkin_ws/src/soccerbot/bez2_description/meshes", "Bez2_meshes")
@@ -776,10 +894,11 @@ with open(input_file, "r") as proto_file:
     # set foot
     text = text.replace('name "New_right_foot_upperhalf_v3_1"', 'name "New_right_foot_upperhalf_v3_1 [foot]"')
     text = text.replace('name "New_left_foot_upperhalf_v5_1"', 'name "New_left_foot_upperhalf_v5_1 [foot]"')
-
+    text = text.replace('baseColor 0.500000 0.500000 0.500000', 'baseColor 0 0 0')
     # add tags to the motors
     text = text.replace(
-        'field  SFString    controller      "void"  # Is `Robot.controller`.', 'field  SFString    controller      "player"  # Is `Robot.controller`.'
+        'field  SFString    controller      "void"  # Is `Robot.controller`.',
+        'field  SFString    controller      "player"  # Is `Robot.controller`.'
     )
 
 with open(target_file, "w") as proto_file:

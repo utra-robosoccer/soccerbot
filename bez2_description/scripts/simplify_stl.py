@@ -20,16 +20,24 @@ for filename in os.listdir(directory):
     f = os.path.join(directory, filename)
     # checking if it is a file
     if os.path.isfile(f):
+
         print(f"----------------------- parsing {os.path.basename(f)}")
-        if True:
+
+        if os.path.basename(f)[-3:] == "stl":
             mesh = o3d.io.read_triangle_mesh(f)
             print("Vertices:")
             print(len(mesh.vertices))
             print("Triangles:")
             print(len(mesh.triangles))
-            target_triangles = int(len(mesh.triangles) * 0.5)
+            if os.path.basename(f) == "biceps_v3_1.stl" or os.path.basename(f) == "biceps_v3_2.stl" or os.path.basename(
+                    f) == "base_link.stl" or os.path.basename(f) == "head_v4_1.stl":
+                target_triangles = 21000
+            else:
+                target_triangles = int(len(mesh.triangles) * 0.5)
+
             mesh.compute_vertex_normals()
-            mesh_smp = mesh.simplify_quadric_decimation(target_number_of_triangles=target_triangles, maximum_error=1.0, boundary_weight=0.5)
+            mesh_smp = mesh.simplify_quadric_decimation(target_number_of_triangles=target_triangles, maximum_error=1.0,
+                                                        boundary_weight=0.5)
             print(f"Simplified mesh has {len(mesh_smp.vertices)} vertices and {len(mesh_smp.triangles)} triangles")
             mesh.compute_vertex_normals()
             o3d.io.write_triangle_mesh(os.path.join(new_dir, os.path.basename(f)), mesh_smp)
