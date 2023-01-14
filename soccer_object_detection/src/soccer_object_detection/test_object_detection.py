@@ -11,6 +11,7 @@ import numpy as np
 import rospy
 import tf2_ros
 from cv2 import Mat
+from cv_bridge import CvBridge
 from sensor_msgs.msg import CameraInfo, Image
 
 from soccer_common import Camera
@@ -46,13 +47,10 @@ class TestObjectDetection(TestCase):
         rospy.init_node("test")
 
         Camera.reset_position = MagicMock()
-        tf2_ros.TransformListener = MagicMock()
 
         src_path = os.path.dirname(os.path.realpath(__file__))
         model_path = src_path + "/small_model/July14.pt"
         test_path = src_path + "/test_image"
-
-        from cv_bridge import CvBridge
 
         cvbridge = CvBridge()
         for file_name in os.listdir(test_path):
@@ -95,5 +93,5 @@ class TestObjectDetection(TestCase):
             if "DISPLAY" in os.environ:
                 mat = cvbridge.imgmsg_to_cv2(n.pub_detection.publish.call_args[0][0])
                 cv2.imshow("res", mat)
-                cv2.waitKey(1)
+                cv2.waitKey(1000)
                 cv2.destroyAllWindows()

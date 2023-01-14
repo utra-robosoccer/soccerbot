@@ -11,8 +11,10 @@ from pathlib import Path
 from unittest import TestCase
 from unittest.mock import MagicMock
 
+import cv2
 import gdown
 import pytest
+from cv_bridge import CvBridge
 from sensor_msgs.msg import CameraInfo, Image
 
 from soccer_common.camera import Camera
@@ -180,9 +182,6 @@ class TestObjectLocalization(TestCase):
         d.image_publisher.get_num_connections = MagicMock(return_value=1)
         d.point_cloud_publisher.get_num_connections = MagicMock(return_value=1)
         d.publish_point_cloud = True
-
-        import cv2
-        from cv_bridge import CvBridge
 
         tfBuffer = tf2_ros.Buffer(rospy.Duration(1000))
         tl = tf2_ros.TransformListener(tfBuffer)

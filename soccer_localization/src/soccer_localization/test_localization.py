@@ -188,7 +188,7 @@ def display_rosbag_map(bag, map, debug=False, pos_theta_start=[-4, -3.15, np.pi 
     plt.ylim((-4, 4))
     plt.tight_layout()
     plt.legend()
-    plt.show(block=True)
+    plt.waitforbuttonpress(timeout=10)
 
     def plt_dim_error(dim=0, label="X"):
         plt.figure(f"{label} Error")
