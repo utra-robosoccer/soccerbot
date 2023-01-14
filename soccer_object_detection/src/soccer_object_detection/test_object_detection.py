@@ -12,6 +12,7 @@ import rospy
 import tf2_ros
 import yaml
 from cv2 import Mat
+from cv_bridge import CvBridge
 from sensor_msgs.msg import CameraInfo, Image
 
 from soccer_common import Camera
@@ -52,11 +53,9 @@ class TestObjectDetection(TestCase):
         rospy.init_node("test")
 
         Camera.reset_position = MagicMock()
-        tf2_ros.TransformListener = MagicMock()
 
         src_path = os.path.dirname(os.path.realpath(__file__))
         model_path = src_path + "/../../models/half_5.pt"
-        from cv_bridge import CvBridge
 
         n = ObjectDetectionNode(model_path=model_path)
 
@@ -93,7 +92,7 @@ class TestObjectDetection(TestCase):
             if "DISPLAY" in os.environ:
                 mat = cvbridge.imgmsg_to_cv2(n.pub_detection.publish.call_args[0][0])
                 cv2.imshow("Image", mat)
-                cv2.waitKey(0)
+                cv2.waitKey(1)
                 cv2.destroyAllWindows()
 
             # Check assertion
@@ -144,7 +143,7 @@ class TestObjectDetection(TestCase):
 
             if "DISPLAY" in os.environ:
                 cv2.imshow("Image", mat)
-                cv2.waitKey(0)
+                cv2.waitKey(1)
                 cv2.destroyAllWindows()
 
     @pytest.mark.skip(reason="Only run locally")

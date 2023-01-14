@@ -1,6 +1,8 @@
 import os
 
+import rosbag
 import rospy
+import tf2_ros
 
 os.environ["ROS_NAMESPACE"] = "/robot1"
 
@@ -8,7 +10,9 @@ import math
 from unittest import TestCase
 from unittest.mock import MagicMock
 
+import cv2
 import pytest
+from cv_bridge import CvBridge
 from sensor_msgs.msg import CameraInfo, Image
 
 from soccer_common.camera import Camera
@@ -137,6 +141,96 @@ class TestObjectLocalization(TestCase):
 
                 cv2.waitKey(0)
         cv2.destroyAllWindows()
+
+    def test_fieldline_detection_freehicle(self):
+        rospy.init_node("test")
+        rospy.set_param("point_cloud_max_distance", 20)
+        rospy.set_param("point_cloud_spacing", 20)
+
+        src_path = os.path.dirname(os.path.realpath(__file__))
+        folter_path = src_path + "/../../images/freehicle"
+        download_dataset(url="https://drive.google.com/uc?id=1Df7FMbnvJ5d7jAx-8fPiaFiLcd5nrsT9", folder_path=folter_path)
+
+        test_path = folter_path + "/freehicle.bag"
+        test_out = folter_path + "/freehicle_out.bag"
+
+        bag = rosbag.Bag(test_path)
+        bag_out = rosbag.Bag(test_out, mode="w")
+        Camera.reset_position = MagicMock()
+        Camera.ready = MagicMock()
+        d = DetectorFieldline()
+        d.camera.horizontalFOV = 1.3926 * 800 / 640
+        d.robot_name = "robot1"
+        d.robot_state.status = RobotState.STATUS_READY
+        d.image_publisher.get_num_connections = MagicMock(return_value=1)
+        d.point_cloud_publisher.get_num_connections = MagicMock(return_value=1)
+        d.publish_point_cloud = True
+
+        tfBuffer = tf2_ros.Buffer(rospy.Duration(1000))
+        tl = tf2_ros.TransformListener(tfBuffer)
+        camera_detected = False
+        debug = False
+        cvbridge = CvBridge()
+        original_publish = d.point_cloud_publisher.publish
+        t_init = None
+        for topic, msg, t in bag.read_messages():
+            if t_init is None:
+                t_init = t
+            else:
+                if t.secs - t_init.secs > 10:
+                    break
+            if topic == "/odom":
+                topic = "/robot1/odom_combined"
+            bag_out.write(topic, msg, t)
+
+            if topic == "/camera/image_raw":
+                if not camera_detected:
+                    continue
+
+                c = CameraInfo()
+                c.height = msg.height
+                c.width = msg.width
+                d.camera.camera_info = c
+
+                tf_stamped = tfBuffer.lookup_transform("map", "camera", rospy.Time())
+                d.camera.pose.geometry_msgs_transform = tf_stamped.transform
+                position_original = d.camera.pose.position
+                orientation_euler_original = d.camera.pose.orientation_euler
+                position_original[0:2] = 0
+                orientation_euler_original[0] = 0
+                orientation_euler_original[2] = 0
+                d.camera.pose.position = position_original
+                d.camera.pose.orientation_euler = orientation_euler_original
+                img = cvbridge.imgmsg_to_cv2(msg)
+                d.image_publisher.publish = MagicMock()
+
+                d.point_cloud_publisher.publish = MagicMock()
+                d.image_callback(msg, debug=debug)
+
+                bag_out.write("/robot1/field_point_cloud", d.point_cloud_publisher.publish.call_args[0][0], t)
+                original_publish(d.point_cloud_publisher.publish.call_args[0][0])
+
+                if "DISPLAY" in os.environ:
+                    cv2.imshow("Before", img)
+
+                    if d.image_publisher.publish.call_count != 0:
+                        img_out = cvbridge.imgmsg_to_cv2(d.image_publisher.publish.call_args[0][0])
+                        cv2.imshow("After", img_out)
+                        cv2.waitKey(1)
+
+            elif topic == "/tf":
+                camera_detected = True
+                msg._connection_header = MagicMock()
+                msg._connection_header.get = MagicMock(return_value="default_authority")
+                tl.callback(msg)
+            elif topic == "/tf_static":
+                msg._connection_header = MagicMock()
+                msg._connection_header.get = MagicMock(return_value="default_authority")
+                tl.static_callback(msg)
+                pass
+
+        bag_out.close()
+        bag.close()
 
     def test_goalpost_detection(self):
         src_path = os.path.dirname(os.path.realpath(__file__))

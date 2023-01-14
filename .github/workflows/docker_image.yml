@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       start_from_scratch:
-        description: 'Scratch From Scratch'
+        description: "Scratch From Scratch"
         required: false
         default: false
         type: boolean
@@ -28,7 +28,7 @@ jobs:
           sudo rm -rf /usr/share/dotnet
           sudo rm -rf /opt/ghc
           df -h
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           lfs: true
           submodules: recursive
@@ -41,7 +41,7 @@ jobs:
         run: |
           docker pull utrarobosoccer/soccerbot
       - name: Start from scratch
-        if:  ${{ inputs.start_from_scratch }}
+        if: ${{ inputs.start_from_scratch }}
         run: |
           docker system prune -a -f
       - name: Build the Docker image
