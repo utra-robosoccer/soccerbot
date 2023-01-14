@@ -4,18 +4,45 @@
 # This is a proto file for Webots for the Bez2
 # Extracted from: /home/manx52/catkin_ws/src/soccerbot/bez2_description/urdf/bez2_simple.urdf
 
+EXTERNPROTO "HingeJointWithBacklash.proto"
+EXTERNPROTO "JerseyFront.proto"
+EXTERNPROTO "JerseyBack.proto"
+
 PROTO Bez2 [
   field  SFVec3f     translation     0 0 0
   field  SFRotation  rotation        0 0 1 0
-  field  SFString    name            "Bez2"  # Is `Robot.name`.
-  field  SFString    controller      "void"  # Is `Robot.controller`.
+  field  SFString    name            ""  # Is `Robot.name`.
+  field  SFString    controller      "player"  # Is `Robot.controller`.
   field  MFString    controllerArgs  []      # Is `Robot.controllerArgs`.
   field  SFString    customData      ""      # Is `Robot.customData`.
   field  SFBool      supervisor      FALSE   # Is `Robot.supervisor`.
   field  SFBool      synchronization TRUE    # Is `Robot.synchronization`.
-  field  SFBool      selfCollision   FALSE   # Is `Robot.selfCollision`.
+  field  SFBool      selfCollision   TRUE     # Is `Robot.selfCollision`.
 ]
 {
+  %{
+    local mx64_backlash = 0.01
+    local mx64_max_torque = 6.00
+    local mx64_max_velocity = 6.60
+    local mx64_damping_constant = 0.66
+    local mx64_static_friction = 1.42
+    local mx64_resolution = 0.00153
+
+    local xm430_backlash = 0.01
+    local xm430_max_torque = 4.1
+    local xm430_max_velocity = 4.82
+    local xm430_damping_constant = 0.721165
+    local xm430_static_friction = 0.777
+    local xm430_resolution = 0.00153
+
+    local xc430_backlash = 0.01
+    local xc430_max_torque = 1.9
+    local xc430_max_velocity = 7.33
+    local xc430_damping_constant = 0.159155
+    local xc430_static_friction = 0.80667
+    local xc430_resolution = 0.00153
+  }%
+
   Robot {
     translation IS translation
     rotation IS rotation
@@ -25,23 +52,81 @@ PROTO Bez2 [
     supervisor IS supervisor
     synchronization IS synchronization
     selfCollision IS selfCollision
+    
     children [
-      DEF base_link_visual CadShape {
-        url "/home/manx52/catkin_ws/src/soccerbot/bez2_description/meshes/base_link.dae"
-      }
-      HingeJoint {
+          %{
+            print (fields.name.value)
+            if fields.name.value ~= '' then
+
+            -- name is supposed to be something like "red player 2" or "blue player 1"
+            local words = {}
+            for word in fields.name.value:gmatch("%w+") do table.insert(words, word) end
+
+                color = words[1]
+                number = words[3]
+                else
+                color = "blue"
+                number = 3
+                end
+
+                local text1 = '"textures/bez_' .. number .. '_' .. color .. '.png"'
+                local text2 = '"textures/bez_back_' .. number .. '_' .. color .. '.png"'
+          }%
+        Transform {
+            translation 0.010000 0.000000 0.0100000
+            rotation 0.000000 0.000000 0.000000 0
+            children [
+              JerseyFront {
+                jerseyTexture [
+                 %{=text1}%
+                ]
+              }
+            ]
+          }
+
+          Transform {
+            translation -0.020000 0.000000 0.0100000
+            rotation 0.000000 0.000000 0.000000 0
+            children [
+              JerseyBack {
+                jerseyTexture [
+                 %{=text2}%
+                ]
+              }
+            ]
+          }
+
+          Shape {
+            appearance DEF polymide_kapton PBRAppearance {
+              baseColor 0 0 0
+              roughness 1.000000
+              metalness 0
+            }
+            geometry DEF base_link Mesh {
+              url "base_link.stl"
+            }
+          }
+            
+HingeJointWithBacklash {
         jointParameters HingeJointParameters {
           axis -0.000000 -1.000000 0.000000
           anchor 0.000000 0.072500 0.000450
-        }
+      dampingConstant %{= xc430_damping_constant }%
+     staticFriction %{= xc430_static_friction }%
+}
+ backlash %{= xc430_backlash }%
         device [
           RotationalMotor {
-            name "left_arm_motor_0"
-            maxTorque 10000
+            name "left_arm_motor_0 [shoulder]"
+      maxVelocity %{= xc430_max_velocity }%
+     maxTorque %{= xc430_max_torque }%
+        minPosition -1.57079632679
+      maxPosition 3.92699081699
           }
           PositionSensor {
             name "left_arm_motor_0_sensor"
-          }
+     resolution %{= xc430_resolution }%
+}
         ]
         endPoint Solid {
           translation 0.000000 0.072500 0.000450
@@ -49,24 +134,38 @@ PROTO Bez2 [
             Transform {
               translation -0.000000 -0.072500 -0.000450
               children [
-                DEF biceps_v3_1_visual CadShape {
-                  url "/home/manx52/catkin_ws/src/soccerbot/bez2_description/meshes/biceps_v3_1.dae"
+                Shape {
+                  appearance DEF plastic_glossy_black PBRAppearance {
+                    baseColor 0 0 0
+                    roughness 1.000000
+                    metalness 0
+                  }
+                  geometry DEF biceps_v3_1 Mesh {
+                    url "biceps_v3_1.stl"
+                  }
                 }
               ]
             }
-            HingeJoint {
+HingeJointWithBacklash {
               jointParameters HingeJointParameters {
                 axis 0.000000 -1.000000 0.000000
                 anchor 0.000000 0.008000 -0.090600
-              }
+      dampingConstant %{= xc430_damping_constant }%
+     staticFriction %{= xc430_static_friction }%
+}
+ backlash %{= xc430_backlash }%
               device [
                 RotationalMotor {
                   name "left_arm_motor_1"
-                  maxTorque 10000
+      maxVelocity %{= xc430_max_velocity }%
+     maxTorque %{= xc430_max_torque }%
+        minPosition 0
+      maxPosition 3.14159265359
                 }
                 PositionSensor {
                   name "left_arm_motor_1_sensor"
-                }
+     resolution %{= xc430_resolution }%
+}
               ]
               endPoint Solid {
                 translation 0.000000 0.008000 -0.090600
@@ -74,19 +173,58 @@ PROTO Bez2 [
                   Transform {
                     translation -0.000000 -0.080500 0.090150
                     children [
-                      DEF Arm_Assembly-bez3_v12_2_visual CadShape {
-                        url "/home/manx52/catkin_ws/src/soccerbot/bez2_description/meshes/Arm_Assembly-bez3_v12_2.dae"
+                      Shape {
+                        appearance DEF abs_white PBRAppearance {
+                          baseColor 0 0 0
+                          roughness 1.000000
+                          metalness 0
+                        }
+                        geometry DEF Arm_Assembly-bez3_v12_2 Mesh {
+                          url "Arm_Assembly-bez3_v12_2.stl"
+                        }
                       }
                     ]
                   }
+                  Solid {
+                    translation -0.01 0.025 -0.18
+                    rotation 0.000000 1.000000 0.000000 0.000000
+                    name "left_hand [hand]"
+                    children [
+                      Shape {
+                        appearance PBRAppearance {
+                          baseColor 0 0 0
+                          roughness 1
+                          metalness 0
+                        }
+                        geometry Box {
+                          size 0.005 0.02 0.005
+                        }
+                      }
+                    ]
+                    boundingObject Transform {
+                      translation 0 0 0
+                      rotation 0.000000 1.000000 0.000000 0.000000
+                      children [
+                        Box {
+                          size 0.005 0.02 0.005
+                        }
+                      ]
+                    }
+                    physics Physics {
+                      density -1
+                      mass 0.0001
+                      centerOfMass [ 0 0 0 ]
+                      inertiaMatrix []
+                    }
+                  }
                 ]
-                name "Arm_Assembly-bez3_v12_2"
+                name "Arm_Assembly-bez3_v12_2 [arm]"
                 boundingObject Transform {
-                  translation -0.007000 0.024337 -0.078700
+                  translation -0.012 0.024337 -0.1
                   rotation 0.000000 -1.000000 -0.000000 3.141593
                   children [
                     Box {
-                       size 0.050000 0.056674 0.197500
+                       size 0.04 0.04 0.150
                     }
                   ]
                 }
@@ -102,7 +240,7 @@ PROTO Bez2 [
               }
             }
           ]
-          name "biceps_v3_1"
+          name "biceps_v3_1 [arm]"
           boundingObject Transform {
             translation -0.000000 0.028337 -0.045300
             rotation 1.000000 -0.000000 -0.000000 3.141593
@@ -123,19 +261,26 @@ PROTO Bez2 [
           }
         }
       }
-      HingeJoint {
+HingeJointWithBacklash {
         jointParameters HingeJointParameters {
           axis 0.000000 -1.000000 0.000000
           anchor 0.000000 -0.072500 0.000450
-        }
+      dampingConstant %{= xc430_damping_constant }%
+     staticFriction %{= xc430_static_friction }%
+}
+ backlash %{= xc430_backlash }%
         device [
           RotationalMotor {
-            name "right_arm_motor_0"
-            maxTorque 10000
+            name "right_arm_motor_0 [shoulder]"
+      maxVelocity %{= xc430_max_velocity }%
+     maxTorque %{= xc430_max_torque }%
+        minPosition -1.57079632679
+      maxPosition 3.92699081699
           }
           PositionSensor {
             name "right_arm_motor_0_sensor"
-          }
+     resolution %{= xc430_resolution }%
+}
         ]
         endPoint Solid {
           translation 0.000000 -0.072500 0.000450
@@ -143,24 +288,34 @@ PROTO Bez2 [
             Transform {
               translation -0.000000 0.072500 -0.000450
               children [
-                DEF biceps_v3_2_visual CadShape {
-                  url "/home/manx52/catkin_ws/src/soccerbot/bez2_description/meshes/biceps_v3_2.dae"
+                Shape {
+                  appearance USE plastic_glossy_black
+                  geometry DEF biceps_v3_2 Mesh {
+                    url "biceps_v3_2.stl"
+                  }
                 }
               ]
             }
-            HingeJoint {
+HingeJointWithBacklash {
               jointParameters HingeJointParameters {
                 axis -0.000000 -1.000000 0.000000
                 anchor -0.000000 -0.008000 -0.090600
-              }
+      dampingConstant %{= xc430_damping_constant }%
+     staticFriction %{= xc430_static_friction }%
+}
+ backlash %{= xc430_backlash }%
               device [
                 RotationalMotor {
                   name "right_arm_motor_1"
-                  maxTorque 10000
+      maxVelocity %{= xc430_max_velocity }%
+     maxTorque %{= xc430_max_torque }%
+        minPosition 0
+      maxPosition 3.14159265359
                 }
                 PositionSensor {
                   name "right_arm_motor_1_sensor"
-                }
+     resolution %{= xc430_resolution }%
+}
               ]
               endPoint Solid {
                 translation -0.000000 -0.008000 -0.090600
@@ -168,19 +323,54 @@ PROTO Bez2 [
                   Transform {
                     translation 0.000000 0.080500 0.090150
                     children [
-                      DEF Arm_Assembly-bez3_v12_1_visual CadShape {
-                        url "/home/manx52/catkin_ws/src/soccerbot/bez2_description/meshes/Arm_Assembly-bez3_v12_1.dae"
+                      Shape {
+                        appearance USE abs_white
+                        geometry DEF Arm_Assembly-bez3_v12_1 Mesh {
+                          url "Arm_Assembly-bez3_v12_1.stl"
+                        }
                       }
                     ]
                   }
+                  Solid {
+                    translation -0.01 -0.025 -0.18
+                    rotation 0.000000 1.000000 0.000000 0.000000
+                    name "right_hand [hand]"
+                    children [
+                      Shape {
+                        appearance PBRAppearance {
+                          baseColor 0 0 0
+                          roughness 1
+                          metalness 0
+                        }
+                        geometry Box {
+                          size 0.005 0.02 0.005
+                        }
+                      }
+                    ]
+                    boundingObject Transform {
+                      translation 0 0 0
+                      rotation 0.000000 1.000000 0.000000 0.000000
+                      children [
+                        Box {
+                          size 0.005 0.02 0.005
+                        }
+                      ]
+                    }
+                    physics Physics {
+                      density -1
+                      mass 0.0001
+                      centerOfMass [ 0 0 0 ]
+                      inertiaMatrix []
+                    }
+                  }
                 ]
-                name "Arm_Assembly-bez3_v12_1"
+                name "Arm_Assembly-bez3_v12_1 [arm]"
                 boundingObject Transform {
-                  translation -0.007000 -0.024337 -0.078700
+                  translation -0.012 -0.024337 -0.1
                   rotation 0.000000 -1.000000 -0.000000 3.141593
                   children [
                     Box {
-                       size 0.050000 0.056674 0.197500
+                       size 0.04 0.04 0.150
                     }
                   ]
                 }
@@ -196,7 +386,7 @@ PROTO Bez2 [
               }
             }
           ]
-          name "biceps_v3_2"
+          name "biceps_v3_2 [arm]"
           boundingObject Transform {
             translation -0.000000 -0.028337 -0.045300
             rotation 0.000000 -1.000000 -0.000000 3.141593
@@ -217,19 +407,26 @@ PROTO Bez2 [
           }
         }
       }
-      HingeJoint {
+HingeJointWithBacklash {
         jointParameters HingeJointParameters {
           axis -0.000000 0.000000 -1.000000
           anchor 0.015970 0.037700 -0.144050
-        }
+      dampingConstant %{= xm430_damping_constant }%
+     staticFriction %{= xm430_static_friction }%
+}
+ backlash %{= xm430_backlash }%
         device [
           RotationalMotor {
             name "left_leg_motor_0"
-            maxTorque 10000
+      maxVelocity %{= xm430_max_velocity }%
+     maxTorque %{= xm430_max_torque }%
+        minPosition -1.309
+      maxPosition 0.524
           }
           PositionSensor {
             name "left_leg_motor_0_sensor"
-          }
+     resolution %{= xm430_resolution }%
+}
         ]
         endPoint Solid {
           translation 0.015970 0.037700 -0.144050
@@ -237,23 +434,33 @@ PROTO Bez2 [
             Transform {
               translation -0.015970 -0.037700 0.144050
               children [
-                DEF Hip_Printable_v2_v10_2_visual CadShape {
-                  url "/home/manx52/catkin_ws/src/soccerbot/bez2_description/meshes/Hip_Printable_v2_v10_2.dae"
+                Shape {
+                  appearance USE abs_white
+                  geometry DEF Hip_Printable_v2_v10_2 Mesh {
+                    url "Hip_Printable_v2_v10_2.stl"
+                  }
                 }
               ]
             }
-            HingeJoint {
+HingeJointWithBacklash {
               jointParameters HingeJointParameters {
                 anchor -0.025000 0.000000 -0.032000
-              }
+      dampingConstant %{= xm430_damping_constant }%
+     staticFriction %{= xm430_static_friction }%
+}
+ backlash %{= xm430_backlash }%
               device [
                 RotationalMotor {
-                  name "left_leg_motor_1"
-                  maxTorque 10000
+                  name "left_leg_motor_1 [hip]"
+      maxVelocity %{= xm430_max_velocity }%
+     maxTorque %{= xm430_max_torque }%
+        minPosition -0.785398163397
+      maxPosition 1.57079632679
                 }
                 PositionSensor {
                   name "left_leg_motor_1_sensor"
-                }
+     resolution %{= xm430_resolution }%
+}
               ]
               endPoint Solid {
                 translation -0.025000 0.000000 -0.032000
@@ -261,24 +468,38 @@ PROTO Bez2 [
                   Transform {
                     translation 0.009030 -0.037700 0.176050
                     children [
-                      DEF hip_motors_v4_2_visual CadShape {
-                        url "/home/manx52/catkin_ws/src/soccerbot/bez2_description/meshes/hip_motors_v4_2.dae"
+                      Shape {
+                        appearance DEF silver_default PBRAppearance {
+                          baseColor 0 0 0
+                          roughness 1.000000
+                          metalness 0
+                        }
+                        geometry DEF hip_motors_v4_2 Mesh {
+                          url "hip_motors_v4_2.stl"
+                        }
                       }
                     ]
                   }
-                  HingeJoint {
+HingeJointWithBacklash {
                     jointParameters HingeJointParameters {
                       axis 0.000000 -1.000000 0.000000
                       anchor 0.023650 -0.020000 0.000000
-                    }
+      dampingConstant %{= xm430_damping_constant }%
+     staticFriction %{= xm430_static_friction }%
+}
+ backlash %{= xm430_backlash }%
                     device [
                       RotationalMotor {
                         name "left_leg_motor_2"
-                        maxTorque 10000
+      maxVelocity %{= xm430_max_velocity }%
+     maxTorque %{= xm430_max_torque }%
+        minPosition -0.785398163397
+      maxPosition 2.35619449019
                       }
                       PositionSensor {
                         name "left_leg_motor_2_sensor"
-                      }
+     resolution %{= xm430_resolution }%
+}
                     ]
                     endPoint Solid {
                       translation 0.023650 -0.020000 0.000000
@@ -286,24 +507,34 @@ PROTO Bez2 [
                         Transform {
                           translation -0.014620 -0.017700 0.176050
                           children [
-                            DEF Upper_left_leg_support__bottom__v8_1_visual CadShape {
-                              url "/home/manx52/catkin_ws/src/soccerbot/bez2_description/meshes/Upper_left_leg_support__bottom__v8_1.dae"
+                            Shape {
+                              appearance USE abs_white
+                              geometry DEF Upper_left_leg_support__bottom__v8_1 Mesh {
+                                url "Upper_left_leg_support__bottom__v8_1.stl"
+                              }
                             }
                           ]
                         }
-                        HingeJoint {
+HingeJointWithBacklash {
                           jointParameters HingeJointParameters {
                             axis 0.000000 -1.000000 0.000000
                             anchor 0.000000 -0.004500 -0.091700
-                          }
+      dampingConstant %{= mx64_damping_constant }%
+     staticFriction %{= mx64_static_friction }%
+}
+ backlash %{= mx64_backlash }%
                           device [
                             RotationalMotor {
                               name "left_leg_motor_3"
-                              maxTorque 10000
+      maxVelocity %{= mx64_max_velocity }%
+     maxTorque %{= mx64_max_torque }%
+        minPosition -2.793
+      maxPosition 0
                             }
                             PositionSensor {
                               name "left_leg_motor_3_sensor"
-                            }
+     resolution %{= mx64_resolution }%
+}
                           ]
                           endPoint Solid {
                             translation 0.000000 -0.004500 -0.091700
@@ -311,24 +542,34 @@ PROTO Bez2 [
                               Transform {
                                 translation -0.014620 -0.013200 0.267750
                                 children [
-                                  DEF lower_leg_v4_2_visual CadShape {
-                                    url "/home/manx52/catkin_ws/src/soccerbot/bez2_description/meshes/lower_leg_v4_2.dae"
+                                  Shape {
+                                    appearance USE abs_white
+                                    geometry DEF lower_leg_v4_2 Mesh {
+                                      url "lower_leg_v4_2.stl"
+                                    }
                                   }
                                 ]
                               }
-                              HingeJoint {
+HingeJointWithBacklash {
                                 jointParameters HingeJointParameters {
                                   axis 0.000000 -1.000000 0.000000
                                   anchor 0.000000 -0.000500 -0.108300
-                                }
+      dampingConstant %{= mx64_damping_constant }%
+     staticFriction %{= mx64_static_friction }%
+}
+ backlash %{= mx64_backlash }%
                                 device [
                                   RotationalMotor {
                                     name "left_leg_motor_4"
-                                    maxTorque 10000
+      maxVelocity %{= mx64_max_velocity }%
+     maxTorque %{= mx64_max_torque }%
+        minPosition -0.785398163397
+      maxPosition 1.57079632679
                                   }
                                   PositionSensor {
                                     name "left_leg_motor_4_sensor"
-                                  }
+     resolution %{= mx64_resolution }%
+}
                                 ]
                                 endPoint Solid {
                                   translation 0.000000 -0.000500 -0.108300
@@ -336,24 +577,38 @@ PROTO Bez2 [
                                     Transform {
                                       translation -0.014620 -0.012700 0.376050
                                       children [
-                                        DEF ankle_motors_v4_1_visual CadShape {
-                                          url "/home/manx52/catkin_ws/src/soccerbot/bez2_description/meshes/ankle_motors_v4_1.dae"
+                                        Shape {
+                                          appearance DEF steel_satin PBRAppearance {
+                                            baseColor 0 0 0
+                                            roughness 1.000000
+                                            metalness 0
+                                          }
+                                          geometry DEF ankle_motors_v4_1 Mesh {
+                                            url "ankle_motors_v4_1.stl"
+                                          }
                                         }
                                       ]
                                     }
-                                    HingeJoint {
+HingeJointWithBacklash {
                                       jointParameters HingeJointParameters {
                                         axis -1.000000 0.000000 0.000000
                                         anchor -0.084300 0.023300 0.000000
-                                      }
+      dampingConstant %{= mx64_damping_constant }%
+     staticFriction %{= mx64_static_friction }%
+}
+ backlash %{= mx64_backlash }%
                                       device [
                                         RotationalMotor {
                                           name "left_leg_motor_5"
-                                          maxTorque 10000
+      maxVelocity %{= mx64_max_velocity }%
+     maxTorque %{= mx64_max_torque }%
+        minPosition -0.785398163397
+      maxPosition 0.785398163397
                                         }
                                         PositionSensor {
                                           name "left_leg_motor_5_sensor"
-                                        }
+     resolution %{= mx64_resolution }%
+}
                                       ]
                                       endPoint Solid {
                                         translation -0.084300 0.023300 0.000000
@@ -361,19 +616,162 @@ PROTO Bez2 [
                                           Transform {
                                             translation 0.069680 -0.036000 0.376050
                                             children [
-                                              DEF New_right_foot_upperhalf_v3_1_visual CadShape {
-                                                url "/home/manx52/catkin_ws/src/soccerbot/bez2_description/meshes/New_right_foot_upperhalf_v3_1.dae"
+                                              Shape {
+                                                appearance USE abs_white
+                                                geometry DEF New_right_foot_upperhalf_v3_1 Mesh {
+                                                  url "New_right_foot_upperhalf_v3_1.stl"
+                                                }
                                               }
                                             ]
                                           }
+                                          TouchSensor {
+                                            translation 0.12 0.052 -0.03
+                                            rotation 1.000000 0.000000 0.000000 1.57
+                                            name "left_leg_foot_sensor_1"
+                                            type "bumper"
+                                            resolution -1
+                                                children [
+                                                  Shape {
+                                                    appearance PBRAppearance {
+                                                        baseColor 0 0 0
+                                                        roughness 1
+                                                        metalness 0
+                                                        }
+                                                      geometry Capsule {
+                                                          height 0.005
+                                                          radius 0.005
+                                                      }
+                                                  }
+                                                ]
+                          			            boundingObject Transform {
+                                              children [
+                                                  Capsule {
+                                                        height 0.005
+                                                        radius 0.005
+                                                    }
+                                             ]
+                                            }
+                                            physics Physics {
+                                              density -1
+                                              mass 0.02
+                                              centerOfMass [0 0 0]
+                                              inertiaMatrix []
+                                            }
+
+					                                }
+                                          TouchSensor {
+                                            translation 0.12 -0.022 -0.03
+                                            rotation 1.000000 0.000000 0.000000 1.57
+                                            name "left_leg_foot_sensor_2"
+                                            type "bumper"
+                                            resolution -1
+                                            children [
+                                                Shape {
+                                                  appearance PBRAppearance {
+                                                      baseColor 0 0 0
+                                                      roughness 1
+                                                      metalness 0
+                                                  }
+                                                  geometry Capsule {
+                                                      height 0.005
+                                                      radius 0.005
+                                                  }
+                                                }
+                                            ]
+                                            boundingObject Transform {
+
+                                              children [
+                                                 Capsule {
+                                                   height 0.005
+                                                  radius 0.005
+                                                }
+                                             ]
+                                            }
+                                            physics Physics {
+                                              density -1
+                                              mass 0.02
+                                              centerOfMass [0 0 0]
+                                              inertiaMatrix []
+                                            }
+                                          }
+                                          TouchSensor {
+                                            translation -0.025 -0.022 -0.03
+                                            rotation 1.000000 0.000000 0.000000 1.57
+                                            name "left_leg_foot_sensor_3"
+                                            type "bumper"
+                                            resolution -1
+                                            children [
+                                              Shape {
+                                                appearance PBRAppearance {
+                                                    baseColor 0 0 0
+                                                    roughness 1
+                                                    metalness 0
+                                                }
+                                                geometry Capsule {
+                                                    height 0.005
+                                                    radius 0.005
+                                                }
+                                              }
+                                            ]
+                                            boundingObject Transform {
+
+                                              children [
+                                                 Capsule {
+                                                   height 0.005
+                                                  radius 0.005
+                                                }
+                                             ]
+                                            }
+                                            physics Physics {
+                                              density -1
+                                              mass 0.02
+                                              centerOfMass [0 0 0]
+                                              inertiaMatrix []
+                                            }
+                                          }
+                                          TouchSensor {
+                                            translation -0.025 0.052 -0.03
+                                            rotation 1.000000 0.000000 0.000000 1.57
+                                            name "left_leg_foot_sensor_4"
+                                            type "bumper"
+                                            resolution -1
+                                            children [
+                                              Shape {
+                                                appearance PBRAppearance {
+                                                  baseColor 0 0 0
+                                                    roughness 1
+                                                    metalness 0
+                                                    }
+                                                geometry Capsule {
+                                                  height 0.005
+                                                    radius 0.005
+                                                }
+                                              }
+                                            ]
+                                            boundingObject Transform {
+
+                                              children [
+                                                 Capsule {
+                                                   height 0.005
+                                                  radius 0.005
+                                                }
+                                             ]
+                                            }
+                                            physics Physics {
+                                              density -1
+                                              mass 0.02
+                                              centerOfMass [0 0 0]
+                                              inertiaMatrix []
+                                            }
+                                          }
                                         ]
-                                        name "New_right_foot_upperhalf_v3_1"
+                                        name "New_right_foot_upperhalf_v3_1 [foot]"
                                         boundingObject Transform {
-                                          translation 0.052160 0.015000 -0.005500
+                                          translation 0.052160 0.015000 -0.0255
                                           rotation -0.707107 0.000000 0.707107 3.141593
                                           children [
                                             Box {
-                                               size 0.043000 0.090000 0.170000
+                                               size 0.004 0.090000 0.170000
                                             }
                                           ]
                                         }
@@ -497,19 +895,26 @@ PROTO Bez2 [
           }
         }
       }
-      HingeJoint {
+HingeJointWithBacklash {
         jointParameters HingeJointParameters {
           axis -0.000000 -0.000000 1.000000
           anchor 0.015970 -0.036800 -0.144050
-        }
+      dampingConstant %{= xm430_damping_constant }%
+     staticFriction %{= xm430_static_friction }%
+}
+ backlash %{= xm430_backlash }%
         device [
           RotationalMotor {
             name "right_leg_motor_0"
-            maxTorque 10000
+      maxVelocity %{= xm430_max_velocity }%
+     maxTorque %{= xm430_max_torque }%
+        minPosition -1.309
+      maxPosition 0.524
           }
           PositionSensor {
             name "right_leg_motor_0_sensor"
-          }
+     resolution %{= xm430_resolution }%
+}
         ]
         endPoint Solid {
           translation 0.015970 -0.036800 -0.144050
@@ -517,24 +922,34 @@ PROTO Bez2 [
             Transform {
               translation -0.015970 0.036800 0.144050
               children [
-                DEF Hip_Printable_v2_v10_1_visual CadShape {
-                  url "/home/manx52/catkin_ws/src/soccerbot/bez2_description/meshes/Hip_Printable_v2_v10_1.dae"
+                Shape {
+                  appearance USE abs_white
+                  geometry DEF Hip_Printable_v2_v10_1 Mesh {
+                    url "Hip_Printable_v2_v10_1.stl"
+                  }
                 }
               ]
             }
-            HingeJoint {
+HingeJointWithBacklash {
               jointParameters HingeJointParameters {
                 axis -1.000000 0.000000 0.000000
                 anchor -0.023500 0.000000 -0.032000
-              }
+      dampingConstant %{= xm430_damping_constant }%
+     staticFriction %{= xm430_static_friction }%
+}
+ backlash %{= xm430_backlash }%
               device [
                 RotationalMotor {
-                  name "right_leg_motor_1"
-                  maxTorque 10000
+                  name "right_leg_motor_1 [hip]"
+      maxVelocity %{= xm430_max_velocity }%
+     maxTorque %{= xm430_max_torque }%
+        minPosition -0.785398163397
+      maxPosition 1.57079632679
                 }
                 PositionSensor {
                   name "right_leg_motor_1_sensor"
-                }
+     resolution %{= xm430_resolution }%
+}
               ]
               endPoint Solid {
                 translation -0.023500 0.000000 -0.032000
@@ -542,24 +957,34 @@ PROTO Bez2 [
                   Transform {
                     translation 0.007530 0.036800 0.176050
                     children [
-                      DEF hip_motors_v4_1_visual CadShape {
-                        url "/home/manx52/catkin_ws/src/soccerbot/bez2_description/meshes/hip_motors_v4_1.dae"
+                      Shape {
+                        appearance USE silver_default
+                        geometry DEF hip_motors_v4_1 Mesh {
+                          url "hip_motors_v4_1.stl"
+                        }
                       }
                     ]
                   }
-                  HingeJoint {
+HingeJointWithBacklash {
                     jointParameters HingeJointParameters {
                       axis 0.000000 -1.000000 0.000000
                       anchor 0.023650 0.020000 0.000000
-                    }
+      dampingConstant %{= xm430_damping_constant }%
+     staticFriction %{= xm430_static_friction }%
+}
+ backlash %{= xm430_backlash }%
                     device [
                       RotationalMotor {
                         name "right_leg_motor_2"
-                        maxTorque 10000
+      maxVelocity %{= xm430_max_velocity }%
+     maxTorque %{= xm430_max_torque }%
+        minPosition -0.785398163397
+      maxPosition 2.35619449019
                       }
                       PositionSensor {
                         name "right_leg_motor_2_sensor"
-                      }
+     resolution %{= xm430_resolution }%
+}
                     ]
                     endPoint Solid {
                       translation 0.023650 0.020000 0.000000
@@ -567,24 +992,34 @@ PROTO Bez2 [
                         Transform {
                           translation -0.016120 0.016800 0.176050
                           children [
-                            DEF Upper_left_leg_support__bottom__v8_2_visual CadShape {
-                              url "/home/manx52/catkin_ws/src/soccerbot/bez2_description/meshes/Upper_left_leg_support__bottom__v8_2.dae"
+                            Shape {
+                              appearance USE abs_white
+                              geometry DEF Upper_left_leg_support__bottom__v8_2 Mesh {
+                                url "Upper_left_leg_support__bottom__v8_2.stl"
+                              }
                             }
                           ]
                         }
-                        HingeJoint {
+HingeJointWithBacklash {
                           jointParameters HingeJointParameters {
                             axis 0.000000 -1.000000 0.000000
                             anchor 0.000000 0.004500 -0.091700
-                          }
+      dampingConstant %{= mx64_damping_constant }%
+     staticFriction %{= mx64_static_friction }%
+}
+ backlash %{= mx64_backlash }%
                           device [
                             RotationalMotor {
                               name "right_leg_motor_3"
-                              maxTorque 10000
+      maxVelocity %{= mx64_max_velocity }%
+     maxTorque %{= mx64_max_torque }%
+        minPosition -2.793
+      maxPosition 0
                             }
                             PositionSensor {
                               name "right_leg_motor_3_sensor"
-                            }
+     resolution %{= mx64_resolution }%
+}
                           ]
                           endPoint Solid {
                             translation 0.000000 0.004500 -0.091700
@@ -592,24 +1027,34 @@ PROTO Bez2 [
                               Transform {
                                 translation -0.016120 0.012300 0.267750
                                 children [
-                                  DEF lower_leg_v4_1_visual CadShape {
-                                    url "/home/manx52/catkin_ws/src/soccerbot/bez2_description/meshes/lower_leg_v4_1.dae"
+                                  Shape {
+                                    appearance USE abs_white
+                                    geometry DEF lower_leg_v4_1 Mesh {
+                                      url "lower_leg_v4_1.stl"
+                                    }
                                   }
                                 ]
                               }
-                              HingeJoint {
+HingeJointWithBacklash {
                                 jointParameters HingeJointParameters {
                                   axis 0.000000 -1.000000 0.000000
                                   anchor 0.000000 0.000500 -0.108300
-                                }
+      dampingConstant %{= mx64_damping_constant }%
+     staticFriction %{= mx64_static_friction }%
+}
+ backlash %{= mx64_backlash }%
                                 device [
                                   RotationalMotor {
                                     name "right_leg_motor_4"
-                                    maxTorque 10000
+      maxVelocity %{= mx64_max_velocity }%
+     maxTorque %{= mx64_max_torque }%
+        minPosition -0.785398163397
+      maxPosition 1.57079632679
                                   }
                                   PositionSensor {
                                     name "right_leg_motor_4_sensor"
-                                  }
+     resolution %{= mx64_resolution }%
+}
                                 ]
                                 endPoint Solid {
                                   translation 0.000000 0.000500 -0.108300
@@ -617,23 +1062,33 @@ PROTO Bez2 [
                                     Transform {
                                       translation -0.016120 0.011800 0.376050
                                       children [
-                                        DEF ankle_motors_v4_2_visual CadShape {
-                                          url "/home/manx52/catkin_ws/src/soccerbot/bez2_description/meshes/ankle_motors_v4_2.dae"
+                                        Shape {
+                                          appearance USE steel_satin
+                                          geometry DEF ankle_motors_v4_2 Mesh {
+                                            url "ankle_motors_v4_2.stl"
+                                          }
                                         }
                                       ]
                                     }
-                                    HingeJoint {
+HingeJointWithBacklash {
                                       jointParameters HingeJointParameters {
                                         anchor -0.084300 -0.023300 0.000000
-                                      }
+      dampingConstant %{= mx64_damping_constant }%
+     staticFriction %{= mx64_static_friction }%
+}
+ backlash %{= mx64_backlash }%
                                       device [
                                         RotationalMotor {
                                           name "right_leg_motor_5"
-                                          maxTorque 10000
+      maxVelocity %{= mx64_max_velocity }%
+     maxTorque %{= mx64_max_torque }%
+        minPosition -0.785398163397
+      maxPosition 0.785398163397
                                         }
                                         PositionSensor {
                                           name "right_leg_motor_5_sensor"
-                                        }
+     resolution %{= mx64_resolution }%
+}
                                       ]
                                       endPoint Solid {
                                         translation -0.084300 -0.023300 0.000000
@@ -641,19 +1096,162 @@ PROTO Bez2 [
                                           Transform {
                                             translation 0.068180 0.035100 0.376050
                                             children [
-                                              DEF New_left_foot_upperhalf_v5_1_visual CadShape {
-                                                url "/home/manx52/catkin_ws/src/soccerbot/bez2_description/meshes/New_left_foot_upperhalf_v5_1.dae"
+                                              Shape {
+                                                appearance USE abs_white
+                                                geometry DEF New_left_foot_upperhalf_v5_1 Mesh {
+                                                  url "New_left_foot_upperhalf_v5_1.stl"
+                                                }
                                               }
                                             ]
                                           }
+                                          TouchSensor {
+                                            translation 0.12 0.023 -0.03
+                                            rotation 1.000000 0.000000 0.000000 1.57
+                                            name "right_leg_foot_sensor_1"
+                                            type "bumper"
+                                            resolution -1
+                                                children [
+                                                  Shape {
+                                                    appearance PBRAppearance {
+                                                        baseColor 0 0 0
+                                                        roughness 1
+                                                        metalness 0
+                                                    }
+                                                    geometry Capsule {
+                                                        height 0.005
+                                                        radius 0.005
+                                                    }
+                                                  }
+                                                ]
+                          			            boundingObject Transform {
+
+                                              children [
+                                                 Capsule {
+                                                   height 0.005
+                                                  radius 0.005
+                                                }
+                                             ]
+                                            }
+                                            physics Physics {
+                                              density -1
+                                              mass 0.02
+                                              centerOfMass [0 0 0]
+                                              inertiaMatrix []
+                                            }
+					                                }
+                                          TouchSensor {
+                                            translation 0.12 -0.051 -0.03
+                                            rotation 1.000000 0.000000 0.000000 1.57
+                                            name "right_leg_foot_sensor_2"
+                                            type "bumper"
+                                            resolution -1
+                                            children [
+                                              Shape {
+                                                  appearance PBRAppearance {
+                                                      baseColor 0 0 0
+                                                      roughness 1
+                                                      metalness 0
+                                                  }
+                                                  geometry Capsule {
+                                                      height 0.005
+                                                      radius 0.005
+                                                  }
+                                              }
+                                            ]
+                                            boundingObject Transform {
+
+                                              children [
+                                                 Capsule {
+                                                   height 0.005
+                                                  radius 0.005
+                                                }
+                                             ]
+                                            }
+                                            physics Physics {
+                                              density -1
+                                              mass 0.02
+                                              centerOfMass [0 0 0]
+                                              inertiaMatrix []
+                                            }
+                                          }
+                                          TouchSensor {
+                                            translation -0.025 -0.051 -0.03
+                                            rotation 1.000000 0.000000 0.000000 1.57
+                                            name "right_leg_foot_sensor_3"
+                                            type "bumper"
+                                            resolution -1
+                                            children [
+                                                Shape {
+                                                  appearance PBRAppearance {
+                                                      baseColor 0 0 0
+                                                      roughness 1
+                                                      metalness 0
+                                                  }
+                                                  geometry Capsule {
+                                                      height 0.005
+                                                      radius 0.005
+                                                  }
+                                                }
+                                            ]
+                                            boundingObject Transform {
+
+                                              children [
+                                                 Capsule {
+                                                   height 0.005
+                                                  radius 0.005
+                                                }
+                                             ]
+                                            }
+                                            physics Physics {
+                                              density -1
+                                              mass 0.02
+                                              centerOfMass [0 0 0]
+                                              inertiaMatrix []
+                                            }
+                                          }
+                                          TouchSensor {
+                                            translation -0.025 0.022 -0.03
+                                            rotation 1.000000 0.000000 0.000000 1.57
+                                            name "right_leg_foot_sensor_4"
+                                            type "bumper"
+                                            resolution -1
+                                            children [
+                                              Shape {
+                                                appearance PBRAppearance {
+                                                    baseColor 0 0 0
+                                                    roughness 1
+                                                    metalness 0
+                                                }
+                                                geometry Capsule {
+                                                    height 0.005
+                                                    radius 0.005
+                                                }
+                                              }
+                                            ]
+                                            boundingObject Transform {
+
+                                              children [
+                                                 Capsule {
+                                                   height 0.005
+                                                  radius 0.005
+                                                }
+                                             ]
+                                            }
+                                            physics Physics {
+                                              density -1
+                                              mass 0.02
+                                              centerOfMass [0 0 0]
+                                              inertiaMatrix []
+                                            }
+                                          }
                                         ]
-                                        name "New_left_foot_upperhalf_v5_1"
+                                        name "New_left_foot_upperhalf_v5_1 [foot]"
                                         boundingObject Transform {
-                                          translation 0.052160 -0.015000 -0.005500
+                                          translation 0.052160 -0.015000 -0.0255
                                           rotation 0.000000 1.000000 -0.000000 1.570796
                                           children [
                                             Box {
-                                               size 0.043000 0.090000 0.170000
+                                               size 0.004 0.090000 0.170000
                                             }
                                           ]
                                         }
@@ -777,19 +1375,26 @@ PROTO Bez2 [
           }
         }
       }
-      HingeJoint {
+HingeJointWithBacklash {
         jointParameters HingeJointParameters {
           axis 0.000000 0.000000 -1.000000
           anchor 0.033250 -0.000333 0.075624
-        }
+      dampingConstant %{= xc430_damping_constant }%
+     staticFriction %{= xc430_static_friction }%
+}
+ backlash %{= xc430_backlash }%
         device [
           RotationalMotor {
             name "head_motor_0"
-            maxTorque 10000
+      maxVelocity %{= xc430_max_velocity }%
+     maxTorque %{= xc430_max_torque }%
+        minPosition -1.57079632679
+      maxPosition 1.57079632679
           }
           PositionSensor {
             name "head_motor_0_sensor"
-          }
+     resolution %{= xc430_resolution }%
+}
         ]
         endPoint Solid {
           translation 0.033250 -0.000333 0.075624
@@ -797,24 +1402,34 @@ PROTO Bez2 [
             Transform {
               translation -0.033250 0.000333 -0.075624
               children [
-                DEF custom_servo_support__middle_neck__v9_1_visual CadShape {
-                  url "/home/manx52/catkin_ws/src/soccerbot/bez2_description/meshes/custom_servo_support__middle_neck__v9_1.dae"
+                Shape {
+                  appearance USE abs_white
+                  geometry DEF custom_servo_support__middle_neck__v9_1 Mesh {
+                    url "custom_servo_support__middle_neck__v9_1.stl"
+                  }
                 }
               ]
             }
-            HingeJoint {
+HingeJointWithBacklash {
               jointParameters HingeJointParameters {
                 axis -0.000000 1.000000 0.000000
                 anchor 0.000000 -0.022187 0.033817
-              }
+      dampingConstant %{= xc430_damping_constant }%
+     staticFriction %{= xc430_static_friction }%
+}
+ backlash %{= xc430_backlash }%
               device [
                 RotationalMotor {
                   name "head_motor_1"
-                  maxTorque 10000
+      maxVelocity %{= xc430_max_velocity }%
+     maxTorque %{= xc430_max_torque }%
+        minPosition -2.35619449019
+      maxPosition 2.35619449019
                 }
                 PositionSensor {
                   name "head_motor_1_sensor"
-                }
+     resolution %{= xc430_resolution }%
+}
               ]
               endPoint Solid {
                 translation 0.000000 -0.022187 0.033817
@@ -822,52 +1437,40 @@ PROTO Bez2 [
                   Transform {
                     translation -0.033250 0.022520 -0.109441
                     children [
-                      DEF head_v4_1_visual CadShape {
-                        url "/home/manx52/catkin_ws/src/soccerbot/bez2_description/meshes/head_v4_1.dae"
+                      Shape {
+                        appearance USE plastic_glossy_black
+                        geometry DEF head_v4_1 Mesh {
+                          url "head_v4_1.stl"
+                        }
                       }
                     ]
                   }
-                  HingeJoint {
-                    jointParameters HingeJointParameters {
-                      anchor 0.034400 0.025674 0.048000
-                    }
-                    device [
-                      RotationalMotor {
-                        name "head_camera"
-                        maxTorque 10000
-                      }
-                      PositionSensor {
-                        name "head_camera_sensor"
-                      }
-                    ]
-                    endPoint Solid {
-                      translation 0.034400 0.025674 0.048000
+                  Solid {
+                      translation 0.015000 0.001450 0.047400
+                      rotation 0.0 0.0 -1.0 1.5708
                       children [
-                        Transform {
-                          translation -0.067650 -0.003154 -0.157441
-                          children [
-                            DEF camera_point_1_visual CadShape {
-                              url "/home/manx52/catkin_ws/src/soccerbot/bez2_description/meshes/camera_point_1.dae"
-                            }
-                          ]
+                        DEF CAMERA Camera {
+                            rotation 1.0 0.0 0.0 1.5708
+                            name "camera"
+                            fieldOfView 1.39626
+                            width 640
+                            height 480
+                            noise 0.007000
+                            near 0.2
+                            far 10
+
                         }
                       ]
-                      name "camera_point_1"
-                      boundingObject Transform {
-                        translation -0.001000 -0.000000 0.000000
-                        rotation 0.707107 0.707107 0.000000 3.141593
-                        children [
-                          Box {
-                             size 0.004000 0.004000 0.004000
-                          }
-                        ]
-                      }
+                      name "camera"
                       physics Physics {
                         density -1
-                        mass 0.000502
-                        centerOfMass [ -0.001000 -0.000000 0.000000 ]
+                        mass 0.010000
+                        centerOfMass [ 0.000000 0.000000 0.000000 ]
+                        inertiaMatrix [
+                          1.000000e-09 1.000000e-09 1.000000e-09
+                          0.000000e+00 0.000000e+00 0.000000e+00
+                        ]
                       }
-                    }
                   }
                 ]
                 name "head_v4_1"
@@ -913,49 +1516,39 @@ PROTO Bez2 [
           }
         }
       }
-      HingeJoint {
-        jointParameters HingeJointParameters {
-          axis 0.000000 0.000000 1.000000
-          anchor 0.013000 0.000000 0.028950
-        }
-        device [
-          RotationalMotor {
-            name "torso_imu"
-            maxTorque 10000
-          }
-          PositionSensor {
-            name "torso_imu_sensor"
-          }
-        ]
-        endPoint Solid {
-          translation 0.013000 0.000000 0.028950
-          children [
-            Transform {
-              translation -0.013000 0.000000 -0.028950
+      Solid {
+              translation 0.000000 0.000000 0.000000
+              rotation 0.000000 1.000000 0.000000 0.000000
               children [
-                DEF imu_1_visual CadShape {
-                  url "/home/manx52/catkin_ws/src/soccerbot/bez2_description/meshes/imu_1.dae"
-                }
+
+                Accelerometer {
+                    name "imu accelerometer"
+                    lookupTable [
+                    -19.62 -32768 0.00203
+                    19.62 32767 0.00203
+                    ]
+                    resolution 1
+                  }
+                  Gyro {
+                    name "imu gyro"
+                    lookupTable [
+                      -8.7266 -32768 0.00698
+                        8.7266 32767 0.00698
+                    ]
+                    resolution 1
+                  }
               ]
-            }
-          ]
-          name "imu_1"
-          boundingObject Transform {
-            translation 0.002000 0.000000 -0.043000
-            rotation 0.000000 1.000000 -0.000000 1.570796
-            children [
-              Box {
-                 size 0.004000 0.004000 0.004000
+              name "imu_link"
+              physics Physics {
+                density -1
+                mass 0.010000
+                centerOfMass [ 0.000000 0.000000 0.000000 ]
+                inertiaMatrix [
+                  1.000000e-09 1.000000e-09 1.000000e-09
+                  0.000000e+00 0.000000e+00 0.000000e+00
+                ]
               }
-            ]
-          }
-          physics Physics {
-            density -1
-            mass 0.000502
-            centerOfMass [ 0.002000 -0.000000 -0.043000 ]
-          }
-        }
-      }
+            }
     ]
     name IS name
     boundingObject Transform {
@@ -963,7 +1556,7 @@ PROTO Bez2 [
       rotation 0.000000 1.000000 0.000000 3.141593
       children [
         Box {
-           size 0.124000 0.145000 0.220674
+           size 0.124000 0.145000 0.15
         }
       ]
     }

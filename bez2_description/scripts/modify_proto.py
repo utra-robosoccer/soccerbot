@@ -12,6 +12,16 @@ text = ""
 with open(input_file, "r") as proto_file:
     text = proto_file.read()
 
+    # Export
+    target_text = """PROTO Bez2 ["""
+
+    replace_text = """EXTERNPROTO "HingeJointWithBacklash.proto"
+EXTERNPROTO "JerseyFront.proto"
+EXTERNPROTO "JerseyBack.proto"
+
+PROTO Bez2 ["""
+    text = text.replace(target_text, replace_text)
+
     # Jersey
     target_text = """children [
       Shape {
@@ -75,7 +85,7 @@ with open(input_file, "r") as proto_file:
               metalness 0
             }
             geometry DEF base_link Mesh {
-              url "Bez2_meshes/base_link.stl"
+              url "base_link.stl"
             }
           }
             """
@@ -407,7 +417,7 @@ with open(input_file, "r") as proto_file:
 
 
     # update STL paths
-    text = text.replace(home + "/catkin_ws/src/soccerbot/bez2_description/meshes", "Bez2_meshes")
+    text = text.replace(home + "/catkin_ws/src/soccerbot/bez2_description/meshes/", "")
 
     # set hands
     target_text = """children [
@@ -421,7 +431,7 @@ with open(input_file, "r") as proto_file:
                           metalness 0
                         }
                         geometry DEF Arm_Assembly-bez3_v12_2 Mesh {
-                          url "Bez2_meshes/Arm_Assembly-bez3_v12_2.stl"
+                          url "Arm_Assembly-bez3_v12_2.stl"
                         }
                       }
                     ]
@@ -439,7 +449,7 @@ with open(input_file, "r") as proto_file:
                           metalness 0
                         }
                         geometry DEF Arm_Assembly-bez3_v12_2 Mesh {
-                          url "Bez2_meshes/Arm_Assembly-bez3_v12_2.stl"
+                          url "Arm_Assembly-bez3_v12_2.stl"
                         }
                       }
                     ]
@@ -486,7 +496,7 @@ with open(input_file, "r") as proto_file:
                       Shape {
                         appearance USE abs_white
                         geometry DEF Arm_Assembly-bez3_v12_1 Mesh {
-                          url "Bez2_meshes/Arm_Assembly-bez3_v12_1.stl"
+                          url "Arm_Assembly-bez3_v12_1.stl"
                         }
                       }
                     ]
@@ -500,7 +510,7 @@ with open(input_file, "r") as proto_file:
                       Shape {
                         appearance USE abs_white
                         geometry DEF Arm_Assembly-bez3_v12_1 Mesh {
-                          url "Bez2_meshes/Arm_Assembly-bez3_v12_1.stl"
+                          url "Arm_Assembly-bez3_v12_1.stl"
                         }
                       }
                     ]
@@ -548,7 +558,7 @@ with open(input_file, "r") as proto_file:
                                               Shape {
                                                 appearance USE abs_white
                                                 geometry DEF New_right_foot_upperhalf_v3_1 Mesh {
-                                                  url "Bez2_meshes/New_right_foot_upperhalf_v3_1.stl"
+                                                  url "New_right_foot_upperhalf_v3_1.stl"
                                                 }
                                               }
                                             ]
@@ -562,7 +572,7 @@ with open(input_file, "r") as proto_file:
                                               Shape {
                                                 appearance USE abs_white
                                                 geometry DEF New_right_foot_upperhalf_v3_1 Mesh {
-                                                  url "Bez2_meshes/New_right_foot_upperhalf_v3_1.stl"
+                                                  url "New_right_foot_upperhalf_v3_1.stl"
                                                 }
                                               }
                                             ]
@@ -717,7 +727,7 @@ with open(input_file, "r") as proto_file:
                                               Shape {
                                                 appearance USE abs_white
                                                 geometry DEF New_left_foot_upperhalf_v5_1 Mesh {
-                                                  url "Bez2_meshes/New_left_foot_upperhalf_v5_1.stl"
+                                                  url "New_left_foot_upperhalf_v5_1.stl"
                                                 }
                                               }
                                             ]
@@ -731,7 +741,7 @@ with open(input_file, "r") as proto_file:
                                               Shape {
                                                 appearance USE abs_white
                                                 geometry DEF New_left_foot_upperhalf_v5_1 Mesh {
-                                                  url "Bez2_meshes/New_left_foot_upperhalf_v5_1.stl"
+                                                  url "New_left_foot_upperhalf_v5_1.stl"
                                                 }
                                               }
                                             ]
