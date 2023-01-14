@@ -92,7 +92,7 @@ class TestObjectDetection(TestCase):
             if "DISPLAY" in os.environ:
                 mat = cvbridge.imgmsg_to_cv2(n.pub_detection.publish.call_args[0][0])
                 cv2.imshow("Image", mat)
-                cv2.waitKey(0)
+                cv2.waitKey(1)
                 cv2.destroyAllWindows()
 
             # Check assertion
@@ -143,7 +143,7 @@ class TestObjectDetection(TestCase):
 
             if "DISPLAY" in os.environ:
                 cv2.imshow("Image", mat)
-                cv2.waitKey(0)
+                cv2.waitKey(1)
                 cv2.destroyAllWindows()
 
     @pytest.mark.skip(reason="Only run locally")
