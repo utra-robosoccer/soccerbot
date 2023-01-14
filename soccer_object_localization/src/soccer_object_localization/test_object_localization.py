@@ -249,7 +249,7 @@ class TestObjectLocalization(TestCase):
 
         # Loop through test images
         for file_name in os.listdir(test_path):
-            file_name = "img173_-0.852141317992289_3.15_-1.7125376246657054.png"
+            # file_name = "img173_-0.852141317992289_3.15_-1.7125376246657054.png"
 
             print(f"Loading {file_name} from goal_net dataset")
             file_name_no_ext = os.path.splitext(file_name)[0]
