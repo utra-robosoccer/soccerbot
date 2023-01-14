@@ -14,3 +14,4 @@
 [submodule "external/hlvs_webots"]
 	path = external/hlvs_webots
 	url = git@github.com:utra-robosoccer/hlvs_webots.git
+	branch = utra
