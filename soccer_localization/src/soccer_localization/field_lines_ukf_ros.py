@@ -39,7 +39,7 @@ class FieldLinesUKFROS(FieldLinesUKF):
         self.robot_state_subscriber = rospy.Subscriber("state", RobotState, self.robot_state_callback)
         self.robot_state = RobotState()
 
-        rospy.loginfo("Soccer Localization UFK initiated")
+        rospy.loginfo("Soccer Localization UKF initiated")
 
     def robot_state_callback(self, robot_state: RobotState):
         self.robot_state = robot_state
