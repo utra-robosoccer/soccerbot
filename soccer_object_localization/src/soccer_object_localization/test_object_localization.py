@@ -109,14 +109,8 @@ class TestObjectLocalization(TestCase):
         # d.publish_point_cloud = True
         # d.point_cloud_publisher.get_num_connections = MagicMock(return_value=1)
 
-        import cv2
-        from cv2 import Mat
-        from cv_bridge import CvBridge
-
         cvbridge = CvBridge()
 
-        src_path = os.path.dirname(os.path.realpath(__file__))
-        test_path = src_path + "/../../images/goal_net"
         for file_name in os.listdir(test_path):
             # file_name = "img160_-1.452993567956688_-3.15_0.7763055830612666.png"
 
