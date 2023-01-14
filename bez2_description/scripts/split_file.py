@@ -11,7 +11,7 @@ target_file = (
 
 
 with open(target_file, "w") as proto_file:
-    text = """#VRML_SIM R2021b utf8
+    text = """#VRML_SIM R2022b utf8
 # license: Apache License 2.0
 # license url: http://www.apache.org/licenses/LICENSE-2.0
 # This is a proto file for Webots for the WolfgangRobocup
