@@ -19,6 +19,7 @@ class Camera:
 
     """
 
+    HORIZONTAL_FOV = 1.39626
     diagonal_fov: float
 
     def __init__(self, robot_name: str):
@@ -31,7 +32,7 @@ class Camera:
         self.robot_name = robot_name  #: Name of the robot
         self.pose = Transformation()  #: Pose of the camera
         self.camera_info = None  #: Camera info object recieved from the subscriber
-        self.horizontalFOV = 1.39626
+        self.horizontalFOV = Camera.HORIZONTAL_FOV
         self.focal_length = 3.67  #: Focal length of the camera (meters) distance to the camera plane as projected in 3D
 
         self.camera_info_subscriber = Subscriber("/" + robot_name + "/camera/camera_info", CameraInfo, self.cameraInfoCallback)
@@ -62,7 +63,7 @@ class Camera:
             target_frame = self.robot_name + camera_frame
             timeout_duration = rospy.Duration(nsecs=1000000)
         else:
-            base_frame = self.robot_name + "/odom"
+            base_frame = self.robot_name + "/base_footprint"
             target_frame = self.robot_name + camera_frame
             timeout_duration = rospy.Duration(secs=1)
 

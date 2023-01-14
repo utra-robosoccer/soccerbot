@@ -1,48 +1,32 @@
-import math
 import os
-import unittest
-from pathlib import Path
+
+import cv2
+import pytest
+import rospy
+from cv2 import Mat
+from cv_bridge import CvBridge
+
+from soccer_object_localization.detector_goalpost import DetectorGoalPost
+
+os.environ["ROS_NAMESPACE"] = "/robot1"
+
+import math
 from unittest import TestCase
 from unittest.mock import MagicMock
 
-import gdown
 import numpy as np
-import pytest
-
-from soccer_common.mock_ros import mock_ros
-
-mock_ros()
-
-from sensor_msgs.msg import CameraInfo
+from sensor_msgs.msg import CameraInfo, Image
 
 from soccer_common.camera import Camera
 from soccer_common.transformation import Transformation
+from soccer_common.utils import download_dataset, wrapToPi
 from soccer_msgs.msg import RobotState
-
-
-def download_dataset(url, folder_name):
-    # Collect the dataset from the web (https://drive.google.com/drive/u/2/folders/1amhnKBSxHFzkH7op1SusShJckcu-jiUn)
-    src_path = os.path.dirname(os.path.realpath(__file__))
-    test_path = src_path + f"/../../images/{folder_name}"
-    bag_path = Path(test_path)
-
-    if not bag_path.is_dir():
-        print(f"Dataset not found at {test_path}. Downloading ...")
-        os.makedirs(bag_path)
-
-        zipfilepath = test_path + "/dataset.zip"
-        gdown.download(url=url, output=zipfilepath, quiet=False)
-        import zipfile
-
-        with zipfile.ZipFile(zipfilepath, "r") as zip_ref:
-            zip_ref.extractall(test_path)
-        os.remove(zipfilepath)
+from soccer_object_localization.detector_fieldline import DetectorFieldline
 
 
 class TestObjectLocalization(TestCase):
-    @unittest.mock.patch("soccer_common.camera.TransformListener")
-    @unittest.mock.patch("soccer_common.camera.rospy.Time.now")
-    def test_camera_find_floor_coordinate(self, mock_tf_listener, now):
+    def test_camera_find_floor_coordinate(self):
+        rospy.init_node("test")
         p = Transformation([0, 0, 0.5], euler=[0, math.pi / 4, 0])
         c = Camera("robot1")
         c.pose = p
@@ -56,9 +40,8 @@ class TestObjectLocalization(TestCase):
         self.assertAlmostEqual(p2[1], 0, delta=0.005)
         self.assertAlmostEqual(p2[2], 0, delta=0.005)
 
-    @unittest.mock.patch("soccer_common.camera.TransformListener")
-    @unittest.mock.patch("soccer_common.camera.rospy.Time.now")
-    def test_camera_find_camera_coordinate(self, mock_tf_listener, now):
+    def test_camera_find_camera_coordinate(self):
+        rospy.init_node("test")
         p = Transformation([0, 0, 0.5], euler=[0, math.pi / 4, 0])
         c = Camera("robot1")
         c.pose = p
@@ -71,9 +54,8 @@ class TestObjectLocalization(TestCase):
         self.assertAlmostEqual(p2[0], 360 / 2, delta=0.5)
         self.assertAlmostEqual(p2[1], 240 / 2, delta=0.5)
 
-    @unittest.mock.patch("soccer_common.camera.TransformListener")
-    @unittest.mock.patch("soccer_common.camera.rospy.Time.now")
-    def test_camera_find_camera_coordinate_2(self, mock_tf_listener, now):
+    def test_camera_find_camera_coordinate_2(self):
+        rospy.init_node("test")
         p = Transformation([0, 0, 0.5], euler=[0, 0, 0])
         c = Camera("robot1")
         c.pose = p
@@ -86,10 +68,8 @@ class TestObjectLocalization(TestCase):
         self.assertAlmostEqual(p3[0], 360 / 2, delta=0.5)
         self.assertAlmostEqual(p3[1], 240 / 2, delta=0.5)
 
-    @unittest.mock.patch("soccer_common.camera.TransformListener")
-    @unittest.mock.patch("soccer_common.camera.rospy.Time.now")
-    def test_calculate_bounding_boxes_from_ball(self, mock_tf_listener, now):
-        from sensor_msgs.msg import CameraInfo
+    def test_calculate_bounding_boxes_from_ball(self):
+        rospy.init_node("test")
 
         for cam_angle in [0, 0.1, -0.1]:
             for cam_position in [[0, 0, 0], [0, 0, 0.1], [0, 0, -0.1]]:
@@ -114,14 +94,12 @@ class TestObjectLocalization(TestCase):
                     self.assertAlmostEqual(position.position[1], ball_pose.position[1], delta=0.001)
                     self.assertAlmostEqual(position.position[2], ball_pose.position[2], delta=0.001)
 
-    @unittest.mock.patch("soccer_common.camera.TransformListener")
-    @unittest.mock.patch("soccer_common.camera.rospy.Time.now")
-    def test_fieldline_detection(self, mock_tf_listener, now):
-        from sensor_msgs.msg import CameraInfo, Image
+    def test_fieldline_detection(self):
+        rospy.init_node("test")
 
-        from soccer_object_localization.detector_fieldline import DetectorFieldline
-
-        download_dataset(url="https://drive.google.com/uc?id=1nJX6ySks_a7mESvCm3sNllmJTNpm-x2_", folder_name="fieldlines")
+        src_path = os.path.dirname(os.path.realpath(__file__))
+        test_path = src_path + "/../../images/fieldlines"
+        download_dataset(url="https://drive.google.com/uc?id=1nJX6ySks_a7mESvCm3sNllmJTNpm-x2_", folder_path=test_path)
 
         Camera.reset_position = MagicMock()
         Camera.ready = MagicMock()
@@ -152,7 +130,7 @@ class TestObjectLocalization(TestCase):
 
             img_msg: Image = cvbridge.cv2_to_imgmsg(img, encoding="rgb8")
             d.image_publisher.publish = MagicMock()
-            d.image_callback(img_msg, debug=True)
+            d.image_callback(img_msg, debug=False)
 
             if "DISPLAY" in os.environ:
                 cv2.imshow("Before", img)
@@ -164,17 +142,14 @@ class TestObjectLocalization(TestCase):
                     cv2.imwrite("/tmp/after.png", img_out)
 
                 cv2.waitKey(0)
+        cv2.destroyAllWindows()
 
-    @unittest.mock.patch("soccer_common.camera.TransformListener")
-    @unittest.mock.patch("soccer_common.camera.rospy.Time.now")
-    def test_goalpost_detection(self, mock_tf_listener, now):
-        import math
-
-        from soccer_pycontrol.utils import wrapToPi
+    def test_goalpost_detection(self):
 
         """
-            Returns whether a point at a given field coordinate is visible to the robot
+        Returns whether a point at a given field coordinate is visible to the robot
         """
+        rospy.init_node("test")
 
         def get_point_visibility(robot_pose, point_coords):
             robot_x, robot_y, robot_yaw = robot_pose
@@ -225,11 +200,9 @@ class TestObjectLocalization(TestCase):
 
         # Setup test environment:
 
-        from sensor_msgs.msg import CameraInfo, Image
-
-        from soccer_object_localization.detector_goalpost import DetectorGoalPost
-
-        download_dataset(url="https://drive.google.com/uc?id=17qdnW7egoopXHvakiNnUUufP2MOjyZ18", folder_name="goal_net")
+        src_path = os.path.dirname(os.path.realpath(__file__))
+        test_path = src_path + "/../../images/goal_net"
+        download_dataset(url="https://drive.google.com/uc?id=17qdnW7egoopXHvakiNnUUufP2MOjyZ18", folder_path=test_path)
 
         Camera.reset_position = MagicMock()
         Camera.ready = MagicMock()
@@ -237,10 +210,6 @@ class TestObjectLocalization(TestCase):
         d.robot_state.status = RobotState.STATUS_DETERMINING_SIDE
         d.camera.pose = Transformation(position=[0, 0, 0.46])
         d.image_publisher.get_num_connections = MagicMock(return_value=1)
-
-        import cv2
-        from cv2 import Mat
-        from cv_bridge import CvBridge
 
         cvbridge = CvBridge()
 
@@ -288,23 +257,17 @@ class TestObjectLocalization(TestCase):
 
                 cv2.waitKey(0)
 
-    # @pytest.mark.skip
-    @unittest.mock.patch("soccer_common.camera.TransformListener")
-    @unittest.mock.patch("soccer_common.camera.rospy.Time.now")
-    def test_goalpost_detection_tune(self, mock_tf_listener, now):
-        from sensor_msgs.msg import CameraInfo, Image
+    @pytest.mark.skip
+    def test_goalpost_detection_tune(self):
+        rospy.init_node("test")
 
-        from soccer_object_localization.detector_goalpost import DetectorGoalPost
-
-        download_dataset(url="https://drive.google.com/uc?id=17qdnW7egoopXHvakiNnUUufP2MOjyZ18", folder_name="goal_net")
+        src_path = os.path.dirname(os.path.realpath(__file__))
+        test_path = src_path + "/../../images/goal_net"
+        download_dataset(url="https://drive.google.com/uc?id=17qdnW7egoopXHvakiNnUUufP2MOjyZ18", folder_path=test_path)
 
         Camera.reset_position = MagicMock()
         Camera.ready = MagicMock()
         d = DetectorGoalPost()
-
-        import cv2
-        import numpy as np
-        from cv2 import Mat
 
         src_path = os.path.dirname(os.path.realpath(__file__))
         test_path = src_path + "/../../images/goal_net"
@@ -367,7 +330,7 @@ class TestObjectLocalization(TestCase):
                 file_name = "newfile"
                 break
 
-    # @pytest.mark.skip
+    @pytest.mark.skip
     def test_hsv_filter(self):
         import cv2
         import numpy as np

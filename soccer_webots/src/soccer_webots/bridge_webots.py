@@ -1,23 +1,11 @@
 #!/usr/bin/env python3
-import argparse
 import math
 import os
 import socket
 import struct
-import sys
 import time
 
 import rospy
-import tf
-from geometry_msgs.msg import (
-    Point,
-    Pose,
-    PoseWithCovarianceStamped,
-    Quaternion,
-    Twist,
-    Vector3,
-)
-from nav_msgs.msg import Odometry
 from rosgraph_msgs.msg import Clock
 from sensor_msgs.msg import CameraInfo, Image, Imu, JointState
 from std_msgs.msg import Bool
@@ -28,7 +16,7 @@ from soccer_webots import messages_pb2
 class GameControllerBridge:
     def __init__(self):
         rospy.init_node("game_controller_bridge")
-        robot_name = rospy.get_param("robot_name", "robot1")
+        robot_name = os.environ["ROS_NAMESPACE"].replace("/", "")
         self.base_frame = robot_name
         self.MIN_FRAME_STEP = 16  # ms
         self.MIN_CONTROL_STEP = 8  # ms
@@ -80,8 +68,6 @@ class GameControllerBridge:
         self.socket = None
         self.first_run = True
         self.published_camera_info = False
-        self.odom_combined_received = False
-        rospy.Subscriber("/" + self.base_frame + "/odom_combined", PoseWithCovarianceStamped, self.odom_combined_callback)
         self.run()
 
     def receive_msg(self):
@@ -114,39 +100,7 @@ class GameControllerBridge:
                     sensor_time_steps = self.get_sensor_time_steps(active=True)
                 self.send_actuator_requests(sensor_time_steps)
                 self.first_run = False
-                if not self.odom_combined_received:
-                    odom_pub = rospy.Publisher("/" + self.base_frame + "/odom", Odometry, queue_size=50)
 
-                    # since all odometry is 6DOF we'll need a quaternion created from yaw
-                    odom_quat = tf.transformations.quaternion_from_euler(0, 0, 0)
-
-                    # next, we'll publish the odometry message over ROS
-                    odom = Odometry()
-                    odom.header.stamp = self.stamp
-                    odom.header.frame_id = self.base_frame + "/odom"
-
-                    # set the position
-                    odom.pose.pose = Pose(Point(0, 0, 0), Quaternion(*odom_quat))
-                    # fmt: off
-                    odom.pose.covariance = [0.1, 0.0, 0.0, 0.0, 0.0, 0.0,
-                                            0.0, 0.1, 0.0, 0.0, 0.0, 0.0,
-                                            0.0, 0.0, 0.1, 0.0, 0.0, 0.0,
-                                            0.0, 0.0, 0.0, 0.1, 0.0, 0.0,
-                                            0.0, 0.0, 0.0, 0.0, 0.1, 0.0,
-                                            0.0, 0.0, 0.0, 0.0, 0.0, 0.1]
-
-                    # set the velocity
-                    odom.child_frame_id = self.base_frame + "/base_footprint"
-                    odom.twist.twist = Twist(Vector3(0, 0, 0), Vector3(0, 0, 0))
-                    odom.twist.covariance = [0.1, 0.0, 0.0, 0.0, 0.0, 0.0,
-                                             0.0, 0.1, 0.0, 0.0, 0.0, 0.0,
-                                             0.0, 0.0, 0.1, 0.0, 0.0, 0.0,
-                                             0.0, 0.0, 0.0, 0.1, 0.0, 0.0,
-                                             0.0, 0.0, 0.0, 0.0, 0.1, 0.0,
-                                             0.0, 0.0, 0.0, 0.0, 0.0, 0.1]
-                    # fmt: on
-                    # publish the message
-                    odom_pub.publish(odom)
             except socket.timeout as s:
                 print(s)
                 self.socket = None
@@ -165,9 +119,6 @@ class GameControllerBridge:
                 time.sleep(6)
 
         self.close_connection()
-
-    def odom_combined_callback(self, data):
-        self.odom_combined_received = True
 
     def create_publishers(self):
         self.pub_clock = rospy.Publisher("/clock", Clock, queue_size=1)
@@ -266,6 +217,8 @@ class GameControllerBridge:
         imu_msg.orientation.w = 1
         imu_accel = imu_gyro = False
 
+        # Data obtained from https://docs.google.com/document/d/1a-wFkxcSyTkWRwb_al38hqDmtMBojVwZ-Ql2d1uYoKo/edit#
+
         # Extract data from message
         for accelerometer in accelerometers:
             name = accelerometer.name
@@ -276,6 +229,12 @@ class GameControllerBridge:
                 imu_msg.linear_acceleration.y = ((value.Y + 32768) / 65535) * (19.62 * 2) - 19.62
                 imu_msg.linear_acceleration.z = ((value.Z + 32768) / 65535) * (19.62 * 2) - 19.62
 
+                # fmt: off
+                imu_msg.linear_acceleration_covariance = [4.06 ** 2, 0, 0,
+                                                          0, 4.06 ** 2, 0,
+                                                          0, 0, 4.06 ** 2]
+                # fmt: on
+
         for gyro in gyros:
             name = gyro.name
             value = gyro.value
@@ -284,6 +243,13 @@ class GameControllerBridge:
                 imu_msg.angular_velocity.x = ((value.X + 32768) / 65535) * (8.7266 * 2) - 8.7266
                 imu_msg.angular_velocity.y = ((value.Y + 32768) / 65535) * (8.7266 * 2) - 8.7266
                 imu_msg.angular_velocity.z = ((value.Z + 32768) / 65535) * (8.7266 * 2) - 8.7266
+
+                # fmt: off
+                imu_msg.angular_velocity_covariance = [0.402 ** 2, 0, 0,
+                                                       0, 0.402 ** 2, 0,
+                                                       0, 0, 0.402 ** 2]
+
+                # fmt: on
 
         if self.pub_imu_first > 0:
             if imu_msg.linear_acceleration.z > 10 or imu_msg.linear_acceleration.z < 8:

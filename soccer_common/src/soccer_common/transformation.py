@@ -1,6 +1,7 @@
 import numpy as np
 import rospy
-from geometry_msgs.msg import Pose, PoseStamped
+from geometry_msgs.msg import Pose, PoseStamped, PoseWithCovarianceStamped
+from geometry_msgs.msg import Transform as GeometryMsgsTransform
 from scipy.spatial.transform import Rotation as R
 from scipy.spatial.transform import Slerp
 
@@ -14,12 +15,17 @@ class Transformation(np.ndarray):
         cls,
         position=(0.0, 0.0, 0.0),
         quaternion=(0.0, 0.0, 0.0, 1.0),
-        rotation_matrix=None,
-        matrix=None,
-        euler=None,
-        pos_theta=None,
-        pose=None,
-        dh=None,
+        rotation_matrix: np.array = None,
+        matrix: np.array = None,
+        euler: np.array = None,
+        pos_theta: np.array = None,
+        pose_theta_covariance_array: np.array = None,
+        pose: Pose = None,
+        pose_stamped: PoseStamped = None,
+        pose_with_covariance_stamped: PoseWithCovarianceStamped = None,
+        geometry_msgs_transform: GeometryMsgsTransform = None,
+        dh: np.array = None,
+        timestamp: rospy.Time = None,
         *args,
         **kwargs
     ):
@@ -32,7 +38,10 @@ class Transformation(np.ndarray):
         :param matrix: 4x4 transformation matrix, includes both position and rotation
         :param euler: Orientation represented in euler format (roll, pitch, yaw)
         :param pos_theta: 2D position and theta format (x, y, theta/yaw)
+        :param pose_theta_covariance_array: Covariance matrix for position and theta format etc diag([x_var, y_var, theta/yaw_var])
         :param pose: Takes a geometry_msg.Pose object and converts it
+        :param pose_stamped: Takes a geometry_msg.PoseStamped object and converts it
+        :param pose_with_covariance_stamped: Takes a geometry_msg.PoseWithCovarianceStamped object and converts it
         :type pose: :class:`Transformation`
         :param dh: (d, theta, r, alpha)
         See `DH <https://en.wikipedia.org/wiki/Field_of_view>`_
@@ -40,6 +49,8 @@ class Transformation(np.ndarray):
         :param kwargs: Additional keyword arguments, passed down to the numpy array object
         """
         cls = np.eye(4).view(cls)
+
+        cls.timestamp = timestamp
 
         if matrix is not None:
             cls.matrix = matrix
@@ -68,8 +79,19 @@ class Transformation(np.ndarray):
             cls.position = position
         elif pos_theta is not None:
             cls.pos_theta = pos_theta
+            if pose_theta_covariance_array is not None:
+                cls.pose_theta_covariance_array = pose_theta_covariance_array
         elif pose is not None:
             cls.pose = pose
+        elif geometry_msgs_transform is not None:
+            cls.geometry_msgs_transform = geometry_msgs_transform
+        elif pose_stamped is not None:
+            cls.pose = pose_stamped.pose
+            cls.timestamp = pose_stamped.header.stamp
+        elif pose_with_covariance_stamped is not None:
+            cls.pose = pose_with_covariance_stamped.pose.pose
+            cls.pose_covariance = pose_with_covariance_stamped.pose.covariance
+            cls.timestamp = pose_with_covariance_stamped.header.stamp
         else:
             cls.position = position
             cls.quaternion = quaternion
@@ -98,6 +120,11 @@ class Transformation(np.ndarray):
         self[0:3, 3] = position
 
     @property
+    def norm_squared(self) -> float:
+        position = self.position
+        return position[0] ** 2 + position[1] ** 2 + position[2] ** 2
+
+    @property
     def quaternion(self) -> np.ndarray:
         """
         Representation of the rotation of the transformation in quaternion in form [x y z w]
@@ -107,7 +134,11 @@ class Transformation(np.ndarray):
 
     @quaternion.setter
     def quaternion(self, quat: [float]):
-        r = R.from_quat(quat)
+        try:
+            r = R.from_quat(quat)
+        except ValueError as v:
+            print("Hi")
+            pass
         self[0:3, 0:3] = np.reshape(r.as_matrix(), [3, 3])
 
     @property
@@ -150,6 +181,15 @@ class Transformation(np.ndarray):
         self.orientation_euler = [pos_theta[2], 0, 0]
 
     @property
+    def pose_theta_covariance_array(self) -> np.array:
+        return self.pose_covariance_array[(0, 1, 5), :][:, (0, 1, 5)]
+
+    @pose_theta_covariance_array.setter
+    def pose_theta_covariance_array(self, pose_theta_covariance_array):
+        full_matrix = np.insert(np.insert(pose_theta_covariance_array, [2, 2, 2], 0, axis=1), [2, 2, 2], 0, axis=0)
+        self.pose_covariance = full_matrix.flatten()
+
+    @property
     def pose(self) -> Pose:
         """
         Representation of the transformation in the ros Pose format
@@ -173,6 +213,34 @@ class Transformation(np.ndarray):
         self.quaternion = [pose.orientation.x, pose.orientation.y, pose.orientation.z, pose.orientation.w]
 
     @property
+    def geometry_msgs_transform(self) -> GeometryMsgsTransform:
+        """
+        Representation of the transformation in the ros geometry_msgs Transform format
+        """
+        position = self.position
+        quaternion = self.quaternion
+
+        p = GeometryMsgsTransform()
+        p.translation.x = position[0]
+        p.translation.y = position[1]
+        p.translation.z = position[2]
+        p.rotation.x = quaternion[0]
+        p.rotation.y = quaternion[1]
+        p.rotation.z = quaternion[2]
+        p.rotation.w = quaternion[3]
+        return p
+
+    @geometry_msgs_transform.setter
+    def geometry_msgs_transform(self, geometry_msgs_transform: GeometryMsgsTransform):
+        self.position = [geometry_msgs_transform.translation.x, geometry_msgs_transform.translation.y, geometry_msgs_transform.translation.z]
+        self.quaternion = [
+            geometry_msgs_transform.rotation.x,
+            geometry_msgs_transform.rotation.y,
+            geometry_msgs_transform.rotation.z,
+            geometry_msgs_transform.rotation.w,
+        ]
+
+    @property
     def pose_stamped(self) -> PoseStamped:
         """
         The transformation represented in the PoseStamped format
@@ -182,6 +250,22 @@ class Transformation(np.ndarray):
         t.header.frame_id = "world"
         t.pose = self.pose
         return t
+
+    @property
+    def pose_covariance_array(self) -> np.array:
+        return np.reshape(self.pose_covariance, (6, 6))
+
+    @property
+    def pose_with_covariance_stamped(self) -> PoseWithCovarianceStamped:
+        """
+        The transformation represented in the PoseStamped format
+        """
+        p = PoseWithCovarianceStamped()
+        p.header.stamp = rospy.Time.now()
+        p.header.frame_id = "world"
+        p.pose.pose = self.pose
+        p.pose.covariance = list(self.pose_covariance)
+        return p
 
     @staticmethod
     def distance(t1, t2) -> float:

@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Python tests for test_integration.IntegrationTestPlaying.test_kick_right" type="tests" factoryName="Autodetect" nameIsGenerated="true">
+  <configuration default="false" name="Python tests for test_integration.IntegrationTestInitial.test_game_start" type="tests" factoryName="Autodetect" nameIsGenerated="true">
     <module name="soccerbot" />
     <option name="INTERPRETER_OPTIONS" value="" />
     <option name="PARENT_ENVS" value="true" />
@@ -10,7 +10,7 @@
     <option name="ADD_SOURCE_ROOTS" value="true" />
     <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
     <option name="_new_additionalArguments" value="&quot;-s&quot;" />
-    <option name="_new_target" value="&quot;test_integration.IntegrationTestPlaying.test_kick_right&quot;" />
+    <option name="_new_target" value="&quot;test_integration.IntegrationTestInitial.test_game_start&quot;" />
     <option name="_new_targetType" value="&quot;PYTHON&quot;" />
     <method v="2" />
   </configuration>

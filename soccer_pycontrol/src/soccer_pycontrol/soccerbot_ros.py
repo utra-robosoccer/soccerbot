@@ -17,9 +17,9 @@ class SoccerbotRos(Soccerbot):
     The main class for the robot, which receives and sends information to ROS
     """
 
-    def __init__(self, position, useFixedBase=False, useCalibration=True):
+    def __init__(self, pose: Transformation, useFixedBase=False, useCalibration=True):
 
-        super().__init__(position, useFixedBase, useCalibration)
+        super().__init__(pose, useFixedBase, useCalibration)
 
         self.grass_and_cleats_offset = rospy.get_param(
             "grass_and_cleats_offset", 0.015
@@ -27,7 +27,6 @@ class SoccerbotRos(Soccerbot):
         self.motor_publishers = {}
         self.pub_all_motor = rospy.Publisher("joint_command", JointState, queue_size=1)
         self.odom_publisher = rospy.Publisher("odom", Odometry, queue_size=1)
-        self.odom_pose = Transformation()
         self.torso_height_publisher = rospy.Publisher("torso_height", Float64, queue_size=1, latch=True)
         self.path_publisher = rospy.Publisher("path", Path, queue_size=1, latch=True)
         self.path_odom_publisher = rospy.Publisher("path_odom", Path, queue_size=1, latch=True)
@@ -47,6 +46,7 @@ class SoccerbotRos(Soccerbot):
         self.robot_state_subscriber = rospy.Subscriber("state", RobotState, self.state_callback)
         self.robot_state = RobotState()
         self.robot_state.status = RobotState.STATUS_DISCONNECTED
+        self.last_status = self.robot_state.status
 
         #: Frequency for the head's yaw while searching and relocalizing (left and right movement)
         self.head_yaw_freq = rospy.get_param("head_yaw_freq", 0.005)
@@ -61,6 +61,9 @@ class SoccerbotRos(Soccerbot):
         :param robot_state: A class which tells you information about the robot, disconnected etc
         """
         self.robot_state = robot_state
+
+        if self.robot_state.status not in [RobotState.STATUS_READY]:
+            self.last_status = self.robot_state.status
 
     def imu_callback(self, msg: Imu):
         """
@@ -164,6 +167,7 @@ class SoccerbotRos(Soccerbot):
             return p
 
         self.path_publisher.publish(createPath(robot_path))
+
         if self.robot_odom_path is not None:
             self.path_odom_publisher.publish(createPath(self.robot_odom_path))
 
@@ -180,12 +184,12 @@ class SoccerbotRos(Soccerbot):
         o.pose.pose.position.z = 0
 
         # fmt: off
-        o.pose.covariance = [1E-2, 0, 0, 0, 0, 0,
-                             0, 1E-2, 0, 0, 0, 0,
-                             0, 0, 1E-6, 0, 0, 0,
-                             0, 0, 0, 1E-6, 0, 0,
-                             0, 0, 0, 0, 1E-6, 0,
-                             0, 0, 0, 0, 0, 1E-2]
+        o.pose.covariance = [1e-4, 0, 0, 0, 0, 0,
+                             0, 1e-4, 0, 0, 0, 0,
+                             0, 0, 1e-18, 0, 0, 0,
+                             0, 0, 0, 1e-18, 0, 0,
+                             0, 0, 0, 0, 1e-18, 0,
+                             0, 0, 0, 0, 0, 1e-2]
         # fmt: on
         self.odom_publisher.publish(o)
         self.publishHeight()
@@ -255,7 +259,8 @@ class SoccerbotRos(Soccerbot):
             self.configuration[Joints.RIGHT_ARM_2] = (0.8 - self.configuration[Joints.RIGHT_ARM_2]) * 0.05 + self.configuration[Joints.RIGHT_ARM_2]
 
             # If the last time it saw the ball was 2 seconds ago
-            if self.last_ball_found_timestamp is not None and (rospy.Time.now() - self.last_ball_found_timestamp) < rospy.Duration(3):
+            if self.last_ball_found_timestamp is not None and (rospy.Time.now() - self.last_ball_found_timestamp) < rospy.Duration(3)\
+                    and self.last_status not in [RobotState.STATUS_KICKING]:
 
                 assert self.ball_pixel is not None
 
@@ -317,7 +322,8 @@ class SoccerbotRos(Soccerbot):
                     self.look_at_last_ball_pose_timeout = rospy.Time.now()
                     return
 
-                self.configuration[Joints.HEAD_1] = yaw
+                if self.configuration[Joints.HEAD_1] != yaw:
+                    self.configuration[Joints.HEAD_1] += yaw * 0.0005
                 self.configuration[Joints.HEAD_2] = -pitch
 
                 rospy.loginfo_throttle(

@@ -28,6 +28,7 @@ class Navigator:
         """
         self.display = display
         self.real_time = real_time
+        assert pb.isConnected() == 0
         if display:
             self.client_id = pb.connect(pb.GUI)
         else:
@@ -43,9 +44,10 @@ class Navigator:
 
         self.t = 0
 
-    def __del__(self):
-        if hasattr(self, "client_id") and pb.isConnected(self.client_id):
+    def close(self):
+        if pb.isConnected(self.client_id):
             pb.disconnect(self.client_id)
+        assert pb.isConnected() == 0
 
     def ready(self) -> None:
         """

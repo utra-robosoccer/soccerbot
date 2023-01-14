@@ -5,7 +5,7 @@ on:
 jobs:
   Ubuntu:
     name: Add labels to issues
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: GitHub Issue Due Dates Action
         uses: alexleventer/github-issue-due-dates-action@1.2.0

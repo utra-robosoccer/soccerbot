@@ -15,7 +15,6 @@ soccer_webots/worlds/*.wbproj
 soccer_webots/worlds/.kid.wbproj
 cmake-build-debug
 
-/soccer_object_detection/images/*
 /soccer_strategy/game_controller/robocup_extension_pb2.py
 
 /soccer_common/credentials.json
@@ -29,3 +28,4 @@ venv/
 /docs/generated/
 *.bag
 /soccer_object_localization/images/
+/soccer_object_detection/images/*

@@ -86,7 +86,7 @@ class GameEngine3D:
         self.gameState = gameState
         if self.gameState.penalty != GameState.PENALTY_NONE:
             self.this_robot.status = Robot.Status.PENALIZED
-            self.this_robot.update_robot_state(None)  # Publish immediately to stop actuators
+            self.this_robot.update_robot_state(None)  # immediately to stop actuators
 
     def decide_strategy(self):
         """

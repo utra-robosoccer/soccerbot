@@ -1,9 +1,11 @@
 import enum
+from typing import List
 
 import numpy
 
 from soccer_msgs.msg import RobotState
 from soccer_strategy.ball import Ball
+from soccer_strategy.obstacle import Obstacle
 
 
 class Robot:
@@ -76,3 +78,4 @@ class Robot:
         self.position = position
         self.robot_id = robot_id
         self.observed_ball = Ball()
+        self.observed_obstacles: List[Obstacle] = []

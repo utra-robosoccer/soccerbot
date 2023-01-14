@@ -8,3 +8,6 @@
 [submodule "soccer_strategy/src/game_controller/RobocupProtocol"]
 	path = soccer_strategy/src/game_controller/RobocupProtocol
 	url = git@github.com:utra-robosoccer/RobocupProtocol.git
+[submodule "external/yolov5"]
+	path = external/yolov5
+	url = git@github.com:utra-robosoccer/yolov5.git
