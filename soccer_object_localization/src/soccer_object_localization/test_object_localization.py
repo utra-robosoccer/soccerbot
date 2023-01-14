@@ -145,11 +145,11 @@ class TestObjectLocalization(TestCase):
         cv2.destroyAllWindows()
 
     def test_goalpost_detection(self):
+        rospy.init_node("test")
 
         """
-        Returns whether a point at a given field coordinate is visible to the robot
+            Returns whether a point at a given field coordinate is visible to the robot
         """
-        rospy.init_node("test")
 
         def get_point_visibility(robot_pose, point_coords):
             robot_x, robot_y, robot_yaw = robot_pose
@@ -199,7 +199,6 @@ class TestObjectLocalization(TestCase):
             return visible_posts
 
         # Setup test environment:
-
         src_path = os.path.dirname(os.path.realpath(__file__))
         test_path = src_path + "/../../images/goal_net"
         download_dataset(url="https://drive.google.com/uc?id=17qdnW7egoopXHvakiNnUUufP2MOjyZ18", folder_path=test_path)
@@ -259,6 +258,10 @@ class TestObjectLocalization(TestCase):
 
     @pytest.mark.skip
     def test_goalpost_detection_tune(self):
+        """
+        Used for tuning vertical line detection parameters using sliders.
+        """
+
         rospy.init_node("test")
 
         src_path = os.path.dirname(os.path.realpath(__file__))

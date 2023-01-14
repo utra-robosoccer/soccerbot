@@ -18,7 +18,6 @@ from sensor_msgs.msg import Image
 
 from soccer_msgs.msg import RobotState
 from soccer_object_localization.detector import Detector
-from soccer_object_localization.detector_fieldline import DetectorFieldline
 
 
 class DetectorGoalPost(Detector):
@@ -140,7 +139,8 @@ class DetectorGoalPost(Detector):
             if abs(abs_line_angle - np.pi / 2) < angle_tol_rad:
                 vertical_lines.append(line[0])
                 cv2.line(image_out, (x1, y1), (x2, y2), (0, 255, 0), 2)
-        if debug:
+
+        if debug and "DISPLAY" in os.environ:
             cv2.imshow("image_blurred", image_blurred)
             cv2.imshow("image_hsv", image_hsv)
             cv2.imshow("image_hsv_filter", image_hsv_filter)
