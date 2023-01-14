@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       use_cached_image:
-        description: 'Use cached image'
+        description: "Use cached image"
         required: false
         default: true
         type: boolean
@@ -28,7 +28,7 @@ jobs:
           sudo rm -rf /usr/share/dotnet
           sudo rm -rf /opt/ghc
           df -h
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           lfs: true
           submodules: recursive
