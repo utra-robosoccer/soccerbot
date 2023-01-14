@@ -172,10 +172,13 @@ class TestObjectLocalization(TestCase):
         debug = False
         cvbridge = CvBridge()
         original_publish = d.point_cloud_publisher.publish
-
+        t_init = None
         for topic, msg, t in bag.read_messages():
-            # if t.secs < 1672750997:
-            #     continue
+            if t_init is None:
+                t_init = t
+            else:
+                if t.secs - t_init.secs > 10:
+                    break
             if topic == "/odom":
                 topic = "/robot1/odom_combined"
             bag_out.write(topic, msg, t)
