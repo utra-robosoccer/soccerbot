@@ -118,7 +118,7 @@ class TestObjectLocalization(TestCase):
         src_path = os.path.dirname(os.path.realpath(__file__))
         test_path = src_path + "/../../images/goal_net"
         for file_name in os.listdir(test_path):
-            file_name = "img160_-1.452993567956688_-3.15_0.7763055830612666.png"
+            # file_name = "img160_-1.452993567956688_-3.15_0.7763055830612666.png"
 
             print(file_name)
             img: Mat = cv2.imread(os.path.join(test_path, file_name))
