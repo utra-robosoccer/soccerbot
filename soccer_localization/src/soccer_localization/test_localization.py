@@ -1,5 +1,7 @@
 import os
+from functools import cached_property
 from pathlib import Path
+from typing import List, Union
 
 import gdown
 import matplotlib.pyplot as plt
@@ -10,20 +12,29 @@ import rospy
 import sensor_msgs.point_cloud2 as pcl2
 
 from soccer_common.transformation import Transformation
-from soccer_localization.field import Field
+from soccer_localization.field import Circle, Field, Line, Point
 from soccer_localization.field_lines_ukf import FieldLinesUKF
 from soccer_localization.field_lines_ukf_ros import FieldLinesUKFROS
 from soccer_msgs.msg import RobotState
 
 
-def retrieve_bag():
+def retrieve_bag(url="https://drive.google.com/uc?id=1T_oyM1rZwWgUy6A6KlsJ7Oqn8J3vpGDo", bag_name="localization"):
     src_path = os.path.dirname(os.path.realpath(__file__))
-    test_path = src_path + "/test/localization.bag"
+    folder_path = Path(src_path + "/../../data/")
+    if not folder_path.is_dir():
+        os.makedirs(folder_path)
+
+    test_path = src_path + f"/../../data/{bag_name}.bag"
     bag_path = Path(test_path)
     if not bag_path.is_file():
         print(f"Bag not found at {test_path}. Downloading ...")
-        url = "https://drive.google.com/uc?id=1HpBAFg1FFYhiCaEN5K81b2sQ3rq9i3Nx"
-        gdown.download(url, test_path, quiet=False)
+        zip_path = test_path.replace("bag", "zip")
+        gdown.download(url, zip_path, quiet=False)
+        import zipfile
+
+        with zipfile.ZipFile(zip_path, "r") as zip_ref:
+            zip_ref.extractall(folder_path)
+        os.remove(zip_path)
     return test_path
 
 
@@ -78,20 +89,11 @@ def test_points_correction(t_start):
     plt.close()
 
 
-def test_walk_forward():
-    rospy.init_node("test")
+def display_rosbag_map(bag, map, debug=False, pos_theta_start=[-4, -3.15, np.pi / 2]):
 
-    plt.figure("Localization")
-    debug = False
-
-    map = Field()
-    map.draw()
-
-    bag = rosbag.Bag(retrieve_bag())
-
-    f = FieldLinesUKFROS()
+    f = FieldLinesUKFROS(map=map)
     f.robot_state.status = RobotState.STATUS_READY
-    initial_pose = Transformation(pos_theta=[-4, -3.15, np.pi / 2])
+    initial_pose = Transformation(pos_theta=pos_theta_start)
     f.ukf.x = initial_pose.pos_theta
 
     path_ukf = []
@@ -113,23 +115,27 @@ def test_walk_forward():
                 path_vo.append(vo_pos_theta)
                 path_vo_t.append(t.to_sec())
                 f.update(vo_pos_theta)
-                if debug:
-                    map.drawPathOnMap(vo_transform, label="VO Odometry", color="red")
-                    map.drawPathOnMap(Transformation(pos_theta=f.ukf.x), label="VO Odometry", color="orange")
-                    map.drawPointsOnMap(current_transform, point_cloud_array, label="Odom Points", color="brown")
-                    map.drawPointsOnMap(vo_transform, point_cloud_array, label="Odom Points Corrected", color="orange")
 
-                    plt.title(f"UKF Robot localization (t = {round(t.secs + t.nsecs * 1e-9)})")
-                    plt.xlim((-5, -3))
-                    plt.ylim((-3.5, 1))
-                    plt.legend()
-                    plt.draw()
-                    plt.waitforbuttonpress()
+            if debug:
+                map.drawPathOnMap(Transformation(pos_theta=f.ukf.x), label="VO Odometry", color="orange")
+
+                if vo_pos_theta is not None:
+                    map.drawPathOnMap(vo_transform, label="VO Odometry", color="red")
+                    map.drawPointsOnMap(vo_transform, point_cloud_array, label="Odom Points Corrected", color="red")
+                if point_cloud_array is not None:
+                    map.drawPointsOnMap(current_transform, point_cloud_array, label="Odom Points", color="black")
+
+                plt.title(f"UKF Robot localization (t = {round(t.secs + t.nsecs * 1e-9)})")
+                # plt.xlim((-5, -3))
+                # plt.ylim((-3.5, 1))
+                plt.legend()
+                plt.draw()
+                plt.waitforbuttonpress()
 
         elif topic == "/tf":
             # Process ground truth information
             for transform in msg.transforms:
-                if transform.child_frame_id == "robot1/base_footprint_gt":
+                if transform.child_frame_id in ["robot1/base_footprint_gt", "body"]:
                     transform_gt = Transformation(geometry_msgs_transform=transform.transform)
                     path_gt.append(transform_gt.pos_theta)
                     path_gt_t.append(t.to_sec())
@@ -170,14 +176,19 @@ def test_walk_forward():
     path_vo_t = np.array(path_vo_t)
 
     # Add the patch to the Axes
-    plt.plot(path_odom[:, 0], path_odom[:, 1], color="yellow", linewidth=0.5, label="Odom Path")
-    plt.plot(path_ukf[:, 0], path_ukf[:, 1], color="white", linewidth=0.5, label="UKF Path")
-    plt.plot(path_gt[:, 0], path_gt[:, 1], color="orange", linewidth=0.5, label="Ground Truth Path")
-    plt.plot(path_vo[:, 0], path_vo[:, 1], color="red", linewidth=0.5, label="VO Points")
+    if len(path_odom) != 0:
+        plt.plot(path_odom[:, 0], path_odom[:, 1], color="yellow", linewidth=0.5, label="Odom Path")
+    if len(path_ukf) != 0:
+        plt.plot(path_ukf[:, 0], path_ukf[:, 1], color="white", linewidth=0.5, label="UKF Path")
+    if len(path_gt) != 0:
+        plt.plot(path_gt[:, 0], path_gt[:, 1], color="orange", linewidth=0.5, label="Ground Truth Path")
+    if len(path_vo) != 0:
+        plt.plot(path_vo[:, 0], path_vo[:, 1], color="red", linewidth=0.5, label="VO Points")
     plt.xlim((-5, 5))
     plt.ylim((-4, 4))
     plt.tight_layout()
     plt.legend()
+    plt.waitforbuttonpress(timeout=10)
 
     def plt_dim_error(dim=0, label="X"):
         plt.figure(f"{label} Error")
@@ -207,6 +218,46 @@ def test_walk_forward():
         plt.show(block=False)
         plt.waitforbuttonpress(timeout=10)
         plt.close("all")
+
+
+def test_walk_forward():
+    rospy.init_node("test")
+
+    plt.figure("Localization")
+
+    map = Field()
+    map.draw()
+
+    bag = rosbag.Bag(retrieve_bag())
+    display_rosbag_map(bag=bag, map=map)
+
+
+class FreehicleField(Field):
+    @cached_property
+    def lines(self) -> List[Union[Line, Circle]]:
+        lines: List[Union[Line, Circle]] = []
+
+        linegap = 8 / 9
+        centergap = ((350 - 55 * 2) / 350 * 2) * 2
+
+        for i in [-4, 4]:
+            lines.append(Line(Point(x=0, y=i), Point(x=4.5, y=i)))
+            for xgap in range(6):
+                lines.append(Line(Point(x=xgap * linegap, y=-centergap + i), Point(x=xgap * linegap, y=centergap + i)))
+
+        return lines
+
+
+def test_freehicle_movement():
+    rospy.init_node("test")
+    rospy.set_param("distance_point_threshold", 2)
+    plt.figure("Localization")
+
+    map = FreehicleField()
+    map.draw()
+
+    bag = rosbag.Bag(retrieve_bag(url="https://drive.google.com/uc?id=1o2HGsaSvf4mQhZG_iXMhgR5Z1lXJNOGF", bag_name="freehicle_out"))
+    display_rosbag_map(bag=bag, map=map, debug=False, pos_theta_start=[0, 0, 0])
 
 
 def test_show_ukf_stuff():

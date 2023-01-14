@@ -5,7 +5,6 @@ from functools import cached_property
 from typing import Dict, List, Optional, Tuple, Union
 
 import matplotlib.pyplot as plt
-import rospy
 import numpy as np
 import rospy
 import scipy
@@ -37,9 +36,10 @@ class Field:
     def __init__(self):
         # Dimensions given here https://cdn.robocup.org/hl/wp/2021/06/V-HL21_Rules_v4.pdf
 
-        self.distance_point_threshold = 2.2
-        self.max_detected_line_parallel_offset_error = 0.1
-        self.max_detected_line_perpendicular_offset_error = 0.3
+        self.distance_point_threshold = rospy.get_param("distance_point_threshold", 2.2)
+        self.min_points_threshold = rospy.get_param("min_points_threshold", 40)
+        self.max_detected_line_parallel_offset_error = rospy.get_param("max_detected_line_parallel_offset_error", 0.1)
+        self.max_detected_line_perpendicular_offset_error = rospy.get_param("max_detected_line_perpendicular_offset_error", 0.3)
 
         self.path_plots: Dict[str, PathCollection] = {}
         self.path_points: Dict[str, list] = {}
@@ -132,8 +132,8 @@ class Field:
         start = time.time()
         # Filter points by distance from current transform
         world_frame_points = self.filterWorldFramePoints(current_transform, point_cloud_array)
-        if world_frame_points is None:
-            return
+        if world_frame_points is None or world_frame_points.shape[1] < self.min_points_threshold:
+            return None
         # Get closest line to each point
         distance_matrix = np.zeros((len(self.lines), world_frame_points.shape[1]))
         diff_x = np.zeros((len(self.lines), world_frame_points.shape[1]))  # real points - line
@@ -157,6 +157,7 @@ class Field:
                     distance_matrix[line_id, :] = np.where(
                         (world_frame_points[0, :] >= x_left) & (world_frame_points[0, :] <= x_right), y_diff**2, float("inf")
                     )
+                    distance_matrix[line_id, :] = float("inf")
                     diff_y[line_id, :] = y_diff
                 else:
                     y_bottom = line.p1.y - lw / 2 - self.max_detected_line_parallel_offset_error

@@ -31,8 +31,11 @@ class DetectorFieldline(Detector):
         )  # Large buff size (https://answers.ros.org/question/220502/image-subscriber-lag-despite-queue-1/)
         self.image_publisher = rospy.Publisher("camera/line_image", Image, queue_size=1)
         self.point_cloud_publisher = rospy.Publisher("field_point_cloud", PointCloud2, queue_size=1)
+        self.point_cloud_max_distance = rospy.get_param("point_cloud_max_distance", 2)
+        self.point_cloud_spacing = rospy.get_param("point_cloud_spacing", 30)
         self.publish_point_cloud = False
         self.ground_truth = False
+
         cv2.setRNGSeed(12345)
         pass
 
@@ -127,11 +130,11 @@ class DetectorFieldline(Detector):
             i = 0
             for px, py in zip(pts_y, pts_x):
                 i = i + 1
-                if i % 30 == 0:
+                if i % self.point_cloud_spacing == 0:
                     camToPoint = Transformation(self.camera.findFloorCoordinate([px, py]))
 
                     # Exclude points too far away
-                    if camToPoint.norm_squared < 4:
+                    if camToPoint.norm_squared < self.point_cloud_max_distance**2:
                         points3d.append(camToPoint.position)
 
             # Publish fieldlines in laserscan format

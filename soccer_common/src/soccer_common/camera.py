@@ -20,7 +20,6 @@ class Camera:
     """
 
     HORIZONTAL_FOV = 1.39626
-    diagonal_fov: float
 
     def __init__(self, robot_name: str):
         """
