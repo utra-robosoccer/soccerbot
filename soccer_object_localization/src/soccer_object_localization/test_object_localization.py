@@ -7,39 +7,19 @@ import tf2_ros
 os.environ["ROS_NAMESPACE"] = "/robot1"
 
 import math
-from pathlib import Path
 from unittest import TestCase
 from unittest.mock import MagicMock
 
 import cv2
-import gdown
 import pytest
 from cv_bridge import CvBridge
 from sensor_msgs.msg import CameraInfo, Image
 
 from soccer_common.camera import Camera
 from soccer_common.transformation import Transformation
+from soccer_common.utils import download_dataset
 from soccer_msgs.msg import RobotState
 from soccer_object_localization.detector_fieldline import DetectorFieldline
-
-
-def download_dataset(url, folder_name):
-    # Collect the dataset from the web (https://drive.google.com/drive/u/2/folders/1amhnKBSxHFzkH7op1SusShJckcu-jiUn)
-    src_path = os.path.dirname(os.path.realpath(__file__))
-    test_path = src_path + f"/../../images/{folder_name}"
-    bag_path = Path(test_path)
-
-    if not bag_path.is_dir():
-        print(f"Dataset not found at {test_path}. Downloading ...")
-        os.makedirs(bag_path)
-
-        zipfilepath = test_path + "/dataset.zip"
-        gdown.download(url=url, output=zipfilepath, quiet=False)
-        import zipfile
-
-        with zipfile.ZipFile(zipfilepath, "r") as zip_ref:
-            zip_ref.extractall(test_path)
-        os.remove(zipfilepath)
 
 
 class TestObjectLocalization(TestCase):
@@ -115,7 +95,9 @@ class TestObjectLocalization(TestCase):
     def test_fieldline_detection(self):
         rospy.init_node("test")
 
-        download_dataset(url="https://drive.google.com/uc?id=1nJX6ySks_a7mESvCm3sNllmJTNpm-x2_", folder_name="fieldlines")
+        src_path = os.path.dirname(os.path.realpath(__file__))
+        test_path = src_path + "/../../images/fieldlines"
+        download_dataset(url="https://drive.google.com/uc?id=1nJX6ySks_a7mESvCm3sNllmJTNpm-x2_", folder_path=test_path)
 
         Camera.reset_position = MagicMock()
         Camera.ready = MagicMock()
@@ -165,11 +147,12 @@ class TestObjectLocalization(TestCase):
         rospy.set_param("point_cloud_max_distance", 20)
         rospy.set_param("point_cloud_spacing", 20)
 
-        download_dataset(url="https://drive.google.com/uc?id=1Df7FMbnvJ5d7jAx-8fPiaFiLcd5nrsT9", folder_name="freehicle")
-
         src_path = os.path.dirname(os.path.realpath(__file__))
-        test_path = src_path + "/../../images/freehicle/freehicle.bag"
-        test_out = src_path + "/../../images/freehicle/freehicle_out.bag"
+        folter_path = src_path + "/../../images/freehicle"
+        download_dataset(url="https://drive.google.com/uc?id=1Df7FMbnvJ5d7jAx-8fPiaFiLcd5nrsT9", folder_path=folter_path)
+
+        test_path = folter_path + "/freehicle.bag"
+        test_out = folter_path + "/freehicle_out.bag"
 
         bag = rosbag.Bag(test_path)
         bag_out = rosbag.Bag(test_out, mode="w")
@@ -247,7 +230,10 @@ class TestObjectLocalization(TestCase):
         bag.close()
 
     def test_goalpost_detection(self):
-        download_dataset(url="https://drive.google.com/uc?id=17qdnW7egoopXHvakiNnUUufP2MOjyZ18", folder_name="goal_net")
+        src_path = os.path.dirname(os.path.realpath(__file__))
+        test_path = src_path + "/../../images/goal_net"
+
+        download_dataset(url="https://drive.google.com/uc?id=17qdnW7egoopXHvakiNnUUufP2MOjyZ18", folder_path=test_path)
 
     @pytest.mark.skip
     def test_hsv_filter(self):

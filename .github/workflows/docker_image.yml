@@ -38,7 +38,6 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
       - name: Pull original docker image
-        if:  ${{ inputs.use_cached_image }}
         run: |
           docker pull utrarobosoccer/soccerbot
       - name: Build the Docker image
