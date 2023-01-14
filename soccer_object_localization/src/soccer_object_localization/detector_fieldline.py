@@ -22,12 +22,6 @@ from soccer_object_localization.detector import Detector
 
 
 class DetectorFieldline(Detector):
-    HOUGH_RHO = 1
-    HOUGH_THETA = np.pi / 180
-    HOUGH_THRESHOLD = 50
-    HOUGH_MIN_LINE_LENGTH = 50
-    HOUGH_MAX_LINE_GAP = 50
-
     def __init__(self):
         super().__init__()
 
@@ -86,25 +80,22 @@ class DetectorFieldline(Detector):
             cv2.imshow("CVT Color Contrast", image_crop_blurred)
             cv2.waitKey(0)
 
-        def circular_mask(radius: int):
-            return cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (radius, radius))
-
         # Grass Mask
         # Hue > 115 needed
         grass_only = cv2.inRange(hsv, (35, 85, 0), (115, 255, 255))
         grass_only = cv2.vconcat([np.zeros((h + 1, grass_only.shape[1]), dtype=grass_only.dtype), grass_only])
 
         # Use odd numbers for all circular masks otherwise the line will shift location
-        grass_only_0 = cv2.morphologyEx(grass_only, cv2.MORPH_OPEN, circular_mask(5))
-        grass_only_1 = cv2.morphologyEx(grass_only, cv2.MORPH_CLOSE, circular_mask(5))
-        grass_only_2 = cv2.morphologyEx(grass_only_1, cv2.MORPH_OPEN, circular_mask(21))
-        grass_only_3 = cv2.morphologyEx(grass_only_2, cv2.MORPH_CLOSE, circular_mask(61))
+        grass_only_0 = cv2.morphologyEx(grass_only, cv2.MORPH_OPEN, self.circular_mask(5))
+        grass_only_1 = cv2.morphologyEx(grass_only, cv2.MORPH_CLOSE, self.circular_mask(5))
+        grass_only_2 = cv2.morphologyEx(grass_only_1, cv2.MORPH_OPEN, self.circular_mask(21))
+        grass_only_3 = cv2.morphologyEx(grass_only_2, cv2.MORPH_CLOSE, self.circular_mask(61))
 
-        grass_only_morph = cv2.morphologyEx(grass_only_3, cv2.MORPH_ERODE, circular_mask(9))
+        grass_only_morph = cv2.morphologyEx(grass_only_3, cv2.MORPH_ERODE, self.circular_mask(9))
         grass_only_flipped = cv2.bitwise_not(grass_only)
 
         lines_only = cv2.bitwise_and(grass_only_flipped, grass_only_flipped, mask=grass_only_morph)
-        lines_only = cv2.morphologyEx(lines_only, cv2.MORPH_CLOSE, circular_mask(5))
+        lines_only = cv2.morphologyEx(lines_only, cv2.MORPH_CLOSE, self.circular_mask(5))
 
         if debug:
             cv2.imshow("grass_only", grass_only)
