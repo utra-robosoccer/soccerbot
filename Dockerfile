@@ -1,7 +1,6 @@
 ARG BASE_IMAGE=utrarobosoccer/noetic
 
 FROM $BASE_IMAGE as dependencies
-RUN apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
 WORKDIR /root/src
 RUN apt-get update && rosdep update --rosdistro noetic
 ADD . .
@@ -12,7 +11,6 @@ FROM $BASE_IMAGE as builder
 SHELL ["/bin/bash", "-c"]
 
 # Install dependencies
-RUN apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
 RUN apt-get update && \
     apt-get install -q -y software-properties-common && \
     add-apt-repository ppa:apt-fast/stable -y && \

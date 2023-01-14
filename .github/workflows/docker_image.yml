@@ -3,10 +3,10 @@ name: Docker Image
 on:
   workflow_dispatch:
     inputs:
-      use_cached_image:
-        description: "Use cached image"
+      start_from_scratch:
+        description: "Scratch From Scratch"
         required: false
-        default: true
+        default: false
         type: boolean
   schedule:
     - cron: "0 1 1 * *"
@@ -40,6 +40,10 @@ jobs:
       - name: Pull original docker image
         run: |
           docker pull utrarobosoccer/soccerbot
+      - name: Start from scratch
+        if: ${{ inputs.start_from_scratch }}
+        run: |
+          docker system prune -a -f
       - name: Build the Docker image
         run: |
           docker buildx build . --file Dockerfile --tag utrarobosoccer/soccerbot --progress=plain --cache-from utrarobosoccer/soccerbot --build-arg BUILDKIT_INLINE_CACHE=1
