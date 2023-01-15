@@ -1,7 +1,6 @@
 import enum
 from typing import List
 
-import numpy
 import numpy as np
 
 from soccer_msgs.msg import RobotState
@@ -62,7 +61,7 @@ class Robot:
         team=Team.UNKNOWN,
         role=Role.UNASSIGNED,
         status=Status.DISCONNECTED,
-        position=numpy.array([0, 0, 0]),
+        position=np.array([0, 0, 0]),
     ):
         """
         Initializes the robot structure
