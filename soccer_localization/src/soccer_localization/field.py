@@ -78,7 +78,7 @@ class Field:
 
         create_cross(A / 2 - G)
         create_cross(-A / 2 + G)
-        # create_cross(0)
+        create_cross(0)
 
         # Circle
         lines.append(Circle(center=Point(x=0, y=0), radius=H))
@@ -131,6 +131,8 @@ class Field:
 
         start = time.time()
         # Filter points by distance from current transform
+        if point_cloud_array is None or point_cloud_array.shape[0] < self.min_points_threshold:
+            return None
         world_frame_points = self.filterWorldFramePoints(current_transform, point_cloud_array)
         if world_frame_points is None or world_frame_points.shape[1] < self.min_points_threshold:
             return None
