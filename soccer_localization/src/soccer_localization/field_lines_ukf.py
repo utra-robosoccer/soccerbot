@@ -35,7 +35,7 @@ class FieldLinesUKF:
         self.ukf.x = np.array([-4, -3.15, 1.57])  # Initial state
         self.ukf.P = np.diag([0.0004, 0.0004, 0.002])  # Initial covariance (2cm, 2cm, 3 degrees)
 
-        self.R_walking = np.diag([4, 4, 4e4])
+        self.R_walking = np.diag([4, 4, 8e4])
         self.R_localizing = np.diag([1.5, 1.5, 0.25])
         self.ukf.R = self.R_walking  # Noise from measurement updates (x, y, theta), trust the y more than the x
 
