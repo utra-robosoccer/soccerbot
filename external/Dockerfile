@@ -1,7 +1,3 @@
-FROM nvidia/cudagl:11.4.2-base as dependencies
-WORKDIR /usr/local
-COPY webots webots
-
 FROM nvidia/cudagl:11.4.2-base
 
 ENV DEBIAN_FRONTEND=noninteractive
@@ -42,15 +38,16 @@ RUN apt update && apt-fast install -y \
 RUN pip3 install transforms3d
 
 WORKDIR /usr/local
-COPY GameController GameController
+
 COPY webots/scripts webots/scripts
 RUN ./webots/scripts/install/linux_compilation_dependencies.sh
-COPY --from=dependencies /usr/local/webots webots
 
+COPY webots webots
 RUN echo WEBOTS_HOME="/usr/local/webots" >> ~/.bashrc && \
     cd webots && \
     make
 
+COPY GameController GameController
 RUN apt update && apt-fast -y install ant protobuf-compiler libprotobuf-dev libjpeg9-dev && \
     cd GameController && \
     ant
