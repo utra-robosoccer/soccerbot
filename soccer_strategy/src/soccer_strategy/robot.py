@@ -1,7 +1,7 @@
 import enum
 from typing import List
 
-import numpy
+import numpy as np
 
 from soccer_msgs.msg import RobotState
 from soccer_strategy.ball import Ball
@@ -61,7 +61,7 @@ class Robot:
         team=Team.UNKNOWN,
         role=Role.UNASSIGNED,
         status=Status.DISCONNECTED,
-        position=numpy.array([0, 0, 0]),
+        position=np.array([0, 0, 0]),
     ):
         """
         Initializes the robot structure
@@ -75,7 +75,7 @@ class Robot:
         self.team = team
         self.role = role
         self.status = status
-        self.position = position
-        self.robot_id = robot_id
+        self.position: np.ndarray = position
+        self.robot_id: int = robot_id
         self.observed_ball = Ball()
         self.observed_obstacles: List[Obstacle] = []

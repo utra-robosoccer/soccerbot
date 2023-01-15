@@ -18,7 +18,9 @@ services:
       - ./external/hlvs_webots/controllers/referee/team_1_double.json:/usr/local/hlvs_webots/controllers/referee/team_1_single_bez1.json:rw
       - ./external/hlvs_webots/controllers/referee/team_2_empty.json:/usr/local/hlvs_webots/controllers/referee/team_2_single_bez1.json:rw
       - ./external/hlvs_webots/protos/:/usr/local/hlvs_webots/protos/:rw
-
+    environment:
+      TEAM_1_PLAYERS_ON_FIELD: "1,2"
+      TEAM_2_PLAYERS_ON_FIELD: ""
   friendly1:
     extends:
       file: docker-compose.yaml
