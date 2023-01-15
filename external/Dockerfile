@@ -1,7 +1,6 @@
 FROM nvidia/cudagl:11.4.2-base as dependencies
 WORKDIR /usr/local
 COPY webots webots
-RUN rm -rf webots/projects/samples/contests/robocup
 
 FROM nvidia/cudagl:11.4.2-base
 
@@ -56,13 +55,13 @@ RUN apt update && apt-fast -y install ant protobuf-compiler libprotobuf-dev libj
     cd GameController && \
     ant
 
-COPY webots/projects/samples/contests/robocup webots/projects/samples/contests/robocup
-RUN cd webots/projects/samples/contests/robocup/controllers/referee && \
+COPY hlvs_webots hlvs_webots
+RUN cd hlvs_webots/controllers/referee && \
     pip3 install numpy==1.20.2 && \
     pip3 install -r requirements.txt
 
 RUN apt-get install -y protobuf-compiler libprotobuf-dev libjpeg9-dev && \
-    cd webots/projects/samples/contests/robocup && \
+    cd hlvs_webots && \
     WEBOTS_HOME=/usr/local/webots make clean && \
     WEBOTS_HOME=/usr/local/webots make
 
