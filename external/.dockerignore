@@ -1,4 +1,11 @@
 webots/.*
+webots/.clang-format
+webots/msys64
+webots/webots
+webots/webots.lnk
+webots/webots_debug_output.txt
+webots/util
+webots/bin/webots-bin
 **/*.exe
 **/*.o
 **/*.d
