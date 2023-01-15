@@ -5,7 +5,6 @@ external
 !external/hlvs_webots/controllers/player/messages.proto
 !external/hlvs_webots/controllers/referee/*.json
 !external/GameController/protocols/python/gamestate.py
-!external/navigation/amcl
 !external/CATKIN_IGNORE
 LICENSE
 Dockerfile

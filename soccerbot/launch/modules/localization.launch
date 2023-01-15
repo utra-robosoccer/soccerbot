@@ -1,12 +1,10 @@
-<!-- Launches the localization using for amcl the robot -->
+<!-- Launches the localization using for the robot -->
 
 <launch>
     <arg name="simulation" default="false" />
     <arg name="robot_name" default="robot1" />
     <arg name="robot_model" default="bez1" />
     <arg name="map_name" default="robocup" />
-    <arg name="use_amcl" default="false" />
-    <!-- If don't use amcl will use the soccer_localization ukf -->
 
     <arg name="param_file_name" value="$(arg robot_model)_sim" if="$(arg simulation)" />
     <arg name="param_file_name" value="$(arg robot_model)" unless="$(arg simulation)" />
