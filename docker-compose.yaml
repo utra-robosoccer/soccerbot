@@ -61,7 +61,7 @@ services:
     networks:
       soccer_network:
         ipv4_address: 172.18.0.10
-    command: bash -c "cd webots && ./webots --batch --sysinfo --log-performance=performance.log --no-sandbox /usr/local/hlvs_webots/worlds/robocup.wbt"
+    command: bash -c "cd webots && ./webots --batch --sysinfo --log-performance=performance.log /usr/local/hlvs_webots/worlds/robocup.wbt"
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
       - /dev/dri:/dev/dri:rw
