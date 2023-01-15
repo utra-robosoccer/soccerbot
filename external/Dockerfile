@@ -41,6 +41,7 @@ WORKDIR /usr/local
 
 COPY webots/scripts webots/scripts
 RUN ./webots/scripts/install/linux_compilation_dependencies.sh
+RUN ./webots/scripts/install/linux_optional_compilation_dependencies.sh
 
 COPY webots webots
 RUN echo WEBOTS_HOME="/usr/local/webots" >> ~/.bashrc && \
