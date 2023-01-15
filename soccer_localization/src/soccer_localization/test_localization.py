@@ -86,7 +86,7 @@ def test_points_correction(t_start):
 
                 if "DISPLAY" in os.environ:
                     plt.draw()
-                    plt.waitforbuttonpress(timeout=1.01)
+                    plt.waitforbuttonpress(timeout=0.01)
 
     plt.close()
 
@@ -218,7 +218,7 @@ def display_rosbag_map(bag, map, debug=False, pos_theta_start=[-4, -3.15, np.pi 
     plt_dim_error(2, "Theta")
 
     if "DISPLAY" in os.environ:
-        plt.show(block=True)
+        plt.show(block=False)
         plt.waitforbuttonpress()
         plt.close("all")
 
