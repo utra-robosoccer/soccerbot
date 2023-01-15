@@ -15,9 +15,9 @@ services:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
       - /dev/dri:/dev/dri:rw
       - /dev/snd:/dev/snd:rw
-      - ./external/webots/projects/samples/contests/robocup/controllers/referee/team_1_double.json:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/team_1_single_bez1.json:rw
-      - ./external/webots/projects/samples/contests/robocup/controllers/referee/team_2_empty.json:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/team_2_single_bez1.json:rw
-      - ./external/webots/projects/samples/contests/robocup/protos/:/usr/local/webots/projects/samples/contests/robocup/protos/:rw
+      - ./external/hlvs_webots/controllers/referee/team_1_double.json:/usr/local/hlvs_webots/controllers/referee/team_1_single_bez1.json:rw
+      - ./external/hlvs_webots/controllers/referee/team_2_empty.json:/usr/local/hlvs_webots/controllers/referee/team_2_single_bez1.json:rw
+      - ./external/hlvs_webots/protos/:/usr/local/hlvs_webots/protos/:rw
 
   friendly1:
     extends:

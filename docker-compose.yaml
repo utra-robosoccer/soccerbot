@@ -61,20 +61,20 @@ services:
     networks:
       soccer_network:
         ipv4_address: 172.18.0.10
-    command: bash -c "cd webots && ./webots --batch --sysinfo --log-performance=performance.log --no-sandbox ./projects/samples/contests/robocup/worlds/robocup.wbt"
+    command: bash -c "cd webots && ./webots --batch --sysinfo --log-performance=performance.log --no-sandbox /usr/local/hlvs_webots/worlds/robocup.wbt"
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
       - /dev/dri:/dev/dri:rw
       - /dev/snd:/dev/snd:rw
-      - ./external/webots/projects/samples/contests/robocup/worlds:/usr/local/webots/projects/samples/contests/robocup/worlds:rw
-      - ./external/webots/projects/samples/contests/robocup/controllers/referee/referee.py:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/referee.py:rw
-      - ./external/webots/projects/samples/contests/robocup/controllers/referee/udp_bouncer.py:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/udp_bouncer.py:rw
-      - ./external/webots/projects/samples/contests/robocup/controllers/referee/game_single_${ROBOT_MODEL:-bez1}.json:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/game.json:rw
-      - ./external/webots/projects/samples/contests/robocup/controllers/referee/team_1_single_bez1.json:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/team_1_single_bez1.json:rw
-      - ./external/webots/projects/samples/contests/robocup/controllers/referee/team_1_single_bez3.json:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/team_1_single_bez3.json:rw
-      - ./external/webots/projects/samples/contests/robocup/controllers/referee/team_2_single_bez1.json:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/team_2_single_bez1.json:rw
-      - ./external/webots/projects/samples/contests/robocup/controllers/referee/team_2_single_bez3.json:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/team_2_single_bez3.json:rw
-      - ./external/webots/projects/samples/contests/robocup/protos/:/usr/local/webots/projects/samples/contests/robocup/protos/:rw
+      - ./external/hlvs_webots/worlds:/usr/local/hlvs_webots/worlds:rw
+      - ./external/hlvs_webots/controllers/referee/referee.py:/usr/local/hlvs_webots/controllers/referee/referee.py:rw
+      - ./external/hlvs_webots/controllers/referee/udp_bouncer.py:/usr/local/hlvs_webots/controllers/referee/udp_bouncer.py:rw
+      - ./external/hlvs_webots/controllers/referee/game_single_${ROBOT_MODEL:-bez1}.json:/usr/local/hlvs_webots/controllers/referee/game.json:rw
+      - ./external/hlvs_webots/controllers/referee/team_1_single_bez1.json:/usr/local/hlvs_webots/controllers/referee/team_1_single_bez1.json:rw
+      - ./external/hlvs_webots/controllers/referee/team_1_single_bez3.json:/usr/local/hlvs_webots/controllers/referee/team_1_single_bez3.json:rw
+      - ./external/hlvs_webots/controllers/referee/team_2_single_bez1.json:/usr/local/hlvs_webots/controllers/referee/team_2_single_bez1.json:rw
+      - ./external/hlvs_webots/controllers/referee/team_2_single_bez3.json:/usr/local/hlvs_webots/controllers/referee/team_2_single_bez3.json:rw
+      - ./external/hlvs_webots/protos/:/usr/local/hlvs_webots/protos/:rw
     environment:
       DISPLAY: unix$DISPLAY
       JAVA_HOME: /usr
