@@ -257,7 +257,7 @@ PROTO Bez2 ["""
                       rotation 0.0 0.0 -1.0 1.5708
                       children [
                         DEF CAMERA Camera {
-                            rotation 1.0 0.0 0.0 1.5708
+                            rotation 0.0 0.0 1.0 1.5708
                             name "camera"
                             fieldOfView 1.39626
                             width 640

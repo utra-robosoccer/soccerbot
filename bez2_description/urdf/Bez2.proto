@@ -52,7 +52,7 @@ PROTO Bez2 [
     supervisor IS supervisor
     synchronization IS synchronization
     selfCollision IS selfCollision
-    
+
     children [
           %{
             print (fields.name.value)
@@ -106,7 +106,7 @@ PROTO Bez2 [
               url "base_link.stl"
             }
           }
-            
+
 HingeJointWithBacklash {
         jointParameters HingeJointParameters {
           axis -0.000000 -1.000000 0.000000
@@ -1450,7 +1450,7 @@ HingeJointWithBacklash {
                       rotation 0.0 0.0 -1.0 1.5708
                       children [
                         DEF CAMERA Camera {
-                            rotation 1.0 0.0 0.0 1.5708
+                            rotation 0.0 0.0 1.0 1.5708
                             name "camera"
                             fieldOfView 1.39626
                             width 640
