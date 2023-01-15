@@ -76,14 +76,11 @@ class RobotControlled3D(RobotControlled):
         return True
 
     def reset_robot_callback(self, pose: PoseStamped):
-        self.position[0] = pose.pose.position.x
-        self.position[1] = pose.pose.position.y
-
         q = tf.transformations.euler_from_quaternion(
             [pose.pose.orientation.w, pose.pose.orientation.x, pose.pose.orientation.y, pose.pose.orientation.z]
         )
-        self.position[2] = q[2]
-        rospy.loginfo(f"Robot Reset Called to {pose.pose.position.x} {pose.pose.position.y} {q[2]}")
+        self.position = np.array([pose.pose.position.x, pose.pose.position.y, q[2]])
+        rospy.loginfo(f"Robot Reset Called to {pose.pose.position.x} {pose.pose.position.y} {q[2]} (self.position = {self.position}")
         self.status = Robot.Status.READY
         if self.role == Robot.Role.UNASSIGNED:
             self.role = Robot.Role.STRIKER

@@ -7,6 +7,7 @@ from unittest import TestCase
 import numpy as np
 import rospy
 import tf
+import tf2_py as tf2
 import tf2_ros
 from geometry_msgs.msg import PoseStamped
 from rosgraph_msgs.msg import Clock
@@ -134,7 +135,7 @@ class IntegrationTest(TestCase):
             last_observed_time_stamp = self.tf_listener.getLatestCommonTime("world", frame)
             ball_pose = self.tf_listener.lookupTransform("world", frame, last_observed_time_stamp)
             return np.array([ball_pose[0][0], ball_pose[0][1], ball_pose[0][2]])
-        except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+        except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException, tf2.TransformException):
             rospy.logwarn_throttle(30, "Unable to locate ball in TF tree")
             return None
 

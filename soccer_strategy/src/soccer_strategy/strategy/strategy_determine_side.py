@@ -94,7 +94,7 @@ class StrategyDetermineSide(Strategy):
         translation = team_info["players"][str(current_robot.robot_id)]["reentryStartingPose"]["translation"]
         rotation = team_info["players"][str(current_robot.robot_id)]["reentryStartingPose"]["rotation"]
 
-        position = [translation[0], translation[1], rotation[3]]
+        position = np.array([translation[0], translation[1], rotation[3]])
         if self.average_goal_post_y < 0:  # Goal post seen on the left side
             self.flip_required = True
             position[1] = -position[1]
