@@ -19,6 +19,9 @@ services:
       - ./external/hlvs_webots/controllers/referee/team_2.json:/usr/local/hlvs_webots/controllers/referee/team_2.json:rw
       - ./external/hlvs_webots/protos/:/usr/local/hlvs_webots/protos/:rw
       - ./external/hlvs_webots/controllers/referee/game.json:/usr/local/hlvs_webots/controllers/referee/game.json:rw
+    environment:
+      TEAM_1_PLAYERS_ON_FIELD: "1,2,3,4"
+      TEAM_2_PLAYERS_ON_FIELD: "1,2,3,4"
 
   friendly1:
     extends:

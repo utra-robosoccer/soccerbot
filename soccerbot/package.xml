@@ -31,7 +31,6 @@
   <depend>robot_pose_ekf</depend>
   <depend>robot_localization</depend>
   <depend>soccer_pycontrol</depend>
-  <depend>fake_localization</depend>
   <depend>soccer_localization</depend>
   <depend>webots_ros</depend>
 

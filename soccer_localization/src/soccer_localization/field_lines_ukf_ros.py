@@ -141,4 +141,5 @@ class FieldLinesUKFROS(FieldLinesUKF):
         self.initial_pose = Transformation(pose_with_covariance_stamped=pose_stamped)
         self.ukf.x = self.initial_pose.pos_theta
         self.ukf.P = self.initial_pose.pose_theta_covariance_array
+        self.broadcast_tf_position(pose_stamped.header.stamp)
         self.initial_pose_initiated = True
