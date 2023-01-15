@@ -1,6 +1,6 @@
 # Exclude Regex https://www3.ntu.edu.sg/home/ehchua/programming/howto/Regexe.html#zz-1.8
 x-exclude: &exclude
-  exclude: ^(external\/|cmake-build-debug\/|.pytest_cache\/|soccer_embedded\/|docs\/|.idea\/|.+pb2\.py\/|bez2_description\/|scripts\/|modify_proto.py)
+  exclude: ^(external\/|cmake-build-debug\/|.pytest_cache\/|soccer_embedded\/|docs\/|.idea\/|.+pb2\.py\/|bez2_description\/|scripts\/|modify_proto.py\/|bez1_description\/|scripts\/|modify_proto.py)
 
   py:
 repos:

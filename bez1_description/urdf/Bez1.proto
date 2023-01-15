@@ -1,0 +1,1028 @@
+#VRML_SIM R2022b utf8
+# license: Apache License 2.0
+# license url: http://www.apache.org/licenses/LICENSE-2.0
+# This is a proto file for Webots for the Bez1
+# Extracted from: /home/manx52/catkin_ws/src/soccerbot/bez1_description/urdf/bez1_simple.urdf
+
+PROTO Bez1 [
+  field  SFVec3f     translation     0 0 0
+  field  SFRotation  rotation        0 0 1 0
+  field  SFString    name            "Bez1"  # Is `Robot.name`.
+  field  SFString    controller      "void"  # Is `Robot.controller`.
+  field  MFString    controllerArgs  []      # Is `Robot.controllerArgs`.
+  field  SFString    customData      ""      # Is `Robot.customData`.
+  field  SFBool      supervisor      FALSE   # Is `Robot.supervisor`.
+  field  SFBool      synchronization TRUE    # Is `Robot.synchronization`.
+  field  SFBool      selfCollision   FALSE   # Is `Robot.selfCollision`.
+]
+{
+  Robot {
+    translation IS translation
+    rotation IS rotation
+    controller IS controller
+    controllerArgs IS controllerArgs
+    customData IS customData
+    supervisor IS supervisor
+    synchronization IS synchronization
+    selfCollision IS selfCollision
+    children [
+      Shape {
+        appearance DEF black PBRAppearance {
+          baseColor 0.500000 0.500000 0.500000
+          roughness 1.000000
+          metalness 0
+        }
+        geometry DEF torso Mesh {
+          url "/home/manx52/catkin_ws/src/soccerbot/bez1_description/bez1_description/meshes/torso.stl"
+        }
+      }
+      GPS {
+        name "odom_ground_truth gps"
+      }
+      InertialUnit {
+        name "odom_ground_truth inertial"
+      }
+      Gyro {
+        name "odom_ground_truth gyro"
+      }
+      HingeJoint {
+        jointParameters HingeJointParameters {
+          axis 0.000000 -1.000000 0.000000
+          anchor -0.015700 0.072500 0.000000
+          dampingConstant 0.01
+          staticFriction 0.1
+        }
+        device [
+          RotationalMotor {
+            name "left_arm_motor_0"
+            maxVelocity 1.0
+            minPosition -1.5707963267948966
+            maxPosition 3.9269908169872414
+            maxTorque 1.5
+          }
+          PositionSensor {
+            name "left_arm_motor_0_sensor"
+          }
+        ]
+        endPoint Solid {
+          translation -0.015700 0.072500 0.000000
+          children [
+            Shape {
+              appearance DEF white PBRAppearance {
+                baseColor 0.500000 0.500000 0.500000
+                roughness 1.000000
+                metalness 0
+              }
+              geometry DEF left_bicep Mesh {
+                url "/home/manx52/catkin_ws/src/soccerbot/bez1_description/bez1_description/meshes/left_bicep.stl"
+              }
+            }
+            HingeJoint {
+              jointParameters HingeJointParameters {
+                axis 0.000000 -1.000000 0.000000
+                anchor 0.000000 0.000000 -0.100000
+                dampingConstant 0.01
+                staticFriction 0.1
+              }
+              device [
+                RotationalMotor {
+                  name "left_arm_motor_1"
+                  maxVelocity 1.0
+                  maxPosition 3.141592653589793
+                  maxTorque 1.5
+                }
+                PositionSensor {
+                  name "left_arm_motor_1_sensor"
+                }
+              ]
+              endPoint Solid {
+                translation 0.000000 0.000000 -0.100000
+                children [
+                  Shape {
+                    appearance DEF purple PBRAppearance {
+                      baseColor 0.500000 0.500000 0.500000
+                      roughness 1.000000
+                      metalness 0
+                    }
+                    geometry DEF left_forearm Mesh {
+                      url "/home/manx52/catkin_ws/src/soccerbot/bez1_description/bez1_description/meshes/left_forearm.stl"
+                    }
+                  }
+                ]
+                name "/left_forearm"
+                boundingObject Transform {
+                  translation -0.005500 0.017500 -0.060000
+                  children [
+                    Box {
+                       size 0.035000 0.049000 0.144000
+                    }
+                  ]
+                }
+                physics Physics {
+                  density -1
+                  mass 0.045700
+                  centerOfMass [ 0.000000 0.024500 -0.054610 ]
+                  inertiaMatrix [
+                    1.130000e-04 1.070000e-04 1.200000e-05
+                    0.000000e+00 1.000000e-06 0.000000e+00
+                  ]
+                }
+              }
+            }
+          ]
+          name "/left_bicep"
+          boundingObject Transform {
+            translation 0.000000 0.022500 -0.050010
+            children [
+              Box {
+                 size 0.040000 0.047760 0.123000
+              }
+            ]
+          }
+          physics Physics {
+            density -1
+            mass 0.000213
+            centerOfMass [ 0.000000 0.025790 -0.049550 ]
+            inertiaMatrix [
+              2.824000e-04 2.744000e-04 2.433000e-05
+              0.000000e+00 0.000000e+00 1.165000e-05
+            ]
+          }
+        }
+      }
+      HingeJoint {
+        jointParameters HingeJointParameters {
+          axis 0.000000 -1.000000 0.000000
+          anchor -0.015700 -0.072500 0.000000
+          dampingConstant 0.01
+          staticFriction 0.1
+        }
+        device [
+          RotationalMotor {
+            name "right_arm_motor_0"
+            maxVelocity 1.0
+            minPosition -1.5707963267948966
+            maxPosition 3.9269908169872414
+            maxTorque 1.5
+          }
+          PositionSensor {
+            name "right_arm_motor_0_sensor"
+          }
+        ]
+        endPoint Solid {
+          translation -0.015700 -0.072500 0.000000
+          children [
+            Shape {
+              appearance USE white
+              geometry DEF right_bicep Mesh {
+                url "/home/manx52/catkin_ws/src/soccerbot/bez1_description/bez1_description/meshes/right_bicep.stl"
+              }
+            }
+            HingeJoint {
+              jointParameters HingeJointParameters {
+                axis 0.000000 -1.000000 0.000000
+                anchor 0.000000 0.000000 -0.100000
+                dampingConstant 0.01
+                staticFriction 0.1
+              }
+              device [
+                RotationalMotor {
+                  name "right_arm_motor_1"
+                  maxVelocity 1.0
+                  maxPosition 3.141592653589793
+                  maxTorque 1.5
+                }
+                PositionSensor {
+                  name "right_arm_motor_1_sensor"
+                }
+              ]
+              endPoint Solid {
+                translation 0.000000 0.000000 -0.100000
+                children [
+                  Shape {
+                    appearance USE purple
+                    geometry DEF right_forearm Mesh {
+                      url "/home/manx52/catkin_ws/src/soccerbot/bez1_description/bez1_description/meshes/right_forearm.stl"
+                    }
+                  }
+                ]
+                name "/right_forearm"
+                boundingObject Transform {
+                  translation -0.005500 -0.017500 -0.060000
+                  children [
+                    Box {
+                       size 0.035000 0.049000 0.144000
+                    }
+                  ]
+                }
+                physics Physics {
+                  density -1
+                  mass 0.045700
+                  centerOfMass [ 0.000000 -0.024500 -0.054610 ]
+                  inertiaMatrix [
+                    1.130000e-04 1.070000e-04 1.200000e-05
+                    0.000000e+00 -1.000000e-06 -0.000000e+00
+                  ]
+                }
+              }
+            }
+          ]
+          name "/right_bicep"
+          boundingObject Transform {
+            translation 0.000000 -0.022500 -0.050010
+            children [
+              Box {
+                 size 0.040000 0.047760 0.123000
+              }
+            ]
+          }
+          physics Physics {
+            density -1
+            mass 0.000213
+            centerOfMass [ 0.000000 -0.025790 -0.049550 ]
+            inertiaMatrix [
+              2.824000e-04 2.744000e-04 2.433000e-05
+              0.000000e+00 -0.000000e+00 -1.165000e-05
+            ]
+          }
+        }
+      }
+      HingeJoint {
+        jointParameters HingeJointParameters {
+          axis 0.000000 0.000000 -1.000000
+          anchor 0.013500 0.035000 -0.156000
+          dampingConstant 0.01
+          staticFriction 0.1
+        }
+        device [
+          RotationalMotor {
+            name "left_leg_motor_0"
+            maxVelocity 1.0
+            minPosition -1.309
+            maxPosition 0.524
+            maxTorque 2.5
+          }
+          PositionSensor {
+            name "left_leg_motor_0_sensor"
+          }
+        ]
+        endPoint Solid {
+          translation 0.013500 0.035000 -0.156000
+          children [
+            Shape {
+              appearance DEF cyan PBRAppearance {
+                baseColor 0.500000 0.500000 0.500000
+                roughness 1.000000
+                metalness 0
+              }
+              geometry DEF left_hip_side Mesh {
+                url "/home/manx52/catkin_ws/src/soccerbot/bez1_description/bez1_description/meshes/left_hip_side.stl"
+              }
+            }
+            HingeJoint {
+              jointParameters HingeJointParameters {
+                dampingConstant 0.01
+                staticFriction 0.1
+              }
+              device [
+                RotationalMotor {
+                  name "left_leg_motor_1"
+                  maxVelocity 1.0
+                  minPosition -0.7853981633974483
+                  maxPosition 1.5707963267948966
+                  maxTorque 2.5
+                }
+                PositionSensor {
+                  name "left_leg_motor_1_sensor"
+                }
+              ]
+              endPoint Solid {
+                children [
+                  Shape {
+                    appearance DEF blue PBRAppearance {
+                      baseColor 0.500000 0.500000 0.500000
+                      roughness 1.000000
+                      metalness 0
+                    }
+                    geometry DEF left_hip_front Mesh {
+                      url "/home/manx52/catkin_ws/src/soccerbot/bez1_description/bez1_description/meshes/left_hip_front.stl"
+                    }
+                  }
+                  HingeJoint {
+                    jointParameters HingeJointParameters {
+                      axis 0.000000 -1.000000 0.000000
+                      dampingConstant 0.01
+                      staticFriction 0.1
+                    }
+                    device [
+                      RotationalMotor {
+                        name "left_leg_motor_2"
+                        maxVelocity 1.0
+                        minPosition -0.7853981633974483
+                        maxPosition 2.356194490192345
+                        maxTorque 2.5
+                      }
+                      PositionSensor {
+                        name "left_leg_motor_2_sensor"
+                      }
+                    ]
+                    endPoint Solid {
+                      children [
+                        Shape {
+                          appearance DEF red PBRAppearance {
+                            baseColor 0.500000 0.500000 0.500000
+                            roughness 1.000000
+                            metalness 0
+                          }
+                          geometry DEF left_thigh Mesh {
+                            url "/home/manx52/catkin_ws/src/soccerbot/bez1_description/bez1_description/meshes/left_thigh.stl"
+                          }
+                        }
+                        HingeJoint {
+                          jointParameters HingeJointParameters {
+                            axis 0.000000 -1.000000 0.000000
+                            anchor 0.000000 0.000000 -0.089000
+                            dampingConstant 0.01
+                            staticFriction 0.1
+                          }
+                          device [
+                            RotationalMotor {
+                              name "left_leg_motor_3"
+                              maxVelocity 1.0
+                              minPosition -2.793
+                              maxTorque 2.5
+                            }
+                            PositionSensor {
+                              name "left_leg_motor_3_sensor"
+                            }
+                          ]
+                          endPoint Solid {
+                            translation 0.000000 0.000000 -0.089000
+                            children [
+                              Transform {
+                                translation 0.000000 0.000000 -0.082700
+                                children [
+                                  Shape {
+                                    appearance DEF yellow PBRAppearance {
+                                      baseColor 0.500000 0.500000 0.500000
+                                      roughness 1.000000
+                                      metalness 0
+                                    }
+                                    geometry DEF left_calve Mesh {
+                                      url "/home/manx52/catkin_ws/src/soccerbot/bez1_description/bez1_description/meshes/left_calve.stl"
+                                    }
+                                  }
+                                ]
+                              }
+                              HingeJoint {
+                                jointParameters HingeJointParameters {
+                                  axis 0.000000 -1.000000 0.000000
+                                  anchor 0.000000 0.000000 -0.082700
+                                  dampingConstant 0.01
+                                  staticFriction 0.1
+                                }
+                                device [
+                                  RotationalMotor {
+                                    name "left_leg_motor_4"
+                                    maxVelocity 1.0
+                                    minPosition -0.7853981633974483
+                                    maxPosition 1.5707963267948966
+                                    maxTorque 2.5
+                                  }
+                                  PositionSensor {
+                                    name "left_leg_motor_4_sensor"
+                                  }
+                                ]
+                                endPoint Solid {
+                                  translation 0.000000 0.000000 -0.082700
+                                  children [
+                                    Shape {
+                                      appearance USE purple
+                                      geometry DEF left_ankle Mesh {
+                                        url "/home/manx52/catkin_ws/src/soccerbot/bez1_description/bez1_description/meshes/left_ankle.stl"
+                                      }
+                                    }
+                                    HingeJoint {
+                                      jointParameters HingeJointParameters {
+                                        dampingConstant 0.01
+                                        staticFriction 0.1
+                                      }
+                                      device [
+                                        RotationalMotor {
+                                          name "left_leg_motor_5"
+                                          maxVelocity 1.0
+                                          minPosition -0.7853981633974483
+                                          maxPosition 0.7853981633974483
+                                          maxTorque 2.5
+                                        }
+                                        PositionSensor {
+                                          name "left_leg_motor_5_sensor"
+                                        }
+                                      ]
+                                      endPoint Solid {
+                                        children [
+                                          Shape {
+                                            appearance DEF green PBRAppearance {
+                                              baseColor 0.500000 0.500000 0.500000
+                                              roughness 1.000000
+                                              metalness 0
+                                            }
+                                            geometry DEF left_foot Mesh {
+                                              url "/home/manx52/catkin_ws/src/soccerbot/bez1_description/bez1_description/meshes/left_foot.stl"
+                                            }
+                                          }
+                                        ]
+                                        name "/left_foot"
+                                        boundingObject Transform {
+                                          translation 0.003850 -0.004010 -0.007370
+                                          children [
+                                            Box {
+                                               size 0.090000 0.070000 0.036740
+                                            }
+                                          ]
+                                        }
+                                        physics Physics {
+                                          density -1
+                                          mass 0.023216
+                                          centerOfMass [ -0.020939 0.000000 0.011313 ]
+                                          inertiaMatrix [
+                                            6.000000e-06 1.800000e-05 2.200000e-05
+                                            0.000000e+00 0.000000e+00 0.000000e+00
+                                          ]
+                                        }
+                                      }
+                                    }
+                                  ]
+                                  name "/left_ankle"
+                                  boundingObject Transform {
+                                    translation -0.020140 0.000000 0.010310
+                                    children [
+                                      Box {
+                                         size 0.090769 0.042000 0.050600
+                                      }
+                                    ]
+                                  }
+                                  physics Physics {
+                                    density -1
+                                    mass 0.153186
+                                    centerOfMass [ -0.000021 0.000000 0.000011 ]
+                                    inertiaMatrix [
+                                      4.100000e-05 1.180000e-04 1.060000e-04
+                                      0.000000e+00 2.000000e-06 0.000000e+00
+                                    ]
+                                  }
+                                }
+                              }
+                            ]
+                            name "/left_calve"
+                            boundingObject Transform {
+                              translation 0.000000 0.000000 -0.033850
+                              children [
+                                Box {
+                                   size 0.031883 0.048000 0.105683
+                                }
+                              ]
+                            }
+                            physics Physics {
+                              density -1
+                              mass 0.086547
+                              centerOfMass [ 0.000000 -0.000000 -0.000015 ]
+                              inertiaMatrix [
+                                5.400000e-05 4.600000e-05 1.900000e-05
+                                0.000000e+00 0.000000e+00 -1.000000e-06
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                      name "/left_thigh"
+                      boundingObject Transform {
+                        translation 0.000000 0.000000 -0.044500
+                        children [
+                          Box {
+                             size 0.022000 0.048000 0.111000
+                          }
+                        ]
+                      }
+                      physics Physics {
+                        density -1
+                        mass 0.021438
+                        centerOfMass [ 0.001942 0.000142 -0.046941 ]
+                        inertiaMatrix [
+                          2.500000e-05 1.600000e-05 1.000000e-05
+                          2.000000e-06 0.000000e+00 0.000000e+00
+                        ]
+                      }
+                    }
+                  }
+                ]
+                name "/left_hip_front"
+                boundingObject Transform {
+                  translation -0.021870 0.000000 -0.013320
+                  children [
+                    Box {
+                       size 0.083747 0.048850 0.050600
+                    }
+                  ]
+                }
+                physics Physics {
+                  density -1
+                  mass 0.153186
+                  centerOfMass [ -0.020930 0.000000 -0.011313 ]
+                  inertiaMatrix [
+                    4.100000e-05 1.180000e-04 1.060000e-04
+                    0.000000e+00 -2.000000e-06 0.000000e+00
+                  ]
+                }
+              }
+            }
+          ]
+          name "/left_hip_side"
+          boundingObject Transform {
+            translation 0.000000 0.000000 0.008990
+            children [
+              Box {
+                 size 0.048500 0.022000 0.003900
+              }
+            ]
+          }
+          physics Physics {
+            density -1
+            mass 0.009364
+            centerOfMass [ 0.000369 0.000000 0.016890 ]
+            inertiaMatrix [
+              2.000000e-06 5.000000e-06 4.000000e-06
+              0.000000e+00 0.000000e+00 0.000000e+00
+            ]
+          }
+        }
+      }
+      HingeJoint {
+        jointParameters HingeJointParameters {
+          axis 0.000000 0.000000 1.000000
+          anchor 0.013500 -0.035000 -0.156000
+          dampingConstant 0.01
+          staticFriction 0.1
+        }
+        device [
+          RotationalMotor {
+            name "right_leg_motor_0"
+            maxVelocity 1.0
+            minPosition -1.309
+            maxPosition 0.524
+            maxTorque 2.5
+          }
+          PositionSensor {
+            name "right_leg_motor_0_sensor"
+          }
+        ]
+        endPoint Solid {
+          translation 0.013500 -0.035000 -0.156000
+          children [
+            Shape {
+              appearance USE cyan
+              geometry DEF right_hip_side Mesh {
+                url "/home/manx52/catkin_ws/src/soccerbot/bez1_description/bez1_description/meshes/right_hip_side.stl"
+              }
+            }
+            HingeJoint {
+              jointParameters HingeJointParameters {
+                axis -1.000000 0.000000 0.000000
+                dampingConstant 0.01
+                staticFriction 0.1
+              }
+              device [
+                RotationalMotor {
+                  name "right_leg_motor_1"
+                  maxVelocity 1.0
+                  minPosition -0.7853981633974483
+                  maxPosition 1.5707963267948966
+                  maxTorque 2.5
+                }
+                PositionSensor {
+                  name "right_leg_motor_1_sensor"
+                }
+              ]
+              endPoint Solid {
+                children [
+                  Shape {
+                    appearance USE blue
+                    geometry DEF right_hip_front Mesh {
+                      url "/home/manx52/catkin_ws/src/soccerbot/bez1_description/bez1_description/meshes/right_hip_front.stl"
+                    }
+                  }
+                  HingeJoint {
+                    jointParameters HingeJointParameters {
+                      axis 0.000000 -1.000000 0.000000
+                      dampingConstant 0.01
+                      staticFriction 0.1
+                    }
+                    device [
+                      RotationalMotor {
+                        name "right_leg_motor_2"
+                        maxVelocity 1.0
+                        minPosition -0.7853981633974483
+                        maxPosition 2.356194490192345
+                        maxTorque 2.5
+                      }
+                      PositionSensor {
+                        name "right_leg_motor_2_sensor"
+                      }
+                    ]
+                    endPoint Solid {
+                      children [
+                        Shape {
+                          appearance USE red
+                          geometry DEF right_thigh Mesh {
+                            url "/home/manx52/catkin_ws/src/soccerbot/bez1_description/bez1_description/meshes/right_thigh.stl"
+                          }
+                        }
+                        HingeJoint {
+                          jointParameters HingeJointParameters {
+                            axis 0.000000 -1.000000 0.000000
+                            anchor 0.000000 0.000000 -0.089000
+                            dampingConstant 0.01
+                            staticFriction 0.1
+                          }
+                          device [
+                            RotationalMotor {
+                              name "right_leg_motor_3"
+                              maxVelocity 1.0
+                              minPosition -2.793
+                              maxTorque 2.5
+                            }
+                            PositionSensor {
+                              name "right_leg_motor_3_sensor"
+                            }
+                          ]
+                          endPoint Solid {
+                            translation 0.000000 0.000000 -0.089000
+                            children [
+                              Transform {
+                                translation 0.000000 0.000000 -0.082700
+                                children [
+                                  Shape {
+                                    appearance USE yellow
+                                    geometry DEF right_calve Mesh {
+                                      url "/home/manx52/catkin_ws/src/soccerbot/bez1_description/bez1_description/meshes/right_calve.stl"
+                                    }
+                                  }
+                                ]
+                              }
+                              HingeJoint {
+                                jointParameters HingeJointParameters {
+                                  axis 0.000000 -1.000000 0.000000
+                                  anchor 0.000000 0.000000 -0.082700
+                                  dampingConstant 0.01
+                                  staticFriction 0.1
+                                }
+                                device [
+                                  RotationalMotor {
+                                    name "right_leg_motor_4"
+                                    maxVelocity 1.0
+                                    minPosition -0.7853981633974483
+                                    maxPosition 1.5707963267948966
+                                    maxTorque 2.5
+                                  }
+                                  PositionSensor {
+                                    name "right_leg_motor_4_sensor"
+                                  }
+                                ]
+                                endPoint Solid {
+                                  translation 0.000000 0.000000 -0.082700
+                                  children [
+                                    Shape {
+                                      appearance USE purple
+                                      geometry DEF right_ankle Mesh {
+                                        url "/home/manx52/catkin_ws/src/soccerbot/bez1_description/bez1_description/meshes/right_ankle.stl"
+                                      }
+                                    }
+                                    HingeJoint {
+                                      jointParameters HingeJointParameters {
+                                        axis -1.000000 0.000000 0.000000
+                                        dampingConstant 0.01
+                                        staticFriction 0.1
+                                      }
+                                      device [
+                                        RotationalMotor {
+                                          name "right_leg_motor_5"
+                                          maxVelocity 1.0
+                                          minPosition -0.7853981633974483
+                                          maxPosition 0.7853981633974483
+                                          maxTorque 2.5
+                                        }
+                                        PositionSensor {
+                                          name "right_leg_motor_5_sensor"
+                                        }
+                                      ]
+                                      endPoint Solid {
+                                        children [
+                                          Shape {
+                                            appearance USE green
+                                            geometry DEF right_foot Mesh {
+                                              url "/home/manx52/catkin_ws/src/soccerbot/bez1_description/bez1_description/meshes/right_foot.stl"
+                                            }
+                                          }
+                                        ]
+                                        name "/right_foot"
+                                        boundingObject Transform {
+                                          translation 0.003850 0.004010 -0.007370
+                                          children [
+                                            Box {
+                                               size 0.090000 0.070000 0.036740
+                                            }
+                                          ]
+                                        }
+                                        physics Physics {
+                                          density -1
+                                          mass 0.023216
+                                          centerOfMass [ -0.020939 0.000000 0.011313 ]
+                                          inertiaMatrix [
+                                            6.000000e-06 1.800000e-05 2.200000e-05
+                                            0.000000e+00 0.000000e+00 0.000000e+00
+                                          ]
+                                        }
+                                      }
+                                    }
+                                  ]
+                                  name "/right_ankle"
+                                  boundingObject Transform {
+                                    translation -0.020140 0.000000 0.010310
+                                    children [
+                                      Box {
+                                         size 0.090769 0.042000 0.050600
+                                      }
+                                    ]
+                                  }
+                                  physics Physics {
+                                    density -1
+                                    mass 0.153186
+                                    centerOfMass [ -0.000021 0.000000 0.000011 ]
+                                    inertiaMatrix [
+                                      4.100000e-05 1.180000e-04 1.060000e-04
+                                      0.000000e+00 2.000000e-06 0.000000e+00
+                                    ]
+                                  }
+                                }
+                              }
+                            ]
+                            name "/right_calve"
+                            boundingObject Transform {
+                              translation 0.000000 0.000000 -0.033850
+                              children [
+                                Box {
+                                   size 0.031883 0.048000 0.105683
+                                }
+                              ]
+                            }
+                            physics Physics {
+                              density -1
+                              mass 0.086547
+                              centerOfMass [ 0.000000 0.000000 -0.000015 ]
+                              inertiaMatrix [
+                                5.400000e-05 4.600000e-05 1.900000e-05
+                                0.000000e+00 0.000000e+00 -1.000000e-06
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                      name "/right_thigh"
+                      boundingObject Transform {
+                        translation 0.000000 0.000000 -0.044500
+                        children [
+                          Box {
+                             size 0.022000 0.048000 0.111000
+                          }
+                        ]
+                      }
+                      physics Physics {
+                        density -1
+                        mass 0.021438
+                        centerOfMass [ 0.001942 -0.000142 -0.046941 ]
+                        inertiaMatrix [
+                          2.500000e-05 1.600000e-05 1.000000e-05
+                          -2.000000e-06 0.000000e+00 0.000000e+00
+                        ]
+                      }
+                    }
+                  }
+                ]
+                name "/right_hip_front"
+                boundingObject Transform {
+                  translation -0.021870 0.000000 -0.013320
+                  children [
+                    Box {
+                       size 0.083747 0.048850 0.050600
+                    }
+                  ]
+                }
+                physics Physics {
+                  density -1
+                  mass 0.153186
+                  centerOfMass [ -0.020930 0.000000 -0.011313 ]
+                  inertiaMatrix [
+                    4.100000e-05 1.180000e-04 1.060000e-04
+                    0.000000e+00 -2.000000e-06 0.000000e+00
+                  ]
+                }
+              }
+            }
+          ]
+          name "/right_hip_side"
+          boundingObject Transform {
+            translation 0.000000 0.000000 0.008990
+            children [
+              Box {
+                 size 0.048500 0.022000 0.003900
+              }
+            ]
+          }
+          physics Physics {
+            density -1
+            mass 0.009364
+            centerOfMass [ 0.000369 0.000000 0.016890 ]
+            inertiaMatrix [
+              2.000000e-06 5.000000e-06 4.000000e-06
+              0.000000e+00 0.000000e+00 0.000000e+00
+            ]
+          }
+        }
+      }
+      HingeJoint {
+        jointParameters HingeJointParameters {
+          axis 0.000000 0.000000 1.000000
+          anchor 0.024000 0.000000 0.058750
+          dampingConstant 0.01
+          staticFriction 0.1
+        }
+        device [
+          RotationalMotor {
+            name "head_motor_0"
+            maxVelocity 1.0
+            minPosition -1.5707963267948966
+            maxPosition 1.5707963267948966
+            maxTorque 1.5
+          }
+          PositionSensor {
+            name "head_motor_0_sensor"
+          }
+        ]
+        endPoint Solid {
+          translation 0.024000 0.000000 0.058750
+          children [
+            Shape {
+              appearance DEF silver PBRAppearance {
+                baseColor 0.500000 0.500000 0.500000
+                roughness 1.000000
+                metalness 0
+              }
+              geometry DEF neck Mesh {
+                url "/home/manx52/catkin_ws/src/soccerbot/bez1_description/bez1_description/meshes/neck.stl"
+              }
+            }
+            HingeJoint {
+              jointParameters HingeJointParameters {
+                axis 0.000000 1.000000 0.000000
+                anchor 0.000000 0.000000 0.024000
+                dampingConstant 0.01
+                staticFriction 0.1
+              }
+              device [
+                RotationalMotor {
+                  name "head_motor_1"
+                  maxVelocity 1.0
+                  minPosition -2.356194490192345
+                  maxPosition 2.356194490192345
+                  maxTorque 1.5
+                }
+                PositionSensor {
+                  name "head_motor_1_sensor"
+                }
+              ]
+              endPoint Solid {
+                translation 0.000000 0.000000 0.024000
+                children [
+                  Shape {
+                    appearance USE silver
+                    geometry DEF head Mesh {
+                      url "/home/manx52/catkin_ws/src/soccerbot/bez1_description/bez1_description/meshes/head.stl"
+                    }
+                  }
+                  Solid {
+                    translation 0.015000 0.001450 0.047400
+                    children [
+                      Transform {
+                        translation 0 0 0
+                        rotation 0.577350 -0.577350 0.577350 2.094395
+                        children [
+                          Camera {
+                            name "main_camera"
+                            fieldOfView 1.396260
+                            width 640
+                            height 480
+                            noise 0.007000
+                          }
+                        ]
+                      }
+                    ]
+                    name "/camera"
+                    physics Physics {
+                      density -1
+                      mass 0.010000
+                      centerOfMass [ 0.000000 0.000000 0.000000 ]
+                      inertiaMatrix [
+                        1.000000e-09 1.000000e-09 1.000000e-09
+                        0.000000e+00 0.000000e+00 0.000000e+00
+                      ]
+                    }
+                  }
+                ]
+                name "/head"
+                boundingObject Transform {
+                  translation -0.013000 0.000000 0.025000
+                  children [
+                    Box {
+                       size 0.071200 0.094000 0.077900
+                    }
+                  ]
+                }
+                physics Physics {
+                  density -1
+                  mass 0.282000
+                  centerOfMass [ 0.023717 0.001810 0.025597 ]
+                  inertiaMatrix [
+                    2.060000e-04 2.057000e-04 1.603000e-04
+                    1.060000e-06 -5.730000e-05 2.534000e-06
+                  ]
+                }
+              }
+            }
+          ]
+          name "/neck"
+          boundingObject Transform {
+            translation 0.000000 0.000000 0.016500
+            children [
+              Box {
+                 size 0.022000 0.052300 0.033000
+              }
+            ]
+          }
+          physics Physics {
+            density -1
+            mass 0.011294
+            centerOfMass [ 0.000000 -0.000648 0.009245 ]
+            inertiaMatrix [
+              5.489000e-06 1.433000e-06 4.955000e-06
+              0.000000e+00 0.000000e+00 0.000000e+00
+            ]
+          }
+        }
+      }
+      Solid {
+        children [
+          InertialUnit {
+            name "imu_raw inertial"
+          }
+          Accelerometer {
+            name "imu_raw accelerometer"
+          }
+          Gyro {
+            name "imu_raw gyro"
+          }
+          Compass {
+            name "imu_raw compass"
+          }
+        ]
+        name "/imu_link"
+        physics Physics {
+          density -1
+          mass 0.010000
+          centerOfMass [ 0.000000 0.000000 0.000000 ]
+          inertiaMatrix [
+            1.000000e-09 1.000000e-09 1.000000e-09
+            0.000000e+00 0.000000e+00 0.000000e+00
+          ]
+        }
+      }
+    ]
+    name IS name
+    boundingObject Transform {
+      translation 0.000000 0.000000 -0.052000
+      children [
+        Box {
+           size 0.130000 0.145000 0.152000
+        }
+      ]
+    }
+    physics Physics {
+      density -1
+      mass 1.529000
+      centerOfMass [ 0.008250 -0.001744 -0.052248 ]
+      inertiaMatrix [
+        4.323000e-03 5.198000e-03 3.567000e-03
+        5.549000e-06 3.960000e-05 -1.509000e-05
+      ]
+    }
+  }
+}

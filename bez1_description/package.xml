@@ -13,6 +13,9 @@
   <depend>dynamic_reconfigure</depend>
   <depend>ros_control</depend>
   <depend>effort_controllers</depend>
+  <build_depend>rospy</build_depend>
+  <build_export_depend>rospy</build_export_depend>
+  <exec_depend>rospy</exec_depend>
 
   <export>
     <gazebo_ros gazebo_model_path="${prefix}/models" gazebo_media_path="${prefix}/models" />
