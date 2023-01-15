@@ -41,12 +41,11 @@ WORKDIR /usr/local
 
 COPY webots/scripts webots/scripts
 RUN ./webots/scripts/install/linux_compilation_dependencies.sh
-RUN ./webots/scripts/install/linux_optional_compilation_dependencies.sh
 
 COPY webots webots
 RUN echo WEBOTS_HOME="/usr/local/webots" >> ~/.bashrc && \
     cd webots && \
-    make
+    export WEBOTS_HOME="/usr/local/webots" && make
 
 COPY GameController GameController
 RUN apt update && apt-fast -y install ant protobuf-compiler libprotobuf-dev libjpeg9-dev && \
