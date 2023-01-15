@@ -1,10 +1,12 @@
 <launch>
     <arg name="single" default="true" />
+    <arg name="robot_model" default="$(optenv ROBOT_MODEL bez1)" />
     <env name="ROSCONSOLE_FORMAT" value="[${severity}] [${time}] [${node} ${logger} ${function} ${line}]: ${message}" />
 
     <!-- The master simulator controller -->
     <include file="$(find soccerbot)/launch/modules/webots.launch">
         <arg name="single" value="$(arg single)" />
+        <arg name="robot_model" value="$(arg robot_model)" />
     </include>
 
     <include file="$(find soccerbot)/launch/modules/gui.launch" />
@@ -12,7 +14,7 @@
     <include file="$(find soccerbot)/launch/soccerbot.launch" ns="robot1">
         <arg name="simulation" value="true" />
         <arg name="robot_id" value="1" />
-        <arg name="robot_model" value="$(optenv ROBOT_MODEL bez1)" />
+        <arg name="robot_model" value="$(arg robot_model)" />
         <arg name="x_pos" value="-4" />
         <arg name="y_pos" value="-3.15" />
         <arg name="a_pos" value="1.57" />

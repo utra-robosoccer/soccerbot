@@ -1,0 +1,6 @@
+skip_determine_side: false
+skip_ready_strategy: false
+shorten_navigation_limit: 2 # Makes it so that robot cannot move more than this distance at a time
+
+min_kick_distance: 0.20
+min_kick_angle: 0.4
