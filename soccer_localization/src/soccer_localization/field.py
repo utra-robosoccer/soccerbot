@@ -40,6 +40,7 @@ class Field:
         self.min_points_threshold = rospy.get_param("min_points_threshold", 40)
         self.max_detected_line_parallel_offset_error = rospy.get_param("max_detected_line_parallel_offset_error", 0.1)
         self.max_detected_line_perpendicular_offset_error = rospy.get_param("max_detected_line_perpendicular_offset_error", 0.3)
+        self.offset_movement_limit = rospy.get_param("offset_movement_limit", 0.1)
 
         self.path_plots: Dict[str, PathCollection] = {}
         self.path_points: Dict[str, list] = {}
@@ -78,10 +79,10 @@ class Field:
 
         create_cross(A / 2 - G)
         create_cross(-A / 2 + G)
-        # create_cross(0)
+        create_cross(0)
 
         # Circle
-        lines.append(Circle(center=Point(x=0, y=0), radius=H))
+        lines.append(Circle(center=Point(x=0, y=0), radius=H / 2))
 
         return lines
 
@@ -131,6 +132,8 @@ class Field:
 
         start = time.time()
         # Filter points by distance from current transform
+        if point_cloud_array is None or point_cloud_array.shape[0] < self.min_points_threshold:
+            return None
         world_frame_points = self.filterWorldFramePoints(current_transform, point_cloud_array)
         if world_frame_points is None or world_frame_points.shape[1] < self.min_points_threshold:
             return None
@@ -157,7 +160,6 @@ class Field:
                     distance_matrix[line_id, :] = np.where(
                         (world_frame_points[0, :] >= x_left) & (world_frame_points[0, :] <= x_right), y_diff**2, float("inf")
                     )
-                    distance_matrix[line_id, :] = float("inf")
                     diff_y[line_id, :] = y_diff
                 else:
                     y_bottom = line.p1.y - lw / 2 - self.max_detected_line_parallel_offset_error
@@ -170,14 +172,18 @@ class Field:
                     )
                     diff_x[line_id, :] = x_diff
                 pass
-            else:
-                distance = world_frame_points[0, :] ** 2 + world_frame_points[1, :] ** 2 - line.radius**2
-                distance_matrix[line_id, :] = np.where(distance > lw / 2 + 0.5, float("inf"), distance)
+            else:  # Circle
+                xx = world_frame_points[0, :] ** 2
+                yy = world_frame_points[1, :] ** 2
 
-                # TODO test this and optimize the speed
-                yx_ratio = np.arctan2(world_frame_points[1, :], world_frame_points[0, :])
-                diff_y[line_id, :] = distance * np.sin(yx_ratio)
-                diff_x[line_id, :] = distance * np.cos(yx_ratio)
+                distance = np.sqrt(xx + yy) - line.radius
+                distance_matrix[line_id, :] = np.where(distance > lw / 2 + 0.1, float("inf"), distance)
+
+                x_ratio = np.sqrt(xx / (xx + yy)) * np.sign(world_frame_points[0, :])
+                y_ratio = np.sqrt(yy / (xx + yy)) * np.sign(world_frame_points[1, :])
+
+                diff_x[line_id, :] = distance * x_ratio
+                diff_y[line_id, :] = distance * y_ratio
 
         closest_line = np.argmin(distance_matrix, axis=0)
         closest_dist = np.min(distance_matrix, axis=0)
@@ -206,6 +212,8 @@ class Field:
             diff_y_avg = 0
         assert not np.isnan(diff_x_avg)
         assert not np.isnan(diff_y_avg)
+        if diff_x_avg**2 + diff_y_avg**2 > self.offset_movement_limit**2:
+            return None
 
         center_of_all_points = np.average(points_meet_dist_threshold, axis=1)
         points_meet_dist_threshold_delta = np.subtract(points_meet_dist_threshold, np.expand_dims(center_of_all_points, axis=1))
@@ -216,7 +224,9 @@ class Field:
         angle_diff = angle_new - angle_original
         angle_diff = wrapToPi(angle_diff)
         angle_diff_avg = np.average(angle_diff)
-
+        # most_common_line = scipy.stats.mode(closest_line)[0][0]
+        # if most_common_line == len(self.lines) - 1:
+        #     angle_diff_avg = 0 # TODO make this better, for now ignore angle diffs when most common line is circle, todo exclude circle from angle
         transform_delta_center_to_robot = scipy.linalg.inv(current_transform) @ Transformation(
             pos_theta=[center_of_all_points[0], center_of_all_points[1], 0]
         )

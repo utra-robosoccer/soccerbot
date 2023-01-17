@@ -2,9 +2,9 @@
 cmake-build-debug
 *.md
 external
-!external/webots/projects/samples/contests/robocup/controllers/player/messages.proto
+!external/hlvs_webots/controllers/player/messages.proto
+!external/hlvs_webots/controllers/referee/*.json
 !external/GameController/protocols/python/gamestate.py
-!external/navigation/amcl
 !external/CATKIN_IGNORE
 LICENSE
 Dockerfile

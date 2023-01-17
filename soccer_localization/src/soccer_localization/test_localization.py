@@ -38,8 +38,10 @@ def retrieve_bag(url="https://drive.google.com/uc?id=1T_oyM1rZwWgUy6A6KlsJ7Oqn8J
     return test_path
 
 
-@pytest.mark.parametrize("t_start", [(80)])
+@pytest.mark.parametrize("t_start", [(60)])
 def test_points_correction(t_start):
+    rospy.init_node("test")
+
     plt.figure("Localization")
 
     map = Field()
@@ -114,7 +116,6 @@ def display_rosbag_map(bag, map, debug=False, pos_theta_start=[-4, -3.15, np.pi 
             if vo_pos_theta is not None:
                 path_vo.append(vo_pos_theta)
                 path_vo_t.append(t.to_sec())
-                f.update(vo_pos_theta)
 
             if debug:
                 map.drawPathOnMap(Transformation(pos_theta=f.ukf.x), label="VO Odometry", color="orange")
@@ -123,6 +124,8 @@ def display_rosbag_map(bag, map, debug=False, pos_theta_start=[-4, -3.15, np.pi 
                     map.drawPathOnMap(vo_transform, label="VO Odometry", color="red")
                     map.drawPointsOnMap(vo_transform, point_cloud_array, label="Odom Points Corrected", color="red")
                 if point_cloud_array is not None:
+                    # if transform_gt is not None:
+                    #     map.drawPointsOnMap(transform_gt, point_cloud_array, label="Odom Points Ground Truth", color="white")
                     map.drawPointsOnMap(current_transform, point_cloud_array, label="Odom Points", color="black")
 
                 plt.title(f"UKF Robot localization (t = {round(t.secs + t.nsecs * 1e-9)})")
@@ -216,7 +219,7 @@ def display_rosbag_map(bag, map, debug=False, pos_theta_start=[-4, -3.15, np.pi 
 
     if "DISPLAY" in os.environ:
         plt.show(block=False)
-        plt.waitforbuttonpress(timeout=10)
+        plt.waitforbuttonpress()
         plt.close("all")
 
 
@@ -229,7 +232,19 @@ def test_walk_forward():
     map.draw()
 
     bag = rosbag.Bag(retrieve_bag())
-    display_rosbag_map(bag=bag, map=map)
+    display_rosbag_map(bag=bag, map=map, debug=False)
+
+
+def test_walk_forward_center_map():
+
+    rospy.init_node("test")
+
+    plt.figure("Localization")
+
+    map = Field()
+    map.draw()
+    bag = rosbag.Bag(retrieve_bag(url="https://drive.google.com/uc?id=1VNHkAu10cfFJzcpTvc0zR8Jm-tI_6xQ8", bag_name="localization_2"))
+    display_rosbag_map(bag=bag, map=map, debug=False, pos_theta_start=[-1, -3.15, np.pi / 2])
 
 
 class FreehicleField(Field):
