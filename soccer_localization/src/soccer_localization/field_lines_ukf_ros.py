@@ -18,7 +18,7 @@ from soccer_msgs.msg import RobotState
 
 
 class FieldLinesUKFROS(FieldLinesUKF):
-    def __init__(self):
+    def __init__(self, map=Field()):
         super().__init__()
 
         self.initial_pose_initiated = False
@@ -26,7 +26,7 @@ class FieldLinesUKFROS(FieldLinesUKF):
         self.field_point_cloud_subscriber = rospy.Subscriber("field_point_cloud", PointCloud2, self.field_point_cloud_callback, queue_size=1)
         self.initial_pose_subscriber = rospy.Subscriber("initialpose", PoseWithCovarianceStamped, self.initial_pose_callback, queue_size=1)
         self.amcl_pose_publisher = rospy.Publisher("amcl_pose", PoseWithCovarianceStamped, queue_size=1)
-        self.map = Field()
+        self.map = map
 
         self.initial_pose = Transformation(pos_theta=[-4, -3.15, np.pi / 2])  # TODO get this
         self.ukf.x = self.initial_pose.pos_theta
@@ -39,7 +39,7 @@ class FieldLinesUKFROS(FieldLinesUKF):
         self.robot_state_subscriber = rospy.Subscriber("state", RobotState, self.robot_state_callback)
         self.robot_state = RobotState()
 
-        rospy.loginfo("Soccer Localization UFK initiated")
+        rospy.loginfo("Soccer Localization UKF initiated")
 
     def robot_state_callback(self, robot_state: RobotState):
         self.robot_state = robot_state
@@ -141,4 +141,5 @@ class FieldLinesUKFROS(FieldLinesUKF):
         self.initial_pose = Transformation(pose_with_covariance_stamped=pose_stamped)
         self.ukf.x = self.initial_pose.pos_theta
         self.ukf.P = self.initial_pose.pose_theta_covariance_array
+        self.broadcast_tf_position(pose_stamped.header.stamp)
         self.initial_pose_initiated = True

@@ -22,9 +22,7 @@
 <!--  <depend>soccer_embedded</depend>-->
 
   <!-- Localization -->
-  <exec_depend>amcl</exec_depend>
   <depend>map_server</depend>
-  <depend>pointcloud_to_laserscan</depend>
   <depend>soccer_object_detection</depend>
   <depend>soccer_object_localization</depend>
   <depend>soccer_common</depend>
@@ -32,7 +30,6 @@
   <depend>robot_pose_ekf</depend>
   <depend>robot_localization</depend>
   <depend>soccer_pycontrol</depend>
-  <depend>fake_localization</depend>
   <depend>soccer_localization</depend>
   <depend>webots_ros</depend>
 

@@ -60,8 +60,15 @@ class GameControllerBridge:
         ]
         self.sensor_names.extend(self.pressure_sensor_names)
 
-        self.create_publishers()
-        self.create_subscribers()
+        self.pub_clock = rospy.Publisher("/clock", Clock, queue_size=1)
+        self.pub_server_time_clock = rospy.Publisher("/server_time_clock", Clock, queue_size=1)
+        self.pub_camera = rospy.Publisher("camera/image_raw", Image, queue_size=1)
+        self.pub_camera_info = rospy.Publisher("camera/camera_info", CameraInfo, queue_size=1, latch=True)
+        self.pub_imu = rospy.Publisher("imu_raw", Imu, queue_size=1)
+        self.pub_imu_first = 2
+        self.pressure_sensors_pub = {i: rospy.Publisher("foot_contact_{}".format(i), Bool, queue_size=10) for i in range(8)}
+        self.pub_joint_states = rospy.Publisher("joint_states", JointState, queue_size=1)
+        self.joint_command_subscriber = rospy.Subscriber("joint_command", JointState, self.joint_command_callback)
 
         self.addr = os.getenv("ROBOCUP_SIMULATOR_ADDR", "127.0.0.1:10001")
 
@@ -119,19 +126,6 @@ class GameControllerBridge:
                 time.sleep(6)
 
         self.close_connection()
-
-    def create_publishers(self):
-        self.pub_clock = rospy.Publisher("/clock", Clock, queue_size=1)
-        self.pub_server_time_clock = rospy.Publisher("/server_time_clock", Clock, queue_size=1)
-        self.pub_camera = rospy.Publisher("camera/image_raw", Image, queue_size=1)
-        self.pub_camera_info = rospy.Publisher("camera/camera_info", CameraInfo, queue_size=1, latch=True)
-        self.pub_imu = rospy.Publisher("imu_raw", Imu, queue_size=1)
-        self.pub_imu_first = 2
-        self.pressure_sensors_pub = {i: rospy.Publisher("foot_contact_{}".format(i), Bool, queue_size=10) for i in range(8)}
-        self.pub_joint_states = rospy.Publisher("joint_states", JointState, queue_size=1)
-
-    def create_subscribers(self):
-        self.joint_command_subscriber = rospy.Subscriber("joint_command", JointState, self.joint_command_callback)
 
     def joint_command_callback(self, msg: JointState):
         motor_dictionary = {}

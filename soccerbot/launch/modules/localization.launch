@@ -1,16 +1,10 @@
-<!-- Launches the localization using for amcl the robot -->
+<!-- Launches the localization using for the robot -->
 
 <launch>
-    <arg name="fake_localization" default="false" />
     <arg name="simulation" default="false" />
     <arg name="robot_name" default="robot1" />
     <arg name="robot_model" default="bez1" />
     <arg name="map_name" default="robocup" />
-    <arg name="x_pos" default="0" />
-    <arg name="y_pos" default="0" />
-    <arg name="a_pos" default="0" />
-    <arg name="use_amcl" default="false" />
-    <!-- If don't use amcl will use the soccer_localization ukf -->
 
     <arg name="param_file_name" value="$(arg robot_model)_sim" if="$(arg simulation)" />
     <arg name="param_file_name" value="$(arg robot_model)" unless="$(arg simulation)" />
@@ -27,7 +21,7 @@
     <node pkg="soccer_object_localization" type="detector_objects.py" name="ball_detector" output="screen">
         <rosparam file="$(find soccer_object_localization)/config/$(arg param_file_name).yaml" command="load" />
     </node>
-    <node name="object_detector" pkg="soccer_object_detection" type="object_detect_node.py" output="screen" args="--model $(find soccer_object_detection)/models/half_5.pt" unless="$(arg fake_localization)">
+    <node name="object_detector" pkg="soccer_object_detection" type="object_detect_node.py" output="screen" args="--model $(find soccer_object_detection)/models/half_5.pt">
         <rosparam file="$(find soccer_object_detection)/config/$(arg param_file_name).yaml" command="load" />
     </node>
 
@@ -39,7 +33,7 @@
     </node>
 
     <!-- IMU location -->
-    <node pkg="robot_pose_ekf" type="robot_pose_ekf" name="robot_pose_ekf" unless="$(arg fake_localization)" output="log">
+    <node pkg="robot_pose_ekf" type="robot_pose_ekf" name="robot_pose_ekf" output="log">
         <rosparam file="$(find soccerbot)/config/robot_pose_ekf.yaml" command="load" />
         <remap from="robot_pose_ekf/odom_combined" to="odom_combined" />
         <remap from="imu_data" to="imu_filtered" />
@@ -55,31 +49,6 @@
 
     <node name="torso_height_publisher" pkg="bez1_description" type="base_footprint_to_torso.py" />
 
-    <!-- AMCL Localization -->
-    <node pkg="amcl" type="amcl" name="amcl" respawn="$(optenv COMPETITION false)" if="$(eval not fake_localization and use_amcl)" output="log">
-        <rosparam file="$(find soccerbot)/config/amcl.yaml" command="load" />
-        <param name="initial_pose_x" value="$(arg x_pos)" />
-        <param name="initial_pose_y" value="$(arg y_pos)" />
-        <param name="initial_pose_a" value="$(arg a_pos)" />
-        <param name="odom_frame_id" value="$(arg robot_name)/odom" />
-        <param name="base_frame_id" value="$(arg robot_name)/base_footprint" />
-    </node>
-    <node pkg="pointcloud_to_laserscan" type="pointcloud_to_laserscan_node" name="pointcloud_to_laserscan" if="$(eval not fake_localization and use_amcl)">
-        <rosparam file="$(find soccerbot)/config/pointcloud_to_laserscan.yaml" command="load" />
-        <remap from="cloud_in" to="field_point_cloud" />
-    </node>
-
     <!-- UKF localization -->
-    <node pkg="soccer_localization" type="main.py" name="soccer_ukf" respawn="$(optenv COMPETITION false)" unless="$(eval fake_localization or use_amcl)" output="log" />
-
-    <node pkg="tf" type="static_transform_publisher" name="imu_to_robot_base" args="0 0 0 0 0 0 $(arg robot_name)/odom $(arg robot_name)/base_footprint 100" if="$(arg fake_localization)" />
-
-    <node pkg="fake_localization" type="fake_localization" name="fake_localization" if="$(arg fake_localization)">
-        <remap from="base_pose_ground_truth" to="base_pose_ground_truth" />
-        <param name="global_frame_id" value="world" />
-        <param name="base_frame_id" value="$(arg robot_name)/base_footprint" />
-        <param name="odom_frame_id" value="$(arg robot_name)/odom" />
-        <param name="delta_x" value="0" />
-        <param name="delta_y" value="0" />
-    </node>
+    <node pkg="soccer_localization" type="main.py" name="soccer_ukf" respawn="$(optenv COMPETITION false)" output="log" />
 </launch>

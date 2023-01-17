@@ -151,6 +151,9 @@ class Transformation(np.ndarray):
 
     @orientation_euler.setter
     def orientation_euler(self, euler_array, sequence="ZYX"):
+        """
+        Representation of the rotation of the transformation in euler coordinates [yaw, pitch, roll]
+        """
         r = R.from_euler(seq=sequence, angles=euler_array, degrees=False)
         self.quaternion = r.as_quat()
 
