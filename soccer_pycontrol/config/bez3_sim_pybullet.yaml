@@ -3,7 +3,6 @@ robot_model: bez3
 
 walking_torso_height: 0.45
 steps_per_second_default: 1.1
-bodystep_size_default: 0.05
 foot_separation: 0.06
 torso_offset_x_ready: -0.02 # positive is forward
 torso_offset_x: 0.02

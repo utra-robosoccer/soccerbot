@@ -3,7 +3,6 @@ robot_model: bez2
 
 walking_torso_height: 0.66
 steps_per_second_default: 1.0
-bodystep_size_default: 0.05
 foot_separation: 0.06
 torso_offset_x: 0.03
 merge_fixed_links: true
