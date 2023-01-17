@@ -22,6 +22,13 @@
 
     <param
         name="robot_description"
+        if="$(eval robot_model == 'bez2')"
+        command="xacro '$(find bez2_description)/urdf/bez2.xacro'
+        tf_prefix:=$(arg robot_name)"
+    />
+
+    <param
+        name="robot_description"
         if="$(eval robot_model == 'bez3')"
         command="xacro '$(find bez3_description)/urdf/bez3.xacro'
         tf_prefix:=$(arg robot_name)"

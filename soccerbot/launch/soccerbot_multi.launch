@@ -1,12 +1,12 @@
 <launch>
     <arg name="single" default="true" />
-    <arg name="robot_model" default="$(optenv ROBOT_MODEL bez1)" />
+    <arg name="robot_model" default="$(optenv ROBOT_MODEL bez2)" />
     <env name="ROSCONSOLE_FORMAT" value="[${severity}] [${time}] [${node} ${logger} ${function} ${line}]: ${message}" />
 
     <!-- The master simulator controller -->
     <include file="$(find soccerbot)/launch/modules/webots.launch">
+        <env name="ROBOT_MODEL" value="$(arg robot_model)" />
         <arg name="single" value="$(arg single)" />
-        <arg name="robot_model" value="$(arg robot_model)" />
     </include>
 
     <include file="$(find soccerbot)/launch/modules/gui.launch" />

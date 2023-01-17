@@ -4,7 +4,9 @@
 <xacro:include filename="$(find bez2_description)/urdf/materials.xacro" />
 <xacro:include filename="$(find bez2_description)/urdf/bez2.trans" />
 <xacro:include filename="$(find bez2_description)/urdf/bez2.gazebo" />
-<link name="base_link">
+<xacro:arg name="has_base_footprint" default="false" />
+<xacro:arg name="tf_prefix" default="" />
+<link name="$(arg tf_prefix)/torso">
   <inertial>
     <origin xyz="0.005344203942179857 0.0011597330599576942 -0.04327601296104891" rpy="0 0 0"/>
     <mass value="1.4940527908480117"/>
@@ -25,7 +27,7 @@
   </collision>
 </link>
 
-<link name="biceps_v3_1">
+<link name="$(arg tf_prefix)/biceps_v3_1">
   <inertial>
     <origin xyz="-4.857598999001871e-13 0.026299931386057934 -0.038386051153163035" rpy="0 0 0"/>
     <mass value="0.25825416029102555"/>
@@ -46,7 +48,7 @@
   </collision>
 </link>
 
-<link name="Arm_Assembly-bez3_v12_2">
+<link name="$(arg tf_prefix)/Arm_Assembly-bez3_v12_2">
   <inertial>
     <origin xyz="-0.005330016176706751 0.022844719426815346 0.029751280366322262" rpy="0 0 0"/>
     <mass value="0.32110352957731503"/>
@@ -67,7 +69,7 @@
   </collision>
 </link>
 
-<link name="biceps_v3_2">
+<link name="$(arg tf_prefix)/biceps_v3_2">
   <inertial>
     <origin xyz="4.933084310590376e-13 -0.026299931386065484 -0.038386051153161384" rpy="0 0 0"/>
     <mass value="0.25825416029102555"/>
@@ -88,7 +90,7 @@
   </collision>
 </link>
 
-<link name="Arm_Assembly-bez3_v12_1">
+<link name="$(arg tf_prefix)/Arm_Assembly-bez3_v12_1">
   <inertial>
     <origin xyz="-0.005330016176713268 -0.02582928057318666 0.02975128036632215" rpy="0 0 0"/>
     <mass value="0.32110352957731503"/>
@@ -109,7 +111,7 @@
   </collision>
 </link>
 
-<link name="Hip_Printable_v2_v10_2">
+<link name="$(arg tf_prefix)/Hip_Printable_v2_v10_2">
   <inertial>
     <origin xyz="4.21754180706356e-05 -3.2154834350706096e-14 -0.014017367581241474" rpy="0 0 0"/>
     <mass value="0.010089224750638792"/>
@@ -130,7 +132,7 @@
   </collision>
 </link>
 
-<link name="hip_motors_v4_1">
+<link name="$(arg tf_prefix)/hip_motors_v4_1">
   <inertial>
     <origin xyz="0.00908799649277551 -7.287744503703397e-08 -0.011907384768018503" rpy="0 0 0"/>
     <mass value="0.2728199051639206"/>
@@ -151,7 +153,7 @@
   </collision>
 </link>
 
-<link name="hip_motors_v4_2">
+<link name="$(arg tf_prefix)/hip_motors_v4_2">
   <inertial>
     <origin xyz="0.009087996492779226 -7.28774387503961e-08 -0.011907384768019141" rpy="0 0 0"/>
     <mass value="0.2728199051639206"/>
@@ -172,7 +174,7 @@
   </collision>
 </link>
 
-<link name="Upper_left_leg_support__bottom__v8_1">
+<link name="$(arg tf_prefix)/Upper_left_leg_support__bottom__v8_1">
   <inertial>
     <origin xyz="-5.513384106897723e-10 0.019462494401918447 -0.048113787355149845" rpy="0 0 0"/>
     <mass value="0.027169463894965433"/>
@@ -193,7 +195,7 @@
   </collision>
 </link>
 
-<link name="Upper_left_leg_support__bottom__v8_2">
+<link name="$(arg tf_prefix)/Upper_left_leg_support__bottom__v8_2">
   <inertial>
     <origin xyz="-5.513428880110638e-10 -0.019537505598094276 -0.04811378735514921" rpy="0 0 0"/>
     <mass value="0.027169463894965433"/>
@@ -214,7 +216,7 @@
   </collision>
 </link>
 
-<link name="New_left_foot_upperhalf_v5_1">
+<link name="$(arg tf_prefix)/New_left_foot_upperhalf_v5_1">
   <inertial>
     <origin xyz="0.05139344311503742 -0.01218090675701626 -0.02177657679768813" rpy="0 0 0"/>
     <mass value="0.0588564551543425"/>
@@ -235,7 +237,7 @@
   </collision>
 </link>
 
-<link name="New_right_foot_upperhalf_v3_1">
+<link name="$(arg tf_prefix)/New_right_foot_upperhalf_v3_1">
   <inertial>
     <origin xyz="0.05139344394950704 0.060000000000004765 -0.02177657679768963" rpy="0 0 0"/>
     <mass value="0.117712910308685"/>
@@ -256,7 +258,7 @@
   </collision>
 </link>
 
-<link name="lower_leg_v4_1">
+<link name="$(arg tf_prefix)/lower_leg_v4_1">
   <inertial>
     <origin xyz="-7.555562408362304e-09 -0.023191925057663376 -0.02213350063265468" rpy="0 0 0"/>
     <mass value="0.1476733120184745"/>
@@ -277,7 +279,7 @@
   </collision>
 </link>
 
-<link name="lower_leg_v4_2">
+<link name="$(arg tf_prefix)/lower_leg_v4_2">
   <inertial>
     <origin xyz="6.452880308219222e-09 0.023191925057662998 -0.02213350063265551" rpy="0 0 0"/>
     <mass value="0.1476733120184745"/>
@@ -298,7 +300,7 @@
   </collision>
 </link>
 
-<link name="ankle_motors_v4_1">
+<link name="$(arg tf_prefix)/ankle_motors_v4_1">
   <inertial>
     <origin xyz="-0.020543373941361492 0.023300002595937435 0.015062549801947933" rpy="0 0 0"/>
     <mass value="0.3955604131597503"/>
@@ -319,7 +321,7 @@
   </collision>
 </link>
 
-<link name="ankle_motors_v4_2">
+<link name="$(arg tf_prefix)/ankle_motors_v4_2">
   <inertial>
     <origin xyz="-0.020543374775831007 -0.023299997404074242 0.015062549801948433" rpy="0 0 0"/>
     <mass value="0.3955604131597503"/>
@@ -340,7 +342,7 @@
   </collision>
 </link>
 
-<link name="Hip_Printable_v2_v10_1">
+<link name="$(arg tf_prefix)/Hip_Printable_v2_v10_1">
   <inertial>
     <origin xyz="4.217541806686084e-05 -3.049643870767227e-14 -0.014017367581240808" rpy="0 0 0"/>
     <mass value="0.010089224750638792"/>
@@ -362,7 +364,7 @@
 </link>
 
 
-<link name="head_v4_1">
+<link name="$(arg tf_prefix)/head_v4_1">
   <inertial>
     <origin xyz="0.003748762391791026 0.024245275552457073 0.02498879678916051" rpy="0 0 0"/>
     <mass value="0.29338454987270446"/>
@@ -383,7 +385,7 @@
   </collision>
 </link>
 
-<link name="custom_servo_support__middle_neck__v9_1">
+<link name="$(arg tf_prefix)/custom_servo_support__middle_neck__v9_1">
   <inertial>
     <origin xyz="-4.4698224288541866e-11 0.0015597589791841214 0.014702901470227653" rpy="0 0 0"/>
     <mass value="0.01959544470499754"/>
@@ -405,28 +407,28 @@
 </link>
 
 
-<link name="camera_point_1">
-  <inertial>
-    <origin xyz="-0.000999999374146826 -3.3364626470400865e-07 4.7006202563704136e-07" rpy="0 0 0"/>
-    <mass value="0.0005023999999999989"/>
-    <inertia ixx="0.0" iyy="0.0" izz="0.0" ixy="-0.0" iyz="0.0" ixz="-0.0"/>
-  </inertial>
-  <visual>
-    <origin xyz="-0.06765 -0.003154 -0.157441" rpy="0 0 0"/>
-    <geometry>
-      <mesh filename="package://bez2_description/meshes/camera_point_1.stl" scale="0.001 0.001 0.001"/>
-    </geometry>
-    <material name="steel_satin"/>
-  </visual>
-  <collision>
-    <origin xyz="-0.06765 -0.003154 -0.157441" rpy="0 0 0"/>
-    <geometry>
-      <mesh filename="package://bez2_description/meshes/camera_point_1.stl" scale="0.001 0.001 0.001"/>
-    </geometry>
-  </collision>
-</link>
+<!--<link name="$(arg tf_prefix)/camera_point_1">-->
+<!--  <inertial>-->
+<!--    <origin xyz="-0.000999999374146826 -3.3364626470400865e-07 4.7006202563704136e-07" rpy="0 0 0"/>-->
+<!--    <mass value="0.0005023999999999989"/>-->
+<!--    <inertia ixx="0.0" iyy="0.0" izz="0.0" ixy="-0.0" iyz="0.0" ixz="-0.0"/>-->
+<!--  </inertial>-->
+<!--  <visual>-->
+<!--    <origin xyz="-0.06765 -0.003154 -0.157441" rpy="0 0 0"/>-->
+<!--    <geometry>-->
+<!--      <mesh filename="package://bez2_description/meshes/camera_point_1.stl" scale="0.001 0.001 0.001"/>-->
+<!--    </geometry>-->
+<!--    <material name="steel_satin"/>-->
+<!--  </visual>-->
+<!--  <collision>-->
+<!--    <origin xyz="-0.06765 -0.003154 -0.157441" rpy="0 0 0"/>-->
+<!--    <geometry>-->
+<!--      <mesh filename="package://bez2_description/meshes/camera_point_1.stl" scale="0.001 0.001 0.001"/>-->
+<!--    </geometry>-->
+<!--  </collision>-->
+<!--</link>-->
 
-<link name="imu_1">
+<link name="$(arg tf_prefix)/imu_1">
   <inertial>
     <origin xyz="0.0020000000000040315 -4.076738946423575e-15 -0.04299999999999955" rpy="0 0 0"/>
     <mass value="0.0005024000000000008"/>
@@ -447,145 +449,160 @@
   </collision>
 </link>
 
+<xacro:if value="$(arg has_base_footprint)">
+  <link name="$(arg tf_prefix)/base_footprint" />
+  <joint name="base_footprint_torso" type="fixed">
+    <parent link="$(arg tf_prefix)/base_footprint"/>
+    <child link="$(arg tf_prefix)/torso"/>
+    <origin rpy="0 0 0" xyz="0 0 0.3536"/>
+    <axis xyz="1 0 0"/>
+  </joint>
+  <gazebo reference="$(arg tf_prefix)/base_footprint">
+    <kp>${JOINT_KP}</kp>
+    <kd>${JOINT_KD}</kd>
+    <mu1>${JOINT_MU1}</mu1>
+    <mu2>${JOINT_MU2}</mu2>
+  </gazebo>
+</xacro:if>
 
 <joint name="left_arm_motor_0" type="continuous">
   <origin xyz="0.0 0.0725 0.00045" rpy="0 0 0"/>
-  <parent link="base_link"/>
-  <child link="biceps_v3_1"/>
+  <parent link="$(arg tf_prefix)/torso"/>
+  <child link="$(arg tf_prefix)/biceps_v3_1"/>
   <axis xyz="-0.0 -1.0 0.0"/>
 </joint>
 
 <joint name="left_arm_motor_1" type="continuous">
   <origin xyz="0.0 0.008 -0.0906" rpy="0 0 0"/>
-  <parent link="biceps_v3_1"/>
-  <child link="Arm_Assembly-bez3_v12_2"/>
+  <parent link="$(arg tf_prefix)/biceps_v3_1"/>
+  <child link="$(arg tf_prefix)/Arm_Assembly-bez3_v12_2"/>
   <axis xyz="0.0 -1.0 0.0"/>
 </joint>
 
 <joint name="right_arm_motor_0" type="continuous">
   <origin xyz="0.0 -0.0725 0.00045" rpy="0 0 0"/>
-  <parent link="base_link"/>
-  <child link="biceps_v3_2"/>
+  <parent link="$(arg tf_prefix)/torso"/>
+  <child link="$(arg tf_prefix)/biceps_v3_2"/>
   <axis xyz="0.0 -1.0 0.0"/>
 </joint>
 
 <joint name="right_arm_motor_1" type="continuous">
   <origin xyz="-0.0 -0.008 -0.0906" rpy="0 0 0"/>
-  <parent link="biceps_v3_2"/>
-  <child link="Arm_Assembly-bez3_v12_1"/>
+  <parent link="$(arg tf_prefix)/biceps_v3_2"/>
+  <child link="$(arg tf_prefix)/Arm_Assembly-bez3_v12_1"/>
   <axis xyz="-0.0 -1.0 0.0"/>
 </joint>
 
 <joint name="left_leg_motor_0" type="continuous">
   <origin xyz="0.01597 0.0377 -0.14405" rpy="0 0 0"/>
-  <parent link="base_link"/>
-  <child link="Hip_Printable_v2_v10_2"/>
+  <parent link="$(arg tf_prefix)/torso"/>
+  <child link="$(arg tf_prefix)/Hip_Printable_v2_v10_2"/>
   <axis xyz="-0.0 0.0 -1.0"/>
 </joint>
 
 <joint name="right_leg_motor_1" type="continuous">
   <origin xyz="-0.0235 0.0 -0.032" rpy="0 0 0"/>
-  <parent link="Hip_Printable_v2_v10_1"/>
-  <child link="hip_motors_v4_1"/>
+  <parent link="$(arg tf_prefix)/Hip_Printable_v2_v10_1"/>
+  <child link="$(arg tf_prefix)/hip_motors_v4_1"/>
   <axis xyz="-1.0 0.0 0.0"/>
 </joint>
 
 <joint name="left_leg_motor_1" type="continuous">
   <origin xyz="-0.025 0.0 -0.032" rpy="0 0 0"/>
-  <parent link="Hip_Printable_v2_v10_2"/>
-  <child link="hip_motors_v4_2"/>
+  <parent link="$(arg tf_prefix)/Hip_Printable_v2_v10_2"/>
+  <child link="$(arg tf_prefix)/hip_motors_v4_2"/>
   <axis xyz="1.0 -0.0 -0.0"/>
 </joint>
 
 <joint name="left_leg_motor_2" type="continuous">
   <origin xyz="0.02365 -0.02 0.0" rpy="0 0 0"/>
-  <parent link="hip_motors_v4_2"/>
-  <child link="Upper_left_leg_support__bottom__v8_1"/>
+  <parent link="$(arg tf_prefix)/hip_motors_v4_2"/>
+  <child link="$(arg tf_prefix)/Upper_left_leg_support__bottom__v8_1"/>
   <axis xyz="0.0 -1.0 0.0"/>
 </joint>
 
 <joint name="right_leg_motor_2" type="continuous">
   <origin xyz="0.02365 0.02 0.0" rpy="0 0 0"/>
-  <parent link="hip_motors_v4_1"/>
-  <child link="Upper_left_leg_support__bottom__v8_2"/>
+  <parent link="$(arg tf_prefix)/hip_motors_v4_1"/>
+  <child link="$(arg tf_prefix)/Upper_left_leg_support__bottom__v8_2"/>
   <axis xyz="0.0 -1.0 0.0"/>
 </joint>
 
 <joint name="right_leg_motor_5" type="continuous">
   <origin xyz="-0.0843 -0.0233 0.0" rpy="0 0 0"/>
-  <parent link="ankle_motors_v4_2"/>
-  <child link="New_left_foot_upperhalf_v5_1"/>
+  <parent link="$(arg tf_prefix)/ankle_motors_v4_2"/>
+  <child link="$(arg tf_prefix)/New_left_foot_upperhalf_v5_1"/>
   <axis xyz="1.0 0.0 0.0"/>
 </joint>
 
 <joint name="left_leg_motor_5" type="continuous">
   <origin xyz="-0.0843 0.0233 0.0" rpy="0 0 0"/>
-  <parent link="ankle_motors_v4_1"/>
-  <child link="New_right_foot_upperhalf_v3_1"/>
+  <parent link="$(arg tf_prefix)/ankle_motors_v4_1"/>
+  <child link="$(arg tf_prefix)/New_right_foot_upperhalf_v3_1"/>
   <axis xyz="-1.0 0.0 0.0"/>
 </joint>
 
 
 <joint name="right_leg_motor_3" type="continuous">
   <origin xyz="0.0 0.0045 -0.0917" rpy="0 0 0"/>
-  <parent link="Upper_left_leg_support__bottom__v8_2"/>
-  <child link="lower_leg_v4_1"/>
+  <parent link="$(arg tf_prefix)/Upper_left_leg_support__bottom__v8_2"/>
+  <child link="$(arg tf_prefix)/lower_leg_v4_1"/>
   <axis xyz="0.0 -1.0 0.0"/>
 </joint>
 
 <joint name="left_leg_motor_3" type="continuous">
   <origin xyz="0.0 -0.0045 -0.0917" rpy="0 0 0"/>
-  <parent link="Upper_left_leg_support__bottom__v8_1"/>
-  <child link="lower_leg_v4_2"/>
+  <parent link="$(arg tf_prefix)/Upper_left_leg_support__bottom__v8_1"/>
+  <child link="$(arg tf_prefix)/lower_leg_v4_2"/>
   <axis xyz="0.0 -1.0 0.0"/>
 </joint>
 
 <joint name="left_leg_motor_4" type="continuous">
   <origin xyz="0.0 -0.0005 -0.1083" rpy="0 0 0"/>
-  <parent link="lower_leg_v4_2"/>
-  <child link="ankle_motors_v4_1"/>
+  <parent link="$(arg tf_prefix)/lower_leg_v4_2"/>
+  <child link="$(arg tf_prefix)/ankle_motors_v4_1"/>
   <axis xyz="0.0 -1.0 0.0"/>
 </joint>
 
 <joint name="right_leg_motor_4" type="continuous">
   <origin xyz="0.0 0.0005 -0.1083" rpy="0 0 0"/>
-  <parent link="lower_leg_v4_1"/>
-  <child link="ankle_motors_v4_2"/>
+  <parent link="$(arg tf_prefix)/lower_leg_v4_1"/>
+  <child link="$(arg tf_prefix)/ankle_motors_v4_2"/>
   <axis xyz="0.0 -1.0 0.0"/>
 </joint>
 
 <joint name="right_leg_motor_0" type="continuous">
   <origin xyz="0.01597 -0.0368 -0.14405" rpy="0 0 0"/>
-  <parent link="base_link"/>
-  <child link="Hip_Printable_v2_v10_1"/>
+  <parent link="$(arg tf_prefix)/torso"/>
+  <child link="$(arg tf_prefix)/Hip_Printable_v2_v10_1"/>
   <axis xyz="-0.0 -0.0 1.0"/>
 </joint>
 
 <joint name="head_motor_0" type="continuous">
   <origin xyz="0.03325 -0.000333 0.075624" rpy="0 0 0"/>
-  <parent link="base_link"/>
-  <child link="custom_servo_support__middle_neck__v9_1"/>
+  <parent link="$(arg tf_prefix)/torso"/>
+  <child link="$(arg tf_prefix)/custom_servo_support__middle_neck__v9_1"/>
   <axis xyz="0.0 0.0 -1.0"/>
 </joint>
 
 <joint name="head_motor_1" type="continuous">
   <origin xyz="0.0 -0.022187 0.033817" rpy="0 0 0"/>
-  <parent link="custom_servo_support__middle_neck__v9_1"/>
-  <child link="head_v4_1"/>
+  <parent link="$(arg tf_prefix)/custom_servo_support__middle_neck__v9_1"/>
+  <child link="$(arg tf_prefix)/head_v4_1"/>
   <axis xyz="-0.0 1.0 0.0"/>
 </joint>
 
-<joint name="head_camera" type="continuous">
-  <origin xyz="0.0344 0.025674 0.048" rpy="0 0 0"/>
-  <parent link="head_v4_1"/>
-  <child link="camera_point_1"/>
-  <axis xyz="1.0 0.0 -0.0"/>
-</joint>
+<!--<joint name="head_camera" type="continuous">-->
+<!--  <origin xyz="0.0344 0.025674 0.048" rpy="0 0 0"/>-->
+<!--  <parent link="$(arg tf_prefix)/head_v4_1"/>-->
+<!--  <child link="$(arg tf_prefix)/camera_point_1"/>-->
+<!--  <axis xyz="1.0 0.0 -0.0"/>-->
+<!--</joint>-->
 
 <joint name="torso_imu" type="continuous">
   <origin xyz="0.013 0.0 0.02895" rpy="0 0 0"/>
-  <parent link="base_link"/>
-  <child link="imu_1"/>
+  <parent link="$(arg tf_prefix)/torso"/>
+  <child link="$(arg tf_prefix)/imu_1"/>
   <axis xyz="0.0 0.0 1.0"/>
 </joint>
 
