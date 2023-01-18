@@ -3,9 +3,9 @@ control_frequency: 0.02
 # Path parameters
 walking_torso_height: 0.3 # not sure
 
-bodystep_size_default: 0.02
-bodystep_size_short_backwards: 0.01
-bodystep_size_short_forwards: 0.025
+torso_step_length: 0.02
+torso_step_length_short_backwards: 0.01
+torso_step_length_short_forwards: 0.025
 
 steps_per_second_default: 2.6
 foot_separation: 0.043

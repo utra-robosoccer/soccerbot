@@ -33,9 +33,9 @@ class TestWalking:
         config_path = config_folder_path + f"{robot_model}_sim_pybullet.yaml"
         set_rosparam_from_yaml_file(param_path=config_path)
         if "DISPLAY" not in os.environ:
-            c = Navigator(display=False, real_time=False)
+            c = Navigator(display=False, real_time=True)
         else:
-            c = Navigator(display=True, real_time=False)
+            c = Navigator(display=True, real_time=True)
 
         yield c
         c.close()
@@ -77,7 +77,7 @@ class TestWalking:
 
     @pytest.mark.timeout(30)
     @pytest.mark.flaky(reruns=1)
-    @pytest.mark.parametrize("walker", ["bez1", "bez3"], indirect=True)
+    @pytest.mark.parametrize("walker", ["bez1", "bez2", "bez3"], indirect=True)
     def test_ik(self, walker: Navigator):
         walker.soccerbot.configuration[Links.RIGHT_LEG_1 : Links.RIGHT_LEG_6 + 1] = walker.soccerbot.inverseKinematicsRightFoot(
             np.copy(walker.soccerbot.right_foot_init_position)
@@ -97,7 +97,7 @@ class TestWalking:
                 _ = _
             pb.stepSimulation()
 
-    @pytest.mark.parametrize("walker", ["bez1", "bez3"], indirect=True)
+    @pytest.mark.parametrize("walker", ["bez1","bez2", "bez3"], indirect=True)
     def test_walk_1(self, walker: Navigator):
         walker.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
         walker.ready()
@@ -215,7 +215,7 @@ class TestWalking:
 
     @pytest.mark.timeout(30)
     @pytest.mark.flaky(reruns=1)
-    @pytest.mark.parametrize("walker", ["bez1"], indirect=True)
+    @pytest.mark.parametrize("walker", ["bez1", "bez2"], indirect=True)
     def test_turn_in_place(self, walker: Navigator):
         walker.setPose(Transformation([0, 0, 0], [0.00000, 0, 0, 1]))
         walker.ready()

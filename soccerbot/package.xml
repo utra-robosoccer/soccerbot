@@ -12,6 +12,7 @@
 
   <!-- Simulation -->
   <depend>bez1_description</depend>
+  <depend>bez2_description</depend>
   <depend>bez3_description</depend>
   <!-- Sensors -->
   <depend>usb_cam</depend>
