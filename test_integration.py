@@ -170,7 +170,7 @@ class IntegrationTestInitial(IntegrationTest):
         while not rospy.is_shutdown():
             printlog(f"Distance to destination: {self.distance}")
             rospy.sleep(1)
-            if self.distance < 2:
+            if self.distance < 1:
                 break
         printlog("Goal reached")
 

@@ -46,7 +46,6 @@ class SoccerbotRos(Soccerbot):
         self.robot_state_subscriber = rospy.Subscriber("state", RobotState, self.state_callback)
         self.robot_state = RobotState()
         self.robot_state.status = RobotState.STATUS_DISCONNECTED
-        self.last_status = self.robot_state.status
 
         #: Frequency for the head's yaw while searching and relocalizing (left and right movement)
         self.head_yaw_freq = rospy.get_param("head_yaw_freq", 0.005)
@@ -61,9 +60,6 @@ class SoccerbotRos(Soccerbot):
         :param robot_state: A class which tells you information about the robot, disconnected etc
         """
         self.robot_state = robot_state
-
-        if self.robot_state.status not in [RobotState.STATUS_READY]:
-            self.last_status = self.robot_state.status
 
     def imu_callback(self, msg: Imu):
         """
@@ -259,8 +255,7 @@ class SoccerbotRos(Soccerbot):
             self.configuration[Joints.RIGHT_ARM_2] = (0.8 - self.configuration[Joints.RIGHT_ARM_2]) * 0.05 + self.configuration[Joints.RIGHT_ARM_2]
 
             # If the last time it saw the ball was 2 seconds ago
-            if self.last_ball_found_timestamp is not None and (rospy.Time.now() - self.last_ball_found_timestamp) < rospy.Duration(3)\
-                    and self.last_status not in [RobotState.STATUS_KICKING]:
+            if self.last_ball_found_timestamp is not None and (rospy.Time.now() - self.last_ball_found_timestamp) < rospy.Duration(3):
 
                 assert self.ball_pixel is not None
 
