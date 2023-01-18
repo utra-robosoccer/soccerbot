@@ -26,7 +26,7 @@ class StrategyReady(Strategy):
         this_robot = self.get_current_robot(friendly_team)
 
         if this_robot.status != Robot.Status.WALKING:  # TODO use dynamic walking to adjust position
-            navigation_position = np.array(friendly_team.formations["ready"][this_robot.role], dtype=np.float)
+            navigation_position = np.array(friendly_team.formations["ready"][this_robot.role], dtype=float)
             if np.linalg.norm(this_robot.position[0:2] - navigation_position[0:2]) > 0.20:
                 this_robot.set_navigation_position(navigation_position)
             elif abs((this_robot.position[2] - navigation_position[2]) % math.pi) > 0.2:  # Rotate only
