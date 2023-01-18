@@ -95,10 +95,10 @@ class StrategyDetermineSide(Strategy):
         rotation = team_info["players"][str(current_robot.robot_id)]["reentryStartingPose"]["rotation"]
 
         position = np.array([translation[0], translation[1], rotation[3]])
-        if self.average_goal_post_y < 0:  # Goal post seen on the left side
-            self.flip_required = True
-            position[1] = -position[1]
-            position[2] = -position[2]
+        # if self.average_goal_post_y < 0:  # Goal post seen on the left side
+        #     self.flip_required = True
+        #     position[1] = -position[1]
+        #     position[2] = -position[2]
         current_robot.position = position
         rospy.loginfo(f"Robot Position Determined, Determining Roles, Position: {current_robot.position} Flip Required: {self.flip_required}")
         current_robot.reset_initial_position()
