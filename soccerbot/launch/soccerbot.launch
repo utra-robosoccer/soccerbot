@@ -24,6 +24,10 @@
         name="robot_description"
         if="$(eval robot_model == 'bez2')"
         command="xacro '$(find bez2_description)/urdf/bez2.xacro'
+        robot_name:=$(arg robot_name)
+        model_type:=stl
+        file_path:=package://bez2_description
+        has_base_footprint:=false
         tf_prefix:=$(arg robot_name)"
     />
 
@@ -31,6 +35,10 @@
         name="robot_description"
         if="$(eval robot_model == 'bez3')"
         command="xacro '$(find bez3_description)/urdf/bez3.xacro'
+        robot_name:=$(arg robot_name)
+        model_type:=stl
+        file_path:=package://bez3_description
+        has_base_footprint:=false
         tf_prefix:=$(arg robot_name)"
     />
 
