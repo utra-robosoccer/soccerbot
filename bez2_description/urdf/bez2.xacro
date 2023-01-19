@@ -407,28 +407,28 @@
 </link>
 
 
-<!--<link name="$(arg tf_prefix)/camera_point_1">-->
-<!--  <inertial>-->
-<!--    <origin xyz="-0.000999999374146826 -3.3364626470400865e-07 4.7006202563704136e-07" rpy="0 0 0"/>-->
-<!--    <mass value="0.0005023999999999989"/>-->
-<!--    <inertia ixx="0.0" iyy="0.0" izz="0.0" ixy="-0.0" iyz="0.0" ixz="-0.0"/>-->
-<!--  </inertial>-->
-<!--  <visual>-->
-<!--    <origin xyz="-0.06765 -0.003154 -0.157441" rpy="0 0 0"/>-->
-<!--    <geometry>-->
-<!--      <mesh filename="package://bez2_description/meshes/camera_point_1.stl" scale="0.001 0.001 0.001"/>-->
-<!--    </geometry>-->
-<!--    <material name="steel_satin"/>-->
-<!--  </visual>-->
-<!--  <collision>-->
-<!--    <origin xyz="-0.06765 -0.003154 -0.157441" rpy="0 0 0"/>-->
-<!--    <geometry>-->
-<!--      <mesh filename="package://bez2_description/meshes/camera_point_1.stl" scale="0.001 0.001 0.001"/>-->
-<!--    </geometry>-->
-<!--  </collision>-->
-<!--</link>-->
+<link name="$(arg tf_prefix)/camera">
+  <inertial>
+    <origin xyz="-0.000999999374146826 -3.3364626470400865e-07 4.7006202563704136e-07" rpy="0 0 0"/>
+    <mass value="0.0005023999999999989"/>
+    <inertia ixx="0.0" iyy="0.0" izz="0.0" ixy="-0.0" iyz="0.0" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.06765 -0.003154 -0.157441" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://bez2_description/meshes/camera_point_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="steel_satin"/>
+  </visual>
+  <collision>
+    <origin xyz="-0.06765 -0.003154 -0.157441" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://bez2_description/meshes/camera_point_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
 
-<link name="$(arg tf_prefix)/imu_1">
+<link name="$(arg tf_prefix)/imu_link">
   <inertial>
     <origin xyz="0.0020000000000040315 -4.076738946423575e-15 -0.04299999999999955" rpy="0 0 0"/>
     <mass value="0.0005024000000000008"/>
@@ -592,17 +592,17 @@
   <axis xyz="-0.0 1.0 0.0"/>
 </joint>
 
-<!--<joint name="head_camera" type="continuous">-->
-<!--  <origin xyz="0.0344 0.025674 0.048" rpy="0 0 0"/>-->
-<!--  <parent link="$(arg tf_prefix)/head_v4_1"/>-->
-<!--  <child link="$(arg tf_prefix)/camera_point_1"/>-->
-<!--  <axis xyz="1.0 0.0 -0.0"/>-->
-<!--</joint>-->
+<joint name="$(arg tf_prefix)/head_camera" type="fixed">
+  <origin xyz="0.0344 0.025674 0.048" rpy="0 0 0"/>
+  <parent link="$(arg tf_prefix)/head_v4_1"/>
+  <child link="$(arg tf_prefix)/camera"/>
+  <axis xyz="1.0 0.0 -0.0"/>
+</joint>
 
-<joint name="torso_imu" type="continuous">
+<joint name="$(arg tf_prefix)/torso_imu" type="fixed">
   <origin xyz="0.013 0.0 0.02895" rpy="0 0 0"/>
   <parent link="$(arg tf_prefix)/torso"/>
-  <child link="$(arg tf_prefix)/imu_1"/>
+  <child link="$(arg tf_prefix)/imu_link"/>
   <axis xyz="0.0 0.0 1.0"/>
 </joint>
 

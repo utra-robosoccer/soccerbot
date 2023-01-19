@@ -241,7 +241,7 @@ class NavigatorRos(Navigator):
 
             if self.soccerbot.robot_path is None or self.t > self.soccerbot.robot_path.duration():
                 self.soccerbot.publishHeight()
-                # self.soccerbot.apply_head_rotation()
+                self.soccerbot.apply_head_rotation()
                 self.soccerbot.robot_path = None
                 pass
 
@@ -283,7 +283,6 @@ class NavigatorRos(Navigator):
                         return False
 
             # Publishes angles to robot (Average Time: 0.00041992547082119)
-            self.soccerbot.apply_head_rotation()
             self.soccerbot.publishAngles()
 
             time_end = time.time()

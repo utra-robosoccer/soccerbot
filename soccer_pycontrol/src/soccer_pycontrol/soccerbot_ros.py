@@ -259,7 +259,7 @@ class SoccerbotRos(Soccerbot):
 
                 assert self.ball_pixel is not None
 
-                camera_movement_speed = 0.00075
+                camera_movement_speed = 0.0005
                 pixel_threshold = 15
                 if self.ball_pixel != self.last_ball_pixel or (rospy.Time.now() - self.last_ball_pixel_update) > rospy.Duration(0.5):
                     xpixeldiff = self.ball_pixel.x - 640 / 2
@@ -341,12 +341,6 @@ class SoccerbotRos(Soccerbot):
             ) * math.pi * rospy.get_param("head_rotation_yaw_range", 0.15)
             self.head_step += 1
         else:
-            # self.configuration[Joints.HEAD_1] = 0
-            # self.configuration[Joints.HEAD_2] = 0
-            # self.head_step = 0
-            self.configuration[Joints.HEAD_1] = math.cos(self.head_step * self.head_yaw_freq) * (math.pi / 4)
-            # self.configuration[Joints.HEAD_2] = math.pi * rospy.get_param("head_rotation_yaw_center", 0.175) - math.sin(
-            #     self.head_step * self.head_yaw_freq
-            # ) * math.pi * rospy.get_param("head_rotation_yaw_range", 0.15)
-            self.configuration[Joints.HEAD_2] = 0.180
-            self.head_step += 1
+            self.configuration[Joints.HEAD_1] = 0
+            self.configuration[Joints.HEAD_2] = 0
+            self.head_step = 0
