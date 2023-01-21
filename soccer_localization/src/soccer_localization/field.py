@@ -39,7 +39,7 @@ class Field:
         self.distance_point_threshold = rospy.get_param("distance_point_threshold", 2.2)
         self.min_points_threshold = rospy.get_param("min_points_threshold", 40)
         self.max_detected_line_parallel_offset_error = rospy.get_param("max_detected_line_parallel_offset_error", 0.1)
-        self.max_detected_line_perpendicular_offset_error = rospy.get_param("max_detected_line_perpendicular_offset_error", 0.3)
+        self.max_detected_line_perpendicular_offset_error = rospy.get_param("max_detected_line_perpendicular_offset_error", 0.2)
         self.offset_movement_limit = rospy.get_param("offset_movement_limit", 0.1)
 
         self.path_plots: Dict[str, PathCollection] = {}
@@ -177,7 +177,7 @@ class Field:
                 yy = world_frame_points[1, :] ** 2
 
                 distance = np.sqrt(xx + yy) - line.radius
-                distance_matrix[line_id, :] = np.where(distance > lw / 2 + 0.1, float("inf"), distance)
+                distance_matrix[line_id, :] = np.where(np.abs(distance) > lw / 2 + 0.5, float("inf"), distance)
 
                 x_ratio = np.sqrt(xx / (xx + yy)) * np.sign(world_frame_points[0, :])
                 y_ratio = np.sqrt(yy / (xx + yy)) * np.sign(world_frame_points[1, :])
@@ -216,27 +216,30 @@ class Field:
             return None
 
         center_of_all_points = np.average(points_meet_dist_threshold, axis=1)
+        most_common_line = scipy.stats.mode(closest_line)[0][0]
+        if most_common_line == len(self.lines) - 1:
+            center_of_all_points = [0, 0]
         points_meet_dist_threshold_delta = np.subtract(points_meet_dist_threshold, np.expand_dims(center_of_all_points, axis=1))
         points_meet_dist_threshold_shift = points_meet_dist_threshold_delta - np.concatenate([[closest_line_diff_x], [closest_line_diff_y]])
+        distance_to_new_points = np.linalg.norm(points_meet_dist_threshold_delta, axis=0)
+        sum_distance_to_new_points = np.sum(distance_to_new_points)
 
         angle_original = np.arctan2(points_meet_dist_threshold_delta[1, :], points_meet_dist_threshold_delta[0, :])
         angle_new = np.arctan2(points_meet_dist_threshold_shift[1, :], points_meet_dist_threshold_shift[0, :])
         angle_diff = angle_new - angle_original
         angle_diff = wrapToPi(angle_diff)
-        angle_diff_avg = np.average(angle_diff)
-        # most_common_line = scipy.stats.mode(closest_line)[0][0]
-        # if most_common_line == len(self.lines) - 1:
-        #     angle_diff_avg = 0 # TODO make this better, for now ignore angle diffs when most common line is circle, todo exclude circle from angle
-        transform_delta_center_to_robot = scipy.linalg.inv(current_transform) @ Transformation(
-            pos_theta=[center_of_all_points[0], center_of_all_points[1], 0]
+        angle_diff_avg = np.sum(angle_diff * distance_to_new_points / sum_distance_to_new_points)
+        inv_current_transform = scipy.linalg.inv(current_transform)
+
+        transform_delta_robot_to_center = inv_current_transform @ Transformation(pos_theta=[center_of_all_points[0], center_of_all_points[1], 0])
+        transform_rotation = (
+            transform_delta_robot_to_center @ Transformation(pos_theta=[0, 0, angle_diff_avg]) @ scipy.linalg.inv(transform_delta_robot_to_center)
         )
 
-        offset_transform = (
-            transform_delta_center_to_robot
-            @ Transformation(pos_theta=[-diff_x_avg, -diff_y_avg, angle_diff_avg])
-            @ scipy.linalg.inv(transform_delta_center_to_robot)
-        )
-
+        offset_transform = (inv_current_transform @ Transformation(pos_theta=[-diff_x_avg, -diff_y_avg, 0]) @ current_transform) @ transform_rotation
+        offset_transform_pos_theta = offset_transform.pos_theta
+        if offset_transform_pos_theta[0] > 0.1 or offset_transform_pos_theta[1] > 0.1:
+            return None
         end = time.time()
         rospy.loginfo_throttle(60, f"Match Points with Map rate (s) :  {(end - start)}")
         return offset_transform
