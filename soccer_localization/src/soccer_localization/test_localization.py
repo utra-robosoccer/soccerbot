@@ -38,8 +38,7 @@ def retrieve_bag(url="https://drive.google.com/uc?id=1T_oyM1rZwWgUy6A6KlsJ7Oqn8J
     return test_path
 
 
-@pytest.mark.parametrize("t_start", [(60)])
-def test_points_correction(t_start):
+def test_points_correction_goalie():
     rospy.init_node("test")
 
     plt.figure("Localization")
@@ -49,10 +48,33 @@ def test_points_correction(t_start):
 
     bag = rosbag.Bag(retrieve_bag())
 
-    transform_gt = None
     transform_gt_offset = Transformation(pos_theta=[0.05, 0.05, 0.05])
     # transform_gt_offset = Transformation()
 
+    draw_points_correction(bag, map, t_start=55, transform_gt_offset=transform_gt_offset, xlim=(-5, -2), ylim=(-3.5, 2), debug=True)
+
+    plt.close()
+
+
+def test_points_correction_striker():
+    rospy.init_node("test")
+
+    plt.figure("Localization")
+
+    map = Field()
+    map.draw()
+
+    bag = rosbag.Bag(retrieve_bag(url="https://drive.google.com/uc?id=1VNHkAu10cfFJzcpTvc0zR8Jm-tI_6xQ8", bag_name="localization_2"))
+
+    transform_gt_offset = Transformation()
+
+    draw_points_correction(bag, map, t_start=20, transform_gt_offset=transform_gt_offset, xlim=(-2, 2), ylim=(-3.5, 2), debug=True)
+
+    plt.close()
+
+
+def draw_points_correction(bag, map, t_start, transform_gt_offset, xlim, ylim, debug=False):
+    transform_gt = None
     for topic, msg, t in bag.read_messages(topics=["/robot1/odom_combined", "/tf", "/robot1/field_point_cloud"]):
 
         if topic == "/tf":
@@ -75,20 +97,21 @@ def test_points_correction(t_start):
                 # pp = offset_transform.pos_theta
                 # pp[2] = 0
                 # offset_transform.pos_theta = pp
-                vo_transform = offset_transform @ current_transform
+                vo_transform = current_transform @ offset_transform
                 map.drawPathOnMap(vo_transform, label="VO Odometry", color="blue")
-                map.drawPointsOnMap(current_transform, point_cloud_array, label="Odom Points", color="brown")
+                map.drawPointsOnMap(current_transform, point_cloud_array, label="Odom Points", color="black")
                 map.drawPointsOnMap(vo_transform, point_cloud_array, label="Odom Points Adjusted", color="red")
                 plt.title(f"UKF Robot localization (t = {round(t.secs + t.nsecs * 1e-9)})")
-                plt.xlim((-5, -3))
-                plt.ylim((-3.5, 2))
+                plt.xlim(xlim)
+                plt.ylim(ylim)
                 plt.legend()
 
                 if "DISPLAY" in os.environ:
                     plt.draw()
-                    plt.waitforbuttonpress(timeout=0.01)
-
-    plt.close()
+                    if debug:
+                        plt.waitforbuttonpress()
+                    else:
+                        plt.waitforbuttonpress(timeout=0.01)
 
 
 def display_rosbag_map(bag, map, debug=False, pos_theta_start=[-4, -3.15, np.pi / 2]):
@@ -218,7 +241,7 @@ def display_rosbag_map(bag, map, debug=False, pos_theta_start=[-4, -3.15, np.pi 
     plt_dim_error(2, "Theta")
 
     if "DISPLAY" in os.environ:
-        plt.show(block=False)
+        plt.show(block=True)
         plt.waitforbuttonpress()
         plt.close("all")
 

@@ -24,6 +24,7 @@ class FieldLinesUKFROS(FieldLinesUKF):
         self.initial_pose_initiated = False
         self.odom_subscriber = rospy.Subscriber("odom_combined", PoseWithCovarianceStamped, self.odom_callback, queue_size=1)
         self.field_point_cloud_subscriber = rospy.Subscriber("field_point_cloud", PointCloud2, self.field_point_cloud_callback, queue_size=1)
+        self.field_point_cloud_transformed_publisher = rospy.Publisher("field_point_cloud_transformed", PointCloud2, queue_size=1)
         self.initial_pose_subscriber = rospy.Subscriber("initialpose", PoseWithCovarianceStamped, self.initial_pose_callback, queue_size=1)
         self.amcl_pose_publisher = rospy.Publisher("amcl_pose", PoseWithCovarianceStamped, queue_size=1)
         self.map = map
@@ -64,10 +65,10 @@ class FieldLinesUKFROS(FieldLinesUKF):
         if dt_secs == 0:
             return
 
-        if np.all(diff_transformation.pos_theta < 0.001):
+        if np.all(diff_transformation.pos_theta < 0.000001):
             self.ukf.Q = self.Q_do_nothing
             self.ukf.R = self.R_localizing
-        elif np.all(diff_transformation.pos_theta[0:2] < 0.001):
+        elif self.robot_state.status in [RobotState.STATUS_LOCALIZING, RobotState.STATUS_READY]:
             self.ukf.Q = self.Q_localizing
             self.ukf.R = self.R_localizing
         else:
@@ -82,7 +83,7 @@ class FieldLinesUKFROS(FieldLinesUKF):
 
         return odom_t
 
-    def field_point_cloud_callback(self, point_cloud: PointCloud2):
+    def field_point_cloud_callback(self, point_cloud_msg: PointCloud2):
         if self.robot_state.status not in [
             RobotState.STATUS_LOCALIZING,
             RobotState.STATUS_READY,
@@ -91,8 +92,8 @@ class FieldLinesUKFROS(FieldLinesUKF):
         ]:
             return None, None, None
 
-        stamp = point_cloud.header.stamp
-        point_cloud = pcl2.read_points_list(point_cloud)
+        stamp = point_cloud_msg.header.stamp
+        point_cloud = pcl2.read_points_list(point_cloud_msg)
         point_cloud_array = np.array(point_cloud)
         current_transform = Transformation(pos_theta=self.ukf.x)
         offset_transform = self.map.matchPointsWithMap(current_transform, point_cloud_array)
@@ -102,9 +103,22 @@ class FieldLinesUKFROS(FieldLinesUKF):
             vo_pos_theta = vo_transform.pos_theta
             self.update(vo_pos_theta)
             self.broadcast_tf_position(timestamp=stamp)
+            self.broadcast_vo_transform_debug(vo_transform, point_cloud_msg)
             self.publish_amcl_pose(timestamp=stamp)
+
             return point_cloud_array, vo_transform, vo_pos_theta
         return None, None, None
+
+    def broadcast_vo_transform_debug(self, vo_transform: Transformation, point_cloud: PointCloud2):
+        self.br.sendTransform(
+            vo_transform.position,
+            vo_transform.quaternion,
+            point_cloud.header.stamp,
+            f"{os.environ.get('ROS_NAMESPACE', 'robot1')}/odom_vo",
+            "world",
+        )
+        point_cloud.header.frame_id = f"{os.environ.get('ROS_NAMESPACE', '/robot1').replace('/', '')}/odom_vo"
+        self.field_point_cloud_transformed_publisher.publish(point_cloud)
 
     def broadcast_tf_position(self, timestamp):
         if not self.initial_pose_initiated:
