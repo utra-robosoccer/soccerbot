@@ -21,8 +21,8 @@ class SoccerbotRos(Soccerbot):
 
         super().__init__(pose, useFixedBase, useCalibration)
 
-        self.grass_and_cleats_offset = rospy.get_param(
-            "grass_and_cleats_offset", 0.005
+        self.cleats_offset = rospy.get_param(
+            "cleats_offset", -0.01634
         )  #: Additional height added by cleats and grass, consists of 1cm grass and 0.5cm cleats
         self.motor_publishers = {}
         self.pub_all_motor = rospy.Publisher("joint_command", JointState, queue_size=1)
@@ -197,7 +197,7 @@ class SoccerbotRos(Soccerbot):
         """
 
         f = Float64()
-        f.data = self.pose.position[2] + self.grass_and_cleats_offset
+        f.data = self.pose.position[2] + self.foot_box[2] / 2 + self.cleats_offset
         self.torso_height_publisher.publish(f)
         pass
 
