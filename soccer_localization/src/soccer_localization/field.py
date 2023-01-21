@@ -237,7 +237,9 @@ class Field:
         )
 
         offset_transform = (inv_current_transform @ Transformation(pos_theta=[-diff_x_avg, -diff_y_avg, 0]) @ current_transform) @ transform_rotation
-
+        offset_transform_pos_theta = offset_transform.pos_theta
+        if offset_transform_pos_theta[0] > 0.1 or offset_transform_pos_theta[1] > 0.1:
+            return None
         end = time.time()
         rospy.loginfo_throttle(60, f"Match Points with Map rate (s) :  {(end - start)}")
         return offset_transform

@@ -51,7 +51,7 @@ def test_points_correction_goalie():
     transform_gt_offset = Transformation(pos_theta=[0.05, 0.05, 0.05])
     # transform_gt_offset = Transformation()
 
-    draw_points_correction(bag, map, t_start=55, transform_gt_offset=transform_gt_offset, xlim=(-5, -2), ylim=(-3.5, 2), debug=True)
+    draw_points_correction(bag, map, t_start=55, transform_gt_offset=transform_gt_offset, xlim=(-5, -2), ylim=(-3.5, 2), debug=False)
 
     plt.close()
 
@@ -68,7 +68,7 @@ def test_points_correction_striker():
 
     transform_gt_offset = Transformation()
 
-    draw_points_correction(bag, map, t_start=20, transform_gt_offset=transform_gt_offset, xlim=(-2, 2), ylim=(-3.5, 2), debug=True)
+    draw_points_correction(bag, map, t_start=20, transform_gt_offset=transform_gt_offset, xlim=(-2, 2), ylim=(-3.5, 2), debug=False)
 
     plt.close()
 
