@@ -179,7 +179,7 @@ class Camera:
 
     def findCameraCoordinateFixedCamera(self, pos: [int]) -> [int]:
         """
-        Helper function for :func:`~soccer_common.Camera.findFloorCoordinate`, finds the camera coordinate if the camera were fixed at the origin
+        Helper function for :func:`~soccer_common.Camera.findCameraCoordinate`, finds the camera coordinate if the camera were fixed at the origin
 
         :param pos: The 3D coordinate of the object
         :return: The 2D pixel (x, y) on the camera, if the object was projected on the camera and the camera is placed at the origin
