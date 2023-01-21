@@ -2,7 +2,6 @@
 x-exclude: &exclude
   exclude: ^(external\/|cmake-build-debug\/|.pytest_cache\/|soccer_embedded\/|docs\/|.idea\/|.+pb2\.py\/|bez2_description\/|bez1_description)
 
-  py:
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.1.0
