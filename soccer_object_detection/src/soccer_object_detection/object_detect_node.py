@@ -49,7 +49,6 @@ class bcolors:
 
 
 class ObjectDetectionNode(object):
-
     """
     Detect ball, robot
     publish bounding boxes
@@ -63,7 +62,11 @@ class ObjectDetectionNode(object):
         torch.hub._validate_not_a_forked_repo = (
             lambda a, b, c: True
         )  # https://discuss.pytorch.org/t/help-for-http-error-403-rate-limit-exceeded/125907
-        self.model = torch.hub.load("ultralytics/yolov5", "custom", path=model_path)
+        try:
+            self.model = torch.hub.load("ultralytics/yolov5", "custom", path=model_path)
+        except:
+            self.model = torch.hub.load("ultralytics/yolov5", "custom", path=model_path, force_reload=True)
+            pass
         if torch.cuda.is_available():
             rospy.loginfo(f"{bcolors.OKGREEN}Using CUDA for object detection{bcolors.ENDC}")
             self.model.cuda()

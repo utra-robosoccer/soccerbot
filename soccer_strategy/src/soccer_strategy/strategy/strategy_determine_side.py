@@ -79,6 +79,9 @@ class StrategyDetermineSide(Strategy):
 
         :param current_robot: The current robot
         """
+        if current_robot.status == current_robot.status.PENALIZED:
+            current_robot.run_fixed_trajectory("ready")
+
         team_id = int(os.getenv("ROBOCUP_TEAM_ID", 16))
         if team_id == 16:
             file = "team_1.json"
