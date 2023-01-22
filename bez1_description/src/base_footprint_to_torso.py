@@ -37,7 +37,7 @@ if __name__ == "__main__":
         orientation_euler[0] = 0
         imu_transform.orientation_euler = orientation_euler
 
-        base_link_to_torso = imu_transform @ height_transform
+        base_link_to_torso = height_transform @ imu_transform
 
         br.sendTransform(
             base_link_to_torso.position,
