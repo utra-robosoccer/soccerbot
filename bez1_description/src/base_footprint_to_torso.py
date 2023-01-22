@@ -35,6 +35,7 @@ if __name__ == "__main__":
         imu_transform = Transformation(quaternion=[imu.orientation.x, imu.orientation.y, imu.orientation.z, imu.orientation.w])
         orientation_euler = imu_transform.orientation_euler
         orientation_euler[0] = 0
+        orientation_euler[1] = 0
         imu_transform.orientation_euler = orientation_euler
 
         base_link_to_torso = imu_transform @ height_transform

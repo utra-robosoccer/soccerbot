@@ -2,6 +2,7 @@ import functools
 import math
 from math import ceil, floor
 
+import cachetools
 import matplotlib.pyplot as plt
 import numpy as np
 import rospy
@@ -42,6 +43,10 @@ class Path:
 
         p = self.createPathSection(start_transform, end_transform)
         self.path_sections.append(p)
+
+    @functools.cached_property
+    def start_transformed_inv(self):
+        return scipy.linalg.inv(self.start_transform)
 
     def isShortPath(self, start_transform: Transformation, end_transform: Transformation):
         """

@@ -56,8 +56,10 @@ class FieldLinesUKFROS(FieldLinesUKF):
 
         if self.odom_t_previous is None:
             self.odom_t_previous = Transformation(pose_with_covariance_stamped=pose_msg)
+            self.odom_t_previous.orientation_euler = [self.odom_t_previous.orientation_euler[0], 0, 0]  # Needed to remove non yaw values
             return
         odom_t = Transformation(pose_with_covariance_stamped=pose_msg)
+        odom_t.orientation_euler = [odom_t.orientation_euler[0], 0, 0]  # Needed to remove non yaw values
 
         diff_transformation: Transformation = scipy.linalg.inv(self.odom_t_previous) @ odom_t
         dt = odom_t.timestamp - self.odom_t_previous.timestamp
@@ -134,11 +136,11 @@ class FieldLinesUKFROS(FieldLinesUKF):
         else:
             self.timestamp_last = timestamp
 
-        odom_to_base_footprint = Transformation(pos_theta=self.ukf.x) @ scipy.linalg.inv(self.odom_t_previous)
+        world_to_odom = Transformation(pos_theta=self.ukf.x) @ scipy.linalg.inv(self.odom_t_previous)
 
         self.br.sendTransform(
-            odom_to_base_footprint.position,
-            odom_to_base_footprint.quaternion,
+            world_to_odom.position,
+            world_to_odom.quaternion,
             timestamp,
             f"{os.environ.get('ROS_NAMESPACE', 'robot1')}/odom",
             "world",

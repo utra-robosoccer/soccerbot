@@ -5,6 +5,7 @@ import rospy
 import scipy
 
 from soccer_common.transformation import Transformation
+from soccer_pycontrol.calibration import adjust_navigation_transform
 from soccer_pycontrol.path_foot import PathFoot
 
 
@@ -31,7 +32,7 @@ class PathTorso(PathFoot):
         else:
             self.first_step_left = 1
 
-    def torsoPosition(self, t: float) -> Transformation:
+    def torsoPosition(self, t: float, invert_calibration=False) -> Transformation:
         """
         Retrieves the torso position at a given time of the path
 
@@ -64,6 +65,10 @@ class PathTorso(PathFoot):
                 _from = self.getTorsoStepPose(step_num)
                 _to = self.getTorsoStepPose(step_num + 1)
                 body_movement_ratio = ratio - 0.5
+
+        if invert_calibration:
+            _from = adjust_navigation_transform(self.start_transform, _from, invert=True)
+            _to = adjust_navigation_transform(self.start_transform, _to, invert=True)
 
         position = self.parabolicPath(_from, _to, 0.0, 0.0, 0.0, body_movement_ratio)
 

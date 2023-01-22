@@ -125,10 +125,12 @@ class SoccerbotRos(Soccerbot):
         super(SoccerbotRos, self).stepPath(t)
 
         # Get odom from odom_path
-        t_adjusted = t * self.robot_odom_path.duration() / self.robot_path.duration()
-        torsoPosition = self.robot_odom_path.torsoPosition(t_adjusted) @ self.torso_offset
-
-        self.odom_pose = Transformation(position=torsoPosition.position, quaternion=torsoPosition.quaternion)
+        self.odom_pose = (
+            self.odom_pose_start_path
+            @ self.robot_path.start_transformed_inv
+            @ self.robot_path.torsoPosition(t, invert_calibration=True)
+            @ self.torso_offset
+        )
 
     def publishPath(self, robot_path=None):
         """
@@ -140,12 +142,15 @@ class SoccerbotRos(Soccerbot):
         if robot_path is None:
             robot_path = self.robot_path
 
-        def createPath(robot_path) -> Path:
+        def createPath(robot_path, invert_calibration=False) -> Path:
             p = Path()
             p.header.frame_id = "world"
             p.header.stamp = rospy.Time.now()
             for i in range(0, robot_path.torsoStepCount(), 1):
                 step = robot_path.getTorsoStepPose(i)
+                if invert_calibration:
+                    step = adjust_navigation_transform(robot_path.start_transform, step)
+
                 position = step.position
                 orientation = step.quaternion
                 pose = PoseStamped()
@@ -163,9 +168,7 @@ class SoccerbotRos(Soccerbot):
             return p
 
         self.path_publisher.publish(createPath(robot_path))
-
-        if self.robot_odom_path is not None:
-            self.path_odom_publisher.publish(createPath(self.robot_odom_path))
+        self.path_odom_publisher.publish(createPath(robot_path, invert_calibration=True))
 
     def publishOdometry(self):
         """

@@ -107,7 +107,6 @@ class Soccerbot:
         pitch_correction = Transformation([0, 0, 0], euler=[0, rospy.get_param("torso_offset_pitch", 0.0), 0])
         self.torso_offset = Transformation([rospy.get_param("torso_offset_x", 0), 0, 0]) @ pitch_correction
         self.robot_path: Union[PathRobot, None] = None
-        self.robot_odom_path: Union[PathRobot, None] = None
 
         self.configuration = [0.0] * len(Joints)  #: The 18x1 float array motor angle configuration for the robot's 18 motors
         self.configuration_offset = [0.0] * len(Joints)  #: The offset for the 18x1 motor angle configurations
@@ -148,7 +147,9 @@ class Soccerbot:
 
         self.get_ready_rate = rospy.get_param("get_ready_rate", 0.02)
 
+        #: Odom pose at start of path, reset everytime a new path is created
         #: Odom pose, always starts at (0,0) and is the odometry of the robot's movement. All odom paths start from odom pose
+        self.odom_pose_start_path = Transformation()
         self.odom_pose = Transformation()
 
     def get_angles(self):
@@ -361,13 +362,14 @@ class Soccerbot:
         )
 
         self.robot_path = PathRobot(startPose, endPoseCalibrated, self.foot_center_to_floor)
-        self.robot_odom_path = PathRobot(self.odom_pose, self.odom_pose @ (scipy.linalg.inv(startPose) @ endPose), self.foot_center_to_floor)
 
         # obj.rate = rateControl(1 / obj.robot_path.step_size); -- from findPath
         self.rate = 1 / self.robot_path.step_precision
         self.period = self.robot_path.step_precision
 
         self.current_step_time = 0
+
+        self.odom_pose_start_path = deepcopy(self.odom_pose)
         return self.robot_path
 
     def stepPath(self, t):
