@@ -38,7 +38,7 @@
         <remap from="robot_pose_ekf/odom_combined" to="odom_combined" />
         <remap from="imu_data" to="imu_filtered" />
         <param name="output_frame" value="$(arg robot_name)/odom" />
-        <param name="base_footprint_frame" value="$(arg robot_name)/base_footprint" />
+        <param name="base_footprint_frame" value="$(arg robot_name)/torso" />
     </node>
     <node pkg="robot_localization" type="ekf_localization_node" name="ekf_se_map" clear_params="true" output="log">
         <rosparam file="$(find soccerbot)/config/robot_localization_ekf_map.yaml" command="load" />
@@ -46,8 +46,6 @@
         <param name="base_link_frame" value="$(arg robot_name)/base_footprint" />
         <param name="pose0" value="amcl_pose" />
     </node>
-
-    <node name="torso_height_publisher" pkg="bez1_description" type="base_footprint_to_torso.py" />
 
     <!-- UKF localization -->
     <node pkg="soccer_localization" type="main.py" name="soccer_ukf" respawn="$(optenv COMPETITION false)" output="log" />

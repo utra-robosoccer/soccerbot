@@ -219,32 +219,30 @@ class RobotControlled3D(RobotControlled):
                 self.status = Robot.Status.FALLEN_SIDE
 
     def reset_initial_position(self):
-        while self.amcl_pose is None:
-            position = self.position
+        position = self.position
 
-            p = PoseWithCovarianceStamped()
-            p.header.frame_id = "world"
-            p.header.stamp = rospy.get_rostime()
-            p.pose.pose.position.x = position[0]
-            p.pose.pose.position.y = position[1]
-            p.pose.pose.position.z = 0
-            angle_fixed = position[2]
-            q = tf.transformations.quaternion_about_axis(angle_fixed, (0, 0, 1))
-            p.pose.pose.orientation.x = q[0]
-            p.pose.pose.orientation.y = q[1]
-            p.pose.pose.orientation.z = q[2]
-            p.pose.pose.orientation.w = q[3]
-            rospy.loginfo_throttle_identical(10, "Setting " + self.robot_name + " localization position " + str(position) + " orientation " + str(q))
-            # fmt: off
-            p.pose.covariance = [0.0004, 0.0, 0.0, 0.0, 0.0, 0.0,
-                                 0.0, 0.0004, 0.0, 0.0, 0.0, 0.0,
-                                 0.0, 0.0, 0, 0.0, 0.0, 0.0,
-                                 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                                 0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                                 0.0, 0.0, 0.0, 0.0, 0.0, 0.0001]
-            # fmt: on
-            self.robot_initial_pose_publisher.publish(p)
-            rospy.sleep(1)
+        p = PoseWithCovarianceStamped()
+        p.header.frame_id = "world"
+        p.header.stamp = rospy.get_rostime()
+        p.pose.pose.position.x = position[0]
+        p.pose.pose.position.y = position[1]
+        p.pose.pose.position.z = 0
+        angle_fixed = position[2]
+        q = tf.transformations.quaternion_about_axis(angle_fixed, (0, 0, 1))
+        p.pose.pose.orientation.x = q[0]
+        p.pose.pose.orientation.y = q[1]
+        p.pose.pose.orientation.z = q[2]
+        p.pose.pose.orientation.w = q[3]
+        rospy.loginfo_throttle_identical(10, "Setting " + self.robot_name + " localization position " + str(position) + " orientation " + str(q))
+        # fmt: off
+        p.pose.covariance = [0.0004, 0.0, 0.0, 0.0, 0.0, 0.0,
+                             0.0, 0.0004, 0.0, 0.0, 0.0, 0.0,
+                             0.0, 0.0, 0, 0.0, 0.0, 0.0,
+                             0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                             0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
+                             0.0, 0.0, 0.0, 0.0, 0.0, 0.0001]
+        # fmt: on
+        self.robot_initial_pose_publisher.publish(p)
 
     def kick(self):
         return self.run_fixed_trajectory("rightkick")

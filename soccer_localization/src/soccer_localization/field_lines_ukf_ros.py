@@ -8,6 +8,7 @@ import sensor_msgs.point_cloud2 as pcl2
 import tf
 from geometry_msgs.msg import PoseWithCovarianceStamped
 from sensor_msgs.msg import PointCloud2
+from std_msgs.msg import Float64
 
 from soccer_common import Transformation
 from soccer_localization.field import Field
@@ -21,7 +22,7 @@ class FieldLinesUKFROS(FieldLinesUKF):
     def __init__(self, map=Field()):
         super().__init__()
 
-        self.initial_pose_initiated = False
+        self.torso_height_subscriber = rospy.Subscriber("torso_height", Float64, self.torso_height_callback, queue_size=1)
         self.odom_subscriber = rospy.Subscriber("odom_combined", PoseWithCovarianceStamped, self.odom_callback, queue_size=1)
         self.field_point_cloud_subscriber = rospy.Subscriber("field_point_cloud", PointCloud2, self.field_point_cloud_callback, queue_size=1)
         self.field_point_cloud_transformed_publisher = rospy.Publisher("field_point_cloud_transformed", PointCloud2, queue_size=1)
@@ -29,10 +30,11 @@ class FieldLinesUKFROS(FieldLinesUKF):
         self.amcl_pose_publisher = rospy.Publisher("amcl_pose", PoseWithCovarianceStamped, queue_size=1)
         self.map = map
 
-        self.initial_pose = Transformation(pos_theta=[-4, -3.15, np.pi / 2])  # TODO get this
+        self.initial_pose = Transformation(pos_theta=[0, 0, 0])  # TODO get this
         self.ukf.x = self.initial_pose.pos_theta
 
         self.odom_t_previous = None
+        self.torso_height = None
 
         self.br = tf.TransformBroadcaster()
         self.timestamp_last = rospy.Time(0)
@@ -44,6 +46,9 @@ class FieldLinesUKFROS(FieldLinesUKF):
 
     def robot_state_callback(self, robot_state: RobotState):
         self.robot_state = robot_state
+
+    def torso_height_callback(self, torso_height: Float64):
+        self.torso_height = torso_height.data
 
     def odom_callback(self, pose_msg: PoseWithCovarianceStamped):
         if self.robot_state.status not in [
@@ -123,11 +128,13 @@ class FieldLinesUKFROS(FieldLinesUKF):
         self.field_point_cloud_transformed_publisher.publish(point_cloud)
 
     def broadcast_tf_position(self, timestamp):
-        if not self.initial_pose_initiated:
-            return
 
         if self.odom_t_previous is None:
             rospy.logerr_throttle(1, "Odom not published")
+            return
+
+        if self.torso_height is None:
+            rospy.logerr_throttle(1, "Torso height not published")
             return
 
         # Prevent rebroadcasting same or older timestamp
@@ -137,7 +144,7 @@ class FieldLinesUKFROS(FieldLinesUKF):
             self.timestamp_last = timestamp
 
         world_to_odom = Transformation(pos_theta=self.ukf.x) @ scipy.linalg.inv(self.odom_t_previous)
-
+        world_to_odom.position = [world_to_odom.position[0], world_to_odom.position[1], self.torso_height]
         self.br.sendTransform(
             world_to_odom.position,
             world_to_odom.quaternion,
@@ -145,10 +152,15 @@ class FieldLinesUKFROS(FieldLinesUKF):
             f"{os.environ.get('ROS_NAMESPACE', 'robot1')}/odom",
             "world",
         )
+        self.br.sendTransform(
+            (0, 0, -self.torso_height),
+            (0, 0, 0, 1),
+            timestamp,
+            f"{os.environ.get('ROS_NAMESPACE', 'robot1')}/base_footprint",
+            f"{os.environ.get('ROS_NAMESPACE', 'robot1')}/torso",
+        )
 
     def publish_amcl_pose(self, timestamp):
-        if not self.initial_pose_initiated:
-            return
         amcl_pose = Transformation(pos_theta=self.ukf.x, pose_theta_covariance_array=self.ukf.P).pose_with_covariance_stamped
         amcl_pose.header.stamp = timestamp
         self.amcl_pose_publisher.publish(amcl_pose)
@@ -158,4 +170,3 @@ class FieldLinesUKFROS(FieldLinesUKF):
         self.ukf.x = self.initial_pose.pos_theta
         self.ukf.P = self.initial_pose.pose_theta_covariance_array
         self.broadcast_tf_position(pose_stamped.header.stamp)
-        self.initial_pose_initiated = True
