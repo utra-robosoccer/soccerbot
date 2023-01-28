@@ -193,7 +193,7 @@ class RobotControlled3D(RobotControlled):
             rospy.logerr("Invalid Action Completed " + str(self.status))
 
     def head_centered_on_ball_callback(self, data):
-        self.navigation_goal_localized_time = rospy.Time.now()
+        self.robot_focused_on_ball_time = rospy.Time.now()
 
     def imu_callback(self, msg):
         angle_threshold = 1.2  # in radian
