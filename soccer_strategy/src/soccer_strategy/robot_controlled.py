@@ -73,7 +73,6 @@ class RobotControlled(Robot):
         self.start_position = self.position
         self.goal_position = goal_position
         self.status = Robot.Status.WALKING
-        print(self.start_position, self.goal_position)
 
         return True
 
