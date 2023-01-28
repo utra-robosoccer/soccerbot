@@ -194,7 +194,7 @@ class GameEngine2D:
         print(f"Game Finished: Friendly: {friendly_points}, Opponent: {opponent_points}")
         return friendly_points, opponent_points
 
-    def update_estimated_physics(self, robots: [Robot], ball: Ball):
+    def update_estimated_physics(self, robots: [RobotControlled2D], ball: Ball):
         """
         Executes the world physics step, robot's movement, ball movement, and for fairness it runs through the priority
         for kicks in a random fashion.
@@ -221,10 +221,25 @@ class GameEngine2D:
 
             elif robot.status == Robot.Status.KICKING:
                 if ball.kick_timeout == 0:
-                    ball.velocity = robot.kick_velocity
-                    ball.kick_timeout = 5
-                robot.status = Robot.Status.READY
+                    if robot.can_kick(ball, None, verbose=False):
+                        kick_angle_rand = np.random.normal(0, 0.2)
+                        kick_force_rand = max(np.random.normal(0.4, 0.3), 0)
+                        if kick_force_rand == 0:
+                            print("Kick Missed")
+
+                        rotation_rand = np.array(
+                            [[np.cos(kick_angle_rand), -np.sin(kick_angle_rand)], [np.sin(kick_angle_rand), np.cos(kick_angle_rand)]]
+                        )
+                        ball.velocity = kick_force_rand * rotation_rand @ robot.kick_velocity
+                        ball.kick_timeout = 5
+                robot.status = Robot.Status.TRAJECTORY_IN_PROGRESS
+                robot.trajectory_timeout = 8
                 robot.path_time = 0
+            elif robot.status == Robot.Status.TRAJECTORY_IN_PROGRESS:
+                if robot.trajectory_timeout == 0:
+                    robot.status = Robot.Status.READY
+                else:
+                    robot.trajectory_timeout -= 1
             else:
                 robot.path_time = 0
 

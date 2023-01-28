@@ -99,7 +99,7 @@ class Strategy:
         closest_dist = math.inf
         current_closest = None
         for robot in robots:
-            if robot.status not in [Robot.Status.READY, Robot.Status.WALKING, Robot.Status.KICKING]:
+            if robot.status not in [Robot.Status.READY, Robot.Status.WALKING, Robot.Status.KICKING, Robot.Status.TRAJECTORY_IN_PROGRESS]:
                 continue
 
             dist = np.linalg.norm(ball.position[0:2] - robot.position[0:2])

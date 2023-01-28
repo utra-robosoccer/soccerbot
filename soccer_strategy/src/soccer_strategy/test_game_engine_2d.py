@@ -146,8 +146,15 @@ class TestGameEngine2D(TestCase):
                     team=Robot.Team.OPPONENT,
                     role=Robot.Role.GOALIE,
                     status=Robot.Status.READY,
-                    position=np.array([-0.5, -0.5, -3.14]),
-                )
+                    position=np.array([-1, -1, -3.14]),
+                ),
+                RobotControlled2D(
+                    robot_id=3,
+                    team=Robot.Team.OPPONENT,
+                    role=Robot.Role.GOALIE,
+                    status=Robot.Status.READY,
+                    position=np.array([-0.4, -0.75, -3.14]),
+                ),
             ]
         )
 

@@ -68,13 +68,14 @@ class StrategyDummy(Strategy):
                         unit = delta / np.linalg.norm(delta)
 
                         this_robot.status = Robot.Status.KICKING
-                        this_robot.set_kick_velocity(unit * this_robot.max_kick_speed)
-                        this_robot.kick()
+                        this_robot.kick(kick_velocity=unit * this_robot.max_kick_speed)
                 else:
+                    if this_robot.status == Robot.Status.WALKING:
+                        # TODO more intelligent strategy where other robot goes for the ball if it is not going
+                        return
+
                     # Ball localized, move to ball
-                    if (rospy.Time.now() - this_robot.navigation_goal_localized_time) < rospy.Duration(
-                        2
-                    ) and this_robot.status != Robot.Status.WALKING:
+                    if (rospy.Time.now() - this_robot.robot_focused_on_ball_time) < rospy.Duration(2):
                         # If there is an obstacle, then move around the obstacle
                         blocked_position = Utility.is_obstacle_blocking(this_robot, ball.position)
                         if blocked_position is not None:
@@ -85,8 +86,23 @@ class StrategyDummy(Strategy):
                         else:
                             rospy.loginfo("Navigation to ball")
                             Utility.navigate_to_scoring_position(this_robot, np.array(ball.position[0:2]), goal_position)
+                    elif this_robot.observed_ball is None or (rospy.Time.now() - this_robot.observed_ball.last_observed_time_stamp) > rospy.Duration(
+                        2
+                    ):
+                        # Other robot sees the ball but this robot is not seeing the ball, then turn to face the ball
+                        player_angle = this_robot.position[2]
+                        player_position = this_robot.position[0:2]
 
-            pass
+                        # Haven't seen the ball timeout
+                        rospy.loginfo(f"Player {this_robot.robot_id}: Rotating to locate ball that other robot found {ball.position}")
+                        robot_to_ball = ball.position - player_position
+                        angle = np.arctan2(robot_to_ball[1], robot_to_ball[0])
+
+                        turn_position = np.array([player_position[0], player_position[1], angle])
+                        this_robot.set_navigation_position(turn_position)
+                    else:
+                        # Waiting to focus on ball
+                        pass
 
         # If the ball hasn't been seen in 10 seconds
         elif (

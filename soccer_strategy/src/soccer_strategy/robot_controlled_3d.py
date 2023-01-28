@@ -246,7 +246,7 @@ class RobotControlled3D(RobotControlled):
             self.robot_initial_pose_publisher.publish(p)
             rospy.sleep(1)
 
-    def kick(self):
+    def kick(self, kick_velocity):
         return self.run_fixed_trajectory("rightkick")
 
     def run_fixed_trajectory(self, trajectory_name="rightkick"):

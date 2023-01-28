@@ -34,22 +34,16 @@ class RobotControlled2D(RobotControlled):
         self.robot_name = "robot %d" % robot_id
         self.path_time = 0
         self.path = None
+        self.trajectory_timeout = 0
 
-    def set_kick_velocity(self, kick_velocity):
+    def kick(self, kick_velocity):
         """
         Set's a kick velocity for the ball
-        :param kick_velocity:
+        :param kick_velocity: Amount of strength for the kick
         :return:
         """
-
-        kick_angle_rand = np.random.normal(0, 0.2)
-        kick_force_rand = max(np.random.normal(0.4, 0.3), 0)
-        if kick_force_rand == 0:
-            print("Kick Missed")
-
-        rotation_rand = np.array([[np.cos(kick_angle_rand), -np.sin(kick_angle_rand)], [np.sin(kick_angle_rand), np.cos(kick_angle_rand)]])
-
-        self.kick_velocity = kick_force_rand * rotation_rand @ kick_velocity
+        self.status = Robot.Status.KICKING
+        self.kick_velocity = kick_velocity
 
     def set_navigation_position(self, goal_position):
         super().set_navigation_position(goal_position)
@@ -75,7 +69,7 @@ class RobotControlled2D(RobotControlled):
                 self.observed_ball = Ball()
             self.observed_ball.position = ball_position
             self.observed_ball.last_observed_time_stamp = rospy.Time.now()
-            self.navigation_goal_localized_time = rospy.Time.now()
+            self.robot_focused_on_ball_time = rospy.Time.now()
 
         # TODO can add noise here
 

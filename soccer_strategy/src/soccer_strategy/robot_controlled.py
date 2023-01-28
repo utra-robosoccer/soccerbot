@@ -30,7 +30,7 @@ class RobotControlled(Robot):
         self.goal_position = None
 
         self.max_kick_speed = 2
-        self.navigation_goal_localized_time = rospy.Time.now()
+        self.robot_focused_on_ball_time = rospy.Time(0)
         self.kick_with_right_foot = True
 
         self.min_kick_distance = rospy.get_param("min_kick_distance", 0.20)
@@ -77,7 +77,7 @@ class RobotControlled(Robot):
 
         return True
 
-    def can_kick(self, ball: Ball, goal_position):
+    def can_kick(self, ball: Ball, goal_position, verbose=True):
         """
         Whether the robot can kick the ball based on the robot and ball position
 
@@ -107,16 +107,18 @@ class RobotControlled(Robot):
                 self.kick_with_right_foot = True
             else:
                 self.kick_with_right_foot = False
-            print(
-                "\u001b[1m\u001b[34mPlayer {}: Kick | Player Angle {:.3f}, Robot Ball Angle {:.3f}, Nav_angle Diff {:.3f}, Distance Player Ball {:.3f}, Right Foot {}\u001b[0m".format(
-                    self.robot_id,
-                    player_angle,
-                    robot_ball_angle,
-                    nav_angle_diff,
-                    distance_of_player_to_ball,
-                    self.kick_with_right_foot,
+
+            if verbose:
+                print(
+                    "\u001b[1m\u001b[34mPlayer {}: Kick | Player Angle {:.3f}, Robot Ball Angle {:.3f}, Nav_angle Diff {:.3f}, Distance Player Ball {:.3f}, Right Foot {}\u001b[0m".format(
+                        self.robot_id,
+                        player_angle,
+                        robot_ball_angle,
+                        nav_angle_diff,
+                        distance_of_player_to_ball,
+                        self.kick_with_right_foot,
+                    )
                 )
-            )
             return True
         return False
 
@@ -128,7 +130,7 @@ class RobotControlled(Robot):
         pass
 
     @abc.abstractmethod
-    def kick(self):
+    def kick(self, kick_velocity):
         """
         Send a command to kick the ball
         """
@@ -146,11 +148,5 @@ class RobotControlled(Robot):
         """
         Set's the robot's position based on the amcl_pose
         :return:
-        """
-        pass
-
-    def set_kick_velocity(self, kick_velocity):
-        """
-        TODO deprecate and delete
         """
         pass
