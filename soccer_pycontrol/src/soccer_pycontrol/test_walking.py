@@ -33,9 +33,9 @@ class TestWalking:
         config_path = config_folder_path + f"{robot_model}_sim_pybullet.yaml"
         set_rosparam_from_yaml_file(param_path=config_path)
         if "DISPLAY" not in os.environ:
-            c = Navigator(display=False, real_time=True)
+            c = Navigator(display=False, real_time=False)
         else:
-            c = Navigator(display=True, real_time=True)
+            c = Navigator(display=True, real_time=False)
 
         yield c
         c.close()
