@@ -1,5 +1,6 @@
 import enum
 import os
+from typing import Optional
 
 import numpy as np
 
@@ -51,7 +52,7 @@ class Team:
 
     def __init__(self, robots):
         self.robots = robots
-        self.average_ball_position: Ball = None
+        self.observed_ball: Optional[Ball] = None
         self.field_side = FieldSide.NORMAL
         self.is_first_half = False
         self.strategy = None
@@ -78,13 +79,13 @@ class Team:
 
         for robot in self.robots:
             if robot.robot_id == int(os.getenv("ROBOCUP_ROBOT_ID", 1)):
-                self.average_ball_position = robot.observed_ball
+                self.observed_ball = robot.observed_ball
                 return True
 
         # Backup by getting any other robot's ball position
         for robot in self.robots:
             if robot.observed_ball is not None:
-                self.average_ball_position = robot.observed_ball
+                self.observed_ball = robot.observed_ball
                 return True
         return False
 

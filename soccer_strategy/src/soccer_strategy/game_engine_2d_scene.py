@@ -57,8 +57,8 @@ class Scene:
         :return: list of points for the polygon in real world coordinates
         """
 
-        l = 0.085000 / 2
-        w = (0.145000 + 0.047760 * 2) / 2
+        l = robot.BODY_LENGTH
+        w = robot.BODY_WIDTH
         a = robot.position[0:2]
         t = robot.position[2]
         rotm = np.array([[np.cos(t), -np.sin(t)], [np.sin(t), np.cos(t)]])

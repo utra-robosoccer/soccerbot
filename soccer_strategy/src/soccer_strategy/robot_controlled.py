@@ -8,7 +8,11 @@ from soccer_common.transformation import Transformation
 from soccer_strategy.ball import Ball
 from soccer_strategy.robot import Robot
 
+
 class RobotControlled(Robot):
+    BODY_LENGTH = 0.085000 / 2
+    BODY_WIDTH = (0.145000 + 0.047760 * 2) / 2
+
     def __init__(
         self,
         robot_id=0,
@@ -16,7 +20,6 @@ class RobotControlled(Robot):
         role=Robot.Role.UNASSIGNED,
         status=Robot.Status.DISCONNECTED,
         position=np.array([0, 0, 0]),
-
     ):
         super().__init__(robot_id=robot_id, team=team, role=role, status=status, position=position)
 
@@ -70,6 +73,8 @@ class RobotControlled(Robot):
         self.start_position = self.position
         self.goal_position = goal_position
         self.status = Robot.Status.WALKING
+        print(self.start_position, self.goal_position)
+
         return True
 
     def can_kick(self, ball: Ball, goal_position):

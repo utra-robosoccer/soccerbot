@@ -3,6 +3,8 @@ import random
 from typing import Optional
 
 import numpy as np
+import rosparam
+import rospy
 
 from soccer_common import Transformation
 from soccer_msgs.msg import GameState
@@ -40,6 +42,9 @@ class GameEngine2D:
         :param team_2_strategy: What strategy the team 2 will use
         :param game_duration: How long to run the game (in minutes)
         """
+        rospy.set_param("/use_sim_time", True)
+        rospy.rostime._set_rostime(rospy.Time(0))
+
         self.display = display
         self.game_duration = game_duration
 
@@ -144,6 +149,8 @@ class GameEngine2D:
         friendly_points = 0
         opponent_points = 0
 
+        for i in range(10):
+            self.scene.update(self.team1.robots + self.team2.robots, self.ball)
         for step in range(game_period_seconds):
             if step == int(game_period_seconds / 2):
                 print("\033[96m----- Second Half Started -----\033[0m")
@@ -156,14 +163,12 @@ class GameEngine2D:
             if step % self.team1.strategy.update_frequency == 0:
                 for robot in self.team1.robots:
                     robot.active = True
-                    robot.observed_ball = self.ball
                     self.team1.strategy.step_strategy(self.team1, self.team2, self.gameState)
                     robot.active = False
 
             if step % self.team2.strategy.update_frequency == 0:
                 for robot in self.team2.robots:
                     robot.active = True
-                    robot.observed_ball = self.ball
                     self.team2.strategy.step_strategy(self.team2, self.team1, self.gameState)
                     robot.active = False
 
@@ -181,6 +186,9 @@ class GameEngine2D:
 
             if self.display and step % GameEngine2D.DISPLAY_UPDATE_INTERVAL == 0:
                 self.scene.update(self.team1.robots + self.team2.robots, self.ball)
+
+            # Step the ros time manually
+            rospy.rostime._rostime_current += rospy.Duration(1)
 
         print("----------------------------------------------------------------------")
         print(f"Game Finished: Friendly: {friendly_points}, Opponent: {opponent_points}")

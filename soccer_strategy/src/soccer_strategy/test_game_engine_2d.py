@@ -134,7 +134,7 @@ class TestGameEngine2D(TestCase):
                     team=Robot.Team.FRIENDLY,
                     role=Robot.Role.STRIKER,
                     status=Robot.Status.READY,
-                    position=np.array([-0.5, 0, 0]),
+                    position=np.array([-1.5, -1.5, 0]),
                 )
             ]
         )
@@ -146,13 +146,13 @@ class TestGameEngine2D(TestCase):
                     team=Robot.Team.OPPONENT,
                     role=Robot.Role.GOALIE,
                     status=Robot.Status.READY,
-                    position=np.array([2.0, 0, -3.14]),
+                    position=np.array([-0.5, -0.5, -3.14]),
                 )
             ]
         )
 
         g = GameEngine2D(
-            display=self.display, team_1_strategy=StrategyDummy, team_2_strategy=StrategyStationary, team_1=team1, team_2=team2, game_duration=2
+            display=self.display, team_1_strategy=StrategyDummy, team_2_strategy=StrategyStationary, team_1=team1, team_2=team2, game_duration=4
         )
 
         friendly_points, opponent_points = g.run()

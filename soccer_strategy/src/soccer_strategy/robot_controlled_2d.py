@@ -74,9 +74,11 @@ class RobotControlled2D(RobotControlled):
         angle = np.arccos(np.dot(ball_to_robot[0:2], robot_direction) / (np.linalg.norm(ball_to_robot[0:2]) * np.linalg.norm(robot_direction)))
         distance = np.linalg.norm(ball_to_robot)
         if angle < self.ObservationConstants.FOV / 2 and distance < self.ObservationConstants.VISION_RANGE:
+            if self.observed_ball is None:
+                self.observed_ball = Ball()
             self.observed_ball.position = ball_position
+            self.observed_ball.last_observed_time_stamp = rospy.Time.now()
             self.navigation_goal_localized_time = rospy.Time.now()
-            ball.last_observed_time_stamp = rospy.Time.now()
 
         # TODO can add noise here
 

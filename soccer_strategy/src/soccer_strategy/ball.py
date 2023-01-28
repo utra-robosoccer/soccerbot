@@ -12,6 +12,6 @@ class Ball:
 
     def __init__(self, position=np.array([0, 0])):
         self.position = position
-        self.last_observed_time_stamp = rospy.Time.now()
+        self.last_observed_time_stamp = rospy.Time(0)
         self.velocity = np.array([0, 0])
         self.kick_timeout = 0

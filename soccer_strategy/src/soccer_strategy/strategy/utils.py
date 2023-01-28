@@ -3,6 +3,7 @@ import math
 import numpy as np
 import rospy
 
+from soccer_common.utils import wrapToPi
 from soccer_strategy.robot import Robot
 from soccer_strategy.robot_controlled import RobotControlled
 
@@ -114,11 +115,11 @@ class Utility:
         ball_position = np.array(destination_position)
         player_position = robot.position[0:2]
 
-        diff = ball_position - target_position
+        diff = target_position - ball_position
         diff_unit = diff / np.linalg.norm(diff)
-        diff_angle = math.atan2(-diff_unit[1], -diff_unit[0])
+        diff_angle = math.atan2(diff_unit[1], diff_unit[0])
 
-        destination_position = ball_position + diff_unit * offset
+        destination_position = ball_position - diff_unit * offset
 
         diff = destination_position - player_position
 
@@ -131,3 +132,51 @@ class Utility:
         np.set_printoptions(precision=3)
         rospy.loginfo("Player {}: Navigation | Destination position biased {}".format(robot.robot_id, destination_position_biased))
         robot.set_navigation_position(destination_position_biased)
+
+    @staticmethod
+    def is_obstacle_blocking(robot: RobotControlled, ball_position):
+
+        obstacle_radius = robot.BODY_WIDTH / 2
+        ball_position = np.array(ball_position)
+        player_position = robot.position[0:2]
+        ball_diff = ball_position - player_position
+
+        for obstacle in robot.observed_obstacles:
+            obstacle_position = obstacle.position
+            obstacle_diff = obstacle_position - player_position
+            if np.linalg.norm(obstacle_diff) > np.linalg.norm(ball_diff):
+                continue
+            angle = wrapToPi(np.arctan2(obstacle_diff[1], obstacle_diff[0]) - np.arctan2(ball_diff[1], ball_diff[0]))
+            opposite_len = np.linalg.norm(obstacle_diff) * math.sin(angle)
+            if opposite_len <= obstacle_radius:
+                return obstacle.position
+
+        return None
+
+    @staticmethod
+    def optimal_position_to_navigate_if_obstacle_blocking_target(robot: RobotControlled, ball_position, obstacle_position):
+
+        player_position = robot.position[0:2]
+        ball_position = np.array(ball_position)
+        ball_diff = ball_position - player_position
+        ball_diff_unit = ball_diff / np.linalg.norm(ball_diff)
+        obstacle_diff = obstacle_position - player_position
+
+        ball_diff_rotate_left_90 = np.array([ball_diff[1], -ball_diff[0]])
+        ball_diff_rotate_left_90_unit = ball_diff_rotate_left_90 / np.linalg.norm(ball_diff_rotate_left_90)
+        ball_diff_rotate_right_90 = np.array([-ball_diff[1], ball_diff[0]])
+        ball_diff_rotate_right_90_unit = ball_diff_rotate_right_90 / np.linalg.norm(ball_diff_rotate_right_90)
+
+        angle_obstacle_ball = wrapToPi(np.arctan2(obstacle_diff[1], obstacle_diff[0]) - np.arctan2(ball_diff[1], ball_diff[0]))
+        len_to_obstacle_intersect = np.linalg.norm(obstacle_diff) * math.cos(angle_obstacle_ball)
+
+        obstacle_intersect_pt = player_position + ball_diff_unit * len_to_obstacle_intersect
+        obstacle_center_to_intersection = obstacle_intersect_pt - obstacle_position
+
+        obstacle_center_to_intersection_unit = obstacle_center_to_intersection / np.linalg.norm(obstacle_center_to_intersection)
+        offset_to_optimal_position = 5 * robot.BODY_WIDTH
+
+        if angle_obstacle_ball == 0:
+            return obstacle_position + ball_diff_rotate_left_90_unit * offset_to_optimal_position
+        else:
+            return obstacle_position + obstacle_center_to_intersection_unit * offset_to_optimal_position
