@@ -51,7 +51,7 @@ class StrategyDummy(Strategy):
             return
 
         # If the ball has been seen in the last 2 seconds
-        if friendly_team.observed_ball is not None and rospy.Time.now() - friendly_team.observed_ball.last_observed_time_stamp < rospy.Duration(2):
+        if friendly_team.observed_ball is not None:
 
             # generate goal pose
             goal_position = friendly_team.enemy_goal_position

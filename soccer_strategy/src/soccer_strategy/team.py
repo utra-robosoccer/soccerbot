@@ -3,6 +3,7 @@ import os
 from typing import Optional
 
 import numpy as np
+import rospy
 
 from soccer_strategy.ball import Ball
 from soccer_strategy.robot import Robot
@@ -77,17 +78,34 @@ class Team:
         :return:
         """
 
-        for robot in self.robots:
-            if robot.robot_id == int(os.getenv("ROBOCUP_ROBOT_ID", 1)):
-                if robot.observed_ball is not None:
-                    self.observed_ball = robot.observed_ball
-                    return True
-
-        # Backup by getting any other robot's ball position
+        # Use the closest robot to the ball that is last seen within 2 seconds
+        closest_distance = 1000
+        closest_location = None
         for robot in self.robots:
             if robot.observed_ball is not None:
-                self.observed_ball = robot.observed_ball
-                return True
+                distance = np.linalg.norm(robot.position[0:2] - robot.observed_ball.position)
+                if distance < closest_distance and rospy.Time.now() - robot.observed_ball.last_observed_time_stamp < rospy.Duration(2):
+                    closest_location = robot.observed_ball
+                    closest_distance = distance
+
+        if closest_location is not None:
+            self.observed_ball = closest_location
+            return True
+
+        # Use the last ball seen
+        closest_duration_since_last_ball_seen = rospy.Duration(10000000)
+        closest_location = None
+        for robot in self.robots:
+            if robot.observed_ball is not None:
+                duration_since_last_ball_seen = rospy.Time.now() - robot.observed_ball.last_observed_time_stamp
+                if duration_since_last_ball_seen < closest_duration_since_last_ball_seen:
+                    closest_location = robot.observed_ball
+                    closest_duration_since_last_ball_seen = duration_since_last_ball_seen
+
+        if closest_location is not None:
+            self.observed_ball = closest_location
+            return True
+
         return False
 
     def log(self):
