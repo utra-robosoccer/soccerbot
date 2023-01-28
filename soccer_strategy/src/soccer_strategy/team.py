@@ -79,8 +79,9 @@ class Team:
 
         for robot in self.robots:
             if robot.robot_id == int(os.getenv("ROBOCUP_ROBOT_ID", 1)):
-                self.observed_ball = robot.observed_ball
-                return True
+                if robot.observed_ball is not None:
+                    self.observed_ball = robot.observed_ball
+                    return True
 
         # Backup by getting any other robot's ball position
         for robot in self.robots:
