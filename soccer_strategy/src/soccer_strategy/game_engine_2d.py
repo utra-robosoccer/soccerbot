@@ -193,6 +193,7 @@ class GameEngine2D:
         print("----------------------------------------------------------------------")
         print(f"Game Finished: Friendly: {friendly_points}, Opponent: {opponent_points}")
         rospy.set_param("/use_sim_time", False)
+        self.scene.canvas.close()
         return friendly_points, opponent_points
 
     def update_estimated_physics(self, robots: [RobotControlled2D], ball: Ball):
