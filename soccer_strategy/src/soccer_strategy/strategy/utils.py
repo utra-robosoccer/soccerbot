@@ -174,7 +174,7 @@ class Utility:
         obstacle_center_to_intersection = obstacle_intersect_pt - obstacle_position
 
         obstacle_center_to_intersection_unit = obstacle_center_to_intersection / np.linalg.norm(obstacle_center_to_intersection)
-        offset_to_optimal_position = 5 * robot.BODY_WIDTH
+        offset_to_optimal_position = 4 * robot.BODY_WIDTH
 
         if angle_obstacle_ball == 0:
             return obstacle_position + ball_diff_rotate_left_90_unit * offset_to_optimal_position

@@ -27,7 +27,7 @@ class TestGameEngine2D(TestCase):
     def test_dummy_vs_stationary_strategy(self):
         rospy.init_node("test")
 
-        g = GameEngine2D(display=self.display, team_1_strategy=StrategyDummy, team_2_strategy=StrategyStationary, game_duration=2)
+        g = GameEngine2D(display=self.display, team_1_strategy=StrategyDummy, team_2_strategy=StrategyStationary, game_duration=4)
         friendly_points, opponent_points = g.run()
         print(f"Friendly: {friendly_points}, opponent: {opponent_points}")
         assert not (friendly_points == 0 and opponent_points == 0)
@@ -35,7 +35,7 @@ class TestGameEngine2D(TestCase):
     def test_dummy_vs_dummy_strategy(self):
         rospy.init_node("test")
 
-        g = GameEngine2D(display=self.display, team_1_strategy=StrategyDummy, team_2_strategy=StrategyDummy, game_duration=2)
+        g = GameEngine2D(display=self.display, team_1_strategy=StrategyDummy, team_2_strategy=StrategyDummy, game_duration=4)
         friendly_points, opponent_points = g.run()
         print(f"Friendly: {friendly_points}, opponent: {opponent_points}")
 

@@ -6,6 +6,7 @@ import rospy
 
 from soccer_common.camera import Camera
 from soccer_common.transformation import Transformation
+from soccer_common.utils import wrapToPi
 from soccer_pycontrol import path
 from soccer_strategy.ball import Ball
 from soccer_strategy.obstacle import Obstacle
@@ -65,15 +66,11 @@ class RobotControlled2D(RobotControlled):
         if ball is None or ball.position is None:
             return False
         theta = self.position[2]  # TODO change this to direction vector?
-        arrow_len = 0.3
-        arrow_end_x = math.cos(theta) * arrow_len
-        arrow_end_y = math.sin(theta) * arrow_len
-        robot_direction = np.array([arrow_end_x, arrow_end_y])
         ball_position = ball.position
-        ball_to_robot = ball_position - self.position[0:2]
-        angle = np.arccos(np.dot(ball_to_robot[0:2], robot_direction) / (np.linalg.norm(ball_to_robot[0:2]) * np.linalg.norm(robot_direction)))
-        distance = np.linalg.norm(ball_to_robot)
-        if angle < self.ObservationConstants.FOV / 2 and distance < self.ObservationConstants.VISION_RANGE:
+        ball_diff = ball_position - self.position[0:2]
+        angle = wrapToPi(theta - np.arctan2(ball_diff[1], ball_diff[0]))
+        distance = np.linalg.norm(ball_diff)
+        if abs(angle) < self.ObservationConstants.FOV / 2 and distance < self.ObservationConstants.VISION_RANGE:
             if self.observed_ball is None:
                 self.observed_ball = Ball()
             self.observed_ball.position = ball_position
