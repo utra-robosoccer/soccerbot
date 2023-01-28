@@ -33,9 +33,9 @@ class TestWalking:
         config_path = config_folder_path + f"{robot_model}_sim_pybullet.yaml"
         set_rosparam_from_yaml_file(param_path=config_path)
         if "DISPLAY" not in os.environ:
-            c = Navigator(display=False, real_time=False)
+            c = Navigator(display=False, real_time=True)
         else:
-            c = Navigator(display=True, real_time=False)
+            c = Navigator(display=True, real_time=True)
 
         yield c
         c.close()
@@ -77,7 +77,7 @@ class TestWalking:
 
     @pytest.mark.timeout(30)
     @pytest.mark.flaky(reruns=1)
-    @pytest.mark.parametrize("walker", ["bez1", "bez3"], indirect=True)
+    @pytest.mark.parametrize("walker", ["bez1", "bez2", "bez3"], indirect=True)
     def test_ik(self, walker: Navigator):
         walker.soccerbot.configuration[Links.RIGHT_LEG_1 : Links.RIGHT_LEG_6 + 1] = walker.soccerbot.inverseKinematicsRightFoot(
             np.copy(walker.soccerbot.right_foot_init_position)
@@ -97,7 +97,7 @@ class TestWalking:
                 _ = _
             pb.stepSimulation()
 
-    @pytest.mark.parametrize("walker", ["bez1", "bez3"], indirect=True)
+    @pytest.mark.parametrize("walker", ["bez1", "bez2", "bez3"], indirect=True)
     def test_walk_1(self, walker: Navigator):
         walker.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
         walker.ready()
@@ -215,7 +215,7 @@ class TestWalking:
 
     @pytest.mark.timeout(30)
     @pytest.mark.flaky(reruns=1)
-    @pytest.mark.parametrize("walker", ["bez1"], indirect=True)
+    @pytest.mark.parametrize("walker", ["bez1", "bez2"], indirect=True)
     def test_turn_in_place(self, walker: Navigator):
         walker.setPose(Transformation([0, 0, 0], [0.00000, 0, 0, 1]))
         walker.ready()
@@ -397,6 +397,21 @@ class TestWalking:
         new_end_transform = adjust_navigation_transform(start_transform, end_transform)
         assert new_end_transform.orientation_euler[0] > np.pi / 4
         assert np.linalg.norm(new_end_transform.position[0:2]) > 1
+
+    def test_path_calibration_inversion(self):
+        rospy.set_param("calibration_trans_a", 1.2)
+        rospy.set_param("calibration_trans_b", 0.34)
+        rospy.set_param("calibration_trans_a2", 0.67)
+        rospy.set_param("calibration_rot_a", 0.75)
+
+        start_transform = Transformation([0.0, 0, 0], [0, 0, 0, 1])
+        end_transform = Transformation([1, 1, 0], euler=[np.pi / 4, 0, 0])
+        new_end_transform = adjust_navigation_transform(start_transform, end_transform)
+        new_new_end_transform = adjust_navigation_transform(start_transform, new_end_transform, invert=True)
+
+        assert abs(new_new_end_transform.position[0] - end_transform.position[0]) < 0.01
+        assert abs(new_new_end_transform.position[1] - end_transform.position[1]) < 0.01
+        assert abs(new_new_end_transform.orientation_euler[0] - end_transform.orientation_euler[0]) < 0.01
 
     @pytest.mark.timeout(30)
     @pytest.mark.parametrize("walker", ["bez1"], indirect=True)

@@ -52,6 +52,3 @@ services:
       ROBOCUP_GAMECONTROLLER_IP: "192.168.0.2"
       ROBOCUP_TEAM_ID: ${ROBOCUP_TEAM_ID:-10}
       PYTHONUNBUFFERED: 1
-      X_POS: ${X_POS:--4}
-      Y_POS: ${X_POS:--3.15}
-      YAW: ${YAW:-1.57}

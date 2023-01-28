@@ -1,8 +1,5 @@
 <launch>
     <arg name="simulation" default="false" />
-    <arg name="x_pos" default="$(optenv X_POS 0)" />
-    <arg name="y_pos" default="$(optenv Y_POS 0)" />
-    <arg name="a_pos" default="$(optenv YAW 0)" />
     <arg name="robot_id" default="$(optenv ROBOCUP_ROBOT_ID 1)" />
     <arg name="robot_name" value="robot$(arg robot_id)" />
     <arg name="robot_model" default="$(optenv ROBOT_MODEL bez1)" />
@@ -25,8 +22,23 @@
 
     <param
         name="robot_description"
+        if="$(eval robot_model == 'bez2')"
+        command="xacro '$(find bez2_description)/urdf/bez2.xacro'
+        robot_name:=$(arg robot_name)
+        model_type:=stl
+        file_path:=package://bez2_description
+        has_base_footprint:=false
+        tf_prefix:=$(arg robot_name)"
+    />
+
+    <param
+        name="robot_description"
         if="$(eval robot_model == 'bez3')"
         command="xacro '$(find bez3_description)/urdf/bez3.xacro'
+        robot_name:=$(arg robot_name)
+        model_type:=stl
+        file_path:=package://bez3_description
+        has_base_footprint:=false
         tf_prefix:=$(arg robot_name)"
     />
 
@@ -42,9 +54,6 @@
 
     <include file="$(find soccerbot)/launch/modules/localization.launch">
         <arg name="robot_name" value="$(arg robot_name)" />
-        <arg name="x_pos" value="$(arg x_pos)" />
-        <arg name="y_pos" value="$(arg y_pos)" />
-        <arg name="a_pos" value="$(arg a_pos)" />
         <arg name="map_name" value="robocup" if="$(arg simulation)" />
         <arg name="map_name" value="test" unless="$(arg simulation)" />
         <arg name="simulation" value="$(arg simulation)" />
@@ -57,9 +66,6 @@
     </include>
 
     <include file="$(find soccerbot)/launch/modules/strategy.launch">
-        <arg name="x_pos" value="$(arg x_pos)" />
-        <arg name="y_pos" value="$(arg y_pos)" />
-        <arg name="a_pos" value="$(arg a_pos)" />
         <arg name="robot_id" value="$(arg robot_id)" />
         <arg name="robot_model" value="$(arg robot_model)" />
         <arg name="simulation" value="$(arg simulation)" />

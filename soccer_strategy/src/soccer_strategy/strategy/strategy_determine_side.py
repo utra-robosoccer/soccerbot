@@ -1,9 +1,12 @@
+import json
 import math
+import os
 
 import numpy as np
 import rospy
 import tf
 
+from soccer_common import Transformation
 from soccer_msgs.msg import GameState
 from soccer_strategy.robot import Robot
 from soccer_strategy.strategy.strategy import Strategy, get_back_up
@@ -64,27 +67,40 @@ class StrategyDetermineSide(Strategy):
 
         if self.measurements == 1:
             self.measurements += 1
-            self.determine_side(current_robot)
+            self.determine_side(current_robot, game_state)
             self.determine_role(current_robot, friendly_team)
 
             current_robot.status = Robot.Status.READY
             self.complete = True
 
-    def determine_side(self, current_robot):
+    def determine_side(self, current_robot, game_state: GameState):
         """
         Determine robot position (assuming the robot is always on the left side
 
         :param current_robot: The current robot
         """
-        x = current_robot.position_default[0]
-        y = current_robot.position_default[1]
-        theta = current_robot.position_default[2]
-        if self.average_goal_post_y < 0:  # Goal post seen on the left side
-            self.flip_required = True
-            y = -y
-            theta = -theta
-        rospy.loginfo("Robot Position Determined, Determining Roles, Flip Required " + str(self.flip_required))
-        current_robot.position = np.array([x, y, theta])
+        team_id = int(os.getenv("ROBOCUP_TEAM_ID", 16))
+        if team_id == 16:
+            file = "team_1.json"
+        else:
+            file = "team_2.json"
+        file_path = os.path.dirname(os.path.abspath(__file__))
+        config_folder_path = f"{file_path}/../../../config/{file}"
+
+        with open(config_folder_path) as json_file:
+            team_info = json.load(json_file)
+
+        # TODO determine start pose based on goal post localization instead
+        translation = team_info["players"][str(current_robot.robot_id)]["reentryStartingPose"]["translation"]
+        rotation = team_info["players"][str(current_robot.robot_id)]["reentryStartingPose"]["rotation"]
+
+        position = np.array([translation[0], translation[1], rotation[3]])
+        # if self.average_goal_post_y < 0:  # Goal post seen on the left side
+        #     self.flip_required = True
+        #     position[1] = -position[1]
+        #     position[2] = -position[2]
+        current_robot.position = position
+        rospy.loginfo(f"Robot Position Determined, Determining Roles, Position: {current_robot.position} Flip Required: {self.flip_required}")
         current_robot.reset_initial_position()
 
     def determine_role(self, current_robot, friendly_team):

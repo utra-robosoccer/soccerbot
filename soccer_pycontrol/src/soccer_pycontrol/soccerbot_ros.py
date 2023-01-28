@@ -21,8 +21,8 @@ class SoccerbotRos(Soccerbot):
 
         super().__init__(pose, useFixedBase, useCalibration)
 
-        self.grass_and_cleats_offset = rospy.get_param(
-            "grass_and_cleats_offset", 0.015
+        self.cleats_offset = rospy.get_param(
+            "cleats_offset", -0.01634
         )  #: Additional height added by cleats and grass, consists of 1cm grass and 0.5cm cleats
         self.motor_publishers = {}
         self.pub_all_motor = rospy.Publisher("joint_command", JointState, queue_size=1)
@@ -46,7 +46,6 @@ class SoccerbotRos(Soccerbot):
         self.robot_state_subscriber = rospy.Subscriber("state", RobotState, self.state_callback)
         self.robot_state = RobotState()
         self.robot_state.status = RobotState.STATUS_DISCONNECTED
-        self.last_status = self.robot_state.status
 
         #: Frequency for the head's yaw while searching and relocalizing (left and right movement)
         self.head_yaw_freq = rospy.get_param("head_yaw_freq", 0.005)
@@ -61,9 +60,6 @@ class SoccerbotRos(Soccerbot):
         :param robot_state: A class which tells you information about the robot, disconnected etc
         """
         self.robot_state = robot_state
-
-        if self.robot_state.status not in [RobotState.STATUS_READY]:
-            self.last_status = self.robot_state.status
 
     def imu_callback(self, msg: Imu):
         """
@@ -129,10 +125,12 @@ class SoccerbotRos(Soccerbot):
         super(SoccerbotRos, self).stepPath(t)
 
         # Get odom from odom_path
-        t_adjusted = t * self.robot_odom_path.duration() / self.robot_path.duration()
-        torsoPosition = self.robot_odom_path.torsoPosition(t_adjusted) @ self.torso_offset
-
-        self.odom_pose = Transformation(position=torsoPosition.position, quaternion=torsoPosition.quaternion)
+        self.odom_pose = (
+            self.odom_pose_start_path
+            @ self.robot_path.start_transformed_inv
+            @ self.robot_path.torsoPosition(t, invert_calibration=True)
+            @ self.torso_offset
+        )
 
     def publishPath(self, robot_path=None):
         """
@@ -144,12 +142,15 @@ class SoccerbotRos(Soccerbot):
         if robot_path is None:
             robot_path = self.robot_path
 
-        def createPath(robot_path) -> Path:
+        def createPath(robot_path, invert_calibration=False) -> Path:
             p = Path()
             p.header.frame_id = "world"
             p.header.stamp = rospy.Time.now()
             for i in range(0, robot_path.torsoStepCount(), 1):
                 step = robot_path.getTorsoStepPose(i)
+                if invert_calibration:
+                    step = adjust_navigation_transform(robot_path.start_transform, step)
+
                 position = step.position
                 orientation = step.quaternion
                 pose = PoseStamped()
@@ -167,9 +168,7 @@ class SoccerbotRos(Soccerbot):
             return p
 
         self.path_publisher.publish(createPath(robot_path))
-
-        if self.robot_odom_path is not None:
-            self.path_odom_publisher.publish(createPath(self.robot_odom_path))
+        self.path_odom_publisher.publish(createPath(robot_path, invert_calibration=True))
 
     def publishOdometry(self):
         """
@@ -201,7 +200,7 @@ class SoccerbotRos(Soccerbot):
         """
 
         f = Float64()
-        f.data = self.pose.position[2] + self.grass_and_cleats_offset
+        f.data = self.pose.position[2] + self.foot_box[2] / 2 + self.cleats_offset
         self.torso_height_publisher.publish(f)
         pass
 
@@ -259,8 +258,7 @@ class SoccerbotRos(Soccerbot):
             self.configuration[Joints.RIGHT_ARM_2] = (0.8 - self.configuration[Joints.RIGHT_ARM_2]) * 0.05 + self.configuration[Joints.RIGHT_ARM_2]
 
             # If the last time it saw the ball was 2 seconds ago
-            if self.last_ball_found_timestamp is not None and (rospy.Time.now() - self.last_ball_found_timestamp) < rospy.Duration(3)\
-                    and self.last_status not in [RobotState.STATUS_KICKING]:
+            if self.last_ball_found_timestamp is not None and (rospy.Time.now() - self.last_ball_found_timestamp) < rospy.Duration(3):
 
                 assert self.ball_pixel is not None
 

@@ -11,7 +11,6 @@ from std_msgs.msg import Bool, Empty
 
 from soccer_common import Transformation
 from soccer_msgs.msg import FixedTrajectoryCommand, RobotState
-
 from soccer_strategy.ball import Ball
 from soccer_strategy.robot import Robot
 from soccer_strategy.robot_controlled import RobotControlled
@@ -19,10 +18,7 @@ from soccer_strategy.robot_controlled import RobotControlled
 
 class RobotControlled3D(RobotControlled):
     def __init__(self, team, role, status):
-        x_pos_default = rospy.get_param("~x_pos", -4)
-        y_pos_default = rospy.get_param("~y_pos", -3.15)
-        yaw_default = rospy.get_param("~a_pos", 1.57)
-        self.position_default = np.array([x_pos_default, y_pos_default, yaw_default])
+        self.position_default = np.array([0, 0, 0])
 
         super().__init__(team=team, role=role, status=status, position=self.position_default)
 
@@ -80,14 +76,11 @@ class RobotControlled3D(RobotControlled):
         return True
 
     def reset_robot_callback(self, pose: PoseStamped):
-        self.position[0] = pose.pose.position.x
-        self.position[1] = pose.pose.position.y
-
         q = tf.transformations.euler_from_quaternion(
             [pose.pose.orientation.w, pose.pose.orientation.x, pose.pose.orientation.y, pose.pose.orientation.z]
         )
-        self.position[2] = q[2]
-        rospy.loginfo(f"Robot Reset Called to {pose.pose.position.x} {pose.pose.position.y} {q[2]}")
+        self.position = np.array([pose.pose.position.x, pose.pose.position.y, q[2]])
+        rospy.loginfo(f"Robot Reset Called to {pose.pose.position.x} {pose.pose.position.y} {q[2]} (self.position = {self.position}")
         self.status = Robot.Status.READY
         if self.role == Robot.Role.UNASSIGNED:
             self.role = Robot.Role.STRIKER
@@ -298,7 +291,7 @@ class RobotControlled3D(RobotControlled):
         r = Range()
         r.header.stamp = rospy.Time.now()
         r.header.frame_id = f"robot{self.robot_id}/base_footprint"
-        r.field_of_view = self.min_kick_angle*2
+        r.field_of_view = self.min_kick_angle * 2
         r.min_range = 0
         r.max_range = self.min_kick_angle
         r.range = self.min_kick_distance

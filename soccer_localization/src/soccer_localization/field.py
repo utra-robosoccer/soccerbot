@@ -5,7 +5,6 @@ from functools import cached_property
 from typing import Dict, List, Optional, Tuple, Union
 
 import matplotlib.pyplot as plt
-import rospy
 import numpy as np
 import rospy
 import scipy
@@ -37,9 +36,11 @@ class Field:
     def __init__(self):
         # Dimensions given here https://cdn.robocup.org/hl/wp/2021/06/V-HL21_Rules_v4.pdf
 
-        self.distance_point_threshold = 2.2
-        self.max_detected_line_parallel_offset_error = 0.1
-        self.max_detected_line_perpendicular_offset_error = 0.3
+        self.distance_point_threshold = rospy.get_param("distance_point_threshold", 2.2)
+        self.min_points_threshold = rospy.get_param("min_points_threshold", 40)
+        self.max_detected_line_parallel_offset_error = rospy.get_param("max_detected_line_parallel_offset_error", 0.1)
+        self.max_detected_line_perpendicular_offset_error = rospy.get_param("max_detected_line_perpendicular_offset_error", 0.2)
+        self.offset_movement_limit = rospy.get_param("offset_movement_limit", 0.1)
 
         self.path_plots: Dict[str, PathCollection] = {}
         self.path_points: Dict[str, list] = {}
@@ -78,10 +79,10 @@ class Field:
 
         create_cross(A / 2 - G)
         create_cross(-A / 2 + G)
-        # create_cross(0)
+        create_cross(0)
 
         # Circle
-        lines.append(Circle(center=Point(x=0, y=0), radius=H))
+        lines.append(Circle(center=Point(x=0, y=0), radius=H / 2))
 
         return lines
 
@@ -131,9 +132,11 @@ class Field:
 
         start = time.time()
         # Filter points by distance from current transform
+        if point_cloud_array is None or point_cloud_array.shape[0] < self.min_points_threshold:
+            return None
         world_frame_points = self.filterWorldFramePoints(current_transform, point_cloud_array)
-        if world_frame_points is None:
-            return
+        if world_frame_points is None or world_frame_points.shape[1] < self.min_points_threshold:
+            return None
         # Get closest line to each point
         distance_matrix = np.zeros((len(self.lines), world_frame_points.shape[1]))
         diff_x = np.zeros((len(self.lines), world_frame_points.shape[1]))  # real points - line
@@ -169,14 +172,18 @@ class Field:
                     )
                     diff_x[line_id, :] = x_diff
                 pass
-            else:
-                distance = world_frame_points[0, :] ** 2 + world_frame_points[1, :] ** 2 - line.radius**2
-                distance_matrix[line_id, :] = np.where(distance > lw / 2 + 0.5, float("inf"), distance)
+            else:  # Circle
+                xx = world_frame_points[0, :] ** 2
+                yy = world_frame_points[1, :] ** 2
 
-                # TODO test this and optimize the speed
-                yx_ratio = np.arctan2(world_frame_points[1, :], world_frame_points[0, :])
-                diff_y[line_id, :] = distance * np.sin(yx_ratio)
-                diff_x[line_id, :] = distance * np.cos(yx_ratio)
+                distance = np.sqrt(xx + yy) - line.radius
+                distance_matrix[line_id, :] = np.where(np.abs(distance) > lw / 2 + 0.5, float("inf"), distance)
+
+                x_ratio = np.sqrt(xx / (xx + yy)) * np.sign(world_frame_points[0, :])
+                y_ratio = np.sqrt(yy / (xx + yy)) * np.sign(world_frame_points[1, :])
+
+                diff_x[line_id, :] = distance * x_ratio
+                diff_y[line_id, :] = distance * y_ratio
 
         closest_line = np.argmin(distance_matrix, axis=0)
         closest_dist = np.min(distance_matrix, axis=0)
@@ -205,27 +212,34 @@ class Field:
             diff_y_avg = 0
         assert not np.isnan(diff_x_avg)
         assert not np.isnan(diff_y_avg)
+        if diff_x_avg**2 + diff_y_avg**2 > self.offset_movement_limit**2:
+            return None
 
         center_of_all_points = np.average(points_meet_dist_threshold, axis=1)
+        most_common_line = scipy.stats.mode(closest_line)[0][0]
+        if most_common_line == len(self.lines) - 1:
+            center_of_all_points = [0, 0]
         points_meet_dist_threshold_delta = np.subtract(points_meet_dist_threshold, np.expand_dims(center_of_all_points, axis=1))
         points_meet_dist_threshold_shift = points_meet_dist_threshold_delta - np.concatenate([[closest_line_diff_x], [closest_line_diff_y]])
+        distance_to_new_points = np.linalg.norm(points_meet_dist_threshold_delta, axis=0)
+        sum_distance_to_new_points = np.sum(distance_to_new_points)
 
         angle_original = np.arctan2(points_meet_dist_threshold_delta[1, :], points_meet_dist_threshold_delta[0, :])
         angle_new = np.arctan2(points_meet_dist_threshold_shift[1, :], points_meet_dist_threshold_shift[0, :])
         angle_diff = angle_new - angle_original
         angle_diff = wrapToPi(angle_diff)
-        angle_diff_avg = np.average(angle_diff)
+        angle_diff_avg = np.sum(angle_diff * distance_to_new_points / sum_distance_to_new_points)
+        inv_current_transform = scipy.linalg.inv(current_transform)
 
-        transform_delta_center_to_robot = scipy.linalg.inv(current_transform) @ Transformation(
-            pos_theta=[center_of_all_points[0], center_of_all_points[1], 0]
+        transform_delta_robot_to_center = inv_current_transform @ Transformation(pos_theta=[center_of_all_points[0], center_of_all_points[1], 0])
+        transform_rotation = (
+            transform_delta_robot_to_center @ Transformation(pos_theta=[0, 0, angle_diff_avg]) @ scipy.linalg.inv(transform_delta_robot_to_center)
         )
 
-        offset_transform = (
-            transform_delta_center_to_robot
-            @ Transformation(pos_theta=[-diff_x_avg, -diff_y_avg, angle_diff_avg])
-            @ scipy.linalg.inv(transform_delta_center_to_robot)
-        )
-
+        offset_transform = (inv_current_transform @ Transformation(pos_theta=[-diff_x_avg, -diff_y_avg, 0]) @ current_transform) @ transform_rotation
+        offset_transform_pos_theta = offset_transform.pos_theta
+        if offset_transform_pos_theta[0] > 0.2 or offset_transform_pos_theta[1] > 0.2:
+            return None
         end = time.time()
         rospy.loginfo_throttle(60, f"Match Points with Map rate (s) :  {(end - start)}")
         return offset_transform
