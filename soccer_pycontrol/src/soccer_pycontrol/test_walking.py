@@ -409,41 +409,74 @@ class TestWalking:
 
         get_imu_original = walker.soccerbot.get_imu
         pitches = []
+        rolls = []
+        yaws = []
+        locations = [[] for _ in range(8)]
         times = []
 
         def walker_get_imu_patch():
             imu_transform = get_imu_original()
             pitches.append(imu_transform.orientation_euler[1])
+            yaws.append(imu_transform.orientation_euler[0])
+            rolls.append(imu_transform.orientation_euler[2])
             times.append(walker.t)
+            get_foot_pressure = walker.soccerbot.get_foot_pressure_sensors(walker.ramp.plane)
+            for i in range(len(locations)):
+                locations[i].append(int(get_foot_pressure[i]))
             return imu_transform
 
         walker.soccerbot.get_imu = walker_get_imu_patch
 
         walk_success = walker.run(single_trajectory=True)
         assert walk_success
-        plt.plot(times, pitches, label="Pitch of robot over time")
 
-        times_after_walk = [t for t in times if t < 0]
-        pitches_after_walk = pitches[len(times_after_walk) :]
-        max_pitch_offset = round(max(pitches_after_walk) - walker.soccerbot.walking_pid.setpoint, 5)
-        min_pitch_offset = round(min(pitches_after_walk) - walker.soccerbot.walking_pid.setpoint, 5)
-        plt.axhline(max(pitches_after_walk), color="red", label=f"Max Pitch Offset {max_pitch_offset} rad")
-        plt.axhline(min(pitches_after_walk), color="red", label=f"Min Pitch Offset {min_pitch_offset} rad")
-        plt.axhline(walker.soccerbot.walking_pid.setpoint, color="green", label="Walking set point")
-        assert abs(max_pitch_offset) < 0.03
-        assert abs(min_pitch_offset) < 0.03
+        def create_angle_plot(angle_name: str, angle_data):
+            plt.figure(angle_name)
+            plt.plot(times, angle_data, label=f"{angle_name} of robot over time")
+            times_after_walk = [t for t in times if t < 0]
+            angle_data_after_walk = angle_data[len(times_after_walk) :]
 
-        times_before_walk = [t for t in times if t < 0]
-        pitches_before_walk = pitches[0 : len(times_before_walk)]
-        max_pitch_pre_walk = round(max(pitches_before_walk), 5)
-        min_pitch_pre_walk = round(min(pitches_before_walk), 5)
-        assert abs(max_pitch_pre_walk) < 0.01
-        plt.axhline(max(pitches_before_walk), color="yellow", label=f"Max Pitch Pre Walk Offset {max_pitch_pre_walk} rad")
-        plt.axhline(min(pitches_before_walk), color="yellow", label=f"Min Pitch Pre Walk Offset {min_pitch_pre_walk} rad")
+            if angle_name == "Pitches":
+                max_angle_offset = round(max(angle_data_after_walk) - walker.soccerbot.walking_pid.setpoint, 5)
+                min_angle_offset = round(min(angle_data_after_walk) - walker.soccerbot.walking_pid.setpoint, 5)
+                plt.axhline(max(angle_data_after_walk), color="red", label=f"Max {angle_name} Offset {max_angle_offset} rad")
+                plt.axhline(min(angle_data_after_walk), color="red", label=f"Min {angle_name} Offset {min_angle_offset} rad")
+                plt.axhline(walker.soccerbot.walking_pid.setpoint, color="green", label="Walking set point")
+                assert abs(max_angle_offset) < 0.03
+                assert abs(min_angle_offset) < 0.03
 
-        plt.xlabel("Time (t)")
-        plt.ylabel("Forward pitch of robot in radians")
-        plt.grid()
-        plt.legend()
+            times_before_walk = [t for t in times if t < 0]
+            angle_data_before_walk = angle_data[0 : len(times_before_walk)]
+
+            if angle_name == "Pitches":
+                max_pitch_pre_walk = round(max(angle_data_before_walk), 5)
+                min_pitch_pre_walk = round(min(angle_data_before_walk), 5)
+                assert abs(max_pitch_pre_walk) < 0.01
+                plt.axhline(max(angle_data_before_walk), color="yellow", label=f"Max {angle_name} Pre Walk Offset {max_pitch_pre_walk} rad")
+                plt.axhline(min(angle_data_before_walk), color="yellow", label=f"Min {angle_name} Pre Walk Offset {min_pitch_pre_walk} rad")
+
+            plt.xlabel("Time (t)")
+            plt.ylabel(f"Forward {angle_name} of robot in radians")
+            plt.grid()
+            plt.legend()
+
+        def create_foot_pressure_sensor_plot():
+            fig, axs = plt.subplots(8)
+            fig.suptitle("Foot Pressure Sensor Locations")
+
+            for i in range(len(locations)):
+                axs[i].plot(times, locations[i], label="Foot Pressure Sensor %s of robot over time" % (i))
+
+            for ax in axs.flat:
+                ax.set(xlabel="Time (t)", ylabel="Sensor Value")
+                ax.set_xlim([0, max(times)])
+                ax.grid()
+                ax.legend()
+
+        create_angle_plot("Pitches", pitches)
+        create_angle_plot("Yaws", yaws)
+        create_angle_plot("Rolls", rolls)
+        create_foot_pressure_sensor_plot()
+
         if "DISPLAY" in os.environ:
             plt.show()

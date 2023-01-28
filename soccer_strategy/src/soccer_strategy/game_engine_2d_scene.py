@@ -137,11 +137,11 @@ class Scene:
             visualization_robot["vision_cone"].set_data(pos=np.array([robot_pos + vision_cone_left, robot_pos, vision_cone_right + robot_pos]))
 
             # Draw obstacles
+            color = white if robot.team == Robot.Team.FRIENDLY else red
             for i in range(8):
-                visualization_robot[f"obstacle{i}"].color = Color("#ffffff", alpha=0.0)
+                visualization_robot[f"obstacle{i}"].color = Color(color, alpha=0.0)
             for i, obstacle in enumerate(robot.observed_obstacles):
                 visualization_robot[f"obstacle{i}"].center = obstacle.position
-                color = white if robot.team == Robot.Team.FRIENDLY else red
                 visualization_robot[f"obstacle{i}"].color = Color(color, alpha=obstacle.probability * 0.5)
 
             # Draw robot path
