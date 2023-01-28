@@ -14,6 +14,8 @@ class TestTrajectory:
     @pytest.mark.parametrize("robot_model", ["bez1", "bez1_sim"])
     @pytest.mark.parametrize("trajectory_name", ["getupfront", "getupback", "getupside", "rightkick"])
     def test_all_trajectories(self, robot_model: str, trajectory_name: str):
+        rospy.init_node("test")
+
         os.system(
             "/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_strategy /robot1/soccer_pycontrol /robot1/soccer_trajectories'"
         )
@@ -29,5 +31,5 @@ class TestTrajectory:
         msg = FixedTrajectoryCommand()
         msg.trajectory_name = trajectory_name
         msg.mirror = False
-        traj_success = c.run_trajectory(command=msg)
+        traj_success = c.run_trajectory(command=msg, real_time=False)
         assert traj_success
