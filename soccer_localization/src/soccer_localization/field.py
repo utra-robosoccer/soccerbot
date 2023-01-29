@@ -177,7 +177,7 @@ class Field:
                 yy = world_frame_points[1, :] ** 2
 
                 distance = np.sqrt(xx + yy) - line.radius
-                distance_matrix[line_id, :] = np.where(np.abs(distance) > lw / 2 + 0.5, float("inf"), distance)
+                distance_matrix[line_id, :] = np.where(np.abs(distance) > (lw / 2 + 0.5), float("inf"), distance**2)
 
                 x_ratio = np.sqrt(xx / (xx + yy)) * np.sign(world_frame_points[0, :])
                 y_ratio = np.sqrt(yy / (xx + yy)) * np.sign(world_frame_points[1, :])
