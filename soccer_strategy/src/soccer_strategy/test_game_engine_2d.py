@@ -82,6 +82,74 @@ class TestGameEngine2D(TestCase):
         print(f"Friendly: {friendly_points}, opponent: {opponent_points}")
         assert not (friendly_points == 0 and opponent_points == 0)
 
+    def test_search_for_ball(self):
+        rospy.init_node("test")
+
+        team1 = Team(
+            [
+                RobotControlled2D(
+                    robot_id=1,
+                    team=Robot.Team.FRIENDLY,
+                    role=Robot.Role.STRIKER,
+                    status=Robot.Status.READY,
+                    position=np.array([-3, 0, 0]),
+                )
+            ]
+        )
+
+        team2 = Team(
+            [
+                RobotControlled2D(
+                    robot_id=2,
+                    team=Robot.Team.OPPONENT,
+                    role=Robot.Role.GOALIE,
+                    status=Robot.Status.READY,
+                    position=np.array([3, 0, -3.14]),
+                )
+            ]
+        )
+
+        g = GameEngine2D(
+            display=self.display, team_1_strategy=StrategyDummy, team_2_strategy=StrategyDummy, team_1=team1, team_2=team2, game_duration=4
+        )
+
+        friendly_points, opponent_points = g.run()
+        print(f"Friendly: {friendly_points}, opponent: {opponent_points}")
+
+    def test_one_v_one(self):
+        rospy.init_node("test")
+
+        team1 = Team(
+            [
+                RobotControlled2D(
+                    robot_id=1,
+                    team=Robot.Team.FRIENDLY,
+                    role=Robot.Role.STRIKER,
+                    status=Robot.Status.READY,
+                    position=np.array([-2, 0, 0]),
+                )
+            ]
+        )
+
+        team2 = Team(
+            [
+                RobotControlled2D(
+                    robot_id=2,
+                    team=Robot.Team.OPPONENT,
+                    role=Robot.Role.GOALIE,
+                    status=Robot.Status.READY,
+                    position=np.array([2, 0, -3.14]),
+                )
+            ]
+        )
+
+        g = GameEngine2D(
+            display=self.display, team_1_strategy=StrategyDummy, team_2_strategy=StrategyDummy, team_1=team1, team_2=team2, game_duration=4
+        )
+
+        friendly_points, opponent_points = g.run()
+        print(f"Friendly: {friendly_points}, opponent: {opponent_points}")
+
     def test_navigate_to_scoring_position_with_offset_case_1(self):
 
         robot = MagicMock()

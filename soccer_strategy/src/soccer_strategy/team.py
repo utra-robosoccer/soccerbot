@@ -79,6 +79,8 @@ class Team:
         """
 
         # Use the closest robot to the ball that is last seen within 2 seconds
+        self.observed_ball = None
+
         closest_distance = 1000
         closest_location = None
         for robot in self.robots:
@@ -92,13 +94,13 @@ class Team:
             self.observed_ball = closest_location
             return True
 
-        # Use the last ball seen
+        # Use the last ball seen (for balls seen in the last 10 seconds)
         closest_duration_since_last_ball_seen = rospy.Duration(10000000)
         closest_location = None
         for robot in self.robots:
             if robot.observed_ball is not None:
                 duration_since_last_ball_seen = rospy.Time.now() - robot.observed_ball.last_observed_time_stamp
-                if duration_since_last_ball_seen < closest_duration_since_last_ball_seen:
+                if duration_since_last_ball_seen < closest_duration_since_last_ball_seen and duration_since_last_ball_seen < rospy.Duration(10):
                     closest_location = robot.observed_ball
                     closest_duration_since_last_ball_seen = duration_since_last_ball_seen
 
