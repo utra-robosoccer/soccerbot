@@ -72,6 +72,8 @@ class DetectorFieldline(Detector):
 
         image = CvBridge().imgmsg_to_cv2(img, desired_encoding="rgb8")
         h = self.camera.calculateHorizonCoverArea()
+        if h + 1 >= self.camera.resolution_y:
+            return
         image_crop = image[h + 1 :, :, :]
         # image_crop_blurred = cv2.GaussianBlur(image_crop, (3, 3), 0)
         image_crop_blurred = cv2.bilateralFilter(image_crop, 9, 75, 75)

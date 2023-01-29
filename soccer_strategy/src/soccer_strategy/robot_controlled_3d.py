@@ -165,11 +165,13 @@ class RobotControlled3D(RobotControlled):
                 self.status = Robot.Status.READY
 
     def action_completed_callback(self, data):
-        if self.status in [
+        if self.status == Robot.Status.GETTING_BACK_UP:
+            self.reset_initial_position(variance=0.06)
+            self.status = Robot.Status.LOCALIZING
+        elif self.status in [
             Robot.Status.WALKING,
             Robot.Status.TERMINATING_WALK,
             Robot.Status.KICKING,
-            Robot.Status.TRAJECTORY_IN_PROGRESS,
         ]:
             self.goal_position = None
             if self.amcl_pose is not None:
@@ -219,7 +221,7 @@ class RobotControlled3D(RobotControlled):
                 rospy.logwarn_throttle(1, f"Fallen Side: (R: {roll}, P: {pitch}, Y: {yaw})")
                 self.status = Robot.Status.FALLEN_SIDE
 
-    def reset_initial_position(self):
+    def reset_initial_position(self, variance=0.02):
         position = self.position
 
         p = PoseWithCovarianceStamped()
@@ -236,12 +238,12 @@ class RobotControlled3D(RobotControlled):
         p.pose.pose.orientation.w = q[3]
         rospy.loginfo_throttle_identical(10, "Setting " + self.robot_name + " localization position " + str(position) + " orientation " + str(q))
         # fmt: off
-        p.pose.covariance = [0.0004, 0.0, 0.0, 0.0, 0.0, 0.0,
-                             0.0, 0.0004, 0.0, 0.0, 0.0, 0.0,
+        p.pose.covariance = [variance ** 2, 0.0, 0.0, 0.0, 0.0, 0.0,
+                             0.0, variance ** 2, 0.0, 0.0, 0.0, 0.0,
                              0.0, 0.0, 0, 0.0, 0.0, 0.0,
                              0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
                              0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                             0.0, 0.0, 0.0, 0.0, 0.0, 0.0001]
+                             0.0, 0.0, 0.0, 0.0, 0.0, variance ** 2]
         # fmt: on
         self.robot_initial_pose_publisher.publish(p)
         rospy.sleep(1)
@@ -258,7 +260,7 @@ class RobotControlled3D(RobotControlled):
         if "kick" in trajectory_name:
             self.status = Robot.Status.KICKING
         else:
-            self.status = Robot.Status.TRAJECTORY_IN_PROGRESS
+            self.status = Robot.Status.GETTING_BACK_UP
         rospy.loginfo(self.robot_name + " " + f.trajectory_name)
 
     def get_detected_obstacles(self):

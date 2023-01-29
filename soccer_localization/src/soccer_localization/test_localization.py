@@ -66,7 +66,7 @@ def test_points_correction_striker():
 
     bag = rosbag.Bag(retrieve_bag(url="https://drive.google.com/uc?id=1VNHkAu10cfFJzcpTvc0zR8Jm-tI_6xQ8", bag_name="localization_2"))
 
-    transform_gt_offset = Transformation(pos_theta=[0, -0.05, 0])
+    transform_gt_offset = Transformation(pos_theta=[0, -0.0, 0])
 
     draw_points_correction(bag, map, t_start=25, transform_gt_offset=transform_gt_offset, xlim=(-2, 2), ylim=(-3.5, 2), debug=True)
 
@@ -114,7 +114,7 @@ def draw_points_correction(bag, map, t_start, transform_gt_offset, xlim, ylim, d
                         plt.waitforbuttonpress(timeout=0.01)
 
 
-def display_rosbag_map(bag, map, debug=False, pos_theta_start=[-4, -3.15, np.pi / 2]):
+def display_rosbag_map(bag, map, debug=False, pos_theta_start=[-4, -3.15, np.pi / 2], t_start=0):
 
     f = FieldLinesUKFROS(map=map)
     f.robot_state.status = RobotState.STATUS_READY
@@ -140,7 +140,7 @@ def display_rosbag_map(bag, map, debug=False, pos_theta_start=[-4, -3.15, np.pi 
                 path_vo.append(vo_pos_theta)
                 path_vo_t.append(t.to_sec())
 
-            if debug:
+            if debug and t.secs > t_start:
                 map.drawPathOnMap(Transformation(pos_theta=f.ukf.x), label="VO Odometry", color="orange")
 
                 if vo_pos_theta is not None:
@@ -165,7 +165,7 @@ def display_rosbag_map(bag, map, debug=False, pos_theta_start=[-4, -3.15, np.pi 
                     transform_gt = Transformation(geometry_msgs_transform=transform.transform)
                     path_gt.append(transform_gt.pos_theta)
                     path_gt_t.append(t.to_sec())
-                    if debug:
+                    if debug and t.secs > t_start:
                         map.drawPathOnMap(transform_gt, label="Ground Truth", color="black")
 
         elif topic == "/robot1/odom_combined":
@@ -187,7 +187,7 @@ def display_rosbag_map(bag, map, debug=False, pos_theta_start=[-4, -3.15, np.pi 
             odom_uncorrected = initial_pose @ odom_t
             path_odom.append(odom_uncorrected.pos_theta)
             path_odom_t.append(t.to_sec())
-            if debug:
+            if debug and t.secs > t_start:
                 map.drawPathOnMap(odom_uncorrected, label="Uncorrected Odom", color="blue")
 
     path_ukf = np.array(path_ukf)
@@ -258,7 +258,7 @@ def test_walk_forward():
     display_rosbag_map(bag=bag, map=map, debug=False)
 
 
-def test_walk_forward_center_map():
+def test_walk_forward_striker():
 
     rospy.init_node("test")
 
@@ -267,7 +267,7 @@ def test_walk_forward_center_map():
     map = Field()
     map.draw()
     bag = rosbag.Bag(retrieve_bag(url="https://drive.google.com/uc?id=1VNHkAu10cfFJzcpTvc0zR8Jm-tI_6xQ8", bag_name="localization_2"))
-    display_rosbag_map(bag=bag, map=map, debug=False, pos_theta_start=[-1, -3.15, np.pi / 2])
+    display_rosbag_map(bag=bag, map=map, debug=False, pos_theta_start=[-1, -3.15, np.pi / 2], t_start=70)
 
 
 class FreehicleField(Field):
