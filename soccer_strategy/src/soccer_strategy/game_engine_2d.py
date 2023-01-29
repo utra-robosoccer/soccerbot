@@ -149,8 +149,9 @@ class GameEngine2D:
         friendly_points = 0
         opponent_points = 0
 
-        for i in range(10):
-            self.scene.update(self.team1.robots + self.team2.robots, self.ball)
+        if self.display:
+            for i in range(10):
+                self.scene.update(self.team1.robots + self.team2.robots, self.ball)
         for step in range(game_period_seconds):
             if step == int(game_period_seconds / 2):
                 print("\033[96m----- Second Half Started -----\033[0m")
