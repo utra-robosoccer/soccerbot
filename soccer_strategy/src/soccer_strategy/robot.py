@@ -1,5 +1,5 @@
 import enum
-from typing import List
+from typing import List, Optional
 
 import numpy as np
 
@@ -77,5 +77,5 @@ class Robot:
         self.status = status
         self.position: np.ndarray = position
         self.robot_id: int = robot_id
-        self.observed_ball = Ball()
+        self.observed_ball: Optional[Ball] = None
         self.observed_obstacles: List[Obstacle] = []

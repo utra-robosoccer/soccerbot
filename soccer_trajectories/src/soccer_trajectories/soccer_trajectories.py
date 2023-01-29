@@ -99,7 +99,7 @@ class Trajectory:
         """Returns a list of joints in this trajectory."""
         return self.splines.keys()
 
-    def run(self):
+    def run(self, real_time=True):
         pub_all_motor = rospy.Publisher("joint_command", JointState, queue_size=10)
         rate = rospy.Rate(Trajectory.RATE)
         t = 0
@@ -148,7 +148,8 @@ class Trajectory:
                 print(ex)
                 exit(0)
             t = t + 0.01
-            rate.sleep()
+            if real_time:
+                rate.sleep()
 
 
 class SoccerTrajectoryClass:
@@ -165,7 +166,7 @@ class SoccerTrajectoryClass:
             if self.trajectory is not None:
                 self.trajectory.terminate = True
 
-    def run_trajectory(self, command: FixedTrajectoryCommand):
+    def run_trajectory(self, command: FixedTrajectoryCommand, real_time=True):
         if not self.trajectory_complete:
             return
         self.trajectory_complete = False
@@ -179,7 +180,7 @@ class SoccerTrajectoryClass:
 
         rospy.loginfo("Running Trajectory: " + command.trajectory_name)
         self.trajectory = Trajectory(path, command.mirror)
-        self.trajectory.run()
+        self.trajectory.run(real_time=real_time)
         rospy.loginfo("Finished Trajectory: " + command.trajectory_name)
         self.finish_trajectory.publish()
         self.trajectory_complete = True
