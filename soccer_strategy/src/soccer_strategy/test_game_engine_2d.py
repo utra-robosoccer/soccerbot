@@ -36,7 +36,7 @@ class TestGameEngine2D(TestCase):
     def test_dummy_vs_dummy_strategy(self):
         rospy.init_node("test")
 
-        g = GameEngine2D(display=self.display, team_1_strategy=StrategyDummy, team_2_strategy=StrategyDummy, game_duration=6)
+        g = GameEngine2D(display=self.display, team_1_strategy=StrategyDummy, team_2_strategy=StrategyDummy, game_duration=2)
         friendly_points, opponent_points = g.run()
         print(f"Friendly: {friendly_points}, opponent: {opponent_points}")
 
