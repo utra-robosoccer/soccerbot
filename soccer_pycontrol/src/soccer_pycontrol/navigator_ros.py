@@ -150,7 +150,7 @@ class NavigatorRos(Navigator):
             time_start = time.time()
 
             # Always publish odometry no matter what state
-            self.soccerbot.publishOdometry()
+            self.soccerbot.publishOdometry(r.last_time)
 
             if self.soccerbot.robot_state.status in [
                 RobotState.STATUS_DISCONNECTED,
@@ -240,7 +240,6 @@ class NavigatorRos(Navigator):
                 self.completed_walk_publisher.publish(e)
 
             if self.soccerbot.robot_path is None or self.t > self.soccerbot.robot_path.duration():
-                self.soccerbot.publishHeight()
                 self.soccerbot.apply_head_rotation()
                 self.soccerbot.robot_path = None
                 pass
@@ -294,7 +293,4 @@ class NavigatorRos(Navigator):
 
             self.t = self.t + Navigator.PYBULLET_STEP
 
-            try:
-                r.sleep()
-            except rospy.exceptions.ROSInterruptException:
-                break
+            r.sleep()

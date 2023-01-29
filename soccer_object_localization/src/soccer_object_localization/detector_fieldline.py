@@ -3,6 +3,7 @@ import os
 import time
 
 from rospy.impl.tcpros_base import DEFAULT_BUFF_SIZE
+from tf import TransformBroadcaster
 
 from soccer_common.transformation import Transformation
 from soccer_msgs.msg import RobotState
@@ -31,6 +32,8 @@ class DetectorFieldline(Detector):
         )  # Large buff size (https://answers.ros.org/question/220502/image-subscriber-lag-despite-queue-1/)
         self.image_publisher = rospy.Publisher("camera/line_image", Image, queue_size=1)
         self.point_cloud_publisher = rospy.Publisher("field_point_cloud", PointCloud2, queue_size=1)
+        self.tf_broadcaster = TransformBroadcaster()
+
         self.point_cloud_max_distance = rospy.get_param("point_cloud_max_distance", 2)
         self.point_cloud_spacing = rospy.get_param("point_cloud_spacing", 30)
         self.publish_point_cloud = False
@@ -137,13 +140,22 @@ class DetectorFieldline(Detector):
                     if camToPoint.norm_squared < self.point_cloud_max_distance**2:
                         points3d.append(camToPoint.position)
 
+            # Publish straight base link
+            self.tf_broadcaster.sendTransform(
+                self.camera.pose_base_link_straight.position,
+                self.camera.pose_base_link_straight.quaternion,
+                img.header.stamp,
+                self.robot_name + "/base_footprint_straight",
+                self.robot_name + "/odom",
+            )
+
             # Publish fieldlines in laserscan format
             header = Header()
             header.stamp = img.header.stamp
-            header.frame_id = self.robot_name + "/base_footprint"
+            header.frame_id = self.robot_name + "/base_footprint_straight"
             if self.ground_truth:
                 if not self.publish_point_cloud:
-                    header.frame_id = self.robot_name + "/base_footprint"
+                    header.frame_id = self.robot_name + "/base_footprint_straight"
                 else:
                     header.frame_id = "world"
             point_cloud_msg = pcl2.create_cloud_xyz32(header, points3d)

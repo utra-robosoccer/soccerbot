@@ -39,7 +39,7 @@ class Field:
         self.distance_point_threshold = rospy.get_param("distance_point_threshold", 2.2)
         self.min_points_threshold = rospy.get_param("min_points_threshold", 40)
         self.max_detected_line_parallel_offset_error = rospy.get_param("max_detected_line_parallel_offset_error", 0.1)
-        self.max_detected_line_perpendicular_offset_error = rospy.get_param("max_detected_line_perpendicular_offset_error", 0.2)
+        self.max_detected_line_perpendicular_offset_error = rospy.get_param("max_detected_line_perpendicular_offset_error", 0.3)
         self.offset_movement_limit = rospy.get_param("offset_movement_limit", 0.1)
 
         self.path_plots: Dict[str, PathCollection] = {}
