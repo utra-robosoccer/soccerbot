@@ -39,8 +39,8 @@ class FieldLinesUKF:
         self.R_localizing = np.diag([0.1, 0.1, 1])
         self.ukf.R = self.R_walking  # Noise from measurement updates (x, y, theta), trust the y more than the x
 
-        self.Q_walking = np.diag([2e-5, 2e-5, 1e-6])
-        self.Q_localizing = np.diag([1e-5, 1e-5, 1e-6])
+        self.Q_walking = np.diag([9e-5, 9e-5, 1e-4])
+        self.Q_localizing = np.diag([9e-5, 9e-5, 1e-4])
         self.Q_do_nothing = np.diag([1e-18, 1e-18, 1e-18])
         self.ukf.Q = self.Q_walking  # Noise from navigation movements (2cm 2cm)
 
@@ -95,9 +95,15 @@ class FieldLinesUKF:
         self.ukf.predict(dt=dt, u=u)
         assert not math.isnan(self.ukf.x[0])
 
-    def update(self, z):
+    def update(self, z, transform_confidence):
         assert not any((math.isnan(z[i]) for i in range(0, 3)))
-        self.ukf.update(z)
+
+        R = np.copy(self.ukf.R)
+        R[0, 0] = R[0, 0] / max(0.001, transform_confidence[0])
+        R[1, 1] = R[1, 1] / max(0.001, transform_confidence[1])
+        R[2, 2] = R[2, 2] / max(0.001, transform_confidence[2])
+
+        self.ukf.update(z, R)
         assert not math.isnan(self.ukf.x[0])
 
     def draw_covariance(self):

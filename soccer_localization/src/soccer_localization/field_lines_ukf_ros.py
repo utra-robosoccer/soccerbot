@@ -97,12 +97,13 @@ class FieldLinesUKFROS(FieldLinesUKF):
         point_cloud = pcl2.read_points_list(point_cloud_msg)
         point_cloud_array = np.array(point_cloud)
         current_transform = Transformation(pos_theta=self.ukf.x)
-        offset_transform = self.map.matchPointsWithMap(current_transform, point_cloud_array)
+        tt = self.map.matchPointsWithMap(current_transform, point_cloud_array)
 
-        if offset_transform is not None:
+        if tt is not None:
+            (offset_transform, transform_confidence) = tt
             vo_transform = current_transform @ offset_transform
             vo_pos_theta = vo_transform.pos_theta
-            self.update(vo_pos_theta)
+            self.update(vo_pos_theta, transform_confidence)
             self.broadcast_tf_position(timestamp=stamp)
             self.broadcast_vo_transform_debug(vo_transform, point_cloud_msg)
             self.publish_amcl_pose(timestamp=stamp)

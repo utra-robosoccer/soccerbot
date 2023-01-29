@@ -112,21 +112,23 @@ class RobotControlled3D(RobotControlled):
             self.observed_ball = None
 
         # Get Robot Position from TF
-        trans = [self.position[0], self.position[1], 0]
-        rot = tf.transformations.quaternion_from_euler(0, 0, self.position[2])
-        try:
-            if ground_truth:
-                (trans, rot) = self.tf_listener.lookupTransform("world", "robot" + str(self.robot_id) + "/base_footprint_gt", rospy.Time(0))
-            else:
-                (trans, rot) = self.tf_listener.lookupTransform("world", "robot" + str(self.robot_id) + "/base_footprint", rospy.Time(0))
-            eul = tf.transformations.euler_from_quaternion(rot)
-            self.position = np.array([trans[0], trans[1], eul[2]])
-            if self.status == Robot.Status.DISCONNECTED:
-                self.status = Robot.Status.READY
+        if self.status not in [Robot.Status.FALLEN_BACK, Robot.Status.FALLEN_SIDE, Robot.Status.FALLEN_FRONT, Robot.Status.GETTING_BACK_UP]:
 
-        except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
-            if rospy.Time.now() - self.node_init_time > rospy.Duration(5):
-                rospy.logwarn_throttle(5, "Unable to locate robot in TF tree")
+            trans = [self.position[0], self.position[1], 0]
+            rot = tf.transformations.quaternion_from_euler(0, 0, self.position[2])
+            try:
+                if ground_truth:
+                    (trans, rot) = self.tf_listener.lookupTransform("world", "robot" + str(self.robot_id) + "/base_footprint_gt", rospy.Time(0))
+                else:
+                    (trans, rot) = self.tf_listener.lookupTransform("world", "robot" + str(self.robot_id) + "/base_footprint", rospy.Time(0))
+                eul = tf.transformations.euler_from_quaternion(rot)
+                self.position = np.array([trans[0], trans[1], eul[2]])
+                if self.status == Robot.Status.DISCONNECTED:
+                    self.status = Robot.Status.READY
+
+            except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+                if rospy.Time.now() - self.node_init_time > rospy.Duration(5):
+                    rospy.logwarn_throttle(5, "Unable to locate robot in TF tree")
 
         # Publish Robot state info
         r = RobotState()
