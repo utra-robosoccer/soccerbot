@@ -47,8 +47,6 @@
         <param name="pose0" value="amcl_pose" />
     </node>
 
-    <node name="torso_height_publisher" pkg="bez1_description" type="base_footprint_to_torso.py" />
-
     <!-- UKF localization -->
     <node pkg="soccer_localization" type="main.py" name="soccer_ukf" respawn="$(optenv COMPETITION false)" output="log" />
 </launch>

@@ -21,7 +21,6 @@ class FieldLinesUKFROS(FieldLinesUKF):
     def __init__(self, map=Field()):
         super().__init__()
 
-        self.initial_pose_initiated = False
         self.odom_subscriber = rospy.Subscriber("odom_combined", PoseWithCovarianceStamped, self.odom_callback, queue_size=1)
         self.field_point_cloud_subscriber = rospy.Subscriber("field_point_cloud", PointCloud2, self.field_point_cloud_callback, queue_size=1)
         self.field_point_cloud_transformed_publisher = rospy.Publisher("field_point_cloud_transformed", PointCloud2, queue_size=1)
@@ -29,7 +28,7 @@ class FieldLinesUKFROS(FieldLinesUKF):
         self.amcl_pose_publisher = rospy.Publisher("amcl_pose", PoseWithCovarianceStamped, queue_size=1)
         self.map = map
 
-        self.initial_pose = Transformation(pos_theta=[-4, -3.15, np.pi / 2])  # TODO get this
+        self.initial_pose = Transformation(pos_theta=[0, 0, 0])
         self.ukf.x = self.initial_pose.pos_theta
 
         self.odom_t_previous = None
@@ -123,9 +122,6 @@ class FieldLinesUKFROS(FieldLinesUKF):
         self.field_point_cloud_transformed_publisher.publish(point_cloud)
 
     def broadcast_tf_position(self, timestamp):
-        if not self.initial_pose_initiated:
-            return
-
         if self.odom_t_previous is None:
             rospy.logerr_throttle(1, "Odom not published")
             return
@@ -147,8 +143,6 @@ class FieldLinesUKFROS(FieldLinesUKF):
         )
 
     def publish_amcl_pose(self, timestamp):
-        if not self.initial_pose_initiated:
-            return
         amcl_pose = Transformation(pos_theta=self.ukf.x, pose_theta_covariance_array=self.ukf.P).pose_with_covariance_stamped
         amcl_pose.header.stamp = timestamp
         self.amcl_pose_publisher.publish(amcl_pose)
@@ -158,4 +152,3 @@ class FieldLinesUKFROS(FieldLinesUKF):
         self.ukf.x = self.initial_pose.pos_theta
         self.ukf.P = self.initial_pose.pose_theta_covariance_array
         self.broadcast_tf_position(pose_stamped.header.stamp)
-        self.initial_pose_initiated = True

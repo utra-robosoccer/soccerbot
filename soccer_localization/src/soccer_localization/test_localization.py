@@ -66,9 +66,9 @@ def test_points_correction_striker():
 
     bag = rosbag.Bag(retrieve_bag(url="https://drive.google.com/uc?id=1VNHkAu10cfFJzcpTvc0zR8Jm-tI_6xQ8", bag_name="localization_2"))
 
-    transform_gt_offset = Transformation()
+    transform_gt_offset = Transformation(pos_theta=[0, -0.05, 0])
 
-    draw_points_correction(bag, map, t_start=20, transform_gt_offset=transform_gt_offset, xlim=(-2, 2), ylim=(-3.5, 2), debug=False)
+    draw_points_correction(bag, map, t_start=25, transform_gt_offset=transform_gt_offset, xlim=(-2, 2), ylim=(-3.5, 2), debug=True)
 
     plt.close()
 
