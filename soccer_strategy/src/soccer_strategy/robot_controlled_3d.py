@@ -224,6 +224,7 @@ class RobotControlled3D(RobotControlled):
                 self.status = Robot.Status.FALLEN_SIDE
 
     def reset_initial_position(self, variance=0.02):
+
         position = self.position
 
         p = PoseWithCovarianceStamped()
