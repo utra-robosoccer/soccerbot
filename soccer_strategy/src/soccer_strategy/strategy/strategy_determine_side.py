@@ -75,11 +75,10 @@ class StrategyDetermineSide(Strategy):
         determine_side_timeout = 0 if rospy.get_param("skip_determine_side", False) else 10
         if (rospy.Time.now() - self.time_strategy_started) > rospy.Duration(determine_side_timeout):
             rospy.logwarn("Timeout error, cannot determine side, determining side as from default")
-            self.measurements = 1
+            self.measurements = 1  # TODO update this
 
-        if abs(camera_yaw) > 0.2 and self.measurements == 1:
-            # Wait until the robot has moved its head
-            self.measurements += 1
+        if abs(camera_yaw) > 0.05:
+            # Wait until the robot has moved its head a bit
             self.determine_side(current_robot, goal_post_pose, camera_yaw)
             self.determine_role(current_robot, friendly_team)
 
@@ -116,7 +115,7 @@ class StrategyDetermineSide(Strategy):
         actual_post_x = None
         actual_post_y = None
         robot_yaw = camera_yaw
-        if camera_yaw < 0:  # TODO is this looking left?
+        if camera_yaw > 0:  # If the robot is looking left
             if rel_post_x > HALF_FIELD_LENGTH:
                 # Robot on top sideline (positive y side), looking at right net (positive x side)
                 actual_post_x = 4.5
@@ -160,10 +159,14 @@ class StrategyDetermineSide(Strategy):
 
         # Get robot position form actual and relative post positions
         robot_yaw = camera_yaw  # TODO Update this appropriately
-        position_from_post = np.array([rel_post_x + actual_post_x, rel_post_y + actual_post_y, robot_yaw])
+        rotation_matrix = np.array(
+            [np.cos(camera_yaw), -np.sin(camera_yaw)], [np.sin(camera_yaw), np.cos(camera_yaw)]
+        )  # Probably need to update this angle based on the side we are on
+        position_from_post = np.dot(np.array([rel_post_x, rel_post_y, robot_yaw]), rotation_matrix)
 
         # ? What is self.flip_required?
         current_robot.position = position
+        rospy.loginfo(f"Estimated Robot position: {position_from_post}")
         rospy.loginfo(f"Robot Position Determined, Determining Roles, Position: {current_robot.position} Flip Required: {self.flip_required}")
         current_robot.reset_initial_position()
 
