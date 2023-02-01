@@ -41,39 +41,52 @@ class StrategyDetermineSide(Strategy):
 
         current_robot = self.get_current_robot(friendly_team)
 
-        if self.iteration == 1:
-            current_robot.status = Robot.Status.DETERMINING_SIDE
+        # if self.iteration == 1:
+        current_robot.status = Robot.Status.DETERMINING_SIDE
 
+        goal_post_pose = []
+        camera_yaw = 0.0
         try:
             goal_post_pose, goal_pose_orientation = self.tf_listener.lookupTransform(
                 "robot" + str(current_robot.robot_id) + "/base_camera",
                 "robot" + str(current_robot.robot_id) + "/goal_post",
                 rospy.Time(0),
             )
-            if goal_post_pose[1] > 0:
-                self.average_goal_post_y = self.average_goal_post_y + 1
-            else:
-                self.average_goal_post_y = self.average_goal_post_y - 1
+
             self.measurements = self.measurements + 1
             rospy.loginfo("Goal Post detected " + str(goal_post_pose))
+
         except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
             rospy.logwarn_throttle(30, "Unable to locate goal post in TF tree")
+
+        try:
+            camera_position, camera_orientation = self.tf_listener.lookupTransform(
+                os.environ["ROS_NAMESPACE"].replace("/", "") + "/base_footprint",
+                os.environ["ROS_NAMESPACE"].replace("/", "") + "/camera",
+                rospy.Time(0),
+            )
+
+            camera_yaw = Transformation.get_euler_from_quaternion(camera_orientation)[0]
+            rospy.loginfo("Found Robot Yaw " + str(camera_yaw))
+
+        except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+            rospy.logwarn_throttle(30, "Unable to get robot to camera pose")
 
         determine_side_timeout = 0 if rospy.get_param("skip_determine_side", False) else 10
         if (rospy.Time.now() - self.time_strategy_started) > rospy.Duration(determine_side_timeout):
             rospy.logwarn("Timeout error, cannot determine side, determining side as from default")
             self.measurements = 1
-            self.average_goal_post_y = 1
 
-        if self.measurements == 1:
+        if abs(camera_yaw) > 0.2 and self.measurements == 1:
+            # Wait until the robot has moved its head
             self.measurements += 1
-            self.determine_side(current_robot, game_state)
+            self.determine_side(current_robot, goal_post_pose, camera_yaw)
             self.determine_role(current_robot, friendly_team)
 
             current_robot.status = Robot.Status.READY
             self.complete = True
 
-    def determine_side(self, current_robot, game_state: GameState):
+    def determine_side(self, current_robot, goal_post_pose, camera_yaw):
         """
         Determine robot position (assuming the robot is always on the left side
 
@@ -95,10 +108,61 @@ class StrategyDetermineSide(Strategy):
         rotation = team_info["players"][str(current_robot.robot_id)]["reentryStartingPose"]["rotation"]
 
         position = np.array([translation[0], translation[1], rotation[3]])
-        # if self.average_goal_post_y < 0:  # Goal post seen on the left side
-        #     self.flip_required = True
-        #     position[1] = -position[1]
-        #     position[2] = -position[2]
+
+        rel_post_x, rel_post_y, rel_post_z = goal_post_pose
+        HALF_FIELD_LENGTH = 4.5  # m
+        HALF_FIELD_WIDTH = 3  # m
+
+        actual_post_x = None
+        actual_post_y = None
+        robot_yaw = camera_yaw
+        if camera_yaw < 0:  # TODO is this looking left?
+            if rel_post_x > HALF_FIELD_LENGTH:
+                # Robot on top sideline (positive y side), looking at right net (positive x side)
+                actual_post_x = 4.5
+                if rel_post_y > HALF_FIELD_WIDTH:
+                    # Looking at lower right post
+                    actual_post_y = -1.3
+                elif rel_post_y <= HALF_FIELD_WIDTH:
+                    # Looking at upper right post
+                    actual_post_y = 1.3
+
+            elif rel_post_x <= HALF_FIELD_LENGTH:
+                # Robot on bottom sideline (negative y side) looking at left net (negative x side)
+                actual_post_x = -4.5
+                if rel_post_y > HALF_FIELD_WIDTH:
+                    # Looking at upper left post
+                    actual_post_y = 1.3
+                elif rel_post_y <= HALF_FIELD_WIDTH:
+                    # Looking at lower left post
+                    actual_post_y = -1.3
+
+        else:  # robot is looking right (or straight ahead)
+            if rel_post_x > HALF_FIELD_LENGTH:
+                # Robot on top sideline (negative y side) looking at left net (negative x side)
+                actual_post_x = -4.5
+                if rel_post_y > HALF_FIELD_WIDTH:
+                    # Looking at lower left post
+                    actual_post_y = -1.3
+                elif rel_post_y <= HALF_FIELD_WIDTH:
+                    # Looking at upper left post
+                    actual_post_y = 1.3
+
+            elif rel_post_x <= HALF_FIELD_LENGTH:
+                # Robot on bottom sideline (positive y side), looking at right net (positive x side)
+                actual_post_x = 4.5
+                if rel_post_y > HALF_FIELD_WIDTH:
+                    # Looking at upper right post
+                    actual_post_y = 1.3
+                elif rel_post_y <= HALF_FIELD_WIDTH:
+                    # Looking at lower right post
+                    actual_post_y = -1.3
+
+        # Get robot position form actual and relative post positions
+        robot_yaw = camera_yaw  # TODO Update this appropriately
+        position_from_post = np.array([rel_post_x + actual_post_x, rel_post_y + actual_post_y, robot_yaw])
+
+        # ? What is self.flip_required?
         current_robot.position = position
         rospy.loginfo(f"Robot Position Determined, Determining Roles, Position: {current_robot.position} Flip Required: {self.flip_required}")
         current_robot.reset_initial_position()
