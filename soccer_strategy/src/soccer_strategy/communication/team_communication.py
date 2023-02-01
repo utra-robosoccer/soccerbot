@@ -38,9 +38,11 @@ if __name__ == "__main__":
         m.pose.orientation.y = robot_state.pose.orientation.y
         m.pose.orientation.z = robot_state.pose.orientation.z
         m.pose.orientation.w = robot_state.pose.orientation.w
+        m.localized = robot_state.localized
         m.ball_pose.x = robot_state.ball_pose.x
         m.ball_pose.y = robot_state.ball_pose.y
         m.ball_pose.theta = robot_state.ball_pose.theta
+        m.ball_detected = robot_state.ball_detected
         m_str = m.SerializeToString()
         id_address = socket.gethostbyname(mirror_server_ip)
         rospy.loginfo_once(f"\033[96mSending to 3737 on {id_address}\033[0m")
@@ -89,6 +91,7 @@ if __name__ == "__main__":
         r.player_id = m.player_id
         r.status = m.status
         r.role = m.role
+        r.localized = m.localized
         r.pose.position.x = m.pose.position.x
         r.pose.position.y = m.pose.position.y
         r.pose.position.z = m.pose.position.z
@@ -96,6 +99,7 @@ if __name__ == "__main__":
         r.pose.orientation.y = m.pose.orientation.y
         r.pose.orientation.z = m.pose.orientation.z
         r.pose.orientation.w = m.pose.orientation.w
+        r.ball_detected = m.ball_detected
         r.ball_pose.x = m.ball_pose.x
         r.ball_pose.y = m.ball_pose.y
         r.ball_pose.theta = m.ball_pose.theta

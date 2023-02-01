@@ -134,6 +134,7 @@ class RobotControlled3D(RobotControlled):
         r.player_id = self.robot_id
         r.status = self.status
         r.role = self.role
+        r.localized = self.localized
         r.pose.position.x = trans[0]
         r.pose.position.y = trans[1]
         r.pose.position.z = trans[2]
@@ -142,10 +143,12 @@ class RobotControlled3D(RobotControlled):
         r.pose.orientation.z = rot[2]
         r.pose.orientation.w = rot[3]
         if self.observed_ball is not None:
+            r.ball_detected = True
             r.ball_pose.x = self.observed_ball.position[0]
             r.ball_pose.y = self.observed_ball.position[1]
             r.ball_pose.theta = 0
         else:
+            r.ball_detected = False
             r.ball_pose.x = 0
             r.ball_pose.y = 0
             r.ball_pose.theta = 0

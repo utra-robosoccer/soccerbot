@@ -2,7 +2,6 @@ import os
 from typing import Union
 
 import rospy
-from traitlets import List
 
 from soccer_msgs.msg import GameState
 from soccer_strategy.ball import Ball
