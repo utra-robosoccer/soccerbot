@@ -32,6 +32,8 @@
   <depend>soccer_pycontrol</depend>
   <depend>soccer_localization</depend>
   <depend>webots_ros</depend>
+  <exec_depend>amcl</exec_depend>
+  <exec_depend>pointcloud_to_laserscan</exec_depend>
 
   <!-- Navigation-->
   <depend>soccer_trajectories</depend>

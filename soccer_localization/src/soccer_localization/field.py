@@ -36,7 +36,7 @@ class Field:
     def __init__(self):
         # Dimensions given here https://cdn.robocup.org/hl/wp/2021/06/V-HL21_Rules_v4.pdf
 
-        self.distance_point_threshold = rospy.get_param("distance_point_threshold", 2.2)
+        self.distance_point_threshold = rospy.get_param("distance_point_threshold", 5)
         self.min_points_threshold = rospy.get_param("min_points_threshold", 40)
         self.max_detected_line_parallel_offset_error = rospy.get_param("max_detected_line_parallel_offset_error", 0.1)
         self.max_detected_line_perpendicular_offset_error = rospy.get_param("max_detected_line_perpendicular_offset_error", 0.3)
@@ -128,7 +128,24 @@ class Field:
         # TODO filter density
         return world_frame_points
 
-    def matchPointsWithMap(self, current_transform: Transformation, point_cloud_array: np.array) -> Union[Transformation, None]:
+    def matchPointsWithMapIterative(
+        self, current_transform: Transformation, point_cloud_array: np.array, iterations=3
+    ) -> Union[Tuple[Transformation, List[int]], None]:
+        match_iterations = iterations
+        offset_transform_cumulative = Transformation()
+        transform_confidence = None
+        while match_iterations > 0:
+            tt = self.matchPointsWithMap(current_transform, point_cloud_array)
+            if tt is None:
+                return None
+
+            (offset_transform, transform_confidence) = tt
+            current_transform = current_transform @ offset_transform
+            offset_transform_cumulative = offset_transform_cumulative @ offset_transform
+            match_iterations -= 1
+        return offset_transform_cumulative, transform_confidence
+
+    def matchPointsWithMap(self, current_transform: Transformation, point_cloud_array: np.array) -> Union[Tuple[Transformation, List[int]], None]:
 
         start = time.time()
         # Filter points by distance from current transform
@@ -241,8 +258,13 @@ class Field:
         if offset_transform_pos_theta[0] > 0.2 or offset_transform_pos_theta[1] > 0.2:
             return None
         end = time.time()
+
+        confidence_x = min(1, closest_line_diff_x_valid_count / 150)
+        confidence_y = min(1, closest_line_diff_y_valid_count / 150)
+        transform_confidence = [confidence_x, confidence_y, max(confidence_x, confidence_y)]
         rospy.loginfo_throttle(60, f"Match Points with Map rate (s) :  {(end - start)}")
-        return offset_transform
+        rospy.loginfo_throttle(10, f"Transform Confidence :  {transform_confidence}")
+        return offset_transform, transform_confidence
 
     def drawPointsOnMap(self, current_transform: Transformation, point_cloud_array: np.array, label: str, color: str):
         world_frame_points = self.filterWorldFramePoints(current_transform, point_cloud_array)

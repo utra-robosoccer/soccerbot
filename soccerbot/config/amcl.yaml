@@ -2,23 +2,23 @@ min_particles: 100
 max_particles: 5000
 kld_err: 0.01
 kld_z: 0.99
-update_min_d: 0.05
-update_min_a: 0.05
+update_min_d: 0.02
+update_min_a: 0.02
 resample_interval: 2
 gui_publish_rate: 10
-transform_tolerance: 0.1
+transform_tolerance: 0.01
 laser_model_type: "likelihood_field"
 laser_max_beams: 100
 tf_broadcast: true
 
 # Add together to be 1
-laser_z_hit: 0.9
-laser_z_rand: 0.1
+laser_z_hit: 0.95
+laser_z_rand: 0.05
 
 odom_model_type: "diff-corrected"
-odom_alpha1: 0.00003 # 1 radian odom error per step
+odom_alpha1: 0.001 # 1 radian odom error per step
 odom_alpha2: 0.00
-odom_alpha3: 0.00003 # 1 cm odom error per step
+odom_alpha3: 0.001 # 1 cm odom error per step
 odom_alpha4: 0.00
 
 use_map_topic: true

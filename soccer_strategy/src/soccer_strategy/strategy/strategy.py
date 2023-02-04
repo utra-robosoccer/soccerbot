@@ -42,7 +42,7 @@ def get_back_up(update_next_strategy):
         elif current_robot.status == Robot.Status.FALLEN_SIDE:
             current_robot.run_fixed_trajectory("getupside")
             return
-        elif current_robot.status == Robot.Status.TRAJECTORY_IN_PROGRESS:
+        elif current_robot.status == Robot.Status.GETTING_BACK_UP:
             return
         elif current_robot.status == Robot.Status.LOCALIZING:
             # Wait for localization status
@@ -99,7 +99,7 @@ class Strategy:
         closest_dist = math.inf
         current_closest = None
         for robot in robots:
-            if robot.status not in [Robot.Status.READY, Robot.Status.WALKING, Robot.Status.KICKING, Robot.Status.TRAJECTORY_IN_PROGRESS]:
+            if robot.status not in [Robot.Status.READY, Robot.Status.WALKING, Robot.Status.KICKING, Robot.Status.GETTING_BACK_UP]:
                 continue
 
             dist = np.linalg.norm(ball.position[0:2] - robot.position[0:2])
