@@ -241,12 +241,12 @@ class Field:
         if offset_transform_pos_theta[0] > 0.2 or offset_transform_pos_theta[1] > 0.2:
             return None
         end = time.time()
-        rospy.loginfo_throttle(60, f"Match Points with Map rate (s) :  {(end - start)}")
 
         confidence_x = min(1, closest_line_diff_x_valid_count / 100)
         confidence_y = min(1, closest_line_diff_y_valid_count / 100)
         transform_confidence = [confidence_x, confidence_y, max(confidence_x, confidence_y)]
-        print(transform_confidence)
+        rospy.loginfo_throttle(60, f"Match Points with Map rate (s) :  {(end - start)}")
+        rospy.loginfo_throttle(10, f"Transform Confidence :  {transform_confidence}")
         return offset_transform, transform_confidence
 
     def drawPointsOnMap(self, current_transform: Transformation, point_cloud_array: np.array, label: str, color: str):
