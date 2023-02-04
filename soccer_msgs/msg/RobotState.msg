@@ -31,10 +31,11 @@ uint8 role
 
 # Absolute position value (in the map frame)
 geometry_msgs/Pose pose
+bool localized
 
 # ball position, rotation is not used (in the map frame)
-# TODO indicate whether observed ball value is valid
 geometry_msgs/Pose2D ball_pose
+bool ball_detected
 
 # Observed obstacles
 geometry_msgs/Pose2D[] obstacles_poses

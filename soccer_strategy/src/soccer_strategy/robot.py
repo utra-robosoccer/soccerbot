@@ -76,6 +76,7 @@ class Robot:
         self.role = role
         self.status = status
         self.position: np.ndarray = position
+        self.localized: bool = False
         self.robot_id: int = robot_id
         self.observed_ball: Optional[Ball] = None
         self.observed_obstacles: List[Obstacle] = []

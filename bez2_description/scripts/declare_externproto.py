@@ -17,12 +17,12 @@
 """Makes local PROTO references extern"""
 
 
+import argparse
 import os
 import re
 import sys
-import argparse
-from pathlib import Path
 import xml.etree.ElementTree as ET
+from pathlib import Path
 
 parser = argparse.ArgumentParser(description='Declares EXTERNPROTO references')
 parser.add_argument('webots_path', nargs=1, default=None)
