@@ -157,12 +157,20 @@ class StrategyDetermineSide(Strategy):
                     # Looking at lower right post
                     actual_post_y = -1.3
 
-        # Get robot position form actual and relative post positions
-        robot_yaw = camera_yaw  # TODO Update this appropriately
-        rotation_matrix = np.array(
-            [np.cos(camera_yaw), -np.sin(camera_yaw)], [np.sin(camera_yaw), np.cos(camera_yaw)]
-        )  # Probably need to update this angle based on the side we are on
-        position_from_post = np.dot(np.array([rel_post_x, rel_post_y, robot_yaw]), rotation_matrix)
+        # Get robot position from actual and relative post positions
+        # from soccer_common.utils import wrapTo2Pi
+        # if (actual_post_x < 0):
+        #     robot_yaw = wrapTo2Pi(camera_yaw + np.pi)
+        # else:
+        #     robot_yaw = wrapTo2Pi(camera_yaw - np.pi / 2.0)
+
+        from soccer_common.transformation2d import Transformation2D
+
+        tf_robot_to_field = Transformation2D(pos_theta=np.array([actual_post_x, actual_post_y, np.pi / 2.0]))
+        # tf_robot_to_field.yaw(robot_yaw) # Probably need to update this angle based on the side we are on
+        # rospy.loginfo(f"Robot yaw: {robot_yaw}")
+        rospy.loginfo(f"Matrix: {tf_robot_to_field.matrix}")
+        position_from_post = np.dot(tf_robot_to_field.matrix, np.array([[rel_post_x], [rel_post_y], [camera_yaw]]))
 
         # ? What is self.flip_required?
         current_robot.position = position
