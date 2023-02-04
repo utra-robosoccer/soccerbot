@@ -112,10 +112,10 @@ class RobotControlled3D(RobotControlled):
             self.observed_ball = None
 
         # Get Robot Position from TF
-        if self.status not in [Robot.Status.FALLEN_BACK, Robot.Status.FALLEN_SIDE, Robot.Status.FALLEN_FRONT, Robot.Status.GETTING_BACK_UP]:
+        trans = [self.position[0], self.position[1], 0]
+        rot = tf.transformations.quaternion_from_euler(0, 0, self.position[2])
 
-            trans = [self.position[0], self.position[1], 0]
-            rot = tf.transformations.quaternion_from_euler(0, 0, self.position[2])
+        if self.status not in [Robot.Status.FALLEN_BACK, Robot.Status.FALLEN_SIDE, Robot.Status.FALLEN_FRONT, Robot.Status.GETTING_BACK_UP]:
             try:
                 if ground_truth:
                     (trans, rot) = self.tf_listener.lookupTransform("world", "robot" + str(self.robot_id) + "/base_footprint_gt", rospy.Time(0))

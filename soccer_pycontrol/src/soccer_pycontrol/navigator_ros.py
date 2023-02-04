@@ -194,6 +194,13 @@ class NavigatorRos(Navigator):
                 rospy.loginfo("Received New Goal")
                 time_now = rospy.Time.now()
 
+                # Minimum goal movement tolerance check
+                if (self.new_goal.pose.position.x - self.robot_pose.pose.position.x) ** 2 + (
+                    self.new_goal.pose.position.y - self.robot_pose.pose.position.y
+                ) ** 2 < 0.03**2:
+                    self.new_goal.pose.position.x = self.robot_pose.pose.position.x
+                    self.new_goal.pose.position.y = self.robot_pose.pose.position.y
+
                 self.goal = self.new_goal
                 self.soccerbot.reset_imus()
                 self.soccerbot.ready()
