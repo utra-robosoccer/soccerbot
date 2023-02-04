@@ -263,7 +263,7 @@ class Field:
         confidence_y = min(1, closest_line_diff_y_valid_count / 150)
         transform_confidence = [confidence_x, confidence_y, max(confidence_x, confidence_y)]
         rospy.loginfo_throttle(60, f"Match Points with Map rate (s) :  {(end - start)}")
-        print(f"Transform Confidence :  {transform_confidence}")
+        rospy.loginfo_throttle(10, f"Transform Confidence :  {transform_confidence}")
         return offset_transform, transform_confidence
 
     def drawPointsOnMap(self, current_transform: Transformation, point_cloud_array: np.array, label: str, color: str):

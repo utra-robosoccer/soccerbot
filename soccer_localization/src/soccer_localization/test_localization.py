@@ -68,7 +68,7 @@ def test_points_correction_striker():
 
     transform_gt_offset = Transformation(pos_theta=[0, -0.0, 0])
 
-    draw_points_correction(bag, map, t_start=130, transform_gt_offset=transform_gt_offset, xlim=(-2, 4), ylim=(-3.5, 2), debug=True)
+    draw_points_correction(bag, map, t_start=130, transform_gt_offset=transform_gt_offset, xlim=(-2, 4), ylim=(-3.5, 2), debug=False)
 
     plt.close()
 
