@@ -62,5 +62,7 @@ message Message {
     Status status = 3;
     Role role = 4;
     Pose3D pose = 5;
-    Pose2D ball_pose = 6;
+    bool localized = 6;
+    Pose2D ball_pose = 7;
+    bool ball_detected = 8;
 }

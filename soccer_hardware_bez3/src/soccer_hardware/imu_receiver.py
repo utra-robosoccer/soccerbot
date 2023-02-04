@@ -20,10 +20,10 @@ class IMUReceiver(Receiver):
         self._working_buf = b""
 
     def _receive_packet_from_mcu(self, timeout):
-        #print(self._working_buf)
+        # print(self._working_buf)
         self._ser.timeout = timeout
         self._working_buf += self._ser.read(28)
-        #print("IMU RECEIVER: ", self._working_buf)
+        # print("IMU RECEIVER: ", self._working_buf)
         D = self._working_buf.split(NAN_HEAD)
         ret = (False, None)
         if len(D) > 0:

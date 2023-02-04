@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
     inputs:
       use_cached_image:
-        description: 'Use cached image'
+        description: "Use cached image"
         required: false
         default: true
         type: boolean
@@ -45,7 +45,7 @@ jobs:
         with:
           version: latest
       - name: Pull original docker image
-        if:  ${{ inputs.use_cached_image }}
+        if: ${{ inputs.use_cached_image }}
         run: |
           docker pull utrarobosoccer/soccerbot:arm64
       - name: Build the Docker image

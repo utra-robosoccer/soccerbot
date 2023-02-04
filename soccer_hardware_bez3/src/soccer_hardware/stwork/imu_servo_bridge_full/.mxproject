@@ -11,4 +11,3 @@ HeaderPath=../Inc
 HeaderFiles=gpio.h;crc.h;i2c.h;tim.h;usart.h;stm32l4xx_it.h;stm32l4xx_hal_conf.h;main.h;
 SourcePath=../Src
 SourceFiles=gpio.c;crc.c;i2c.c;tim.c;usart.c;stm32l4xx_it.c;stm32l4xx_hal_msp.c;main.c;
-
