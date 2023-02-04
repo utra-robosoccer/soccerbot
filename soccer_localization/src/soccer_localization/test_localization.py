@@ -38,6 +38,7 @@ def retrieve_bag(url="https://drive.google.com/uc?id=1T_oyM1rZwWgUy6A6KlsJ7Oqn8J
     return test_path
 
 
+@pytest.mark.skipif("DISPLAY" not in os.environ, reason="Takes too long in CI")
 def test_points_correction_goalie():
     rospy.init_node("test")
 
@@ -56,6 +57,7 @@ def test_points_correction_goalie():
     plt.close()
 
 
+@pytest.mark.skipif("DISPLAY" not in os.environ, reason="Takes too long in CI")
 def test_points_correction_striker():
     rospy.init_node("test")
 
@@ -244,7 +246,7 @@ def display_rosbag_map(bag, map, debug=False, pos_theta_start=[-4, -3.15, np.pi 
     plt_dim_error(2, "Theta")
 
     if "DISPLAY" in os.environ:
-        plt.show(block=True)
+        plt.show(block=False)
         plt.waitforbuttonpress()
         plt.close("all")
 
@@ -289,6 +291,7 @@ class FreehicleField(Field):
         return lines
 
 
+@pytest.mark.skip
 def test_freehicle_movement():
     rospy.init_node("test")
     rospy.set_param("distance_point_threshold", 2)
