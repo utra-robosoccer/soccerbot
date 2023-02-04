@@ -72,7 +72,7 @@ class StrategyDetermineSide(Strategy):
                 current_robot.localized = True
         else:
             for robot in friendly_team.robots:
-                if not robot.localized:
+                if robot.status is Robot.Status.DETERMINING_SIDE and not robot.localized:
                     rospy.logwarn_throttle(1, f"robot {robot.robot_id} has not determined position")
                     return
             self.determine_role(current_robot, friendly_team)
