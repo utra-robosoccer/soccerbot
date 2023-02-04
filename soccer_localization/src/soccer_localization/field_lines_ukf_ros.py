@@ -1,3 +1,4 @@
+import copy
 import os
 from typing import Optional
 
@@ -97,7 +98,7 @@ class FieldLinesUKFROS(FieldLinesUKF):
         point_cloud = pcl2.read_points_list(point_cloud_msg)
         point_cloud_array = np.array(point_cloud)
         current_transform = Transformation(pos_theta=self.ukf.x)
-        tt = self.map.matchPointsWithMap(current_transform, point_cloud_array)
+        tt = self.map.matchPointsWithMapIterative(current_transform, point_cloud_array, 3)
 
         if tt is not None:
             (offset_transform, transform_confidence) = tt

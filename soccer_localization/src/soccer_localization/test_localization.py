@@ -68,7 +68,7 @@ def test_points_correction_striker():
 
     transform_gt_offset = Transformation(pos_theta=[0, -0.0, 0])
 
-    draw_points_correction(bag, map, t_start=25, transform_gt_offset=transform_gt_offset, xlim=(-2, 2), ylim=(-3.5, 2), debug=True)
+    draw_points_correction(bag, map, t_start=130, transform_gt_offset=transform_gt_offset, xlim=(-2, 4), ylim=(-3.5, 2), debug=True)
 
     plt.close()
 
@@ -92,8 +92,11 @@ def draw_points_correction(bag, map, t_start, transform_gt_offset, xlim, ylim, d
             point_cloud = pcl2.read_points_list(msg)
             point_cloud_array = np.array(point_cloud)
             current_transform = transform_gt_offset @ Transformation(pos_theta=transform_gt.pos_theta)
-            offset_transform = map.matchPointsWithMap(current_transform, point_cloud_array)
-            if offset_transform is not None:
+            tr = map.matchPointsWithMapIterative(current_transform, point_cloud_array)
+
+            if tr is not None:
+                offset_transform, transform_confidence = tr
+
                 # pp = offset_transform.pos_theta
                 # pp[2] = 0
                 # offset_transform.pos_theta = pp
@@ -267,7 +270,7 @@ def test_walk_forward_striker():
     map = Field()
     map.draw()
     bag = rosbag.Bag(retrieve_bag(url="https://drive.google.com/uc?id=1VNHkAu10cfFJzcpTvc0zR8Jm-tI_6xQ8", bag_name="localization_2"))
-    display_rosbag_map(bag=bag, map=map, debug=False, pos_theta_start=[-1, -3.15, np.pi / 2], t_start=70)
+    display_rosbag_map(bag=bag, map=map, debug=False, pos_theta_start=[-1, -3.15, np.pi / 2], t_start=130)
 
 
 class FreehicleField(Field):

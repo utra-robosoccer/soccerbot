@@ -128,6 +128,23 @@ class Field:
         # TODO filter density
         return world_frame_points
 
+    def matchPointsWithMapIterative(
+        self, current_transform: Transformation, point_cloud_array: np.array, iterations=3
+    ) -> Union[Tuple[Transformation, List[int]], None]:
+        match_iterations = iterations
+        offset_transform_cumulative = Transformation()
+        transform_confidence = None
+        while match_iterations > 0:
+            tt = self.matchPointsWithMap(current_transform, point_cloud_array)
+            if tt is None:
+                return None
+
+            (offset_transform, transform_confidence) = tt
+            current_transform = current_transform @ offset_transform
+            offset_transform_cumulative = offset_transform_cumulative @ offset_transform
+            match_iterations -= 1
+        return offset_transform_cumulative, transform_confidence
+
     def matchPointsWithMap(self, current_transform: Transformation, point_cloud_array: np.array) -> Union[Tuple[Transformation, List[int]], None]:
 
         start = time.time()
@@ -242,11 +259,11 @@ class Field:
             return None
         end = time.time()
 
-        confidence_x = min(1, closest_line_diff_x_valid_count / 100)
-        confidence_y = min(1, closest_line_diff_y_valid_count / 100)
+        confidence_x = min(1, closest_line_diff_x_valid_count / 150)
+        confidence_y = min(1, closest_line_diff_y_valid_count / 150)
         transform_confidence = [confidence_x, confidence_y, max(confidence_x, confidence_y)]
         rospy.loginfo_throttle(60, f"Match Points with Map rate (s) :  {(end - start)}")
-        rospy.loginfo_throttle(10, f"Transform Confidence :  {transform_confidence}")
+        print(f"Transform Confidence :  {transform_confidence}")
         return offset_transform, transform_confidence
 
     def drawPointsOnMap(self, current_transform: Transformation, point_cloud_array: np.array, label: str, color: str):
