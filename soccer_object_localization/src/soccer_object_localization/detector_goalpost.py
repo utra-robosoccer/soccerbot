@@ -134,8 +134,7 @@ class DetectorGoalPost(Detector):
         vertical_lines = []
         for line in lines:
             x1, y1, x2, y2 = line[0]
-            abs_slope = abs((y2 - y1) / (x2 - x1))  # Use abs so all angles in first 2 quadrants
-            abs_line_angle = math.atan(abs_slope)
+            abs_line_angle = math.atan2(y2 - y1, x2 - x1)
             if abs(abs_line_angle - np.pi / 2) < angle_tol_rad:
                 vertical_lines.append(line[0])
                 cv2.line(image_out, (x1, y1), (x2, y2), (0, 255, 0), 2)

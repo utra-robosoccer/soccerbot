@@ -138,7 +138,9 @@ def display_rosbag_map(bag, map, debug=False, pos_theta_start=[-4, -3.15, np.pi 
 
     predict_it = 0
     for topic, msg, t in bag.read_messages(topics=["/robot1/odom_combined", "/tf", "/robot1/field_point_cloud"]):
-        if topic == "/robot1/field_point_cloud":
+        if topic == "/robot1/state":
+            f.robot_state_callback(msg)
+        elif topic == "/robot1/field_point_cloud":
             current_transform = Transformation(pos_theta=f.ukf.x)
             point_cloud_array, vo_transform, vo_pos_theta = f.field_point_cloud_callback(msg)
             if vo_pos_theta is not None:

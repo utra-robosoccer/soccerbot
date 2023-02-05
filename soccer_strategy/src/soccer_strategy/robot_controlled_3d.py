@@ -249,7 +249,7 @@ class RobotControlled3D(RobotControlled):
                              0.0, 0.0, 0, 0.0, 0.0, 0.0,
                              0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
                              0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                             0.0, 0.0, 0.0, 0.0, 0.0, variance ** 2]
+                             0.0, 0.0, 0.0, 0.0, 0.0, (variance * 2) ** 2]
         # fmt: on
         self.robot_initial_pose_publisher.publish(p)
         rospy.sleep(1)
