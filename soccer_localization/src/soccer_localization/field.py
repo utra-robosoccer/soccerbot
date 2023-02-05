@@ -1,4 +1,5 @@
 import os
+import statistics
 import time
 from collections import namedtuple
 from functools import cached_property
@@ -233,7 +234,7 @@ class Field:
             return None
 
         center_of_all_points = np.average(points_meet_dist_threshold, axis=1)
-        most_common_line = scipy.stats.mode(closest_line)[0][0]
+        most_common_line = statistics.mode(closest_line)
         if most_common_line == len(self.lines) - 1:
             center_of_all_points = [0, 0]
         points_meet_dist_threshold_delta = np.subtract(points_meet_dist_threshold, np.expand_dims(center_of_all_points, axis=1))

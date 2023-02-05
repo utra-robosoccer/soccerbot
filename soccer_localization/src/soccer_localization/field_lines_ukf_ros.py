@@ -1,5 +1,6 @@
 import copy
 import os
+import time
 from typing import Optional
 
 import numpy as np
@@ -67,9 +68,8 @@ class FieldLinesUKFROS(FieldLinesUKF):
         if dt_secs == 0:
             return
 
-        if np.all(diff_transformation.pos_theta < 0.000001):
-            self.ukf.Q = self.Q_do_nothing
-            self.ukf.R = self.R_localizing
+        if self.robot_state.status in [RobotState.STATUS_DETERMINING_SIDE]:
+            return
         elif self.robot_state.status in [RobotState.STATUS_LOCALIZING, RobotState.STATUS_READY]:
             self.ukf.Q = self.Q_localizing
             self.ukf.R = self.R_localizing
@@ -78,6 +78,7 @@ class FieldLinesUKFROS(FieldLinesUKF):
             self.ukf.R = self.R_walking
 
         self.predict(u=diff_transformation.pos_theta / dt_secs, dt=dt_secs)
+
         self.odom_t_previous = odom_t
 
         self.broadcast_tf_position(pose_msg.header.stamp)
@@ -153,4 +154,5 @@ class FieldLinesUKFROS(FieldLinesUKF):
         self.initial_pose = Transformation(pose_with_covariance_stamped=pose_stamped)
         self.ukf.x = self.initial_pose.pos_theta
         self.ukf.P = self.initial_pose.pose_theta_covariance_array
+        rospy.loginfo(f"Reinitialized with x = {self.ukf.x} and P = {np.diag(self.ukf.P)}")
         self.broadcast_tf_position(pose_stamped.header.stamp)
