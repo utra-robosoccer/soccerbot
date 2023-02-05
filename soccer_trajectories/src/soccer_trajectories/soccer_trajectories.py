@@ -29,47 +29,6 @@ class Trajectory:
         self.splines = {}
         self.step_map = {}
         self.time_to_last_pose = 2  # seconds
-        self.motor_names = [
-            "left_arm_motor_0 [shoulder]",
-            "left_arm_motor_1",
-            "right_arm_motor_0 [shoulder]",
-            "right_arm_motor_1",
-            "right_leg_motor_0",
-            "right_leg_motor_1 [hip]",
-            "right_leg_motor_2",
-            "right_leg_motor_3",
-            "right_leg_motor_4",
-            "right_leg_motor_5",
-            "left_leg_motor_0",
-            "left_leg_motor_1 [hip]",
-            "left_leg_motor_2",
-            "left_leg_motor_3",
-            "left_leg_motor_4",
-            "left_leg_motor_5",
-            "head_motor_0",
-            "head_motor_1",
-        ]
-
-        self.external_motor_names = [
-            "left_arm_motor_0",
-            "left_arm_motor_1",
-            "right_arm_motor_0",
-            "right_arm_motor_1",
-            "right_leg_motor_0",
-            "right_leg_motor_1",
-            "right_leg_motor_2",
-            "right_leg_motor_3",
-            "right_leg_motor_4",
-            "right_leg_motor_5",
-            "left_leg_motor_0",
-            "left_leg_motor_1",
-            "left_leg_motor_2",
-            "left_leg_motor_3",
-            "left_leg_motor_4",
-            "left_leg_motor_5",
-            "head_motor_0",
-            "head_motor_1",
-        ]
         with open(trajectory_path) as f:
             csv_traj = csv.reader(f)
             for row in csv_traj:
@@ -105,42 +64,17 @@ class Trajectory:
         t = 0
         while not rospy.is_shutdown() and t < self.max_time and not self.terminate:
             js = JointState()
-            js.name = [
-                "left_arm_motor_0",
-                "left_arm_motor_1",
-                "right_arm_motor_0",
-                "right_arm_motor_1",
-                "right_leg_motor_0",
-                "right_leg_motor_1",
-                "right_leg_motor_2",
-                "right_leg_motor_3",
-                "right_leg_motor_4",
-                "right_leg_motor_5",
-                "left_leg_motor_0",
-                "left_leg_motor_1",
-                "left_leg_motor_2",
-                "left_leg_motor_3",
-                "left_leg_motor_4",
-                "left_leg_motor_5",
-                "head_motor_0",
-                "head_motor_1",
-            ]
             js.header.stamp = rospy.Time.now()  # rospy.Time.from_seconds(self.time)
-            js.position = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-
-            js.effort = []
 
             for joint, setpoint in self.get_setpoint(t).items():
-                motor_index = js.name.index(joint)
-                js.position[motor_index] = float(setpoint)
 
-            if self.mirror:
-                position_mirrored = copy.deepcopy(js.position)
-                position_mirrored[0:2] = js.position[2:4]
-                position_mirrored[2:4] = js.position[0:2]
-                position_mirrored[4:10] = js.position[10:16]
-                position_mirrored[10:16] = js.position[4:10]
-                js.position = position_mirrored
+                if self.mirror:
+                    if "left" in joint:
+                        joint.replace("left", "right")
+                    elif "right" in joint:
+                        joint.replace("right", "left")
+                js.name.append(joint)
+                js.position.append(float(setpoint))
 
             try:
                 pub_all_motor.publish(js)
