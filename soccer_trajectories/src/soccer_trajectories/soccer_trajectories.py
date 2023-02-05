@@ -2,6 +2,7 @@
 import copy
 import csv
 import os
+from typing import Optional
 
 if "ROS_NAMESPACE" not in os.environ:
     os.environ["ROS_NAMESPACE"] = "/robot1"
@@ -86,42 +87,42 @@ class Trajectory:
                 rate.sleep()
 
 
-class SoccerTrajectoryClass:
+class TrajectoryManager:
     def __init__(self):
         self.trajectory_path = rospy.get_param("~trajectory_path", os.path.join(os.path.dirname(__file__), "../../trajectories/bez1"))
-        self.trajectory_complete = True
-        self.trajectory = None
-        self.command_sub = rospy.Subscriber("command", FixedTrajectoryCommand, self.run_trajectory, queue_size=1)
-        self.robot_state_sub = rospy.Subscriber("state", RobotState, self.robot_state_callback, queue_size=1)
-        self.finish_trajectory = rospy.Publisher("action_complete", Empty, queue_size=1)
+        self.trajectory: Optional[Trajectory] = None
+        self.command_subscriber = rospy.Subscriber("command", FixedTrajectoryCommand, self.command_callback, queue_size=1)
+        self.robot_state_subscriber = rospy.Subscriber("state", RobotState, self.robot_state_callback, queue_size=1)
+        self.finish_trajectory_publisher = rospy.Publisher("action_complete", Empty, queue_size=1)
 
     def robot_state_callback(self, state: RobotState):
         if state.status in [RobotState.STATUS_PENALIZED]:
             if self.trajectory is not None:
                 self.trajectory.terminate = True
 
-    def run_trajectory(self, command: FixedTrajectoryCommand, real_time=True):
-        if not self.trajectory_complete:
+    def command_callback(self, command: FixedTrajectoryCommand):
+        if self.trajectory is not None:
             return
-        self.trajectory_complete = False
 
         path = self.trajectory_path + "/" + command.trajectory_name + ".csv"
 
         if not os.path.exists(path):
             rospy.logerr(f"Trajectory doesn't exist in path {path}")
-            self.trajectory_complete = True
             return
-
-        rospy.loginfo("Running Trajectory: " + command.trajectory_name)
         self.trajectory = Trajectory(path, command.mirror)
-        self.trajectory.run(real_time=real_time)
-        rospy.loginfo("Finished Trajectory: " + command.trajectory_name)
-        self.finish_trajectory.publish()
-        self.trajectory_complete = True
-        return True
 
 
 if __name__ == "__main__":
     rospy.init_node("soccer_trajectories")
-    trajectory_class = SoccerTrajectoryClass()
-    rospy.spin()
+    trajectory_class = TrajectoryManager()
+
+    r = rospy.Rate(100)
+    while not rospy.is_shutdown():
+        if trajectory_class.trajectory is not None:
+            rospy.loginfo("Running Trajectory: " + trajectory_class.trajectory_path)
+            trajectory_class.trajectory.run()
+            rospy.loginfo("Finished Trajectory: " + trajectory_class.trajectory_path)
+            trajectory_class.finish_trajectory_publisher.publish()
+            trajectory_class.trajectory = None
+
+        r.sleep()

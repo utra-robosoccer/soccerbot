@@ -299,7 +299,6 @@ class SoccerbotRos(Soccerbot):
                 and rospy.Time.now() - self.last_ball_tracking_walking_timestamp < rospy.Duration(1)
             ):
                 rospy.loginfo_throttle(1, "Slowly raising head to locate ball")
-                print(self.configuration[Joints.HEAD_2])
                 self.configuration[Joints.HEAD_2] = max(self.configuration[Joints.HEAD_2] - 0.025, 0)
                 self.head_step += 1
             else:
