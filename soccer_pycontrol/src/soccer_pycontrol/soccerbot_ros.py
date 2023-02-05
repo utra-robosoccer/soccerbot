@@ -50,10 +50,12 @@ class SoccerbotRos(Soccerbot):
         self.robot_state.status = RobotState.STATUS_DISCONNECTED
 
         #: Frequency for the head's yaw while searching and relocalizing (left and right movement)
-        self.head_yaw_freq = rospy.get_param("head_yaw_freq", 0.005)
+        self.head_yaw_freq = rospy.get_param("head_yaw_freq", 0.04)
+        self.head_yaw_freq_relocalizing = rospy.get_param("head_yaw_freq_relocalizing", 0.005)
 
         #: Frequency for the head's while searching and relocalizing yaw (up and down movement)
-        self.head_pitch_freq = rospy.get_param("head_pitch_freq", 0.005)
+        self.head_pitch_freq = rospy.get_param("head_pitch_freq", 0.04)
+        self.head_pitch_freq_relocalizing = rospy.get_param("head_pitch_freq_relocalizing", 0.005)
 
     def state_callback(self, robot_state: RobotState):
         """
@@ -232,9 +234,9 @@ class SoccerbotRos(Soccerbot):
             self.configuration[Joints.HEAD_1] = math.sin(-self.head_step * self.head_yaw_freq * 3) * (math.pi * 0.05)
             self.head_step += 1
         elif self.robot_state.status == RobotState.STATUS_LOCALIZING:
-            self.configuration[Joints.HEAD_1] = math.cos(self.head_step * self.head_yaw_freq) * (math.pi / 4)
+            self.configuration[Joints.HEAD_1] = math.cos(self.head_step * self.head_yaw_freq_relocalizing) * (math.pi / 4)
             self.configuration[Joints.HEAD_2] = math.pi * rospy.get_param("head_rotation_yaw_center", 0.175) - math.sin(
-                self.head_step * self.head_yaw_freq
+                self.head_step * self.head_pitch_freq_relocalizing
             ) * math.pi * rospy.get_param("head_rotation_yaw_range", 0.15)
             self.head_step += 1
         elif self.robot_state.status == self.robot_state.STATUS_READY:
@@ -306,7 +308,7 @@ class SoccerbotRos(Soccerbot):
                 self.last_ball_pose = None
                 self.configuration[Joints.HEAD_1] = math.sin(self.head_step * self.head_yaw_freq) * (math.pi / 4)
                 self.configuration[Joints.HEAD_2] = math.pi * rospy.get_param("head_rotation_yaw_center", 0.185) - math.cos(
-                    self.head_step * self.head_yaw_freq
+                    self.head_step * self.head_pitch_freq
                 ) * math.pi * rospy.get_param("head_rotation_yaw_range", 0.15)
                 self.head_step += 1
         elif self.robot_state.status == self.robot_state.STATUS_WALKING:
