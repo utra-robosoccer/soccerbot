@@ -1,11 +1,9 @@
-import copy
 import os
 from typing import Optional
 
-import numpy as np
-import rospy
 import tf
 import tf2_py
+import torch
 from geometry_msgs.msg import Pose2D, PoseStamped
 from nav_msgs.msg import Odometry, Path
 from sensor_msgs.msg import Imu
@@ -50,11 +48,11 @@ class SoccerbotRos(Soccerbot):
         self.robot_state.status = RobotState.STATUS_DISCONNECTED
 
         #: Frequency for the head's yaw while searching and relocalizing (left and right movement)
-        self.head_yaw_freq = rospy.get_param("head_yaw_freq", 0.04)
+        self.head_yaw_freq = rospy.get_param("head_yaw_freq", 0.04 if torch.cuda.is_available() else 0.005)
         self.head_yaw_freq_relocalizing = rospy.get_param("head_yaw_freq_relocalizing", 0.005)
 
         #: Frequency for the head's while searching and relocalizing yaw (up and down movement)
-        self.head_pitch_freq = rospy.get_param("head_pitch_freq", 0.04)
+        self.head_pitch_freq = rospy.get_param("head_pitch_freq", 0.04 if torch.cuda.is_available() else 0.005)
         self.head_pitch_freq_relocalizing = rospy.get_param("head_pitch_freq_relocalizing", 0.005)
 
     def state_callback(self, robot_state: RobotState):
