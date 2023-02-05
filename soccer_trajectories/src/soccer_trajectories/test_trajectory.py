@@ -30,6 +30,6 @@ class TestTrajectory:
         rospy.init_node("test")
         msg = FixedTrajectoryCommand()
         msg.trajectory_name = trajectory_name
-        msg.mirror = False
-        traj_success = c.command_callback(command=msg)
+        msg.mirror = True
+        c.command_callback(command=msg)
         c.trajectory.run(real_time=False)

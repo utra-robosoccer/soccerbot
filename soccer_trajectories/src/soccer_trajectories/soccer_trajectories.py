@@ -30,6 +30,7 @@ class Trajectory:
         self.splines = {}
         self.step_map = {}
         self.time_to_last_pose = 2  # seconds
+        self.trajectory_path = trajectory_path
         with open(trajectory_path) as f:
             csv_traj = csv.reader(f)
             for row in csv_traj:
@@ -71,9 +72,9 @@ class Trajectory:
 
                 if self.mirror:
                     if "left" in joint:
-                        joint.replace("left", "right")
+                        joint = joint.replace("left", "right")
                     elif "right" in joint:
-                        joint.replace("right", "left")
+                        joint = joint.replace("right", "left")
                 js.name.append(joint)
                 js.position.append(float(setpoint))
 
@@ -119,9 +120,9 @@ if __name__ == "__main__":
     r = rospy.Rate(100)
     while not rospy.is_shutdown():
         if trajectory_class.trajectory is not None:
-            rospy.loginfo("Running Trajectory: " + trajectory_class.trajectory_path)
+            rospy.loginfo("Running Trajectory: " + trajectory_class.trajectory.trajectory_path + f" {trajectory_class.trajectory.mirror}")
             trajectory_class.trajectory.run()
-            rospy.loginfo("Finished Trajectory: " + trajectory_class.trajectory_path)
+            rospy.loginfo("Finished Trajectory: " + trajectory_class.trajectory.trajectory_path)
             trajectory_class.finish_trajectory_publisher.publish()
             trajectory_class.trajectory = None
 
