@@ -2,6 +2,7 @@
 import copy
 import csv
 import os
+from typing import Optional
 
 if "ROS_NAMESPACE" not in os.environ:
     os.environ["ROS_NAMESPACE"] = "/robot1"
@@ -29,47 +30,7 @@ class Trajectory:
         self.splines = {}
         self.step_map = {}
         self.time_to_last_pose = 2  # seconds
-        self.motor_names = [
-            "left_arm_motor_0 [shoulder]",
-            "left_arm_motor_1",
-            "right_arm_motor_0 [shoulder]",
-            "right_arm_motor_1",
-            "right_leg_motor_0",
-            "right_leg_motor_1 [hip]",
-            "right_leg_motor_2",
-            "right_leg_motor_3",
-            "right_leg_motor_4",
-            "right_leg_motor_5",
-            "left_leg_motor_0",
-            "left_leg_motor_1 [hip]",
-            "left_leg_motor_2",
-            "left_leg_motor_3",
-            "left_leg_motor_4",
-            "left_leg_motor_5",
-            "head_motor_0",
-            "head_motor_1",
-        ]
-
-        self.external_motor_names = [
-            "left_arm_motor_0",
-            "left_arm_motor_1",
-            "right_arm_motor_0",
-            "right_arm_motor_1",
-            "right_leg_motor_0",
-            "right_leg_motor_1",
-            "right_leg_motor_2",
-            "right_leg_motor_3",
-            "right_leg_motor_4",
-            "right_leg_motor_5",
-            "left_leg_motor_0",
-            "left_leg_motor_1",
-            "left_leg_motor_2",
-            "left_leg_motor_3",
-            "left_leg_motor_4",
-            "left_leg_motor_5",
-            "head_motor_0",
-            "head_motor_1",
-        ]
+        self.trajectory_path = trajectory_path
         with open(trajectory_path) as f:
             csv_traj = csv.reader(f)
             for row in csv_traj:
@@ -105,42 +66,17 @@ class Trajectory:
         t = 0
         while not rospy.is_shutdown() and t < self.max_time and not self.terminate:
             js = JointState()
-            js.name = [
-                "left_arm_motor_0",
-                "left_arm_motor_1",
-                "right_arm_motor_0",
-                "right_arm_motor_1",
-                "right_leg_motor_0",
-                "right_leg_motor_1",
-                "right_leg_motor_2",
-                "right_leg_motor_3",
-                "right_leg_motor_4",
-                "right_leg_motor_5",
-                "left_leg_motor_0",
-                "left_leg_motor_1",
-                "left_leg_motor_2",
-                "left_leg_motor_3",
-                "left_leg_motor_4",
-                "left_leg_motor_5",
-                "head_motor_0",
-                "head_motor_1",
-            ]
             js.header.stamp = rospy.Time.now()  # rospy.Time.from_seconds(self.time)
-            js.position = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-
-            js.effort = []
 
             for joint, setpoint in self.get_setpoint(t).items():
-                motor_index = js.name.index(joint)
-                js.position[motor_index] = float(setpoint)
 
-            if self.mirror:
-                position_mirrored = copy.deepcopy(js.position)
-                position_mirrored[0:2] = js.position[2:4]
-                position_mirrored[2:4] = js.position[0:2]
-                position_mirrored[4:10] = js.position[10:16]
-                position_mirrored[10:16] = js.position[4:10]
-                js.position = position_mirrored
+                if self.mirror:
+                    if "left" in joint:
+                        joint = joint.replace("left", "right")
+                    elif "right" in joint:
+                        joint = joint.replace("right", "left")
+                js.name.append(joint)
+                js.position.append(float(setpoint))
 
             try:
                 pub_all_motor.publish(js)
@@ -152,42 +88,42 @@ class Trajectory:
                 rate.sleep()
 
 
-class SoccerTrajectoryClass:
+class TrajectoryManager:
     def __init__(self):
         self.trajectory_path = rospy.get_param("~trajectory_path", os.path.join(os.path.dirname(__file__), "../../trajectories/bez1"))
-        self.trajectory_complete = True
-        self.trajectory = None
-        self.command_sub = rospy.Subscriber("command", FixedTrajectoryCommand, self.run_trajectory, queue_size=1)
-        self.robot_state_sub = rospy.Subscriber("state", RobotState, self.robot_state_callback, queue_size=1)
-        self.finish_trajectory = rospy.Publisher("action_complete", Empty, queue_size=1)
+        self.trajectory: Optional[Trajectory] = None
+        self.command_subscriber = rospy.Subscriber("command", FixedTrajectoryCommand, self.command_callback, queue_size=1)
+        self.robot_state_subscriber = rospy.Subscriber("state", RobotState, self.robot_state_callback, queue_size=1)
+        self.finish_trajectory_publisher = rospy.Publisher("action_complete", Empty, queue_size=1)
 
     def robot_state_callback(self, state: RobotState):
         if state.status in [RobotState.STATUS_PENALIZED]:
             if self.trajectory is not None:
                 self.trajectory.terminate = True
 
-    def run_trajectory(self, command: FixedTrajectoryCommand, real_time=True):
-        if not self.trajectory_complete:
+    def command_callback(self, command: FixedTrajectoryCommand):
+        if self.trajectory is not None:
             return
-        self.trajectory_complete = False
 
         path = self.trajectory_path + "/" + command.trajectory_name + ".csv"
 
         if not os.path.exists(path):
             rospy.logerr(f"Trajectory doesn't exist in path {path}")
-            self.trajectory_complete = True
             return
-
-        rospy.loginfo("Running Trajectory: " + command.trajectory_name)
         self.trajectory = Trajectory(path, command.mirror)
-        self.trajectory.run(real_time=real_time)
-        rospy.loginfo("Finished Trajectory: " + command.trajectory_name)
-        self.finish_trajectory.publish()
-        self.trajectory_complete = True
-        return True
 
 
 if __name__ == "__main__":
     rospy.init_node("soccer_trajectories")
-    trajectory_class = SoccerTrajectoryClass()
-    rospy.spin()
+    trajectory_class = TrajectoryManager()
+
+    r = rospy.Rate(100)
+    while not rospy.is_shutdown():
+        if trajectory_class.trajectory is not None:
+            rospy.loginfo("Running Trajectory: " + trajectory_class.trajectory.trajectory_path + f" {trajectory_class.trajectory.mirror}")
+            trajectory_class.trajectory.run()
+            rospy.loginfo("Finished Trajectory: " + trajectory_class.trajectory.trajectory_path)
+            trajectory_class.finish_trajectory_publisher.publish()
+            trajectory_class.trajectory = None
+
+        r.sleep()

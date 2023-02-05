@@ -75,7 +75,7 @@ services:
     ports:
       - 11311:11311
     environment:
-      ROBOCUP_ROBOT_ID: 1 # (see start_competition.sh for positions), not 1 https://discord.com/channels/462951096374132736/798238127588114462/954388600290685008
+      ROBOCUP_ROBOT_ID: 1 # not 1 https://discord.com/channels/462951096374132736/798238127588114462/954388600290685008
       ROBOCUP_TEAM_COLOR: "red"
       ROBOCUP_SIMULATOR_ADDR: "simulator:10001"
       ROBOCUP_GAMECONTROLLER_IP: "simulator"

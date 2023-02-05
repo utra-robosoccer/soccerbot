@@ -205,7 +205,7 @@ class RobotControlled3D(RobotControlled):
     def imu_callback(self, msg):
         angle_threshold = 1.2  # in radian
         t = Transformation([0, 0, 0], [msg.orientation.x, msg.orientation.y, msg.orientation.z, msg.orientation.w])
-        roll, pitch, yaw = t.orientation_euler
+        yaw, pitch, roll = t.orientation_euler
         if self.status in [
             Robot.Status.DETERMINING_SIDE,
             Robot.Status.READY,
@@ -215,15 +215,15 @@ class RobotControlled3D(RobotControlled):
             Robot.Status.LOCALIZING,
         ]:
             if pitch < -angle_threshold:
-                rospy.logwarn_throttle(1, f"Fallen Back: (R: {roll}, P: {pitch}, Y: {yaw})")
+                rospy.logwarn_throttle(1, f"Fallen Back: (R: {roll}, P: {pitch}, Y: {yaw}), {t.quaternion}")
                 self.status = Robot.Status.FALLEN_BACK
 
             elif pitch > angle_threshold:
-                rospy.logwarn_throttle(1, f"Fallen Front: (R: {roll}, P: {pitch}, Y: {yaw})")
+                rospy.logwarn_throttle(1, f"Fallen Front: (R: {roll}, P: {pitch}, Y: {yaw}), {t.quaternion}")
                 self.status = Robot.Status.FALLEN_FRONT
 
-            elif yaw < -angle_threshold or yaw > angle_threshold:
-                rospy.logwarn_throttle(1, f"Fallen Side: (R: {roll}, P: {pitch}, Y: {yaw})")
+            elif roll < -angle_threshold or roll > angle_threshold:
+                rospy.logwarn_throttle(1, f"Fallen Side: (R: {roll}, P: {pitch}, Y: {yaw}), {t.quaternion}")
                 self.status = Robot.Status.FALLEN_SIDE
 
     def reset_initial_position(self, variance=0.02):

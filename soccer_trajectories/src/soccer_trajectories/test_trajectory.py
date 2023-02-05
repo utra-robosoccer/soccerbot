@@ -7,7 +7,7 @@ import rospy
 
 from soccer_common.utils_rosparam import set_rosparam_from_yaml_file
 from soccer_msgs.msg import FixedTrajectoryCommand
-from soccer_trajectories.soccer_trajectories import SoccerTrajectoryClass, Trajectory
+from soccer_trajectories.soccer_trajectories import Trajectory, TrajectoryManager
 
 
 class TestTrajectory:
@@ -26,10 +26,10 @@ class TestTrajectory:
 
         if "DISPLAY" not in os.environ:
             Trajectory.RATE = 10000
-        c = SoccerTrajectoryClass()
+        c = TrajectoryManager()
         rospy.init_node("test")
         msg = FixedTrajectoryCommand()
         msg.trajectory_name = trajectory_name
-        msg.mirror = False
-        traj_success = c.run_trajectory(command=msg, real_time=False)
-        assert traj_success
+        msg.mirror = True
+        c.command_callback(command=msg)
+        c.trajectory.run(real_time=False)
