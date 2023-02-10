@@ -171,7 +171,7 @@ class RobotControlled3D(RobotControlled):
 
     def action_completed_callback(self, data):
         if self.status == Robot.Status.GETTING_BACK_UP:
-            self.reset_initial_position(variance=0.06)
+            self.reset_initial_position(variance=0.2)
             self.status = Robot.Status.LOCALIZING
         elif self.status in [
             Robot.Status.WALKING,
@@ -203,7 +203,7 @@ class RobotControlled3D(RobotControlled):
         self.robot_focused_on_ball_time = rospy.Time.now()
 
     def imu_callback(self, msg):
-        angle_threshold = 1.2  # in radian
+        angle_threshold = np.pi / 4  # in radian
         t = Transformation([0, 0, 0], [msg.orientation.x, msg.orientation.y, msg.orientation.z, msg.orientation.w])
         yaw, pitch, roll = t.orientation_euler
         if self.status in [
