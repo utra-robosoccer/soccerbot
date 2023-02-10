@@ -238,6 +238,12 @@ class SoccerbotRos(Soccerbot):
                 self.head_step * self.head_pitch_freq_relocalizing
             ) * math.pi * rospy.get_param("head_rotation_yaw_range", 0.15)
             self.head_step += 1
+        elif self.robot_state.status == RobotState.STATUS_LOCALIZING:
+            self.configuration[Joints.HEAD_1] = math.cos(self.head_step * self.head_yaw_freq_relocalizing) * (math.pi / 4)
+            self.configuration[Joints.HEAD_2] = math.pi * rospy.get_param("head_rotation_yaw_center", 0.175) - math.sin(
+                self.head_step * self.head_pitch_freq_relocalizing
+            ) * math.pi * rospy.get_param("head_rotation_yaw_range", 0.15)
+            self.head_step += 1
         elif self.robot_state.status == self.robot_state.STATUS_READY:
             try:
                 ball_found_timestamp = self.listener.getLatestCommonTime(
