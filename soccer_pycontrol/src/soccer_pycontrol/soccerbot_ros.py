@@ -230,6 +230,7 @@ class SoccerbotRos(Soccerbot):
     def apply_head_rotation(self):
         if self.robot_state.status in [self.robot_state.STATUS_DETERMINING_SIDE, self.robot_state.STATUS_PENALIZED]:
             self.configuration[Joints.HEAD_1] = math.sin(-self.head_step * self.head_yaw_freq * 3) * (math.pi * 0.05)
+            self.configuration[Joints.HEAD_2] = 0
             self.head_step += 1
         elif self.robot_state.status == RobotState.STATUS_LOCALIZING:
             self.configuration[Joints.HEAD_1] = math.cos(self.head_step * self.head_yaw_freq_relocalizing) * (math.pi / 4)
