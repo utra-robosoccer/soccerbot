@@ -56,9 +56,9 @@ jobs:
       - name: Build Image Webots
         uses: docker/build-push-action@v3
         with:
-          context: .
-          load: true
-          file: Dockerfile
+          context: external
+          push: true
+          file: external/Dockerfile
           tags: utrarobosoccer/webots
           cache-from: type=registry,ref=utrarobosoccer/webots
           cache-to: type=inline
