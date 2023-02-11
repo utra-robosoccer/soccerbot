@@ -27,9 +27,16 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
-      - name: Build the Docker image
-        run: |
-          docker pull utrarobosoccer/webots
-          docker buildx build external --file external/Dockerfile --tag utrarobosoccer/webots --progress=plain --cache-from utrarobosoccer/webots --build-arg BUILDKIT_INLINE_CACHE=1
-      - name: Build and push Docker images
-        run: docker push utrarobosoccer/webots
+      - name: Set up Docker Buildx
+        uses: crazy-max/ghaction-docker-buildx@v3
+        with:
+          version: latest
+      - name: Build Image
+        uses: docker/build-push-action@v3
+        with:
+          context: external
+          push: true
+          file: Dockerfile
+          tags: utrarobosoccer/webots
+          cache-from: type=registry,ref=utrarobosoccer/webots
+          cache-to: type=inline

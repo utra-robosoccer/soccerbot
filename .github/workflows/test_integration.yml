@@ -45,19 +45,27 @@ jobs:
         uses: crazy-max/ghaction-docker-buildx@v3
         with:
           version: latest
-      - name: Build Image
+      - name: Build Image Soccerbot
         uses: docker/build-push-action@v3
         with:
           context: .
-          push: false
+          load: true
           file: Dockerfile
           tags: utrarobosoccer/soccerbot
           cache-from: type=registry,ref=utrarobosoccer/soccerbot
           cache-to: type=inline
-      - name: Build the Docker images
+      - name: Build Image Webots
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          load: true
+          file: Dockerfile
+          tags: utrarobosoccer/webots
+          cache-from: type=registry,ref=utrarobosoccer/webots
+          cache-to: type=inline
+      - name: Pull rest of the the Docker images
         run: |
           docker-compose pull -q
-          docker-compose build --progress=plain
       - name: Walking Integration Test
         timeout-minutes: 10
         run: |
