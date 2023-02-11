@@ -53,5 +53,3 @@ jobs:
           tags: utrarobosoccer/soccerbot
           cache-from: type=registry,ref=utrarobosoccer/soccerbot
           cache-to: type=inline
-          build-args: |
-            BUILDKIT_INLINE_CACHE=1
