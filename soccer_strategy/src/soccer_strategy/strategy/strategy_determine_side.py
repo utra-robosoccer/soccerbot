@@ -60,7 +60,7 @@ class StrategyDetermineSide(Strategy):
             except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
                 rospy.logwarn_throttle(30, "Unable to locate goal post in TF tree")
 
-            determine_side_timeout = 0 if rospy.get_param("skip_determine_side", False) else 10000000
+            determine_side_timeout = 0 if rospy.get_param("skip_determine_side", False) else 10
             if (rospy.Time.now() - self.time_strategy_started) > rospy.Duration(determine_side_timeout):
                 rospy.logwarn("Timeout error, cannot determine side, determining side as from default")
                 self.measurements = 1
