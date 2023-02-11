@@ -106,7 +106,9 @@ class FieldLinesUKFROS(FieldLinesUKF):
         iterations = 3
         if self.robot_state.status == RobotState.STATUS_LOCALIZING:
             iterations = 10
-        tt = self.map.matchPointsWithMapIterative(current_transform, point_cloud_array, iterations)
+        tt = self.map.matchPointsWithMapIterative(
+            current_transform, point_cloud_array, iterations, localizing=self.robot_state.status == RobotState.STATUS_LOCALIZING
+        )
 
         if tt is not None:
             (offset_transform, transform_confidence) = tt
