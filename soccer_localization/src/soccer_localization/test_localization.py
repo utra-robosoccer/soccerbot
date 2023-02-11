@@ -119,7 +119,7 @@ def draw_points_correction(bag, map, t_start, transform_gt_offset, xlim, ylim, d
                         plt.waitforbuttonpress(timeout=0.01)
 
 
-def display_rosbag_map(bag, map, debug=False, pos_theta_start=[-4, -3.15, np.pi / 2], t_start=0.0):
+def display_rosbag_map(bag, map, debug=False, pos_theta_start=[-4, -3.15, np.pi / 2], t_start=0.0, t_end=None):
 
     f = FieldLinesUKFROS(map=map)
     f.robot_state.status = RobotState.STATUS_READY
@@ -140,6 +140,8 @@ def display_rosbag_map(bag, map, debug=False, pos_theta_start=[-4, -3.15, np.pi 
     for topic, msg, t in bag.read_messages(
         topics=["/robot1/odom_combined", "/tf", "/robot1/field_point_cloud", "/robot1/state", "/robot1/initialpose"]
     ):
+        if t_end is not None and t.to_sec() > t_end:
+            break
         if topic == "/robot1/state":
             f.robot_state_callback(msg)
         elif topic == "/robot1/initialpose":
@@ -289,7 +291,7 @@ def test_fall_relocalization():
     map = Field()
     map.draw()
     bag = rosbag.Bag(retrieve_bag(url="https://drive.google.com/uc?id=1spsxVlUqvhXlZhdTNt_aCBulTFyLBoUQ", bag_name="relocalization_fall"))
-    display_rosbag_map(bag=bag, map=map, debug=False, pos_theta_start=[-1, -3.15, np.pi / 2], t_start=53.4)
+    display_rosbag_map(bag=bag, map=map, debug=False, pos_theta_start=[-1, -3.15, np.pi / 2], t_start=0)
 
 
 class FreehicleField(Field):
