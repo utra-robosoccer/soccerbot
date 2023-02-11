@@ -58,9 +58,6 @@ services:
     cap_add:
       - SYS_PTRACE
     pid: "host"
-    networks:
-      soccer_network:
-        ipv4_address: 172.18.0.10
     command: bash -c "cd webots && ./webots --batch --sysinfo --log-performance=performance.log /usr/local/hlvs_webots/worlds/robocup.wbt"
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
