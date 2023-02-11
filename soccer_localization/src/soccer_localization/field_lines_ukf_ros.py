@@ -68,11 +68,14 @@ class FieldLinesUKFROS(FieldLinesUKF):
         if dt_secs == 0:
             return
 
-        if self.robot_state.status in [RobotState.STATUS_DETERMINING_SIDE]:
+        if self.robot_state.status == RobotState.STATUS_DETERMINING_SIDE:
             return
-        elif self.robot_state.status in [RobotState.STATUS_LOCALIZING, RobotState.STATUS_READY]:
+        elif self.robot_state.status == RobotState.STATUS_LOCALIZING:
             self.ukf.Q = self.Q_localizing
             self.ukf.R = self.R_localizing
+        elif self.robot_state.status == RobotState.STATUS_READY:
+            self.ukf.Q = self.Q_ready
+            self.ukf.R = self.R_ready
         else:
             self.ukf.Q = self.Q_walking
             self.ukf.R = self.R_walking
@@ -99,7 +102,11 @@ class FieldLinesUKFROS(FieldLinesUKF):
         point_cloud = pcl2.read_points_list(point_cloud_msg)
         point_cloud_array = np.array(point_cloud)
         current_transform = Transformation(pos_theta=self.ukf.x)
-        tt = self.map.matchPointsWithMapIterative(current_transform, point_cloud_array, 3)
+
+        iterations = 3
+        if self.robot_state.status == RobotState.STATUS_LOCALIZING:
+            iterations = 10
+        tt = self.map.matchPointsWithMapIterative(current_transform, point_cloud_array, iterations)
 
         if tt is not None:
             (offset_transform, transform_confidence) = tt

@@ -45,7 +45,7 @@ def get_back_up(update_next_strategy):
         elif current_robot.status == Robot.Status.FALLEN_FRONT:
             current_robot.run_fixed_trajectory("getupfront")
             transform_current = Transformation(pos_theta=current_robot.position)
-            transform_recovery = Transformation(position=[-0.4, 0, 0])
+            transform_recovery = Transformation(position=[-0.5, 0, 0])
             transform_new = transform_current @ transform_recovery
             current_robot.position = transform_new.pos_theta
             print(f"Updating Current Robot Position {transform_current.pos_theta} -> {transform_new.pos_theta}")

@@ -119,7 +119,7 @@ def draw_points_correction(bag, map, t_start, transform_gt_offset, xlim, ylim, d
                         plt.waitforbuttonpress(timeout=0.01)
 
 
-def display_rosbag_map(bag, map, debug=False, pos_theta_start=[-4, -3.15, np.pi / 2], t_start=0):
+def display_rosbag_map(bag, map, debug=False, pos_theta_start=[-4, -3.15, np.pi / 2], t_start=0.0):
 
     f = FieldLinesUKFROS(map=map)
     f.robot_state.status = RobotState.STATUS_READY
@@ -137,9 +137,13 @@ def display_rosbag_map(bag, map, debug=False, pos_theta_start=[-4, -3.15, np.pi 
     path_covariance = []
 
     predict_it = 0
-    for topic, msg, t in bag.read_messages(topics=["/robot1/odom_combined", "/tf", "/robot1/field_point_cloud"]):
+    for topic, msg, t in bag.read_messages(
+        topics=["/robot1/odom_combined", "/tf", "/robot1/field_point_cloud", "/robot1/state", "/robot1/initialpose"]
+    ):
         if topic == "/robot1/state":
             f.robot_state_callback(msg)
+        elif topic == "/robot1/initialpose":
+            f.initial_pose_callback(msg)
         elif topic == "/robot1/field_point_cloud":
             current_transform = Transformation(pos_theta=f.ukf.x)
             point_cloud_array, vo_transform, vo_pos_theta = f.field_point_cloud_callback(msg)
@@ -164,7 +168,6 @@ def display_rosbag_map(bag, map, debug=False, pos_theta_start=[-4, -3.15, np.pi 
                 plt.legend()
                 plt.draw()
                 plt.waitforbuttonpress()
-
         elif topic == "/tf":
             # Process ground truth information
             for transform in msg.transforms:
@@ -275,6 +278,18 @@ def test_walk_forward_striker():
     map.draw()
     bag = rosbag.Bag(retrieve_bag(url="https://drive.google.com/uc?id=1VNHkAu10cfFJzcpTvc0zR8Jm-tI_6xQ8", bag_name="localization_2"))
     display_rosbag_map(bag=bag, map=map, debug=False, pos_theta_start=[-1, -3.15, np.pi / 2], t_start=130)
+
+
+def test_fall_relocalization():
+
+    rospy.init_node("test")
+
+    plt.figure("Localization")
+
+    map = Field()
+    map.draw()
+    bag = rosbag.Bag(retrieve_bag(url="https://drive.google.com/uc?id=1spsxVlUqvhXlZhdTNt_aCBulTFyLBoUQ", bag_name="relocalization_fall"))
+    display_rosbag_map(bag=bag, map=map, debug=False, pos_theta_start=[-1, -3.15, np.pi / 2], t_start=53.4)
 
 
 class FreehicleField(Field):
