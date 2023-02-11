@@ -34,7 +34,7 @@ class DetectorGoalPost(Detector):
     def image_callback(self, img: Image, debug=False):
         t_start = time.time()
 
-        if self.robot_state.status is not RobotState.STATUS_DETERMINING_SIDE:
+        if self.robot_state.status not in [RobotState.STATUS_DETERMINING_SIDE, RobotState.STATUS_LOCALIZING]:
             return
 
         if not self.camera.ready():
