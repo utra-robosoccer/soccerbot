@@ -67,7 +67,7 @@ class StrategyDetermineSide(Strategy):
             )
 
             camera_yaw = Transformation.get_euler_from_quaternion(camera_orientation)[0]
-            rospy.loginfo("Found Robot Yaw " + str(camera_yaw))
+            rospy.loginfo("Camera Yaw " + str(camera_yaw))
 
         except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
             rospy.logwarn_throttle(30, "Unable to get robot to camera pose")
@@ -77,7 +77,7 @@ class StrategyDetermineSide(Strategy):
             rospy.logwarn("Timeout error, cannot determine side, determining side as from default")
             self.measurements = 1  # TODO update this
 
-        if abs(camera_yaw) > 0.05:
+        if self.measurements == 1:
             # Wait until the robot has moved its head a bit
             self.determine_side(current_robot, goal_post_pose, camera_yaw)
             self.determine_role(current_robot, friendly_team)
@@ -108,73 +108,88 @@ class StrategyDetermineSide(Strategy):
 
         position = np.array([translation[0], translation[1], rotation[3]])
 
-        rel_post_x, rel_post_y, rel_post_z = goal_post_pose
+        head_post_x, head_post_y, head_post_z = goal_post_pose
+
+        # Get robot position from actual and relative post positions
+        from soccer_common.transformation import Transformation
+
+        # Probably need to update this angle based on the side we are on pi/2.0
+        robot_yaw = np.pi / 2.0 + camera_yaw
+        tf_robot_to_field = Transformation(pos_theta=np.array([0.0, 0.0, robot_yaw]))
+        rospy.loginfo(f"Robot yaw: {robot_yaw}")
+        # rospy.loginfo(f"Matrix:\n{tf_robot_to_field.rotation_matrix}")
+
+        goal_head_frame = np.array([[head_post_x], [head_post_y], [0.0]])
+        rospy.loginfo(f"Goal head frame\n{goal_head_frame}")
+
+        goal_robot_frame = np.dot(tf_robot_to_field.rotation_matrix, goal_head_frame)
+        robot_post_x, robot_post_y, robot_post_z = goal_robot_frame
+        rospy.loginfo(f"Goal robot frame\n{goal_robot_frame}")
+
         HALF_FIELD_LENGTH = 4.5  # m
         HALF_FIELD_WIDTH = 3  # m
 
-        actual_post_x = None
-        actual_post_y = None
-        robot_yaw = camera_yaw
-        if camera_yaw > 0:  # If the robot is looking left
-            if rel_post_x > HALF_FIELD_LENGTH:
+        world_post_x = None
+        world_post_y = None
+        flip_required = False
+        # ! THIS APPROACH ASSUMES ROBOT IS ON THE LEFT SIDE OF THE FIELD (NEGATIVE X)
+        if robot_post_x < 0:  # If the post is to the left of the robot
+            if abs(robot_post_x) > HALF_FIELD_LENGTH:
                 # Robot on top sideline (positive y side), looking at right net (positive x side)
-                actual_post_x = 4.5
-                if rel_post_y > HALF_FIELD_WIDTH:
+                world_post_x = 4.5
+                self.flip_required = True
+                if robot_post_y > HALF_FIELD_WIDTH:
                     # Looking at lower right post
-                    actual_post_y = -1.3
-                elif rel_post_y <= HALF_FIELD_WIDTH:
+                    world_post_y = -1.3
+                elif robot_post_y <= HALF_FIELD_WIDTH:
                     # Looking at upper right post
-                    actual_post_y = 1.3
+                    world_post_y = 1.3
 
-            elif rel_post_x <= HALF_FIELD_LENGTH:
+            elif abs(robot_post_x) <= HALF_FIELD_LENGTH:
                 # Robot on bottom sideline (negative y side) looking at left net (negative x side)
-                actual_post_x = -4.5
-                if rel_post_y > HALF_FIELD_WIDTH:
+                world_post_x = -4.5
+                if robot_post_y > HALF_FIELD_WIDTH:
                     # Looking at upper left post
-                    actual_post_y = 1.3
-                elif rel_post_y <= HALF_FIELD_WIDTH:
+                    world_post_y = 1.3
+                elif robot_post_y <= HALF_FIELD_WIDTH:
                     # Looking at lower left post
-                    actual_post_y = -1.3
+                    world_post_y = -1.3
 
-        else:  # robot is looking right (or straight ahead)
-            if rel_post_x > HALF_FIELD_LENGTH:
-                # Robot on top sideline (negative y side) looking at left net (negative x side)
-                actual_post_x = -4.5
-                if rel_post_y > HALF_FIELD_WIDTH:
-                    # Looking at lower left post
-                    actual_post_y = -1.3
-                elif rel_post_y <= HALF_FIELD_WIDTH:
-                    # Looking at upper left post
-                    actual_post_y = 1.3
-
-            elif rel_post_x <= HALF_FIELD_LENGTH:
+        else:  # if the post is to the right of the robot
+            if robot_post_x > HALF_FIELD_LENGTH:
                 # Robot on bottom sideline (positive y side), looking at right net (positive x side)
-                actual_post_x = 4.5
-                if rel_post_y > HALF_FIELD_WIDTH:
+                world_post_x = 4.5
+                if robot_post_y > HALF_FIELD_WIDTH:
                     # Looking at upper right post
-                    actual_post_y = 1.3
-                elif rel_post_y <= HALF_FIELD_WIDTH:
+                    world_post_y = 1.3
+                elif robot_post_y <= HALF_FIELD_WIDTH:
                     # Looking at lower right post
-                    actual_post_y = -1.3
+                    world_post_y = -1.3
 
-        # Get robot position from actual and relative post positions
-        # from soccer_common.utils import wrapTo2Pi
-        # if (actual_post_x < 0):
-        #     robot_yaw = wrapTo2Pi(camera_yaw + np.pi)
-        # else:
-        #     robot_yaw = wrapTo2Pi(camera_yaw - np.pi / 2.0)
+            elif robot_post_x <= HALF_FIELD_LENGTH:
+                # Robot on top sideline (negative y side) looking at left net (negative x side)
+                world_post_x = -4.5
+                flip_required = True
+                if robot_post_y > HALF_FIELD_WIDTH:
+                    # Looking at lower left post
+                    world_post_y = -1.3
+                elif robot_post_y <= HALF_FIELD_WIDTH:
+                    # Looking at upper left post
+                    world_post_y = 1.3
 
-        from soccer_common.transformation2d import Transformation2D
+        goal_world_frame = np.array([[world_post_x], [world_post_y], [0.0]])
+        rospy.loginfo(f"Goal world frame\n{goal_world_frame}")
 
-        tf_robot_to_field = Transformation2D(pos_theta=np.array([actual_post_x, actual_post_y, np.pi / 2.0]))
-        # tf_robot_to_field.yaw(robot_yaw) # Probably need to update this angle based on the side we are on
-        # rospy.loginfo(f"Robot yaw: {robot_yaw}")
-        rospy.loginfo(f"Matrix: {tf_robot_to_field.matrix}")
-        position_from_post = np.dot(tf_robot_to_field.matrix, np.array([[rel_post_x], [rel_post_y], [camera_yaw]]))
+        if flip_required:
+            tf_robot_to_world = Transformation(pos_theta=np.array([0.0, 0.0, np.pi]))
+            goal_robot_frame = np.dot(tf_robot_to_world.rotation_matrix, goal_robot_frame)
+            rospy.loginfo(f"Rotated goal robot frame\n{goal_robot_frame}")
+
+        position_from_post = goal_world_frame - goal_robot_frame
 
         # ? What is self.flip_required?
         current_robot.position = position
-        rospy.loginfo(f"Estimated Robot position: {position_from_post}")
+        rospy.loginfo(f"Estimated Robot position:\n{position_from_post}")
         rospy.loginfo(f"Robot Position Determined, Determining Roles, Position: {current_robot.position} Flip Required: {self.flip_required}")
         current_robot.reset_initial_position()
 
