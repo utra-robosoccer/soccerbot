@@ -49,6 +49,7 @@ jobs:
         with:
           context: .
           load: true
+          push: false
           file: Dockerfile
           tags: utrarobosoccer/soccerbot
           cache-from: type=registry,ref=utrarobosoccer/soccerbot
@@ -57,7 +58,8 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: external
-          push: true
+          load: true
+          push: false
           file: external/Dockerfile
           tags: utrarobosoccer/webots
           cache-from: type=registry,ref=utrarobosoccer/webots
