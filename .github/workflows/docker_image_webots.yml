@@ -36,7 +36,9 @@ jobs:
         with:
           context: external
           push: true
-          file: Dockerfile
+          file: external/Dockerfile
           tags: utrarobosoccer/webots
           cache-from: type=registry,ref=utrarobosoccer/webots
           cache-to: type=inline
+          build-args: |
+            BUILDKIT_INLINE_CACHE=1

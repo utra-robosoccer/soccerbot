@@ -53,15 +53,19 @@ jobs:
           tags: utrarobosoccer/soccerbot
           cache-from: type=registry,ref=utrarobosoccer/soccerbot
           cache-to: type=inline
+          build-args: |
+            BUILDKIT_INLINE_CACHE=1
       - name: Build Image Webots
         uses: docker/build-push-action@v3
         with:
-          context: .
-          load: true
-          file: Dockerfile
+          context: external
+          push: true
+          file: external/Dockerfile
           tags: utrarobosoccer/webots
           cache-from: type=registry,ref=utrarobosoccer/webots
           cache-to: type=inline
+          build-args: |
+            BUILDKIT_INLINE_CACHE=1
       - name: Pull rest of the the Docker images
         run: |
           docker-compose pull -q
