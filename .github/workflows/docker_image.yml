@@ -37,22 +37,16 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
-      - name: Pull original docker image
-        run: |
-          docker pull utrarobosoccer/soccerbot
-      - name: Start from scratch
-        if: ${{ inputs.start_from_scratch }}
-        run: |
-          docker system prune -a -f
-      - name: Build the Docker image
-        run: |
-          docker buildx build . --file Dockerfile --tag utrarobosoccer/soccerbot --progress=plain --cache-from utrarobosoccer/soccerbot --build-arg BUILDKIT_INLINE_CACHE=1
-      - name: Push Docker image to dockerhub
-        run: docker push utrarobosoccer/soccerbot
-#       - name: Push to AWS repository
-#         run: |
-#           aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
-#           aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#           aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 047817357099.dkr.ecr.us-east-2.amazonaws.com/hl-vs-utra
-#           docker tag utrarobosoccer/soccerbot 047817357099.dkr.ecr.us-east-2.amazonaws.com/hl-vs-utra
-#           docker push 047817357099.dkr.ecr.us-east-2.amazonaws.com/hl-vs-utra
+      - name: Set up Docker Buildx
+        uses: crazy-max/ghaction-docker-buildx@v3
+        with:
+          version: latest
+      - name: Build Image
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          push: true
+          file: Dockerfile
+          tags: utrarobosoccer/soccerbot
+          cache-from: type=registry,ref=utrarobosoccer/soccerbot
+          cache-to: type=inline
