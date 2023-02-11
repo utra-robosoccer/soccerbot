@@ -54,7 +54,7 @@ jobs:
           tags: utrarobosoccer/soccerbot
           cache-from: type=registry,ref=utrarobosoccer/soccerbot
           cache-to: type=inline
-      - name: Build the Docker images
+      - name: Build rest of the the Docker images
         run: |
           docker-compose pull -q
           docker-compose build --progress=plain
