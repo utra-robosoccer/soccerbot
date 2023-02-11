@@ -36,7 +36,7 @@ class TestGameEngine2D(TestCase):
     def test_dummy_vs_dummy_strategy(self):
         rospy.init_node("test")
 
-        g = GameEngine2D(display=self.display, team_1_strategy=StrategyDummy, team_2_strategy=StrategyDummy, game_duration=2)
+        g = GameEngine2D(display=self.display, team_1_strategy=StrategyDummy, team_2_strategy=StrategyDummy, game_duration=6)
         friendly_points, opponent_points = g.run()
         print(f"Friendly: {friendly_points}, opponent: {opponent_points}")
 
@@ -145,6 +145,40 @@ class TestGameEngine2D(TestCase):
 
         g = GameEngine2D(
             display=self.display, team_1_strategy=StrategyDummy, team_2_strategy=StrategyDummy, team_1=team1, team_2=team2, game_duration=4
+        )
+
+        friendly_points, opponent_points = g.run()
+        print(f"Friendly: {friendly_points}, opponent: {opponent_points}")
+
+    def test_ball_behind_kicker(self):
+        rospy.init_node("test")
+
+        team1 = Team(
+            [
+                RobotControlled2D(
+                    robot_id=1,
+                    team=Robot.Team.FRIENDLY,
+                    role=Robot.Role.STRIKER,
+                    status=Robot.Status.READY,
+                    position=np.array([2, 1, 0]),
+                )
+            ]
+        )
+
+        team2 = Team(
+            [
+                RobotControlled2D(
+                    robot_id=2,
+                    team=Robot.Team.OPPONENT,
+                    role=Robot.Role.GOALIE,
+                    status=Robot.Status.READY,
+                    position=np.array([4, 0, -3.14]),
+                )
+            ]
+        )
+
+        g = GameEngine2D(
+            display=self.display, team_1_strategy=StrategyDummy, team_2_strategy=StrategyStationary, team_1=team1, team_2=team2, game_duration=4
         )
 
         friendly_points, opponent_points = g.run()

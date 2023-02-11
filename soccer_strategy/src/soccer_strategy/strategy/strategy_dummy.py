@@ -80,11 +80,12 @@ class StrategyDummy(Strategy):
                         blocked_position = Utility.is_obstacle_blocking(this_robot, ball.position)
                         if blocked_position is not None:
                             optimal_pos = Utility.optimal_position_to_navigate_if_obstacle_blocking_target(
-                                this_robot, np.array(ball.position[0:2]), blocked_position
+                                this_robot, np.array(ball.position[0:2]), blocked_position, this_robot.BODY_WIDTH
                             )
                             Utility.navigate_to_position_with_offset(this_robot, optimal_pos, np.array(ball.position[0:2]), 0)
                         else:
                             rospy.loginfo("Navigation to ball")
+
                             Utility.navigate_to_scoring_position(this_robot, np.array(ball.position[0:2]), goal_position)
                     elif this_robot.observed_ball is None or (rospy.Time.now() - this_robot.observed_ball.last_observed_time_stamp) > rospy.Duration(
                         2

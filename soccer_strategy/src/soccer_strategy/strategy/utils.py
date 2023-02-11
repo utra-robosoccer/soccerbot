@@ -129,14 +129,39 @@ class Utility:
         # nav goal behind the ball
         destination_position_biased = [destination_position_biased[0], destination_position_biased[1], diff_angle]
 
+        # check if player will run into the ball while moving to the destination_position_biased
+        if Utility.is_ball_blocking_to_scoring_position(robot, destination_position_biased[0:2], ball_position):
+            optimal_pos_to_ball = Utility.optimal_position_to_navigate_if_obstacle_blocking_target(
+                robot, destination_position_biased[0:2], ball_position, 0.14
+            )
+            diff = ball_position - optimal_pos_to_ball
+            diff_unit = diff / np.linalg.norm(diff)
+            diff_angle = math.atan2(diff_unit[1], diff_unit[0])
+            destination_position_biased = [optimal_pos_to_ball[0], optimal_pos_to_ball[1], diff_angle]
+
         np.set_printoptions(precision=3)
         rospy.loginfo("Player {}: Navigation | Destination position biased {}".format(robot.robot_id, destination_position_biased))
         robot.set_navigation_position(destination_position_biased)
 
     @staticmethod
+    def is_ball_blocking_to_scoring_position(robot: RobotControlled, target_position, ball_position):
+        ball_radius = 0.07 + robot.BODY_WIDTH / 2  # take in account of the width of robot avoiding obstacles
+        ball_position = np.array(ball_position)
+        scoring_position = np.array(target_position)
+        player_position = robot.position[0:2]
+
+        ball_diff = ball_position - player_position
+        scoring_position_diff = scoring_position - player_position
+        angle = wrapToPi(np.arctan2(ball_diff[1], ball_diff[0]) - np.arctan2(scoring_position_diff[1], scoring_position_diff[0]))
+        opposite_len = np.linalg.norm(ball_diff) * math.sin(angle)
+        if opposite_len <= ball_radius and np.linalg.norm(ball_diff) < np.linalg.norm(scoring_position_diff):
+            return True
+        return False
+
+    @staticmethod
     def is_obstacle_blocking(robot: RobotControlled, ball_position):
 
-        obstacle_radius = robot.BODY_WIDTH / 2
+        obstacle_radius = robot.BODY_WIDTH  # take in account the width of robot avoiding the obstacle
         ball_position = np.array(ball_position)
         player_position = robot.position[0:2]
         ball_diff = ball_position - player_position
@@ -154,7 +179,7 @@ class Utility:
         return None
 
     @staticmethod
-    def optimal_position_to_navigate_if_obstacle_blocking_target(robot: RobotControlled, ball_position, obstacle_position):
+    def optimal_position_to_navigate_if_obstacle_blocking_target(robot: RobotControlled, ball_position, obstacle_position, obstacle_width):
 
         player_position = robot.position[0:2]
         ball_position = np.array(ball_position)
@@ -174,7 +199,7 @@ class Utility:
         obstacle_center_to_intersection = obstacle_intersect_pt - obstacle_position
 
         obstacle_center_to_intersection_unit = obstacle_center_to_intersection / np.linalg.norm(obstacle_center_to_intersection)
-        offset_to_optimal_position = 4 * robot.BODY_WIDTH
+        offset_to_optimal_position = 3 * obstacle_width
 
         if angle_obstacle_ball == 0:
             return obstacle_position + ball_diff_rotate_left_90_unit * offset_to_optimal_position
