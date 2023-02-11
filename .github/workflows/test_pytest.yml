@@ -70,6 +70,7 @@ jobs:
           export DISPLAY=unix:1
       - name: Pytest
         run: |
+          mkdir -p /home/$USER/.ros/config && cd /home/$USER/.ros/config && ln -s /opt/ros/noetic/etc/ros/python_logging.conf
           cd $HOME/catkin_ws/src/soccerbot
           source /opt/ros/noetic/setup.bash
           source $HOME/catkin_ws/devel/setup.bash
