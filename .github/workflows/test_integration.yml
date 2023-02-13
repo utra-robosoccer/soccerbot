@@ -45,7 +45,7 @@ jobs:
         with:
           version: latest
       - name: Build Image Soccerbot
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v4
         with:
           context: .
           load: true
@@ -55,7 +55,7 @@ jobs:
           cache-from: type=registry,ref=utrarobosoccer/soccerbot
           cache-to: type=inline
       - name: Build Image Webots
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v4
         with:
           context: external
           load: true
