@@ -53,7 +53,6 @@ class RobotControlled(Robot):
         diff_unit *= shorten_navigation_limit
 
         diff_angle = math.atan2(diff[0], diff[1])
-        diff_angle *= shorten_navigation_limit
 
         return np.array([diff_unit[0], diff_unit[1], diff_angle] + self.position)
 

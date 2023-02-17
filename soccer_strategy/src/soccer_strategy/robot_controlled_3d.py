@@ -49,7 +49,8 @@ class RobotControlled3D(RobotControlled):
         self.robot_state_publisher = rospy.Publisher("state", RobotState, queue_size=1)
 
         self.active = True
-        self.delocalized_threshold = rospy.get_param("delocalized_threshold", 0.05)
+        self.delocalized_threshold = rospy.get_param("delocalized_threshold", 0.15)
+        self.relocalized_threshold = rospy.get_param("relocalized_threshold", 0.05)
         self.node_init_time = rospy.Time.now()
 
     def set_navigation_position(self, goal_position):
@@ -162,7 +163,7 @@ class RobotControlled3D(RobotControlled):
         if self.status == Robot.Status.LOCALIZING:
             covariance_trace = np.sqrt(amcl_pose.pose.covariance[0] ** 2 + amcl_pose.pose.covariance[7] ** 2)
             rospy.logwarn_throttle(1, "Relocalizing, current cov trace: " + str(covariance_trace))
-            if covariance_trace < self.delocalized_threshold:
+            if covariance_trace < self.relocalized_threshold:
                 rospy.loginfo("Relocalized")
                 self.status = Robot.Status.READY
 

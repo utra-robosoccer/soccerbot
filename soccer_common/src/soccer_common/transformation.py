@@ -134,11 +134,7 @@ class Transformation(np.ndarray):
 
     @quaternion.setter
     def quaternion(self, quat: [float]):
-        try:
-            r = R.from_quat(quat)
-        except ValueError as v:
-            print("Hi")
-            pass
+        r = R.from_quat(quat)
         self[0:3, 0:3] = np.reshape(r.as_matrix(), [3, 3])
 
     @property

@@ -48,12 +48,12 @@ class SoccerbotRos(Soccerbot):
         self.robot_state.status = RobotState.STATUS_DISCONNECTED
 
         #: Frequency for the head's yaw while searching and relocalizing (left and right movement)
-        self.head_yaw_freq = rospy.get_param("head_yaw_freq", 0.04 if torch.cuda.is_available() else 0.005)
-        self.head_yaw_freq_relocalizing = rospy.get_param("head_yaw_freq_relocalizing", 0.005)
+        self.head_yaw_freq = rospy.get_param("head_yaw_freq", 0.02 if torch.cuda.is_available() else 0.003)
+        self.head_yaw_freq_relocalizing = rospy.get_param("head_yaw_freq_relocalizing", 0.005 if torch.cuda.is_available() else 0.003)
 
         #: Frequency for the head's while searching and relocalizing yaw (up and down movement)
-        self.head_pitch_freq = rospy.get_param("head_pitch_freq", 0.04 if torch.cuda.is_available() else 0.005)
-        self.head_pitch_freq_relocalizing = rospy.get_param("head_pitch_freq_relocalizing", 0.005)
+        self.head_pitch_freq = rospy.get_param("head_pitch_freq", 0.02 if torch.cuda.is_available() else 0.003)
+        self.head_pitch_freq_relocalizing = rospy.get_param("head_pitch_freq_relocalizing", 0.005 if torch.cuda.is_available() else 0.003)
 
     def state_callback(self, robot_state: RobotState):
         """
@@ -229,7 +229,7 @@ class SoccerbotRos(Soccerbot):
 
     def apply_head_rotation(self):
         if self.robot_state.status in [self.robot_state.STATUS_DETERMINING_SIDE, self.robot_state.STATUS_PENALIZED]:
-            self.configuration[Joints.HEAD_1] = math.sin(-self.head_step * self.head_yaw_freq * 3) * (math.pi * 0.05)
+            self.configuration[Joints.HEAD_1] = math.cos(self.head_step * self.head_pitch_freq_relocalizing) * (math.pi / 4)
             self.configuration[Joints.HEAD_2] = 0
             self.head_step += 1
         elif self.robot_state.status == RobotState.STATUS_LOCALIZING:

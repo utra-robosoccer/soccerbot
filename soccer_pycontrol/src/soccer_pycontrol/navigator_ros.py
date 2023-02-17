@@ -157,7 +157,6 @@ class NavigatorRos(Navigator):
 
             if self.soccerbot.robot_state.status in [
                 RobotState.STATUS_DISCONNECTED,
-                RobotState.STATUS_DETERMINING_SIDE,
                 RobotState.STATUS_FALLEN_FRONT,
                 RobotState.STATUS_FALLEN_BACK,
                 RobotState.STATUS_FALLEN_SIDE,
