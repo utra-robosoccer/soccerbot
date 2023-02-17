@@ -204,8 +204,8 @@ class Soccerbot:
         configuration[Links.LEFT_LEG_1 : Links.LEFT_LEG_6 + 1] = thetas[0:6]
 
         # head
-        configuration[Joints.HEAD_1] = 0
-        configuration[Joints.HEAD_2] = 0
+        configuration[Joints.HEAD_1] = self.configuration[Joints.HEAD_1]
+        configuration[Joints.HEAD_2] = self.configuration[Joints.HEAD_2]
 
         # Slowly ease into the ready position
         previous_configuration = self.configuration

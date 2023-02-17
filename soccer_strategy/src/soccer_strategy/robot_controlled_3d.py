@@ -49,7 +49,8 @@ class RobotControlled3D(RobotControlled):
         self.robot_state_publisher = rospy.Publisher("state", RobotState, queue_size=1)
 
         self.active = True
-
+        self.delocalized_threshold = rospy.get_param("delocalized_threshold", 0.15)
+        self.relocalized_threshold = rospy.get_param("relocalized_threshold", 0.05)
         self.node_init_time = rospy.Time.now()
 
     def set_navigation_position(self, goal_position):
@@ -114,19 +115,21 @@ class RobotControlled3D(RobotControlled):
         # Get Robot Position from TF
         trans = [self.position[0], self.position[1], 0]
         rot = tf.transformations.quaternion_from_euler(0, 0, self.position[2])
-        try:
-            if ground_truth:
-                (trans, rot) = self.tf_listener.lookupTransform("world", "robot" + str(self.robot_id) + "/base_footprint_gt", rospy.Time(0))
-            else:
-                (trans, rot) = self.tf_listener.lookupTransform("world", "robot" + str(self.robot_id) + "/base_footprint", rospy.Time(0))
-            eul = tf.transformations.euler_from_quaternion(rot)
-            self.position = np.array([trans[0], trans[1], eul[2]])
-            if self.status == Robot.Status.DISCONNECTED:
-                self.status = Robot.Status.READY
 
-        except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
-            if rospy.Time.now() - self.node_init_time > rospy.Duration(5):
-                rospy.logwarn_throttle(5, "Unable to locate robot in TF tree")
+        if self.status not in [Robot.Status.FALLEN_BACK, Robot.Status.FALLEN_SIDE, Robot.Status.FALLEN_FRONT, Robot.Status.GETTING_BACK_UP]:
+            try:
+                if ground_truth:
+                    (trans, rot) = self.tf_listener.lookupTransform("world", "robot" + str(self.robot_id) + "/base_footprint_gt", rospy.Time(0))
+                else:
+                    (trans, rot) = self.tf_listener.lookupTransform("world", "robot" + str(self.robot_id) + "/base_footprint", rospy.Time(0))
+                eul = tf.transformations.euler_from_quaternion(rot)
+                self.position = np.array([trans[0], trans[1], eul[2]])
+                if self.status == Robot.Status.DISCONNECTED:
+                    self.status = Robot.Status.READY
+
+            except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+                if rospy.Time.now() - self.node_init_time > rospy.Duration(5):
+                    rospy.logwarn_throttle(5, "Unable to locate robot in TF tree")
 
         # Publish Robot state info
         r = RobotState()
@@ -160,26 +163,25 @@ class RobotControlled3D(RobotControlled):
         if self.status == Robot.Status.LOCALIZING:
             covariance_trace = np.sqrt(amcl_pose.pose.covariance[0] ** 2 + amcl_pose.pose.covariance[7] ** 2)
             rospy.logwarn_throttle(1, "Relocalizing, current cov trace: " + str(covariance_trace))
-            if covariance_trace < 0.05:
+            if covariance_trace < self.relocalized_threshold:
                 rospy.loginfo("Relocalized")
-                self.status = Robot.Status.READY
-            elif rospy.Time.now() - self.time_since_action_completed > rospy.Duration(10):  # Timeout localization after 10 seconds
-                rospy.logwarn("Relocalization timeout hit")
                 self.status = Robot.Status.READY
 
     def action_completed_callback(self, data):
-        if self.status in [
+        if self.status == Robot.Status.GETTING_BACK_UP:
+            self.reset_initial_position(variance=0.3)
+            self.status = Robot.Status.LOCALIZING
+        elif self.status in [
             Robot.Status.WALKING,
             Robot.Status.TERMINATING_WALK,
             Robot.Status.KICKING,
-            Robot.Status.TRAJECTORY_IN_PROGRESS,
         ]:
             self.goal_position = None
             if self.amcl_pose is not None:
                 covariance_trace = np.sqrt(self.amcl_pose.pose.covariance[0] ** 2 + self.amcl_pose.pose.covariance[7] ** 2)
             else:
                 covariance_trace = 0
-            if covariance_trace > 0.2:
+            if covariance_trace >= self.delocalized_threshold:
                 rospy.logwarn("Robot Delocalized, Sending Robot back to localizing, current cov trace: " + str(covariance_trace))
                 self.status = Robot.Status.LOCALIZING
             else:
@@ -199,9 +201,9 @@ class RobotControlled3D(RobotControlled):
         self.robot_focused_on_ball_time = rospy.Time.now()
 
     def imu_callback(self, msg):
-        angle_threshold = 1.2  # in radian
+        angle_threshold = np.pi / 4  # in radian
         t = Transformation([0, 0, 0], [msg.orientation.x, msg.orientation.y, msg.orientation.z, msg.orientation.w])
-        roll, pitch, yaw = t.orientation_euler
+        yaw, pitch, roll = t.orientation_euler
         if self.status in [
             Robot.Status.DETERMINING_SIDE,
             Robot.Status.READY,
@@ -211,18 +213,19 @@ class RobotControlled3D(RobotControlled):
             Robot.Status.LOCALIZING,
         ]:
             if pitch < -angle_threshold:
-                rospy.logwarn_throttle(1, f"Fallen Back: (R: {roll}, P: {pitch}, Y: {yaw})")
+                rospy.logwarn_throttle(1, f"Fallen Back: (R: {roll}, P: {pitch}, Y: {yaw}), {t.quaternion}")
                 self.status = Robot.Status.FALLEN_BACK
 
             elif pitch > angle_threshold:
-                rospy.logwarn_throttle(1, f"Fallen Front: (R: {roll}, P: {pitch}, Y: {yaw})")
+                rospy.logwarn_throttle(1, f"Fallen Front: (R: {roll}, P: {pitch}, Y: {yaw}), {t.quaternion}")
                 self.status = Robot.Status.FALLEN_FRONT
 
-            elif yaw < -angle_threshold or yaw > angle_threshold:
-                rospy.logwarn_throttle(1, f"Fallen Side: (R: {roll}, P: {pitch}, Y: {yaw})")
+            elif roll < -angle_threshold or roll > angle_threshold:
+                rospy.logwarn_throttle(1, f"Fallen Side: (R: {roll}, P: {pitch}, Y: {yaw}), {t.quaternion}")
                 self.status = Robot.Status.FALLEN_SIDE
 
-    def reset_initial_position(self):
+    def reset_initial_position(self, variance=0.02):
+
         position = self.position
 
         p = PoseWithCovarianceStamped()
@@ -239,12 +242,12 @@ class RobotControlled3D(RobotControlled):
         p.pose.pose.orientation.w = q[3]
         rospy.loginfo_throttle_identical(10, "Setting " + self.robot_name + " localization position " + str(position) + " orientation " + str(q))
         # fmt: off
-        p.pose.covariance = [0.0004, 0.0, 0.0, 0.0, 0.0, 0.0,
-                             0.0, 0.0004, 0.0, 0.0, 0.0, 0.0,
+        p.pose.covariance = [variance ** 2, 0.0, 0.0, 0.0, 0.0, 0.0,
+                             0.0, variance ** 2, 0.0, 0.0, 0.0, 0.0,
                              0.0, 0.0, 0, 0.0, 0.0, 0.0,
                              0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
                              0.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                             0.0, 0.0, 0.0, 0.0, 0.0, 0.0001]
+                             0.0, 0.0, 0.0, 0.0, 0.0, (variance * 4) ** 2]
         # fmt: on
         self.robot_initial_pose_publisher.publish(p)
         rospy.sleep(1)
@@ -261,7 +264,7 @@ class RobotControlled3D(RobotControlled):
         if "kick" in trajectory_name:
             self.status = Robot.Status.KICKING
         else:
-            self.status = Robot.Status.TRAJECTORY_IN_PROGRESS
+            self.status = Robot.Status.GETTING_BACK_UP
         rospy.loginfo(self.robot_name + " " + f.trajectory_name)
 
     def get_detected_obstacles(self):

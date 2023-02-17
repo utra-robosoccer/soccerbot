@@ -235,10 +235,10 @@ class GameEngine2D:
                         )
                         ball.velocity = kick_force_rand * rotation_rand @ robot.kick_velocity
                         ball.kick_timeout = 5
-                robot.status = Robot.Status.TRAJECTORY_IN_PROGRESS
+                robot.status = Robot.Status.GETTING_BACK_UP
                 robot.trajectory_timeout = 8
                 robot.path_time = 0
-            elif robot.status == Robot.Status.TRAJECTORY_IN_PROGRESS:
+            elif robot.status == Robot.Status.GETTING_BACK_UP:
                 if robot.trajectory_timeout == 0:
                     robot.status = Robot.Status.READY
                 else:

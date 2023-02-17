@@ -34,7 +34,7 @@ class DetectorFieldline(Detector):
         self.point_cloud_publisher = rospy.Publisher("field_point_cloud", PointCloud2, queue_size=1)
         self.tf_broadcaster = TransformBroadcaster()
 
-        self.point_cloud_max_distance = rospy.get_param("point_cloud_max_distance", 2)
+        self.point_cloud_max_distance = rospy.get_param("point_cloud_max_distance", 5)
         self.point_cloud_spacing = rospy.get_param("point_cloud_spacing", 30)
         self.publish_point_cloud = False
         self.ground_truth = False
@@ -72,6 +72,8 @@ class DetectorFieldline(Detector):
 
         image = CvBridge().imgmsg_to_cv2(img, desired_encoding="rgb8")
         h = self.camera.calculateHorizonCoverArea()
+        if h + 1 >= self.camera.resolution_y:
+            return
         image_crop = image[h + 1 :, :, :]
         # image_crop_blurred = cv2.GaussianBlur(image_crop, (3, 3), 0)
         image_crop_blurred = cv2.bilateralFilter(image_crop, 9, 75, 75)

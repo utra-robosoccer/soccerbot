@@ -373,4 +373,4 @@ class Camera:
         d = math.sin(pitch) * self.focal_length
 
         (r, h) = self.worldToImageFrame(0, -d)
-        return int(max(0, h))
+        return int(min(max(0, h), self.resolution_y))

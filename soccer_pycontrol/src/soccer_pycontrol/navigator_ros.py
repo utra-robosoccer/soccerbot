@@ -152,14 +152,16 @@ class NavigatorRos(Navigator):
             # Always publish odometry no matter what state
             self.soccerbot.publishOdometry(r.last_time)
 
+            # Always apply head rotation
+            self.soccerbot.apply_head_rotation()
+
             if self.soccerbot.robot_state.status in [
                 RobotState.STATUS_DISCONNECTED,
-                RobotState.STATUS_DETERMINING_SIDE,
                 RobotState.STATUS_FALLEN_FRONT,
                 RobotState.STATUS_FALLEN_BACK,
                 RobotState.STATUS_FALLEN_SIDE,
                 RobotState.STATUS_PENALIZED,
-                RobotState.STATUS_TRAJECTORY_IN_PROGRESS,
+                RobotState.STATUS_GETTING_BACK_UP,
                 RobotState.STATUS_KICKING,
             ]:
                 self.soccerbot.robot_path = None
@@ -193,6 +195,13 @@ class NavigatorRos(Navigator):
 
                 rospy.loginfo("Received New Goal")
                 time_now = rospy.Time.now()
+
+                # Minimum goal movement tolerance check
+                if (self.new_goal.pose.position.x - self.robot_pose.pose.position.x) ** 2 + (
+                    self.new_goal.pose.position.y - self.robot_pose.pose.position.y
+                ) ** 2 < 0.03**2:
+                    self.new_goal.pose.position.x = self.robot_pose.pose.position.x
+                    self.new_goal.pose.position.y = self.robot_pose.pose.position.y
 
                 self.goal = self.new_goal
                 self.soccerbot.reset_imus()
@@ -240,7 +249,6 @@ class NavigatorRos(Navigator):
                 self.completed_walk_publisher.publish(e)
 
             if self.soccerbot.robot_path is None or self.t > self.soccerbot.robot_path.duration():
-                self.soccerbot.apply_head_rotation()
                 self.soccerbot.robot_path = None
                 pass
 

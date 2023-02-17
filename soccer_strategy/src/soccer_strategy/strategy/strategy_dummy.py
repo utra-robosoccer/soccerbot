@@ -45,7 +45,7 @@ class StrategyDummy(Strategy):
             Robot.Status.FALLEN_BACK,
             Robot.Status.FALLEN_FRONT,
             Robot.Status.FALLEN_SIDE,
-            Robot.Status.TRAJECTORY_IN_PROGRESS,
+            Robot.Status.GETTING_BACK_UP,
         ]:
             self.time_of_end_of_action = rospy.Time.now()
             return

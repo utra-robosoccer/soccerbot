@@ -9,7 +9,6 @@ on:
     branches: [master]
     paths-ignore:
       - "**.md"
-
 env:
   COMPOSE_DOCKER_CLI_BUILD: 1
   DOCKER_BUILDKIT: 1
@@ -34,14 +33,37 @@ jobs:
           lfs: true
           submodules: recursive
       - name: Docker Login
-        uses: docker/login-action@v1.12.0
+        uses: docker/login-action@v2.1.0
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
-      - name: Build the Docker images
+      - name: Set filesystems permissions
         run: |
-          docker-compose pull -q
-          docker-compose build --progress=plain
+          chmod -R g+w .
+      - name: Set up Docker Buildx
+        uses: crazy-max/ghaction-docker-buildx@v3
+        with:
+          version: latest
+      - name: Build Image Soccerbot
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          load: true
+          push: false
+          file: Dockerfile
+          tags: utrarobosoccer/soccerbot
+          cache-from: type=registry,ref=utrarobosoccer/soccerbot
+          cache-to: type=inline
+      - name: Build Image Webots
+        uses: docker/build-push-action@v4
+        with:
+          context: external
+          load: true
+          push: false
+          file: external/Dockerfile
+          tags: utrarobosoccer/webots
+          cache-from: type=registry,ref=utrarobosoccer/webots
+          cache-to: type=inline
       - name: Walking Integration Test
         timeout-minutes: 10
         run: |

@@ -2,6 +2,7 @@ import math
 
 import numpy as np
 
+from soccer_common.utils import wrapToPi
 from soccer_msgs.msg import GameState
 from soccer_strategy.robot import Robot
 from soccer_strategy.strategy.strategy import Strategy, get_back_up
@@ -27,9 +28,9 @@ class StrategyReady(Strategy):
 
         if this_robot.status != Robot.Status.WALKING:  # TODO use dynamic walking to adjust position
             navigation_position = np.array(friendly_team.formations["ready"][this_robot.role], dtype=float)
-            if np.linalg.norm(this_robot.position[0:2] - navigation_position[0:2]) > 0.20:
+            if np.linalg.norm(this_robot.position[0:2] - navigation_position[0:2]) > 0.10:
                 this_robot.set_navigation_position(navigation_position)
-            elif abs((this_robot.position[2] - navigation_position[2]) % math.pi) > 0.2:  # Rotate only
+            elif abs(wrapToPi(this_robot.position[2] - navigation_position[2])) > 0.2:  # Rotate only
                 navigation_position[0:2] = this_robot.position[0:2]
                 this_robot.set_navigation_position(navigation_position)
             else:
