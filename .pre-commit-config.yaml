@@ -1,6 +1,6 @@
 # Exclude Regex https://www3.ntu.edu.sg/home/ehchua/programming/howto/Regexe.html#zz-1.8
 x-exclude: &exclude
-  exclude: ^(external\/|cmake-build-debug\/|.pytest_cache\/|soccer_embedded\/|docs\/|.idea\/|.+pb2\.py\/|bez2_description\/|bez1_description)
+  exclude: '^(external|cmake-build-debug|.pytest_cache|soccer_embedded|docs|.idea|.+pb2.py|bez2_description|bez1_description)'
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -25,7 +25,7 @@ repos:
         args:
           - --line-length=150
   - repo: https://github.com/pycqa/isort
-    rev: 5.10.1
+    rev: 5.11.5
     hooks:
       - id: isort
         name: isort

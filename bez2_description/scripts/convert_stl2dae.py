@@ -1,6 +1,6 @@
-import os
 import argparse
 import glob
+import os
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--folder', type=str, default="./")

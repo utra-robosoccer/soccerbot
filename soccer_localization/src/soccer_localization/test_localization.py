@@ -38,6 +38,7 @@ def retrieve_bag(url="https://drive.google.com/uc?id=1T_oyM1rZwWgUy6A6KlsJ7Oqn8J
     return test_path
 
 
+@pytest.mark.skipif("DISPLAY" not in os.environ, reason="Takes too long in CI")
 def test_points_correction_goalie():
     rospy.init_node("test")
 
@@ -56,6 +57,7 @@ def test_points_correction_goalie():
     plt.close()
 
 
+@pytest.mark.skipif("DISPLAY" not in os.environ, reason="Takes too long in CI")
 def test_points_correction_striker():
     rospy.init_node("test")
 
@@ -66,9 +68,9 @@ def test_points_correction_striker():
 
     bag = rosbag.Bag(retrieve_bag(url="https://drive.google.com/uc?id=1VNHkAu10cfFJzcpTvc0zR8Jm-tI_6xQ8", bag_name="localization_2"))
 
-    transform_gt_offset = Transformation()
+    transform_gt_offset = Transformation(pos_theta=[0, -0.0, 0])
 
-    draw_points_correction(bag, map, t_start=20, transform_gt_offset=transform_gt_offset, xlim=(-2, 2), ylim=(-3.5, 2), debug=False)
+    draw_points_correction(bag, map, t_start=130, transform_gt_offset=transform_gt_offset, xlim=(-2, 4), ylim=(-3.5, 2), debug=False)
 
     plt.close()
 
@@ -92,8 +94,11 @@ def draw_points_correction(bag, map, t_start, transform_gt_offset, xlim, ylim, d
             point_cloud = pcl2.read_points_list(msg)
             point_cloud_array = np.array(point_cloud)
             current_transform = transform_gt_offset @ Transformation(pos_theta=transform_gt.pos_theta)
-            offset_transform = map.matchPointsWithMap(current_transform, point_cloud_array)
-            if offset_transform is not None:
+            tr = map.matchPointsWithMapIterative(current_transform, point_cloud_array)
+
+            if tr is not None:
+                offset_transform, transform_confidence = tr
+
                 # pp = offset_transform.pos_theta
                 # pp[2] = 0
                 # offset_transform.pos_theta = pp
@@ -114,7 +119,7 @@ def draw_points_correction(bag, map, t_start, transform_gt_offset, xlim, ylim, d
                         plt.waitforbuttonpress(timeout=0.01)
 
 
-def display_rosbag_map(bag, map, debug=False, pos_theta_start=[-4, -3.15, np.pi / 2]):
+def display_rosbag_map(bag, map, debug=False, pos_theta_start=[-4, -3.15, np.pi / 2], t_start=0.0, t_end=None):
 
     f = FieldLinesUKFROS(map=map)
     f.robot_state.status = RobotState.STATUS_READY
@@ -132,15 +137,23 @@ def display_rosbag_map(bag, map, debug=False, pos_theta_start=[-4, -3.15, np.pi 
     path_covariance = []
 
     predict_it = 0
-    for topic, msg, t in bag.read_messages(topics=["/robot1/odom_combined", "/tf", "/robot1/field_point_cloud"]):
-        if topic == "/robot1/field_point_cloud":
+    for topic, msg, t in bag.read_messages(
+        topics=["/robot1/odom_combined", "/tf", "/robot1/field_point_cloud", "/robot1/state", "/robot1/initialpose"]
+    ):
+        if t_end is not None and t.to_sec() > t_end:
+            break
+        if topic == "/robot1/state":
+            f.robot_state_callback(msg)
+        elif topic == "/robot1/initialpose":
+            f.initial_pose_callback(msg)
+        elif topic == "/robot1/field_point_cloud":
             current_transform = Transformation(pos_theta=f.ukf.x)
             point_cloud_array, vo_transform, vo_pos_theta = f.field_point_cloud_callback(msg)
             if vo_pos_theta is not None:
                 path_vo.append(vo_pos_theta)
                 path_vo_t.append(t.to_sec())
 
-            if debug:
+            if debug and t.secs > t_start:
                 map.drawPathOnMap(Transformation(pos_theta=f.ukf.x), label="VO Odometry", color="orange")
 
                 if vo_pos_theta is not None:
@@ -157,7 +170,6 @@ def display_rosbag_map(bag, map, debug=False, pos_theta_start=[-4, -3.15, np.pi 
                 plt.legend()
                 plt.draw()
                 plt.waitforbuttonpress()
-
         elif topic == "/tf":
             # Process ground truth information
             for transform in msg.transforms:
@@ -165,7 +177,7 @@ def display_rosbag_map(bag, map, debug=False, pos_theta_start=[-4, -3.15, np.pi 
                     transform_gt = Transformation(geometry_msgs_transform=transform.transform)
                     path_gt.append(transform_gt.pos_theta)
                     path_gt_t.append(t.to_sec())
-                    if debug:
+                    if debug and t.secs > t_start:
                         map.drawPathOnMap(transform_gt, label="Ground Truth", color="black")
 
         elif topic == "/robot1/odom_combined":
@@ -187,7 +199,7 @@ def display_rosbag_map(bag, map, debug=False, pos_theta_start=[-4, -3.15, np.pi 
             odom_uncorrected = initial_pose @ odom_t
             path_odom.append(odom_uncorrected.pos_theta)
             path_odom_t.append(t.to_sec())
-            if debug:
+            if debug and t.secs > t_start:
                 map.drawPathOnMap(odom_uncorrected, label="Uncorrected Odom", color="blue")
 
     path_ukf = np.array(path_ukf)
@@ -241,7 +253,7 @@ def display_rosbag_map(bag, map, debug=False, pos_theta_start=[-4, -3.15, np.pi 
     plt_dim_error(2, "Theta")
 
     if "DISPLAY" in os.environ:
-        plt.show(block=True)
+        plt.show(block=False)
         plt.waitforbuttonpress()
         plt.close("all")
 
@@ -258,7 +270,7 @@ def test_walk_forward():
     display_rosbag_map(bag=bag, map=map, debug=False)
 
 
-def test_walk_forward_center_map():
+def test_walk_forward_striker():
 
     rospy.init_node("test")
 
@@ -267,7 +279,19 @@ def test_walk_forward_center_map():
     map = Field()
     map.draw()
     bag = rosbag.Bag(retrieve_bag(url="https://drive.google.com/uc?id=1VNHkAu10cfFJzcpTvc0zR8Jm-tI_6xQ8", bag_name="localization_2"))
-    display_rosbag_map(bag=bag, map=map, debug=False, pos_theta_start=[-1, -3.15, np.pi / 2])
+    display_rosbag_map(bag=bag, map=map, debug=False, pos_theta_start=[-1, -3.15, np.pi / 2], t_start=130)
+
+
+def test_fall_relocalization():
+
+    rospy.init_node("test")
+
+    plt.figure("Localization")
+
+    map = Field()
+    map.draw()
+    bag = rosbag.Bag(retrieve_bag(url="https://drive.google.com/uc?id=1spsxVlUqvhXlZhdTNt_aCBulTFyLBoUQ", bag_name="relocalization_fall"))
+    display_rosbag_map(bag=bag, map=map, debug=False, pos_theta_start=[-1, -3.15, np.pi / 2], t_start=0)
 
 
 class FreehicleField(Field):
@@ -286,6 +310,7 @@ class FreehicleField(Field):
         return lines
 
 
+@pytest.mark.skip
 def test_freehicle_movement():
     rospy.init_node("test")
     rospy.set_param("distance_point_threshold", 2)

@@ -44,6 +44,8 @@ class PathSectionShort(PathSection):
         intermediate_angle = wrapToPi(intermediate_angle - start_angle) * self.scale_yaw + start_angle
         if self.isWalkingBackwards():
             intermediate_angle = wrapToPi(intermediate_angle + np.pi)
+        if diff_position[0] == 0 and diff_position[1] == 0:  # If the movement is only a rotation
+            intermediate_angle = start_angle
         final_angle = self.end_transform.orientation_euler[0]
 
         step_1_duration = abs(wrapToPi(intermediate_angle - start_angle)) / self.angular_speed

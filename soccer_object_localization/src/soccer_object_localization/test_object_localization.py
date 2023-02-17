@@ -227,6 +227,8 @@ class TestObjectLocalization(TestCase):
 
         bag_out.close()
         bag.close()
+        if "DISPLAY" in os.environ:
+            cv2.destroyAllWindows()
 
     def test_goalpost_detection(self):
         rospy.init_node("test")

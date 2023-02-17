@@ -6,10 +6,10 @@ from threading import Event, Lock, Thread
 
 import gobilda_servo_util
 import jx_servo_util
-from common_motor_util import constrain
 import numpy as np
 import rospy as rp
 import serial
+from common_motor_util import constrain
 from jx_servo_util import CMD_HEADS, CMDS, RWS
 from utility import log_string
 

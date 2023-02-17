@@ -2,6 +2,7 @@ from functools import cached_property
 
 import numpy as np
 import rospy
+import scipy
 import tf
 import tf2_py
 from rospy import Subscriber
@@ -30,6 +31,7 @@ class Camera:
 
         self.robot_name = robot_name  #: Name of the robot
         self.pose = Transformation()  #: Pose of the camera
+        self.pose_base_link_straight = Transformation()  #: Pose of the camera
         self.camera_info = None  #: Camera info object recieved from the subscriber
         self.horizontalFOV = Camera.HORIZONTAL_FOV
         self.focal_length = 3.67  #: Focal length of the camera (meters) distance to the camera plane as projected in 3D
@@ -58,67 +60,51 @@ class Camera:
         :param skip_if_not_found: If set to true, then will not wait if it cannot find the camera transform after the specified duration (1 second), it will just return
         """
         if from_world_frame:
-            base_frame = "world"
-            target_frame = self.robot_name + camera_frame
-            timeout_duration = rospy.Duration(nsecs=1000000)
+            try:
+                self.tf_listener.waitForTransform("world", self.robot_name + camera_frame, timestamp, rospy.Duration(nsecs=1000000))
+                (trans, rot) = self.tf_listener.lookupTransform("world", self.robot_name + camera_frame, timestamp)
+                self.pose = Transformation(trans, rot)
+                return
+            except (
+                tf2_py.LookupException,
+                tf.LookupException,
+                tf.ConnectivityException,
+                tf.ExtrapolationException,
+                tf2_py.TransformException,
+            ) as ex:
+                rospy.logerr_throttle(5, f"Unable to find transformation from world to {self.robot_name + camera_frame}")
+                pass
         else:
-            base_frame = self.robot_name + "/base_footprint"
-            target_frame = self.robot_name + camera_frame
-            timeout_duration = rospy.Duration(secs=1)
 
-        # First if the timestamp transformation can be found
-        if self.tf_listener.canTransform(base_frame, target_frame, timestamp):
-            (trans, rot) = self.tf_listener.lookupTransform(base_frame, target_frame, timestamp)
-            self.pose = Transformation(trans, rot)
-            return
+            try:
+                # Find the odom to base_footprint and publish straight base footprint
+                self.tf_listener.waitForTransform(self.robot_name + "/odom", self.robot_name + "/base_footprint", timestamp, rospy.Duration(secs=1))
+                (trans, rot) = self.tf_listener.lookupTransform(self.robot_name + "/odom", self.robot_name + "/base_footprint", timestamp)
+                world_to_base_link = Transformation(trans, rot)
+                e = world_to_base_link.orientation_euler
+                e[1] = 0
+                e[2] = 0
+                world_to_base_link.orientation_euler = e
+                self.pose_base_link_straight = world_to_base_link
 
-        # Then wait the specified time
-        try:
-            self.tf_listener.waitForTransform(base_frame, target_frame, timestamp, timeout_duration)
-            (trans, rot) = self.tf_listener.lookupTransform(base_frame, target_frame, timestamp)
-            self.pose = Transformation(trans, rot)
-            return
-        except (
-            tf2_py.LookupException,
-            tf.LookupException,
-            tf.ConnectivityException,
-            tf.ExtrapolationException,
-            tf2_py.TransformException,
-        ) as ex:
-            pass
+                # Calculate the camera transformation
+                self.tf_listener.waitForTransform(self.robot_name + "/odom", self.robot_name + camera_frame, timestamp, rospy.Duration(secs=1))
+                (trans, rot) = self.tf_listener.lookupTransform(self.robot_name + "/odom", self.robot_name + camera_frame, timestamp)
+                world_to_camera = Transformation(trans, rot)
 
-        # Then just get the first transform
-        try:
-            (trans, rot) = self.tf_listener.lookupTransform(base_frame, target_frame, rospy.Time(0))
-            self.pose = Transformation(trans, rot)
-            return
-        except (
-            tf2_py.LookupException,
-            tf.LookupException,
-            tf.ConnectivityException,
-            tf.ExtrapolationException,
-            tf2_py.TransformException,
-        ) as ex:
-            pass
+                camera_to_base_link = scipy.linalg.inv(world_to_base_link) @ world_to_camera
 
-        if skip_if_not_found:
-            return
-
-        # Then try waiting for the first transform
-        try:
-            self.tf_listener.waitForTransform(base_frame, target_frame, rospy.Time(0), rospy.Duration(60))
-            (trans, rot) = self.tf_listener.lookupTransform(base_frame, target_frame, timestamp)
-            self.pose = Transformation(trans, rot)
-            return
-        except (
-            tf2_py.LookupException,
-            tf.LookupException,
-            tf.ConnectivityException,
-            tf.ExtrapolationException,
-            tf2_py.TransformException,
-        ) as ex:
-            rospy.logerr_throttle(10, f"Cant find TF between {base_frame} and {target_frame} at {timestamp}")
-            rospy.logerr_throttle(10, str(ex))
+                self.pose = camera_to_base_link
+                return
+            except (
+                tf2_py.LookupException,
+                tf.LookupException,
+                tf.ConnectivityException,
+                tf.ExtrapolationException,
+                tf2_py.TransformException,
+            ) as ex:
+                rospy.logerr_throttle(5, f"Unable to find transformation from world to {self.robot_name + camera_frame}")
+                pass
 
     def cameraInfoCallback(self, camera_info: CameraInfo):
         """
@@ -387,4 +373,4 @@ class Camera:
         d = math.sin(pitch) * self.focal_length
 
         (r, h) = self.worldToImageFrame(0, -d)
-        return int(max(0, h))
+        return int(min(max(0, h), self.resolution_y))

@@ -34,7 +34,7 @@ def wrapTo2Pi(num: float) -> float:
 
 def wrapToPi(num: float) -> float:
     """
-    Wraps a angle to pi, etc -3pi -> -pi
+    Wraps a angle to pi, etc -3pi -> pi
     :param num: Angle in radians
     """
     rem = (num + np.pi) % (2 * np.pi) - np.pi

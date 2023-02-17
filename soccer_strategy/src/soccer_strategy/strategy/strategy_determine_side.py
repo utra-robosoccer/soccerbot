@@ -1,6 +1,7 @@
 import json
 import math
 import os
+from typing import Optional
 
 import numpy as np
 import rospy
@@ -22,7 +23,6 @@ class StrategyDetermineSide(Strategy):
         super().__init__()
         self.average_goal_post_y = 0
         self.update_frequency = 1
-        self.measurements = 0
         self.flip_required = False
         self.tf_listener = tf.TransformListener()
 
@@ -40,50 +40,53 @@ class StrategyDetermineSide(Strategy):
         super().step_strategy(friendly_team, opponent_team, game_state)
 
         current_robot = self.get_current_robot(friendly_team)
+        if not current_robot.localized:
+            if self.iteration == 1:
+                current_robot.status = Robot.Status.DETERMINING_SIDE
 
-        # if self.iteration == 1:
-        current_robot.status = Robot.Status.DETERMINING_SIDE
+            goal_post_pose = None
+            camera_yaw = None
 
-        goal_post_pose = []
-        camera_yaw = 0.0
-        try:
-            goal_post_pose, goal_pose_orientation = self.tf_listener.lookupTransform(
-                "robot" + str(current_robot.robot_id) + "/base_camera",
-                "robot" + str(current_robot.robot_id) + "/goal_post",
-                rospy.Time(0),
-            )
+            # Transform of camera to goal post
+            try:
+                goal_post_pose, goal_pose_orientation = self.tf_listener.lookupTransform(
+                    "robot" + str(current_robot.robot_id) + "/base_camera",
+                    "robot" + str(current_robot.robot_id) + "/goal_post",
+                    rospy.Time(0),
+                )
 
-            self.measurements = self.measurements + 1
-            rospy.loginfo("Goal Post detected " + str(goal_post_pose))
+                rospy.loginfo("Goal Post detected " + str(goal_post_pose))
 
-        except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
-            rospy.logwarn_throttle(30, "Unable to locate goal post in TF tree")
+            except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+                rospy.logwarn_throttle(30, "Unable to locate goal post in TF tree")
 
-        try:
-            camera_position, camera_orientation = self.tf_listener.lookupTransform(
-                os.environ["ROS_NAMESPACE"].replace("/", "") + "/base_footprint",
-                os.environ["ROS_NAMESPACE"].replace("/", "") + "/camera",
-                rospy.Time(0),
-            )
+            # Transform of body to camera
+            try:
+                camera_position, camera_orientation = self.tf_listener.lookupTransform(
+                    os.environ["ROS_NAMESPACE"].replace("/", "") + "/base_footprint",
+                    os.environ["ROS_NAMESPACE"].replace("/", "") + "/camera",
+                    rospy.Time(0),
+                )
 
-            camera_yaw = Transformation.get_euler_from_quaternion(camera_orientation)[0]
-            rospy.loginfo("Camera Yaw " + str(camera_yaw))
+                camera_yaw = Transformation.get_euler_from_quaternion(camera_orientation)[0]
+                rospy.loginfo("Camera Yaw " + str(camera_yaw))
 
-        except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
-            rospy.logwarn_throttle(30, "Unable to get robot to camera pose")
+            except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+                rospy.logwarn_throttle(30, "Unable to get robot to camera pose")
 
-        determine_side_timeout = 0 if rospy.get_param("skip_determine_side", False) else 10
-        if (rospy.Time.now() - self.time_strategy_started) > rospy.Duration(determine_side_timeout):
-            rospy.logwarn("Timeout error, cannot determine side, determining side as from default")
-            self.measurements = 1  # TODO update this
+            detected = goal_post_pose is not None and camera_yaw is not None
+            determine_side_timeout = 0 if rospy.get_param("skip_determine_side", False) else 10
+            if (rospy.Time.now() - self.time_strategy_started) > rospy.Duration(determine_side_timeout):
+                rospy.logwarn("Timeout error, cannot determine side, determining side as from default")
+                detected = True
 
-        if self.measurements == 1:
-            # Wait until the robot has moved its head a bit
-            self.determine_side(current_robot, goal_post_pose, camera_yaw)
-            self.determine_role(current_robot, friendly_team)
+            if detected:
+                # Wait until the robot has moved its head a bit
+                self.determine_side(current_robot, goal_post_pose, camera_yaw)
+                self.determine_role(current_robot, friendly_team)
 
-            current_robot.status = Robot.Status.READY
-            self.complete = True
+                current_robot.status = Robot.Status.READY
+                self.complete = True
 
     def determine_side(self, current_robot, goal_post_pose, camera_yaw):
         """
@@ -213,14 +216,15 @@ class StrategyDetermineSide(Strategy):
                 if robot.role == Robot.Role.UNASSIGNED:
                     unassigned_robots.append(robot)
 
-            print("  Available Robots", unassigned_robots)
+            print("  Available Robots", [robot.robot_id for robot in unassigned_robots])
+            print("  Available Robot Positions", [robot.position for robot in unassigned_robots])
             print("  Available Roles", available_roles)
             print(
                 "  Available Roles Positions",
                 [friendly_team.formations["ready"][role][0:2] for role in available_roles],
             )
             while len(unassigned_robots) > 0:
-                closest_index = 0
+                closest_robot: Optional[Robot] = None
                 closest_role_index = 0
                 closest_distance = math.inf
                 for i in range(len(unassigned_robots)):
@@ -230,16 +234,16 @@ class StrategyDetermineSide(Strategy):
                         )
                         if distance < closest_distance:
                             closest_distance = distance
-                            closest_index = i
+                            closest_robot = unassigned_robots[i]
                             closest_role_index = j
 
                 print(
-                    f"  Assigning Robot {closest_index + 1} { unassigned_robots[closest_index].position } to {available_roles[closest_role_index].name} with location {friendly_team.formations['ready'][available_roles[closest_role_index]][0:2]}"
+                    f"  Assigning Robot {closest_robot.robot_id} { closest_robot.position } to {available_roles[closest_role_index].name} with location {friendly_team.formations['ready'][available_roles[closest_role_index]][0:2]}"
                 )
-                if unassigned_robots[closest_index].robot_id == current_robot.robot_id:
+                if closest_robot.robot_id == current_robot.robot_id:
                     current_robot.role = available_roles[closest_role_index]
                     print("  Completed Assignment")
                     break
                 else:
-                    unassigned_robots.pop(closest_index)
+                    unassigned_robots.pop(unassigned_robots.index(closest_robot))
                     available_roles.pop(closest_role_index)

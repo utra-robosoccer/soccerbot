@@ -1,5 +1,5 @@
 import enum
-from typing import List
+from typing import List, Optional
 
 import numpy as np
 
@@ -51,7 +51,7 @@ class Robot:
         FALLEN_FRONT = RobotState.STATUS_FALLEN_FRONT
         FALLEN_BACK = RobotState.STATUS_FALLEN_BACK
         FALLEN_SIDE = RobotState.STATUS_FALLEN_SIDE
-        TRAJECTORY_IN_PROGRESS = RobotState.STATUS_TRAJECTORY_IN_PROGRESS
+        GETTING_BACK_UP = RobotState.STATUS_GETTING_BACK_UP
         PENALIZED = RobotState.STATUS_PENALIZED
         STOPPED = RobotState.STATUS_STOPPED
 
@@ -76,6 +76,7 @@ class Robot:
         self.role = role
         self.status = status
         self.position: np.ndarray = position
+        self.localized: bool = False
         self.robot_id: int = robot_id
-        self.observed_ball = Ball()
+        self.observed_ball: Optional[Ball] = None
         self.observed_obstacles: List[Obstacle] = []

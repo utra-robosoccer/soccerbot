@@ -1,4 +1,6 @@
+import copy
 import os
+import time
 from typing import Optional
 
 import numpy as np
@@ -21,7 +23,6 @@ class FieldLinesUKFROS(FieldLinesUKF):
     def __init__(self, map=Field()):
         super().__init__()
 
-        self.initial_pose_initiated = False
         self.odom_subscriber = rospy.Subscriber("odom_combined", PoseWithCovarianceStamped, self.odom_callback, queue_size=1)
         self.field_point_cloud_subscriber = rospy.Subscriber("field_point_cloud", PointCloud2, self.field_point_cloud_callback, queue_size=1)
         self.field_point_cloud_transformed_publisher = rospy.Publisher("field_point_cloud_transformed", PointCloud2, queue_size=1)
@@ -29,7 +30,7 @@ class FieldLinesUKFROS(FieldLinesUKF):
         self.amcl_pose_publisher = rospy.Publisher("amcl_pose", PoseWithCovarianceStamped, queue_size=1)
         self.map = map
 
-        self.initial_pose = Transformation(pos_theta=[-4, -3.15, np.pi / 2])  # TODO get this
+        self.initial_pose = Transformation(pos_theta=[0, 0, 0])
         self.ukf.x = self.initial_pose.pos_theta
 
         self.odom_t_previous = None
@@ -56,8 +57,10 @@ class FieldLinesUKFROS(FieldLinesUKF):
 
         if self.odom_t_previous is None:
             self.odom_t_previous = Transformation(pose_with_covariance_stamped=pose_msg)
+            self.odom_t_previous.orientation_euler = [self.odom_t_previous.orientation_euler[0], 0, 0]  # Needed to remove non yaw values
             return
         odom_t = Transformation(pose_with_covariance_stamped=pose_msg)
+        odom_t.orientation_euler = [odom_t.orientation_euler[0], 0, 0]  # Needed to remove non yaw values
 
         diff_transformation: Transformation = scipy.linalg.inv(self.odom_t_previous) @ odom_t
         dt = odom_t.timestamp - self.odom_t_previous.timestamp
@@ -65,17 +68,20 @@ class FieldLinesUKFROS(FieldLinesUKF):
         if dt_secs == 0:
             return
 
-        if np.all(diff_transformation.pos_theta < 0.000001):
-            self.ukf.Q = self.Q_do_nothing
-            self.ukf.R = self.R_localizing
-        elif self.robot_state.status in [RobotState.STATUS_LOCALIZING, RobotState.STATUS_READY]:
+        if self.robot_state.status == RobotState.STATUS_DETERMINING_SIDE:
+            return
+        elif self.robot_state.status == RobotState.STATUS_LOCALIZING:
             self.ukf.Q = self.Q_localizing
             self.ukf.R = self.R_localizing
+        elif self.robot_state.status == RobotState.STATUS_READY:
+            self.ukf.Q = self.Q_ready
+            self.ukf.R = self.R_ready
         else:
             self.ukf.Q = self.Q_walking
             self.ukf.R = self.R_walking
 
         self.predict(u=diff_transformation.pos_theta / dt_secs, dt=dt_secs)
+
         self.odom_t_previous = odom_t
 
         self.broadcast_tf_position(pose_msg.header.stamp)
@@ -96,12 +102,19 @@ class FieldLinesUKFROS(FieldLinesUKF):
         point_cloud = pcl2.read_points_list(point_cloud_msg)
         point_cloud_array = np.array(point_cloud)
         current_transform = Transformation(pos_theta=self.ukf.x)
-        offset_transform = self.map.matchPointsWithMap(current_transform, point_cloud_array)
 
-        if offset_transform is not None:
+        iterations = 3
+        if self.robot_state.status == RobotState.STATUS_LOCALIZING:
+            iterations = 10
+        tt = self.map.matchPointsWithMapIterative(
+            current_transform, point_cloud_array, iterations, localizing=self.robot_state.status == RobotState.STATUS_LOCALIZING
+        )
+
+        if tt is not None:
+            (offset_transform, transform_confidence) = tt
             vo_transform = current_transform @ offset_transform
             vo_pos_theta = vo_transform.pos_theta
-            self.update(vo_pos_theta)
+            self.update(vo_pos_theta, transform_confidence)
             self.broadcast_tf_position(timestamp=stamp)
             self.broadcast_vo_transform_debug(vo_transform, point_cloud_msg)
             self.publish_amcl_pose(timestamp=stamp)
@@ -121,9 +134,6 @@ class FieldLinesUKFROS(FieldLinesUKF):
         self.field_point_cloud_transformed_publisher.publish(point_cloud)
 
     def broadcast_tf_position(self, timestamp):
-        if not self.initial_pose_initiated:
-            return
-
         if self.odom_t_previous is None:
             rospy.logerr_throttle(1, "Odom not published")
             return
@@ -134,19 +144,17 @@ class FieldLinesUKFROS(FieldLinesUKF):
         else:
             self.timestamp_last = timestamp
 
-        odom_to_base_footprint = Transformation(pos_theta=self.ukf.x) @ scipy.linalg.inv(self.odom_t_previous)
+        world_to_odom = Transformation(pos_theta=self.ukf.x) @ scipy.linalg.inv(self.odom_t_previous)
 
         self.br.sendTransform(
-            odom_to_base_footprint.position,
-            odom_to_base_footprint.quaternion,
+            world_to_odom.position,
+            world_to_odom.quaternion,
             timestamp,
             f"{os.environ.get('ROS_NAMESPACE', 'robot1')}/odom",
             "world",
         )
 
     def publish_amcl_pose(self, timestamp):
-        if not self.initial_pose_initiated:
-            return
         amcl_pose = Transformation(pos_theta=self.ukf.x, pose_theta_covariance_array=self.ukf.P).pose_with_covariance_stamped
         amcl_pose.header.stamp = timestamp
         self.amcl_pose_publisher.publish(amcl_pose)
@@ -155,5 +163,6 @@ class FieldLinesUKFROS(FieldLinesUKF):
         self.initial_pose = Transformation(pose_with_covariance_stamped=pose_stamped)
         self.ukf.x = self.initial_pose.pos_theta
         self.ukf.P = self.initial_pose.pose_theta_covariance_array
+        self.odom_t_previous = None
+        rospy.loginfo(f"Reinitialized with x = {self.ukf.x} and P = {np.diag(self.ukf.P)}")
         self.broadcast_tf_position(pose_stamped.header.stamp)
-        self.initial_pose_initiated = True

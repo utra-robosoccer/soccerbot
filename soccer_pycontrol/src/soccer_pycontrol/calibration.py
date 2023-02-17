@@ -3,17 +3,17 @@ import os
 
 if "ROS_NAMESPACE" not in os.environ:
     os.environ["ROS_NAMESPACE"] = "/robot1"
+from unittest.mock import MagicMock
+
+import matplotlib.pyplot as plt
 import numpy as np
+import rospy
 import ruamel.yaml
 from scipy.optimize import curve_fit
 
 from soccer_common.transformation import Transformation
 from soccer_common.utils import trimToPi, wrapToPi
 from soccer_common.utils_rosparam import set_rosparam_from_yaml_file
-
-from unittest.mock import MagicMock
-import rospy
-import matplotlib.pyplot as plt
 
 robot_model = "bez2"
 run_in_ros = False
@@ -149,7 +149,7 @@ def calibrate_theta():
     return popt[0]
 
 
-def adjust_navigation_transform(start_transform: Transformation, end_transform: Transformation) -> Transformation:
+def adjust_navigation_transform(start_transform: Transformation, end_transform: Transformation, invert=False) -> Transformation:
     calibration_trans_a = rospy.get_param("calibration_trans_a", 0)
     calibration_trans_b = rospy.get_param("calibration_trans_b", 1)
     calibration_trans_a2 = rospy.get_param("calibration_trans_a2", 1)
@@ -174,16 +174,30 @@ def adjust_navigation_transform(start_transform: Transformation, end_transform: 
     step_2_distance = np.linalg.norm(diff_position)
     step_3_angular_distance = wrapToPi(final_angle - intermediate_angle)
 
-    step_1_angular_distance_new = (1 / calibration_rot_a) * step_1_angular_distance
-    step_3_angular_distance_new = (1 / calibration_rot_a) * step_3_angular_distance
+    if invert:
+        # Xactual = a * Xdesired^2 + b * Xdesired (between 0 and 0.25m)
+        # Xactual = a2 * Xdesired (after 0.25m) approximated using last few elements of the plot
 
-    max_x = calibration_trans_a * 0.25**2 + calibration_trans_b * 0.25
-    c = min(max_x, step_2_distance)
-    c_remainder = max(0.0, step_2_distance - max_x)
+        step_1_angular_distance_new = calibration_rot_a * step_1_angular_distance
+        step_3_angular_distance_new = calibration_rot_a * step_3_angular_distance
 
-    quadratic = lambda a, b, c: (-b + np.sqrt(b**2 + 4 * a * c)) / (2 * a) if a != 0 else (1 / b) * c
-    step_2_distance_new = quadratic(calibration_trans_a, calibration_trans_b, c)
-    step_2_distance_new = step_2_distance_new + (1 / calibration_trans_a2) * c_remainder
+        c = min(step_2_distance, 0.25)
+        c_remainder = max(0.0, step_2_distance - 0.25)
+
+        step_2_distance_new = calibration_trans_a * c**2 + calibration_trans_b * c
+        step_2_distance_new += calibration_trans_a2 * c_remainder
+
+    else:
+        step_1_angular_distance_new = (1 / calibration_rot_a) * step_1_angular_distance
+        step_3_angular_distance_new = (1 / calibration_rot_a) * step_3_angular_distance
+
+        max_x = calibration_trans_a * 0.25**2 + calibration_trans_b * 0.25
+        c = min(max_x, step_2_distance)
+        c_remainder = max(0.0, step_2_distance - max_x)
+
+        quadratic = lambda a, b, c: (-b + np.sqrt(b**2 + 4 * a * c)) / (2 * a) if a != 0 else (1 / b) * c
+        step_2_distance_new = quadratic(calibration_trans_a, calibration_trans_b, c)
+        step_2_distance_new = step_2_distance_new + (1 / calibration_trans_a2) * c_remainder
 
     step_1_angular_distance_new = trimToPi(step_1_angular_distance_new)
     step_3_angular_distance_new = trimToPi(step_3_angular_distance_new)

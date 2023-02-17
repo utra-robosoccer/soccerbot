@@ -47,8 +47,20 @@
         <param name="pose0" value="amcl_pose" />
     </node>
 
-    <node name="torso_height_publisher" pkg="bez1_description" type="base_footprint_to_torso.py" />
-
     <!-- UKF localization -->
-    <node pkg="soccer_localization" type="main.py" name="soccer_ukf" respawn="$(optenv COMPETITION false)" output="log" />
+    <node pkg="soccer_localization" type="main.py" name="soccer_ukf" respawn="$(optenv COMPETITION false)" output="screen" />
+
+    <!-- AMCL Localization -->
+    <!--    <node pkg="amcl" type="amcl" name="amcl" output="log">-->
+    <!--        <rosparam file="$(find soccerbot)/config/amcl.yaml" command="load" />-->
+    <!--        <param name="initial_pose_x" value="0" />-->
+    <!--        <param name="initial_pose_y" value="0" />-->
+    <!--        <param name="initial_pose_a" value="0" />-->
+    <!--        <param name="odom_frame_id" value="$(arg robot_name)/odom" />-->
+    <!--        <param name="base_frame_id" value="$(arg robot_name)/base_footprint" />-->
+    <!--    </node>-->
+    <!--    <node pkg="pointcloud_to_laserscan" type="pointcloud_to_laserscan_node" name="pointcloud_to_laserscan">-->
+    <!--        <rosparam file="$(find soccerbot)/config/pointcloud_to_laserscan.yaml" command="load" />-->
+    <!--        <remap from="cloud_in" to="field_point_cloud" />-->
+    <!--    </node>-->
 </launch>
