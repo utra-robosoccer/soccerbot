@@ -73,7 +73,7 @@ class DetectorGoalPost(Detector):
                 (0, 0, 0, 1),
                 img.header.stamp,
                 self.robot_name + "/goal_post",
-                self.robot_name + "/base_camera",
+                self.robot_name + "/base_footprint",
             )
         if self.image_publisher.get_num_connections() > 0:
             img_out = CvBridge().cv2_to_imgmsg(image_out)

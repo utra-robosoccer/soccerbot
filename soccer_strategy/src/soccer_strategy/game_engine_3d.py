@@ -31,13 +31,13 @@ class GameEngine3D:
         """
         Initializes the game engine information
         """
-        robot_id = rospy.get_param("~robot_id", 1)
+        self.robot_id = rospy.get_param("robot_id", 1)
         team_id = int(os.getenv("ROBOCUP_TEAM_ID", "16"))
-        rospy.loginfo(f"Initializing strategy with robot id: {robot_id},  team id:  {team_id}")
+        rospy.loginfo(f"Initializing strategy with robot id: {self.robot_id},  team id:  {team_id}")
 
         robots: [Union[RobotObserved, RobotControlled3D]] = []
         for i in range(1, 5):
-            if i == robot_id:
+            if i == self.robot_id:
                 robots.append(RobotControlled3D(team=Robot.Team.FRIENDLY, role=Robot.Role.UNASSIGNED, status=Robot.Status.DISCONNECTED))
             else:
                 robots.append(
@@ -65,7 +65,7 @@ class GameEngine3D:
         Returns this robot, of type RobotControlled3D
         :return: this robot, of type RobotControlled3D
         """
-        return self.team1.robots[int(os.getenv("ROBOCUP_ROBOT_ID", 1)) - 1]
+        return self.team1.robots[self.robot_id - 1]
 
     def gamestate_callback(self, gameState: GameState):
         """
@@ -166,7 +166,7 @@ class GameEngine3D:
             # Log information about the strategy and run the strategy in the step_strategy function
             penalize_str = f"(P{self.gameState.penalty} - {self.gameState.secondsTillUnpenalized})" if self.gameState.penalty != 0 else ""
             print(
-                f"\033[1mRobot {os.getenv('ROBOCUP_ROBOT_ID', 1)} Running {str(type(self.team1.strategy))} ({self.team1.strategy.iteration}) | Game State: {GameEngine3D.GAMESTATE_LOOKUP[self.gameState.gameState]}, Secondary State: {GameEngine3D.SECONDARY_STATE_LOOKUP[self.gameState.secondaryState]}, Secondary State Mode: {GameEngine3D.SECONDARY_STATE_MODE_LOOKUP[self.gameState.secondaryStateMode]} {penalize_str} [{rospy.Time.now().secs}.{rospy.Time.now().nsecs}]\033[0m"
+                f"\033[1mRobot {self.robot_id} Running {str(type(self.team1.strategy))} ({self.team1.strategy.iteration}) | Game State: {GameEngine3D.GAMESTATE_LOOKUP[self.gameState.gameState]}, Secondary State: {GameEngine3D.SECONDARY_STATE_LOOKUP[self.gameState.secondaryState]}, Secondary State Mode: {GameEngine3D.SECONDARY_STATE_MODE_LOOKUP[self.gameState.secondaryStateMode]} {penalize_str} [{rospy.Time.now().secs}.{rospy.Time.now().nsecs}]\033[0m"
             )
             self.team1.log()
             self.team1.strategy.step_strategy(self.team1, self.team2, self.gameState)

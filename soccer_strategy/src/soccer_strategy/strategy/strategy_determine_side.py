@@ -23,7 +23,6 @@ class StrategyDetermineSide(Strategy):
         super().__init__()
         self.average_goal_post_y = 0
         self.update_frequency = 1
-        self.flip_required = False
         self.tf_listener = tf.TransformListener()
 
     @get_back_up
@@ -44,56 +43,39 @@ class StrategyDetermineSide(Strategy):
             if self.iteration == 1:
                 current_robot.status = Robot.Status.DETERMINING_SIDE
 
-            goal_post_pose = None
-            camera_yaw = None
+            footprint_to_goal_post = None
 
-            # Transform of camera to goal post
+            # Transform of base footprint to goal post
             try:
-                goal_post_pose, goal_pose_orientation = self.tf_listener.lookupTransform(
-                    "robot" + str(current_robot.robot_id) + "/base_camera",
-                    "robot" + str(current_robot.robot_id) + "/goal_post",
-                    rospy.Time(0),
-                )
-
-                rospy.loginfo("Goal Post detected " + str(goal_post_pose))
-
-            except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
-                rospy.logwarn_throttle(30, "Unable to locate goal post in TF tree")
-
-            # Transform of body to camera
-            try:
-                camera_position, camera_orientation = self.tf_listener.lookupTransform(
+                goal_post_position, goal_post_orientation = self.tf_listener.lookupTransform(
                     os.environ["ROS_NAMESPACE"].replace("/", "") + "/base_footprint",
-                    os.environ["ROS_NAMESPACE"].replace("/", "") + "/camera",
+                    os.environ["ROS_NAMESPACE"].replace("/", "") + "/goal_post",
                     rospy.Time(0),
                 )
 
-                camera_yaw = Transformation.get_euler_from_quaternion(camera_orientation)[0]
-                rospy.loginfo("Camera Yaw " + str(camera_yaw))
+                footprint_to_goal_post = Transformation(position=goal_post_position, quaternion=goal_post_orientation)
+                rospy.loginfo(f"Footprint to goal post: {footprint_to_goal_post.position}")
 
             except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
                 rospy.logwarn_throttle(30, "Unable to get robot to camera pose")
 
-            detected = goal_post_pose is not None and camera_yaw is not None
             determine_side_timeout = 0 if rospy.get_param("skip_determine_side", False) else 10
             if (rospy.Time.now() - self.time_strategy_started) > rospy.Duration(determine_side_timeout):
                 rospy.logwarn("Timeout error, cannot determine side, determining side as from default")
-                detected = True
-
-            if detected:
-                # Wait until the robot has moved its head a bit
-                self.determine_side(current_robot, goal_post_pose, camera_yaw)
+                self.determine_side_initial(current_robot, game_state)
                 self.determine_role(current_robot, friendly_team)
+                current_robot.status = Robot.Status.READY
+                self.complete = True
+            elif footprint_to_goal_post is not None:
+                side_determined = self.determine_side(current_robot, footprint_to_goal_post, game_state)
+                if not side_determined:
+                    return
 
+                self.determine_role(current_robot, friendly_team)
                 current_robot.status = Robot.Status.READY
                 self.complete = True
 
-    def determine_side(self, current_robot, goal_post_pose, camera_yaw):
-        """
-        Determine robot position (assuming the robot is always on the left side
-
-        :param current_robot: The current robot
-        """
+    def determine_side_initial(self, current_robot, game_state: GameState):
         team_id = int(os.getenv("ROBOCUP_TEAM_ID", 16))
         if team_id == 16:
             file = "team_1.json"
@@ -105,96 +87,82 @@ class StrategyDetermineSide(Strategy):
         with open(config_folder_path) as json_file:
             team_info = json.load(json_file)
 
-        # TODO determine start pose based on goal post localization instead
         translation = team_info["players"][str(current_robot.robot_id)]["reentryStartingPose"]["translation"]
         rotation = team_info["players"][str(current_robot.robot_id)]["reentryStartingPose"]["rotation"]
 
         position = np.array([translation[0], translation[1], rotation[3]])
-
-        head_post_x, head_post_y, head_post_z = goal_post_pose
-
-        # Get robot position from actual and relative post positions
-        from soccer_common.transformation import Transformation
-
-        # Probably need to update this angle based on the side we are on pi/2.0
-        robot_yaw = np.pi / 2.0 + camera_yaw
-        tf_robot_to_field = Transformation(pos_theta=np.array([0.0, 0.0, robot_yaw]))
-        rospy.loginfo(f"Robot yaw: {robot_yaw}")
-        # rospy.loginfo(f"Matrix:\n{tf_robot_to_field.rotation_matrix}")
-
-        goal_head_frame = np.array([[head_post_x], [head_post_y], [0.0]])
-        rospy.loginfo(f"Goal head frame\n{goal_head_frame}")
-
-        goal_robot_frame = np.dot(tf_robot_to_field.rotation_matrix, goal_head_frame)
-        robot_post_x, robot_post_y, robot_post_z = goal_robot_frame
-        rospy.loginfo(f"Goal robot frame\n{goal_robot_frame}")
-
-        HALF_FIELD_LENGTH = 4.5  # m
-        HALF_FIELD_WIDTH = 3  # m
-
-        world_post_x = None
-        world_post_y = None
-        flip_required = False
-        # ! THIS APPROACH ASSUMES ROBOT IS ON THE LEFT SIDE OF THE FIELD (NEGATIVE X)
-        if robot_post_x < 0:  # If the post is to the left of the robot
-            if abs(robot_post_x) > HALF_FIELD_LENGTH:
-                # Robot on top sideline (positive y side), looking at right net (positive x side)
-                world_post_x = 4.5
-                self.flip_required = True
-                if robot_post_y > HALF_FIELD_WIDTH:
-                    # Looking at lower right post
-                    world_post_y = -1.3
-                elif robot_post_y <= HALF_FIELD_WIDTH:
-                    # Looking at upper right post
-                    world_post_y = 1.3
-
-            elif abs(robot_post_x) <= HALF_FIELD_LENGTH:
-                # Robot on bottom sideline (negative y side) looking at left net (negative x side)
-                world_post_x = -4.5
-                if robot_post_y > HALF_FIELD_WIDTH:
-                    # Looking at upper left post
-                    world_post_y = 1.3
-                elif robot_post_y <= HALF_FIELD_WIDTH:
-                    # Looking at lower left post
-                    world_post_y = -1.3
-
-        else:  # if the post is to the right of the robot
-            if robot_post_x > HALF_FIELD_LENGTH:
-                # Robot on bottom sideline (positive y side), looking at right net (positive x side)
-                world_post_x = 4.5
-                if robot_post_y > HALF_FIELD_WIDTH:
-                    # Looking at upper right post
-                    world_post_y = 1.3
-                elif robot_post_y <= HALF_FIELD_WIDTH:
-                    # Looking at lower right post
-                    world_post_y = -1.3
-
-            elif robot_post_x <= HALF_FIELD_LENGTH:
-                # Robot on top sideline (negative y side) looking at left net (negative x side)
-                world_post_x = -4.5
-                flip_required = True
-                if robot_post_y > HALF_FIELD_WIDTH:
-                    # Looking at lower left post
-                    world_post_y = -1.3
-                elif robot_post_y <= HALF_FIELD_WIDTH:
-                    # Looking at upper left post
-                    world_post_y = 1.3
-
-        goal_world_frame = np.array([[world_post_x], [world_post_y], [0.0]])
-        rospy.loginfo(f"Goal world frame\n{goal_world_frame}")
-
-        if flip_required:
-            tf_robot_to_world = Transformation(pos_theta=np.array([0.0, 0.0, np.pi]))
-            goal_robot_frame = np.dot(tf_robot_to_world.rotation_matrix, goal_robot_frame)
-            rospy.loginfo(f"Rotated goal robot frame\n{goal_robot_frame}")
-
-        position_from_post = goal_world_frame - goal_robot_frame
-
-        # ? What is self.flip_required?
         current_robot.position = position
-        rospy.loginfo(f"Estimated Robot position:\n{position_from_post}")
-        rospy.loginfo(f"Robot Position Determined, Determining Roles, Position: {current_robot.position} Flip Required: {self.flip_required}")
+        rospy.loginfo(f"Robot Position Determined, Determining Roles, Position: {current_robot.position}")
         current_robot.reset_initial_position()
+
+    def determine_side(self, current_robot, footprint_to_goal_post: Transformation, game_state: GameState) -> bool:
+
+        team_id = int(os.getenv("ROBOCUP_TEAM_ID", 16))
+        if team_id == 16:
+            file = "team_1.json"
+        else:
+            file = "team_2.json"
+        file_path = os.path.dirname(os.path.abspath(__file__))
+        config_folder_path = f"{file_path}/../../../config/{file}"
+
+        with open(config_folder_path) as json_file:
+            team_info = json.load(json_file)
+
+        # Rulebook http://humanoid.robocup.org/wp-content/uploads/RC-HL-2022-Rules-Changes-Marked-3.pdf
+        FIELD_LENGTH = 9  # m
+        GOAL_WIDTH = 2.6
+
+        # Top left, top right, bottom left, bottom right, assuming x is the long for the net
+        goal_post_locations = [
+            (-FIELD_LENGTH / 2, GOAL_WIDTH / 2),
+            (FIELD_LENGTH / 2, GOAL_WIDTH / 2),
+            (-FIELD_LENGTH / 2, -GOAL_WIDTH / 2),
+            (FIELD_LENGTH / 2, -GOAL_WIDTH / 2),
+        ]
+
+        # Where the robot would be if the goal post detected is there
+        potential_robot_locations = []
+        for l in goal_post_locations:
+            # If the robot is facing forward
+            potential_robot_locations.append([l[0] - footprint_to_goal_post.position[1], l[1] + footprint_to_goal_post.position[0]])
+
+            # If the robot is on the other side
+            potential_robot_locations.append([l[0] + footprint_to_goal_post.position[1], l[1] - footprint_to_goal_post.position[0]])
+
+        # Valid robot locations (assuming the robots are placed on the bottom line, the line on the opposite side of the field
+        # assuming robot is bottom left, becuase the bottom right line
+        valid_robot_transforms = []
+        written_robot_transforms = {}
+        for id, p in team_info["players"].items():
+            position = p["reentryStartingPose"]["translation"]
+            axang = p["reentryStartingPose"]["rotation"]
+            quaternion = Transformation.get_quaternion_from_axis_angle(axang[0:3], axang[3])
+            t = Transformation(position=position, quaternion=quaternion)
+            valid_robot_transforms.append(t)
+            written_robot_transforms[int(id)] = t
+
+        # Compare the potential robot locations and see which valid robot transformation is closest to the potential robot locations
+        closest_valid_robot_transform = None
+        closest_valid_robot_transform_distance = 100000
+        for transform in valid_robot_transforms:
+            pos = transform.position[0:2]
+            for potential_location in potential_robot_locations:
+                dist_squared = (potential_location[0] - pos[0]) ** 2 + (potential_location[1] - pos[1]) ** 2
+                if dist_squared < closest_valid_robot_transform_distance:
+                    closest_valid_robot_transform = transform
+                    closest_valid_robot_transform_distance = dist_squared
+
+        if closest_valid_robot_transform_distance > 1**2:
+            return False
+
+        # Set the location
+        current_robot.position = closest_valid_robot_transform.pos_theta
+        rospy.loginfo(
+            f"Estimated Robot position: {closest_valid_robot_transform.pos_theta} Written Robot Position: {written_robot_transforms[current_robot.robot_id].pos_theta}"
+        )
+        rospy.loginfo(f"Robot Position Determined, Determining Roles, Position: {current_robot.position}")
+        current_robot.reset_initial_position()
+        return True
 
     def determine_role(self, current_robot, friendly_team):
         """
