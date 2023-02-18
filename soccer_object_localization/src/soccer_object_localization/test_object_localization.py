@@ -1,5 +1,9 @@
 import os
 
+from soccer_object_detection.object_detect_node import Label, ObjectDetectionNode
+from soccer_object_detection.test_object_detection import IoU
+from soccer_object_localization.detector_objects import DetectorObjects
+
 os.environ["ROS_NAMESPACE"] = "/robot1"
 
 import math
@@ -19,7 +23,7 @@ from sensor_msgs.msg import CameraInfo, Image
 from soccer_common.camera import Camera
 from soccer_common.transformation import Transformation
 from soccer_common.utils import download_dataset, wrapToPi
-from soccer_msgs.msg import RobotState
+from soccer_msgs.msg import GameState, RobotState
 from soccer_object_localization.detector_fieldline import DetectorFieldline
 from soccer_object_localization.detector_goalpost import DetectorGoalPost
 
@@ -487,5 +491,65 @@ class TestObjectLocalization(TestCase):
             # Wait longer to prevent freeze for videos.
             if cv2.waitKey(waitTime) & 0xFF == ord("q"):
                 break
+
+        cv2.destroyAllWindows()
+
+    def test_robot_detection(self):
+        src_path = os.path.dirname(os.path.realpath(__file__))
+        test_path = src_path + "/../../../soccer_object_detection/images/simulation"
+        download_dataset("https://drive.google.com/uc?id=11nN58j8_PBoLNRAzOEdk7fMe1UK1diCc", folder_path=test_path)
+
+        rospy.init_node("test")
+
+        Camera.reset_position = MagicMock()
+
+        src_path = os.path.dirname(os.path.realpath(__file__))
+        model_path = src_path + "/../../../soccer_object_detection/models/half_5.pt"
+
+        n = ObjectDetectionNode(model_path=model_path)
+        n.robot_state.status = RobotState.STATUS_READY
+        n.game_state.gameState = GameState.GAMESTATE_PLAYING
+
+        Camera.reset_position = MagicMock()
+        Camera.ready = MagicMock()
+        do = DetectorObjects()
+        do.robot_state.status = RobotState.STATUS_READY
+
+        cvbridge = CvBridge()
+        for file_name in os.listdir(f"{test_path}/images"):
+            print(file_name)
+            img: Mat = cv2.imread(os.path.join(f"{test_path}/images", file_name))  # ground truth box = (68, 89) (257, 275)
+            img_original_size = img.size
+            img = cv2.resize(img, dsize=(640, 480))
+
+            img_msg: Image = cvbridge.cv2_to_imgmsg(img)
+
+            # Mock the detections
+            n.pub_detection = MagicMock()
+            n.pub_boundingbox = MagicMock()
+            n.pub_detection.get_num_connections = MagicMock(return_value=1)
+            n.pub_boundingbox.get_num_connections = MagicMock(return_value=1)
+            n.pub_detection.publish = MagicMock()
+            n.pub_boundingbox.publish = MagicMock()
+
+            ci = CameraInfo()
+            ci.height = img.shape[0]
+            ci.width = img.shape[1]
+            n.camera.camera_info = ci
+            n.camera.pose.orientation_euler = [0, np.pi / 8, 0]
+            n.callback(img_msg)
+
+            with open(os.path.join(f"{test_path}/labels", file_name.replace("PNG", "txt"))) as f:
+                lines = f.readlines()
+
+            if "DISPLAY" in os.environ:
+                mat = cvbridge.imgmsg_to_cv2(n.pub_detection.publish.call_args[0][0])
+                cv2.imshow("Image", mat)
+                cv2.waitKey()
+
+            # Check assertion
+            if n.pub_boundingbox.publish.call_args is not None:
+                bounding_boxes = n.pub_boundingbox.publish.call_args[0][0]
+                do.objectDetectorCallback(bounding_boxes)
 
         cv2.destroyAllWindows()

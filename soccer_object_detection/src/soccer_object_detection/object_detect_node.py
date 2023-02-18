@@ -141,6 +141,8 @@ class ObjectDetectionNode(object):
                     bbs_msg.bounding_boxes.append(bb_msg)
                     id += 1
 
+                    # TODO Joanne look the pixels of the image in addition to the bounding box, calculate likely foot coordate xy
+
             bbs_msg.header = msg.header
             try:
                 if self.pub_detection.get_num_connections() > 0:

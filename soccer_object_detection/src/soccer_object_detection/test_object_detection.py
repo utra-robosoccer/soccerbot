@@ -92,7 +92,7 @@ class TestObjectDetection(TestCase):
             if "DISPLAY" in os.environ:
                 mat = cvbridge.imgmsg_to_cv2(n.pub_detection.publish.call_args[0][0])
                 cv2.imshow("Image", mat)
-                cv2.waitKey(1)
+                cv2.waitKey(1000)
                 cv2.destroyAllWindows()
 
             # Check assertion
