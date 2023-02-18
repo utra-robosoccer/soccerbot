@@ -38,7 +38,7 @@ class RobotControlled3D(RobotControlled):
 
         self.tf_listener = tf.TransformListener()
 
-        self.robot_id = int(os.getenv("ROBOCUP_ROBOT_ID", 1))
+        self.robot_id = rospy.get_param("robot_id")
         self.robot_name = "robot " + str(self.robot_id)
 
         self.time_since_action_completed = rospy.Time(0)

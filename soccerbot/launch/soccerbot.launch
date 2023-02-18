@@ -1,6 +1,7 @@
 <launch>
     <arg name="simulation" default="false" />
     <arg name="robot_id" default="$(optenv ROBOCUP_ROBOT_ID 1)" />
+    <param name="robot_id" value="$(arg robot_id)" />
     <arg name="robot_name" value="robot$(arg robot_id)" />
     <arg name="robot_model" default="$(optenv ROBOT_MODEL bez1)" />
 
@@ -66,7 +67,6 @@
     </include>
 
     <include file="$(find soccerbot)/launch/modules/strategy.launch">
-        <arg name="robot_id" value="$(arg robot_id)" />
         <arg name="robot_model" value="$(arg robot_model)" />
         <arg name="simulation" value="$(arg simulation)" />
     </include>

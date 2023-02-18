@@ -2,6 +2,7 @@
 
 import os
 import socket
+import time
 
 import rospy
 from construct import ConstError, Container
@@ -21,7 +22,7 @@ class GameStateReceiver:
     """
 
     team_id = int(os.getenv("ROBOCUP_TEAM_ID", 16))
-    robot_id = int(os.getenv("ROBOCUP_ROBOT_ID", 1))
+    robot_id = rospy.get_param("robot_id", 1)
 
     DEFAULT_LISTENING_HOST = "0.0.0.0"
     GAME_CONTROLLER_LISTEN_PORT = 3838
@@ -146,6 +147,6 @@ class GameStateReceiver:
 
 
 if __name__ == "__main__":
-    rospy.init_node("game_controller")
+    rospy.init_node("game_controller_receiver")
     rec = GameStateReceiver()
     rec.receive_forever()
