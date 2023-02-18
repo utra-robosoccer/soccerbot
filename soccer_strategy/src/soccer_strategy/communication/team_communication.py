@@ -18,7 +18,7 @@ if __name__ == "__main__":
     rospy.init_node("team_communication")
     rospy.loginfo("Initializing team_communication...", logger_name="team_comm")
 
-    player_id = int(os.getenv("ROBOCUP_ROBOT_ID", 1))
+    player_id = rospy.get_param("robot_id", 1)
     team_id = int(os.getenv("ROBOCUP_TEAM_ID", 16))
     mirror_server_ip = os.getenv("ROBOCUP_MIRROR_SERVER_IP", "127.0.0.1")
 

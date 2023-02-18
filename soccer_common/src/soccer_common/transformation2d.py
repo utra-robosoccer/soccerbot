@@ -1,3 +1,4 @@
+"""EXPERIMENTAL, USE AT YOUR OWN RISK!"""
 import math
 
 import numpy as np

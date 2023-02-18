@@ -280,7 +280,7 @@ class Transformation(np.ndarray):
         """
         Get the quaternion representation of euler angle rotations
 
-        :param euler_array: array of 3 angles for rotation
+        :param euler_array: array of 3 angles for rotation (yaw, pitch, roll)
         :param sequence: order and type of rotation, see intrinsic vs extrinsic for capital and small case letter
         :return: quaternion in the form of [x y z w]
         """
