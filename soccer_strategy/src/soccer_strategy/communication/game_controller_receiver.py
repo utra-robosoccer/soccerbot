@@ -22,7 +22,6 @@ class GameStateReceiver:
     """
 
     team_id = int(os.getenv("ROBOCUP_TEAM_ID", 16))
-    time.sleep(20)
     robot_id = rospy.get_param("robot_id", 1)
 
     DEFAULT_LISTENING_HOST = "0.0.0.0"
