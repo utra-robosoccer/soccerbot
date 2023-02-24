@@ -34,7 +34,7 @@ class DetectorGoalPost(Detector):
     def image_callback(self, img: Image, debug=False):
         t_start = time.time()
 
-        if self.robot_state.status not in [RobotState.STATUS_DETERMINING_SIDE, RobotState.STATUS_LOCALIZING]:
+        if self.robot_state.status not in [RobotState.STATUS_DETERMINING_SIDE, RobotState.STATUS_LOCALIZING, RobotState.STATUS_PENALIZED]:
             return
 
         if not self.camera.ready():
@@ -121,6 +121,8 @@ class DetectorGoalPost(Detector):
         lines = cv2.HoughLinesP(
             image_edges, rho=1, theta=hough_theta, threshold=hough_threshold, minLineLength=hough_min_line_length, maxLineGap=hough_max_line_gap
         )
+        if lines is None:
+            return
         if debug:
             image_hough = image.copy()
             for line in lines:
