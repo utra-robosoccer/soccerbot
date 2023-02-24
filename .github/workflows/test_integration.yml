@@ -65,7 +65,7 @@ jobs:
           cache-from: type=registry,ref=utrarobosoccer/webots
           cache-to: type=inline
       - name: Setup tmate session
-        timeout-minutes: 15
+        timeout-minutes: 60
         uses: mxschmitt/action-tmate@v3
       - name: Walking Integration Test
         timeout-minutes: 10
