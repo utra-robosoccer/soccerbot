@@ -42,12 +42,14 @@ jobs:
       - name: Build robot
         run: |
           docker compose build friendly
+          docker builder prune -a
       - name: Setup tmate session
         timeout-minutes: 60
         uses: mxschmitt/action-tmate@v3
       - name: Build webots
         run: |
           docker compose build simulator
+          docker builder prune -a
       - name: Walking Integration Test
         timeout-minutes: 10
         run: |
