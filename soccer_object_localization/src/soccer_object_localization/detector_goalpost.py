@@ -43,6 +43,8 @@ class DetectorGoalPost(Detector):
         self.camera.reset_position(timestamp=img.header.stamp)
 
         image = CvBridge().imgmsg_to_cv2(img, desired_encoding="rgb8")
+        if image.size == 0:
+            return
         vertical_lines, image_out = self.get_vlines_from_img(image, debug=debug)
 
         # Get vertical line in 3D position to the camera assuming that the lower point of the line is on the grass
