@@ -43,7 +43,7 @@ jobs:
       - name: Build robot
         run: |
           docker system prune -af
-          docker buildx build --cache-from utrarobosoccer/soccerbot --tag utrasoccerbot/soccerbot --load .
+          docker buildx build --cache-from utrarobosoccer/soccerbot --tag utrarobosoccer/soccerbot --load .
           docker builder prune -a
           docker image ls
       - name: Build webots
@@ -54,7 +54,7 @@ jobs:
       - name: Walking Integration Test
         timeout-minutes: 10
         run: |
-          docker compose -f docker-compose.test.yaml up --exit-code-from friendly
+          docker compose -f docker-compose.test.yaml up --no-build --exit-code-from friendly
       - name: Get integration test logs
         if: always()
         run: |
