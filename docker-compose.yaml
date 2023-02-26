@@ -21,7 +21,6 @@ x-soccerbot: &soccerbot #  <<: *gpu
     target: builder
     args:
       - BUILDKIT_INLINE_CACHE=1
-      - USER=${USER}
     cache_from:
       - utrarobosoccer/soccerbot
       - utrarobosoccer/soccerbot_dependencies
@@ -36,7 +35,7 @@ x-soccerbot: &soccerbot #  <<: *gpu
     bash ./src/soccerbot/soccerbot/scripts/start_competition.sh robot$$ROBOCUP_ROBOT_ID"
   volumes:
     - .:/home/$USER/catkin_ws/src/soccerbot
-    - .:/home/robosoccer/catkin_ws/src/soccerbot
+    - .:/home/soccer/catkin_ws/src/soccerbot
     - /tmp/.X11-unix:/tmp/.X11-unix:rw
     - /dev/dri:/dev/dri:rw
     - /dev/snd:/dev/snd:rw

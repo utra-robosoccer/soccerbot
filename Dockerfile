@@ -84,38 +84,37 @@ RUN if [[ "$(dpkg --print-architecture)" == "arm64" ]] ; then \
     rm -rf torchvision-0.12.0a0+9b5a3fe-cp38-cp38-linux_aarch64.whl; fi
 
 # Create User
-ARG USER="robosoccer"
-RUN groupadd -g 1000 $USER && \
-    useradd -u 1000 -g 1000 -mrs /bin/bash -b /home -p $(openssl passwd -1 $USER) $USER && \
-    usermod -aG sudo $USER && \
-    echo "$USER ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \
-    usermod --append --groups 29,20,104,46,5,44 $USER
+RUN groupadd -g 1000 robosoccer && \
+    useradd -u 1000 -g 1000 -mrs /bin/bash -b /home -p $(openssl passwd -1 robosoccer) robosoccer && \
+    usermod -aG sudo robosoccer && \
+    echo "robosoccer ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \
+    usermod --append --groups 29,20,104,46,5,44 robosoccer
 
 # Install apt dependencies
 COPY --from=dependencies /tmp/catkin_install_list /tmp/catkin_install_list
 RUN (apt-get update || echo "Apt Error") && apt-fast install -y --no-install-recommends $(cat /tmp/catkin_install_list)
 
 # Install python dependencies
-USER $USER
+USER robosoccer
 COPY requirements.txt /tmp/requirements.txt
-ENV PATH=/home/$USER/.local/bin:$PATH
+ENV PATH=/home/robosoccer/.local/bin:$PATH
 RUN pip3 install -r /tmp/requirements.txt -f https://download.pytorch.org/whl/torch_stable.html
 
-RUN mkdir -p /home/$USER/catkin_ws/src
-WORKDIR /home/$USER/catkin_ws
+RUN mkdir -p /home/robosoccer/catkin_ws/src
+WORKDIR /home/robosoccer/catkin_ws
 
 # Predownload neural networks
-RUN mkdir -p /home/$USER/.cache/torch/hub/ &&  \
-    cd /home/$USER/.cache/torch/hub/ && \
+RUN mkdir -p /home/robosoccer/.cache/torch/hub/ &&  \
+    cd /home/robosoccer/.cache/torch/hub/ && \
     wget https://github.com/ultralytics/yolov5/archive/master.zip && \
-    unzip /home/$USER/.cache/torch/hub/master.zip && \
+    unzip /home/robosoccer/.cache/torch/hub/master.zip && \
     mv yolov5-master ultralytics_yolov5_master && \
     rm -rf master.zip
 
 # Build Python ROS Packages
-COPY --from=dependencies --chown=$USER /root/src src/soccerbot
+COPY --from=dependencies --chown=robosoccer /root/src src/soccerbot
 RUN source /opt/ros/noetic/setup.bash && catkin config --cmake-args -DCMAKE_BUILD_TYPE=Debug
 RUN source /opt/ros/noetic/setup.bash && catkin build --no-status soccerbot
-RUN echo "source /home/$USER/catkin_ws/devel/setup.bash" >> ~/.bashrc
+RUN echo "source /home/robosoccer/catkin_ws/devel/setup.bash" >> ~/.bashrc
 
 ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/aarch64-linux-gnu/tegra:/usr/local/cuda/targets/aarch64-linux/lib/
