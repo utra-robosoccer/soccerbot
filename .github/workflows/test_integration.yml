@@ -50,7 +50,6 @@ jobs:
           file: Dockerfile
           tags: utrarobosoccer/soccerbot
           cache-from: type=registry,ref=utrarobosoccer/soccerbot
-          cache-to: type=inline
       - name: Setup tmate session
         timeout-minutes: 60
         uses: mxschmitt/action-tmate@v3
@@ -63,7 +62,6 @@ jobs:
           file: external/Dockerfile
           tags: utrarobosoccer/webots
           cache-from: type=registry,ref=utrarobosoccer/webots
-          cache-to: type=inline
       - name: Walking Integration Test
         timeout-minutes: 10
         run: |
