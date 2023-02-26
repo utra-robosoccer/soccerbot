@@ -47,6 +47,9 @@ jobs:
       - name: Build robot
         run: |
           docker compose build friendly
+      - name: Setup tmate session
+        timeout-minutes: 60
+        uses: mxschmitt/action-tmate@v3
       - name: Walking Integration Test
         timeout-minutes: 10
         run: |
