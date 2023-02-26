@@ -44,6 +44,9 @@ jobs:
       - name: Pull containers
         run: |
           docker compose pull
+      - name: Setup tmate session
+        timeout-minutes: 60
+        uses: mxschmitt/action-tmate@v3
       - name: Build containers
         run: |
           docker compose build
