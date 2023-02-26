@@ -52,6 +52,7 @@ class FieldLinesUKFROS(FieldLinesUKF):
             RobotState.STATUS_READY,
             RobotState.STATUS_DETERMINING_SIDE,
             RobotState.STATUS_WALKING,
+            RobotState.STATUS_PENALIZED,
         ]:
             return
 
@@ -95,6 +96,7 @@ class FieldLinesUKFROS(FieldLinesUKF):
             RobotState.STATUS_READY,
             RobotState.STATUS_DETERMINING_SIDE,
             RobotState.STATUS_WALKING,
+            RobotState.STATUS_PENALIZED,
         ]:
             return None, None, None
 

@@ -39,9 +39,11 @@ class StrategyDetermineSide(Strategy):
         super().step_strategy(friendly_team, opponent_team, game_state)
 
         current_robot = self.get_current_robot(friendly_team)
+
+        if self.iteration == 1:
+            current_robot.localized = False
+
         if not current_robot.localized:
-            if self.iteration == 1 and current_robot.status not in [Robot.Status.PENALIZED]:
-                current_robot.status = Robot.Status.DETERMINING_SIDE
 
             footprint_to_goal_post = None
             # Transform of base footprint to goal post
@@ -60,9 +62,7 @@ class StrategyDetermineSide(Strategy):
                 rospy.logwarn_throttle(30, "Unable to get robot to camera pose")
 
             determine_side_timeout = 0 if rospy.get_param("skip_determine_side", False) else 10
-            if (rospy.Time.now() - self.time_strategy_started) > rospy.Duration(determine_side_timeout) or current_robot.status not in [
-                Robot.Status.PENALIZED
-            ]:
+            if (rospy.Time.now() - self.time_strategy_started) > rospy.Duration(determine_side_timeout):
                 rospy.logwarn("Timeout error, cannot determine side, determining side as from default")
                 self.determine_side_initial(current_robot, game_state)
                 self.determine_role(current_robot, friendly_team)
