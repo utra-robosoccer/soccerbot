@@ -50,9 +50,11 @@ class FieldLinesUKFROS(FieldLinesUKF):
             self.robot_state = robot_state
 
             if self.robot_state.status in [RobotState.STATUS_PENALIZED, RobotState.STATUS_DISCONNECTED]:
+                self.initial_pose = Transformation(pos_theta=[0, 0, 0])
                 self.ukf.x = np.array([0, 0, 0])
                 self.ukf.P = np.diag([0.0004, 0.0004, 0.002])
                 self.odom_t_previous = None
+                self.broadcast_tf_position(robot_state.header.stamp)
 
     def odom_callback(self, pose_msg: PoseWithCovarianceStamped):
         with self.ukf_lock:

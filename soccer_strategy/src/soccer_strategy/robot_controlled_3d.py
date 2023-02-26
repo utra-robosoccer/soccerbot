@@ -163,7 +163,7 @@ class RobotControlled3D(RobotControlled):
             rospy.logwarn_throttle(1, "Relocalizing, current cov trace: " + str(covariance_trace))
             if covariance_trace < self.relocalized_threshold:
                 rospy.loginfo("Relocalized")
-                if self.role != Robot.Role.UNASSIGNED:
+                if self.role != Robot.Role.UNASSIGNED and self.localized:
                     self.status = Robot.Status.READY
                 else:
                     self.status = Robot.Status.DETERMINING_SIDE
@@ -186,7 +186,7 @@ class RobotControlled3D(RobotControlled):
                 rospy.logwarn("Robot Delocalized, Sending Robot back to localizing, current cov trace: " + str(covariance_trace))
                 self.status = Robot.Status.LOCALIZING
             else:
-                if self.role == Robot.Role.UNASSIGNED:
+                if self.role == Robot.Role.UNASSIGNED or not self.localized:
                     self.status = Robot.Status.DETERMINING_SIDE
                 else:
                     self.status = Robot.Status.READY

@@ -162,6 +162,7 @@ class NavigatorRos(Navigator):
                 RobotState.STATUS_FALLEN_SIDE,
                 RobotState.STATUS_GETTING_BACK_UP,
                 RobotState.STATUS_KICKING,
+                RobotState.STATUS_PENALIZED,
             ]:
                 self.soccerbot.robot_path = None
                 self.goal = self.new_goal
