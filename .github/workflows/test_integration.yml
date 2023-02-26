@@ -27,6 +27,7 @@ jobs:
           sudo rm -rf /usr/local/lib/android
           sudo rm -rf /usr/share/dotnet
           sudo rm -rf /opt/ghc
+          sudo apt remove -y azure-cli google-cloud-sdk microsoft-edge-stable dotnet-sdk-* temurin-* google-chrome-stable firefox hhvm llvm-* powershell mysql-* mongodb-mongosh
           df -h
       - uses: actions/checkout@v3
         with:
@@ -37,38 +38,27 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
-      - name: Build Image Soccerbot
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          load: true
-          push: false
-          file: Dockerfile
-          tags: utrarobosoccer/soccerbot
-          cache-from: type=registry,ref=utrarobosoccer/soccerbot
-          cache-to: type=inline
-      - name: Build Image Webots
-        uses: docker/build-push-action@v4
-        with:
-          context: external
-          load: true
-          push: false
-          file: external/Dockerfile
-          tags: utrarobosoccer/webots
-          cache-from: type=registry,ref=utrarobosoccer/webots
-          cache-to: type=inline
+      - name: Build robot
+        run: |
+          docker system prune -af
+          docker buildx build --cache-from utrarobosoccer/soccerbot --tag utrarobosoccer/soccerbot --load .
+          docker builder prune -a
+          docker image ls
+      - name: Build webots
+        run: |
+          docker compose build simulator
+          docker builder prune -a
+          docker image ls
       - name: Walking Integration Test
         timeout-minutes: 10
         run: |
-          docker-compose -f docker-compose.test.yaml up --exit-code-from friendly
+          docker compose -f docker-compose.test.yaml up --no-build --exit-code-from friendly
       - name: Get integration test logs
         if: always()
         run: |
-          docker-compose logs
+          docker compose logs
           docker cp soccerbot_simulator_1:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/textures/ soccerbot/bags || echo "Unable to find logs"
           docker cp soccerbot_simulator_1:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/bouncing_log.txt soccerbot/bags || echo "Unable to find logs"
           docker cp soccerbot_simulator_1:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/log.txt soccerbot/bags || echo "Unable to find logs"
@@ -84,11 +74,11 @@ jobs:
       - name: Kick Integration Test
         timeout-minutes: 10
         run: |
-          docker-compose -f docker-compose.test.kick.yaml up --exit-code-from friendly
+          docker compose -f docker-compose.test.kick.yaml up --exit-code-from friendly
       - name: Get integration test logs
         if: always()
         run: |
-          docker-compose logs
+          docker compose logs
           docker cp soccerbot_simulator_1:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/textures/ soccerbot/bags || echo "Unable to find logs"
           docker cp soccerbot_simulator_1:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/bouncing_log.txt soccerbot/bags || echo "Unable to find logs"
           docker cp soccerbot_simulator_1:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/log.txt soccerbot/bags || echo "Unable to find logs"
@@ -107,11 +97,11 @@ jobs:
           ROBOT_X: 3.5
           TEST_NAME: test_walk_and_kick_right
         run: |
-          docker-compose -f docker-compose.test.kick.yaml up --exit-code-from friendly
+          docker compose -f docker-compose.test.kick.yaml up --exit-code-from friendly
       - name: Get integration test logs
         if: always()
         run: |
-          docker-compose logs
+          docker compose logs
           docker cp soccerbot_simulator_1:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/textures/ soccerbot/bags || echo "Unable to find logs"
           docker cp soccerbot_simulator_1:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/bouncing_log.txt soccerbot/bags || echo "Unable to find logs"
           docker cp soccerbot_simulator_1:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/log.txt soccerbot/bags || echo "Unable to find logs"
@@ -124,7 +114,7 @@ jobs:
         with:
           name: RosbagsWalkAndKick
           path: soccerbot/bags
-#      - name: Setup tmate session
-#        timeout-minutes: 15
-#        if: ${{ failure() }}
-#        uses: mxschmitt/action-tmate@v3
+      - name: Setup tmate session
+        timeout-minutes: 15
+        if: ${{ failure() }}
+        uses: mxschmitt/action-tmate@v3
