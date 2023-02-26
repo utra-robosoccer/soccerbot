@@ -42,15 +42,15 @@ jobs:
         uses: docker/setup-buildx-action@v1
       - name: Build robot
         run: |
-          docker compose build friendly
+          docker system prune -af
+          docker buildx build --cache-from utrarobosoccer/soccerbot --tag utrasoccerbot/soccerbot --load .
           docker builder prune -a
-      - name: Setup tmate session
-        timeout-minutes: 60
-        uses: mxschmitt/action-tmate@v3
+          docker image ls
       - name: Build webots
         run: |
           docker compose build simulator
           docker builder prune -a
+          docker image ls
       - name: Walking Integration Test
         timeout-minutes: 10
         run: |
