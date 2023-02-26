@@ -21,10 +21,8 @@ x-soccerbot: &soccerbot #  <<: *gpu
     target: builder
     args:
       - BUILDKIT_INLINE_CACHE=1
-      - USER=${USER}
     cache_from:
       - utrarobosoccer/soccerbot
-      - utrarobosoccer/soccerbot_dependencies
   cap_add:
     - SYS_PTRACE
     - SYS_NICE
