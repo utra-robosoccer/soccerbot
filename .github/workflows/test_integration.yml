@@ -39,12 +39,12 @@ jobs:
           password: ${{ secrets.DOCKER_TOKEN }}
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
-      #      - name: Build webots
-      #        run: |
-      #          docker compose build simulator
-      #      - name: Build robot
-      #        run: |
-      #          docker compose build friendly
+      - name: Build webots
+        run: |
+          docker compose build simulator
+      - name: Build robot
+        run: |
+          docker compose build friendly
       - name: Setup tmate session
         timeout-minutes: 60
         uses: mxschmitt/action-tmate@v3
