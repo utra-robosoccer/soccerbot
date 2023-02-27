@@ -35,6 +35,10 @@ jobs:
         with:
           lfs: true
           submodules: recursive
+      # Ensure that the filesystem permissions are consistent across all umasks, all git checkouts:
+      - name: Set filesystems permissions
+        run: |
+          chmod -R g+w .
       - name: Docker Login
         uses: docker/login-action@v2.1.0
         with:
