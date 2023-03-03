@@ -9,6 +9,7 @@ pyserial>=3.5
 transforms3d
 construct==2.10.67
 opencv-python>=4.5.5.62
+setuptools==67.4.0
 shapely
 vispy
 pytest
