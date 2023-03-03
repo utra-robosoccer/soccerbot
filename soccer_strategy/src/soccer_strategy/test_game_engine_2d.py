@@ -1,5 +1,8 @@
 import os
 
+from soccer_common import Transformation
+from soccer_strategy.strategy.strategy_determine_side import StrategyDetermineSide
+
 os.environ["ROS_NAMESPACE"] = "/robot1"
 
 from unittest import TestCase
@@ -24,6 +27,42 @@ class TestGameEngine2D(TestCase):
         self.display = True
         if "DISPLAY" not in os.environ:
             self.display = False
+
+    def test_determine_side(self):
+        rospy.init_node("test")
+
+        FIELD_LENGTH = 9
+        FIELD_WIDTH = 3.15
+        GOAL_WIDTH = 2.6
+
+        d = StrategyDetermineSide()
+        current_robot = MagicMock()
+        game_state = MagicMock()
+
+        # bottom right position, close post detected
+        current_robot.robot_id = 1
+        footprint_to_goal_post = Transformation(position=[FIELD_WIDTH - GOAL_WIDTH / 2, -FIELD_LENGTH / 2 + 1, 0])
+        d.determine_side(current_robot, footprint_to_goal_post, game_state)
+
+        # bottom left position, far post detected
+        current_robot.robot_id = 2
+        footprint_to_goal_post = Transformation(position=[-(FIELD_WIDTH + GOAL_WIDTH / 2 + 0.05), -FIELD_LENGTH / 2 + 4, 0])
+        d.determine_side(current_robot, footprint_to_goal_post, game_state)
+
+        # bottom right position, distant close post detected
+        current_robot.robot_id = 1
+        footprint_to_goal_post = Transformation(position=[-(FIELD_WIDTH - GOAL_WIDTH / 2), FIELD_LENGTH / 2 + 1, 0])
+        d.determine_side(current_robot, footprint_to_goal_post, game_state)
+
+        # top right position, close post detected
+        current_robot.robot_id = 3
+        footprint_to_goal_post = Transformation(position=[-(FIELD_WIDTH - GOAL_WIDTH / 2 - 0.05), FIELD_LENGTH / 2 - 1, 0])
+        d.determine_side(current_robot, footprint_to_goal_post, game_state)
+
+        # top right position, far post detected
+        current_robot.robot_id = 3
+        footprint_to_goal_post = Transformation(position=[-(FIELD_WIDTH - GOAL_WIDTH / 2 - 0.05), -FIELD_LENGTH / 2 - 1, 0])
+        d.determine_side(current_robot, footprint_to_goal_post, game_state)
 
     def test_dummy_vs_stationary_strategy(self):
         rospy.init_node("test")

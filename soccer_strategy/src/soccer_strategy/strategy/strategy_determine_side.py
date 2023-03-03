@@ -1,3 +1,4 @@
+import copy
 import json
 import math
 import os
@@ -53,7 +54,7 @@ class StrategyDetermineSide(Strategy):
                     os.environ["ROS_NAMESPACE"].replace("/", "") + "/goal_post",
                     rospy.Time(0),
                 )
-                print(f"This is the goal_post_pos {goal_post_position}, this is goal_post_orientation {goal_post_orientation}")
+                print(f"Detected Goal Post Position {goal_post_position}, Orientation {goal_post_orientation}")
                 footprint_to_goal_post = Transformation(position=goal_post_position, quaternion=goal_post_orientation)
                 rospy.loginfo(f"Footprint to goal post: {footprint_to_goal_post.position}")
 
@@ -108,6 +109,9 @@ class StrategyDetermineSide(Strategy):
 
     def determine_side(self, current_robot, footprint_to_goal_post: Transformation, game_state: GameState) -> bool:
 
+        if footprint_to_goal_post.position[0] < 0:
+            return False
+
         team_id = int(os.getenv("ROBOCUP_TEAM_ID", 16))
         if team_id == 16:
             file = "team_1.json"
@@ -120,28 +124,46 @@ class StrategyDetermineSide(Strategy):
             team_info = json.load(json_file)
 
         # Rulebook http://humanoid.robocup.org/wp-content/uploads/RC-HL-2022-Rules-Changes-Marked-3.pdf
-        FIELD_LENGTH = 9  # m
+        FIELD_LENGTH = 9
+        FIELD_WIDTH = abs(
+            team_info["players"]["1"]["reentryStartingPose"]["translation"][1]
+        )  # m, how far the robot stands from the center in y direction
         GOAL_WIDTH = 2.6
 
         # Top left, top right, bottom left, bottom right, assuming x is the long for the net
         goal_post_locations = [
-            (-FIELD_LENGTH / 2, GOAL_WIDTH / 2),
-            (FIELD_LENGTH / 2, GOAL_WIDTH / 2),
-            (-FIELD_LENGTH / 2, -GOAL_WIDTH / 2),
-            (FIELD_LENGTH / 2, -GOAL_WIDTH / 2),
+            (-FIELD_LENGTH / 2, GOAL_WIDTH / 2),  # Left far
+            (FIELD_LENGTH / 2, GOAL_WIDTH / 2),  # Right far
+            (-FIELD_LENGTH / 2, -GOAL_WIDTH / 2),  # Left close
+            (FIELD_LENGTH / 2, -GOAL_WIDTH / 2),  # Right close
         ]
 
-        # Where the robot would be if the goal post detected is there
+        # Where the robot would be if the goal post detected is there, adjusted for distance
         potential_robot_locations = []
         for l in goal_post_locations:
+            if footprint_to_goal_post.position[0] == 0:
+                return False
+
             # If the robot is facing forward
-            potential_robot_locations.append([l[0] - footprint_to_goal_post.position[1], l[1] + footprint_to_goal_post.position[0]])
+            y_delta = l[1] + FIELD_WIDTH
+            x_delta = y_delta / footprint_to_goal_post.position[0] * footprint_to_goal_post.position[1]
+            position = [l[0] + x_delta, l[1] - y_delta]
+            if position[0] <= 0 and 0.7 < abs(y_delta / footprint_to_goal_post.position[0]) < 1.2:
+                potential_robot_locations.append(position)
 
             # If the robot is on the other side
-            potential_robot_locations.append([l[0] + footprint_to_goal_post.position[1], l[1] - footprint_to_goal_post.position[0]])
+            y_delta = FIELD_WIDTH - l[1]
+            x_delta = y_delta / footprint_to_goal_post.position[0] * footprint_to_goal_post.position[1]
+            position = [l[0] - x_delta, l[1] + y_delta]
+            if position[0] <= 0 and 0.7 < abs(y_delta / footprint_to_goal_post.position[0]) < 1.2:
+                potential_robot_locations.append(position)
+
+        print("Potential Robot Locations")
+        for p in potential_robot_locations:
+            print(f" {p}")
 
         # Valid robot locations (assuming the robots are placed on the bottom line, the line on the opposite side of the field
-        # assuming robot is bottom left, becuase the bottom right line
+        # assuming robot is bottom left, because the bottom right line
         valid_robot_transforms = []
         written_robot_transforms = {}
         for id, p in team_info["players"].items():
@@ -160,11 +182,9 @@ class StrategyDetermineSide(Strategy):
             for potential_location in potential_robot_locations:
                 dist_squared = (potential_location[0] - pos[0]) ** 2 + (potential_location[1] - pos[1]) ** 2
                 if dist_squared < closest_valid_robot_transform_distance:
-                    closest_valid_robot_transform = transform
+                    closest_valid_robot_transform = copy.deepcopy(transform)
+                    closest_valid_robot_transform.position = np.array((potential_location[0], potential_location[1], 0))
                     closest_valid_robot_transform_distance = dist_squared
-
-        if closest_valid_robot_transform_distance > 1**2:
-            return False
 
         # Set the location
         current_robot.position = closest_valid_robot_transform.pos_theta
