@@ -253,6 +253,8 @@ class Field:
         points_meet_dist_threshold_shift = points_meet_dist_threshold_delta - np.concatenate([[closest_line_diff_x], [closest_line_diff_y]])
         distance_to_new_points = np.linalg.norm(points_meet_dist_threshold_delta, axis=0)
         sum_distance_to_new_points = np.sum(distance_to_new_points)
+        if sum_distance_to_new_points == 0:
+            return None
 
         angle_original = np.arctan2(points_meet_dist_threshold_delta[1, :], points_meet_dist_threshold_delta[0, :])
         angle_new = np.arctan2(points_meet_dist_threshold_shift[1, :], points_meet_dist_threshold_shift[0, :])

@@ -359,6 +359,10 @@ class TestWalking:
         assert walk_success
 
     def test_path_calibration(self):
+        file_path = os.path.dirname(os.path.abspath(__file__))
+        config_folder_path = f"{file_path}/../../config/"
+        config_path = config_folder_path + "bez1_sim_pybullet.yaml"
+        set_rosparam_from_yaml_file(param_path=config_path)
 
         start_transform = Transformation([0.0, 0, 0], [0, 0, 0, 1])
 
@@ -397,6 +401,11 @@ class TestWalking:
         new_end_transform = adjust_navigation_transform(start_transform, end_transform)
         assert new_end_transform.orientation_euler[0] > np.pi / 4
         assert np.linalg.norm(new_end_transform.position[0:2]) > 1
+
+        start_transform = Transformation(pos_theta=[0.916, 1.091, 1.954])
+        end_transform = Transformation(pos_theta=[0.916, 1.091, -2.907])
+        new_end_transform = adjust_navigation_transform(start_transform, end_transform)
+        assert -2.907 < new_end_transform.pos_theta[2] < 0
 
     def test_path_calibration_inversion(self):
         rospy.set_param("calibration_trans_a", 1.2)
