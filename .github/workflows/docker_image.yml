@@ -58,7 +58,7 @@ jobs:
           push: true
           file: Dockerfile
           build-args:
-            BUILD_CUDA: ${{ matrix.install_cuda }}
+            - BUILD_CUDA: ${{ matrix.install_cuda }}
           tags: utrarobosoccer/soccerbot:$TAG
           cache-from: type=registry,ref=utrarobosoccer/soccerbot
           cache-to: type=inline
