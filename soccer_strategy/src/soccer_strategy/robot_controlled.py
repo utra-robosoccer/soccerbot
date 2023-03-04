@@ -38,12 +38,12 @@ class RobotControlled(Robot):
 
     def shorten_navigation_position(self, goal_position):
         """
-        Limits the length of the navigation, for example a goal given 3 meters will return a goal determined by
+        Limits the length of the navigation, for example a goal given 2 meters will return a goal determined by
         the shorten_navigation_limit parameter, if it is 1 then 1 meter max navigation limit
         :param goal_position: [x, y, theta] of the robot's goal position
         """
 
-        shorten_navigation_limit = rospy.get_param("shorten_navigation_limit", 3)
+        shorten_navigation_limit = rospy.get_param("shorten_navigation_limit", 2)
         distance_xy = np.linalg.norm(self.position[0:2] - goal_position[0:2])
         if distance_xy < shorten_navigation_limit:
             return goal_position
