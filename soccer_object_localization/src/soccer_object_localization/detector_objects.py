@@ -111,9 +111,11 @@ class DetectorObjects(Detector):
                     max_detection_size = detection_size
                     pass
             elif box.Class == "2":
-                # TODO joanne
-                # self.camera.findFloorCoordinate
-                pass
+                # TODO
+                if box.probability > 0.78:
+                    floor_coordinate_robot = self.camera.findFloorCoordinate([box.xbase, box.ybase])
+                    box.xbase = floor_coordinate_robot[0]
+                    box.ybase = floor_coordinate_robot[1]
 
         if final_camera_to_ball is not None:
             self.ball_pixel_publisher.publish(final_ball_pixel)

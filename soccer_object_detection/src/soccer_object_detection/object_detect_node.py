@@ -141,7 +141,35 @@ class ObjectDetectionNode(object):
                     bbs_msg.bounding_boxes.append(bb_msg)
                     id += 1
 
-                    # TODO Joanne look the pixels of the image in addition to the bounding box, calculate likely foot coordate xy
+                    # TODO Joanne look the pixels of the image in addition to the bounding box,
+                    #  calculate likely foot coordinate xy
+                    if bb_msg == "2":
+                        # only look at bottom 1/3 of bounding box
+                        y_box_height_bottom_section = round((bb_msg.ymax - bb_msg.ymin) * 0.3)
+                        foot_img = img[bb_msg.xmin : bb_msg.xmax, (bb_msg.ymax - y_box_height_bottom_section) : bb_msg.ymax]
+
+                        # identify two black blobs (AKA left and right foot) - note down the location
+                        # of all the black pixels
+                        num_rows = len(foot_img)
+                        num_cols = len(foot_img[0])
+                        all_black_pixel_locations = []
+                        for i in range(num_rows):
+                            for j in range(num_cols):
+                                if foot_img[i, j] == (0, 0, 0):
+                                    all_black_pixel_locations.append([i, j])
+
+                        # get midpoint of all black pixels
+                        x_min_black = min(all_black_pixel_locations[0])
+                        x_max_black = max(all_black_pixel_locations[0])
+                        y_min_black = min(all_black_pixel_locations[1])
+                        y_max_black = max(all_black_pixel_locations[1])
+
+                        midpoint = [x_max_black - x_min_black, y_max_black - y_min_black]
+                        bb_msg.xbase = midpoint[0]
+                        bb_msg.ybase = midpoint[1]
+
+                        # draw xbase ybase on image
+                        cv2.circle(image, midpoint, 5, (0, 255, 255), 3)
 
             bbs_msg.header = msg.header
             try:
