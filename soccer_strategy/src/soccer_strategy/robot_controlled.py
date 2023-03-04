@@ -53,8 +53,10 @@ class RobotControlled(Robot):
         diff_unit *= shorten_navigation_limit
 
         diff_angle = math.atan2(diff[0], diff[1])
+        new_location = np.array([self.position[0] + diff_unit[0], self.position[1] + diff_unit[1], diff_angle])
+        rospy.loginfo(f"Shorted Navigation Path: Original {goal_position} New {new_location}")
 
-        return np.array([diff_unit[0], diff_unit[1], diff_angle] + self.position)
+        return new_location
 
     def set_navigation_position(self, goal_position):
         """
