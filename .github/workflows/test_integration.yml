@@ -47,7 +47,7 @@ jobs:
       - name: Build robot
         run: |
           docker system prune -af
-          docker buildx build --cache-from utrarobosoccer/soccerbot --tag utrarobosoccer/soccerbot --load .
+          docker buildx build --cache-from utrarobosoccer/soccerbot:no_cuda --build-arg INSTALL_CUDA=false --tag utrarobosoccer/soccerbot --load .
           docker builder prune -a
           docker image ls
       - name: Build webots
