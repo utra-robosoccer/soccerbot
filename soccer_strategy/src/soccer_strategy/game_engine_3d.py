@@ -15,6 +15,7 @@ from soccer_strategy.strategy.strategy_freekick import StrategyFreekick
 from soccer_strategy.strategy.strategy_penaltykick import StrategyPenaltykick
 from soccer_strategy.strategy.strategy_ready import StrategyReady
 from soccer_strategy.strategy.strategy_set import StrategySet
+from soccer_strategy.strategy.strategy_stationary import StrategyStationary
 from soccer_strategy.team import Team
 
 
@@ -86,6 +87,8 @@ class GameEngine3D:
         if self.gameState.penalty != GameState.PENALTY_NONE:
             self.this_robot.status = Robot.Status.PENALIZED
             self.this_robot.update_robot_state(None)  # immediately to stop actuators
+        elif self.this_robot.status in [Robot.Status.DISCONNECTED, Robot.Status.PENALIZED]:
+            self.this_robot.status = Robot.Status.DETERMINING_SIDE
 
     def decide_strategy(self):
         """
@@ -95,7 +98,7 @@ class GameEngine3D:
         :return:
         """
 
-        new_strategy = StrategyDetermineSide
+        new_strategy = StrategyStationary
         current_strategy = type(self.team1.strategy)
 
         if self.gameState.gameState == GameState.GAMESTATE_INITIAL:
@@ -105,8 +108,8 @@ class GameEngine3D:
                 Robot.Status.DISCONNECTED,
                 Robot.Status.PENALIZED,
             ]:
-                new_strategy = StrategyDetermineSide
-            elif current_strategy is StrategyDetermineSide and not self.team1.strategy.complete:
+                new_strategy = StrategyStationary
+            elif self.this_robot.status == Robot.Status.DETERMINING_SIDE:
                 new_strategy = StrategyDetermineSide
             else:
                 if rospy.get_param("skip_ready_strategy", False):
@@ -115,14 +118,16 @@ class GameEngine3D:
                     new_strategy = StrategyReady
         elif self.gameState.gameState == GameState.GAMESTATE_SET:
             if self.this_robot.status == Robot.Status.PENALIZED:
-                new_strategy = StrategyDetermineSide
+                new_strategy = StrategyStationary
             else:
                 new_strategy = StrategySet
         elif self.gameState.gameState == GameState.GAMESTATE_FINISHED:
             new_strategy = StrategyFinished
         elif self.gameState.gameState == GameState.GAMESTATE_PLAYING:
             if self.gameState.secondaryState == GameState.STATE_NORMAL:
-                if self.this_robot.status in [Robot.Status.PENALIZED, Robot.Status.DETERMINING_SIDE]:
+                if self.this_robot.status == Robot.Status.PENALIZED:
+                    new_strategy = StrategyStationary
+                elif self.this_robot.status == Robot.Status.DETERMINING_SIDE:
                     new_strategy = StrategyDetermineSide
                 elif current_strategy == StrategyDetermineSide and self.team1.strategy.complete:
                     new_strategy = StrategyReady

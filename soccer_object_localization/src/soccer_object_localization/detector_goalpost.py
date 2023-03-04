@@ -44,6 +44,8 @@ class DetectorGoalPost(Detector):
 
         image = CvBridge().imgmsg_to_cv2(img, desired_encoding="rgb8")
         vertical_lines, image_out = self.get_vlines_from_img(image, debug=debug)
+        if vertical_lines is None:
+            return
 
         # Get vertical line in 3D position to the camera assuming that the lower point of the line is on the grass
         closest_distance = np.inf
@@ -121,6 +123,8 @@ class DetectorGoalPost(Detector):
         lines = cv2.HoughLinesP(
             image_edges, rho=1, theta=hough_theta, threshold=hough_threshold, minLineLength=hough_min_line_length, maxLineGap=hough_max_line_gap
         )
+        if lines is None:
+            return None, None
         if debug:
             image_hough = image.copy()
             for line in lines:

@@ -228,7 +228,11 @@ class SoccerbotRos(Soccerbot):
         pass
 
     def apply_head_rotation(self):
-        if self.robot_state.status in [self.robot_state.STATUS_DETERMINING_SIDE, self.robot_state.STATUS_PENALIZED]:
+        if self.robot_state.status == RobotState.STATUS_PENALIZED:
+            self.configuration[Joints.HEAD_1] = 0
+            self.configuration[Joints.HEAD_2] = 0
+            self.publishAngles()
+        elif self.robot_state.status == RobotState.STATUS_DETERMINING_SIDE:
             self.configuration[Joints.HEAD_1] = math.cos(self.head_step * self.head_pitch_freq_relocalizing) * (math.pi / 4)
             self.configuration[Joints.HEAD_2] = 0
             self.head_step += 1
