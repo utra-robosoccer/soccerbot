@@ -186,6 +186,9 @@ class StrategyDetermineSide(Strategy):
                     closest_valid_robot_transform.position = np.array((potential_location[0], potential_location[1], 0))
                     closest_valid_robot_transform_distance = dist_squared
 
+        if closest_valid_robot_transform is None:
+            return False
+
         # Set the location
         current_robot.position = closest_valid_robot_transform.pos_theta
         rospy.loginfo(

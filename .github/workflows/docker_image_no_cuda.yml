@@ -46,7 +46,7 @@ jobs:
           push: true
           file: Dockerfile
           build-args: |
-            BUILD_CUDA=false
+            INSTALL_CUDA=false
           tags: utrarobosoccer/soccerbot:no_cuda
           cache-from: type=registry,ref=utrarobosoccer/soccerbot
           cache-to: type=inline
