@@ -31,6 +31,8 @@ services:
     networks:
       soccer_network:
         ipv4_address: 172.18.0.2
+    ports:
+      - 11311:11311
     environment:
       ROBOCUP_ROBOT_ID: 1
       ROBOCUP_TEAM_COLOR: "red"
@@ -47,6 +49,8 @@ services:
     networks:
       soccer_network:
         ipv4_address: 172.18.0.3
+    ports:
+      - 11312:11311
     environment:
       ROBOCUP_ROBOT_ID: 2
       ROBOCUP_TEAM_ID: 16
