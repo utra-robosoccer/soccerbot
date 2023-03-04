@@ -22,6 +22,7 @@ jobs:
       group: ${{ github.workflow }}-${{ github.ref }}
       cancel-in-progress: true
     strategy:
+      max-parallel: 2
       matrix:
         install_cuda: ["true", "false"]
     steps:
@@ -59,6 +60,6 @@ jobs:
           file: Dockerfile
           build-args: |
             BUILD_CUDA=${{ matrix.install_cuda }}
-          tags: utrarobosoccer/soccerbot:$TAG
+          tags: utrarobosoccer/soccerbot:${TAG}
           cache-from: type=registry,ref=utrarobosoccer/soccerbot
           cache-to: type=inline
