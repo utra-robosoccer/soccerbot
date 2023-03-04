@@ -52,9 +52,9 @@ class RobotControlled(Robot):
         diff_unit = diff / np.linalg.norm(diff)
         diff_unit *= shorten_navigation_limit
 
-        diff_angle = math.atan2(diff[0], diff[1])
+        diff_angle = math.atan2(diff[1], diff[0])
         new_location = np.array([self.position[0] + diff_unit[0], self.position[1] + diff_unit[1], diff_angle])
-        rospy.loginfo(f"Shorted Navigation Path: Original {goal_position} New {new_location}")
+        rospy.loginfo(f"Shortened Navigation Path: Original {goal_position} New {new_location}")
 
         return new_location
 
