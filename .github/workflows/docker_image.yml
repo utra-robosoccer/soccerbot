@@ -21,6 +21,9 @@ jobs:
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
       cancel-in-progress: true
+    strategy:
+      matrix:
+        install_cuda: ["true", "false"]
     steps:
       - name: Maximize build space
         run: |
@@ -45,12 +48,17 @@ jobs:
         uses: docker/setup-qemu-action@v2
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
+      - name: Pick Image Name
+        run: |
+          if [[ "${{ matrix.install_cuda }}" == "false" ]] ; then export TAG=no_cuda ; fi
       - name: Build Image
         uses: docker/build-push-action@v4
         with:
           context: .
           push: true
           file: Dockerfile
-          tags: utrarobosoccer/soccerbot
+          build-args:
+            BUILD_CUDA: ${{ matrix.install_cuda }}
+          tags: utrarobosoccer/soccerbot:$no_cuda
           cache-from: type=registry,ref=utrarobosoccer/soccerbot
           cache-to: type=inline
