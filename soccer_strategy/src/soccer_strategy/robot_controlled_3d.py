@@ -84,6 +84,7 @@ class RobotControlled3D(RobotControlled):
         rospy.loginfo(f"Robot Reset Called to {pose.pose.position.x} {pose.pose.position.y} {q[2]} (self.position = {self.position}")
         if self.role == Robot.Role.UNASSIGNED:
             self.role = Robot.Role.STRIKER
+        self.localized = True
         self.status = Robot.Status.READY
         self.reset_initial_position()
 
