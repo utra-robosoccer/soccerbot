@@ -1,4 +1,4 @@
-name: Docker Image
+name: Docker Image No Cuda
 
 on:
   workflow_dispatch:
@@ -46,7 +46,7 @@ jobs:
           push: true
           file: Dockerfile
           build-args: |
-            BUILD_CUDA=true
-          tags: utrarobosoccer/soccerbot
+            BUILD_CUDA=false
+          tags: utrarobosoccer/soccerbot:no_cuda
           cache-from: type=registry,ref=utrarobosoccer/soccerbot
           cache-to: type=inline
