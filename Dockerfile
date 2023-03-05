@@ -59,18 +59,19 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -y --no-install-recommends install ke
 # Architecture: Use sbsa for arm build
 # CUDA Installation Ref: https://developer.nvidia.com/cuda-downloads?target_os=Linux&target_arch=x86_64&Distribution=Ubuntu&target_version=20.04&target_type=deb_network
 # CUDNN (Ref: https://docs.nvidia.com/deeplearning/cudnn/install-guide/index.html#installlinux)
+ARG INSTALL_CUDA=true
 ARG ARCHITECTURE=x86_64
 ARG OS=ubuntu2004
-RUN wget --progress=dot:mega https://developer.download.nvidia.com/compute/cuda/repos/$OS/$ARCHITECTURE/cuda-$OS.pin && \
+RUN if [[ "$INSTALL_CUDA" == "true" ]] ; then \
+    wget --progress=dot:mega https://developer.download.nvidia.com/compute/cuda/repos/$OS/$ARCHITECTURE/cuda-$OS.pin && \
     mv cuda-$OS.pin /etc/apt/preferences.d/cuda-repository-pin-600 && \
     apt-key adv --fetch-keys https://developer.download.nvidia.com/compute/cuda/repos/${OS}/$ARCHITECTURE/3bf863cc.pub && \
     add-apt-repository "deb https://developer.download.nvidia.com/compute/cuda/repos/${OS}/$ARCHITECTURE/ /" && \
-    apt-get update
-RUN DEBIAN_FRONTEND=noninteractive apt-fast -yq --no-install-recommends install cuda libcudnn8 libcudnn8-dev libnccl2 libnccl-dev
+    apt-get update; fi
+
+RUN if [[ "$INSTALL_CUDA" == "true" ]] ; then DEBIAN_FRONTEND=noninteractive apt-fast -yq --no-install-recommends install cuda libcudnn8 libcudnn8-dev libnccl2 libnccl-dev; fi
 
 RUN pip install --no-cache-dir --upgrade pip Cython pybullet
-
-RUN curl -sSL https://get.docker.com/ | sh
 
 RUN if [[ "$(dpkg --print-architecture)" == "arm64" ]] ; then \
     apt-get update && \
