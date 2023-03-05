@@ -76,17 +76,22 @@ class StrategyDummy(Strategy):
 
                     # Ball localized, move to ball
                     if (rospy.Time.now() - this_robot.robot_focused_on_ball_time) < rospy.Duration(2):
-                        # If there is an obstacle, then move around the obstacle
-                        blocked_position = Utility.is_obstacle_blocking(this_robot, ball.position)
+                        blocked_position = Utility.is_obstacle_blocking(this_robot, this_robot.position[0:2], ball.position)
                         if blocked_position is not None:
-                            optimal_pos = Utility.optimal_position_to_navigate_if_obstacle_blocking_target(
-                                this_robot, np.array(ball.position[0:2]), blocked_position, this_robot.BODY_WIDTH
+                            optimal_pos = Utility.optimal_position_to_navigate_if_blocking(
+                                this_robot.position[0:2], np.array(ball.position[0:2]), blocked_position, this_robot.BODY_WIDTH
                             )
                             Utility.navigate_to_position_with_offset(this_robot, optimal_pos, np.array(ball.position[0:2]), 0)
                         else:
                             rospy.loginfo("Navigation to ball")
-
-                            Utility.navigate_to_scoring_position(this_robot, np.array(ball.position[0:2]), goal_position)
+                            blocked_position = Utility.is_obstacle_blocking(this_robot, ball.position, goal_position)
+                            if blocked_position is not None:
+                                optimal_pos = Utility.optimal_position_to_navigate_if_blocking(
+                                    ball.position[0:2], goal_position[0:2], blocked_position, this_robot.BODY_WIDTH
+                                )
+                                Utility.navigate_to_position_with_offset(this_robot, np.array(ball.position[0:2]), optimal_pos)
+                            else:
+                                Utility.navigate_to_scoring_position(this_robot, np.array(ball.position[0:2]), goal_position)
                     elif this_robot.observed_ball is None or (rospy.Time.now() - this_robot.observed_ball.last_observed_time_stamp) > rospy.Duration(
                         2
                     ):

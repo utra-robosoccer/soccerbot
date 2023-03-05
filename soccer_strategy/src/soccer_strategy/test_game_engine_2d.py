@@ -40,7 +40,41 @@ class TestGameEngine2D(TestCase):
         friendly_points, opponent_points = g.run()
         print(f"Friendly: {friendly_points}, opponent: {opponent_points}")
 
-    def test_obstacle_detection(self):
+    def test_obstacle_detection_between_ball_and_goal(self):
+        rospy.init_node("test")
+        team1 = Team(
+            [
+                RobotControlled2D(
+                    robot_id=1,
+                    team=Robot.Team.FRIENDLY,
+                    role=Robot.Role.STRIKER,
+                    status=Robot.Status.READY,
+                    position=np.array([-1.5, 0, 0]),
+                )
+            ]
+        )
+
+        team2 = Team(
+            [
+                RobotControlled2D(
+                    robot_id=2,
+                    team=Robot.Team.OPPONENT,
+                    role=Robot.Role.GOALIE,
+                    status=Robot.Status.READY,
+                    position=np.array([1, 0, -3.14]),
+                )
+            ]
+        )
+
+        g = GameEngine2D(
+            display=self.display, team_1_strategy=StrategyDummy, team_2_strategy=StrategyStationary, team_1=team1, team_2=team2, game_duration=4
+        )
+
+        friendly_points, opponent_points = g.run()
+        print(f"Friendly: {friendly_points}, opponent: {opponent_points}")
+        assert not (friendly_points == 0 and opponent_points == 0)
+
+    def test_obstacle_detection_between_player_and_ball(self):
         rospy.init_node("test")
 
         team1 = Team(
@@ -138,7 +172,7 @@ class TestGameEngine2D(TestCase):
                     team=Robot.Team.OPPONENT,
                     role=Robot.Role.GOALIE,
                     status=Robot.Status.READY,
-                    position=np.array([2, 0, -3.14]),
+                    position=np.array([1, 0, -3.14]),
                 )
             ]
         )
@@ -150,7 +184,7 @@ class TestGameEngine2D(TestCase):
         friendly_points, opponent_points = g.run()
         print(f"Friendly: {friendly_points}, opponent: {opponent_points}")
 
-    def test_ball_behind_kicker(self):
+    def test_obstacle_detection_when_ball_behind_kicker(self):
         rospy.init_node("test")
 
         team1 = Team(
