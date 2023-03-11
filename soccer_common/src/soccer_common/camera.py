@@ -1,3 +1,5 @@
+from functools import cached_property
+
 import numpy as np
 import rospy
 import tf
@@ -29,7 +31,7 @@ class Camera:
         self.robot_name = robot_name  #: Name of the robot
         self.pose = Transformation()  #: Pose of the camera
         self.camera_info = None  #: Camera info object recieved from the subscriber
-        self.diagonal_fov = 1.523  #: Diagonal Field of Vision for the camera
+        self.horizontalFOV = 1.39626
         self.focal_length = 3.67  #: Focal length of the camera (meters) distance to the camera plane as projected in 3D
 
         self.camera_info_subscriber = Subscriber("/" + robot_name + "/camera/camera_info", CameraInfo, self.cameraInfoCallback)
@@ -60,7 +62,7 @@ class Camera:
             target_frame = self.robot_name + camera_frame
             timeout_duration = rospy.Duration(nsecs=1000000)
         else:
-            base_frame = self.robot_name + "/odom"
+            base_frame = self.robot_name + "/base_footprint"
             target_frame = self.robot_name + camera_frame
             timeout_duration = rospy.Duration(secs=1)
 
@@ -126,7 +128,7 @@ class Camera:
         """
         self.camera_info = camera_info
 
-    @property
+    @cached_property
     def resolution_x(self) -> int:
         """
         The X resolution of the camera or the width of the screen in pixels
@@ -135,7 +137,7 @@ class Camera:
         """
         return self.camera_info.width
 
-    @property
+    @cached_property
     def resolution_y(self):
         """
         The Y resolution of the camera or the height of the screen in pixels
@@ -153,12 +155,12 @@ class Camera:
         """
 
         tx, ty = self.imageToWorldFrame(pos[0], pos[1])
-        pixel_pose = Transformation((self.focal_length, tx, ty), (0, 0, 0, 1))
+        pixel_pose = Transformation(position=(self.focal_length, tx, ty))
         camera_pose = self.pose
         pixel_world_pose = camera_pose @ pixel_pose
-        ratio = (self.pose.position[2] - pixel_world_pose.position[2]) / self.pose.position[2]  # TODO Fix divide by 0 problem
-        x_delta = (pixel_world_pose.position[0] - self.pose.position[0]) / ratio
-        y_delta = (pixel_world_pose.position[1] - self.pose.position[1]) / ratio
+        ratio = (camera_pose.position[2] - pixel_world_pose.position[2]) / self.pose.position[2]  # TODO Fix divide by 0 problem
+        x_delta = (pixel_world_pose.position[0] - camera_pose.position[0]) / ratio
+        y_delta = (pixel_world_pose.position[1] - camera_pose.position[1]) / ratio
 
         return [x_delta + camera_pose.position[0], y_delta + camera_pose.position[1], 0]
 
@@ -192,46 +194,36 @@ class Camera:
         x, y = self.worldToImageFrame(tx, ty)
         return [x, y]
 
-    @property
+    @cached_property
     def verticalFOV(self):
         """
         The vertical field of vision of the camera.
         See `Field of View <https://en.wikipedia.org/wiki/Field_of_view>`_
         """
-        f = math.sqrt(self.resolution_x**2 + self.resolution_y**2) / (2 * (1 / math.tan(self.diagonal_fov / 2)))
-        return 2 * math.atan2(self.resolution_y / 2.0, f)
+        return 2 * math.atan(math.tan(self.horizontalFOV * 0.5) * (self.resolution_y / self.resolution_x))
 
-    @property
-    def horizontalFOV(self):
-        """
-        The horizontal field of vision of the camera.
-        See `Field of View <https://en.wikipedia.org/wiki/Field_of_view>`_
-        """
-        f = math.sqrt(self.resolution_x**2 + self.resolution_y**2) / (2 * (1 / math.tan(self.diagonal_fov / 2)))
-        return 2 * math.atan2(self.resolution_x / 2, f)
-
-    @property
+    @cached_property
     def imageSensorHeight(self):
         """
         The height of the image sensor (m)
         """
         return math.tan(self.verticalFOV / 2.0) * 2.0 * self.focal_length
 
-    @property
+    @cached_property
     def imageSensorWidth(self):
         """
         The width of the image sensor (m)
         """
         return math.tan(self.horizontalFOV / 2.0) * 2.0 * self.focal_length
 
-    @property
+    @cached_property
     def pixelHeight(self):
         """
         The height of a pixel in real 3d measurements (m)
         """
         return self.imageSensorHeight / self.resolution_y
 
-    @property
+    @cached_property
     def pixelWidth(self):
         """
         The wdith of a pixel in real 3d measurements (m)
@@ -239,18 +231,19 @@ class Camera:
         return self.imageSensorWidth / self.resolution_x
         pass
 
-    def imageToWorldFrame(self, pos_x: int, pos_y: int) -> tuple:
+    def imageToWorldFrame(self, pixel_x: int, pixel_y: int) -> tuple:
         """
         From image pixel coordinates, get the coordinates of the pixel as if they have been projected ot the camera plane, which is
         positioned at (0,0) in 3D world coordinates
+        https://docs.google.com/presentation/d/10DKYteySkw8dYXDMqL2Klby-Kq4FlJRnc4XUZyJcKsw/edit#slide=id.g163680c589a_0_0
 
-        :param pos_x: x pixel of the camera
-        :param pos_y: y pixel of the camera
+        :param pixel_x: x pixel of the camera
+        :param pixel_y: y pixel of the camera
         :return: 3D position (X, Y) of the pixel in meters
         """
         return (
-            (self.resolution_x / 2.0 - pos_x) * self.pixelWidth,
-            (self.resolution_y / 2.0 - pos_y) * self.pixelHeight,
+            (self.resolution_x / 2.0 - (pixel_x + 0.5)) * self.pixelWidth,
+            (self.resolution_y / 2.0 - (pixel_y + 0.5)) * self.pixelHeight,
         )
 
     def worldToImageFrame(self, pos_x: float, pos_y: float) -> tuple:
@@ -263,8 +256,8 @@ class Camera:
         :return: Tuple (x, y) of the pixel coordinates of in the image
         """
         return (
-            (self.resolution_x / 2.0 + pos_x / self.pixelWidth),
-            (self.resolution_y / 2.0 + pos_y / self.pixelHeight),
+            (self.resolution_x / 2.0 + pos_x / self.pixelWidth) - 0.5,
+            (self.resolution_y / 2.0 + pos_y / self.pixelHeight) - 0.5,
         )
 
     def calculateBoundingBoxesFromBall(self, ball_position: Transformation, ball_radius: float = 0.07):

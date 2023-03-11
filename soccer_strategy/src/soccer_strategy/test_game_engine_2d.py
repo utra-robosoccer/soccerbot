@@ -1,17 +1,18 @@
 import os
+
+os.environ["ROS_NAMESPACE"] = "/robot1"
+
 from unittest import TestCase
 from unittest.mock import MagicMock
 
 import numpy
 import numpy as np
+import rospy
+from vispy import app, scene
 
-from soccer_common.mock_ros import mock_ros
 
-
-class Test(TestCase):
+class TestGameEngine2D(TestCase):
     def setUp(self) -> None:
-
-        mock_ros(robot_model="bez1", real_robot=False, config_path="")
 
         super().setUpClass()
         self.display = True
@@ -19,11 +20,11 @@ class Test(TestCase):
             self.display = False
 
     def test_dummy_vs_stationary_strategy(self):
+        rospy.init_node("test")
+
         from soccer_strategy.game_engine_2d import GameEngine2D
         from soccer_strategy.strategy.strategy_dummy import StrategyDummy
         from soccer_strategy.strategy.strategy_stationary import StrategyStationary
-
-        mock_ros(robot_model="bez1", real_robot=False, config_path="")
 
         g = GameEngine2D(display=self.display, team_1_strategy=StrategyDummy, team_2_strategy=StrategyStationary, game_duration=2)
         friendly_points, opponent_points = g.run()
@@ -31,10 +32,10 @@ class Test(TestCase):
         assert not (friendly_points == 0 and opponent_points == 0)
 
     def test_dummy_vs_dummy_strategy(self):
+        rospy.init_node("test")
+
         from soccer_strategy.game_engine_2d import GameEngine2D
         from soccer_strategy.strategy.strategy_dummy import StrategyDummy
-
-        mock_ros(robot_model="bez1", real_robot=False, config_path="")
 
         g = GameEngine2D(display=self.display, team_1_strategy=StrategyDummy, team_2_strategy=StrategyDummy, game_duration=2)
         friendly_points, opponent_points = g.run()

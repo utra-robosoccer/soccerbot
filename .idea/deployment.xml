@@ -2,5 +2,21 @@
 <project version="4">
   <component name="PublishConfigData" serverName="Robot1" remoteFilesAllowedToDisappearOnAutoupload="false" confirmBeforeUploading="false">
     <option name="confirmBeforeUploading" value="false" />
+    <serverData>
+      <paths name="Robot1">
+        <serverdata>
+          <mappings>
+            <mapping deploy="catkin_ws/src/soccerbot" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+      <paths name="Robot2">
+        <serverdata>
+          <mappings>
+            <mapping deploy="catkin_ws/src/soccerbot" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
+    </serverData>
   </component>
 </project>

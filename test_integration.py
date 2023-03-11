@@ -178,6 +178,7 @@ class IntegrationTestPlaying(IntegrationTest):
             gt_ball_pose = self.get_ball_pose(gt=False)
             if gt_ball_pose is not None:
                 printlog(f"Current ball location: {gt_ball_pose}")
+
                 if gt_ball_pose[0] > 4.5:
                     printlog("Goal Scored")
                     return
@@ -238,9 +239,9 @@ class IntegrationTestPlaying(IntegrationTest):
             if j < num:
                 j = num
 
-        os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_pycontrol'")
-        os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_strategy'")
-        os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_trajectories'")
+        os.system(
+            "/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_strategy /robot1/soccer_pycontrol /robot1/soccer_trajectories'"
+        )
 
         self.camera = Camera("robot1")
 
@@ -321,5 +322,72 @@ class IntegrationTestPlaying(IntegrationTest):
                 if os.path.exists(filePath2):
                     os.remove(filePath2)
                 cv2.imwrite(filePath2, image_rect)
+
+            j = j + 1
+
+    def test_annotate_net(self, num_samples=100, create_localization_labels=True):
+        import math
+        import os
+        import random
+        import time
+
+        import cv2
+        import numpy as np
+        import rospy
+        from cv_bridge import CvBridge
+        from sensor_msgs.msg import Image
+
+        if not os.path.exists("soccer_object_localization/images"):
+            os.makedirs("soccer_object_localization/images")
+
+        j = 0
+        for file in [
+            f for f in os.listdir("soccer_object_localization/images") if os.path.isfile(os.path.join("soccer_object_localization/images", f))
+        ]:
+            if "border" in file:
+                continue
+            num = int(file.split("_")[0].replace("img", ""))
+            if j < num:
+                j = num
+
+        os.system(
+            "/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_strategy /robot1/soccer_pycontrol /robot1/soccer_trajectories'"
+        )
+
+        self.camera = Camera("robot1")
+
+        while not rospy.is_shutdown() and not self.camera.ready():
+            print("Waiting for camera info")
+
+        for i in range(num_samples):
+            robot_x = random.uniform(-4, 4)
+            robot_y = random.choice([-3.15, 3.15])
+
+            robot_position = [robot_x, robot_y]
+            robot_theta = 0
+            if robot_y == -3.15:
+                robot_theta = random.uniform(math.pi / 2 - 1.0, math.pi / 2 + 1.0)
+            elif robot_y == 3.15:
+                robot_theta = random.uniform(-math.pi / 2 - 1.0, -math.pi / 2 + 1.0)
+
+            self.set_robot_pose(robot_position[0], robot_position[1], robot_theta)
+            time.sleep(0.5)
+            # Calculate the frame in the camera
+            image_msg = rospy.wait_for_message("/robot1/camera/image_raw", Image)
+
+            # Save the image
+            rgb_image = CvBridge().imgmsg_to_cv2(image_msg, desired_encoding="rgb8")
+            camera_info_K = np.array(self.camera.camera_info.K).reshape([3, 3])
+            camera_info_D = np.array(self.camera.camera_info.D)
+            image = cv2.undistort(rgb_image, camera_info_K, camera_info_D)
+
+            # Annotate the image automatically
+            self.camera.reset_position(from_world_frame=True, camera_frame="/camera_gt", timestamp=image_msg.header.stamp)
+
+            if create_localization_labels:
+                filePath = f"soccer_object_localization/images/img{j}_{robot_x}_{robot_y}_{robot_theta}.png"
+                if os.path.exists(filePath):
+                    os.remove(filePath)
+                cv2.imwrite(filePath, image)
 
             j = j + 1

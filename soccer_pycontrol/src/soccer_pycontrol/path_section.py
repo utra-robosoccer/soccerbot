@@ -7,7 +7,7 @@ import numpy as np
 import rospy
 
 from soccer_common.transformation import Transformation
-from soccer_pycontrol.utils import wrapTo2Pi, wrapToPi
+from soccer_common.utils import wrapTo2Pi, wrapToPi
 
 
 class PathSection(ABC):
@@ -15,16 +15,7 @@ class PathSection(ABC):
     Base class for a Path Section
     """
 
-    #: How much smaller the body step is for backwards movement
-    backwards_torso_step_length_ratio = rospy.get_param("backwards_torso_step_length_ratio", 0.5)
-
-    #: How much distance is a torso step (equivalent to a half step)
-    torso_step_length_default = rospy.get_param("torso_step_length_default", 0.04)
-
-    #: How many torso steps per second, approximately equivalent to foot steps per second
-    steps_per_second_default = rospy.get_param("steps_per_second_default", 3.5)
-
-    def __init__(self, start_transform: Transformation, end_transform: Transformation, torso_step_length=torso_step_length_default):
+    def __init__(self, start_transform: Transformation, end_transform: Transformation, torso_step_length=0.04):
         """
         Initializes the Path Section
 
@@ -33,11 +24,16 @@ class PathSection(ABC):
         :param torso_step_length: Length of a torso step
         """
 
+        #: How much distance is a torso step (equivalent to a half step)
+        self.torso_step_length = rospy.get_param("torso_step_length", torso_step_length)
+
+        #: How many torso steps per second, approximately equivalent to foot steps per second
+        self.steps_per_second_default = rospy.get_param("steps_per_second_default", 3.5)
+
         self.start_transform: Transformation = start_transform
         self.end_transform: Transformation = end_transform
 
-        self.torso_step_length = torso_step_length
-        self.steps_per_second = PathSection.steps_per_second_default
+        self.steps_per_second = self.steps_per_second_default
         self.speed = self.steps_per_second * self.torso_step_length
         self.precision = 0.05 * self.torso_step_length
 
@@ -63,7 +59,7 @@ class PathSection(ABC):
 
         # Adjusting body step size to account for extra distance
         if self.distance != 0:
-            self.torso_step_length = self.distance / math.ceil(self.distance / torso_step_length)
+            self.torso_step_length = self.distance / math.ceil(self.distance / self.torso_step_length)
             if self.torsoStepCount() <= 1:
                 self.speed = self.steps_per_second * self.torso_step_length
 

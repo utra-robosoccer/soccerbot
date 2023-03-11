@@ -3,57 +3,30 @@ import os
 
 if "ROS_NAMESPACE" not in os.environ:
     os.environ["ROS_NAMESPACE"] = "/robot1"
-import sys
-
 import numpy as np
 import rospy
 import ruamel.yaml
 from scipy.optimize import curve_fit
 
 from soccer_common.transformation import Transformation
-from soccer_pycontrol.utils import trimToPi, wrapToPi
+from soccer_common.utils import trimToPi, wrapToPi
+from soccer_common.utils_rosparam import set_rosparam_from_yaml_file
 
 robot_model = "bez1"
 run_in_ros = False
 
 
 def setup_calibration():
-    from os.path import exists
     from unittest.mock import MagicMock
 
-    import yaml
-
-    sys.modules["rospy"] = MagicMock()
     import rospy
 
-    rospy.Time = MagicMock()
     joint_state = MagicMock()
     joint_state.position = [0.0] * 18
     rospy.wait_for_message = MagicMock(return_value=joint_state)
-    rospy.loginfo_throttle = lambda a, b: None
 
-    robot_model = "bez1"
-
-    def f(a, b):
-        a = a.lstrip("~")
-        if a == "robot_model":
-            return robot_model
-
-        config_path = f"../../config/{robot_model}_sim.yaml"
-        if not exists(config_path):
-            return b
-
-        with open(config_path, "r") as g:
-
-            y = yaml.safe_load(g)
-            for c in a.split("/"):
-                if y is None or c not in y:
-                    return b
-                y = y[c]
-            return y
-
-    rospy.get_param = f
-
+    param_path = f"../../config/{robot_model}_sim.yaml"
+    set_rosparam_from_yaml_file(param_path=param_path)
     pass
 
 
@@ -61,21 +34,18 @@ def calibrate_x():
     if not run_in_ros:
         setup_calibration()
 
-    import pybullet as pb
-
     from soccer_pycontrol.navigator import Navigator
     from soccer_pycontrol.navigator_ros import NavigatorRos
 
     start_positions = []
     final_positions = []
-    for x in np.linspace(0.0, 0.2, 21):
+    for x in np.linspace(0.0, 0.25, 26):
         if run_in_ros:
             walker = NavigatorRos(useCalibration=False)
         else:
-            walker = Navigator(display=False, useCalibration=False)
+            walker = Navigator(display=False, real_time=False, useCalibration=False)
         walker.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
         walker.ready()
-        walker.wait(200)
 
         actual_start_position = walker.getPose()
 
@@ -92,8 +62,6 @@ def calibrate_x():
 
         start_positions.append(goal_position.position)
         final_positions.append(final_transformation)
-
-        walker.wait(100)
 
         del walker
 
@@ -119,7 +87,8 @@ def calibrate_x():
     def func(x, a):
         return a * x
 
-    popt2, pcov2 = curve_fit(func, x[int(len(x) / 2) : -1], y[int(len(y) / 2) : -1])
+    fs = 8  # Final samples used to approximate linear fit after 0.25
+    popt2, pcov2 = curve_fit(func, x[-fs:] - x[-fs], y[-fs:] - y[-fs])
 
     return popt[0], popt[1], popt2[0]
 
@@ -213,7 +182,7 @@ def adjust_navigation_transform(start_transform: Transformation, end_transform: 
     step_1_angular_distance_new = (1 / calibration_rot_a) * step_1_angular_distance
     step_3_angular_distance_new = (1 / calibration_rot_a) * step_3_angular_distance
 
-    max_x = calibration_trans_a * 0.2**2 + calibration_trans_b * 0.2
+    max_x = calibration_trans_a * 0.25**2 + calibration_trans_b * 0.25
     c = min(max_x, step_2_distance)
     c_remainder = max(0.0, step_2_distance - max_x)
 
@@ -236,14 +205,15 @@ def adjust_navigation_transform(start_transform: Transformation, end_transform: 
 
 if __name__ == "__main__":
     if run_in_ros:
-
-        os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_strategy'")
-        os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_pycontrol'")
-        os.system("/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_trajectories'")
+        os.system(
+            "/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_strategy /robot1/soccer_pycontrol /robot1/soccer_trajectories'"
+        )
         rospy.init_node("soccer_control_calibration")
         rospy.loginfo("Initializing Soccer Control Calibration")
+        config_file_path = os.path.dirname(__file__).replace("src/soccer_pycontrol", f"config/{robot_model}_sim.yaml")
+    else:
+        config_file_path = os.path.dirname(__file__).replace("src/soccer_pycontrol", f"config/{robot_model}_sim_pybullet.yaml")
 
-    config_file_path = os.path.dirname(__file__).replace("src/soccer_pycontrol", f"config/{robot_model}_sim.yaml")
     yaml = ruamel.yaml.YAML()
 
     # Calibrate translation

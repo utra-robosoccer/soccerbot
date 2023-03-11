@@ -8,7 +8,6 @@ from soccer_common.transformation import Transformation
 from soccer_strategy.ball import Ball
 from soccer_strategy.robot import Robot
 
-
 class RobotControlled(Robot):
     def __init__(
         self,
@@ -17,6 +16,7 @@ class RobotControlled(Robot):
         role=Robot.Role.UNASSIGNED,
         status=Robot.Status.DISCONNECTED,
         position=np.array([0, 0, 0]),
+
     ):
         super().__init__(robot_id=robot_id, team=team, role=role, status=status, position=position)
 
@@ -29,6 +29,9 @@ class RobotControlled(Robot):
         self.max_kick_speed = 2
         self.navigation_goal_localized_time = rospy.Time.now()
         self.kick_with_right_foot = True
+
+        self.min_kick_distance = rospy.get_param("min_kick_distance", 0.20)
+        self.min_kick_angle = rospy.get_param("min_kick_angle", 0.4)
 
     def shorten_navigation_position(self, goal_position):
         """
@@ -93,7 +96,8 @@ class RobotControlled(Robot):
         nav_angle_diff = player_angle - robot_ball_angle
         distance_of_player_to_ball = np.linalg.norm(player_position - ball_position)
 
-        if distance_of_player_to_ball < rospy.get_param("min_kick_distance", 0.20) and abs(nav_angle_diff) < rospy.get_param("min_kick_angle", 0.4):
+        # Evaluate kicking angle is correct
+        if distance_of_player_to_ball < self.min_kick_distance and abs(nav_angle_diff) < self.min_kick_angle:
             if nav_angle_diff > 0:
                 self.kick_with_right_foot = True
             else:

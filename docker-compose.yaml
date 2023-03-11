@@ -15,6 +15,7 @@ x-gpu: &gpu
 x-soccerbot: &soccerbot #  <<: *gpu
   image: utrarobosoccer/soccerbot
   privileged: true
+  user: "1000"
   build:
     context: .
     target: builder
@@ -36,7 +37,6 @@ x-soccerbot: &soccerbot #  <<: *gpu
   volumes:
     - .:/home/$USER/catkin_ws/src/soccerbot
     - .:/home/robosoccer/catkin_ws/src/soccerbot
-    - /home/$USER/.local:/home/$USER/.local
     - /tmp/.X11-unix:/tmp/.X11-unix:rw
     - /dev/dri:/dev/dri:rw
     - /dev/snd:/dev/snd:rw
@@ -46,6 +46,8 @@ services:
   simulator:
     <<: *gpu
     image: utrarobosoccer/webots
+    stop_signal: SIGINT
+    stop_grace_period: 10s
     privileged: true
     build:
       context: external

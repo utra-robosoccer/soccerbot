@@ -13,16 +13,20 @@ class PathSectionBezier(PathSection):
     A path section made up of bezier curves
     """
 
-    #: The amount of torso steps it takes to make the starting and final turn
-    turn_duration = rospy.get_param("turn_duration", 3)
-
     def __init__(self, start_transform: Transformation, end_transform: Transformation):
         self.start_transform: Transformation = start_transform
         self.end_transform: Transformation = end_transform
+
+        #: The amount of torso steps it takes to make the starting and final turn
+        self.turn_duration = rospy.get_param("turn_duration", 3)
+
+        #: How much smaller the body step is for backwards movement
+        self.backwards_torso_step_length_ratio = rospy.get_param("backwards_torso_step_length_ratio", 0.5)
+
+        #: How much distance is a torso step (equivalent to a half step)
+        torso_step_length = rospy.get_param("torso_step_length", 0.04)
         if self.isWalkingBackwards():
-            torso_step_length = self.torso_step_length_default * self.backwards_torso_step_length_ratio
-        else:
-            torso_step_length = self.torso_step_length_default
+            torso_step_length = torso_step_length * self.backwards_torso_step_length_ratio
 
         super().__init__(start_transform, end_transform, torso_step_length)
 
@@ -47,11 +51,11 @@ class PathSectionBezier(PathSection):
 
         p1 = start_transform
         if self.isWalkingBackwards():
-            p2 = np.matmul(start_transform, Transformation([-self.speed * PathSectionBezier.turn_duration, 0.0, 0.0]))
-            p3 = np.matmul(end_transform, Transformation([self.speed * PathSectionBezier.turn_duration, 0.0, 0.0]))
+            p2 = np.matmul(start_transform, Transformation([-self.speed * self.turn_duration, 0.0, 0.0]))
+            p3 = np.matmul(end_transform, Transformation([self.speed * self.turn_duration, 0.0, 0.0]))
         else:
-            p2 = np.matmul(start_transform, Transformation([self.speed * PathSectionBezier.turn_duration, 0.0, 0.0]))
-            p3 = np.matmul(end_transform, Transformation([-self.speed * PathSectionBezier.turn_duration, 0.0, 0.0]))
+            p2 = np.matmul(start_transform, Transformation([self.speed * self.turn_duration, 0.0, 0.0]))
+            p3 = np.matmul(end_transform, Transformation([-self.speed * self.turn_duration, 0.0, 0.0]))
         p4 = end_transform
 
         p1_pos = p1.position

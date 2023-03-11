@@ -5,8 +5,8 @@ import numpy as np
 import rospy
 
 from soccer_common.transformation import Transformation
+from soccer_common.utils import wrapToPi
 from soccer_pycontrol.path_section import PathSection
-from soccer_pycontrol.utils import wrapToPi
 
 
 class PathSectionShort(PathSection):
@@ -14,14 +14,14 @@ class PathSectionShort(PathSection):
     A path section made up an initial rotation, followed by a linear path and a final rotatio
     """
 
-    steps_per_second_default = rospy.get_param("steps_per_second_default", 2.5)  # try 6 motors P = 09.25
-
-    #: How much to incrase the rotation angle when turning (for calibration purposes)
-    scale_yaw = rospy.get_param("scale_yaw", 1.0)  # Increase the rotation by angle
-
     def __init__(self, start_transform: Transformation, end_transform: Transformation):
         self.start_transform: Transformation = start_transform
         self.end_transform: Transformation = end_transform
+
+        self.steps_per_second_default = rospy.get_param("steps_per_second_default", 2.5)  # try 6 motors P = 09.25
+
+        #: How much to incrase the rotation angle when turning (for calibration purposes)
+        self.scale_yaw = rospy.get_param("scale_yaw", 1.0)  # Increase the rotation by angle
 
         if self.isWalkingBackwards():
             torso_step_length = rospy.get_param("torso_step_length_short_backwards", 0.025)

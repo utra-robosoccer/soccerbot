@@ -10,33 +10,33 @@ motor_mapping:
   right_leg_motor_1:
     id: 7
     direction: -1 # -1 # 1 #leg goes outwards # opposite
-    offset: 83
+    offset: 68
     initial_state: -0.05
-    limits: [61.79, 100.11]
+    limits: [50, 100.11]
   right_leg_motor_2:
     id: 9
     direction: -1 # 1 # -1 #leg goes forwards # opposite
-    offset: 90
+    offset: 100
     initial_state: 0.25
     limits: [9.67, 118.92]
   right_leg_motor_3:
     id: 10
     direction: 1 # 1 #calve goes forwards # same
-    offset: 94
+    offset: 150
     initial_state: -0.4
-    limits: [8.79, 171.21]
+    # limits: [8.79, 171.21]
   right_leg_motor_4:
     id: 3
     direction: 1 # 1 #foot points upwards # same
-    offset: 102
+    offset: 114
     initial_state: 0.2
     limits: [70.31, 168.13]
   right_leg_motor_5:
     id: 5
     direction: 1 # -1 #foot turns outwards # same
-    offset: 90
+    offset: 80
     initial_state: 0.05
-    limits: [75.37, 105.29]
+    limits: [50.37, 130.29]
 
   ######################################
   ######################################
@@ -44,37 +44,37 @@ motor_mapping:
   left_leg_motor_0:
     id: 11
     direction: -1 # 1 #leg turns inwards # opposite
-    offset: 92
+    offset: 90
     initial_state: 0.0
     limits: [8.79, 140.45]
   left_leg_motor_1:
     id: 1
     direction: 1 # -1 #leg goes outwards # same
-    offset: 92
+    offset: 103
     initial_state: -0.05
-    limits: [81.96, 109.86]
+    limits: [71.96, 130.86]
   left_leg_motor_2:
     id: 2
     direction: 1 # 1 # leg goes forwards # same
-    offset: 90
+    offset: 71
     initial_state: 0.25
-    limits: [70.88, 171.21]
+    limits: [0, 171.21]
   left_leg_motor_3:
     id: 0
     direction: -1 # 1 # -1 # calve goes forwards # opposite
-    offset: 80 
+    offset: 117
     initial_state: -0.4
-    limits: [8.92, 162.42]
+#    limits: [8.92, 162.42]
   left_leg_motor_4:
     id: 12
     direction: -1 # 1 # -1 # foot points upwards # opposite
-    offset: 110
+    offset: 100
     initial_state: 0.2
     limits: [10.99, 107.49]
   left_leg_motor_5:
     id: 8
     direction: -1 # -1 # 1 # foot turns outwards # opposite
-    offset: 110 
+    offset: 95
     initial_state: 0.05
 
   ######################################
@@ -82,24 +82,25 @@ motor_mapping:
   
   left_arm_motor_0:
     id: 15
-    direction: -1 # 1 # arm goes forwards
-    offset: 75 # 150
+    direction: 1 # 1 # arm goes forwards
+    offset: 90 # 150
     initial_state: 0.2
   left_arm_motor_1:
     id: 16
-    direction: 1 # arm goes forwards
+    direction: -1 # arm goes forwards
     offset: 170 # 150
     initial_state: 1.5
   right_arm_motor_0:
     id: 13
-    direction: 1 # arm goes forwards
-    offset: 90 # 150
+    direction: -1 # arm goes forwards
+    offset: 105 # 150
     initial_state: 0.2
   right_arm_motor_1:
     id: 14
-    direction: -1 # arm goes forwards
-    offset: 20 # 150
+    direction: 1 # arm goes forwards
+    offset: 10 # 150
     initial_state: 1.5
+
   head_motor_0:
     id: 17
     joint_state_id: 0

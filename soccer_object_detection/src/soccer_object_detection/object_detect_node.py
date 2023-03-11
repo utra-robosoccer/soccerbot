@@ -18,7 +18,7 @@ from rospy import ROSException
 from sensor_msgs.msg import Image
 
 from soccer_common.camera import Camera
-from soccer_msgs.msg import BoundingBox, BoundingBoxes, RobotState
+from soccer_msgs.msg import BoundingBox, BoundingBoxes, GameState, RobotState
 
 
 class Label(enum.IntEnum):
@@ -74,6 +74,11 @@ class ObjectDetectionNode(object):
         )  # Large buff size (https://answers.ros.org/question/220502/image-subscriber-lag-despite-queue-1/)
         self.robot_state_subscriber = rospy.Subscriber("state", RobotState, self.robot_state_callback)
         self.robot_state = RobotState()
+        self.game_state_subscriber = rospy.Subscriber("gamestate", GameState, self.game_state_callback)
+        self.game_state = GameState()
+
+    def game_state_callback(self, game_state: GameState):
+        self.game_state = game_state
 
     def robot_state_callback(self, robot_state: RobotState):
         self.robot_state = robot_state
@@ -85,6 +90,9 @@ class ObjectDetectionNode(object):
             RobotState.STATUS_READY,
             RobotState.ROLE_UNASSIGNED,
         ]:
+            return
+
+        if self.game_state.gameState != GameState.GAMESTATE_PLAYING:
             return
 
         rospy.loginfo_once("Object Detection Receiving image")
@@ -100,7 +108,7 @@ class ObjectDetectionNode(object):
             # 1. preprocess image
             img = image[:, :, :3]  # get rid of alpha channel
             img = img[..., ::-1]  # convert bgr to rgb
-            img = img[max(0, h + 1) : -1, :]
+            img = img[max(0, h + 1) :, :]
             # 2. inference
 
             results = self.model(img)
@@ -137,7 +145,7 @@ class ObjectDetectionNode(object):
 
 if __name__ == "__main__":
     parser = ArgumentParser()
-    parser.add_argument("--model", dest="model_path", default="outputs/model3_feat10", help="pytorch model")
+    parser.add_argument("--model", dest="model_path", default="small_model/July14.pt", help="pytorch model")
     parser.add_argument("--num-feat", dest="num_feat", default=10, help="specify model size of the neural network")
     args, unknown = parser.parse_known_args()
 

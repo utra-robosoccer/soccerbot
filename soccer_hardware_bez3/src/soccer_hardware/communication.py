@@ -18,12 +18,20 @@ from std_msgs.msg import Float64
 from transformations import *
 from transmitter import Transmitter
 from wait_for_ms import WaitForMs
+import time
 
 
 class Communication:
     def __init__(self, jx_ser, imu_pwm_servo_ser):
         self._last_angles = None
         self._last_imu = None
+
+        self._jx_ser = jx_ser
+        self._imu_pwm_servo_ser = imu_pwm_servo_ser
+
+        self.init_rx_imu_thread()
+        self.init_rx_servo_thread()
+        self.init_tx_servo_thread()
 
         # https://www.pieter-jan.com/node/11
         self.pitch_acc = 0
@@ -37,14 +45,9 @@ class Communication:
         jx_ser._motor_lock = (
             Lock()
         )  # TODO improve on this hacky exclusive lock over the serial port for motor TX/RX (which always requires flushing the RX buffer via the state machine due to echo, hence exclusive lock)
-        self._tx_servo_thread = Transmitter(name="tx_servo_th", jx_ser=jx_ser, pwm_ser=imu_pwm_servo_ser)
-        self._rx_servo_thread = MotorReceiver(name="rx_servo_th", ser=jx_ser)
-        self._rx_servo_thread.set_timeout(0.04)
-        self._rx_servo_thread.bind(self.receive_servo_callback)
 
-        self._rx_imu_thread = IMUReceiver(name="rx_imu_th", ser=imu_pwm_servo_ser)
-        self._rx_imu_thread.set_timeout(0.010)
-        self._rx_imu_thread.bind(self.receive_imu_callback)
+        # TODO: Serial fail handling
+        #    e.g. put all thread creation in a conditional timed loop, so if the serial temporarily disconnects we can reconnect and restart the thread. Alternatively, give the threads the serial object factory
 
         self._pub_imu = rp.Publisher("imu_raw", Imu, queue_size=1)
         self._pub_joint_states = rp.Publisher("joint_states", JointState, queue_size=1)
@@ -59,7 +62,20 @@ class Communication:
         #     self._motor_map[motor]["subscriber"] = rp.Subscriber(motor + "/command", Float64, self.trajectory_callback, motor)
         #     self._motor_map[motor]["publisher"] = rp.Publisher(motor + "/state", JointControllerState, queue_size=1)
 
-        self._publish_timer = rp.Timer(rp.Duration(nsecs=10000000), self.send_angles)
+        self._publish_timer = rp.Timer(rp.Duration(nsecs=int(3E6)), self.send_angles)
+
+    def init_tx_servo_thread(self):
+        self._tx_servo_thread = Transmitter(name="tx_servo_th", jx_ser=self._jx_ser, pwm_ser=self._imu_pwm_servo_ser)
+
+    def init_rx_servo_thread(self):
+        self._rx_servo_thread = MotorReceiver(name="rx_servo_th", ser=self._jx_ser)
+        self._rx_servo_thread.set_timeout(0.04)
+        self._rx_servo_thread.bind(self.receive_servo_callback)
+
+    def init_rx_imu_thread(self):
+        self._rx_imu_thread = IMUReceiver(name="rx_imu_th", ser=self._imu_pwm_servo_ser)
+        self._rx_imu_thread.set_timeout(0.010)
+        self._rx_imu_thread.bind(self.receive_imu_callback)
 
     def run(self):
         self._rx_servo_thread.start()
@@ -72,7 +88,19 @@ class Communication:
         # Never need to wait longer than the target time, but allow calls to
         # time.sleep for down to 3 ms less than the desired time
         tx_cycle.set_e_lim(0, -3.0)
-        rp.spin()
+
+
+        while not rp.is_shutdown():
+            if not self._tx_servo_thread.is_alive():
+                self.init_tx_servo_thread()
+                self._tx_servo_thread.start()
+            if not self._rx_imu_thread.is_alive():
+                self.init_rx_imu_thread()
+                self._rx_imu_thread.start()
+            if not self._rx_servo_thread.is_alive():
+                self.init_rx_servo_thread()
+                self._rx_servo_thread.start()
+            time.sleep(0.1)
 
     def joint_command_callback(self, joint_command):
         for motor_name, target in zip(joint_command.name, joint_command.position):
@@ -98,18 +126,17 @@ class Communication:
         for motor in self._motor_map:
             servo_idx = int(self._motor_map[motor]["id"])
             # print(servo_idx, str(type(list(received_angles.keys())[0])), servo_idx in received_angles)
-            if int(servo_idx) < 12 and (servo_idx + 1) in received_angles:
-                angle = received_angles[servo_idx + 1]
+            if servo_idx in received_angles:
+                angle = received_angles[servo_idx]
                 if math.isnan(angle):  # TODO fix this
                     continue
                 angle = (angle - float(self._motor_map[motor]["offset"])) * float(self._motor_map[motor]["direction"])
                 angle = np.deg2rad(angle)
-            else:
-                angle = self._motor_map[motor]["value"]
 
-            # Joint State
-            joint_state.name.append(motor)
-            joint_state.position.append(angle)
+                # NOTE: only publish if we receive a valid angle from the servos, as opposed to whatever is in `_motor_map.value` [why were we doing that anyways?! sample-and-hold is a much better estimate.] (-DL 2022-09-28)
+                joint_state.name.append(motor)
+                joint_state.position.append(angle)
+
         # print(joint_state)
         self._pub_joint_states.publish(joint_state)
         # self.publish_sensor_data(self._last_angles, self._last_imu)

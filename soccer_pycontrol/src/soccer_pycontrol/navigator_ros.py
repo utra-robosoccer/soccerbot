@@ -1,6 +1,7 @@
 import copy
 import os
 
+import rospy
 import tf
 from geometry_msgs.msg import Pose, PoseStamped, PoseWithCovarianceStamped
 from rospy import ROSInterruptException
@@ -40,6 +41,8 @@ class NavigatorRos(Navigator):
 
         self.tf_listener = tf.TransformListener()
 
+        self.t = 0
+
     def update_robot_pose(self, footprint_name="/base_footprint") -> bool:
         """
         Function to update the location of the robot based on odometry. Called before movement to make sure the starting
@@ -67,7 +70,7 @@ class NavigatorRos(Navigator):
         resetPublisher.publish(pose_stamped)
         self.robot_pose = pose_stamped
 
-        rospy.sleep(0.5)
+        rospy.sleep(0.2)
 
         p = PoseWithCovarianceStamped()
         p.header.frame_id = "world"
@@ -75,7 +78,7 @@ class NavigatorRos(Navigator):
         p.pose.pose = pose_stamped.pose
         initialPosePublisher.publish(p)
 
-        rospy.sleep(0.5)
+        rospy.sleep(0.2)
 
     def getPose(self, footprint_name="/base_footprint_gt"):
         try:
@@ -108,7 +111,7 @@ class NavigatorRos(Navigator):
             print("Updating New Goal")
             start = time.time()
             goal_position = Transformation(pose=pose.pose)
-            self.soccerbot.addTorsoHeight(goal_position)
+            self.soccerbot.setWalkingTorsoHeight(goal_position)
             self.new_path = copy.deepcopy(self.soccerbot.robot_path)
 
             try:
@@ -146,6 +149,9 @@ class NavigatorRos(Navigator):
         while not rospy.is_shutdown():
             time_start = time.time()
 
+            # Always publish odometry no matter what state
+            self.soccerbot.publishOdometry()
+
             if self.soccerbot.robot_state.status in [
                 RobotState.STATUS_DISCONNECTED,
                 RobotState.STATUS_DETERMINING_SIDE,
@@ -157,7 +163,6 @@ class NavigatorRos(Navigator):
             ]:
                 self.soccerbot.robot_path = None
                 self.goal = self.new_goal
-                self.soccerbot.publishOdometry()
                 self.soccerbot.reset_imus()
                 self.soccerbot.updateRobotConfiguration()
                 r.sleep()
@@ -222,9 +227,6 @@ class NavigatorRos(Navigator):
 
                 self.soccerbot.current_step_time = self.t
 
-                # Publish robot's position and height (Average Time: 0.00030437924645164)
-                self.soccerbot.publishOdometry()
-
             # Walk completed
             if (
                 self.soccerbot.robot_path is not None
@@ -237,7 +239,6 @@ class NavigatorRos(Navigator):
                 self.completed_walk_publisher.publish(e)
 
             if self.soccerbot.robot_path is None or self.t > self.soccerbot.robot_path.duration():
-                self.soccerbot.pose[2, 3] = 0.334  # TODO remove hardcode
                 self.soccerbot.publishHeight()
                 self.soccerbot.apply_head_rotation()
                 self.soccerbot.robot_path = None
@@ -287,7 +288,7 @@ class NavigatorRos(Navigator):
             if time_end - time_start > Navigator.PYBULLET_STEP * 1.2:
                 rospy.logerr_throttle(
                     10,
-                    f"Step Delta took longer than expected {time_end - time_start}. Control Frequency {Navigator.PYBULLET_STEP}. Desired Steps Per Second: {PathSection.steps_per_second_default}",
+                    f"Step Delta took longer than expected {time_end - time_start}. Control Frequency {self.PYBULLET_STEP}",
                 )
 
             self.t = self.t + Navigator.PYBULLET_STEP
