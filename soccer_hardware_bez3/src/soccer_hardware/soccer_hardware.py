@@ -5,6 +5,8 @@ import serial.tools.list_ports
 from communication import Communication
 from utility import *
 
+MAX_ATTEMPTS = 5
+
 if __name__ == "__main__":
     rospy.init_node("soccer_hardware")
     imu_port = rospy.get_param("~imu_port", "/dev/ttyACM")
@@ -19,31 +21,36 @@ if __name__ == "__main__":
     log_string("\tIMU Baud rate: " + str(imu_baud))
 
     # Try all ranges in port
-    imu_ser = None
-    servo_ser = None
-    for i in [""] + [str(a) for a in range(0, 10)]:
-        try:
-            imu_ser = serial.Serial(imu_port + i, imu_baud, timeout=0)
-        except serial.serialutil.SerialException as e:
-            pass
-
-        try:
-            servo_ser = serial.Serial(servo_port + i, servo_baud, timeout=0)
-        except serial.serialutil.SerialException as e:
-            pass
-
-    if imu_ser is None or servo_ser is None:
-        rospy.logerr(
-            "No serial port found: "
-            + ("IMU port `%s`" % imu_port if imu_ser is None else "")
-            + (" and " if imu_ser is None and servo_ser is None else "")
-            + ("Servo port `%s`" % servo_port if servo_ser is None else "")
-        )
-        exit(0)
 
     attempt = 0
-    rate = rospy.Rate(1)
+    rate = rospy.Rate(5)
     while not rospy.is_shutdown():
+        log_string('COMMS ATTEMPT %d/%d' % (attempt, MAX_ATTEMPTS))
+        if attempt > MAX_ATTEMPTS:
+            break
+        
+        imu_ser = None
+        servo_ser = None
+        for i in [""] + [str(a) for a in range(0, 10)]:
+            try:
+                imu_ser = serial.Serial(imu_port + i, imu_baud, timeout=0)
+            except serial.serialutil.SerialException as e:
+                pass
+
+            try:
+                servo_ser = serial.Serial(servo_port + i, servo_baud, timeout=0)
+            except serial.serialutil.SerialException as e:
+                pass
+
+        if imu_ser is None or servo_ser is None:
+            rospy.logerr(
+                "No serial port found: "
+                + ("IMU port `%s`" % imu_port if imu_ser is None else "")
+                + (" and " if imu_ser is None and servo_ser is None else "")
+                + ("Servo port `%s`" % servo_port if servo_ser is None else "")
+            )
+            rate.sleep()
+            
         try:
             comm = Communication(servo_ser, imu_ser)
             comm.run()
