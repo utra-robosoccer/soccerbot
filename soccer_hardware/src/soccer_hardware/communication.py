@@ -58,10 +58,12 @@ class Communication:
 
     def send_angles(self, event):
         motor_angles = [0] * len(self._motor_map)
-        for motor in self._motor_map:
-            motor_angles[int(self._motor_map[motor]["id"])] = np.rad2deg(
-                self._motor_map[motor]["value"] * float(self._motor_map[motor]["direction"])
-            ) + float(self._motor_map[motor]["offset"])
+        for motor_key, motor in self._motor_map.items():
+            motor_angles[int(motor["id"])] = (
+                np.rad2deg(
+                    motor["value"] * float(motor["direction"])
+                ) + float(motor["offset"])
+            ) * (self._motor_map['scale'] if 'scale' in motor else 1)
         self._tx_thread.send(motor_angles)
 
     def receive_callback(self, received_angles, received_imu):

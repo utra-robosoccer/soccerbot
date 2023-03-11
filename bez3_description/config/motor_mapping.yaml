@@ -5,36 +5,42 @@ motor_mapping:
     joint_state_id: 1
     direction: 1 # -1 #leg turns inwards # same
     offset: 80
+    scale: 1
     initial_state: 0.0
     limits: [30.32, 170.73]
   right_leg_motor_1:
     id: 7
     direction: -1 # -1 # 1 #leg goes outwards # opposite
     offset: 68
+    scale: 1
     initial_state: -0.05
     limits: [50, 100.11]
   right_leg_motor_2:
     id: 9
     direction: -1 # 1 # -1 #leg goes forwards # opposite
     offset: 100
+    scale: 1
     initial_state: 0.25
     limits: [9.67, 118.92]
   right_leg_motor_3:
     id: 10
     direction: 1 # 1 #calve goes forwards # same
     offset: 150
+    scale: 1
     initial_state: -0.4
     # limits: [8.79, 171.21]
   right_leg_motor_4:
     id: 3
     direction: 1 # 1 #foot points upwards # same
     offset: 114
+    scale: 1
     initial_state: 0.2
     limits: [70.31, 168.13]
   right_leg_motor_5:
     id: 5
     direction: 1 # -1 #foot turns outwards # same
     offset: 80
+    scale: 1
     initial_state: 0.05
     limits: [50.37, 130.29]
 
@@ -45,36 +51,42 @@ motor_mapping:
     id: 11
     direction: -1 # 1 #leg turns inwards # opposite
     offset: 90
+    scale: 1
     initial_state: 0.0
     limits: [8.79, 140.45]
   left_leg_motor_1:
     id: 1
     direction: 1 # -1 #leg goes outwards # same
     offset: 103
+    scale: 1
     initial_state: -0.05
     limits: [71.96, 130.86]
   left_leg_motor_2:
     id: 2
     direction: 1 # 1 # leg goes forwards # same
     offset: 71
+    scale: 1
     initial_state: 0.25
     limits: [0, 171.21]
   left_leg_motor_3:
     id: 0
     direction: -1 # 1 # -1 # calve goes forwards # opposite
     offset: 117
+    scale: 1
     initial_state: -0.4
 #    limits: [8.92, 162.42]
   left_leg_motor_4:
     id: 12
     direction: -1 # 1 # -1 # foot points upwards # opposite
     offset: 100
+    scale: 1
     initial_state: 0.2
     limits: [10.99, 107.49]
   left_leg_motor_5:
     id: 8
     direction: -1 # -1 # 1 # foot turns outwards # opposite
     offset: 95
+    scale: 1
     initial_state: 0.05
 
   ######################################
@@ -84,21 +96,25 @@ motor_mapping:
     id: 15
     direction: 1 # 1 # arm goes forwards
     offset: 90 # 150
+    scale: 1
     initial_state: 0.2
   left_arm_motor_1:
     id: 16
     direction: -1 # arm goes forwards
     offset: 170 # 150
+    scale: 1
     initial_state: 1.5
   right_arm_motor_0:
     id: 13
     direction: -1 # arm goes forwards
     offset: 105 # 150
+    scale: 1
     initial_state: 0.2
   right_arm_motor_1:
     id: 14
     direction: 1 # arm goes forwards
     offset: 10 # 150
+    scale: 1
     initial_state: 1.5
 
   head_motor_0:
@@ -106,10 +122,12 @@ motor_mapping:
     joint_state_id: 0
     direction: 1 # robot looks to the right
     offset: 70 # 150
+    scale: 1
     initial_state: 0.0
   head_motor_1:
     id: 18
     joint_state_id: 1
     direction: -1 # robot looks down
     offset: 90 # 150
+    scale: 1
     initial_state: 0.0
