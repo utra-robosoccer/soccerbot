@@ -57,4 +57,3 @@ jobs:
           aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 047817357099.dkr.ecr.us-east-2.amazonaws.com/hl-vs-utra
           docker tag utrarobosoccer/soccerbot 047817357099.dkr.ecr.us-east-2.amazonaws.com/hl-vs-utra
           docker push 047817357099.dkr.ecr.us-east-2.amazonaws.com/hl-vs-utra
-
