@@ -6,10 +6,12 @@ from typing import Optional
 import cv2
 import numpy as np
 import rospy
+from field import *
 from filterpy.kalman import MerweScaledSigmaPoints
 from filterpy.kalman import UnscentedKalmanFilter as UKF
 from filterpy.stats import plot_covariance
 from nav_msgs.msg import OccupancyGrid
+from scipy.linalg import block_diag
 
 from soccer_common.transformation import Transformation
 from soccer_common.utils import wrapToPi
@@ -21,7 +23,7 @@ class FieldLinesUKF:
         points_fn = MerweScaledSigmaPoints(n=3, alpha=0.1, beta=2, kappa=0, subtract=self.residual_x)
         self.ukf = UKF(
             dim_x=3,
-            dim_z=3,
+            dim_z=3 + 8,
             fx=self.move,
             hx=self.Hx,
             dt=0.01,
@@ -38,7 +40,13 @@ class FieldLinesUKF:
         self.R_walking = np.diag([4, 2, 0.1])
         self.R_localizing = np.diag([0.9, 0.9, 0.1])
         self.R_ready = np.diag([0.1, 0.1, 0.1])
-        self.ukf.R = self.R_walking  # Noise from measurement updates (x, y, theta), trust the y more than the x
+
+        self.R_goal_posts_localizing = np.diag([1e-4, 1e-4] * 4)  # Range, bearing, range, bearing, ...
+        self.R_goal_posts_not_localizing = np.diag([1e4, 1e4] * 4)  # Range, bearing, range, bearing, ...
+
+        self.ukf.R = block_diag(
+            self.R_walking, self.R_goal_posts_not_localizing
+        )  # Noise from measurement updates (x, y, theta), trust the y more than the x
 
         self.Q_walking = np.diag([9e-5, 9e-5, 5e-4])
         self.Q_localizing = np.diag([9e-5, 9e-5, 5e-4])
@@ -68,10 +76,21 @@ class FieldLinesUKF:
         that would correspond to that state
 
         :param x: offset transform of robot from field
-        :return: an array of distance and bearings in relation to the robot
-        """
+        :return: state of the robot, bearing and range of all the goal posts [x, y, theta, goal_post_1 dist, goal_post_1 angle, ...]
 
-        return x
+        # Dimensions given here https://cdn.robocup.org/hl/wp/2021/06/V-HL21_Rules_v4.pdf
+        """
+        A = 9
+        D = 2.6
+        goal_post_locations = [(A / 2, D / 2), (A / 2, -D / 2), (-A / 2, D / 2), (-A / 2, -D / 2)]
+
+        hx = []
+        for goal_post in goal_post_locations:
+            dist = sqrt((goal_post[0] - x[0]) ** 2 + (goal_post[1] - x[1]) ** 2)
+            angle = atan2(goal_post[1] - x[1], goal_post[0] - x[0])
+            hx.extend([dist, wrapToPi(angle - x[2])])
+
+        return np.concatenate((x, hx))
 
     def state_mean(self, sigmas, Wm):
         x = np.zeros(3)
@@ -95,6 +114,7 @@ class FieldLinesUKF:
         assert dt >= 0
         self.ukf.predict(dt=dt, u=u)
         assert not math.isnan(self.ukf.x[0])
+        assert not np.any(np.diagonal(self.ukf.P) <= 0)
 
     def update(self, z, transform_confidence):
         assert not any((math.isnan(z[i]) for i in range(0, 3)))
@@ -104,8 +124,15 @@ class FieldLinesUKF:
         R[1, 1] = R[1, 1] / max(0.001, transform_confidence[1] ** 2)
         R[2, 2] = R[2, 2] / max(0.001, transform_confidence[2] ** 2)
 
+        R[3, 3] = R[4, 4] = R[5, 5] = R[6, 6] = R[7, 7] = R[8, 8] = R[9, 9] = R[10, 10] = 1e4
+        z = np.concatenate((z, np.zeros(8)))
+        # TODO fix this
         self.ukf.update(z, R)
         assert not math.isnan(self.ukf.x[0])
+        assert not np.any(np.diagonal(self.ukf.P) <= 0)
+
+    def update_goal_posts(self, z):
+        pass
 
     def draw_covariance(self):
         plot_covariance((self.ukf.x[0], self.ukf.x[1]), self.ukf.P[0:2, 0:2], std=1, facecolor="k", alpha=0.1)

@@ -10,7 +10,9 @@ import scipy
 import sensor_msgs.point_cloud2 as pcl2
 import tf
 from geometry_msgs.msg import PoseWithCovarianceStamped
+from scipy.linalg import block_diag
 from sensor_msgs.msg import PointCloud2
+from tf2_msgs.msg import TFMessage
 
 from soccer_common import Transformation
 from soccer_localization.field import Field
@@ -38,6 +40,7 @@ class FieldLinesUKFROS(FieldLinesUKF):
         self.odom_t_previous = None
 
         self.br = tf.TransformBroadcaster()
+        self.tf_subscriber = rospy.Subscriber("/tf", TFMessage, callback=self.tf_callback)
         self.timestamp_last = rospy.Time(0)
 
         self.robot_state_subscriber = rospy.Subscriber("state", RobotState, self.robot_state_callback)
@@ -79,13 +82,13 @@ class FieldLinesUKFROS(FieldLinesUKF):
 
             if self.robot_state.status == RobotState.STATUS_LOCALIZING:
                 self.ukf.Q = self.Q_localizing
-                self.ukf.R = self.R_localizing
+                self.ukf.R = block_diag(self.R_localizing, self.R_goal_posts_localizing)
             elif self.robot_state.status == RobotState.STATUS_READY:
                 self.ukf.Q = self.Q_ready
-                self.ukf.R = self.R_ready
+                self.ukf.R = block_diag(self.R_ready, self.R_goal_posts_localizing)
             else:
                 self.ukf.Q = self.Q_walking
-                self.ukf.R = self.R_walking
+                self.ukf.R = block_diag(self.R_walking, self.R_goal_posts_localizing)
 
             self.predict(u=diff_transformation.pos_theta / dt_secs, dt=dt_secs)
 
@@ -128,6 +131,13 @@ class FieldLinesUKFROS(FieldLinesUKF):
 
                 return point_cloud_array, vo_transform, vo_pos_theta
             return None, None, None
+
+    def tf_callback(self, tf_message: TFMessage):
+        for transform in tf_message.transforms:
+            if "goal_post" in transform.child_frame_id:
+                # Do callback here
+                pass
+        pass
 
     def broadcast_vo_transform_debug(self, vo_transform: Transformation, point_cloud: PointCloud2):
         self.br.sendTransform(

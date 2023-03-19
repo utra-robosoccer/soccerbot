@@ -179,6 +179,7 @@ def display_rosbag_map(bag, map, debug=False, pos_theta_start=[-4, -3.15, np.pi 
                     path_gt_t.append(t.to_sec())
                     if debug and t.secs > t_start:
                         map.drawPathOnMap(transform_gt, label="Ground Truth", color="black")
+            f.tf_callback(msg)
 
         elif topic == "/robot1/odom_combined":
             odom_t = f.odom_callback(msg)
@@ -267,7 +268,7 @@ def test_walk_forward():
     map.draw()
 
     bag = rosbag.Bag(retrieve_bag())
-    display_rosbag_map(bag=bag, map=map, debug=False)
+    display_rosbag_map(bag=bag, map=map, debug=True)
 
 
 def test_walk_forward_striker():
@@ -291,6 +292,18 @@ def test_fall_relocalization():
     map = Field()
     map.draw()
     bag = rosbag.Bag(retrieve_bag(url="https://drive.google.com/uc?id=1spsxVlUqvhXlZhdTNt_aCBulTFyLBoUQ", bag_name="relocalization_fall"))
+    display_rosbag_map(bag=bag, map=map, debug=False, pos_theta_start=[-1, -3.15, np.pi / 2], t_start=0)
+
+
+def test_relocalization_goal_posts():
+
+    rospy.init_node("test")
+
+    plt.figure("Localization")
+
+    map = Field()
+    map.draw()
+    bag = rosbag.Bag(retrieve_bag(url="https://drive.google.com/file/d/1zVFzDLydoyto3RmE1TA_5CJMefQT_0uI", bag_name="localization_goal_posts"))
     display_rosbag_map(bag=bag, map=map, debug=False, pos_theta_start=[-1, -3.15, np.pi / 2], t_start=0)
 
 

@@ -31,11 +31,11 @@ I = 1
 J = 2
 K = 5
 lw = 0.05
+# Dimensions given here https://cdn.robocup.org/hl/wp/2021/06/V-HL21_Rules_v4.pdf
 
 
 class Field:
     def __init__(self):
-        # Dimensions given here https://cdn.robocup.org/hl/wp/2021/06/V-HL21_Rules_v4.pdf
 
         self.distance_point_threshold = rospy.get_param("distance_point_threshold", 5)
         self.min_points_threshold = rospy.get_param("min_points_threshold", 40)
