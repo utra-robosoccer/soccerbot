@@ -41,7 +41,11 @@ class Field:
         self.min_points_threshold = rospy.get_param("min_points_threshold", 40)
         self.max_detected_line_parallel_offset_error = rospy.get_param("max_detected_line_parallel_offset_error", 0.1)
         self.max_detected_line_perpendicular_offset_error = rospy.get_param("max_detected_line_perpendicular_offset_error", 0.3)
-        self.offset_movement_limit = rospy.get_param("offset_movement_limit", 0.1)
+        self.offset_movement_limit = rospy.get_param("offset_movement_limit", 0.2)
+
+        self.max_detected_line_parallel_offset_error_localizing = rospy.get_param("max_detected_line_parallel_offset_error_localizing", 0.5)
+        self.max_detected_line_perpendicular_offset_error_localizing = rospy.get_param("max_detected_line_perpendicular_offset_error", 0.5)
+        self.offset_movement_limit_localizing = rospy.get_param("offset_movement_limit", 0.5)
 
         self.path_plots: Dict[str, PathCollection] = {}
         self.path_points: Dict[str, list] = {}
@@ -130,13 +134,15 @@ class Field:
         return world_frame_points
 
     def matchPointsWithMapIterative(
-        self, current_transform: Transformation, point_cloud_array: np.array, iterations=3
+        self, current_transform: Transformation, point_cloud_array: np.array, iterations=3, localizing=False
     ) -> Union[Tuple[Transformation, List[int]], None]:
         match_iterations = iterations
         offset_transform_cumulative = Transformation()
         transform_confidence = None
         while match_iterations > 0:
-            tt = self.matchPointsWithMap(current_transform, point_cloud_array)
+            if match_iterations == 1:
+                localizing = False
+            tt = self.matchPointsWithMap(current_transform, point_cloud_array, localizing=localizing)
             if tt is None:
                 return None
 
@@ -146,7 +152,17 @@ class Field:
             match_iterations -= 1
         return offset_transform_cumulative, transform_confidence
 
-    def matchPointsWithMap(self, current_transform: Transformation, point_cloud_array: np.array) -> Union[Tuple[Transformation, List[int]], None]:
+    def matchPointsWithMap(
+        self, current_transform: Transformation, point_cloud_array: np.array, localizing=False
+    ) -> Union[Tuple[Transformation, List[int]], None]:
+        if localizing:
+            max_detected_line_parallel_offset_error = self.max_detected_line_parallel_offset_error_localizing
+            max_detected_line_perpendicular_offset_error = self.max_detected_line_parallel_offset_error_localizing
+            offset_movement_limit = self.offset_movement_limit_localizing
+        else:
+            max_detected_line_parallel_offset_error = self.max_detected_line_parallel_offset_error
+            max_detected_line_perpendicular_offset_error = self.max_detected_line_perpendicular_offset_error
+            offset_movement_limit = self.offset_movement_limit
 
         start = time.time()
         # Filter points by distance from current transform
@@ -170,8 +186,8 @@ class Field:
                     line_horizontal = False
 
                 if line_horizontal:
-                    x_left = line.p1.x - lw / 2 - self.max_detected_line_parallel_offset_error
-                    x_right = line.p2.x + lw / 2 + self.max_detected_line_parallel_offset_error
+                    x_left = line.p1.x - lw / 2 - max_detected_line_parallel_offset_error
+                    x_right = line.p2.x + lw / 2 + max_detected_line_parallel_offset_error
                     y = line.p1.y
 
                     y_diff = world_frame_points[1, :] - y
@@ -180,8 +196,8 @@ class Field:
                     )
                     diff_y[line_id, :] = y_diff
                 else:
-                    y_bottom = line.p1.y - lw / 2 - self.max_detected_line_parallel_offset_error
-                    y_top = line.p2.y + lw / 2 + self.max_detected_line_parallel_offset_error
+                    y_bottom = line.p1.y - lw / 2 - max_detected_line_parallel_offset_error
+                    y_top = line.p2.y + lw / 2 + max_detected_line_parallel_offset_error
                     x = line.p1.x
 
                     x_diff = world_frame_points[0, :] - x
@@ -205,11 +221,12 @@ class Field:
 
         closest_line = np.argmin(distance_matrix, axis=0)
         closest_dist = np.min(distance_matrix, axis=0)
-        index_meets_dist_threshold = np.where(closest_dist < self.max_detected_line_perpendicular_offset_error**2)
+        index_meets_dist_threshold = np.where(closest_dist < max_detected_line_perpendicular_offset_error**2)
 
         if len(index_meets_dist_threshold[0]) == 0:
             return None
 
+        ratio_meets_distance_threshold = len(index_meets_dist_threshold[0]) / closest_dist.size
         index_array = np.arange(len(closest_line))
 
         closest_line_diff_x = diff_x[closest_line, index_array]
@@ -230,8 +247,6 @@ class Field:
             diff_y_avg = 0
         assert not np.isnan(diff_x_avg)
         assert not np.isnan(diff_y_avg)
-        if diff_x_avg**2 + diff_y_avg**2 > self.offset_movement_limit**2:
-            return None
 
         center_of_all_points = np.average(points_meet_dist_threshold, axis=1)
         most_common_line = statistics.mode(closest_line)
@@ -241,6 +256,8 @@ class Field:
         points_meet_dist_threshold_shift = points_meet_dist_threshold_delta - np.concatenate([[closest_line_diff_x], [closest_line_diff_y]])
         distance_to_new_points = np.linalg.norm(points_meet_dist_threshold_delta, axis=0)
         sum_distance_to_new_points = np.sum(distance_to_new_points)
+        if sum_distance_to_new_points == 0:
+            return None
 
         angle_original = np.arctan2(points_meet_dist_threshold_delta[1, :], points_meet_dist_threshold_delta[0, :])
         angle_new = np.arctan2(points_meet_dist_threshold_shift[1, :], points_meet_dist_threshold_shift[0, :])
@@ -256,15 +273,17 @@ class Field:
 
         offset_transform = (inv_current_transform @ Transformation(pos_theta=[-diff_x_avg, -diff_y_avg, 0]) @ current_transform) @ transform_rotation
         offset_transform_pos_theta = offset_transform.pos_theta
-        if offset_transform_pos_theta[0] > 0.2 or offset_transform_pos_theta[1] > 0.2:
+        if offset_transform_pos_theta[0] ** 2 + offset_transform_pos_theta[1] ** 2 > offset_movement_limit**2:
             return None
-        end = time.time()
 
-        confidence_x = min(1, closest_line_diff_x_valid_count / 150)
-        confidence_y = min(1, closest_line_diff_y_valid_count / 150)
+        ratio_meets_distance_threshold = 4 * (ratio_meets_distance_threshold - 0.75) if ratio_meets_distance_threshold >= 0.75 else 0
+        confidence_x = min(1, closest_line_diff_x_valid_count / 150) * ratio_meets_distance_threshold
+        confidence_y = min(1, closest_line_diff_y_valid_count / 150) * ratio_meets_distance_threshold
         transform_confidence = [confidence_x, confidence_y, max(confidence_x, confidence_y)]
+
+        end = time.time()
         rospy.loginfo_throttle(60, f"Match Points with Map rate (s) :  {(end - start)}")
-        rospy.loginfo_throttle(10, f"Transform Confidence :  {transform_confidence}")
+        rospy.loginfo_throttle(1, f"Transform Confidence :  {transform_confidence} Ratio Meet Distance Threshold: {ratio_meets_distance_threshold}")
         return offset_transform, transform_confidence
 
     def drawPointsOnMap(self, current_transform: Transformation, point_cloud_array: np.array, label: str, color: str):

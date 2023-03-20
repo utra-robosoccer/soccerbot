@@ -67,18 +67,18 @@ Visualization Manager:
         All Enabled: false
         robot1/ball_gt:
           Value: false
-        robot1/base_camera:
-          Value: true
         robot1/base_footprint:
           Value: true
         robot1/base_footprint_gt:
+          Value: true
+        robot1/base_footprint_straight:
           Value: true
         robot1/camera:
           Value: false
         robot1/camera_gt:
           Value: true
         robot1/goal_post:
-          Value: false
+          Value: true
         robot1/head:
           Value: false
         robot1/imu_link:
@@ -102,6 +102,8 @@ Visualization Manager:
         robot1/neck:
           Value: false
         robot1/odom:
+          Value: true
+        robot1/odom_vo:
           Value: true
         robot1/right_ankle:
           Value: false
@@ -168,6 +170,10 @@ Visualization Manager:
                         robot1/right_ankle:
                           robot1/right_foot:
                             {}
+            robot1/base_footprint_straight:
+              {}
+          robot1/odom_vo:
+            {}
           robot1/torso_gt:
             {}
       Update Interval: 0

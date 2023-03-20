@@ -157,13 +157,12 @@ class NavigatorRos(Navigator):
 
             if self.soccerbot.robot_state.status in [
                 RobotState.STATUS_DISCONNECTED,
-                RobotState.STATUS_DETERMINING_SIDE,
                 RobotState.STATUS_FALLEN_FRONT,
                 RobotState.STATUS_FALLEN_BACK,
                 RobotState.STATUS_FALLEN_SIDE,
-                RobotState.STATUS_PENALIZED,
                 RobotState.STATUS_GETTING_BACK_UP,
                 RobotState.STATUS_KICKING,
+                RobotState.STATUS_PENALIZED,
             ]:
                 self.soccerbot.robot_path = None
                 self.goal = self.new_goal

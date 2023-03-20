@@ -165,8 +165,9 @@ def adjust_navigation_transform(start_transform: Transformation, end_transform: 
     diff_position = end_transform.position[0:2] - start_transform.position[0:2]
     start_angle = start_transform.orientation_euler[0]
     intermediate_angle = np.arctan2(diff_position[1], diff_position[0])
-
-    if isWalkingBackwards():
+    if diff_position[1] == 0 and diff_position[1] == 0:
+        intermediate_angle = start_angle
+    elif isWalkingBackwards():
         intermediate_angle = wrapToPi(intermediate_angle + np.pi)
     final_angle = end_transform.orientation_euler[0]
 

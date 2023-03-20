@@ -9,6 +9,7 @@ pyserial>=3.5
 transforms3d
 construct==2.10.67
 opencv-python>=4.5.5.62
+setuptools==67.4.0
 shapely
 vispy
 pytest
@@ -26,7 +27,7 @@ pybullet
 
 # object detection
 requests==2.28.1
-ipython==8.4.0
+ipython==8.10.0
 seaborn
 tensorboard
 Pillow==9.3.0

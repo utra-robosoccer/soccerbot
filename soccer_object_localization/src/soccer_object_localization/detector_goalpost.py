@@ -34,7 +34,7 @@ class DetectorGoalPost(Detector):
     def image_callback(self, img: Image, debug=False):
         t_start = time.time()
 
-        if self.robot_state.status is not RobotState.STATUS_DETERMINING_SIDE:
+        if self.robot_state.status not in [RobotState.STATUS_DETERMINING_SIDE, RobotState.STATUS_LOCALIZING]:
             return
 
         if not self.camera.ready():
@@ -44,6 +44,8 @@ class DetectorGoalPost(Detector):
 
         image = CvBridge().imgmsg_to_cv2(img, desired_encoding="rgb8")
         vertical_lines, image_out = self.get_vlines_from_img(image, debug=debug)
+        if vertical_lines is None:
+            return
 
         # Get vertical line in 3D position to the camera assuming that the lower point of the line is on the grass
         closest_distance = np.inf
@@ -73,7 +75,7 @@ class DetectorGoalPost(Detector):
                 (0, 0, 0, 1),
                 img.header.stamp,
                 self.robot_name + "/goal_post",
-                self.robot_name + "/base_camera",
+                self.robot_name + "/base_footprint",
             )
         if self.image_publisher.get_num_connections() > 0:
             img_out = CvBridge().cv2_to_imgmsg(image_out)
@@ -121,6 +123,8 @@ class DetectorGoalPost(Detector):
         lines = cv2.HoughLinesP(
             image_edges, rho=1, theta=hough_theta, threshold=hough_threshold, minLineLength=hough_min_line_length, maxLineGap=hough_max_line_gap
         )
+        if lines is None:
+            return None, None
         if debug:
             image_hough = image.copy()
             for line in lines:

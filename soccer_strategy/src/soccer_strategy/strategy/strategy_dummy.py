@@ -3,6 +3,7 @@ import math
 import numpy as np
 import rospy
 
+from soccer_common.utils import wrapTo2Pi
 from soccer_msgs.msg import GameState
 from soccer_strategy.robot import Robot
 from soccer_strategy.strategy.strategy import (
@@ -125,5 +126,5 @@ class StrategyDummy(Strategy):
                     f"Player {this_robot.robot_id}: Rotating to locate ball. Time of End of Action {self.time_of_end_of_action}, Last Observed Time Stamp {friendly_team.observed_ball.last_observed_time_stamp if friendly_team.observed_ball is not None else 0}"
                 )
 
-                turn_position = np.array([player_position[0], player_position[1], player_angle + math.pi * 0.45])
+                turn_position = np.array([player_position[0], player_position[1], wrapTo2Pi(player_angle + math.pi * 0.45)])
                 this_robot.set_navigation_position(turn_position)
