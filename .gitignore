@@ -29,4 +29,3 @@ venv/
 *.bag
 /soccer_object_localization/images/
 /soccer_object_detection/images/*
-soccer_webots/src/soccer_webots/messages_pb2.py

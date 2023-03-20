@@ -138,6 +138,14 @@ class Utility:
             diff_unit = diff / np.linalg.norm(diff)
             diff_angle = math.atan2(diff_unit[1], diff_unit[0])
             destination_position_biased = [optimal_pos_to_ball[0], optimal_pos_to_ball[1], diff_angle]
+            # check if player might turn into the ball when moving to new destination
+            # will only happen if ball is very close to the player
+            if np.linalg.norm(ball_position - player_position) < 0.07 + robot.BODY_WIDTH / 2:
+                diff = player_position - ball_position
+                diff_unit = diff / np.linalg.norm(diff)
+                diff_angle = math.atan2(diff_unit[1], diff_unit[0]) + 3.14 / 2
+                destination_position_biased[0:2] = player_position + diff_unit * robot.BODY_WIDTH
+                destination_position_biased[2] = diff_angle
 
         np.set_printoptions(precision=3)
         rospy.loginfo("Player {}: Navigation | Destination position biased {}".format(robot.robot_id, destination_position_biased))
