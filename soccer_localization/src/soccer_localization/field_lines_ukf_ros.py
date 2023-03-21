@@ -11,6 +11,7 @@ import sensor_msgs.point_cloud2 as pcl2
 import tf
 from geometry_msgs.msg import PoseWithCovarianceStamped
 from scipy.linalg import block_diag
+from scipy.optimize import linear_sum_assignment
 from sensor_msgs.msg import PointCloud2
 from tf2_msgs.msg import TFMessage
 
@@ -133,10 +134,29 @@ class FieldLinesUKFROS(FieldLinesUKF):
             return None, None, None
 
     def tf_callback(self, tf_message: TFMessage):
+        goal_post_locations_detected = []
         for transform in tf_message.transforms:
             if "goal_post" in transform.child_frame_id:
-                # Do callback here
-                pass
+                # Calculate distances to all goal posts and then run assignment problem
+                t = Transformation(geometry_msgs_transform=transform.transform)
+                goal_post_locations_detected.append(t)
+
+        distances = []
+        if len(goal_post_locations_detected):
+            distance_matrix = np.zeros((len(goal_post_locations_detected), len(self.goal_post_locations)))
+
+            for i, goal_post_location_detected in enumerate(goal_post_locations_detected):
+                goal_post_world_transform = (goal_post_location_detected @ Transformation(pos_theta=self.ukf.x)).position
+                for j, goal_post_location in enumerate(self.goal_post_locations):
+                    d = np.sqrt(
+                        (goal_post_location[1] - goal_post_world_transform[1]) ** 2 + (goal_post_location[0] - goal_post_world_transform[0]) ** 2
+                    )
+                    distance_matrix[i][j] = d
+
+            goal_post_locations_indexes, goal_post_locations_detected_indexes = linear_sum_assignment(distance_matrix)
+            # TODO fill out z and call update_goal_posts
+            pass
+
         pass
 
     def broadcast_vo_transform_debug(self, vo_transform: Transformation, point_cloud: PointCloud2):

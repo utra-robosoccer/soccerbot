@@ -1,3 +1,4 @@
+import functools
 import math
 import os
 from math import atan2, cos, nan, sin, sqrt, tan
@@ -63,12 +64,23 @@ class FieldLinesUKF:
     def residual_h(self, a, b):
         y = a - b
         y[2] = wrapToPi(y[2])
+        y[4] = wrapToPi(y[4])
+        y[6] = wrapToPi(y[6])
+        y[8] = wrapToPi(y[8])
+        y[10] = wrapToPi(y[10])
         return y
 
     def residual_x(self, a, b):
         y = a - b
         y[2] = wrapToPi(y[2])
         return y
+
+    @functools.cached_property
+    def goal_post_locations(self):
+        A = 9
+        D = 2.6
+        goal_post_locations = [(A / 2, D / 2), (A / 2, -D / 2), (-A / 2, D / 2), (-A / 2, -D / 2)]
+        return goal_post_locations
 
     def Hx(self, x):
         """
@@ -80,12 +92,9 @@ class FieldLinesUKF:
 
         # Dimensions given here https://cdn.robocup.org/hl/wp/2021/06/V-HL21_Rules_v4.pdf
         """
-        A = 9
-        D = 2.6
-        goal_post_locations = [(A / 2, D / 2), (A / 2, -D / 2), (-A / 2, D / 2), (-A / 2, -D / 2)]
 
         hx = []
-        for goal_post in goal_post_locations:
+        for goal_post in self.goal_post_locations:
             dist = sqrt((goal_post[0] - x[0]) ** 2 + (goal_post[1] - x[1]) ** 2)
             angle = atan2(goal_post[1] - x[1], goal_post[0] - x[0])
             hx.extend([dist, wrapToPi(angle - x[2])])
@@ -108,6 +117,15 @@ class FieldLinesUKF:
         x[0] = np.mean(sigmas[:, 0])
         x[1] = np.mean(sigmas[:, 1])
         x[2] = np.arctan2(np.sum(np.sin(sigmas[:, 2])) / len(sigmas), np.sum(np.cos(sigmas[:, 2])) / len(sigmas))
+
+        x[3] = np.mean(sigmas[:, 3], axis=0)
+        x[4] = np.arctan2(np.sum(np.sin(sigmas[:, 4])) / len(sigmas), np.sum(np.cos(sigmas[:, 4])) / len(sigmas))
+        x[5] = np.mean(sigmas[:, 5], axis=0)
+        x[6] = np.arctan2(np.sum(np.sin(sigmas[:, 6])) / len(sigmas), np.sum(np.cos(sigmas[:, 6])) / len(sigmas))
+        x[7] = np.mean(sigmas[:, 7], axis=0)
+        x[8] = np.arctan2(np.sum(np.sin(sigmas[:, 8])) / len(sigmas), np.sum(np.cos(sigmas[:, 8])) / len(sigmas))
+        x[9] = np.mean(sigmas[:, 9], axis=0)
+        x[10] = np.arctan2(np.sum(np.sin(sigmas[:, 10])) / len(sigmas), np.sum(np.cos(sigmas[:, 10])) / len(sigmas))
         return x
 
     def predict(self, u, dt):
@@ -124,7 +142,7 @@ class FieldLinesUKF:
         R[1, 1] = R[1, 1] / max(0.001, transform_confidence[1] ** 2)
         R[2, 2] = R[2, 2] / max(0.001, transform_confidence[2] ** 2)
 
-        R[3, 3] = R[4, 4] = R[5, 5] = R[6, 6] = R[7, 7] = R[8, 8] = R[9, 9] = R[10, 10] = 1e4
+        R[3, 3] = R[4, 4] = R[5, 5] = R[6, 6] = R[7, 7] = R[8, 8] = R[9, 9] = R[10, 10] = 1e9
         z = np.concatenate((z, np.zeros(8)))
         # TODO fix this
         self.ukf.update(z, R)
@@ -132,7 +150,11 @@ class FieldLinesUKF:
         assert not np.any(np.diagonal(self.ukf.P) <= 0)
 
     def update_goal_posts(self, z):
-        pass
+        R = np.copy(self.ukf.R)
+        R[0, 0] = R[1, 1] = R[2, 2] = 1e9
+        self.ukf.update(z, R)
+        assert not math.isnan(self.ukf.x[0])
+        assert not np.any(np.diagonal(self.ukf.P) <= 0)
 
     def draw_covariance(self):
         plot_covariance((self.ukf.x[0], self.ukf.x[1]), self.ukf.P[0:2, 0:2], std=1, facecolor="k", alpha=0.1)

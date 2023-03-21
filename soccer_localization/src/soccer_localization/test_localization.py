@@ -268,7 +268,7 @@ def test_walk_forward():
     map.draw()
 
     bag = rosbag.Bag(retrieve_bag())
-    display_rosbag_map(bag=bag, map=map, debug=True)
+    display_rosbag_map(bag=bag, map=map, debug=False)
 
 
 def test_walk_forward_striker():
