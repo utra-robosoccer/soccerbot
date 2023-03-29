@@ -146,7 +146,7 @@ class FieldLinesUKFROS(FieldLinesUKF):
             distance_matrix = np.zeros((len(goal_post_locations_detected), len(self.goal_post_locations)))
 
             for i, goal_post_location_detected in enumerate(goal_post_locations_detected):
-                goal_post_world_transform = (goal_post_location_detected @ Transformation(pos_theta=self.ukf.x)).position
+                goal_post_world_transform = (Transformation(pos_theta=self.ukf.x) @ goal_post_location_detected).position
                 for j, goal_post_location in enumerate(self.goal_post_locations):
                     d = np.sqrt(
                         (goal_post_location[1] - goal_post_world_transform[1]) ** 2 + (goal_post_location[0] - goal_post_world_transform[0]) ** 2
@@ -154,6 +154,23 @@ class FieldLinesUKFROS(FieldLinesUKF):
                     distance_matrix[i][j] = d
 
             goal_post_locations_indexes, goal_post_locations_detected_indexes = linear_sum_assignment(distance_matrix)
+
+            yaw_dist = np.zeros(len(self.goal_post_locations) * 2)
+            goal_post_detected_truth_array = [False] * len(self.goal_post_locations)
+            for goal_post_location_index, goal_post_locations_detected_index in zip(
+                goal_post_locations_indexes, goal_post_locations_detected_indexes
+            ):
+                goal_post_pos_theta = goal_post_locations_detected[goal_post_location_index].pos_theta
+                rho = np.sqrt(goal_post_pos_theta[0] ** 2 + goal_post_pos_theta[1] ** 2)
+                theta = np.arctan2(goal_post_pos_theta[1], goal_post_pos_theta[0])
+                yaw_dist[goal_post_locations_detected_index * 2] = rho
+                yaw_dist[goal_post_locations_detected_index * 2 + 1] = theta
+                goal_post_detected_truth_array[goal_post_locations_detected_index] = True
+
+            self.update_goal_posts(yaw_dist, goal_post_detected_truth_array)
+
+            print("hi")
+
             # TODO fill out z and call update_goal_posts
             pass
 

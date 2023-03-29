@@ -304,7 +304,7 @@ def test_relocalization_goal_posts():
     map = Field()
     map.draw()
     bag = rosbag.Bag(retrieve_bag(url="https://drive.google.com/file/d/1zVFzDLydoyto3RmE1TA_5CJMefQT_0uI", bag_name="localization_goal_posts"))
-    display_rosbag_map(bag=bag, map=map, debug=False, pos_theta_start=[-1, -3.15, np.pi / 2], t_start=0)
+    display_rosbag_map(bag=bag, map=map, debug=True, pos_theta_start=[-1, -3.15, np.pi / 2], t_start=0)
 
 
 class FreehicleField(Field):
