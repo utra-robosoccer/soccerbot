@@ -141,7 +141,6 @@ class FieldLinesUKFROS(FieldLinesUKF):
                 t = Transformation(geometry_msgs_transform=transform.transform)
                 goal_post_locations_detected.append(t)
 
-        distances = []
         if len(goal_post_locations_detected):
             distance_matrix = np.zeros((len(goal_post_locations_detected), len(self.goal_post_locations)))
 
@@ -168,8 +167,6 @@ class FieldLinesUKFROS(FieldLinesUKF):
                 goal_post_detected_truth_array[goal_post_locations_detected_index] = True
 
             self.update_goal_posts(yaw_dist, goal_post_detected_truth_array)
-
-            print("hi")
 
             # TODO fill out z and call update_goal_posts
             pass

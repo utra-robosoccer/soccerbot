@@ -135,6 +135,7 @@ def display_rosbag_map(bag, map, debug=False, pos_theta_start=[-4, -3.15, np.pi 
     path_vo = []  # Path Point Cloud
     path_vo_t = []
     path_covariance = []
+    goal_post_plot = None
 
     predict_it = 0
     for topic, msg, t in bag.read_messages(
@@ -179,6 +180,18 @@ def display_rosbag_map(bag, map, debug=False, pos_theta_start=[-4, -3.15, np.pi 
                     path_gt_t.append(t.to_sec())
                     if debug and t.secs > t_start:
                         map.drawPathOnMap(transform_gt, label="Ground Truth", color="black")
+
+            goal_posts = []
+            for transform in msg.transforms:
+                if "goal_post" in transform.child_frame_id:
+                    # Draw goal post on map
+                    t = Transformation(geometry_msgs_transform=transform.transform)
+                    goal_post_world_transform = (Transformation(pos_theta=f.ukf.x) @ t).position
+                    rospy.loginfo(f"Goal Post Transformation {t.position}, World {goal_post_world_transform}")
+                    goal_posts.append(goal_post_world_transform)
+            if len(goal_posts) != 0:
+                map.drawGoalPostsOnMap(goal_posts)
+
             f.tf_callback(msg)
 
         elif topic == "/robot1/odom_combined":
@@ -254,7 +267,7 @@ def display_rosbag_map(bag, map, debug=False, pos_theta_start=[-4, -3.15, np.pi 
     plt_dim_error(2, "Theta")
 
     if "DISPLAY" in os.environ:
-        plt.show(block=False)
+        plt.show(block=True)
         plt.waitforbuttonpress()
         plt.close("all")
 
@@ -304,7 +317,7 @@ def test_relocalization_goal_posts():
     map = Field()
     map.draw()
     bag = rosbag.Bag(retrieve_bag(url="https://drive.google.com/file/d/1zVFzDLydoyto3RmE1TA_5CJMefQT_0uI", bag_name="localization_goal_posts"))
-    display_rosbag_map(bag=bag, map=map, debug=True, pos_theta_start=[-1, -3.15, np.pi / 2], t_start=0)
+    display_rosbag_map(bag=bag, map=map, debug=False, pos_theta_start=[-1, -3.15, np.pi / 2], t_start=10, t_end=43)
 
 
 class FreehicleField(Field):

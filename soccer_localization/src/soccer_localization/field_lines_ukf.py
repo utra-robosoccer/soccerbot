@@ -42,7 +42,7 @@ class FieldLinesUKF:
         self.R_localizing = np.diag([0.9, 0.9, 0.1])
         self.R_ready = np.diag([0.1, 0.1, 0.1])
 
-        self.R_goal_posts_localizing = np.diag([1e-2, 1e-2] * 4)  # Range, bearing, range, bearing, ...
+        self.R_goal_posts_localizing = np.diag([1e4, 5] * 4)  # Range, bearing, range, bearing, ...
         self.R_goal_posts_not_localizing = np.diag([1e4, 1e4] * 4)  # Range, bearing, range, bearing, ...
 
         self.ukf.R = block_diag(
@@ -152,11 +152,11 @@ class FieldLinesUKF:
     def update_goal_posts(self, yaw_dist: np.ndarray, detected_array: np.ndarray):
         R = np.copy(self.ukf.R)
         z = np.concatenate((np.zeros(3), yaw_dist))
-        R[0, 0] = R[1, 1] = R[2, 2] = 1e9
+        R[0, 0] = R[1, 1] = R[2, 2] = 1e18
         for i, detected in enumerate(detected_array):
             if not detected:
-                R[i * 2 + 3, i * 2 + 3] = 1e9
-                R[i * 2 + 4, i * 2 + 4] = 1e9
+                R[i * 2 + 3, i * 2 + 3] = 1e18
+                R[i * 2 + 4, i * 2 + 4] = 1e18
 
         self.ukf.update(z, R)
         assert not math.isnan(self.ukf.x[0])

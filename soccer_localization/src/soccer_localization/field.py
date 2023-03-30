@@ -49,6 +49,7 @@ class Field:
 
         self.path_plots: Dict[str, PathCollection] = {}
         self.path_points: Dict[str, list] = {}
+        self.goal_post_objects = []
 
     @cached_property
     def lines(self) -> List[Union[Line, Circle]]:
@@ -305,3 +306,12 @@ class Field:
 
         a = np.array(self.path_points[label])
         self.path_plots[label] = plt.scatter(a[:, 0], a[:, 1], marker=".", s=1, label=label, color=color)
+
+    def drawGoalPostsOnMap(self, goal_posts):
+        for pp in self.goal_post_objects:
+            pp[0].remove()
+        self.goal_post_objects.clear()
+
+        for goal_post in goal_posts:
+            pp = plt.plot(goal_post[0], goal_post[1], marker="o", markersize=4, markeredgecolor="red", markerfacecolor="green")
+            self.goal_post_objects.append(pp)
