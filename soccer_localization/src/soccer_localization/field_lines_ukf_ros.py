@@ -83,13 +83,13 @@ class FieldLinesUKFROS(FieldLinesUKF):
 
             if self.robot_state.status == RobotState.STATUS_LOCALIZING:
                 self.ukf.Q = self.Q_localizing
-                self.ukf.R = block_diag(self.R_localizing, self.R_goal_posts_localizing)
+                self.ukf.R = block_diag(self.R_localizing, self.R_goal_posts)
             elif self.robot_state.status == RobotState.STATUS_READY:
                 self.ukf.Q = self.Q_ready
-                self.ukf.R = block_diag(self.R_ready, self.R_goal_posts_localizing)
+                self.ukf.R = block_diag(self.R_ready, self.R_goal_posts)
             else:
                 self.ukf.Q = self.Q_walking
-                self.ukf.R = block_diag(self.R_walking, self.R_goal_posts_localizing)
+                self.ukf.R = block_diag(self.R_walking, self.R_goal_posts)
 
             self.predict(u=diff_transformation.pos_theta / dt_secs, dt=dt_secs)
 

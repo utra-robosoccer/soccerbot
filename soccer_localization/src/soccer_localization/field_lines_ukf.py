@@ -40,14 +40,12 @@ class FieldLinesUKF:
 
         self.R_walking = np.diag([4, 2, 0.1])
         self.R_localizing = np.diag([0.9, 0.9, 0.1])
+        # self.R_localizing = np.diag([1e20, 1e20, 1e20])
         self.R_ready = np.diag([0.1, 0.1, 0.1])
 
-        self.R_goal_posts_localizing = np.diag([1e4, 5] * 4)  # Range, bearing, range, bearing, ...
-        self.R_goal_posts_not_localizing = np.diag([1e4, 1e4] * 4)  # Range, bearing, range, bearing, ...
+        self.R_goal_posts = np.diag([1e20, 0.2**2] * 4)  # Range, bearing, range, bearing, ...
 
-        self.ukf.R = block_diag(
-            self.R_walking, self.R_goal_posts_not_localizing
-        )  # Noise from measurement updates (x, y, theta), trust the y more than the x
+        self.ukf.R = block_diag(self.R_walking, self.R_goal_posts)  # Noise from measurement updates (x, y, theta), trust the y more than the x
 
         self.Q_walking = np.diag([9e-5, 9e-5, 5e-4])
         self.Q_localizing = np.diag([9e-5, 9e-5, 5e-4])
@@ -118,14 +116,12 @@ class FieldLinesUKF:
         x[1] = np.mean(sigmas[:, 1])
         x[2] = np.arctan2(np.sum(np.sin(sigmas[:, 2])) / len(sigmas), np.sum(np.cos(sigmas[:, 2])) / len(sigmas))
 
-        x[3] = np.mean(sigmas[:, 3], axis=0)
-        x[4] = np.arctan2(np.sum(np.sin(sigmas[:, 4])) / len(sigmas), np.sum(np.cos(sigmas[:, 4])) / len(sigmas))
-        x[5] = np.mean(sigmas[:, 5], axis=0)
-        x[6] = np.arctan2(np.sum(np.sin(sigmas[:, 6])) / len(sigmas), np.sum(np.cos(sigmas[:, 6])) / len(sigmas))
-        x[7] = np.mean(sigmas[:, 7], axis=0)
-        x[8] = np.arctan2(np.sum(np.sin(sigmas[:, 8])) / len(sigmas), np.sum(np.cos(sigmas[:, 8])) / len(sigmas))
-        x[9] = np.mean(sigmas[:, 9], axis=0)
-        x[10] = np.arctan2(np.sum(np.sin(sigmas[:, 10])) / len(sigmas), np.sum(np.cos(sigmas[:, 10])) / len(sigmas))
+        for z in range(3, z_count, 2):
+            sum_sin = np.sum(np.dot(np.sin(sigmas[:, z + 1]), Wm))
+            sum_cos = np.sum(np.dot(np.cos(sigmas[:, z + 1]), Wm))
+
+            x[z] = np.sum(np.dot(sigmas[:, z], Wm))
+            x[z + 1] = atan2(sum_sin, sum_cos)
         return x
 
     def predict(self, u, dt):
@@ -142,14 +138,14 @@ class FieldLinesUKF:
         R[1, 1] = R[1, 1] / max(0.001, transform_confidence[1] ** 2)
         R[2, 2] = R[2, 2] / max(0.001, transform_confidence[2] ** 2)
 
-        R[3, 3] = R[4, 4] = R[5, 5] = R[6, 6] = R[7, 7] = R[8, 8] = R[9, 9] = R[10, 10] = 1e9
+        R[3, 3] = R[4, 4] = R[5, 5] = R[6, 6] = R[7, 7] = R[8, 8] = R[9, 9] = R[10, 10] = 1e18
         z = np.concatenate((z, np.zeros(8)))
         # TODO fix this
         self.ukf.update(z, R)
         assert not math.isnan(self.ukf.x[0])
         assert not np.any(np.diagonal(self.ukf.P) <= 0)
 
-    def update_goal_posts(self, yaw_dist: np.ndarray, detected_array: np.ndarray):
+    def update_goal_posts(self, yaw_dist: np.ndarray, detected_array: [bool]):
         R = np.copy(self.ukf.R)
         z = np.concatenate((np.zeros(3), yaw_dist))
         R[0, 0] = R[1, 1] = R[2, 2] = 1e18
