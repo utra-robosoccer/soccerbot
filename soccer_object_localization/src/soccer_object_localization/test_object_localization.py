@@ -521,7 +521,6 @@ class TestObjectLocalization(TestCase):
             img: Mat = cv2.imread(os.path.join(f"{test_path}/images", file_name))  # ground truth box = (68, 89) (257, 275)
             img_original_size = img.size
             img = cv2.resize(img, dsize=(640, 480))
-
             img_msg: Image = cvbridge.cv2_to_imgmsg(img)
 
             # Mock the detections

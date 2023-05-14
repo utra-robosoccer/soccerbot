@@ -139,7 +139,6 @@ class Camera:
         :param pos: The position on the screen in pixels (x, y)
         :return: The 3D coordinate of the pixel as projected to the floor
         """
-
         tx, ty = self.imageToWorldFrame(pos[0], pos[1])
         pixel_pose = Transformation(position=(self.focal_length, tx, ty))
         camera_pose = self.pose

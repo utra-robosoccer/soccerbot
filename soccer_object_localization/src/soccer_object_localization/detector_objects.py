@@ -113,7 +113,13 @@ class DetectorObjects(Detector):
             elif box.Class == "2":
                 # TODO
                 if box.probability > 0.78:
-                    floor_coordinate_robot = self.camera.findFloorCoordinate([box.xbase, box.ybase])
+                    pos = [box.xbase, box.ybase]
+
+                    # for testing purposes, set camera resolution since the camera is not live in test_robot_detection()
+                    self.camera.resolution_x = 640
+                    self.camera.resolution_y = 640
+
+                    floor_coordinate_robot = self.camera.findFloorCoordinate(pos)
                     box.xbase = floor_coordinate_robot[0]
                     box.ybase = floor_coordinate_robot[1]
 
