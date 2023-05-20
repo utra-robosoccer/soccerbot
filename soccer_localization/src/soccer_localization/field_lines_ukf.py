@@ -13,6 +13,7 @@ from filterpy.kalman import UnscentedKalmanFilter as UKF
 from filterpy.stats import plot_covariance
 from nav_msgs.msg import OccupancyGrid
 from scipy.linalg import block_diag
+from scipy.spatial.distance import mahalanobis
 
 from soccer_common.transformation import Transformation
 from soccer_common.utils import wrapToPi
@@ -43,7 +44,7 @@ class FieldLinesUKF:
         # self.R_localizing = np.diag([1e20, 1e20, 1e20])
         self.R_ready = np.diag([0.1, 0.1, 0.1])
 
-        self.R_goal_posts = np.diag([1e20, 0.2**2] * 4)  # Range, bearing, range, bearing, ...
+        self.R_goal_posts = np.diag([1e20, 0.5**2] * 4)  # Range, bearing, range, bearing, ...
 
         self.ukf.R = block_diag(self.R_walking, self.R_goal_posts)  # Noise from measurement updates (x, y, theta), trust the y more than the x
 
@@ -114,7 +115,7 @@ class FieldLinesUKF:
         x = np.zeros(z_count)
         x[0] = np.mean(sigmas[:, 0])
         x[1] = np.mean(sigmas[:, 1])
-        x[2] = np.arctan2(np.sum(np.sin(sigmas[:, 2])) / len(sigmas), np.sum(np.cos(sigmas[:, 2])) / len(sigmas))
+        x[2] = np.arctan2(np.sum(np.dot(np.sin(sigmas[:, 2]), Wm)) / len(sigmas), np.sum(np.dot(np.cos(sigmas[:, 2]), Wm)) / len(sigmas))
 
         for z in range(3, z_count, 2):
             sum_sin = np.sum(np.dot(np.sin(sigmas[:, z + 1]), Wm))
@@ -158,5 +159,5 @@ class FieldLinesUKF:
         assert not math.isnan(self.ukf.x[0])
         assert not np.any(np.diagonal(self.ukf.P) <= 0)
 
-    def draw_covariance(self):
-        plot_covariance((self.ukf.x[0], self.ukf.x[1]), self.ukf.P[0:2, 0:2], std=1, facecolor="k", alpha=0.1)
+    def draw_covariance(self, facecolor="k"):
+        plot_covariance((self.ukf.x[0], self.ukf.x[1]), self.ukf.P[0:2, 0:2], std=1, facecolor=facecolor, alpha=0.1)

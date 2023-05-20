@@ -135,7 +135,6 @@ def display_rosbag_map(bag, map, debug=False, pos_theta_start=[-4, -3.15, np.pi 
     path_vo = []  # Path Point Cloud
     path_vo_t = []
     path_covariance = []
-    goal_post_plot = None
 
     predict_it = 0
     for topic, msg, t in bag.read_messages(
@@ -189,10 +188,12 @@ def display_rosbag_map(bag, map, debug=False, pos_theta_start=[-4, -3.15, np.pi 
                     goal_post_world_transform = (Transformation(pos_theta=f.ukf.x) @ t).position
                     rospy.loginfo(f"Goal Post Transformation {t.position}, World {goal_post_world_transform}")
                     goal_posts.append(goal_post_world_transform)
-            if len(goal_posts) != 0:
-                map.drawGoalPostsOnMap(goal_posts)
 
             f.tf_callback(msg)
+
+            if len(goal_posts) != 0:
+                map.drawGoalPostsOnMap(goal_posts)
+                f.draw_covariance(facecolor="b")
 
         elif topic == "/robot1/odom_combined":
             odom_t = f.odom_callback(msg)
@@ -305,7 +306,7 @@ def test_fall_relocalization():
     map = Field()
     map.draw()
     bag = rosbag.Bag(retrieve_bag(url="https://drive.google.com/uc?id=1spsxVlUqvhXlZhdTNt_aCBulTFyLBoUQ", bag_name="relocalization_fall"))
-    display_rosbag_map(bag=bag, map=map, debug=False, pos_theta_start=[-1, -3.15, np.pi / 2], t_start=0)
+    display_rosbag_map(bag=bag, map=map, debug=False, pos_theta_start=[-1, -3.15, np.pi / 2], t_start=25)
 
 
 def test_relocalization_goal_posts():
@@ -317,7 +318,7 @@ def test_relocalization_goal_posts():
     map = Field()
     map.draw()
     bag = rosbag.Bag(retrieve_bag(url="https://drive.google.com/file/d/1zVFzDLydoyto3RmE1TA_5CJMefQT_0uI", bag_name="localization_goal_posts"))
-    display_rosbag_map(bag=bag, map=map, debug=False, pos_theta_start=[-1, -3.15, np.pi / 2], t_start=10, t_end=45)
+    display_rosbag_map(bag=bag, map=map, debug=False, pos_theta_start=[-1, -3.15, np.pi / 2], t_start=29, t_end=45)
 
 
 class FreehicleField(Field):

@@ -16,6 +16,7 @@ from sensor_msgs.msg import PointCloud2
 from tf2_msgs.msg import TFMessage
 
 from soccer_common import Transformation
+from soccer_common.utils import wrapToPi
 from soccer_localization.field import Field
 from soccer_localization.field_lines_ukf import FieldLinesUKF
 
@@ -134,6 +135,13 @@ class FieldLinesUKFROS(FieldLinesUKF):
             return None, None, None
 
     def tf_callback(self, tf_message: TFMessage):
+        if self.robot_state.status not in [
+            RobotState.STATUS_LOCALIZING,
+            RobotState.STATUS_READY,
+            RobotState.STATUS_WALKING,
+        ]:
+            return
+
         goal_post_locations_detected = []
         for transform in tf_message.transforms:
             if "goal_post" in transform.child_frame_id:
@@ -159,16 +167,20 @@ class FieldLinesUKFROS(FieldLinesUKF):
             for goal_post_location_index, goal_post_locations_detected_index in zip(
                 goal_post_locations_indexes, goal_post_locations_detected_indexes
             ):
+
                 goal_post_pos_theta = goal_post_locations_detected[goal_post_location_index].pos_theta
                 rho = np.sqrt(goal_post_pos_theta[0] ** 2 + goal_post_pos_theta[1] ** 2)
                 theta = np.arctan2(goal_post_pos_theta[1], goal_post_pos_theta[0])
+
+                estimated_location = self.Hx(self.ukf.x)
+                if abs(wrapToPi(estimated_location[3 + goal_post_locations_detected_index * 2 + 1] - theta)) > 1.0:
+                    continue
+
                 yaw_dist[goal_post_locations_detected_index * 2] = rho
                 yaw_dist[goal_post_locations_detected_index * 2 + 1] = theta
                 goal_post_detected_truth_array[goal_post_locations_detected_index] = True
 
             self.update_goal_posts(yaw_dist, goal_post_detected_truth_array)
-
-            # TODO fill out z and call update_goal_posts
             pass
 
         pass
