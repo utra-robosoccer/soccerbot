@@ -153,9 +153,11 @@ class ObjectDetectionNode(object):
                         bb_msg.ybase = round(midpoint[1])
                         bb_msg.xbase = round(midpoint[0])
 
-                        cv2.rectangle(image, (bb_msg.xmin, temp_ymin), (bb_msg.xmax, bb_msg.ymax), (255, 0, 0), 3)
+                        # Calculate 3D position using 2D (x, y coordinate)
 
-                        cv2.circle(image, (bb_msg.xbase, bb_msg.ybase), 5, (0, 255, 255), 3)
+                        cv2.rectangle(image, (bb_msg.xmin, temp_ymin), (bb_msg.xmax, bb_msg.ymax), (255, 0, 0), 2)
+
+                        cv2.circle(image, (bb_msg.xbase, bb_msg.ybase), 0, (0, 255, 255), 3)
                         cv2.imshow("test", image)
                         cv2.waitKey()
                         # ----------------------------------------
