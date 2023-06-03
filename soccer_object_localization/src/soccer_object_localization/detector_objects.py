@@ -54,6 +54,7 @@ class DetectorObjects(Detector):
         final_camera_to_ball: Transformation = None
         final_ball_pixel = None
         candidate_ball_counter = 1
+        obstacle_counter = 0
         for box in msg.bounding_boxes:
             if box.Class == "0":
                 # Exclude weirdly shaped balls
@@ -111,17 +112,22 @@ class DetectorObjects(Detector):
                     max_detection_size = detection_size
                     pass
             elif box.Class == "2":
-                # TODO
                 if box.probability > 0.78:
                     pos = [box.xbase, box.ybase]
 
-                    # for testing purposes, set camera resolution since the camera is not live in test_robot_detection()
-                    self.camera.resolution_x = 640
-                    self.camera.resolution_y = 640
-
                     floor_coordinate_robot = self.camera.findFloorCoordinate(pos)
-                    box.xbase = floor_coordinate_robot[0]
-                    box.ybase = floor_coordinate_robot[1]
+                    if box.obstacle_detected:
+                        box.xbase = floor_coordinate_robot[0]
+                        box.ybase = floor_coordinate_robot[1]
+                        self.br.sendTransform(
+                            floor_coordinate_robot,
+                            (0, 0, 0, 1),
+                            msg.header.stamp,
+                            self.robot_name + f"/obstacle_{obstacle_counter}",
+                            self.robot_name + "/camera",
+                        )
+                        rospy.loginfo(f"Obstacle {obstacle_counter} detected at [{pos}] {floor_coordinate_robot}")
+                        obstacle_counter += 1
 
         if final_camera_to_ball is not None:
             self.ball_pixel_publisher.publish(final_ball_pixel)

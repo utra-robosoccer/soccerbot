@@ -8,6 +8,7 @@ int64 ymax
 # position of in between the feet, assuming coordinate is on the ground
 int64 xbase
 int64 ybase
+bool obstacle_detected
 
 int16 id
 string Class

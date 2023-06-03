@@ -535,20 +535,20 @@ class TestObjectLocalization(TestCase):
             ci.height = img.shape[0]
             ci.width = img.shape[1]
             n.camera.camera_info = ci
-            n.camera.pose.orientation_euler = [0, np.pi / 8, 0]
+            do.camera.camera_info = ci
+            n.camera.pose = Transformation(position=[0, 0, 0.46], orientation_euler=[0, np.pi / 8, 0])
+            do.camera.pose = n.camera.pose
+
             n.callback(img_msg)
-
-            with open(os.path.join(f"{test_path}/labels", file_name.replace("PNG", "txt"))) as f:
-                lines = f.readlines()
-
-            if "DISPLAY" in os.environ:
-                mat = cvbridge.imgmsg_to_cv2(n.pub_detection.publish.call_args[0][0])
-                cv2.imshow("Image", mat)
-                cv2.waitKey()
 
             # Check assertion
             if n.pub_boundingbox.publish.call_args is not None:
                 bounding_boxes = n.pub_boundingbox.publish.call_args[0][0]
                 do.objectDetectorCallback(bounding_boxes)
+
+            if "DISPLAY" in os.environ:
+                mat = cvbridge.imgmsg_to_cv2(n.pub_detection.publish.call_args[0][0])
+                cv2.imshow("Image", mat)
+                cv2.waitKey()
 
         cv2.destroyAllWindows()

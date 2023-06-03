@@ -140,10 +140,12 @@ class TestObjectDetection(TestCase):
                                 pt2=(best_dimensions[2], best_dimensions[3]),
                                 color=(255, 255, 255),
                             )
+                            if bounding_box.obstacle_detected is True:
+                                cv2.circle(mat, (bounding_box.xbase, bounding_box.ybase), 0, (0, 255, 255), 3)
 
             if "DISPLAY" in os.environ:
                 cv2.imshow("Image", mat)
-                cv2.waitKey(1)
+                cv2.waitKey()
                 cv2.destroyAllWindows()
 
     @pytest.mark.skip(reason="Only run locally")

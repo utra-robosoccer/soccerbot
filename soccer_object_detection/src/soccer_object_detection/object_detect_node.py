@@ -2,6 +2,7 @@
 
 import enum
 import os
+from math import nan
 
 import numpy as np
 from matplotlib import pyplot as plt
@@ -138,126 +139,22 @@ class ObjectDetectionNode(object):
                     bb_msg.probability = confidence
                     bb_msg.id = id
                     bb_msg.Class = str(int(img_class))
-                    bbs_msg.bounding_boxes.append(bb_msg)
-                    id += 1
-
                     # TODO Joanne look the pixels of the image in addition to the bounding box,
                     #  calculate likely foot coordinate xy
                     if bb_msg.Class == "2":
 
-                        # --- simple version just draw the box in bottom 1/3 of box to detect feet position---
+                        # --- simple version just draw the box in bottom ratio of box to detect feet position---
                         # only look at bottom 1/3 of bounding box (assumption: bounding box is of a standing robot)
                         # Calculate ymin value to start checking for black pixels
-                        temp_ymin = round(bb_msg.ymin + ((bb_msg.ymax - bb_msg.ymin) / 4) * 3)
-                        midpoint = [(bb_msg.xmax + bb_msg.xmin) / 2, (bb_msg.ymax + temp_ymin) / 2]
-                        bb_msg.ybase = round(midpoint[1])
-                        bb_msg.xbase = round(midpoint[0])
+                        if bb_msg.ymax < self.camera.resolution_y - 5:
+                            temp_ymin = round(bb_msg.ymax * 0.85 + bb_msg.ymin * 0.15)
+                            midpoint = [(bb_msg.xmax + bb_msg.xmin) / 2, (bb_msg.ymax + temp_ymin) / 2]
+                            bb_msg.ybase = round(midpoint[1])
+                            bb_msg.xbase = round(midpoint[0])
+                            bb_msg.obstacle_detected = True
 
-                        # Calculate 3D position using 2D (x, y coordinate)
-
-                        cv2.rectangle(image, (bb_msg.xmin, temp_ymin), (bb_msg.xmax, bb_msg.ymax), (255, 0, 0), 2)
-
-                        cv2.circle(image, (bb_msg.xbase, bb_msg.ybase), 0, (0, 255, 255), 3)
-                        cv2.imshow("test", image)
-                        cv2.waitKey()
-                        # ----------------------------------------
-
-                        # gray_pixel_img = np.dot(img[..., :3], [0.299, 0.587, 0.114])
-                        thresh = 128
-                        # make the image greyscale so that we can also account for pixels may not exactly be black
-                        # (0,0,0) due to lighting situatioins
-                        # img_grayscale = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
-                        # cv2.imshow('Gray image', img_grayscale)
-                        # cv2.waitKey()
-                        # global thresholding?
-                        # thresh = cv2.threshold(img_segments, 0, 255, cv2.THRESH_BINARY)[1]
-
-                        # can also try adaptive thresholding if fixed thresholding doesn't perform well
-                        # thresh is an image that contains only black and white pixels
-                        # grayscale_final = cv2.adaptiveThreshold(img_grayscale, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
-                        #                                         cv2.THRESH_BINARY, 11, 2)
-                        # cv2.imshow('final gray image', grayscale_final)
-                        # cv2.waitKey()
-                        # only look at bottom 1/3 of bounding box (assumption: bounding box is of a standing robot)
-                        # identify pixels that are black
-                        # black_pixels = []
-                        # Calculate ymin value to start checking for black pixels
-                        # temp_ymin = round(bb_msg.ymin + ((bb_msg.ymax - bb_msg.ymin) / 4) * 3)
-                        # cv2.rectangle(grayscale_final, (bb_msg.xmin, bb_msg.ymin-h), (bb_msg.xmax, bb_msg.ymax-h),
-                        #              (255, 0, 0), 3)
-                        # cv2.imshow("test1", grayscale_final)
-                        # cv2.waitKey()
-
-                        # # Convert the image to the HSV color space
-                        # hsv = cv2.cvtColor(img, cv2.COLOR_RGB2HSV)
-                        # # Define the range of green color in HSV
-                        # lower_green = np.array([25, 52, 72])
-                        # upper_green = np.array([102, 255, 255])
-                        # # Threshold the image to get only green pixels
-                        # mask = cv2.inRange(hsv, lower_green, upper_green)
-                        #
-                        # # Replace the green pixels with white in the entire image
-                        # hsv[mask > 0] = [0, 0, 255]
-                        #
-                        # # Convert HSV back to BGR color space
-                        # img_no_green = cv2.cvtColor(hsv, cv2.COLOR_HSV2BGR)
-                        # cv2.imshow('img_no_green', img_no_green)
-                        # cv2.waitKey(0)
-                        #
-                        # # Write the modified image to a NumPy array
-                        # img_array = np.asarray(img_no_green)
-                        # cv2.imshow('Modified Image', img_array)
-                        # cv2.waitKey(0)
-                        #
-                        # # for i in range(bb_msg.xmin, bb_msg.xmax):
-                        # #     for j in range(temp_ymin, bb_msg.ymax):
-                        # #         if mask[i][j] == 255:
-                        # #             img[i][j] = [255, 255, 255]
-                        # img_grayscale = cv2.cvtColor(img_array, cv2.COLOR_RGB2GRAY)
-                        # # Show the result
-                        # cv2.imshow('result', img_grayscale)
-                        # cv2.waitKey(0)
-                        #
-                        # grayscale_final = cv2.adaptiveThreshold(img_grayscale, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
-                        #                                         cv2.THRESH_BINARY, 11, 2)
-                        # cv2.imshow('final gray image', grayscale_final)
-                        # cv2.waitKey()
-                        # cv2.destroyAllWindows()
-
-                        # only look at bottom 1/3 of bounding box (assumption: bounding box is of a standing robot)
-                        # identify pixels that are black
-                        # black_pixels = []
-                        # Calculate ymin value to start checking for black pixels
-                        # temp_ymin = round(bb_msg.ymin + ((bb_msg.ymax - bb_msg.ymin) / 4) * 3)
-                        # cv2.rectangle(grayscale_final, (bb_msg.xmin, temp_ymin), (bb_msg.xmax, bb_msg.ymax,),
-                        #               (255, 0, 0), 3)
-
-                        # crop_img = grayscale_final[bb_msg.xmin: bb_msg.xmax, temp_ymin:bb_msg.ymax,]
-                        # cv2.imshow('crop image', grayscale_final)
-                        # cv2.waitKey()
-
-                        # for row in range(bb_msg.xmin, bb_msg.xmax):
-                        #     for col in range(temp_ymin, bb_msg.ymax):
-                        #         if grayscale_final[row][col] == 0:
-                        #             # find black pixels in the bottom 1/3 of the bounding box
-                        #             black_pixels.append((row, col))
-                        #
-                        # black_pixel_ymin = min(black_pixels, key=lambda x: x[1])[1]
-                        # black_pixel_ymax = max(black_pixels, key=lambda x: x[1])[1]
-                        #
-                        # black_pixel_xmin = min(black_pixels, key=lambda x: x[0])[0]
-                        # black_pixel_xmax = max(black_pixels, key=lambda x: x[0])[0]
-                        #
-                        # cv2.rectangle(image, (black_pixel_xmin, black_pixel_ymin), (black_pixel_xmax, black_pixel_ymax),
-                        #               (255, 0, 0), 3)
-                        #
-                        # midpoint = [(black_pixel_xmax + black_pixel_xmin)/2, (black_pixel_ymax + black_pixel_ymin)/2]
-                        # bb_msg.ybase = round(midpoint[1])
-                        # bb_msg.xbase = round(midpoint[0])
-                        # # draw xbase ybase on image
-                        # cv2.circle(image, (bb_msg.xbase, bb_msg.ybase), 5, (0, 255, 255), 3)
-                        # cv2.imshow("test", image)
-                        # cv2.waitKey()
+                    bbs_msg.bounding_boxes.append(bb_msg)
+                    id += 1
 
             bbs_msg.header = msg.header
             try:
