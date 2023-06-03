@@ -113,20 +113,21 @@ class DetectorObjects(Detector):
                     pass
             elif box.Class == "2":
                 if box.probability > 0.78:
-                    pos = [box.xbase, box.ybase]
-
-                    floor_coordinate_robot = self.camera.findFloorCoordinate(pos)
                     if box.obstacle_detected:
-                        box.xbase = floor_coordinate_robot[0]
-                        box.ybase = floor_coordinate_robot[1]
+                        pos = [box.xbase, box.ybase]
+
+                        floor_coordinate_robot = self.camera.findFloorCoordinate(pos)
+                        world_to_obstacle = Transformation(position=floor_coordinate_robot)
+                        camera_to_obstacle = np.linalg.inv(self.camera.pose) @ world_to_obstacle
+
                         self.br.sendTransform(
-                            floor_coordinate_robot,
-                            (0, 0, 0, 1),
+                            camera_to_obstacle.position,
+                            camera_to_obstacle.quaternion,
                             msg.header.stamp,
                             self.robot_name + f"/obstacle_{obstacle_counter}",
                             self.robot_name + "/camera",
                         )
-                        rospy.loginfo(f"Obstacle {obstacle_counter} detected at [{pos}] {floor_coordinate_robot}")
+                        rospy.loginfo(f"Obstacle {obstacle_counter} detected at [{pos}] {floor_coordinate_robot} {camera_to_obstacle.position}")
                         obstacle_counter += 1
 
         if final_camera_to_ball is not None:
