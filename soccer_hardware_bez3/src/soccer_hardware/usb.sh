@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# setserial /dev/ttyUSB* low_latency && setserial /dev/ttyACM* low_latency
 set -e
+setserial /dev/ttyUSB* low_latency && setserial /dev/ttyACM* low_latency
 SUDOERD_BASENAME="sudo_setserial"
 SUDOERD_FILE="/etc/sudoers.d/$SUDOERD_BASENAME"
 SUDOER_LINE="$(logname) ALL=(root) NOPASSWD: $(realpath "$0")"

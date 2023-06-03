@@ -244,3 +244,23 @@ def uart_transact(ser, B, cmd, rw, preflush=True):
         jx_iter += 1
 
         return (uart_state == UART_STATES.ENDED, servo_frames) # empty_frames < MAX_EMPTY_FRAMES
+
+if __name__ == '__main__':
+    import serial
+    import numpy as np
+    
+# def uart_transact(ser, B, cmd, rw, preflush=True):    
+
+    MIN_POT=0x27E
+    MAX_POT=0xE64
+    with serial.Serial('/dev/ttyUSB0', 1000000, timeout=0) as ser:
+        uart_transact(ser, [4000, 1, 90] * 13, CMDS.PID_COEFF,
+                                    RWS.WRITE)  # push initial PID gains
+        uart_transact(ser, [0x27E] * (MAX_JX_SERVO_IDX + 1), CMDS.POSITION, RWS.WRITE)
+        input()
+        t0 = time.time()
+        T0 = 6
+        while True:
+            uart_transact(ser, [((-np.cos((time.time() - t0) / T0 * 2 * np.pi) / 2 + 0.5) * (MAX_POT-MIN_POT) + MIN_POT).astype(np.uint16)] * (MAX_JX_SERVO_IDX+1), CMDS.POSITION, RWS.WRITE)
+            time.sleep(0.05)
+        

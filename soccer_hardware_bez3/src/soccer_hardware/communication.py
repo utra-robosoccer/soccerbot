@@ -103,17 +103,20 @@ class Communication:
             time.sleep(0.1)
 
     def joint_command_callback(self, joint_command):
+        print(joint_command, self._motor_map)
         for motor_name, target in zip(joint_command.name, joint_command.position):
+            print(motor_name, target)
             if motor_name in self._motor_map:
+                print('!!')
                 self._motor_map[motor_name]["value"] = target
 
     def send_angles(self, event):
         motor_angles = []  # [0] * len(self._motor_map)
         for motor_name, motor in self._motor_map.items():
-            angle = np.rad2deg(motor["value"] * float(motor["direction"])) + float(motor["offset"])
+            angle = np.rad2deg(motor["value"] * float(motor["direction"]) * float(motor['scale'])) + float(motor["offset"])
             # angle = float(motor['offset'])
-            if "limits" in motor and motor["limits"] is not None:
-                angle = max(motor["limits"][0], min(motor["limits"][1], angle))
+            # if "limits" in motor and motor["limits"] is not None:
+            #     angle = max(motor["limits"][0], min(motor["limits"][1], angle))
             motor_angles.append(((motor_name, motor), angle))
         # print(motor_angles)
         self._tx_servo_thread.send(motor_angles)
