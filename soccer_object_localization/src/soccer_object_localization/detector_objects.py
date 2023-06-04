@@ -21,11 +21,11 @@ from soccer_msgs.msg import BoundingBox, BoundingBoxes
 from soccer_object_localization.detector import Detector
 
 
-class DetectorBall(Detector):
+class DetectorObjects(Detector):
     def __init__(self):
         super().__init__()
         self.joint_states_sub = rospy.Subscriber("joint_states", JointState, self.jointStatesCallback, queue_size=1)
-        self.bounding_boxes_sub = rospy.Subscriber("object_bounding_boxes", BoundingBoxes, self.ballDetectorCallback, queue_size=1)
+        self.bounding_boxes_sub = rospy.Subscriber("object_bounding_boxes", BoundingBoxes, self.objectDetectorCallback, queue_size=1)
         self.ball_pixel_publisher = rospy.Publisher("ball_pixel", Pose2D, queue_size=1)
         self.head_motor_1_angle = 0
         self.last_ball_pose = None
@@ -36,7 +36,7 @@ class DetectorBall(Detector):
             index = msg.name.index("head_motor_1")
             self.head_motor_1_angle = msg.position[index]
 
-    def ballDetectorCallback(self, msg: BoundingBoxes):
+    def objectDetectorCallback(self, msg: BoundingBoxes):
         if self.robot_state.status not in [RobotState.STATUS_LOCALIZING, RobotState.STATUS_READY]:
             return
 
@@ -54,6 +54,7 @@ class DetectorBall(Detector):
         final_camera_to_ball: Transformation = None
         final_ball_pixel = None
         candidate_ball_counter = 1
+        obstacle_counter = 0
         for box in msg.bounding_boxes:
             if box.Class == "0":
                 # Exclude weirdly shaped balls
@@ -110,6 +111,24 @@ class DetectorBall(Detector):
                     self.last_ball_pose_counter = 0
                     max_detection_size = detection_size
                     pass
+            elif box.Class == "2":
+                if box.probability > 0.78:
+                    if box.obstacle_detected:
+                        pos = [box.xbase, box.ybase]
+
+                        floor_coordinate_robot = self.camera.findFloorCoordinate(pos)
+                        world_to_obstacle = Transformation(position=floor_coordinate_robot)
+                        camera_to_obstacle = np.linalg.inv(self.camera.pose) @ world_to_obstacle
+
+                        self.br.sendTransform(
+                            camera_to_obstacle.position,
+                            camera_to_obstacle.quaternion,
+                            msg.header.stamp,
+                            self.robot_name + f"/obstacle_{obstacle_counter}",
+                            self.robot_name + "/camera",
+                        )
+                        rospy.loginfo(f"Obstacle {obstacle_counter} detected at [{pos}] {floor_coordinate_robot} {camera_to_obstacle.position}")
+                        obstacle_counter += 1
 
         if final_camera_to_ball is not None:
             self.ball_pixel_publisher.publish(final_ball_pixel)
@@ -128,5 +147,5 @@ class DetectorBall(Detector):
 
 if __name__ == "__main__":
     rospy.init_node("ball_detector")
-    ball_detector = DetectorBall()
+    ball_detector = DetectorObjects()
     rospy.spin()
