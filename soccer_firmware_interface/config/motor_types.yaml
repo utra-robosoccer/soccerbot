@@ -1,0 +1,10 @@
+# MX28 - https://emanual.robotis.com/docs/en/dxl/mx/mx-28/
+# MX64 - https://emanual.robotis.com/docs/en/dxl/mx/mx-64/
+# AX12 - https://emanual.robotis.com/docs/en/dxl/ax/ax-12a/
+
+ax12:
+  max_angle_bytes: 0x3FF
+  max_angle_degrees: 300
+mx64:
+  max_angle_bytes: 0xFFF
+  max_angle_degrees: 360

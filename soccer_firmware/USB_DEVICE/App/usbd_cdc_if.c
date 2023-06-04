@@ -263,6 +263,14 @@ static int8_t CDC_Receive_FS(uint8_t* Buf, uint32_t *Len)
   /* USER CODE BEGIN 6 */
   USBD_CDC_SetRxBuffer(&hUsbDeviceFS, &Buf[0]);
   USBD_CDC_ReceivePacket(&hUsbDeviceFS);
+
+  // upon receiving packet save it into buffer
+  // keep things simple assume packet is good, no crc checking
+  if (*Len == 20) {
+    for(uint8_t i = 0; i < 20; i++)rxBuffer[i] = Buf[i];
+  }
+  usb_received = 1;
+
   return (USBD_OK);
   /* USER CODE END 6 */
 }

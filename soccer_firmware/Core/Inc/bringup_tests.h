@@ -12,7 +12,7 @@
 
 void test_usb_tx(void);
 void test_all_ports1(void);
-void test_motor_position(GPIO_TypeDef *uart_port, uint16_t pin, UART_HandleTypeDef h, uint16_t angle);
+void update_motor_position(GPIO_TypeDef *uart_port, uint16_t pin, UART_HandleTypeDef h, uint16_t angle);
 void test_motor_sweep1(GPIO_TypeDef *uart_port, uint16_t pin, UART_HandleTypeDef h);
 void test_motor_sweep2(GPIO_TypeDef *uart_port, uint16_t pin, UART_HandleTypeDef h);
 void test_ping1(GPIO_TypeDef *uart_port, uint16_t pin, UART_HandleTypeDef h);

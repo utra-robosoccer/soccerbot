@@ -51,7 +51,10 @@ UART_HandleTypeDef huart3;
 UART_HandleTypeDef huart6;
 
 /* USER CODE BEGIN PV */
-
+uint8_t usb_received = 0;
+uint32_t rxBufferCount;
+uint32_t rxBufferSize;
+uint8_t rxBuffer[20];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -118,7 +121,15 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-	test_motor_sweep1(USART1_DIR_GPIO_Port, USART1_DIR_Pin, huart1);
+    if (usb_received) {
+      update_motor_position(USART1_DIR_GPIO_Port, USART1_DIR_Pin, huart1, rxBuffer[2]);
+
+		  // Write to Motor on UART
+		  uint8_t txBuf[20];
+		  for(uint8_t i = 0; i < 20; i++)
+			  txBuf[i] = i;
+		  uint8_t result = CDC_Transmit_FS((uint8_t *) txBuf, 20);
+	  }
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */

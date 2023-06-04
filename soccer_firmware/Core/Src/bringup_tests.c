@@ -69,7 +69,7 @@ void test_usb_rx_tx() {
 /*
  * Dynamixel 1.0
  */
-void test_motor_position(GPIO_TypeDef *uart_port, uint16_t pin, UART_HandleTypeDef h, uint16_t angle) {
+void update_motor_position(GPIO_TypeDef *uart_port, uint16_t pin, UART_HandleTypeDef h, uint16_t angle) {
 	angle %= 0x3ff;
 
 	HAL_GPIO_TogglePin(GPIOA, GREEN_LED_Pin);
