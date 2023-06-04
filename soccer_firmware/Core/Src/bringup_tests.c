@@ -69,7 +69,7 @@ void test_usb_rx_tx() {
 /*
  * Dynamixel 1.0
  */
-void update_motor_position(GPIO_TypeDef *uart_port, uint16_t pin, UART_HandleTypeDef h, uint16_t angle) {
+void update_motor_position(GPIO_TypeDef *uart_port, uint16_t pin, UART_HandleTypeDef h, uint8_t id, uint16_t angle) {
 	angle %= 0x3ff;
 
 	HAL_GPIO_TogglePin(GPIOA, GREEN_LED_Pin);
@@ -79,7 +79,7 @@ void update_motor_position(GPIO_TypeDef *uart_port, uint16_t pin, UART_HandleTyp
 	uint8_t txBuf[9];
 	txBuf[0] = 0xFF;
 	txBuf[1] = 0xFF;
-	txBuf[2] = 0xFE; // Packet ID (0xFE = broadcast)
+	txBuf[2] = id; // Packet ID (0xFE = broadcast)
 	txBuf[3] = 0x05; // length
 	txBuf[4] = 0x03; // write instruction
 	txBuf[5] = 30;   // address
@@ -92,6 +92,50 @@ void update_motor_position(GPIO_TypeDef *uart_port, uint16_t pin, UART_HandleTyp
 
 	// Write to Motor on UART
 	HAL_UART_Transmit(&h, txBuf, sizeof(txBuf), 1000);
+}
+
+/*
+ * Dynamixel 1.0
+ */
+void update_motor_id(GPIO_TypeDef *uart_port, uint16_t pin, UART_HandleTypeDef h, uint8_t id) {
+  // setup message packet
+  uint8_t txBuf[8];
+  txBuf[0] = 0xFF;
+  txBuf[1] = 0xFF;
+  txBuf[2] = 0xFE; // Packet ID (0xFE = broadcast)
+  txBuf[3] = 0x04; // length
+  txBuf[4] = 0x03; // write instruction
+  txBuf[5] = 3;   // address
+  txBuf[6] = id; // value
+  txBuf[7] = ~(txBuf[2] + txBuf[3] + txBuf[4] + txBuf[5] + txBuf[6]); // checksum
+
+  // set write direction
+  HAL_GPIO_WritePin(uart_port, pin, GPIO_PIN_SET);
+
+  // Write to Motor on UART
+  HAL_UART_Transmit(&h, txBuf, sizeof(txBuf), 1000);
+}
+
+/*
+ * Dynamixel 1.0
+ */
+void update_motor_led(GPIO_TypeDef *uart_port, uint16_t pin, UART_HandleTypeDef h, uint8_t id, uint8_t val) {
+  // setup message packet
+  uint8_t txBuf[8];
+  txBuf[0] = 0xFF;
+  txBuf[1] = 0xFF;
+  txBuf[2] = id; // Packet ID (0xFE = broadcast)
+  txBuf[3] = 0x04; // length
+  txBuf[4] = 0x03; // write instruction
+  txBuf[5] = 25;   // address
+  txBuf[6] = val; // value
+  txBuf[7] = ~(txBuf[2] + txBuf[3] + txBuf[4] + txBuf[5] + txBuf[6]); // checksum
+
+  // set write direction
+  HAL_GPIO_WritePin(uart_port, pin, GPIO_PIN_SET);
+
+  // Write to Motor on UART
+  HAL_UART_Transmit(&h, txBuf, sizeof(txBuf), 1000);
 }
 
 /*

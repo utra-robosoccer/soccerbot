@@ -22,7 +22,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "bringup_tests.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -52,9 +52,9 @@ UART_HandleTypeDef huart6;
 
 /* USER CODE BEGIN PV */
 uint8_t usb_received = 0;
-uint32_t rxBufferCount;
-uint32_t rxBufferSize;
-uint8_t rxBuffer[20];
+uint32_t rxBufferCount = 0;
+uint32_t rxBufferSize = 0;
+uint8_t rxBuffer[100];
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -113,22 +113,30 @@ int main(void)
   MX_USART6_UART_Init();
   MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
-
+  uint8_t val = 0;
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+
     /* USER CODE END WHILE */
     if (usb_received) {
-      update_motor_position(USART1_DIR_GPIO_Port, USART1_DIR_Pin, huart1, rxBuffer[2]);
+      uint16_t angle = rxBuffer[2] | (rxBuffer[3] << 8);
+      update_motor_position(USART1_DIR_GPIO_Port, USART1_DIR_Pin, huart1, 0xfe, angle);
+
+//      uint16_t angle1 = rxBuffer[2] | (rxBuffer[3] << 8);
+//      update_motor_position(USART1_DIR_GPIO_Port, USART1_DIR_Pin, huart1, angle);
 
 		  // Write to Motor on UART
 		  uint8_t txBuf[20];
 		  for(uint8_t i = 0; i < 20; i++)
 			  txBuf[i] = i;
-		  uint8_t result = CDC_Transmit_FS((uint8_t *) txBuf, 20);
+		  uint8_t result = CDC_Transmit_FS((uint8_t *) txBuf, sizeof(txBuf));
+
+//		  HAL_Delay(1000);
+		  usb_received = 0;
 	  }
     /* USER CODE BEGIN 3 */
   }

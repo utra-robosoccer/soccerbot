@@ -17,9 +17,11 @@ def test_send_command():
     t_start = time.time()
     while True:
         angle += 1
-        angle %= 0xFF
+        angle %= 0x3FF
+        angle_lo = angle & 0xFF
+        angle_hi = (angle >> 8) & 0xFF
         # print('angle:', angle)
-        s.write([0xFF, 0xFF, angle, angle, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18])
+        s.write([0xFF, 0xFF, angle_lo, angle_hi, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18])
 
         for i in range(20):
             res = s.read()
@@ -45,7 +47,7 @@ def test_firmware_interface():
     for i in range(10000):
         j = JointState()
         j.name = ["left_leg_motor_0", "left_leg_motor_1"]
-        j.position = [math.sin(i / 180 * math.pi), math.cos(i / 180 * math.pi)]
+        j.position = [math.sin(i / 180 * math.pi) * 2, math.cos(i / 180 * math.pi) * 2]
         j.header.stamp = rospy.Time.now()
 
         f.joint_command_callback(j)

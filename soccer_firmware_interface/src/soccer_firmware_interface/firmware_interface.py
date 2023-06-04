@@ -33,7 +33,7 @@ class FirmwareInterface:
                 self.reconnect_serial_port()
 
                 data = self.serial.read()
-                print(data)
+                # print(data)
 
                 # TODO imu_publisher.publish(imu)
                 # TODO joint_state_publisher.publish(joint_state)
@@ -59,12 +59,12 @@ class FirmwareInterface:
 
                 max_angle_bytes = self.motor_types[type]["max_angle_bytes"]
                 max_angle_radians = self.motor_types[type]["max_angle_degrees"] / 180 * math.pi
-                assert angle_min >= 0
+                assert angle_final >= 0
                 assert angle_final <= max_angle_radians
 
                 angle_final_bytes = round(angle_final / max_angle_radians * max_angle_bytes)
-                angle_final_bytes_1 = (angle_final_bytes >> 8) & 0xFF
-                angle_final_bytes_2 = angle_final_bytes & 0xFF
+                angle_final_bytes_2 = (angle_final_bytes >> 8) & 0xFF
+                angle_final_bytes_1 = angle_final_bytes & 0xFF
 
                 assert id < 18
                 bytes_to_write[2 + id * 2] = angle_final_bytes_1
@@ -75,4 +75,5 @@ class FirmwareInterface:
 
         except Exception as ex:
             # todo: properly catch error, if unplug/replug cable should still work
+            print(ex)
             pass

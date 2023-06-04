@@ -34,7 +34,7 @@ extern "C" {
 extern uint8_t usb_received;
 extern uint32_t rxBufferCount;
 extern uint32_t rxBufferSize;
-extern uint8_t rxBuffer[20];
+extern uint8_t rxBuffer[100];
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/

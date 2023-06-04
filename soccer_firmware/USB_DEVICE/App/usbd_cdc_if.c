@@ -266,9 +266,10 @@ static int8_t CDC_Receive_FS(uint8_t* Buf, uint32_t *Len)
 
   // upon receiving packet save it into buffer
   // keep things simple assume packet is good, no crc checking
-  if (*Len == 20) {
-    for(uint8_t i = 0; i < 20; i++)rxBuffer[i] = Buf[i];
-  }
+  for(uint8_t i = 0; i < *Len; i++)rxBuffer[i] = Buf[i];
+  rxBufferSize = *Len;
+
+
   usb_received = 1;
 
   return (USBD_OK);
