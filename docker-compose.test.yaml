@@ -16,6 +16,7 @@ x-soccerbot: &soccerbot
     target: builder
     args:
       - BUILDKIT_INLINE_CACHE=1
+      - INSTALL_CUDA="false"
     cache_from:
       - utrarobosoccer/soccerbot
       - utrarobosoccer/soccerbot_dependencies

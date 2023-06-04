@@ -11,6 +11,9 @@ services:
     extends:
       file: docker-compose.yaml
       service: simulator
+    networks:
+      soccer_network:
+        ipv4_address: 172.18.0.10
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
       - /dev/dri:/dev/dri:rw
@@ -30,6 +33,8 @@ services:
     networks:
       soccer_network:
         ipv4_address: 172.18.0.2
+    ports:
+      - 11311:11311
     environment:
       ROBOCUP_ROBOT_ID: 1
       ROBOCUP_TEAM_COLOR: "red"
@@ -46,6 +51,8 @@ services:
     networks:
       soccer_network:
         ipv4_address: 172.18.0.3
+    ports:
+      - 11312:11311
     environment:
       ROBOCUP_ROBOT_ID: 2
       ROBOCUP_TEAM_ID: 16
@@ -62,6 +69,8 @@ services:
     networks:
       soccer_network:
         ipv4_address: 172.18.0.4
+    ports:
+      - 11313:11311
     environment:
       ROBOCUP_ROBOT_ID: 3
       ROBOCUP_TEAM_ID: 16
@@ -78,6 +87,8 @@ services:
     networks:
       soccer_network:
         ipv4_address: 172.18.0.5
+    ports:
+      - 11314:11311
     environment:
       ROBOCUP_ROBOT_ID: 4
       ROBOCUP_TEAM_ID: 16

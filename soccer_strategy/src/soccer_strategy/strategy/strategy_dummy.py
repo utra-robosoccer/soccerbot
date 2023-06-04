@@ -3,6 +3,7 @@ import math
 import numpy as np
 import rospy
 
+from soccer_common.utils import wrapTo2Pi
 from soccer_msgs.msg import GameState
 from soccer_strategy.robot import Robot
 from soccer_strategy.strategy.strategy import (
@@ -76,16 +77,22 @@ class StrategyDummy(Strategy):
 
                     # Ball localized, move to ball
                     if (rospy.Time.now() - this_robot.robot_focused_on_ball_time) < rospy.Duration(2):
-                        # If there is an obstacle, then move around the obstacle
-                        blocked_position = Utility.is_obstacle_blocking(this_robot, ball.position)
+                        blocked_position = Utility.is_obstacle_blocking(this_robot, this_robot.position[0:2], ball.position)
                         if blocked_position is not None:
-                            optimal_pos = Utility.optimal_position_to_navigate_if_obstacle_blocking_target(
-                                this_robot, np.array(ball.position[0:2]), blocked_position
+                            optimal_pos = Utility.optimal_position_to_navigate_if_blocking(
+                                this_robot.position[0:2], np.array(ball.position[0:2]), blocked_position, this_robot.BODY_WIDTH
                             )
                             Utility.navigate_to_position_with_offset(this_robot, optimal_pos, np.array(ball.position[0:2]), 0)
                         else:
                             rospy.loginfo("Navigation to ball")
-                            Utility.navigate_to_scoring_position(this_robot, np.array(ball.position[0:2]), goal_position)
+                            blocked_position = Utility.is_obstacle_blocking(this_robot, ball.position, goal_position)
+                            if blocked_position is not None:
+                                optimal_pos = Utility.optimal_position_to_navigate_if_blocking(
+                                    ball.position[0:2], goal_position[0:2], blocked_position, this_robot.BODY_WIDTH
+                                )
+                                Utility.navigate_to_position_with_offset(this_robot, np.array(ball.position[0:2]), optimal_pos)
+                            else:
+                                Utility.navigate_to_scoring_position(this_robot, np.array(ball.position[0:2]), goal_position)
                     elif this_robot.observed_ball is None or (rospy.Time.now() - this_robot.observed_ball.last_observed_time_stamp) > rospy.Duration(
                         2
                     ):
@@ -119,5 +126,5 @@ class StrategyDummy(Strategy):
                     f"Player {this_robot.robot_id}: Rotating to locate ball. Time of End of Action {self.time_of_end_of_action}, Last Observed Time Stamp {friendly_team.observed_ball.last_observed_time_stamp if friendly_team.observed_ball is not None else 0}"
                 )
 
-                turn_position = np.array([player_position[0], player_position[1], player_angle + math.pi * 0.45])
+                turn_position = np.array([player_position[0], player_position[1], wrapTo2Pi(player_angle + math.pi * 0.45)])
                 this_robot.set_navigation_position(turn_position)

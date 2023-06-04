@@ -12,7 +12,8 @@ x-gpu: &gpu
             count: all
             capabilities: [gpu, compute, utility, graphics]
 
-x-soccerbot: &soccerbot #  <<: *gpu
+x-soccerbot: &soccerbot
+  <<: *gpu
   image: utrarobosoccer/soccerbot
   privileged: true
   user: "1000"
@@ -21,10 +22,8 @@ x-soccerbot: &soccerbot #  <<: *gpu
     target: builder
     args:
       - BUILDKIT_INLINE_CACHE=1
-      - USER=${USER}
     cache_from:
       - utrarobosoccer/soccerbot
-      - utrarobosoccer/soccerbot_dependencies
   cap_add:
     - SYS_PTRACE
     - SYS_NICE

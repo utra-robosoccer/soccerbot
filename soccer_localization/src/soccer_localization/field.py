@@ -140,6 +140,8 @@ class Field:
         offset_transform_cumulative = Transformation()
         transform_confidence = None
         while match_iterations > 0:
+            if match_iterations == 1:
+                localizing = False
             tt = self.matchPointsWithMap(current_transform, point_cloud_array, localizing=localizing)
             if tt is None:
                 return None
@@ -224,6 +226,7 @@ class Field:
         if len(index_meets_dist_threshold[0]) == 0:
             return None
 
+        ratio_meets_distance_threshold = len(index_meets_dist_threshold[0]) / closest_dist.size
         index_array = np.arange(len(closest_line))
 
         closest_line_diff_x = diff_x[closest_line, index_array]
@@ -253,6 +256,8 @@ class Field:
         points_meet_dist_threshold_shift = points_meet_dist_threshold_delta - np.concatenate([[closest_line_diff_x], [closest_line_diff_y]])
         distance_to_new_points = np.linalg.norm(points_meet_dist_threshold_delta, axis=0)
         sum_distance_to_new_points = np.sum(distance_to_new_points)
+        if sum_distance_to_new_points == 0:
+            return None
 
         angle_original = np.arctan2(points_meet_dist_threshold_delta[1, :], points_meet_dist_threshold_delta[0, :])
         angle_new = np.arctan2(points_meet_dist_threshold_shift[1, :], points_meet_dist_threshold_shift[0, :])
@@ -271,13 +276,14 @@ class Field:
         if offset_transform_pos_theta[0] ** 2 + offset_transform_pos_theta[1] ** 2 > offset_movement_limit**2:
             return None
 
-        confidence_x = min(1, closest_line_diff_x_valid_count / 150)
-        confidence_y = min(1, closest_line_diff_y_valid_count / 150)
+        ratio_meets_distance_threshold = 4 * (ratio_meets_distance_threshold - 0.75) if ratio_meets_distance_threshold >= 0.75 else 0
+        confidence_x = min(1, closest_line_diff_x_valid_count / 150) * ratio_meets_distance_threshold
+        confidence_y = min(1, closest_line_diff_y_valid_count / 150) * ratio_meets_distance_threshold
         transform_confidence = [confidence_x, confidence_y, max(confidence_x, confidence_y)]
 
         end = time.time()
         rospy.loginfo_throttle(60, f"Match Points with Map rate (s) :  {(end - start)}")
-        rospy.loginfo_throttle(10, f"Transform Confidence :  {transform_confidence}")
+        rospy.loginfo_throttle(1, f"Transform Confidence :  {transform_confidence} Ratio Meet Distance Threshold: {ratio_meets_distance_threshold}")
         return offset_transform, transform_confidence
 
     def drawPointsOnMap(self, current_transform: Transformation, point_cloud_array: np.array, label: str, color: str):

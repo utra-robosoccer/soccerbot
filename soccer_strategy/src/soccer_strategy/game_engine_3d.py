@@ -15,6 +15,7 @@ from soccer_strategy.strategy.strategy_freekick import StrategyFreekick
 from soccer_strategy.strategy.strategy_penaltykick import StrategyPenaltykick
 from soccer_strategy.strategy.strategy_ready import StrategyReady
 from soccer_strategy.strategy.strategy_set import StrategySet
+from soccer_strategy.strategy.strategy_stationary import StrategyStationary
 from soccer_strategy.team import Team
 
 
@@ -31,13 +32,13 @@ class GameEngine3D:
         """
         Initializes the game engine information
         """
-        robot_id = rospy.get_param("~robot_id", 1)
+        self.robot_id = rospy.get_param("robot_id", 1)
         team_id = int(os.getenv("ROBOCUP_TEAM_ID", "16"))
-        rospy.loginfo(f"Initializing strategy with robot id: {robot_id},  team id:  {team_id}")
+        rospy.loginfo(f"Initializing strategy with robot id: {self.robot_id},  team id:  {team_id}")
 
         robots: [Union[RobotObserved, RobotControlled3D]] = []
         for i in range(1, 5):
-            if i == robot_id:
+            if i == self.robot_id:
                 robots.append(RobotControlled3D(team=Robot.Team.FRIENDLY, role=Robot.Role.UNASSIGNED, status=Robot.Status.DISCONNECTED))
             else:
                 robots.append(
@@ -65,7 +66,7 @@ class GameEngine3D:
         Returns this robot, of type RobotControlled3D
         :return: this robot, of type RobotControlled3D
         """
-        return self.team1.robots[int(os.getenv("ROBOCUP_ROBOT_ID", 1)) - 1]
+        return self.team1.robots[self.robot_id - 1]
 
     def gamestate_callback(self, gameState: GameState):
         """
@@ -86,6 +87,8 @@ class GameEngine3D:
         if self.gameState.penalty != GameState.PENALTY_NONE:
             self.this_robot.status = Robot.Status.PENALIZED
             self.this_robot.update_robot_state(None)  # immediately to stop actuators
+        elif self.this_robot.status in [Robot.Status.DISCONNECTED, Robot.Status.PENALIZED]:
+            self.this_robot.status = Robot.Status.DETERMINING_SIDE
 
     def decide_strategy(self):
         """
@@ -95,7 +98,7 @@ class GameEngine3D:
         :return:
         """
 
-        new_strategy = StrategyDetermineSide
+        new_strategy = StrategyStationary
         current_strategy = type(self.team1.strategy)
 
         if self.gameState.gameState == GameState.GAMESTATE_INITIAL:
@@ -105,8 +108,8 @@ class GameEngine3D:
                 Robot.Status.DISCONNECTED,
                 Robot.Status.PENALIZED,
             ]:
-                new_strategy = StrategyDetermineSide
-            elif current_strategy is StrategyDetermineSide and not self.team1.strategy.complete:
+                new_strategy = StrategyStationary
+            elif self.this_robot.status == Robot.Status.DETERMINING_SIDE:
                 new_strategy = StrategyDetermineSide
             else:
                 if rospy.get_param("skip_ready_strategy", False):
@@ -115,14 +118,16 @@ class GameEngine3D:
                     new_strategy = StrategyReady
         elif self.gameState.gameState == GameState.GAMESTATE_SET:
             if self.this_robot.status == Robot.Status.PENALIZED:
-                new_strategy = StrategyDetermineSide
+                new_strategy = StrategyStationary
             else:
                 new_strategy = StrategySet
         elif self.gameState.gameState == GameState.GAMESTATE_FINISHED:
             new_strategy = StrategyFinished
         elif self.gameState.gameState == GameState.GAMESTATE_PLAYING:
             if self.gameState.secondaryState == GameState.STATE_NORMAL:
-                if self.this_robot.status in [Robot.Status.PENALIZED, Robot.Status.DETERMINING_SIDE]:
+                if self.this_robot.status == Robot.Status.PENALIZED:
+                    new_strategy = StrategyStationary
+                elif self.this_robot.status == Robot.Status.DETERMINING_SIDE:
                     new_strategy = StrategyDetermineSide
                 elif current_strategy == StrategyDetermineSide and self.team1.strategy.complete:
                     new_strategy = StrategyReady
@@ -166,7 +171,7 @@ class GameEngine3D:
             # Log information about the strategy and run the strategy in the step_strategy function
             penalize_str = f"(P{self.gameState.penalty} - {self.gameState.secondsTillUnpenalized})" if self.gameState.penalty != 0 else ""
             print(
-                f"\033[1mRobot {os.getenv('ROBOCUP_ROBOT_ID', 1)} Running {str(type(self.team1.strategy))} ({self.team1.strategy.iteration}) | Game State: {GameEngine3D.GAMESTATE_LOOKUP[self.gameState.gameState]}, Secondary State: {GameEngine3D.SECONDARY_STATE_LOOKUP[self.gameState.secondaryState]}, Secondary State Mode: {GameEngine3D.SECONDARY_STATE_MODE_LOOKUP[self.gameState.secondaryStateMode]} {penalize_str} [{rospy.Time.now().secs}.{rospy.Time.now().nsecs}]\033[0m"
+                f"\033[1mRobot {self.robot_id} Running {str(type(self.team1.strategy))} ({self.team1.strategy.iteration}) | Game State: {GameEngine3D.GAMESTATE_LOOKUP[self.gameState.gameState]}, Secondary State: {GameEngine3D.SECONDARY_STATE_LOOKUP[self.gameState.secondaryState]}, Secondary State Mode: {GameEngine3D.SECONDARY_STATE_MODE_LOOKUP[self.gameState.secondaryStateMode]} {penalize_str} [{rospy.Time.now().secs}.{rospy.Time.now().nsecs}]\033[0m"
             )
             self.team1.log()
             self.team1.strategy.step_strategy(self.team1, self.team2, self.gameState)

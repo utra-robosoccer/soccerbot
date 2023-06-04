@@ -38,7 +38,7 @@ class RobotControlled3D(RobotControlled):
 
         self.tf_listener = tf.TransformListener()
 
-        self.robot_id = int(os.getenv("ROBOCUP_ROBOT_ID", 1))
+        self.robot_id = rospy.get_param("robot_id")
         self.robot_name = "robot " + str(self.robot_id)
 
         self.time_since_action_completed = rospy.Time(0)
@@ -82,9 +82,10 @@ class RobotControlled3D(RobotControlled):
         )
         self.position = np.array([pose.pose.position.x, pose.pose.position.y, q[2]])
         rospy.loginfo(f"Robot Reset Called to {pose.pose.position.x} {pose.pose.position.y} {q[2]} (self.position = {self.position}")
-        self.status = Robot.Status.READY
         if self.role == Robot.Role.UNASSIGNED:
             self.role = Robot.Role.STRIKER
+        self.localized = True
+        self.status = Robot.Status.READY
         self.reset_initial_position()
 
     def update_robot_state(self, _):
@@ -124,8 +125,6 @@ class RobotControlled3D(RobotControlled):
                     (trans, rot) = self.tf_listener.lookupTransform("world", "robot" + str(self.robot_id) + "/base_footprint", rospy.Time(0))
                 eul = tf.transformations.euler_from_quaternion(rot)
                 self.position = np.array([trans[0], trans[1], eul[2]])
-                if self.status == Robot.Status.DISCONNECTED:
-                    self.status = Robot.Status.READY
 
             except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
                 if rospy.Time.now() - self.node_init_time > rospy.Duration(5):
@@ -165,7 +164,10 @@ class RobotControlled3D(RobotControlled):
             rospy.logwarn_throttle(1, "Relocalizing, current cov trace: " + str(covariance_trace))
             if covariance_trace < self.relocalized_threshold:
                 rospy.loginfo("Relocalized")
-                self.status = Robot.Status.READY
+                if self.role != Robot.Role.UNASSIGNED and self.localized:
+                    self.status = Robot.Status.READY
+                else:
+                    self.status = Robot.Status.DETERMINING_SIDE
 
     def action_completed_callback(self, data):
         if self.status == Robot.Status.GETTING_BACK_UP:
@@ -185,7 +187,7 @@ class RobotControlled3D(RobotControlled):
                 rospy.logwarn("Robot Delocalized, Sending Robot back to localizing, current cov trace: " + str(covariance_trace))
                 self.status = Robot.Status.LOCALIZING
             else:
-                if self.role == Robot.Role.UNASSIGNED:
+                if self.role == Robot.Role.UNASSIGNED or not self.localized:
                     self.status = Robot.Status.DETERMINING_SIDE
                 else:
                     self.status = Robot.Status.READY

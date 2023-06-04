@@ -7,6 +7,7 @@ import rosparam
 import rospy
 
 from soccer_common import Transformation
+from soccer_common.utils import wrapTo2Pi
 from soccer_msgs.msg import GameState
 from soccer_strategy.ball import Ball
 from soccer_strategy.game_engine_2d_scene import Scene
@@ -230,10 +231,10 @@ class GameEngine2D:
                         if kick_force_rand == 0:
                             print("Kick Missed")
 
-                        rotation_rand = np.array(
-                            [[np.cos(kick_angle_rand), -np.sin(kick_angle_rand)], [np.sin(kick_angle_rand), np.cos(kick_angle_rand)]]
-                        )
-                        ball.velocity = kick_force_rand * rotation_rand @ robot.kick_velocity
+                        kick_angle = wrapTo2Pi(robot.position[2] + kick_angle_rand)
+
+                        rotation_rand = np.array([[np.cos(kick_angle), -np.sin(kick_angle)], [np.sin(kick_angle), np.cos(kick_angle)]])
+                        ball.velocity = kick_force_rand * rotation_rand @ np.array([robot.max_kick_speed, 0])
                         ball.kick_timeout = 5
                 robot.status = Robot.Status.GETTING_BACK_UP
                 robot.trajectory_timeout = 8

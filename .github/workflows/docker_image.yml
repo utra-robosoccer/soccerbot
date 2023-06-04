@@ -2,12 +2,6 @@ name: Docker Image
 
 on:
   workflow_dispatch:
-    inputs:
-      start_from_scratch:
-        description: "Scratch From Scratch"
-        required: false
-        default: false
-        type: boolean
   schedule:
     - cron: "0 1 1 * *"
   push:
@@ -17,10 +11,10 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
       cancel-in-progress: true
+    runs-on: ubuntu-20.04
     steps:
       - name: Maximize build space
         run: |
@@ -32,6 +26,7 @@ jobs:
         with:
           lfs: true
           submodules: recursive
+      # Ensure that the filesystem permissions are consistent across all umasks, all git checkouts:
       - name: Set filesystems permissions
         run: |
           chmod -R g+w .
@@ -40,16 +35,26 @@ jobs:
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
       - name: Set up Docker Buildx
-        uses: crazy-max/ghaction-docker-buildx@v3
-        with:
-          version: latest
+        uses: docker/setup-buildx-action@v2
       - name: Build Image
         uses: docker/build-push-action@v4
         with:
           context: .
           push: true
           file: Dockerfile
+          build-args: |
+            INSTALL_CUDA=true
           tags: utrarobosoccer/soccerbot
           cache-from: type=registry,ref=utrarobosoccer/soccerbot
           cache-to: type=inline
+      - name: Push to AWS repository
+        run: |
+          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          docker pull utrarobosoccer/soccerbot
+          aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 047817357099.dkr.ecr.us-east-2.amazonaws.com/hl-vs-utra
+          docker tag utrarobosoccer/soccerbot 047817357099.dkr.ecr.us-east-2.amazonaws.com/hl-vs-utra
+          docker push 047817357099.dkr.ecr.us-east-2.amazonaws.com/hl-vs-utra

@@ -1,26 +1,31 @@
-name: Docker Image Webots
+name: Docker Image No Cuda
 
 on:
+  workflow_dispatch:
   schedule:
     - cron: "0 1 1 * *"
   push:
     branches: [master]
     paths-ignore:
       - "**.md"
-  workflow_dispatch:
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
       cancel-in-progress: true
-
+    runs-on: ubuntu-20.04
     steps:
+      - name: Maximize build space
+        run: |
+          sudo rm -rf /usr/local/lib/android
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /opt/ghc
+          df -h
       - uses: actions/checkout@v3
         with:
-          submodules: recursive
           lfs: true
+          submodules: recursive
       # Ensure that the filesystem permissions are consistent across all umasks, all git checkouts:
       - name: Set filesystems permissions
         run: |
@@ -37,9 +42,11 @@ jobs:
       - name: Build Image
         uses: docker/build-push-action@v4
         with:
-          context: external
+          context: .
           push: true
-          file: external/Dockerfile
-          tags: utrarobosoccer/webots
-          cache-from: type=registry,ref=utrarobosoccer/webots
+          file: Dockerfile
+          build-args: |
+            INSTALL_CUDA=false
+          tags: utrarobosoccer/soccerbot:no_cuda
+          cache-from: type=registry,ref=utrarobosoccer/soccerbot
           cache-to: type=inline
