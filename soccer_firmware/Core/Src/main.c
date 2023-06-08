@@ -22,6 +22,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include <stdbool.h>
 #include "bringup_tests.h"
 /* USER CODE END Includes */
 
@@ -49,17 +50,33 @@ UART_HandleTypeDef huart1;
 UART_HandleTypeDef huart2;
 UART_HandleTypeDef huart3;
 UART_HandleTypeDef huart6;
+DMA_HandleTypeDef hdma_uart4_rx;
+DMA_HandleTypeDef hdma_uart4_tx;
+DMA_HandleTypeDef hdma_uart5_rx;
+DMA_HandleTypeDef hdma_uart5_tx;
+DMA_HandleTypeDef hdma_usart1_rx;
+DMA_HandleTypeDef hdma_usart1_tx;
+DMA_HandleTypeDef hdma_usart2_rx;
+DMA_HandleTypeDef hdma_usart2_tx;
+DMA_HandleTypeDef hdma_usart3_rx;
+DMA_HandleTypeDef hdma_usart3_tx;
+DMA_HandleTypeDef hdma_usart6_rx;
+DMA_HandleTypeDef hdma_usart6_tx;
 
 /* USER CODE BEGIN PV */
 uint8_t usb_received = 0;
 uint32_t rxBufferCount = 0;
 uint32_t rxBufferSize = 0;
 uint8_t rxBuffer[100];
+
+MotorPort* motorPorts[6];
+MotorPort port1, port2, port3, port4, port5, port6;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
+static void MX_DMA_Init(void);
 static void MX_UART4_Init(void);
 static void MX_UART5_Init(void);
 static void MX_USART1_UART_Init(void);
@@ -73,7 +90,81 @@ static void MX_I2C1_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+// test various functionalities
+void init_ports() {
+  port1 = (MotorPort){
+    .huart          = &huart1,
+    .hdma_uart_tx   = &hdma_usart1_tx,
+    .hdma_uart_rx   = &hdma_usart1_rx ,
+    .pinPort        = USART1_DIR_GPIO_Port,
+    .dirPinNum      = USART1_DIR_Pin,
+    .dmaDoneReading = false,
+    .numMotors      = 1,
+    .motorIds       = {1}
+  };
 
+  port2 = (MotorPort){
+      .huart          = &huart2,
+      .hdma_uart_tx   = &hdma_usart2_tx,
+      .hdma_uart_rx   = &hdma_usart2_rx ,
+      .pinPort        = USART2_DIR_GPIO_Port,
+      .dirPinNum      = USART2_DIR_Pin,
+      .dmaDoneReading = false,
+      .numMotors      = 1,
+      .motorIds       = {1}
+    };
+
+  port3 = (MotorPort){
+      .huart          = &huart3,
+      .hdma_uart_tx   = &hdma_usart3_tx,
+      .hdma_uart_rx   = &hdma_usart3_rx ,
+      .pinPort        = USART3_DIR_GPIO_Port,
+      .dirPinNum      = USART3_DIR_Pin,
+      .dmaDoneReading = false,
+      .numMotors      = 1,
+      .motorIds       = {1}
+    };
+
+  port4 = (MotorPort){
+      .huart          = &huart4,
+      .hdma_uart_tx   = &hdma_uart4_tx,
+      .hdma_uart_rx   = &hdma_uart4_rx ,
+      .pinPort        = USART4_DIR_GPIO_Port,
+      .dirPinNum      = USART4_DIR_Pin,
+      .dmaDoneReading = false,
+      .numMotors      = 1,
+      .motorIds       = {1}
+    };
+
+  port5 = (MotorPort){
+      .huart          = &huart5,
+      .hdma_uart_tx   = &hdma_uart5_tx,
+      .hdma_uart_rx   = &hdma_uart5_rx ,
+      .pinPort        = USART5_DIR_GPIO_Port,
+      .dirPinNum      = USART5_DIR_Pin,
+      .dmaDoneReading = false,
+      .numMotors      = 1,
+      .motorIds       = {1}
+    };
+
+  port6 = (MotorPort){
+      .huart          = &huart6,
+      .hdma_uart_tx   = &hdma_usart6_tx,
+      .hdma_uart_rx   = &hdma_usart6_rx ,
+      .pinPort        = USART6_DIR_GPIO_Port,
+      .dirPinNum      = USART6_DIR_Pin,
+      .dmaDoneReading = false,
+      .numMotors      = 1,
+      .motorIds       = {1}
+    };
+
+  motorPorts[0] = &port1;
+  motorPorts[1] = &port2;
+  motorPorts[2] = &port3;
+  motorPorts[3] = &port4;
+  motorPorts[4] = &port5;
+  motorPorts[5] = &port6;
+}
 /* USER CODE END 0 */
 
 /**
@@ -104,6 +195,7 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
   MX_USB_DEVICE_Init();
   MX_UART4_Init();
   MX_UART5_Init();
@@ -113,31 +205,16 @@ int main(void)
   MX_USART6_UART_Init();
   MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
-  uint8_t val = 0;
+  init_ports();
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-
+    dynamixel_test();
     /* USER CODE END WHILE */
-    if (usb_received) {
-      uint16_t angle = rxBuffer[2] | (rxBuffer[3] << 8);
-      update_motor_position(USART1_DIR_GPIO_Port, USART1_DIR_Pin, huart1, 0xfe, angle);
 
-//      uint16_t angle1 = rxBuffer[2] | (rxBuffer[3] << 8);
-//      update_motor_position(USART1_DIR_GPIO_Port, USART1_DIR_Pin, huart1, angle);
-
-		  // Write to Motor on UART
-		  uint8_t txBuf[20];
-		  for(uint8_t i = 0; i < 20; i++)
-			  txBuf[i] = i;
-		  uint8_t result = CDC_Transmit_FS((uint8_t *) txBuf, sizeof(txBuf));
-
-//		  HAL_Delay(1000);
-		  usb_received = 0;
-	  }
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
@@ -404,7 +481,7 @@ static void MX_USART6_UART_Init(void)
 
   /* USER CODE END USART6_Init 1 */
   huart6.Instance = USART6;
-  huart6.Init.BaudRate = 1000000;
+  huart6.Init.BaudRate = 57600;
   huart6.Init.WordLength = UART_WORDLENGTH_8B;
   huart6.Init.StopBits = UART_STOPBITS_1;
   huart6.Init.Parity = UART_PARITY_NONE;
@@ -418,6 +495,56 @@ static void MX_USART6_UART_Init(void)
   /* USER CODE BEGIN USART6_Init 2 */
 
   /* USER CODE END USART6_Init 2 */
+
+}
+
+/**
+  * Enable DMA controller clock
+  */
+static void MX_DMA_Init(void)
+{
+
+  /* DMA controller clock enable */
+  __HAL_RCC_DMA2_CLK_ENABLE();
+  __HAL_RCC_DMA1_CLK_ENABLE();
+
+  /* DMA interrupt init */
+  /* DMA1_Stream0_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Stream0_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Stream0_IRQn);
+  /* DMA1_Stream1_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Stream1_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Stream1_IRQn);
+  /* DMA1_Stream2_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Stream2_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Stream2_IRQn);
+  /* DMA1_Stream3_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Stream3_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Stream3_IRQn);
+  /* DMA1_Stream4_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Stream4_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Stream4_IRQn);
+  /* DMA1_Stream5_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Stream5_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Stream5_IRQn);
+  /* DMA1_Stream6_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Stream6_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Stream6_IRQn);
+  /* DMA1_Stream7_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Stream7_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Stream7_IRQn);
+  /* DMA2_Stream1_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA2_Stream1_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA2_Stream1_IRQn);
+  /* DMA2_Stream2_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA2_Stream2_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA2_Stream2_IRQn);
+  /* DMA2_Stream6_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA2_Stream6_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA2_Stream6_IRQn);
+  /* DMA2_Stream7_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA2_Stream7_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA2_Stream7_IRQn);
 
 }
 

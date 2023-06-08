@@ -5,9 +5,9 @@
  *      Author: lkune
  */
 
-#include "bringup_tests.h"
-#include "stm32f4xx_hal_gpio.h"
 #include "main.h"
+#include "bringup_tests.h"
+#include "dynamixel_p1.h"
 #include "usb_device.h"
 #include "usbd_cdc_if.h"
 
@@ -40,64 +40,24 @@ void test_usb_rx_tx() {
 	}
 }
 
-//void test_all_ports1() {
-//	test_motor_sweep1(USART1_DIR_GPIO_Port, USART1_DIR_Pin, huart1);
-//	test_ping1(USART1_DIR_GPIO_Port, USART1_DIR_Pin, huart1);
-//	HAL_Delay(1000);
-//
-//	test_motor_sweep1(USART2_DIR_GPIO_Port, USART2_DIR_Pin, huart2);
-//	test_ping1(USART2_DIR_GPIO_Port, USART2_DIR_Pin, huart2);
-//	HAL_Delay(1000);
-//
-//	test_motor_sweep1(USART3_DIR_GPIO_Port, USART3_DIR_Pin, huart3);
-//	test_ping1(USART3_DIR_GPIO_Port, USART3_DIR_Pin, huart3);
-//	HAL_Delay(1000);
-//
-//	test_motor_sweep1(USART4_DIR_GPIO_Port, USART4_DIR_Pin, huart4);
-//	test_ping1(USART4_DIR_GPIO_Port, USART4_DIR_Pin, huart4);
-//	HAL_Delay(1000);
-//
-//	test_motor_sweep1(USART5_DIR_GPIO_Port, USART5_DIR_Pin, huart5);
-//	test_ping1(USART5_DIR_GPIO_Port, USART5_DIR_Pin, huart5);
-//	HAL_Delay(1000);
-//
-//	test_motor_sweep1(USART6_DIR_GPIO_Port, USART6_DIR_Pin, huart6);
-//	test_ping1(USART6_DIR_GPIO_Port, USART6_DIR_Pin, huart6);
-//	HAL_Delay(1000);
-//}
-
-/*
- * Dynamixel 1.0
- */
-void update_motor_position(GPIO_TypeDef *uart_port, uint16_t pin, UART_HandleTypeDef h, uint8_t id, uint16_t angle) {
-	angle %= 0x3ff;
-
-	HAL_GPIO_TogglePin(GPIOA, GREEN_LED_Pin);
-	HAL_Delay(10);
-
-	// setup message packet
-	uint8_t txBuf[9];
-	txBuf[0] = 0xFF;
-	txBuf[1] = 0xFF;
-	txBuf[2] = id; // Packet ID (0xFE = broadcast)
-	txBuf[3] = 0x05; // length
-	txBuf[4] = 0x03; // write instruction
-	txBuf[5] = 30;   // address
-	txBuf[6] = angle & 0xff; // value
-	txBuf[7] = (angle >> 8) % 0xff; // value
-	txBuf[8] = ~(txBuf[2] + txBuf[3] + txBuf[4] + txBuf[5] + txBuf[6] + txBuf[7]); // checksum
-
-	// set write direction
-	HAL_GPIO_WritePin(uart_port, pin, GPIO_PIN_SET);
-
-	// Write to Motor on UART
-	HAL_UART_Transmit(&h, txBuf, sizeof(txBuf), 1000);
+void dynamixel_test() {
+  for (uint8_t i = 0; i < 1; i++) {
+    update_motor_led(motorPorts[i], 1, 0);
+    HAL_Delay(100);
+    update_motor_led(motorPorts[i], 1, 1);
+    HAL_Delay(100);
+    test_motor_sweep1(motorPorts[i], 1);
+    HAL_Delay(100);
+    motor_ping_p1(motorPorts[i], 1);
+    HAL_Delay(2000);
+  }
 }
 
+
 /*
  * Dynamixel 1.0
  */
-void update_motor_id(GPIO_TypeDef *uart_port, uint16_t pin, UART_HandleTypeDef h, uint8_t id) {
+void update_motor_id(MotorPort* p, uint8_t id) {
   // setup message packet
   uint8_t txBuf[8];
   txBuf[0] = 0xFF;
@@ -110,25 +70,36 @@ void update_motor_id(GPIO_TypeDef *uart_port, uint16_t pin, UART_HandleTypeDef h
   txBuf[7] = ~(txBuf[2] + txBuf[3] + txBuf[4] + txBuf[5] + txBuf[6]); // checksum
 
   // set write direction
-  HAL_GPIO_WritePin(uart_port, pin, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(p->pinPort, p->dirPinNum, GPIO_PIN_SET);
 
   // Write to Motor on UART
-  HAL_UART_Transmit(&h, txBuf, sizeof(txBuf), 1000);
+  HAL_UART_Transmit(p->huart, txBuf, sizeof(txBuf), 1000);
 }
 
 /*
  * Dynamixel 1.0
  */
-void update_motor_led(GPIO_TypeDef *uart_port, uint16_t pin, UART_HandleTypeDef h, uint8_t id, uint8_t val) {
+void update_motor_led(MotorPort *p, uint8_t id, uint8_t val) {
+  uint8_t data[1] = {val};
+  uint8_t dataLen = 1;
+  uint8_t addr = 25;
+  dynamixel_write_v1(p, id, addr, data, dataLen);
+}
+
+/*
+ * Dynamixel 1.0
+ * 0xFF   0xFF  0x01  0x04  0x02  0x2B  0x01  0xCC
+ */
+void read_motor_position(GPIO_TypeDef *uart_port, uint16_t pin, UART_HandleTypeDef h, uint8_t id, uint8_t* rxBuf, uint8_t len) {
   // setup message packet
   uint8_t txBuf[8];
   txBuf[0] = 0xFF;
   txBuf[1] = 0xFF;
   txBuf[2] = id; // Packet ID (0xFE = broadcast)
   txBuf[3] = 0x04; // length
-  txBuf[4] = 0x03; // write instruction
-  txBuf[5] = 25;   // address
-  txBuf[6] = val; // value
+  txBuf[4] = 0x02; // write instruction
+  txBuf[5] = 36;   // address
+  txBuf[6] = 2; // register length
   txBuf[7] = ~(txBuf[2] + txBuf[3] + txBuf[4] + txBuf[5] + txBuf[6]); // checksum
 
   // set write direction
@@ -136,83 +107,58 @@ void update_motor_led(GPIO_TypeDef *uart_port, uint16_t pin, UART_HandleTypeDef 
 
   // Write to Motor on UART
   HAL_UART_Transmit(&h, txBuf, sizeof(txBuf), 1000);
+
+  // set read direction
+  HAL_GPIO_WritePin(uart_port, pin, GPIO_PIN_RESET);
+
+  uint8_t i = 0;
+  while(i++ < 100){
+    HAL_UART_Receive(&h, rxBuf, len, 10);
+  }
 }
 
 /*
  * Dynamixel 1.0
  */
-void test_motor_sweep1(GPIO_TypeDef *uart_port, uint16_t pin, UART_HandleTypeDef h) {
+void test_motor_sweep1(MotorPort *port, uint8_t id) {
 	uint16_t angle = 0;
 	uint16_t count = 0;
+	int16_t dir = 1;
 	while (1)
 	{
-		  angle += 5;
-		  if(angle >= 0x3ff) count++;
+		  if(dir) angle += 5;
+		  else angle -= 5;
+		  if(angle >= 0x3ff) {
+		    count++;
+		    dir = 0; // reverse direction
+		    angle = 0x3fe;
+		  }
 		  if(count == 2) break; // end test
 		  angle %= 0x3ff;
 
-		  HAL_GPIO_TogglePin(GPIOA, GREEN_LED_Pin);
-		  HAL_Delay(10);
+		  HAL_Delay(5);
 
-		  // setup message packet
-		  uint8_t txBuf[9];
-		  txBuf[0] = 0xFF;
-		  txBuf[1] = 0xFF;
-		  txBuf[2] = 0xFE; // Packet ID (0xFE = broadcast)
-		  txBuf[3] = 0x05; // length
-		  txBuf[4] = 0x03; // write instruction
-		  txBuf[5] = 30;   // address
-		  txBuf[6] = angle & 0xff; // value
-		  txBuf[7] = (angle >> 8) % 0xff; // value
-		  txBuf[8] = ~(txBuf[2] + txBuf[3] + txBuf[4] + txBuf[5] + txBuf[6] + txBuf[7]); // checksum
-
-		  // set write direction
-		  HAL_GPIO_WritePin(uart_port, pin, GPIO_PIN_SET);
-
-		  // Write to Motor on UART
-		  HAL_UART_Transmit(&h, txBuf, sizeof(txBuf), 1000);
+		  update_motor_position(port, id, angle);
 	}
 }
 
-/*
+/*0xFF  0xFF  0x00  0x02  0x06  0xF7
  * Dynamixel 1.0
  */
-void test_ping1(GPIO_TypeDef *uart_port, uint16_t pin, UART_HandleTypeDef h) {
-	for(uint16_t i = 0; i < 2; i++) {
-		 uint8_t txBuf[6];
-		  txBuf[0] = 0xFF;
-		  txBuf[1] = 0xFF;
-		  txBuf[2] = 0xFE; // Packet ID (0xFE = broadcast)
-		  txBuf[3] = 0x02; // length
-		  txBuf[4] = 0x01; // PING instruction
-		  txBuf[5] = ~(txBuf[2] + txBuf[3] + txBuf[4]); // checksum
+void factory_reset(GPIO_TypeDef *uart_port, uint16_t pin, UART_HandleTypeDef h) {
+  uint8_t txBuf[6];
+  txBuf[0] = 0xFF;
+  txBuf[1] = 0xFF;
+  txBuf[2] = 0x00; // Packet ID (0xFE = broadcast)
+  txBuf[3] = 0x02; // length
+  txBuf[4] = 0x06; // PING instruction
+  txBuf[5] = 0xF7;// checksum
 
-		  uint8_t rxBuf[6];
-		  for(uint8_t i = 0; i < sizeof(rxBuf); i++)rxBuf[i] = 0;
+  // set write direction
+  HAL_GPIO_WritePin(uart_port, pin, GPIO_PIN_SET);
 
-		  // set write direction
-		  HAL_GPIO_WritePin(uart_port, pin, GPIO_PIN_SET);
-
-		  // Write to Motor on UART2
-		  HAL_UART_Transmit(&h, txBuf, sizeof(txBuf), 1000);
-
-		  // set read direction
-		  HAL_GPIO_WritePin(uart_port, pin, GPIO_PIN_RESET);
-
-
-		  while(HAL_UART_Receive(&h, rxBuf, sizeof(rxBuf), 1000) != HAL_OK){
-
-		  }
-
-		  HAL_GPIO_TogglePin(GPIOA, GREEN_LED_Pin);
-		  HAL_Delay(100);
-
-		  while(rxBuf[0] != 0xff | rxBuf[4] != 0) {
-			  // check some values, if wrong value spin
-		  }
-		  HAL_GPIO_TogglePin(GPIOA, GREEN_LED_Pin);
-		  HAL_Delay(100);
-	}
+  // Write to Motor on UART
+  HAL_UART_Transmit(&h, txBuf, sizeof(txBuf), 1000);
 }
 
 unsigned short update_crc(unsigned short crc_accum, unsigned char *data_blk_ptr, unsigned short data_blk_size)
@@ -270,41 +216,71 @@ unsigned short update_crc(unsigned short crc_accum, unsigned char *data_blk_ptr,
 void test_motor_sweep2(GPIO_TypeDef *uart_port, uint16_t pin, UART_HandleTypeDef h) {
 	uint16_t angle = 0;
 	uint16_t count = 0;
-	while (1)
+	while(1)
 	{
 		  angle += 5;
-		  if(angle >= 0x3ff) count++;
-		  if(count == 2) break; // end test
-		  angle %= 0x3ff;
+		  count++;
+		  if(count == 1000) break; // end test
+		  angle %= 0xfff;
 
 		  HAL_GPIO_TogglePin(GPIOA, GREEN_LED_Pin);
 		  HAL_Delay(10);
 
-		  // setup message packet
 		  uint8_t txBuf[16];
-		  txBuf[0] = 0xFF; // header
-		  txBuf[1] = 0xFF; // header
-		  txBuf[2] = 0xFD; // header
-		  txBuf[3] = 0x00; // reserved
-		  txBuf[4] = 0xFE; // Packet ID (0xFE = broadcast)
-		  txBuf[5] = 0x09; // length L
-		  txBuf[6] = 0x00; // length H
-		  txBuf[7] = 0x03; // write instruction
-		  txBuf[8] = 0x74; // address L
-		  txBuf[9] = 0x00; // address H
-		  txBuf[10] = 0x00; // P1
-		  txBuf[11] = 0x02; // P2
-		  txBuf[12] = 0x00; // P3
-		  txBuf[13] = 0x00; // P4
-		  uint16_t crc = update_crc(0, txBuf, 14);
-		  txBuf[14] = (crc & 0xFF); // crc
-		  txBuf[15] = (crc >> 8) & 0xFF;
+      txBuf[0] = 0xFF; // header
+      txBuf[1] = 0xFF; // header
+      txBuf[2] = 0xFD; // header
+      txBuf[3] = 0x00; // reserved
+      txBuf[4] = 0x01; // Packet ID (0xFE = broadcast)
+      txBuf[5] = 0x09; // length L
+      txBuf[6] = 0x00; // length H
+      txBuf[7] = 0x03; // write instruction
+      txBuf[8] = 0x74; // address L
+      txBuf[9] = 0x00; // address H
+      txBuf[10] = 0xff; // P1
+      txBuf[11] = 0xff; // P2
+      txBuf[12] = 0xff; // P3
+      txBuf[13] = 0xff; // P4
+      uint16_t crc = update_crc(0, txBuf, 14);
+      txBuf[14] = (crc & 0xFF); // crc
+      txBuf[15] = (crc >> 8) & 0xFF;
+
+		  // setup message packet
+//		  uint8_t txBuf[16];
+//		  txBuf[0] = 0xFF; // header
+//		  txBuf[1] = 0xFF; // header
+//		  txBuf[2] = 0xFD; // header
+//		  txBuf[3] = 0x00; // reserved
+//		  txBuf[4] = 0xFE; // Packet ID (0xFE = broadcast)
+//		  txBuf[5] = 0x09; // length L
+//		  txBuf[6] = 0x00; // length H
+//		  txBuf[7] = 0x03; // write instruction
+//		  txBuf[8] = 1Position Control Mode16; // address L
+//		  txBuf[9] = 0x00; // address H
+//		  txBuf[10] = 0x00; // P1
+//		  txBuf[11] = 0x02; // P2
+//		  txBuf[12] = 0x00; // P3
+//		  txBuf[13] = 0x00; // P4
+//		  uint16_t crc = update_crc(0, txBuf, 14);
+//		  txBuf[14] = (crc & 0xFF); // crc
+//		  txBuf[15] = (crc >> 8) & 0xFF;
 
 		  // set write direction
 		  HAL_GPIO_WritePin(uart_port, pin, GPIO_PIN_SET);
 
 		  // Write to Motor on UART
 		  HAL_UART_Transmit(&h, txBuf, 16, 1000);
+
+		  // set read direction
+      HAL_GPIO_WritePin(uart_port, pin, GPIO_PIN_RESET);
+
+      uint8_t rxBuf[11];
+      uint8_t i = 0;
+      while(i++ < 100){
+        HAL_UART_Receive(&h, rxBuf, sizeof(rxBuf), 10);
+      }
+
+		  HAL_Delay(100);
 	}
 }
 
@@ -346,6 +322,46 @@ void test_led2(GPIO_TypeDef *uart_port, uint16_t pin, UART_HandleTypeDef h) {
  * Dynamixel 2.0
  * set baud rate to 57600bps
  */
+void write_motor2(GPIO_TypeDef *uart_port, uint16_t pin, UART_HandleTypeDef h, uint8_t* rxBuf, uint8_t bufLen, uint8_t addr) {
+  uint8_t txBuf[14];
+  txBuf[0] = 0xFF; // header
+  txBuf[1] = 0xFF; // header
+  txBuf[2] = 0xFD; // header
+  txBuf[3] = 0x00; // reserved
+  txBuf[4] = 0x01; // Packet ID (0xFE = broadcast)
+  txBuf[5] = 0x07; // length L
+  txBuf[6] = 0x00; // length H
+  txBuf[7] = 0x02; // write instruction
+  txBuf[8] = addr | 0xff; // address L
+  txBuf[9] = (addr>>8) | 0xff ; // address H
+  txBuf[10] = bufLen | 0xff; // P1
+  txBuf[11] = (bufLen>>8) | 0xff; // P2
+  uint16_t crc = update_crc(0, txBuf, 14);
+  txBuf[12] = (crc & 0xFF); // crc
+  txBuf[13] = (crc >> 8) & 0xFF;
+
+  // set write direction
+  HAL_GPIO_WritePin(uart_port, pin, GPIO_PIN_SET);
+
+  // Write to Motor on UART
+  HAL_UART_Transmit(&h, txBuf, 16, 1000);
+
+  // set read direction
+  HAL_GPIO_WritePin(uart_port, pin, GPIO_PIN_RESET);
+
+
+  uint8_t i = 0;
+  while(i++ < 100){
+    HAL_UART_Receive(&h, rxBuf, sizeof(rxBuf), 10);
+  }
+
+  HAL_Delay(100);
+}
+
+/*
+ * Dynamixel 2.0
+ * set baud rate to 57600bps
+ */
 void test_ping2(GPIO_TypeDef *uart_port, uint16_t pin, UART_HandleTypeDef h) {
 	for(uint16_t i = 0; i < 6; i++)
 	{
@@ -355,7 +371,7 @@ void test_ping2(GPIO_TypeDef *uart_port, uint16_t pin, UART_HandleTypeDef h) {
 		  txBuf[1] = 0xFF;
 		  txBuf[2] = 0xFD;
 		  txBuf[3] = 0x00;
-		  txBuf[4] = 0xFE; // Packet ID (0xFE = broadcast)
+		  txBuf[4] = 1; // Packet ID (0xFE = broadcast)
 		  txBuf[5] = 0x03; // length L
 		  txBuf[6] = 0x00; // length H
 		  txBuf[7] = 0x01; // ping instruction
@@ -389,4 +405,30 @@ void test_ping2(GPIO_TypeDef *uart_port, uint16_t pin, UART_HandleTypeDef h) {
 		  HAL_GPIO_TogglePin(GPIOA, GREEN_LED_Pin);
 		  HAL_Delay(100);
 	}
+}
+
+void dynamixel_write_v1(MotorPort *p, uint8_t id, uint8_t addr, uint8_t* data, uint8_t dataLen) {
+  // setup message packet
+  uint8_t packetLen = 7 + dataLen;
+  uint8_t txBuf[50]; //set size to something much bigger than we will need
+  txBuf[0] = 0xFF;
+  txBuf[1] = 0xFF;
+  txBuf[2] = id; // Packet ID (0xFE = broadcast)
+  txBuf[3] = 3 + dataLen; // length
+  txBuf[4] = 0x03; // write instruction
+  txBuf[5] = addr;   // address
+
+  for (uint8_t i = 0; i<dataLen; i++)
+    txBuf[6+i] = data[i];
+
+  uint8_t checksum = 0;
+  for (uint8_t i = 2; i < packetLen-1; i++)
+    checksum += txBuf[i];
+  txBuf[packetLen-1] = ~checksum;
+
+  // set write direction
+  HAL_GPIO_WritePin(p->pinPort, p->dirPinNum, GPIO_PIN_SET);
+
+  // Write to Motor on UART
+  HAL_UART_Transmit(p->huart, txBuf, packetLen, 1000);
 }
