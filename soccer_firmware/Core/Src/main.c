@@ -24,6 +24,7 @@
 /* USER CODE BEGIN Includes */
 #include <stdbool.h>
 #include "bringup_tests.h"
+#include "update_loop.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -212,7 +213,8 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    dynamixel_test();
+//    dynamixel_test();
+    update();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

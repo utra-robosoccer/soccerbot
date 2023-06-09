@@ -36,7 +36,7 @@ class Transformation(np.ndarray):
         :param quaternion: Quaternions represented in (x, y, z, w)
         :param rotation_matrix: 3x3 rotation matrix of the transform, can be used in conjunction with position
         :param matrix: 4x4 transformation matrix, includes both position and rotation
-        :param euler: Orientation represented in euler format (roll, pitch, yaw)
+        :param euler: Orientation represented in euler format [yaw, pitch, roll]
         :param pos_theta: 2D position and theta format (x, y, theta/yaw)
         :param pose_theta_covariance_array: Covariance matrix for position and theta format etc diag([x_var, y_var, theta/yaw_var])
         :param pose: Takes a geometry_msg.Pose object and converts it

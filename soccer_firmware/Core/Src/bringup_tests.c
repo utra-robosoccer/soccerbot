@@ -1,8 +1,5 @@
 /*
  * bringup_tests.c
- *
- *  Created on: May 26, 2023
- *      Author: lkune
  */
 
 #include "main.h"
@@ -83,7 +80,7 @@ void update_motor_led(MotorPort *p, uint8_t id, uint8_t val) {
   uint8_t data[1] = {val};
   uint8_t dataLen = 1;
   uint8_t addr = 25;
-  dynamixel_write_v1(p, id, addr, data, dataLen);
+  dynamixel_write_p1(p, id, addr, data, dataLen);
 }
 
 /*
@@ -405,30 +402,4 @@ void test_ping2(GPIO_TypeDef *uart_port, uint16_t pin, UART_HandleTypeDef h) {
 		  HAL_GPIO_TogglePin(GPIOA, GREEN_LED_Pin);
 		  HAL_Delay(100);
 	}
-}
-
-void dynamixel_write_v1(MotorPort *p, uint8_t id, uint8_t addr, uint8_t* data, uint8_t dataLen) {
-  // setup message packet
-  uint8_t packetLen = 7 + dataLen;
-  uint8_t txBuf[50]; //set size to something much bigger than we will need
-  txBuf[0] = 0xFF;
-  txBuf[1] = 0xFF;
-  txBuf[2] = id; // Packet ID (0xFE = broadcast)
-  txBuf[3] = 3 + dataLen; // length
-  txBuf[4] = 0x03; // write instruction
-  txBuf[5] = addr;   // address
-
-  for (uint8_t i = 0; i<dataLen; i++)
-    txBuf[6+i] = data[i];
-
-  uint8_t checksum = 0;
-  for (uint8_t i = 2; i < packetLen-1; i++)
-    checksum += txBuf[i];
-  txBuf[packetLen-1] = ~checksum;
-
-  // set write direction
-  HAL_GPIO_WritePin(p->pinPort, p->dirPinNum, GPIO_PIN_SET);
-
-  // Write to Motor on UART
-  HAL_UART_Transmit(p->huart, txBuf, packetLen, 1000);
 }

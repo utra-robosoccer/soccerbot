@@ -1,8 +1,5 @@
 /*
  * bringup_tests.h
- *
- *  Created on: May 26, 2023
- *      Author: lkune
  */
 
 #ifndef INC_BRINGUP_TESTS_H_
