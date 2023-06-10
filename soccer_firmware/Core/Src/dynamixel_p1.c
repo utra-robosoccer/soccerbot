@@ -15,7 +15,7 @@ void write_goal_position_p1(MotorPort *port, uint8_t id, uint16_t angle) {
   uint8_t data[2] = {angle & 0xff, (angle>>8) & 0xff};
   uint8_t dataLen = 2;
   uint8_t addr = 30;
-  motor_write_p1(port, id, addr, data, dataLen);
+  _motor_write_p1(port, id, addr, data, dataLen);
   //TODO: handle status packet
 }
 
