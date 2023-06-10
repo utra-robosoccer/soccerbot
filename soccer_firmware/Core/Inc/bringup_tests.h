@@ -13,7 +13,6 @@ void test_all_ports1(void);
 
 void update_motor_position(MotorPort *port, uint8_t id, uint16_t angle);
 void update_motor_id(MotorPort *port, uint8_t id);
-void update_motor_led(MotorPort *port, uint8_t id, uint8_t val);
 
 void test_motor_sweep1(MotorPort *port, uint8_t id);
 

@@ -66,10 +66,10 @@ DMA_HandleTypeDef hdma_usart6_rx;
 DMA_HandleTypeDef hdma_usart6_tx;
 
 /* USER CODE BEGIN PV */
-uint8_t usb_received = 0;
-uint32_t rxBufferCount = 0;
-uint32_t rxBufferSize = 0;
-uint8_t rxBuffer[100];
+uint8_t usb_received = false;
+uint32_t usbRxBufferCount = 0;
+uint32_t usbRxBufferSize = 0;
+uint8_t usbRxBuffer[100];
 
 MotorPort* motorPorts[6];
 MotorPort port1, port2, port3, port4, port5, port6;
@@ -214,11 +214,11 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-//      test_led_p2(&port2);
-//      test_motor_sweep2(&port2);
-      id_motor_and_blink_led(2);
+//    test_led_p2(&port2);
+//    test_motor_sweep2(&port2);
+//    id_motor_and_blink_led(2);
 //    dynamixel_test();
-//    update();
+    update();
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

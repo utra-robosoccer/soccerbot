@@ -5,6 +5,7 @@
 #include "main.h"
 #include "bringup_tests.h"
 #include "dynamixel_p1.h"
+#include "dynamixel_p2.h"
 #include "usb_device.h"
 #include "usbd_cdc_if.h"
 
@@ -20,14 +21,14 @@ void test_usb_tx() {
 			count = 1;
 		}
 
-		CDC_Transmit_FS((uint8_t *) txBuf, strlen(txBuf));
+		CDC_Transmit_FS((uint8_t *) txBuf, sizeof(txBuf));
 
 		HAL_Delay(100);
 	}
 }
 
 void test_usb_rx_tx() {
-	char rxBuf[8];
+//	char rxBuf[8];
 
 	while (1){
 
@@ -51,9 +52,9 @@ void id_motor_and_blink_led(uint8_t id) {
 
 void dynamixel_test() {
   for (uint8_t i = 0; i < 1; i++) {
-    update_motor_led(motorPorts[i], 1, 0);
+    update_motor_led_p1(motorPorts[i], 1, 0);
     HAL_Delay(100);
-    update_motor_led(motorPorts[i], 1, 1);
+    update_motor_led_p1(motorPorts[i], 1, 1);
     HAL_Delay(100);
     test_motor_sweep1(motorPorts[i], 1);
     HAL_Delay(100);
@@ -179,7 +180,7 @@ void test_ping2(GPIO_TypeDef *uart_port, uint16_t pin, UART_HandleTypeDef h) {
 		  txBuf[5] = 0x03; // length L
 		  txBuf[6] = 0x00; // length H
 		  txBuf[7] = 0x01; // ping instruction
-		  uint16_t crc = update_crc(0, txBuf, 8);
+		  uint16_t crc = _update_crc(0, txBuf, 8);
 		  txBuf[8] = (crc & 0xFF); // crc L
 		  txBuf[9] = (crc >> 8) & 0xFF; // crc H
 

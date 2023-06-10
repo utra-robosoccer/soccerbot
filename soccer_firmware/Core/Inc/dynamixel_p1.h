@@ -8,6 +8,7 @@
 #include "main.h"
 
 void write_goal_position_p1(MotorPort *port, uint8_t id, uint16_t angle);
+void update_motor_led_p1(MotorPort *p, uint8_t id, uint8_t val);
 void read_present_position_p1(MotorPort *port, uint8_t id, uint16_t angle);
 
 // functions meant for internal use

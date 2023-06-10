@@ -34,9 +34,9 @@ extern "C" {
 #include <stdbool.h>
 
 extern uint8_t usb_received;
-extern uint32_t rxBufferCount;
-extern uint32_t rxBufferSize;
-extern uint8_t rxBuffer[100];
+extern uint32_t usbRxBufferCount;
+extern uint32_t usbRxBufferSize;
+extern uint8_t usbRxBuffer[100];
 
 typedef struct {
   UART_HandleTypeDef *huart; // uart configuration

@@ -19,6 +19,12 @@ void write_goal_position_p1(MotorPort *port, uint8_t id, uint16_t angle) {
   //TODO: handle status packet
 }
 
+void motor_torque_en_p2(MotorPort *p, uint8_t id, uint8_t val) {
+  uint8_t data[1] = {val};
+  uint16_t dataLen = 1;
+  uint16_t addr = 24;
+  _motor_write_p1(p, id, addr, data, dataLen);
+}
 
 /*
  * Dynamixel 1.0
@@ -36,7 +42,7 @@ void update_motor_led_p1(MotorPort *p, uint8_t id, uint8_t val) {
  * Dynamixel 1.0
  * https://emanual.robotis.com/docs/en/dxl/ax/ax-12a/
  */
-void update_motor_id(MotorPort* p, uint8_t new_id) {
+void update_motor_id_p1(MotorPort* p, uint8_t new_id) {
   uint8_t data[1] = {new_id};
   uint8_t dataLen = 1;
   uint8_t addr = 3;
