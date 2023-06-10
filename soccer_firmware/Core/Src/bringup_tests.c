@@ -37,6 +37,18 @@ void test_usb_rx_tx() {
 	}
 }
 
+void id_motor_and_blink_led(uint8_t id) {
+  update_motor_id(&port1, id);
+  HAL_Delay(1000);
+
+  for(uint8_t i = 0; i < 5; i++) {
+    update_motor_led_p1(&port1, id, 1);
+    HAL_Delay(100);
+    update_motor_led_p1(&port1, id, 0);
+    HAL_Delay(100);
+  }
+}
+
 void dynamixel_test() {
   for (uint8_t i = 0; i < 1; i++) {
     update_motor_led(motorPorts[i], 1, 0);
@@ -48,39 +60,6 @@ void dynamixel_test() {
     _motor_ping_p1(motorPorts[i], 1);
     HAL_Delay(2000);
   }
-}
-
-
-/*
- * Dynamixel 1.0
- */
-void update_motor_id(MotorPort* p, uint8_t id) {
-  // setup message packet
-  uint8_t txBuf[8];
-  txBuf[0] = 0xFF;
-  txBuf[1] = 0xFF;
-  txBuf[2] = 0xFE; // Packet ID (0xFE = broadcast)
-  txBuf[3] = 0x04; // length
-  txBuf[4] = 0x03; // write instruction
-  txBuf[5] = 3;   // address
-  txBuf[6] = id; // value
-  txBuf[7] = ~(txBuf[2] + txBuf[3] + txBuf[4] + txBuf[5] + txBuf[6]); // checksum
-
-  // set write direction
-  HAL_GPIO_WritePin(p->pinPort, p->dirPinNum, GPIO_PIN_SET);
-
-  // Write to Motor on UART
-  HAL_UART_Transmit(p->huart, txBuf, sizeof(txBuf), 1000);
-}
-
-/*
- * Dynamixel 1.0
- */
-void update_motor_led_p1(MotorPort *p, uint8_t id, uint8_t val) {
-  uint8_t data[1] = {val};
-  uint8_t dataLen = 1;
-  uint8_t addr = 25;
-  _motor_write_p1(p, id, addr, data, dataLen);
 }
 
 /*
@@ -151,25 +130,6 @@ void test_motor_sweep1(MotorPort *port, uint8_t id) {
 	}
 }
 
-/*0xFF  0xFF  0x00  0x02  0x06  0xF7
- * Dynamixel 1.0
- */
-void factory_reset(GPIO_TypeDef *uart_port, uint16_t pin, UART_HandleTypeDef h) {
-  uint8_t txBuf[6];
-  txBuf[0] = 0xFF;
-  txBuf[1] = 0xFF;
-  txBuf[2] = 0x00; // Packet ID (0xFE = broadcast)
-  txBuf[3] = 0x02; // length
-  txBuf[4] = 0x06; // PING instruction
-  txBuf[5] = 0xF7;// checksum
-
-  // set write direction
-  HAL_GPIO_WritePin(uart_port, pin, GPIO_PIN_SET);
-
-  // Write to Motor on UART
-  HAL_UART_Transmit(&h, txBuf, sizeof(txBuf), 1000);
-}
-
 /*
  * Dynamixel 2.0
  * set baud rate to 57600bps
@@ -179,7 +139,10 @@ void test_motor_sweep2(MotorPort *port) {
 	uint16_t count = 0;
   int16_t dir = 1;
 
-	motor_torque_en_p2(port, 0x1, 1);
+
+  motor_torque_en_p2(port, 0x1, 1);
+  HAL_Delay(5);
+
 
 	while(1)
 	{
@@ -195,48 +158,8 @@ void test_motor_sweep2(MotorPort *port) {
 
     write_goal_position_p2(port, 0x1, angle);
 
-    HAL_Delay(5);
+    HAL_Delay(3);
 	}
-}
-
-/*
- * Dynamixel 2.0
- * set baud rate to 57600bps
- */
-void write_motor2(GPIO_TypeDef *uart_port, uint16_t pin, UART_HandleTypeDef h, uint8_t* rxBuf, uint8_t bufLen, uint8_t addr) {
-  uint8_t txBuf[14];
-  txBuf[0] = 0xFF; // header
-  txBuf[1] = 0xFF; // header
-  txBuf[2] = 0xFD; // header
-  txBuf[3] = 0x00; // reserved
-  txBuf[4] = 0x01; // Packet ID (0xFE = broadcast)
-  txBuf[5] = 0x07; // length L
-  txBuf[6] = 0x00; // length H
-  txBuf[7] = 0x02; // write instruction
-  txBuf[8] = addr | 0xff; // address L
-  txBuf[9] = (addr>>8) | 0xff ; // address H
-  txBuf[10] = bufLen | 0xff; // P1
-  txBuf[11] = (bufLen>>8) | 0xff; // P2
-  uint16_t crc = update_crc(0, txBuf, 14);
-  txBuf[12] = (crc & 0xFF); // crc
-  txBuf[13] = (crc >> 8) & 0xFF;
-
-  // set write direction
-  HAL_GPIO_WritePin(uart_port, pin, GPIO_PIN_SET);
-
-  // Write to Motor on UART
-  HAL_UART_Transmit(&h, txBuf, 16, 1000);
-
-  // set read direction
-  HAL_GPIO_WritePin(uart_port, pin, GPIO_PIN_RESET);
-
-
-  uint8_t i = 0;
-  while(i++ < 100){
-    HAL_UART_Receive(&h, rxBuf, sizeof(rxBuf), 10);
-  }
-
-  HAL_Delay(100);
 }
 
 /*

@@ -214,8 +214,9 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-      test_led_p2(&port2);
-      test_motor_sweep2(&port2);
+//      test_led_p2(&port2);
+//      test_motor_sweep2(&port2);
+      id_motor_and_blink_led(2);
 //    dynamixel_test();
 //    update();
     /* USER CODE END WHILE */

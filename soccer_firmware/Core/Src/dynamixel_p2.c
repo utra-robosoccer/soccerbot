@@ -67,7 +67,7 @@ void _motor_write_p2(MotorPort *p, uint8_t id, uint16_t addr, uint8_t* data, uin
   for (uint8_t i = 0; i<dataLen; i++)
     txBuf[10+i] = data[i];
 
-  uint16_t crc = update_crc(0, txBuf, 10+dataLen);
+  uint16_t crc = _update_crc(0, txBuf, 10+dataLen);
   txBuf[packetLen-2] = crc & 0xff;
   txBuf[packetLen-1] = (crc >> 8) & 0xff;
 
@@ -79,7 +79,7 @@ void _motor_write_p2(MotorPort *p, uint8_t id, uint16_t addr, uint8_t* data, uin
 }
 
 
-unsigned short update_crc(unsigned short crc_accum, unsigned char *data_blk_ptr, unsigned short data_blk_size)
+unsigned short _update_crc(unsigned short crc_accum, unsigned char *data_blk_ptr, unsigned short data_blk_size)
 {
     unsigned short i, j;
     unsigned short crc_table[256] = {
