@@ -3,8 +3,8 @@ import struct
 def crc32mpeg2(buf, crc=0xFFFFFFFF):
     CRC32_POLY = 0x104C11DB7
     for val in buf:
-        crc ^= val << 24
-        for _ in range(8):
+        crc ^= val # << 24
+        for _ in range(32):
             crc = crc << 1 if (crc & 0x80000000) == 0 else (crc << 1) ^ CRC32_POLY
     return crc
 
@@ -12,7 +12,7 @@ def crc32mpeg2(buf, crc=0xFFFFFFFF):
 def le_crc(S):
     S += b"\x00" * ((4 - len(S) % 4) % 4)  # pad to align to 32-bit words
     n = int(len(S) / 4)
-    return crc32mpeg2(struct.pack(">" + "l" * n, *struct.unpack("<" + "l" * n, S)))
+    return crc32mpeg2(struct.unpack("<" + "l" * n, S))
 
 
 def bytepack(A):

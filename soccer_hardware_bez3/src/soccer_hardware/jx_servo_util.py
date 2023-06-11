@@ -248,19 +248,22 @@ def uart_transact(ser, B, cmd, rw, preflush=True):
 if __name__ == '__main__':
     import serial
     import numpy as np
+    import sys
     
 # def uart_transact(ser, B, cmd, rw, preflush=True):    
 
     MIN_POT=0x27E
     MAX_POT=0xE64
-    with serial.Serial('/dev/ttyUSB0', 1000000, timeout=0) as ser:
-        uart_transact(ser, [4000, 1, 90] * 13, CMDS.PID_COEFF,
-                                    RWS.WRITE)  # push initial PID gains
-        uart_transact(ser, [0x27E] * (MAX_JX_SERVO_IDX + 1), CMDS.POSITION, RWS.WRITE)
+    with serial.Serial(sys.argv[1], 1000000, timeout=0) as ser:
+        print(uart_transact(ser, [], CMDS.POSITION, RWS.READ))
+        uart_transact(ser, [4000, 1, 90] * 13, CMDS.PID_COEFF, RWS.WRITE)  # push initial PID gains
+        uart_transact(ser, [0x27E] * 1, CMDS.POSITION, RWS.WRITE) # * (MAX_JX_SERVO_IDX + 1), CMDS.POSITION, RWS.WRITE)
+        print(uart_transact(ser, [], CMDS.POSITION, RWS.READ))
         input()
         t0 = time.time()
         T0 = 6
         while True:
             uart_transact(ser, [((-np.cos((time.time() - t0) / T0 * 2 * np.pi) / 2 + 0.5) * (MAX_POT-MIN_POT) + MIN_POT).astype(np.uint16)] * (MAX_JX_SERVO_IDX+1), CMDS.POSITION, RWS.WRITE)
+            print(uart_transact(ser, [], CMDS.POSITION, RWS.READ))
             time.sleep(0.05)
         
