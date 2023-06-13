@@ -10,7 +10,7 @@ x-gpu: &gpu
         devices:
           - driver: nvidia
             count: all
-            capabilities: [gpu, compute, utility, graphics]
+            capabilities: [compute, utility, graphics]
 
 x-soccerbot: &soccerbot #  <<: *gpu
   image: utrarobosoccer/soccerbot
@@ -48,6 +48,7 @@ services:
     image: utrarobosoccer/webots
     stop_signal: SIGINT
     stop_grace_period: 10s
+    runtime: nvidia
     privileged: true
     build:
       context: external
