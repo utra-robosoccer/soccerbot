@@ -1,7 +1,4 @@
 <launch>
-    <arg name="x_pos" />
-    <arg name="y_pos" />
-    <arg name="a_pos" />
     <arg name="robot_id" />
     <arg name="robot_model" />
     <arg name="simulation" />
@@ -13,12 +10,7 @@
     <env name="ROBOCUP_TEAM_COLOR" value="$(optenv ROBOCUP_TEAM_COLOR red)" />
     <env name="ROBOCUP_GAMECONTROLLER_IP" value="$(optenv ROBOCUP_GAMECONTROLLER_IP 127.0.1.1)" />
 
-    <node pkg="soccer_strategy" type="main.py" name="soccer_strategy" output="screen">
-        <param name="x_pos" value="$(arg x_pos)" />
-        <param name="y_pos" value="$(arg y_pos)" />
-        <param name="a_pos" value="$(arg a_pos)" />
-        <param name="robot_id" value="$(arg robot_id)" />
-    </node>
+    <node pkg="soccer_strategy" type="main.py" name="soccer_strategy" output="screen" />
 
     <rosparam command="load" file="$(find soccer_strategy)/config/$(arg param_file_name).yaml" />
 

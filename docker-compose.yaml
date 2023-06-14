@@ -12,7 +12,8 @@ x-gpu: &gpu
             count: all
             capabilities: [gpu, compute, utility, graphics]
 
-x-soccerbot: &soccerbot #  <<: *gpu
+x-soccerbot: &soccerbot
+  <<: *gpu
   image: utrarobosoccer/soccerbot
   privileged: true
   user: "1000"
@@ -21,10 +22,8 @@ x-soccerbot: &soccerbot #  <<: *gpu
     target: builder
     args:
       - BUILDKIT_INLINE_CACHE=1
-      - USER=${USER}
     cache_from:
       - utrarobosoccer/soccerbot
-      - utrarobosoccer/soccerbot_dependencies
   cap_add:
     - SYS_PTRACE
     - SYS_NICE
@@ -37,7 +36,6 @@ x-soccerbot: &soccerbot #  <<: *gpu
   volumes:
     - .:/home/$USER/catkin_ws/src/soccerbot
     - .:/home/robosoccer/catkin_ws/src/soccerbot
-    - /home/$USER/.local:/home/$USER/.local
     - /tmp/.X11-unix:/tmp/.X11-unix:rw
     - /dev/dri:/dev/dri:rw
     - /dev/snd:/dev/snd:rw
@@ -59,27 +57,22 @@ services:
     cap_add:
       - SYS_PTRACE
     pid: "host"
-    networks:
-      soccer_network:
-        ipv4_address: 172.18.0.10
-    command: bash -c "cd webots && ./webots --batch --sysinfo --log-performance=performance.log --no-sandbox ./projects/samples/contests/robocup/worlds/robocup.wbt"
+    command: bash -c "cd webots && ./webots --batch --sysinfo --log-performance=performance.log /usr/local/hlvs_webots/worlds/robocup.wbt"
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
       - /dev/dri:/dev/dri:rw
       - /dev/snd:/dev/snd:rw
-      - ./external/webots/projects/samples/contests/robocup/worlds:/usr/local/webots/projects/samples/contests/robocup/worlds:rw
-      - ./external/webots/projects/samples/contests/robocup/controllers/referee/referee.py:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/referee.py:rw
-      - ./external/webots/projects/samples/contests/robocup/controllers/referee/udp_bouncer.py:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/udp_bouncer.py:rw
-      - ./external/webots/projects/samples/contests/robocup/controllers/referee/game_single_${ROBOT_MODEL:-bez1}.json:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/game.json:rw
-      - ./external/webots/projects/samples/contests/robocup/controllers/referee/team_1_single_bez1.json:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/team_1_single_bez1.json:rw
-      - ./external/webots/projects/samples/contests/robocup/controllers/referee/team_1_single_bez3.json:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/team_1_single_bez3.json:rw
-      - ./external/webots/projects/samples/contests/robocup/controllers/referee/team_2_single_bez1.json:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/team_2_single_bez1.json:rw
-      - ./external/webots/projects/samples/contests/robocup/controllers/referee/team_2_single_bez3.json:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/team_2_single_bez3.json:rw
-      - ./external/webots/projects/samples/contests/robocup/protos/:/usr/local/webots/projects/samples/contests/robocup/protos/:rw
+      - ./external/hlvs_webots/worlds:/usr/local/hlvs_webots/worlds:rw
+      - ./external/hlvs_webots/controllers/referee/:/usr/local/hlvs_webots/controllers/referee/:rw
+      - ./external/hlvs_webots/protos/:/usr/local/hlvs_webots/protos/:rw
     environment:
       DISPLAY: unix$DISPLAY
       JAVA_HOME: /usr
       XDG_RUNTIME_DIR: $XDG_RUNTIME_DIR
+      # Specify in comma seperated list see https://github.com/utra-robosoccer/hlvs_webots/blob/16194d22c91b8dfcae3b3298524281bf895cab5d/controllers/referee/team.py#L36
+      TEAM_1_PLAYERS_ON_FIELD: "1"
+      TEAM_2_PLAYERS_ON_FIELD: ""
+      ROBOT_MODEL: "bez1"
 
   friendly:
     <<: *soccerbot

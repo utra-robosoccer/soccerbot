@@ -17,7 +17,7 @@ uint8 STATUS_FALLEN_FRONT = 6
 uint8 STATUS_FALLEN_BACK = 7
 uint8 STATUS_FALLEN_SIDE = 8
 uint8 STATUS_PENALIZED = 9
-uint8 STATUS_TRAJECTORY_IN_PROGRESS = 11
+uint8 STATUS_GETTING_BACK_UP = 11
 uint8 STATUS_STOPPED = 12
 uint8 STATUS_DETERMINING_SIDE = 13
 uint8 status
@@ -31,7 +31,13 @@ uint8 role
 
 # Absolute position value (in the map frame)
 geometry_msgs/Pose pose
+bool localized
 
 # ball position, rotation is not used (in the map frame)
-# TODO indicate whether observed ball value is valid
 geometry_msgs/Pose2D ball_pose
+bool ball_detected
+
+# Observed obstacles
+geometry_msgs/Pose2D[] obstacles_poses
+float32[] obstacles_sizes
+float32[] obstacles_probabilities

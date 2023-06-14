@@ -2,7 +2,10 @@
 
 import enum
 import os
+from math import nan
 
+import numpy as np
+from matplotlib import pyplot as plt
 from rospy.impl.tcpros_base import DEFAULT_BUFF_SIZE
 
 if "ROS_NAMESPACE" not in os.environ:
@@ -23,9 +26,14 @@ from soccer_msgs.msg import BoundingBox, BoundingBoxes, GameState, RobotState
 
 class Label(enum.IntEnum):
     # Defines output channels of model
+    # Refer to class name enumeration in soccer_object_detection/config/Torso21.yaml
     BALL = 0
-    ROBOT = 1
-    OTHER = 2
+    GOALPOST = 1
+    ROBOT = 2
+    L_INTERSECTION = 3
+    T_INTERSECTION = 4
+    X_INTERSECTION = 5
+    TOPBAR = 6
 
 
 class bcolors:
@@ -53,6 +61,9 @@ class ObjectDetectionNode(object):
         self.SOCCER_BALL = 0
         self.CONFIDENCE_THRESHOLD = rospy.get_param("~ball_confidence_threshold", 0.75)
 
+        torch.hub._validate_not_a_forked_repo = (
+            lambda a, b, c: True
+        )  # https://discuss.pytorch.org/t/help-for-http-error-403-rate-limit-exceeded/125907
         self.model = torch.hub.load("ultralytics/yolov5", "custom", path=model_path)
         if torch.cuda.is_available():
             rospy.loginfo(f"{bcolors.OKGREEN}Using CUDA for object detection{bcolors.ENDC}")
@@ -102,7 +113,7 @@ class ObjectDetectionNode(object):
 
         # cover horizon to help robot ignore things outside field
         cover_horizon_up_threshold = rospy.get_param("cover_horizon_up_threshold", 30)
-        h = self.camera.calculateHorizonCoverArea() - cover_horizon_up_threshold
+        h = max(self.camera.calculateHorizonCoverArea() - cover_horizon_up_threshold, 0)
 
         if image is not None:
             # 1. preprocess image
@@ -114,26 +125,45 @@ class ObjectDetectionNode(object):
             results = self.model(img)
 
             bbs_msg = BoundingBoxes()
+            id = 0
             for prediction in results.xyxy[0]:
                 x1, y1, x2, y2, confidence, img_class = prediction.cpu().numpy()
                 y1 += h + 1
                 y2 += h + 1
-                if img_class == Label.BALL.value and confidence > self.CONFIDENCE_THRESHOLD:
+                if img_class in [label.value for label in Label] and confidence > self.CONFIDENCE_THRESHOLD:
                     bb_msg = BoundingBox()
-                    bb_msg.xmin = round(x1)
+                    bb_msg.xmin = round(x1)  # top left of bounding box
                     bb_msg.ymin = round(y1)
-                    bb_msg.xmax = round(x2)
+                    bb_msg.xmax = round(x2)  # bottom right of bounding box
                     bb_msg.ymax = round(y2)
                     bb_msg.probability = confidence
-                    bb_msg.id = Label.BALL.value
-                    bb_msg.Class = "ball"
+                    bb_msg.id = id
+                    bb_msg.Class = str(int(img_class))
+                    # TODO Joanne look the pixels of the image in addition to the bounding box,
+                    #  calculate likely foot coordinate xy
+                    if bb_msg.Class == "2":
+
+                        # --- simple version just draw the box in bottom ratio of box to detect feet position---
+                        # only look at bottom 1/3 of bounding box (assumption: bounding box is of a standing robot)
+                        # Calculate ymin value to start checking for black pixels
+                        if bb_msg.ymax < self.camera.resolution_y - 5:
+                            temp_ymin = round(bb_msg.ymax * 0.85 + bb_msg.ymin * 0.15)
+                            midpoint = [(bb_msg.xmax + bb_msg.xmin) / 2, (bb_msg.ymax + temp_ymin) / 2]
+                            bb_msg.ybase = round(midpoint[1])
+                            bb_msg.xbase = round(midpoint[0])
+                            bb_msg.obstacle_detected = True
+
                     bbs_msg.bounding_boxes.append(bb_msg)
+                    id += 1
 
             bbs_msg.header = msg.header
             try:
                 if self.pub_detection.get_num_connections() > 0:
-                    results.render()
-                    self.pub_detection.publish(self.br.cv2_to_imgmsg(results.ims[0], encoding="bgr8"))
+                    detection_image = np.squeeze(results.render())
+                    detection_image = np.concatenate((np.zeros((h + 1, msg.width, 3), detection_image.dtype), detection_image))
+
+                    detection_image = detection_image[..., ::-1]  # convert rgb to bgr
+                    self.pub_detection.publish(self.br.cv2_to_imgmsg(detection_image, encoding="bgr8"))
 
                 if self.pub_boundingbox.get_num_connections() > 0 and len(bbs_msg.bounding_boxes) > 0:
                     self.pub_boundingbox.publish(bbs_msg)
@@ -145,7 +175,7 @@ class ObjectDetectionNode(object):
 
 if __name__ == "__main__":
     parser = ArgumentParser()
-    parser.add_argument("--model", dest="model_path", default="small_model/July14.pt", help="pytorch model")
+    parser.add_argument("--model", dest="model_path", default="../../models/July14.pt", help="pytorch model")
     parser.add_argument("--num-feat", dest="num_feat", default=10, help="specify model size of the neural network")
     args, unknown = parser.parse_known_args()
 

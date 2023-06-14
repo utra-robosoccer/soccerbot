@@ -104,6 +104,20 @@ def publish_ground_truth_messages(c: Clock):
                 "world",
             )
 
+            odometry.pose.pose.position.z = translation[2]
+            transform_broadcaster.sendTransform(
+                (odometry.pose.pose.position.x, odometry.pose.pose.position.y, odometry.pose.pose.position.z),
+                (
+                    odometry.pose.pose.orientation.x,
+                    odometry.pose.pose.orientation.y,
+                    odometry.pose.pose.orientation.z,
+                    odometry.pose.pose.orientation.w,
+                ),
+                c.clock,
+                name + "/torso_gt",
+                "world",
+            )
+
             # Robot Camera Position
             camera_node = robot_def.getFromProtoDef("CAMERA")
             if camera_node is not None:

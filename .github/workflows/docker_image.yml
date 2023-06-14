@@ -11,10 +11,10 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
       cancel-in-progress: true
+    runs-on: ubuntu-20.04
     steps:
       - name: Maximize build space
         run: |
@@ -22,25 +22,39 @@ jobs:
           sudo rm -rf /usr/share/dotnet
           sudo rm -rf /opt/ghc
           df -h
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           lfs: true
           submodules: recursive
+      # Ensure that the filesystem permissions are consistent across all umasks, all git checkouts:
+      - name: Set filesystems permissions
+        run: |
+          chmod -R g+w .
       - name: Docker Login
-        uses: docker/login-action@v1.12.0
+        uses: docker/login-action@v2.1.0
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
-      - name: Build the Docker image
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Build Image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          push: true
+          file: Dockerfile
+          build-args: |
+            INSTALL_CUDA=true
+          tags: utrarobosoccer/soccerbot
+          cache-from: type=registry,ref=utrarobosoccer/soccerbot
+          cache-to: type=inline
+      - name: Push to AWS repository
         run: |
+          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           docker pull utrarobosoccer/soccerbot
-          docker buildx build . --file Dockerfile --tag utrarobosoccer/soccerbot --progress=plain --cache-from utrarobosoccer/soccerbot --build-arg BUILDKIT_INLINE_CACHE=1
-      - name: Push Docker image to dockerhub
-        run: docker push utrarobosoccer/soccerbot
-#       - name: Push to AWS repository
-#         run: |
-#           aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
-#           aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#           aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 047817357099.dkr.ecr.us-east-2.amazonaws.com/hl-vs-utra
-#           docker tag utrarobosoccer/soccerbot 047817357099.dkr.ecr.us-east-2.amazonaws.com/hl-vs-utra
-#           docker push 047817357099.dkr.ecr.us-east-2.amazonaws.com/hl-vs-utra
+          aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 047817357099.dkr.ecr.us-east-2.amazonaws.com/hl-vs-utra
+          docker tag utrarobosoccer/soccerbot 047817357099.dkr.ecr.us-east-2.amazonaws.com/hl-vs-utra
+          docker push 047817357099.dkr.ecr.us-east-2.amazonaws.com/hl-vs-utra

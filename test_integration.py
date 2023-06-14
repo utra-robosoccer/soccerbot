@@ -7,10 +7,12 @@ from unittest import TestCase
 import numpy as np
 import rospy
 import tf
+import tf2_py as tf2
 import tf2_ros
 from geometry_msgs.msg import PoseStamped
 from rosgraph_msgs.msg import Clock
 from scipy.spatial.transform import Rotation as R
+from sensor_msgs.msg import JointState
 from timeout_decorator import timeout_decorator
 
 from soccer_common.camera import Camera
@@ -113,6 +115,17 @@ class IntegrationTest(TestCase):
 
         ballPublisher.publish(p)
 
+    def set_head_angle(self, theta):
+        jointPublisher = rospy.Publisher("/robot1/joint_command", JointState, queue_size=1, latch=True)
+        p = JointState()
+        p.header.stamp = rospy.Time.now()
+        p.header.frame_id = "world"
+
+        p.name.append("head_motor_1")
+        p.position.append(theta)
+
+        jointPublisher.publish(p)
+
     def get_ball_pose(self, gt=False):
         try:
             if gt:
@@ -122,7 +135,7 @@ class IntegrationTest(TestCase):
             last_observed_time_stamp = self.tf_listener.getLatestCommonTime("world", frame)
             ball_pose = self.tf_listener.lookupTransform("world", frame, last_observed_time_stamp)
             return np.array([ball_pose[0][0], ball_pose[0][1], ball_pose[0][2]])
-        except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
+        except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException, tf2.TransformException):
             rospy.logwarn_throttle(30, "Unable to locate ball in TF tree")
             return None
 
@@ -157,7 +170,7 @@ class IntegrationTestInitial(IntegrationTest):
         while not rospy.is_shutdown():
             printlog(f"Distance to destination: {self.distance}")
             rospy.sleep(1)
-            if self.distance < 2:
+            if self.distance < 1:
                 break
         printlog("Goal reached")
 
@@ -178,6 +191,7 @@ class IntegrationTestPlaying(IntegrationTest):
             gt_ball_pose = self.get_ball_pose(gt=False)
             if gt_ball_pose is not None:
                 printlog(f"Current ball location: {gt_ball_pose}")
+
                 if gt_ball_pose[0] > 4.5:
                     printlog("Goal Scored")
                     return
@@ -209,7 +223,7 @@ class IntegrationTestPlaying(IntegrationTest):
     # Run this to generate many ball and robot locations and test that the localization are correct
     # 1. Run roslaunch soccerbot soccerbot_multi.launch competition:=false fake_localization:=true
     # If complaining missing opencv make sure LD_LIBRARY_PATH env is set
-    def test_annotate_ball(self, num_samples=100, create_localization_labels=True):
+    def test_annotate_ball(self, num_samples=50, create_localization_labels=False):
         import math
         import os
         import random
@@ -225,13 +239,20 @@ class IntegrationTestPlaying(IntegrationTest):
 
         from soccer_common.transformation import Transformation
 
-        if not os.path.exists("soccer_object_localization/images"):
-            os.makedirs("soccer_object_localization/images")
+        IMG_WIDTH = 640
+        IMG_HEIGHT = 480
+        BALL_CLASS = 0
+
+        FOLDER_NAME = "BATCH2_tango_ball5"
+        FILE_PATH_GENERAL = "/".join(["soccer_object_localization", FOLDER_NAME])
+        FILE_PATH_IMAGES = "/".join([FILE_PATH_GENERAL, "images"])
+        FILE_PATH_LABELS = "/".join([FILE_PATH_GENERAL, "labels"])
+
+        if not os.path.exists(FILE_PATH_GENERAL):
+            os.makedirs(FILE_PATH_GENERAL)
 
         j = 0
-        for file in [
-            f for f in os.listdir("soccer_object_localization/images") if os.path.isfile(os.path.join("soccer_object_localization/images", f))
-        ]:
+        for file in [f for f in os.listdir(FILE_PATH_GENERAL) if os.path.isfile(os.path.join(FILE_PATH_GENERAL, f))]:
             if "border" in file:
                 continue
             num = int(file.split("_")[0].replace("img", ""))
@@ -260,7 +281,7 @@ class IntegrationTestPlaying(IntegrationTest):
             robot_position = [robot_x, robot_y]
             robot_theta = random.uniform(-math.pi, math.pi)
 
-            ball_distance_offset = random.uniform(0.8, 3)
+            ball_distance_offset = random.uniform(0.1, 0.5)
             ball_angle_offset = random.uniform(-math.pi / 5, math.pi / 5)
 
             ball_offset = [
@@ -274,6 +295,7 @@ class IntegrationTestPlaying(IntegrationTest):
             print(robot_position, robot_theta)
             self.set_robot_pose(robot_position[0], robot_position[1], robot_theta)
             self.set_ball_pose(ball_position[0], ball_position[1])
+            self.set_head_angle(1)
             time.sleep(0.5)
             # Calculate the frame in the camera
             image_msg = rospy.wait_for_message("/robot1/camera/image_raw", Image)
@@ -307,17 +329,51 @@ class IntegrationTestPlaying(IntegrationTest):
             # if key != 32:
             #     continue
 
+            if not os.path.isdir(FILE_PATH_LABELS):
+                os.makedirs(FILE_PATH_LABELS)
+
+            if not os.path.isdir(FILE_PATH_IMAGES):
+                os.makedirs(FILE_PATH_IMAGES)
+
             if create_localization_labels:
-                filePath = f"soccer_object_localization/images/img{j}_{robot_x}_{robot_y}_{robot_theta}.png"
+                filePath = "/".join([FILE_PATH_IMAGES, f"img{j}_{robot_x}_{robot_y}_{robot_theta}.png"])
                 if os.path.exists(filePath):
                     os.remove(filePath)
                 cv2.imwrite(filePath, image)
             else:
-                filePath = f"soccer_object_localization/images/img{j}_{pt1[0]}_{pt1[1]}_{pt2[0]}_{pt2[1]}.png"
+                filePath = "/".join([FILE_PATH_IMAGES, f"img{j}_{pt1[0]}_{pt1[1]}_{pt2[0]}_{pt2[1]}.png"])
                 if os.path.exists(filePath):
                     os.remove(filePath)
                 cv2.imwrite(filePath, image)
-                filePath2 = f"images/imgborder{j}_{pt1[0]}_{pt1[1]}_{pt2[0]}_{pt2[1]}.png"
+
+                filePathLabel = "/".join([FILE_PATH_LABELS, f"img{j}_{pt1[0]}_{pt1[1]}_{pt2[0]}_{pt2[1]}.txt"])
+                if os.path.exists(filePathLabel):
+                    os.remove(filePathLabel)
+
+                x_center = (pt2[0] + pt1[0]) / 2
+                x_center_normalized = x_center / IMG_WIDTH
+
+                y_center = (pt2[1] + pt1[1]) / 2
+                y_center_normalized = y_center / IMG_HEIGHT
+
+                box_width = pt2[0] - pt1[0]
+                box_width_normalized = box_width / IMG_WIDTH
+
+                box_height = pt2[1] - pt1[1]
+                box_height_normalized = box_height / IMG_HEIGHT
+
+                annotation = " ".join(
+                    [str(BALL_CLASS), str(x_center_normalized), str(y_center_normalized), str(box_width_normalized), str(box_height_normalized)]
+                )
+                # manual labeling of robot feet when head angle is set to 1.3 (looking down)
+                # lines = [annotation, '\n2 0.500491 0.859293 0.664594 0.281414']
+
+                with open(filePathLabel, "w") as f:
+                    f.write(annotation)
+                    # for line in lines:
+                    #     f.write(line)
+
+                filePath2 = "/".join([FOLDER_NAME, "images", f"imgborder{j}_{pt1[0]}_{pt1[1]}_{pt2[0]}_{pt2[1]}.png"])
                 if os.path.exists(filePath2):
                     os.remove(filePath2)
                 cv2.imwrite(filePath2, image_rect)

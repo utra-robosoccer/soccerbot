@@ -1,9 +1,13 @@
 import copy
 import random
+from typing import Optional
 
 import numpy as np
+import rosparam
+import rospy
 
 from soccer_common import Transformation
+from soccer_common.utils import wrapTo2Pi
 from soccer_msgs.msg import GameState
 from soccer_strategy.ball import Ball
 from soccer_strategy.game_engine_2d_scene import Scene
@@ -23,7 +27,15 @@ class GameEngine2D:
     PHYSICS_UPDATE_INTERVAL = 0.25  # 4 Times per second
     DISPLAY_UPDATE_INTERVAL = 0.5  # Every 5 seconds
 
-    def __init__(self, display=True, team_1_strategy: type = StrategyDummy, team_2_strategy: type = StrategyDummy, game_duration: float = 20):
+    def __init__(
+        self,
+        display=True,
+        team_1_strategy: type = StrategyDummy,
+        team_2_strategy: type = StrategyDummy,
+        team_1: Optional[Team] = None,
+        team_2: Optional[Team] = None,
+        game_duration: float = 20,
+    ):
         """
 
         :param display: Whether to show the visualizer
@@ -31,6 +43,9 @@ class GameEngine2D:
         :param team_2_strategy: What strategy the team 2 will use
         :param game_duration: How long to run the game (in minutes)
         """
+        rospy.set_param("/use_sim_time", True)
+        rospy.rostime._set_rostime(rospy.Time(0))
+
         self.display = display
         self.game_duration = game_duration
 
@@ -67,6 +82,9 @@ class GameEngine2D:
                 ),
             ]
         )
+        if team_1 is not None:
+            self.team1 = team_1
+
         self.team1.strategy = team_1_strategy()
 
         self.team1_init = copy.deepcopy(self.team1)
@@ -103,6 +121,9 @@ class GameEngine2D:
                 ),
             ]
         )
+        if team_2 is not None:
+            self.team2 = team_2
+
         self.team2.strategy = team_2_strategy()
         self.team2.flip_positions()
         self.team2_init = copy.deepcopy(self.team2)
@@ -129,6 +150,9 @@ class GameEngine2D:
         friendly_points = 0
         opponent_points = 0
 
+        if self.display:
+            for i in range(10):
+                self.scene.update(self.team1.robots + self.team2.robots, self.ball)
         for step in range(game_period_seconds):
             if step == int(game_period_seconds / 2):
                 print("\033[96m----- Second Half Started -----\033[0m")
@@ -141,14 +165,12 @@ class GameEngine2D:
             if step % self.team1.strategy.update_frequency == 0:
                 for robot in self.team1.robots:
                     robot.active = True
-                    robot.observed_ball = self.ball
                     self.team1.strategy.step_strategy(self.team1, self.team2, self.gameState)
                     robot.active = False
 
             if step % self.team2.strategy.update_frequency == 0:
                 for robot in self.team2.robots:
                     robot.active = True
-                    robot.observed_ball = self.ball
                     self.team2.strategy.step_strategy(self.team2, self.team1, self.gameState)
                     robot.active = False
 
@@ -167,11 +189,16 @@ class GameEngine2D:
             if self.display and step % GameEngine2D.DISPLAY_UPDATE_INTERVAL == 0:
                 self.scene.update(self.team1.robots + self.team2.robots, self.ball)
 
+            # Step the ros time manually
+            rospy.rostime._rostime_current += rospy.Duration(1)
+
         print("----------------------------------------------------------------------")
         print(f"Game Finished: Friendly: {friendly_points}, Opponent: {opponent_points}")
+        rospy.set_param("/use_sim_time", False)
+        rospy.rostime._rostime_current = None
         return friendly_points, opponent_points
 
-    def update_estimated_physics(self, robots: [Robot], ball: Ball):
+    def update_estimated_physics(self, robots: [RobotControlled2D], ball: Ball):
         """
         Executes the world physics step, robot's movement, ball movement, and for fairness it runs through the priority
         for kicks in a random fashion.
@@ -183,6 +210,7 @@ class GameEngine2D:
         # Robot do action in a random priority order
         for robot in sorted(robots, key=lambda _: random.random()):
             robot.observe_ball(ball)
+            robot.observe_obstacles(robots)
             if robot.status == Robot.Status.WALKING:
                 robot.path_time = robot.path_time + GameEngine2D.PHYSICS_UPDATE_INTERVAL
                 update_position_transformation: Transformation = robot.path.estimatedPositionAtTime(robot.path_time)
@@ -197,10 +225,25 @@ class GameEngine2D:
 
             elif robot.status == Robot.Status.KICKING:
                 if ball.kick_timeout == 0:
-                    ball.velocity = robot.kick_velocity
-                    ball.kick_timeout = 5
-                robot.status = Robot.Status.READY
+                    if robot.can_kick(ball, None, verbose=False):
+                        kick_angle_rand = np.random.normal(0, 0.2)
+                        kick_force_rand = max(np.random.normal(0.4, 0.3), 0)
+                        if kick_force_rand == 0:
+                            print("Kick Missed")
+
+                        kick_angle = wrapTo2Pi(robot.position[2] + kick_angle_rand)
+
+                        rotation_rand = np.array([[np.cos(kick_angle), -np.sin(kick_angle)], [np.sin(kick_angle), np.cos(kick_angle)]])
+                        ball.velocity = kick_force_rand * rotation_rand @ np.array([robot.max_kick_speed, 0])
+                        ball.kick_timeout = 5
+                robot.status = Robot.Status.GETTING_BACK_UP
+                robot.trajectory_timeout = 8
                 robot.path_time = 0
+            elif robot.status == Robot.Status.GETTING_BACK_UP:
+                if robot.trajectory_timeout == 0:
+                    robot.status = Robot.Status.READY
+                else:
+                    robot.trajectory_timeout -= 1
             else:
                 robot.path_time = 0
 

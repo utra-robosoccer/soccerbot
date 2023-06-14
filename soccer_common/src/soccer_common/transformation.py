@@ -134,11 +134,7 @@ class Transformation(np.ndarray):
 
     @quaternion.setter
     def quaternion(self, quat: [float]):
-        try:
-            r = R.from_quat(quat)
-        except ValueError as v:
-            print("Hi")
-            pass
+        r = R.from_quat(quat)
         self[0:3, 0:3] = np.reshape(r.as_matrix(), [3, 3])
 
     @property
@@ -151,6 +147,9 @@ class Transformation(np.ndarray):
 
     @orientation_euler.setter
     def orientation_euler(self, euler_array, sequence="ZYX"):
+        """
+        Representation of the rotation of the transformation in euler coordinates [yaw, pitch, roll]
+        """
         r = R.from_euler(seq=sequence, angles=euler_array, degrees=False)
         self.quaternion = r.as_quat()
 
@@ -281,7 +280,7 @@ class Transformation(np.ndarray):
         """
         Get the quaternion representation of euler angle rotations
 
-        :param euler_array: array of 3 angles for rotation
+        :param euler_array: array of 3 angles for rotation (yaw, pitch, roll)
         :param sequence: order and type of rotation, see intrinsic vs extrinsic for capital and small case letter
         :return: quaternion in the form of [x y z w]
         """

@@ -1,10 +1,12 @@
 import math
+from typing import List
 
 import numpy as np
 from vispy import app, scene
 from vispy.color import Color
 
 from soccer_strategy.ball import Ball
+from soccer_strategy.robot import Robot
 from soccer_strategy.robot_controlled_2d import RobotControlled2D
 
 white = Color("#ecf0f1")
@@ -55,8 +57,8 @@ class Scene:
         :return: list of points for the polygon in real world coordinates
         """
 
-        l = 0.085000 / 2
-        w = (0.145000 + 0.047760 * 2) / 2
+        l = robot.BODY_LENGTH
+        w = robot.BODY_WIDTH
         a = robot.position[0:2]
         t = robot.position[2]
         rotm = np.array([[np.cos(t), -np.sin(t)], [np.sin(t), np.cos(t)]])
@@ -74,20 +76,24 @@ class Scene:
         :param ball: The ball
         """
 
-        self.ball = scene.Ellipse(center=(ball.position[0], ball.position[1]), radius=0.07, color=blue, parent=self.view.scene)
-        self.robots = []
-        for robot in robots:
+        self.visualization_ball = scene.Ellipse(center=(ball.position[0], ball.position[1]), radius=0.07, color=blue, parent=self.view.scene)
+        self.visualization_robots = {}
+        for i, robot in enumerate(robots):
             color = red if robot.team == RobotControlled2D.Team.OPPONENT else white
 
-            self.robots.append(
-                {
-                    "body": scene.Polygon(pos=self.get_robot_polygon(robot), color=color, parent=self.view.scene),
-                    "arrow": scene.Arrow(pos=np.array([[0, 0], [0, 0]]), width=1, color=color, parent=self.view.scene),
-                    "path": scene.Arrow(pos=None, width=1, color=color, connect="strip", parent=self.view.scene),
-                    "vision_cone": scene.Arrow(pos=None, width=1, color=color, connect="strip", parent=self.view.scene),
-                    "id": scene.Text(text="id", parent=self.view.scene, pos=(0, 0)),
-                }
-            )
+            self.visualization_robots[i] = {
+                "body": scene.Polygon(pos=self.get_robot_polygon(robot), color=color, parent=self.view.scene),
+                "arrow": scene.Arrow(pos=np.array([[0, 0], [0, 0]]), width=1, color=color, parent=self.view.scene),
+                "path": scene.Arrow(pos=None, width=1, color=color, connect="strip", parent=self.view.scene),
+                "vision_cone": scene.Arrow(pos=None, width=1, color=color, connect="strip", parent=self.view.scene),
+                "id": scene.Text(text="id", parent=self.view.scene, pos=(0, 0)),
+            }
+
+            # Max 8 obstacles per robot
+            for n in range(8):
+                self.visualization_robots[i][f"obstacle{n}"] = scene.Ellipse(
+                    radius=0.1, center=(0, 0), color=Color("#ffffff", alpha=0.0), parent=self.view.scene
+                )
 
         self.field_vectors = scene.Arrow(
             pos=None,
@@ -101,22 +107,24 @@ class Scene:
             parent=self.view.scene,
         )
 
-    def update(self, robots, ball):
-        for i in range(len(robots)):
-            x = robots[i].position[0]
-            y = robots[i].position[1]
-            self.robots[i]["body"].pos = self.get_robot_polygon(robots[i])
-            self.robots[i]["id"].pos = (x, y)
-            self.robots[i]["id"].text = str(robots[i].robot_id)
+    def update(self, robots: List[RobotControlled2D], ball: Ball):
+        for visualization_robot, robot in zip(self.visualization_robots.values(), robots):
+            x = robot.position[0]
+            y = robot.position[1]
+            visualization_robot["body"].pos = self.get_robot_polygon(robot)
+            visualization_robot["id"].pos = (x, y)
+            visualization_robot["id"].text = str(robot.robot_id)
 
-            theta = robots[i].position[2]
+            # Draw robot arrow
+            theta = robot.position[2]
             arrow_len = 0.3
             arrow_end_x = math.cos(theta) * arrow_len
             arrow_end_y = math.sin(theta) * arrow_len
             direction = np.array([arrow_end_x, arrow_end_y])
             direction = direction / np.linalg.norm(direction)
-            self.robots[i]["arrow"].set_data(pos=np.array([[x, y], [x + arrow_end_x, y + arrow_end_y]]))
+            visualization_robot["arrow"].set_data(pos=np.array([[x, y], [x + arrow_end_x, y + arrow_end_y]]))
 
+            # Draw vision cone
             robot_pos = np.array([x, y])
             theta = -RobotControlled2D.ObservationConstants.FOV / 2
             c, s = np.cos(theta), np.sin(theta)
@@ -126,21 +134,30 @@ class Scene:
             c, s = np.cos(theta), np.sin(theta)
             R = np.array(((c, -s), (s, c)))
             vision_cone_left = np.matmul(R, direction) * RobotControlled2D.ObservationConstants.VISION_RANGE
-            self.robots[i]["vision_cone"].set_data(pos=np.array([robot_pos + vision_cone_left, robot_pos, vision_cone_right + robot_pos]))
+            visualization_robot["vision_cone"].set_data(pos=np.array([robot_pos + vision_cone_left, robot_pos, vision_cone_right + robot_pos]))
 
-            if robots[i].path is not None:
+            # Draw obstacles
+            color = white if robot.team == Robot.Team.FRIENDLY else red
+            for i in range(8):
+                visualization_robot[f"obstacle{i}"].color = Color(color, alpha=0.0)
+            for i, obstacle in enumerate(robot.observed_obstacles):
+                visualization_robot[f"obstacle{i}"].center = obstacle.position
+                visualization_robot[f"obstacle{i}"].color = Color(color, alpha=obstacle.probability * 0.5)
+
+            # Draw robot path
+            if robot.path is not None:
                 verts = []
                 for j in range(0, 11):
-                    path_vert = robots[i].path.poseAtRatio(j / 10).position
+                    path_vert = robot.path.poseAtRatio(j / 10).position
                     verts.append([path_vert[0], path_vert[1]])
-                self.robots[i]["path"].set_data(pos=np.array(verts))
+                visualization_robot["path"].set_data(pos=np.array(verts))
 
         if ball.position is not None:
             x = ball.position[0]
             y = ball.position[1]
             dx = ball.velocity[0]
             dy = ball.velocity[1]
-            self.ball.center = (x, y)
+            self.visualization_ball.center = (x, y)
 
         self.canvas.update()
         app.process_events()

@@ -1,0 +1,868 @@
+<?xml version="1.0" ?>
+<robot name="bez2" version="1.0">
+  <material name="silver_default">
+    <color rgba="0.7 0.7 0.7 1.0"/>
+  </material>
+  <material name="polymide_kapton">
+    <color rgba="0.7843137254901961 0.5568627450980392 0.027450980392156862 1.0"/>
+  </material>
+  <material name="plastic_glossy_black">
+    <color rgba="0.09803921568627451 0.09803921568627451 0.09803921568627451 1.0"/>
+  </material>
+  <material name="abs_white">
+    <color rgba="0.9647058823529412 0.9647058823529412 0.9529411764705882 1.0"/>
+  </material>
+  <material name="steel_satin">
+    <color rgba="0.6274509803921569 0.6274509803921569 0.6274509803921569 1.0"/>
+  </material>
+  <transmission name="left_arm_motor_0_tran">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="left_arm_motor_0">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="left_arm_motor_0_actr">
+      <mechanicalReduction>1.0</mechanicalReduction>
+    </actuator>
+  </transmission>
+  <transmission name="left_arm_motor_1_tran">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="left_arm_motor_1">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="left_arm_motor_1_actr">
+      <mechanicalReduction>1.0</mechanicalReduction>
+    </actuator>
+  </transmission>
+  <transmission name="right_arm_motor_0_tran">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="right_arm_motor_0">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="right_arm_motor_0_actr">
+      <mechanicalReduction>1.0</mechanicalReduction>
+    </actuator>
+  </transmission>
+  <transmission name="right_arm_motor_1_tran">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="right_arm_motor_1">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="right_arm_motor_1_actr">
+      <mechanicalReduction>1.0</mechanicalReduction>
+    </actuator>
+  </transmission>
+  <transmission name="left_leg_motor_0_tran">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="left_leg_motor_0">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="left_leg_motor_0_actr">
+      <mechanicalReduction>1.0</mechanicalReduction>
+    </actuator>
+  </transmission>
+  <transmission name="right_leg_motor_1_tran">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="right_leg_motor_1">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="right_leg_motor_1_actr">
+      <mechanicalReduction>1.0</mechanicalReduction>
+    </actuator>
+  </transmission>
+  <transmission name="left_leg_motor_1_tran">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="left_leg_motor_1">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="left_leg_motor_1_actr">
+      <mechanicalReduction>1.0</mechanicalReduction>
+    </actuator>
+  </transmission>
+  <transmission name="left_leg_motor_2_tran">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="left_leg_motor_2">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="left_leg_motor_2_actr">
+      <mechanicalReduction>1.0</mechanicalReduction>
+    </actuator>
+  </transmission>
+  <transmission name="right_leg_motor_2_tran">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="right_leg_motor_2">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="right_leg_motor_2_actr">
+      <mechanicalReduction>1.0</mechanicalReduction>
+    </actuator>
+  </transmission>
+  <transmission name="right_leg_motor_5_tran">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="right_leg_motor_5">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="right_leg_motor_5_actr">
+      <mechanicalReduction>1.0</mechanicalReduction>
+    </actuator>
+  </transmission>
+  <transmission name="left_leg_motor_5_tran">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="left_leg_motor_5">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="left_leg_motor_5_actr">
+      <mechanicalReduction>1.0</mechanicalReduction>
+    </actuator>
+  </transmission>
+  <transmission name="head_motor_1_tran">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="head_motor_1">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="head_motor_1_actr">
+      <mechanicalReduction>1.0</mechanicalReduction>
+    </actuator>
+  </transmission>
+  <transmission name="right_leg_motor_3_tran">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="right_leg_motor_3">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="right_leg_motor_3_actr">
+      <mechanicalReduction>1.0</mechanicalReduction>
+    </actuator>
+  </transmission>
+  <transmission name="left_leg_motor_3_tran">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="left_leg_motor_3">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="left_leg_motor_3_actr">
+      <mechanicalReduction>1.0</mechanicalReduction>
+    </actuator>
+  </transmission>
+  <transmission name="left_leg_motor_4_tran">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="left_leg_motor_4">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="left_leg_motor_4_actr">
+      <mechanicalReduction>1.0</mechanicalReduction>
+    </actuator>
+  </transmission>
+  <transmission name="right_leg_motor_4_tran">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="right_leg_motor_4">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="right_leg_motor_4_actr">
+      <mechanicalReduction>1.0</mechanicalReduction>
+    </actuator>
+  </transmission>
+  <transmission name="head_camera_tran">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="head_camera">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="head_camera_actr">
+      <mechanicalReduction>1.0</mechanicalReduction>
+    </actuator>
+  </transmission>
+  <transmission name="torso_imu_tran">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="torso_imu">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="torso_imu_actr">
+      <mechanicalReduction>1.0</mechanicalReduction>
+    </actuator>
+  </transmission>
+  <transmission name="head_motor_0_tran">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="head_motor_0">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="head_motor_0_actr">
+      <mechanicalReduction>1.0</mechanicalReduction>
+    </actuator>
+  </transmission>
+  <transmission name="right_leg_motor_0_tran">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="right_leg_motor_0">
+      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="right_leg_motor_0_actr">
+      <mechanicalReduction>1.0</mechanicalReduction>
+    </actuator>
+  </transmission>
+  <gazebo>
+    <plugin filename="libgazebo_ros_control.so" name="control"/>
+  </gazebo>
+  <gazebo reference="base_link">
+    <material>Gazebo/Silver</material>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <selfCollide>true</selfCollide>
+    <gravity>true</gravity>
+  </gazebo>
+  <gazebo reference="biceps_v3_1">
+    <material>Gazebo/Silver</material>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <selfCollide>true</selfCollide>
+  </gazebo>
+  <gazebo reference="Arm_Assembly-bez3_v12_2">
+    <material>Gazebo/Silver</material>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <selfCollide>true</selfCollide>
+  </gazebo>
+  <gazebo reference="biceps_v3_2">
+    <material>Gazebo/Silver</material>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <selfCollide>true</selfCollide>
+  </gazebo>
+  <gazebo reference="Arm_Assembly-bez3_v12_1">
+    <material>Gazebo/Silver</material>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <selfCollide>true</selfCollide>
+  </gazebo>
+  <gazebo reference="Hip_Printable_v2_v10_2">
+    <material>Gazebo/Silver</material>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <selfCollide>true</selfCollide>
+  </gazebo>
+  <gazebo reference="hip_motors_v4_1">
+    <material>Gazebo/Silver</material>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <selfCollide>true</selfCollide>
+  </gazebo>
+  <gazebo reference="hip_motors_v4_2">
+    <material>Gazebo/Silver</material>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <selfCollide>true</selfCollide>
+  </gazebo>
+  <gazebo reference="Upper_left_leg_support__bottom__v8_1">
+    <material>Gazebo/Silver</material>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <selfCollide>true</selfCollide>
+  </gazebo>
+  <gazebo reference="Upper_left_leg_support__bottom__v8_2">
+    <material>Gazebo/Silver</material>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <selfCollide>true</selfCollide>
+  </gazebo>
+  <gazebo reference="New_left_foot_upperhalf_v5_1">
+    <material>Gazebo/Silver</material>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <selfCollide>true</selfCollide>
+  </gazebo>
+  <gazebo reference="New_right_foot_upperhalf_v3_1">
+    <material>Gazebo/Silver</material>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <selfCollide>true</selfCollide>
+  </gazebo>
+  <gazebo reference="head_v4_1">
+    <material>Gazebo/Silver</material>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <selfCollide>true</selfCollide>
+  </gazebo>
+  <gazebo reference="lower_leg_v4_1">
+    <material>Gazebo/Silver</material>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <selfCollide>true</selfCollide>
+  </gazebo>
+  <gazebo reference="lower_leg_v4_2">
+    <material>Gazebo/Silver</material>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <selfCollide>true</selfCollide>
+  </gazebo>
+  <gazebo reference="ankle_motors_v4_1">
+    <material>Gazebo/Silver</material>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <selfCollide>true</selfCollide>
+  </gazebo>
+  <gazebo reference="ankle_motors_v4_2">
+    <material>Gazebo/Silver</material>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <selfCollide>true</selfCollide>
+  </gazebo>
+  <gazebo reference="camera_point_1">
+    <material>Gazebo/Silver</material>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <selfCollide>true</selfCollide>
+  </gazebo>
+  <gazebo reference="imu_1">
+    <material>Gazebo/Silver</material>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <selfCollide>true</selfCollide>
+  </gazebo>
+  <gazebo reference="custom_servo_support__middle_neck__v9_1">
+    <material>Gazebo/Silver</material>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <selfCollide>true</selfCollide>
+  </gazebo>
+  <gazebo reference="Hip_Printable_v2_v10_1">
+    <material>Gazebo/Silver</material>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <selfCollide>true</selfCollide>
+  </gazebo>
+  <link name="base_link">
+    <inertial>
+      <origin xyz="0.005344203942179857 0.0011597330599576942 -0.04327601296104891" rpy="0.0 0.0 0.0"/>
+      <mass value="1.4940527908480117"/>
+      <inertia ixx="0.006599" ixy="0.0" ixz="0.0" iyy="0.005741" iyz="0.0" izz="0.003932"/>
+    </inertial>
+    <visual>
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+      <geometry>
+        <mesh filename="package://bez2_description/meshes/base_link.stl" scale="1.0 1.0 1.0"/>
+      </geometry>
+      <material name="polymide_kapton"/>
+    </visual>
+    <collision>
+      <origin xyz="0.006000000983476639 -1.1021822998943454e-18 -0.034713003784418106" rpy="3.141592653589793 -0.0 3.141592653589793"/>
+      <geometry>
+        <box size="0.12400000542402269 0.1449999958276749 0.22067400068044662"/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="biceps_v3_1">
+    <inertial>
+      <origin xyz="-4.857598999001871e-13 0.026299931386057934 -0.038386051153163035" rpy="0.0 0.0 0.0"/>
+      <mass value="0.25825416029102555"/>
+      <inertia ixx="0.000437" ixy="0.0" ixz="-0.0" iyy="0.000394" iyz="3.3e-05" izz="6.4e-05"/>
+    </inertial>
+    <visual>
+      <origin xyz="-0.0 -0.0725 -0.00045" rpy="0.0 0.0 0.0"/>
+      <geometry>
+        <mesh filename="package://bez2_description/meshes/biceps_v3_1.stl" scale="1.0 1.0 1.0"/>
+      </geometry>
+      <material name="plastic_glossy_black"/>
+    </visual>
+    <collision>
+      <origin xyz="-7.644086852239027e-19 0.02833699598908425 -0.04530000018030405" rpy="3.141592653589793 -0.0 -6.123233995736766e-17"/>
+      <geometry>
+        <box size="0.035999998450279236 0.056673996150493615 0.12520000152289865"/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="Arm_Assembly-bez3_v12_2">
+    <inertial>
+      <origin xyz="-0.005330016176706751 0.022844719426815346 0.029751280366322262" rpy="0.0 0.0 0.0"/>
+      <mass value="0.32110352957731503"/>
+      <inertia ixx="0.002148" ixy="3e-06" ixz="-0.000175" iyy="0.002137" iyz="1.6e-05" izz="0.000103"/>
+    </inertial>
+    <visual>
+      <origin xyz="-0.0 -0.0805 0.09015" rpy="0.0 0.0 0.0"/>
+      <geometry>
+        <mesh filename="package://bez2_description/meshes/Arm_Assembly-bez3_v12_2.stl" scale="1.0 1.0 1.0"/>
+      </geometry>
+      <material name="abs_white"/>
+    </visual>
+    <collision>
+      <origin xyz="-0.00699997879564762 0.024337000370025633 -0.07870000094771386" rpy="3.141592653589793 -0.0 -3.141592653589793"/>
+      <geometry>
+        <box size="0.05000000074505807 0.056674003601074226 0.19749999791383743"/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="biceps_v3_2">
+    <inertial>
+      <origin xyz="4.933084310590376e-13 -0.026299931386065484 -0.038386051153161384" rpy="0.0 0.0 0.0"/>
+      <mass value="0.25825416029102555"/>
+      <inertia ixx="0.000437" ixy="0.0" ixz="0.0" iyy="0.000394" iyz="-3.3e-05" izz="6.4e-05"/>
+    </inertial>
+    <visual>
+      <origin xyz="-0.0 0.0725 -0.00045" rpy="0.0 0.0 0.0"/>
+      <geometry>
+        <mesh filename="package://bez2_description/meshes/biceps_v3_2.stl" scale="1.0 1.0 1.0"/>
+      </geometry>
+      <material name="plastic_glossy_black"/>
+    </visual>
+    <collision>
+      <origin xyz="-7.644086852239027e-19 -0.02833699598908425 -0.04530000018030405" rpy="3.141592653589793 -0.0 -3.141592653589793"/>
+      <geometry>
+        <box size="0.035999998450279236 0.056673996150493615 0.12520000152289865"/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="Arm_Assembly-bez3_v12_1">
+    <inertial>
+      <origin xyz="-0.005330016176713268 -0.02582928057318666 0.02975128036632215" rpy="0.0 0.0 0.0"/>
+      <mass value="0.32110352957731503"/>
+      <inertia ixx="0.002148" ixy="3e-06" ixz="-0.000175" iyy="0.002137" iyz="1.6e-05" izz="0.000103"/>
+    </inertial>
+    <visual>
+      <origin xyz="0.0 0.0805 0.09015" rpy="0.0 0.0 0.0"/>
+      <geometry>
+        <mesh filename="package://bez2_description/meshes/Arm_Assembly-bez3_v12_1.stl" scale="1.0 1.0 1.0"/>
+      </geometry>
+      <material name="abs_white"/>
+    </visual>
+    <collision>
+      <origin xyz="-0.006999978795647622 -0.024337000370025633 -0.07870000094771386" rpy="3.141592653589793 -0.0 -3.141592653589793"/>
+      <geometry>
+        <box size="0.05000000074505806 0.05667400360107422 0.19749999791383743"/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="Hip_Printable_v2_v10_2">
+    <inertial>
+      <origin xyz="4.21754180706356e-05 -3.2154834350706096e-14 -0.014017367581241474" rpy="0.0 0.0 0.0"/>
+      <mass value="0.010089224750638792"/>
+      <inertia ixx="2e-06" ixy="0.0" ixz="0.0" iyy="6e-06" iyz="-0.0" izz="5e-06"/>
+    </inertial>
+    <visual>
+      <origin xyz="-0.01597 -0.0377 0.14405" rpy="0.0 0.0 0.0"/>
+      <geometry>
+        <mesh filename="package://bez2_description/meshes/Hip_Printable_v2_v10_2.stl" scale="1.0 1.0 1.0"/>
+      </geometry>
+      <material name="abs_white"/>
+    </visual>
+    <collision>
+      <origin xyz="-1.3311207310018336e-09 1.150369646762961e-09 -0.022500002992153156" rpy="1.5707963267948966 -0.0 1.5707963267948966"/>
+      <geometry>
+        <box size="0.0260000005364418 0.04500000178813934 0.04999999795109033"/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="hip_motors_v4_1">
+    <inertial>
+      <origin xyz="0.00908799649277551 -7.287744503703397e-08 -0.011907384768018503" rpy="0.0 0.0 0.0"/>
+      <mass value="0.2728199051639206"/>
+      <inertia ixx="7.4e-05" ixy="-0.0" ixz="-1e-06" iyy="0.000178" iyz="0.0" izz="0.000153"/>
+    </inertial>
+    <visual>
+      <origin xyz="0.00753 0.0368 0.17605" rpy="0.0 0.0 0.0"/>
+      <geometry>
+        <mesh filename="package://bez2_description/meshes/hip_motors_v4_1.stl" scale="1.0 1.0 1.0"/>
+      </geometry>
+      <material name="silver_default"/>
+    </visual>
+    <collision>
+      <origin xyz="-0.0005500009891390763 0.0015000008262693876 -0.012000001859664905" rpy="1.5707963267948966 -0.0 -1.5707963267948968"/>
+      <geometry>
+        <box size="0.04099999833852053 0.04649999737739564 0.07689999975264072"/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="hip_motors_v4_2">
+    <inertial>
+      <origin xyz="0.009087996492779226 -7.28774387503961e-08 -0.011907384768019141" rpy="0.0 0.0 0.0"/>
+      <mass value="0.2728199051639206"/>
+      <inertia ixx="7.4e-05" ixy="-0.0" ixz="-1e-06" iyy="0.000178" iyz="0.0" izz="0.000153"/>
+    </inertial>
+    <visual>
+      <origin xyz="0.00903 -0.0377 0.17605" rpy="0.0 0.0 0.0"/>
+      <geometry>
+        <mesh filename="package://bez2_description/meshes/hip_motors_v4_2.stl" scale="1.0 1.0 1.0"/>
+      </geometry>
+      <material name="silver_default"/>
+    </visual>
+    <collision>
+      <origin xyz="-0.0005500003036856636 -0.0015000009581446622 -0.012000001859664905" rpy="1.5707963267948966 -0.0 -1.5707963267948968"/>
+      <geometry>
+        <box size="0.040999999269843095 0.04649999737739564 0.07689999975264071"/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="Upper_left_leg_support__bottom__v8_1">
+    <inertial>
+      <origin xyz="-5.513384106897723e-10 0.019462494401918447 -0.048113787355149845" rpy="0.0 0.0 0.0"/>
+      <mass value="0.027169463894965433"/>
+      <inertia ixx="3.2e-05" ixy="0.0" ixz="-0.0" iyy="2.2e-05" iyz="-0.0" izz="1.3e-05"/>
+    </inertial>
+    <visual>
+      <origin xyz="-0.01462 -0.0177 0.17605" rpy="0.0 0.0 0.0"/>
+      <geometry>
+        <mesh filename="package://bez2_description/meshes/Upper_left_leg_support__bottom__v8_1.stl" scale="1.0 1.0 1.0"/>
+      </geometry>
+      <material name="abs_white"/>
+    </visual>
+    <collision>
+      <origin xyz="-7.549580197108163e-10 0.019499999671429395 -0.046900004041194904" rpy="6.123233995736766e-17 1.2246467991473532e-16 -6.123233995736765e-17"/>
+      <geometry>
+        <box size="0.027999999641906474 0.053999998606741435 0.11960001289844512"/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="Upper_left_leg_support__bottom__v8_2">
+    <inertial>
+      <origin xyz="-5.513428880110638e-10 -0.019537505598094276 -0.04811378735514921" rpy="0.0 0.0 0.0"/>
+      <mass value="0.027169463894965433"/>
+      <inertia ixx="3.2e-05" ixy="0.0" ixz="-0.0" iyy="2.2e-05" iyz="-0.0" izz="1.3e-05"/>
+    </inertial>
+    <visual>
+      <origin xyz="-0.01612 0.0168 0.17605" rpy="0.0 0.0 0.0"/>
+      <geometry>
+        <mesh filename="package://bez2_description/meshes/Upper_left_leg_support__bottom__v8_2.stl" scale="1.0 1.0 1.0"/>
+      </geometry>
+      <material name="abs_white"/>
+    </visual>
+    <collision>
+      <origin xyz="-1.889467263205269e-10 -0.019499999337643386 -0.046900004041194904" rpy="6.123233995736766e-17 1.2246467991473532e-16 -6.123233995736765e-17"/>
+      <geometry>
+        <box size="0.02800000086426735 0.05399999860674143 0.11960001289844512"/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="New_left_foot_upperhalf_v5_1">
+    <inertial>
+      <origin xyz="0.05139344311503742 -0.01218090675701626 -0.02177657679768813" rpy="0.0 0.0 0.0"/>
+      <mass value="0.0588564551543425"/>
+      <inertia ixx="3.9e-05" ixy="-0.0" ixz="-0.0" iyy="0.000149" iyz="-3e-06" izz="0.000178"/>
+    </inertial>
+    <visual>
+      <origin xyz="0.06818 0.0351 0.37605" rpy="0.0 0.0 0.0"/>
+      <geometry>
+        <mesh filename="package://bez2_description/meshes/New_left_foot_upperhalf_v5_1.stl" scale="1.0 1.0 1.0"/>
+      </geometry>
+      <material name="abs_white"/>
+    </visual>
+    <collision>
+      <origin xyz="0.0521600000190735 -0.01500000034235418 -0.005499999117851262" rpy="1.2246467991473532e-16 1.5707963267948966 0.0"/>
+      <geometry>
+        <box size="0.04300001263618469 0.0900000003166497 0.17000000178813934"/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="New_right_foot_upperhalf_v3_1">
+    <inertial>
+      <origin xyz="0.05139344394950704 0.060000000000004765 -0.02177657679768963" rpy="0.0 0.0 0.0"/>
+      <mass value="0.117712910308685"/>
+      <inertia ixx="0.000348" ixy="0.0" ixz="-1e-06" iyy="0.000297" iyz="0.0" izz="0.000625"/>
+    </inertial>
+    <visual>
+      <origin xyz="0.06968 -0.036 0.37605" rpy="0.0 0.0 0.0"/>
+      <geometry>
+        <mesh filename="package://bez2_description/meshes/New_right_foot_upperhalf_v3_1.stl" scale="1.0 1.0 1.0"/>
+      </geometry>
+      <material name="abs_white"/>
+    </visual>
+    <collision>
+      <origin xyz="0.05216000070452691 0.015000000443309548 -0.005499999117851262" rpy="-3.141592653589793 1.5707963267948966 0.0"/>
+      <geometry>
+        <box size="0.04300001263618471 0.09000000078231099 0.16999999433755875"/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="lower_leg_v4_1">
+    <inertial>
+      <origin xyz="-7.555562408362304e-09 -0.023191925057663376 -0.02213350063265468" rpy="0.0 0.0 0.0"/>
+      <mass value="0.1476733120184745"/>
+      <inertia ixx="0.000124" ixy="0.0" ixz="-0.0" iyy="0.000107" iyz="-2e-06" izz="4.1e-05"/>
+    </inertial>
+    <visual>
+      <origin xyz="-0.01612 0.0123 0.26775" rpy="0.0 0.0 0.0"/>
+      <geometry>
+        <mesh filename="package://bez2_description/meshes/lower_leg_v4_1.stl" scale="1.0 1.0 1.0"/>
+      </geometry>
+      <material name="abs_white"/>
+    </visual>
+    <collision>
+      <origin xyz="-6.546080032199253e-10 -0.02323344320418004 -0.0546667316320501" rpy="0.00829512378651074 6.123233995736766e-17 3.141592653589793"/>
+      <geometry>
+        <box size="0.04019999969750644 0.05460367704768601 0.1377141897100448"/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="lower_leg_v4_2">
+    <inertial>
+      <origin xyz="6.452880308219222e-09 0.023191925057662998 -0.02213350063265551" rpy="0.0 0.0 0.0"/>
+      <mass value="0.1476733120184745"/>
+      <inertia ixx="0.000124" ixy="0.0" ixz="0.0" iyy="0.000107" iyz="2e-06" izz="4.1e-05"/>
+    </inertial>
+    <visual>
+      <origin xyz="-0.01462 -0.0132 0.26775" rpy="0.0 0.0 0.0"/>
+      <geometry>
+        <mesh filename="package://bez2_description/meshes/lower_leg_v4_2.stl" scale="1.0 1.0 1.0"/>
+      </geometry>
+      <material name="abs_white"/>
+    </visual>
+    <collision>
+      <origin xyz="-4.3481587948257516e-10 0.023233443537966057 -0.05466673163205016" rpy="-0.00829512378651074 6.123233995736766e-17 -3.141592653589793"/>
+      <geometry>
+        <box size="0.040200000628829016 0.05460367704768602 0.13771418971004487"/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="ankle_motors_v4_1">
+    <inertial>
+      <origin xyz="-0.020543373941361492 0.023300002595937435 0.015062549801947933" rpy="0.0 0.0 0.0"/>
+      <mass value="0.3955604131597503"/>
+      <inertia ixx="0.000155" ixy="0.0" ixz="-2e-06" iyy="0.000468" iyz="-0.0" izz="0.000419"/>
+    </inertial>
+    <visual>
+      <origin xyz="-0.01462 -0.0127 0.37605" rpy="0.0 0.0 0.0"/>
+      <geometry>
+        <mesh filename="package://bez2_description/meshes/ankle_motors_v4_1.stl" scale="1.0 1.0 1.0"/>
+      </geometry>
+      <material name="steel_satin"/>
+    </visual>
+    <collision>
+      <origin xyz="-0.0339025236101593 0.02333180118803557 0.017050002622604365" rpy="1.5707963267948968 6.123233995736766e-17 -1.6364414459838246"/>
+      <geometry>
+        <box size="0.05145662496933042 0.06209999322891237 0.109915084847917"/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="ankle_motors_v4_2">
+    <inertial>
+      <origin xyz="-0.020543374775831007 -0.023299997404074242 0.015062549801948433" rpy="0.0 0.0 0.0"/>
+      <mass value="0.3955604131597503"/>
+      <inertia ixx="0.000155" ixy="0.0" ixz="-2e-06" iyy="0.000468" iyz="-0.0" izz="0.000419"/>
+    </inertial>
+    <visual>
+      <origin xyz="-0.01612 0.0118 0.37605" rpy="0.0 0.0 0.0"/>
+      <geometry>
+        <mesh filename="package://bez2_description/meshes/ankle_motors_v4_2.stl" scale="1.0 1.0 1.0"/>
+      </geometry>
+      <material name="steel_satin"/>
+    </visual>
+    <collision>
+      <origin xyz="-0.033848346088894254 -0.023330071198397445 0.01704546644136623" rpy="1.5679595111401872 0.0001862104392936693 -1.5052498791616573"/>
+      <geometry>
+        <box size="0.051475384296038096 0.06242990907162086 0.11020424060664373"/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="Hip_Printable_v2_v10_1">
+    <inertial>
+      <origin xyz="4.217541806686084e-05 -3.049643870767227e-14 -0.014017367581240808" rpy="0.0 0.0 0.0"/>
+      <mass value="0.010089224750638792"/>
+      <inertia ixx="2e-06" ixy="0.0" ixz="0.0" iyy="6e-06" iyz="-0.0" izz="5e-06"/>
+    </inertial>
+    <visual>
+      <origin xyz="-0.01597 0.0368 0.14405" rpy="0.0 0.0 0.0"/>
+      <geometry>
+        <mesh filename="package://bez2_description/meshes/Hip_Printable_v2_v10_1.stl" scale="1.0 1.0 1.0"/>
+      </geometry>
+      <material name="abs_white"/>
+    </visual>
+    <collision>
+      <origin xyz="-1.3311207310018336e-09 -8.165836340445765e-10 -0.022500002992153156" rpy="1.5707963267948966 -0.0 1.5707963267948966"/>
+      <geometry>
+        <box size="0.0260000005364418 0.04500000178813934 0.04999999795109033"/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="head_v4_1">
+    <inertial>
+      <origin xyz="0.003748762391791026 0.024245275552457073 0.02498879678916051" rpy="0.0 0.0 0.0"/>
+      <mass value="0.29338454987270446"/>
+      <inertia ixx="0.00023" ixy="-2e-06" ixz="-7.6e-05" iyy="0.000239" iyz="-1.1e-05" izz="0.000194"/>
+    </inertial>
+    <visual>
+      <origin xyz="-0.03325 0.02252 -0.109441" rpy="0.0 0.0 0.0"/>
+      <geometry>
+        <mesh filename="package://bez2_description/meshes/head_v4_1.stl" scale="1.0 1.0 1.0"/>
+      </geometry>
+      <material name="plastic_glossy_black"/>
+    </visual>
+    <collision>
+      <origin xyz="-0.002649999827146525 0.02567366499125958 0.024250471070051197" rpy="1.5707963267948966 6.123233995736766e-17 3.141592653589793"/>
+      <geometry>
+        <box size="0.07609999924898148 0.07650000602006911 0.09400000050663948"/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="custom_servo_support__middle_neck__v9_1">
+    <inertial>
+      <origin xyz="-4.4698224288541866e-11 0.0015597589791841214 0.014702901470227653" rpy="0.0 0.0 0.0"/>
+      <mass value="0.01959544470499754"/>
+      <inertia ixx="1.4e-05" ixy="-0.0" ixz="-0.0" iyy="6e-06" iyz="0.0" izz="1.2e-05"/>
+    </inertial>
+    <visual>
+      <origin xyz="-0.03325 0.000333 -0.075624" rpy="0.0 0.0 0.0"/>
+      <geometry>
+        <mesh filename="package://bez2_description/meshes/custom_servo_support__middle_neck__v9_1.stl" scale="1.0 1.0 1.0"/>
+      </geometry>
+      <material name="abs_white"/>
+    </visual>
+    <collision>
+      <origin xyz="-6.034970370660808e-10 0.0019996660085320464 0.024126630557537082" rpy="-1.5707963267948966 6.123233995736766e-17 3.141592653589793"/>
+      <geometry>
+        <box size="0.034999998286366456 0.04825326800346374 0.056374000385403626"/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="camera_point_1">
+    <inertial>
+      <origin xyz="-0.000999999374146826 -3.3364626470400865e-07 4.7006202563704136e-07" rpy="0.0 0.0 0.0"/>
+      <mass value="0.0005023999999999989"/>
+      <inertia ixx="0.0" ixy="-0.0" ixz="-0.0" iyy="0.0" iyz="0.0" izz="0.0"/>
+    </inertial>
+    <visual>
+      <origin xyz="-0.06765 -0.003154 -0.157441" rpy="0.0 0.0 0.0"/>
+      <geometry>
+        <mesh filename="package://bez2_description/meshes/camera_point_1.stl" scale="1.0 1.0 1.0"/>
+      </geometry>
+      <material name="steel_satin"/>
+    </visual>
+    <collision>
+      <origin xyz="-0.0010000005304813403 -3.3366996422421955e-07 4.670467376732823e-07" rpy="3.141592653589793 -0.0 1.5707963267948966"/>
+      <geometry>
+        <box size="0.00399999984074384 0.0040000006556510925 0.0040000081062316895"/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="imu_1">
+    <inertial>
+      <origin xyz="0.0020000000000040315 -4.076738946423575e-15 -0.04299999999999955" rpy="0.0 0.0 0.0"/>
+      <mass value="0.0005024000000000008"/>
+      <inertia ixx="0.0" ixy="-0.0" ixz="-0.0" iyy="0.0" iyz="0.0" izz="0.0"/>
+    </inertial>
+    <visual>
+      <origin xyz="-0.013 0.0 -0.02895" rpy="0.0 0.0 0.0"/>
+      <geometry>
+        <mesh filename="package://bez2_description/meshes/imu_1.stl" scale="1.0 1.0 1.0"/>
+      </geometry>
+      <material name="steel_satin"/>
+    </visual>
+    <collision>
+      <origin xyz="0.0020000005960464484 3.314340732553416e-19 -0.04299999988153577" rpy="1.2246467991473532e-16 1.5707963267948966 0.0"/>
+      <geometry>
+        <box size="0.003999999724328519 0.004000000189989805 0.0040000006556510925"/>
+      </geometry>
+    </collision>
+  </link>
+  <joint name="left_arm_motor_0" type="continuous">
+    <origin xyz="0.0 0.0725 0.00045" rpy="0.0 0.0 0.0"/>
+    <axis xyz="-0.0 -1.0 0.0"/>
+    <parent link="base_link"/>
+    <child link="biceps_v3_1"/>
+  </joint>
+  <joint name="left_arm_motor_1" type="continuous">
+    <origin xyz="0.0 0.008 -0.0906" rpy="0.0 0.0 0.0"/>
+    <axis xyz="0.0 -1.0 0.0"/>
+    <parent link="biceps_v3_1"/>
+    <child link="Arm_Assembly-bez3_v12_2"/>
+  </joint>
+  <joint name="right_arm_motor_0" type="continuous">
+    <origin xyz="0.0 -0.0725 0.00045" rpy="0.0 0.0 0.0"/>
+    <axis xyz="0.0 -1.0 0.0"/>
+    <parent link="base_link"/>
+    <child link="biceps_v3_2"/>
+  </joint>
+  <joint name="right_arm_motor_1" type="continuous">
+    <origin xyz="-0.0 -0.008 -0.0906" rpy="0.0 0.0 0.0"/>
+    <axis xyz="-0.0 -1.0 0.0"/>
+    <parent link="biceps_v3_2"/>
+    <child link="Arm_Assembly-bez3_v12_1"/>
+  </joint>
+  <joint name="left_leg_motor_0" type="continuous">
+    <origin xyz="0.01597 0.0377 -0.14405" rpy="0.0 0.0 0.0"/>
+    <axis xyz="-0.0 0.0 -1.0"/>
+    <parent link="base_link"/>
+    <child link="Hip_Printable_v2_v10_2"/>
+  </joint>
+  <joint name="right_leg_motor_1" type="continuous">
+    <origin xyz="-0.0235 0.0 -0.032" rpy="0.0 0.0 0.0"/>
+    <axis xyz="-1.0 0.0 0.0"/>
+    <parent link="Hip_Printable_v2_v10_1"/>
+    <child link="hip_motors_v4_1"/>
+  </joint>
+  <joint name="left_leg_motor_1" type="continuous">
+    <origin xyz="-0.025 0.0 -0.032" rpy="0.0 0.0 0.0"/>
+    <axis xyz="1.0 -0.0 -0.0"/>
+    <parent link="Hip_Printable_v2_v10_2"/>
+    <child link="hip_motors_v4_2"/>
+  </joint>
+  <joint name="left_leg_motor_2" type="continuous">
+    <origin xyz="0.02365 -0.02 0.0" rpy="0.0 0.0 0.0"/>
+    <axis xyz="0.0 -1.0 0.0"/>
+    <parent link="hip_motors_v4_2"/>
+    <child link="Upper_left_leg_support__bottom__v8_1"/>
+  </joint>
+  <joint name="right_leg_motor_2" type="continuous">
+    <origin xyz="0.02365 0.02 0.0" rpy="0.0 0.0 0.0"/>
+    <axis xyz="0.0 -1.0 0.0"/>
+    <parent link="hip_motors_v4_1"/>
+    <child link="Upper_left_leg_support__bottom__v8_2"/>
+  </joint>
+  <joint name="right_leg_motor_5" type="continuous">
+    <origin xyz="-0.0843 -0.0233 0.0" rpy="0.0 0.0 0.0"/>
+    <axis xyz="1.0 0.0 0.0"/>
+    <parent link="ankle_motors_v4_2"/>
+    <child link="New_left_foot_upperhalf_v5_1"/>
+  </joint>
+  <joint name="left_leg_motor_5" type="continuous">
+    <origin xyz="-0.0843 0.0233 0.0" rpy="0.0 0.0 0.0"/>
+    <axis xyz="-1.0 0.0 0.0"/>
+    <parent link="ankle_motors_v4_1"/>
+    <child link="New_right_foot_upperhalf_v3_1"/>
+  </joint>
+  <joint name="right_leg_motor_3" type="continuous">
+    <origin xyz="0.0 0.0045 -0.0917" rpy="0.0 0.0 0.0"/>
+    <axis xyz="0.0 -1.0 0.0"/>
+    <parent link="Upper_left_leg_support__bottom__v8_2"/>
+    <child link="lower_leg_v4_1"/>
+  </joint>
+  <joint name="left_leg_motor_3" type="continuous">
+    <origin xyz="0.0 -0.0045 -0.0917" rpy="0.0 0.0 0.0"/>
+    <axis xyz="0.0 -1.0 0.0"/>
+    <parent link="Upper_left_leg_support__bottom__v8_1"/>
+    <child link="lower_leg_v4_2"/>
+  </joint>
+  <joint name="left_leg_motor_4" type="continuous">
+    <origin xyz="0.0 -0.0005 -0.1083" rpy="0.0 0.0 0.0"/>
+    <axis xyz="0.0 -1.0 0.0"/>
+    <parent link="lower_leg_v4_2"/>
+    <child link="ankle_motors_v4_1"/>
+  </joint>
+  <joint name="right_leg_motor_4" type="continuous">
+    <origin xyz="0.0 0.0005 -0.1083" rpy="0.0 0.0 0.0"/>
+    <axis xyz="0.0 -1.0 0.0"/>
+    <parent link="lower_leg_v4_1"/>
+    <child link="ankle_motors_v4_2"/>
+  </joint>
+  <joint name="right_leg_motor_0" type="continuous">
+    <origin xyz="0.01597 -0.0368 -0.14405" rpy="0.0 0.0 0.0"/>
+    <axis xyz="-0.0 -0.0 1.0"/>
+    <parent link="base_link"/>
+    <child link="Hip_Printable_v2_v10_1"/>
+  </joint>
+  <joint name="head_motor_0" type="continuous">
+    <origin xyz="0.03325 -0.000333 0.075624" rpy="0.0 0.0 0.0"/>
+    <axis xyz="0.0 0.0 -1.0"/>
+    <parent link="base_link"/>
+    <child link="custom_servo_support__middle_neck__v9_1"/>
+  </joint>
+  <joint name="head_motor_1" type="continuous">
+    <origin xyz="0.0 -0.022187 0.033817" rpy="0.0 0.0 0.0"/>
+    <axis xyz="-0.0 1.0 0.0"/>
+    <parent link="custom_servo_support__middle_neck__v9_1"/>
+    <child link="head_v4_1"/>
+  </joint>
+  <joint name="head_camera" type="continuous">
+    <origin xyz="0.0344 0.025674 0.048" rpy="0.0 0.0 0.0"/>
+    <axis xyz="1.0 0.0 -0.0"/>
+    <parent link="head_v4_1"/>
+    <child link="camera_point_1"/>
+  </joint>
+  <joint name="torso_imu" type="continuous">
+    <origin xyz="0.013 0.0 0.02895" rpy="0.0 0.0 0.0"/>
+    <axis xyz="0.0 0.0 1.0"/>
+    <parent link="base_link"/>
+    <child link="imu_1"/>
+  </joint>
+</robot>

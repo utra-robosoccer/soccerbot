@@ -1,19 +1,22 @@
 import math
-from typing import Optional
+from typing import List, Optional
 
 import numpy as np
 import rospy
 
+from soccer_common.camera import Camera
 from soccer_common.transformation import Transformation
+from soccer_common.utils import wrapToPi
 from soccer_pycontrol import path
 from soccer_strategy.ball import Ball
+from soccer_strategy.obstacle import Obstacle
 from soccer_strategy.robot import Robot
 from soccer_strategy.robot_controlled import RobotControlled
 
 
 class RobotControlled2D(RobotControlled):
     class ObservationConstants:
-        FOV = math.pi / 4
+        FOV = Camera.HORIZONTAL_FOV
         VISION_RANGE = 3
 
     def __init__(
@@ -31,22 +34,16 @@ class RobotControlled2D(RobotControlled):
         self.robot_name = "robot %d" % robot_id
         self.path_time = 0
         self.path = None
+        self.trajectory_timeout = 0
 
-    def set_kick_velocity(self, kick_velocity):
+    def kick(self, kick_velocity):
         """
         Set's a kick velocity for the ball
-        :param kick_velocity:
+        :param kick_velocity: Amount of strength for the kick
         :return:
         """
-
-        kick_angle_rand = np.random.normal(0, 0.2)
-        kick_force_rand = max(np.random.normal(0.4, 0.3), 0)
-        if kick_force_rand == 0:
-            print("Kick Missed")
-
-        rotation_rand = np.array([[np.cos(kick_angle_rand), -np.sin(kick_angle_rand)], [np.sin(kick_angle_rand), np.cos(kick_angle_rand)]])
-
-        self.kick_velocity = kick_force_rand * rotation_rand @ kick_velocity
+        self.status = Robot.Status.KICKING
+        self.kick_velocity = kick_velocity
 
     def set_navigation_position(self, goal_position):
         super().set_navigation_position(goal_position)
@@ -63,17 +60,37 @@ class RobotControlled2D(RobotControlled):
         if ball is None or ball.position is None:
             return False
         theta = self.position[2]  # TODO change this to direction vector?
-        arrow_len = 0.3
-        arrow_end_x = math.cos(theta) * arrow_len
-        arrow_end_y = math.sin(theta) * arrow_len
-        robot_direction = np.array([arrow_end_x, arrow_end_y])
         ball_position = ball.position
-        ball_to_robot = ball_position - self.position[0:2]
-        angle = np.arccos(np.dot(ball_to_robot[0:2], robot_direction) / (np.linalg.norm(ball_to_robot[0:2]) * np.linalg.norm(robot_direction)))
-        distance = np.linalg.norm(ball_to_robot)
-        if angle < self.ObservationConstants.FOV / 2 and distance < self.ObservationConstants.VISION_RANGE:
+        ball_diff = ball_position - self.position[0:2]
+        angle = wrapToPi(theta - np.arctan2(ball_diff[1], ball_diff[0]))
+        distance = np.linalg.norm(ball_diff)
+        if abs(angle) < self.ObservationConstants.FOV / 2 and distance < self.ObservationConstants.VISION_RANGE:
+            if self.observed_ball is None:
+                self.observed_ball = Ball()
             self.observed_ball.position = ball_position
-            self.navigation_goal_localized_time = rospy.Time.now()
-            ball.last_observed_time_stamp = rospy.Time.now()
+            self.observed_ball.last_observed_time_stamp = rospy.Time.now()
+            self.robot_focused_on_ball_time = rospy.Time.now()
 
         # TODO can add noise here
+
+    def observe_obstacles(self, robots: List[Robot]):
+        self.observed_obstacles.clear()
+        for robot in robots:
+            if robot.robot_id != self.robot_id:
+                theta = self.position[2]  # TODO change this to direction vector?
+                arrow_len = 0.3
+                arrow_end_x = math.cos(theta) * arrow_len
+                arrow_end_y = math.sin(theta) * arrow_len
+                robot_direction = np.array([arrow_end_x, arrow_end_y])
+                obstacle_position = robot.position[0:2]
+                obstacle_to_robot = obstacle_position - self.position[0:2]
+                angle = np.arccos(
+                    np.dot(obstacle_to_robot[0:2], robot_direction) / (np.linalg.norm(obstacle_to_robot[0:2]) * np.linalg.norm(robot_direction))
+                )
+                distance = np.linalg.norm(obstacle_to_robot)
+                if angle < self.ObservationConstants.FOV / 2 and distance < self.ObservationConstants.VISION_RANGE:
+                    o = Obstacle()
+                    o.position = robot.position[0:2]
+                    o.team = robot.team
+                    o.probability = (self.ObservationConstants.VISION_RANGE - distance) / self.ObservationConstants.VISION_RANGE
+                    self.observed_obstacles.append(o)

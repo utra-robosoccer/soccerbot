@@ -18,11 +18,11 @@ concurrency:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     timeout-minutes: 60
 
     steps:
-      - uses: ros-tooling/setup-ros@v0.2
+      - uses: ros-tooling/setup-ros@v0.6
         with:
           required-ros-distributions: noetic
       - uses: actions/checkout@v3
@@ -55,9 +55,9 @@ jobs:
         run: |
           cd $HOME/catkin_ws/src/soccerbot
           source /opt/ros/noetic/setup.bash
-          pip install pyOpenSSL==22.0.0
+          pip install pyOpenSSL==23.0.0
           pip install --trusted-host=pypi.org --trusted-host=files.pythonhosted.org --trusted-host=pytorch.org --trusted-host=download.pytorch.org --trusted-host=files.pypi.org --trusted-host=files.pytorch.org \
-            -r requirements.txt --find-links https://download.pytorch.org/whl/cu113/torch_stable.html
+            -r requirements.txt --find-links https://download.pytorch.org/whl/torch_stable.html
       - name: Build Soccerbot
         run: |
           cd $HOME/catkin_ws
@@ -73,7 +73,7 @@ jobs:
           roscore &
           make html
       - name: Setup Pages
-        uses: actions/configure-pages@v2
+        uses: actions/configure-pages@v3
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
         with:

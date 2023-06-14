@@ -3,6 +3,9 @@
     <module name="soccerbot" />
     <option name="INTERPRETER_OPTIONS" value="" />
     <option name="PARENT_ENVS" value="true" />
+    <envs>
+      <env name="LD_LIBRARY_PATH" value="$LD_LIBRARY_PATH:/opt/ros/noetic/lib/" />
+    </envs>
     <option name="SDK_HOME" value="" />
     <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/soccer_object_localization/src/soccer_object_localization" />
     <option name="IS_MODULE_SDK" value="true" />

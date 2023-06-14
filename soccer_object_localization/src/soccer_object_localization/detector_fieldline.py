@@ -3,6 +3,7 @@ import os
 import time
 
 from rospy.impl.tcpros_base import DEFAULT_BUFF_SIZE
+from tf import TransformBroadcaster
 
 from soccer_common.transformation import Transformation
 from soccer_msgs.msg import RobotState
@@ -22,12 +23,6 @@ from soccer_object_localization.detector import Detector
 
 
 class DetectorFieldline(Detector):
-    HOUGH_RHO = 1
-    HOUGH_THETA = np.pi / 180
-    HOUGH_THRESHOLD = 50
-    HOUGH_MIN_LINE_LENGTH = 50
-    HOUGH_MAX_LINE_GAP = 50
-
     def __init__(self):
         super().__init__()
 
@@ -37,8 +32,13 @@ class DetectorFieldline(Detector):
         )  # Large buff size (https://answers.ros.org/question/220502/image-subscriber-lag-despite-queue-1/)
         self.image_publisher = rospy.Publisher("camera/line_image", Image, queue_size=1)
         self.point_cloud_publisher = rospy.Publisher("field_point_cloud", PointCloud2, queue_size=1)
+        self.tf_broadcaster = TransformBroadcaster()
+
+        self.point_cloud_max_distance = rospy.get_param("point_cloud_max_distance", 5)
+        self.point_cloud_spacing = rospy.get_param("point_cloud_spacing", 30)
         self.publish_point_cloud = False
         self.ground_truth = False
+
         cv2.setRNGSeed(12345)
         pass
 
@@ -72,6 +72,8 @@ class DetectorFieldline(Detector):
 
         image = CvBridge().imgmsg_to_cv2(img, desired_encoding="rgb8")
         h = self.camera.calculateHorizonCoverArea()
+        if h + 1 >= self.camera.resolution_y:
+            return
         image_crop = image[h + 1 :, :, :]
         # image_crop_blurred = cv2.GaussianBlur(image_crop, (3, 3), 0)
         image_crop_blurred = cv2.bilateralFilter(image_crop, 9, 75, 75)
@@ -83,25 +85,22 @@ class DetectorFieldline(Detector):
             cv2.imshow("CVT Color Contrast", image_crop_blurred)
             cv2.waitKey(0)
 
-        def circular_mask(radius: int):
-            return cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (radius, radius))
-
         # Grass Mask
         # Hue > 115 needed
         grass_only = cv2.inRange(hsv, (35, 85, 0), (115, 255, 255))
         grass_only = cv2.vconcat([np.zeros((h + 1, grass_only.shape[1]), dtype=grass_only.dtype), grass_only])
 
         # Use odd numbers for all circular masks otherwise the line will shift location
-        grass_only_0 = cv2.morphologyEx(grass_only, cv2.MORPH_OPEN, circular_mask(5))
-        grass_only_1 = cv2.morphologyEx(grass_only, cv2.MORPH_CLOSE, circular_mask(5))
-        grass_only_2 = cv2.morphologyEx(grass_only_1, cv2.MORPH_OPEN, circular_mask(21))
-        grass_only_3 = cv2.morphologyEx(grass_only_2, cv2.MORPH_CLOSE, circular_mask(61))
+        grass_only_0 = cv2.morphologyEx(grass_only, cv2.MORPH_OPEN, self.circular_mask(5))
+        grass_only_1 = cv2.morphologyEx(grass_only, cv2.MORPH_CLOSE, self.circular_mask(5))
+        grass_only_2 = cv2.morphologyEx(grass_only_1, cv2.MORPH_OPEN, self.circular_mask(21))
+        grass_only_3 = cv2.morphologyEx(grass_only_2, cv2.MORPH_CLOSE, self.circular_mask(61))
 
-        grass_only_morph = cv2.morphologyEx(grass_only_3, cv2.MORPH_ERODE, circular_mask(9))
+        grass_only_morph = cv2.morphologyEx(grass_only_3, cv2.MORPH_ERODE, self.circular_mask(9))
         grass_only_flipped = cv2.bitwise_not(grass_only)
 
         lines_only = cv2.bitwise_and(grass_only_flipped, grass_only_flipped, mask=grass_only_morph)
-        lines_only = cv2.morphologyEx(lines_only, cv2.MORPH_CLOSE, circular_mask(5))
+        lines_only = cv2.morphologyEx(lines_only, cv2.MORPH_CLOSE, self.circular_mask(5))
 
         if debug:
             cv2.imshow("grass_only", grass_only)
@@ -136,20 +135,29 @@ class DetectorFieldline(Detector):
             i = 0
             for px, py in zip(pts_y, pts_x):
                 i = i + 1
-                if i % 30 == 0:
+                if i % self.point_cloud_spacing == 0:
                     camToPoint = Transformation(self.camera.findFloorCoordinate([px, py]))
 
                     # Exclude points too far away
-                    if camToPoint.norm_squared < 4:
+                    if camToPoint.norm_squared < self.point_cloud_max_distance**2:
                         points3d.append(camToPoint.position)
+
+            # Publish straight base link
+            self.tf_broadcaster.sendTransform(
+                self.camera.pose_base_link_straight.position,
+                self.camera.pose_base_link_straight.quaternion,
+                img.header.stamp,
+                self.robot_name + "/base_footprint_straight",
+                self.robot_name + "/odom",
+            )
 
             # Publish fieldlines in laserscan format
             header = Header()
             header.stamp = img.header.stamp
-            header.frame_id = self.robot_name + "/base_footprint"
+            header.frame_id = self.robot_name + "/base_footprint_straight"
             if self.ground_truth:
                 if not self.publish_point_cloud:
-                    header.frame_id = self.robot_name + "/base_footprint"
+                    header.frame_id = self.robot_name + "/base_footprint_straight"
                 else:
                     header.frame_id = "world"
             point_cloud_msg = pcl2.create_cloud_xyz32(header, points3d)

@@ -31,9 +31,7 @@ class Communication:
         self.pitch = 0
         self.roll = 0
 
-        imu_pwm_servo_ser._motor_lock = (
-            Lock()
-        ) # IMU ser is also used for PWM servos
+        imu_pwm_servo_ser._motor_lock = Lock()  # IMU ser is also used for PWM servos
         jx_ser._motor_lock = (
             Lock()
         )  # TODO improve on this hacky exclusive lock over the serial port for motor TX/RX (which always requires flushing the RX buffer via the state machine due to echo, hence exclusive lock)
@@ -67,7 +65,7 @@ class Communication:
     def run(self):
         self._rx_servo_thread.start()
         self._rx_imu_thread.start()
-        print('TX THREAD CALLER')
+        print("TX THREAD CALLER")
         self._tx_servo_thread.start()
 
         tx_cycle = WaitForMs(10)
@@ -92,7 +90,6 @@ class Communication:
             motor_angles.append(((motor_name, motor), angle))
         # print(motor_angles)
         self._tx_servo_thread.send(motor_angles)
-        
 
     def receive_servo_callback(self, received_angles):
         joint_state = JointState()
@@ -148,7 +145,6 @@ class Communication:
     #         return
 
     #     # MOTOR FEEDBACK
-        
 
 
 if __name__ == "__main__":
