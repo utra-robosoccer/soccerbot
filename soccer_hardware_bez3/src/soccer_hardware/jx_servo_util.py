@@ -254,10 +254,10 @@ if __name__ == '__main__':
 
     MIN_POT=0x27E
     MAX_POT=0xE64
-    with serial.Serial(sys.argv[1], 1000000, timeout=0) as ser:
+    with serial.Serial(sys.argv[1], 115200, timeout=0) as ser:
         print(uart_transact(ser, [], CMDS.POSITION, RWS.READ))
-        uart_transact(ser, [4000, 1, 90] * 13, CMDS.PID_COEFF, RWS.WRITE)  # push initial PID gains
-        uart_transact(ser, [0x27E] * 1, CMDS.POSITION, RWS.WRITE) # * (MAX_JX_SERVO_IDX + 1), CMDS.POSITION, RWS.WRITE)
+        uart_transact(ser, [4000, 1, 90] * 13, CMDS.PID_COEFF, RWS.WRITE, preflush=True)  # push initial PID gains
+        uart_transact(ser, [0x27E] * 1, CMDS.POSITION, RWS.WRITE, preflush=True) # * (MAX_JX_SERVO_IDX + 1), CMDS.POSITION, RWS.WRITE)
         print(uart_transact(ser, [], CMDS.POSITION, RWS.READ))
         input()
         t0 = time.time()
