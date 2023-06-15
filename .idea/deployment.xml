@@ -1,4 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" serverName="Robot1" remoteFilesAllowedToDisappearOnAutoupload="false" />
+  <component name="PublishConfigData" autoUpload="Always" serverName="Jason's Home" remoteFilesAllowedToDisappearOnAutoupload="false" confirmBeforeUploading="false" autoUploadExternalChanges="true" showAutoUploadSettingsWarning="false">
+    <option name="confirmBeforeUploading" value="false" />
+    <serverData>
+      <paths name="Robot1">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/catkin_ws/src/soccerbot" local="$PROJECT_DIR$" web="/" />
+          </mappings>
+          <excludedPaths>
+            <excludedPath local="true" path="$PROJECT_DIR$/soccerbot/bags" />
+            <excludedPath local="true" path="$PROJECT_DIR$/soccer_object_localization/images" />
+            <excludedPath local="true" path="$PROJECT_DIR$/soccer_object_detection/images" />
+            <excludedPath local="true" path="$PROJECT_DIR$/soccer_localization/data" />
+            <excludedPath local="true" path="$PROJECT_DIR$/bez2_description/meshes" />
+            <excludedPath local="true" path="$PROJECT_DIR$/bez1_description/meshes" />
+            <excludedPath local="true" path="$PROJECT_DIR$/bez3_description/meshes" />
+            <excludedPath local="true" path="$PROJECT_DIR$/soccer_hardware_bez3" />
+            <excludedPath local="true" path="$PROJECT_DIR$/docs" />
+            <excludedPath local="true" path="$PROJECT_DIR$/external/webots" />
+            <excludedPath local="true" path="$PROJECT_DIR$/external/yolov5" />
+          </excludedPaths>
+        </serverdata>
+      </paths>
+    </serverData>
+    <option name="myAutoUpload" value="ALWAYS" />
+  </component>
 </project>

@@ -3,19 +3,28 @@
   <component name="WebServers">
     <option name="servers">
       <webServer id="13a02daf-7dc5-4013-b62a-137cf92a794c" name="Robot1" url="http://192.168.0.101">
-        <fileTransfer rootFolder="/home/robot1" accessType="SFTP" host="192.168.0.101" port="22" sshConfigId="7a5c6586-b729-49c8-9739-2da0ee14d462" sshConfig="robot1@192.168.0.101:22 password">
+        <fileTransfer rootFolder="/home/robot1" accessType="SFTP" host="192.168.1.209" port="22" sshConfigId="7a5c6586-b729-49c8-9739-2da0ee14d462" sshConfig="robot1@192.168.1.209:22 password">
           <advancedOptions>
             <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
           </advancedOptions>
         </fileTransfer>
       </webServer>
-      <webServer id="eddf6e2a-2523-4067-8258-014ccd304df7" name="Robot2" url="http://192.168.0.102">
-        <fileTransfer rootFolder="/home/robot2" accessType="SFTP" host="192.168.0.102" port="22" sshConfigId="fc3e3ef9-6659-4440-b2d1-5fa9df74a719" sshConfig="robot2@192.168.0.102:22 password">
+      <webServer id="939e77e5-ee43-4895-81e0-7f973f6752b0" name="asdf">
+        <fileTransfer accessType="SFTP" port="22" sshConfigId="0945f344-ce5b-4f1c-b7ab-1604a9c6b9ca" sshConfig="asdf">
           <advancedOptions>
-            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
           </advancedOptions>
         </fileTransfer>
       </webServer>
     </option>
+    <groups>
+      <group>
+        <name>Jason's Home</name>
+        <servers>
+          <name value="Robot1" />
+          <name value="asdf" />
+        </servers>
+      </group>
+    </groups>
   </component>
 </project>
