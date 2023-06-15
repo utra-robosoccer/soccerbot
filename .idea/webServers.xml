@@ -9,20 +9,12 @@
           </advancedOptions>
         </fileTransfer>
       </webServer>
-      <webServer id="939e77e5-ee43-4895-81e0-7f973f6752b0" name="asdf">
-        <fileTransfer accessType="SFTP" port="22" sshConfigId="0945f344-ce5b-4f1c-b7ab-1604a9c6b9ca" sshConfig="asdf">
-          <advancedOptions>
-            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
-          </advancedOptions>
-        </fileTransfer>
-      </webServer>
     </option>
     <groups>
       <group>
         <name>Jason's Home</name>
         <servers>
           <name value="Robot1" />
-          <name value="asdf" />
         </servers>
       </group>
     </groups>
