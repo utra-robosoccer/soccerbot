@@ -218,7 +218,28 @@ int main(void)
 //    test_motor_sweep2(&port2);
 //    id_motor_and_blink_led(2);
 //    dynamixel_test();
-    update();
+	  update();
+	  HAL_GPIO_TogglePin(GPIOA, GREEN_LED_Pin);
+	  HAL_Delay(10);
+
+
+//	  test_motor_sweep1(&port1, 0x0);
+//	  for(uint8_t i=0; i < 10; i++) {
+//		  update_motor_led_p1(motorPorts[1], 0x1, 0);
+//		  HAL_Delay(100);
+//		  update_motor_led_p1(motorPorts[1], 0x1, 1);
+//		  HAL_Delay(100);
+//	  }
+
+//	  test_motor_sweep1(&port6, 0x1);
+//	  HAL_Delay(100);
+
+	  _motor_ping_p1(&port2, 0x1);
+//	  test_ping2(port5.pinPort, port5.dirPinNum, *port5.huart);
+	  HAL_Delay(100);
+//	  _motor_ping_p1(&port2, 0xb);
+//	  HAL_Delay(100);
+//	  HAL_Delay(100);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -421,7 +442,7 @@ static void MX_USART2_UART_Init(void)
 
   /* USER CODE END USART2_Init 1 */
   huart2.Instance = USART2;
-  huart2.Init.BaudRate = 57600;
+  huart2.Init.BaudRate = 1000000;
   huart2.Init.WordLength = UART_WORDLENGTH_8B;
   huart2.Init.StopBits = UART_STOPBITS_1;
   huart2.Init.Parity = UART_PARITY_NONE;

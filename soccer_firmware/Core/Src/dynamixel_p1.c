@@ -19,7 +19,7 @@ void write_goal_position_p1(MotorPort *port, uint8_t id, uint16_t angle) {
   //TODO: handle status packet
 }
 
-void motor_torque_en_p2(MotorPort *p, uint8_t id, uint8_t val) {
+void motor_torque_en_p1(MotorPort *p, uint8_t id, uint8_t val) {
   uint8_t data[1] = {val};
   uint16_t dataLen = 1;
   uint16_t addr = 24;
@@ -150,13 +150,15 @@ void _motor_ping_p1(MotorPort *port, uint8_t id) {
   uint8_t txBuf[6];
   txBuf[0] = 0xFF;
   txBuf[1] = 0xFF;
-  txBuf[2] = 0xFE; // Packet ID (0xFE = broadcast)
+  txBuf[2] = id; // Packet ID (0xFE = broadcast)
   txBuf[3] = 0x02; // length
   txBuf[4] = 0x01; // PING instruction
   txBuf[5] = ~(txBuf[2] + txBuf[3] + txBuf[4]); // checksum
 
   uint8_t rxBuf[6];
   for(uint8_t i = 0; i < sizeof(rxBuf); i++)rxBuf[i] = 0;
+
+  HAL_UART_Receive_DMA(port->huart, rxBuf, sizeof(rxBuf));
 
   // set write direction
   HAL_GPIO_WritePin(port->pinPort, port->dirPinNum, GPIO_PIN_SET);
@@ -167,7 +169,7 @@ void _motor_ping_p1(MotorPort *port, uint8_t id) {
   // set read direction
   HAL_GPIO_WritePin(port->pinPort, port->dirPinNum, GPIO_PIN_RESET);
 
-  HAL_UART_Receive_DMA(port->huart, rxBuf, sizeof(rxBuf));
+
 
   while(port->dmaDoneReading == false){
   }

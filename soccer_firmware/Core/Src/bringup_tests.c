@@ -112,7 +112,9 @@ void read_motor_position(GPIO_TypeDef *uart_port, uint16_t pin, UART_HandleTypeD
 void test_motor_sweep1(MotorPort *port, uint8_t id) {
 	uint16_t angle = 0;
 	uint16_t count = 0;
+	uint8_t led = 0;
 	int16_t dir = 1;
+	motor_torque_en_p2(&port4, 12, 1);
 	while (1)
 	{
 		  if(dir) angle += 5;
@@ -127,7 +129,17 @@ void test_motor_sweep1(MotorPort *port, uint8_t id) {
 
 		  HAL_Delay(5);
 
-		  write_goal_position_p1(port, id, angle);
+		  write_goal_position_p1(&port1, 0x1, angle);
+		  write_goal_position_p1(&port2, 10, angle);
+	      HAL_Delay(10);
+		  write_goal_position_p1(&port1, 0x2, angle);
+		  write_goal_position_p1(&port2, 11, angle);
+		  HAL_Delay(10);
+		  write_goal_position_p1(&port1, 0x3, angle);
+		  write_goal_position_p2(&port4, 12, angle);
+//		  if(angle % 100 == 0) led = led ^ 1;
+//		  update_motor_led_p2(&port4, 12, led);
+		  HAL_Delay(10);
 	}
 }
 
@@ -176,7 +188,7 @@ void test_ping2(GPIO_TypeDef *uart_port, uint16_t pin, UART_HandleTypeDef h) {
 		  txBuf[1] = 0xFF;
 		  txBuf[2] = 0xFD;
 		  txBuf[3] = 0x00;
-		  txBuf[4] = 1; // Packet ID (0xFE = broadcast)
+		  txBuf[4] = 12; // Packet ID (0xFE = broadcast)
 		  txBuf[5] = 0x03; // length L
 		  txBuf[6] = 0x00; // length H
 		  txBuf[7] = 0x01; // ping instruction
