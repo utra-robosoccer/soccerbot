@@ -33,6 +33,7 @@ extern "C" {
 /* USER CODE BEGIN Includes */
 #include <stdbool.h>
 
+extern CRC_HandleTypeDef hcrc;
 extern uint8_t usb_received;
 extern uint32_t usbRxBufferCount;
 extern uint32_t usbRxBufferSize;

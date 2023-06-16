@@ -44,6 +44,8 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
+CRC_HandleTypeDef hcrc;
+
 I2C_HandleTypeDef hi2c1;
 
 UART_HandleTypeDef huart4;
@@ -86,6 +88,7 @@ static void MX_USART2_UART_Init(void);
 static void MX_USART3_UART_Init(void);
 static void MX_USART6_UART_Init(void);
 static void MX_I2C1_Init(void);
+static void MX_CRC_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -206,6 +209,7 @@ int main(void)
   MX_USART3_UART_Init();
   MX_USART6_UART_Init();
   MX_I2C1_Init();
+  MX_CRC_Init();
   /* USER CODE BEGIN 2 */
   init_ports();
   /* USER CODE END 2 */
@@ -218,7 +222,7 @@ int main(void)
 //    test_motor_sweep2(&port2);
 //    id_motor_and_blink_led(2);
 //    dynamixel_test();
-	  update();
+//	  update();
 	  HAL_GPIO_TogglePin(GPIOA, GREEN_LED_Pin);
 	  HAL_Delay(10);
 
@@ -231,11 +235,16 @@ int main(void)
 //		  HAL_Delay(100);
 //	  }
 
-//	  test_motor_sweep1(&port6, 0x1);
-//	  HAL_Delay(100);
+	  test_motor_sweep1(&port1, 0x1);
+	  HAL_Delay(100);
 
-	  _motor_ping_p1(&port2, 0x1);
-//	  test_ping2(port5.pinPort, port5.dirPinNum, *port5.huart);
+//	  _motor_ping_p1(&port3, 0x1);
+//	  HAL_Delay(10);
+//	  _motor_ping_p1(&port3, 0x2);
+//	  HAL_Delay(10);
+//	  _motor_ping_p1(&port3, 0x3);
+//	  HAL_Delay(10);
+	  test_ping2(port1.pinPort, port1.dirPinNum, *port1.huart);
 	  HAL_Delay(100);
 //	  _motor_ping_p1(&port2, 0xb);
 //	  HAL_Delay(100);
@@ -291,6 +300,32 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
+}
+
+/**
+  * @brief CRC Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_CRC_Init(void)
+{
+
+  /* USER CODE BEGIN CRC_Init 0 */
+
+  /* USER CODE END CRC_Init 0 */
+
+  /* USER CODE BEGIN CRC_Init 1 */
+
+  /* USER CODE END CRC_Init 1 */
+  hcrc.Instance = CRC;
+  if (HAL_CRC_Init(&hcrc) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN CRC_Init 2 */
+
+  /* USER CODE END CRC_Init 2 */
+
 }
 
 /**
@@ -508,7 +543,7 @@ static void MX_USART6_UART_Init(void)
 
   /* USER CODE END USART6_Init 1 */
   huart6.Instance = USART6;
-  huart6.Init.BaudRate = 57600;
+  huart6.Init.BaudRate = 1000000;
   huart6.Init.WordLength = UART_WORDLENGTH_8B;
   huart6.Init.StopBits = UART_STOPBITS_1;
   huart6.Init.Parity = UART_PARITY_NONE;

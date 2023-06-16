@@ -187,7 +187,10 @@ void _motor_ping_p1(MotorPort *port, uint8_t id) {
  * callback gets called when dma is done reading from uart
  */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
-  if (huart->Instance == port1.huart->Instance) {
-    port1.dmaDoneReading = true;
+  for (uint8_t i = 0; i < 6; i++) {
+	  if (huart->Instance == motorPorts[i]->huart->Instance) {
+		  motorPorts[i]->dmaDoneReading = true;
+	  }
   }
+
 }

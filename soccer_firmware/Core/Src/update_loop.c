@@ -12,15 +12,16 @@
 
 void update() {
   while(1) {
+	usb_received = true;
     if (usb_received) {
-      uint16_t angle = usbRxBuffer[2] | (usbRxBuffer[3] << 8);
+//      uint16_t angle = usbRxBuffer[2] | (usbRxBuffer[3] << 8);
 
 
 
 
 //      read motor angle
-      uint8_t txBuf[2];
-      _motor_read_p1(&port1, 0xfe, 36, txBuf, 2);
+      uint8_t txBuf[2] = {1, 2};
+//      _motor_read_p1(&port1, 0xfe, 36, txBuf, 2);
       CDC_Transmit_FS((uint8_t *) txBuf, sizeof(txBuf));
 
       HAL_Delay(10);
