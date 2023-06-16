@@ -69,7 +69,7 @@ class TestWalking:
         file_path = os.path.dirname(os.path.abspath(__file__))
         config_folder_path = f"{file_path}/../../config/"
         config_path = config_folder_path + f"{robot_model}.yaml"
-        set_rosparam_from_yaml_file(param_path=config_path)
+        set_rosparam_from_yaml_file(param_path=config_path, delete_params=False, convert_logs_to_prints=False)
 
         c = NavigatorRos()
         yield c
@@ -125,17 +125,18 @@ class TestWalking:
         distance_offset = np.linalg.norm((final_position - goal_position.position)[0:2])
         print(f"Final distance offset {distance_offset}")
 
-    @pytest.mark.skip
-    def test_walk_1_real_robot(self, walker_ros: NavigatorRos):
-        walker_ros.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
-        walker_ros.ready()
-        walker_ros.wait(200)
+    # @pytest.mark.skip
+    @pytest.mark.parametrize("walker_real_robot", ["bez1"], indirect=True)
+    def test_walk_1_real_robot(self, walker_real_robot: NavigatorRos):
+        walker_real_robot.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
+        walker_real_robot.ready()
+        walker_real_robot.wait(200)
         goal_position = Transformation([1, 0, 0], [0, 0, 0, 1])
-        walker_ros.setGoal(goal_position)
-        walk_success = walker_ros.run(single_trajectory=True)
+        walker_real_robot.setGoal(goal_position)
+        walk_success = walker_real_robot.run(single_trajectory=True)
         assert walk_success
 
-        final_position = walker_ros.getPose()
+        final_position = walker_real_robot.getPose()
         distance_offset = np.linalg.norm((final_position - goal_position.position)[0:2])
 
     @pytest.mark.timeout(30)
