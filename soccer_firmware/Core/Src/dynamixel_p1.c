@@ -172,7 +172,6 @@ void _motor_ping_p1(MotorPort *port, uint8_t id) {
   HAL_GPIO_WritePin(port->pinPort, port->dirPinNum, GPIO_PIN_RESET);
 
 
-
   while(port->dmaDoneReading == false){
   }
   port->dmaDoneReading = false;

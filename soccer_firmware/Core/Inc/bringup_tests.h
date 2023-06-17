@@ -19,6 +19,6 @@ void test_motor_sweep1(MotorPort *port, uint8_t id);
 void test_motor_sweep2(MotorPort *port);
 void test_led_p2(MotorPort *port);
 void test_ping1(GPIO_TypeDef *uart_port, uint16_t pin, UART_HandleTypeDef h);
-void test_ping2(GPIO_TypeDef *uart_port, uint16_t pin, UART_HandleTypeDef h);
+void test_ping2(MotorPort *port);
 
 #endif /* INC_BRINGUP_TESTS_H_ */

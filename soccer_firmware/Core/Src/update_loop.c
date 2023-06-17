@@ -15,9 +15,9 @@ void update() {
   while(1) {
 
     motor_torque_en_p2(motorPorts[1], 1, 1);
-    HAL_Delay(10);
 
     if (usb_received) {
+      HAL_Delay(10);
 
       for (uint16_t i = 0; i < 6; i++) {
 
@@ -31,7 +31,7 @@ void update() {
           continue;
         }
 
-        uint16_t angle = usbRxBuffer[idx + 2] | (usbRxBuffer[idx + 3] << 8);
+        uint16_t angle = usbRxBuffer[motorId * 2] | (usbRxBuffer[motorId * 2 + 1] << 8);
 
         if(protocol == 1) {
           write_goal_position_p1(motorPorts[i], motorId, angle);
@@ -47,7 +47,6 @@ void update() {
 //      _motor_read_p1(&port1, 0xfe, 36, txBuf, 2);
       CDC_Transmit_FS((uint8_t *) txBuf, sizeof(txBuf));
 
-      HAL_Delay(10);
       usb_received = false;
     }
   }

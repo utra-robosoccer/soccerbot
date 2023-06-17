@@ -6,9 +6,9 @@ left_leg_motor_0:
   angle_min: 0
 left_leg_motor_1:
   id: 1
-  type: "ax12"
-  angle_zero: 150
-  angle_max: 300
+  type: "xl430"
+  angle_zero: 180
+  angle_max: 360
   angle_min: 0
 left_leg_motor_2:
   id: 2

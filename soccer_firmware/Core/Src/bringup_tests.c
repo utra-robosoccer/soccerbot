@@ -180,7 +180,7 @@ void test_motor_sweep2(MotorPort *port) {
  * Dynamixel 2.0
  * set baud rate to 57600bps
  */
-void test_ping2(GPIO_TypeDef *uart_port, uint16_t pin, UART_HandleTypeDef h) {
+void test_ping2(MotorPort *p) {
 	for(uint16_t i = 0; i < 6; i++)
 	{
 		  // setup message packet
@@ -189,7 +189,7 @@ void test_ping2(GPIO_TypeDef *uart_port, uint16_t pin, UART_HandleTypeDef h) {
 		  txBuf[1] = 0xFF;
 		  txBuf[2] = 0xFD;
 		  txBuf[3] = 0x00;
-		  txBuf[4] = 10; // Packet ID (0xFE = broadcast)
+		  txBuf[4] = 1; // Packet ID (0xFE = broadcast)
 		  txBuf[5] = 0x03; // length L
 		  txBuf[6] = 0x00; // length H
 		  txBuf[7] = 0x01; // ping instruction
@@ -200,18 +200,13 @@ void test_ping2(GPIO_TypeDef *uart_port, uint16_t pin, UART_HandleTypeDef h) {
 		  uint8_t rxBuf[14];
 		  for(uint8_t i = 0; i < sizeof(rxBuf); i++)rxBuf[i] = 0;
 
-		  // set write direction
-		  HAL_GPIO_WritePin(uart_port, pin, GPIO_PIN_SET);
-
-		  // Write to Motor on UART2
-		  HAL_UART_Transmit(&h, txBuf, sizeof(txBuf), 1000);
-
-		  // set read direction
-		  HAL_GPIO_WritePin(uart_port, pin, GPIO_PIN_RESET);
+		  HAL_GPIO_WritePin(p->pinPort, p->dirPinNum, BUFFER_WRITE);
+		  HAL_UART_Transmit(p->huart, txBuf, sizeof(txBuf), 1000);
+		  HAL_GPIO_WritePin(p->pinPort, p->dirPinNum, BUFFER_READ);
 
 
-		  while(HAL_UART_Receive(&h, rxBuf, sizeof(rxBuf), 100) != HAL_OK){
-
+		  // on oscilloscope measured 3ms response delay
+		  while(HAL_UART_Receive(p->huart, rxBuf, sizeof(rxBuf), 100) != HAL_OK){
 		  }
 
 		  HAL_GPIO_TogglePin(GPIOA, GREEN_LED_Pin);

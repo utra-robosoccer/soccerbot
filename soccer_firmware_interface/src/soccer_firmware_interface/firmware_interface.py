@@ -94,7 +94,7 @@ class FirmwareInterface:
             self.reconnect_serial_port()
 
             # [0xff, 0xff, angle1_lo, angle1_hi, angle2_lo ..., crc_lo, crc_hi]
-            bytes_to_write = [0xFF] * (18 * 2 + 2)
+            bytes_to_write = [0x0] * (18 * 2)
 
             for name, angle in zip(joint_state.name, joint_state.position):
                 id = self.motor_mapping[name]["id"]
@@ -111,14 +111,15 @@ class FirmwareInterface:
                 assert angle_final <= max_angle_radians
 
                 angle_final_bytes = round(angle_final / max_angle_radians * max_angle_bytes)
-                angle_final_bytes_2 = (angle_final_bytes >> 8) & 0xFF
                 angle_final_bytes_1 = angle_final_bytes & 0xFF
+                angle_final_bytes_2 = (angle_final_bytes >> 8) & 0xFF
 
                 assert id < 18
-                bytes_to_write[2 + id * 2] = angle_final_bytes_1
-                bytes_to_write[2 + id * 2 + 1] = angle_final_bytes_2
+                bytes_to_write[id * 2] = angle_final_bytes_1
+                bytes_to_write[id * 2 + 1] = angle_final_bytes_2
                 pass
 
+            print(bytes_to_write)
             self.serial.write(bytes_to_write)
 
         except Exception as ex:

@@ -218,30 +218,25 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+    update();
 
+    // test Dynamixel 2.0
+//    test_led_p2(&port2);
+//    test_motor_sweep2(&port2);
+//    test_ping2(&port2);
+//    update_motor_id_p2(&port2, 0x1, 0x3);
 //    _motor_get_status_p2(&port2, 11);
-//    update_motor_id_p2(&port2, 0xfe, 0x3);
 //    while(port2.dmaDoneReading == false){
 //    }
 //    port2.rxBuffer[0];
 //    HAL_Delay(100);
 
-     // test DYnamixel 2.0
-//    test_led_p2(&port2);
-    test_motor_sweep2(&port2);
-//    test_ping2()
+    // test Dynamixel 1.0
+//    test_motor_sweep1(&port1, 0x2);
+//    _motor_ping_p1(&port1, 0x2);
 
-
-//    test_motor_sweep1(&port3, 0x2);
-//    _motor_ping_p1(&port3, 0x2);
-//    id_motor_and_blink_led(2);
-//    dynamixel_test();
-//	  update();
-//	  HAL_GPIO_TogglePin(GPIOA, GREEN_LED_Pin);
-//	  HAL_Delay(10);
-
-//	  test_motor_sweep1(&port1, 0x1);
-//	  HAL_Delay(100);
+	  HAL_GPIO_TogglePin(GPIOA, GREEN_LED_Pin);
+	  HAL_Delay(100);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
