@@ -112,7 +112,6 @@ void read_motor_position(GPIO_TypeDef *uart_port, uint16_t pin, UART_HandleTypeD
 void test_motor_sweep1(MotorPort *port, uint8_t id) {
 	uint16_t angle = 0;
 	uint16_t count = 0;
-	uint8_t led = 0;
 	int16_t dir = 1;
 	motor_torque_en_p2(&port1, 10, 1);
 	motor_torque_en_p2(&port1, 11, 1);
@@ -194,7 +193,7 @@ void test_ping2(GPIO_TypeDef *uart_port, uint16_t pin, UART_HandleTypeDef h) {
 		  txBuf[5] = 0x03; // length L
 		  txBuf[6] = 0x00; // length H
 		  txBuf[7] = 0x01; // ping instruction
-		  uint16_t crc = HAL_CRC_Calculate(&hcrc, txBuf, 8);
+		  uint16_t crc = _update_crc(0, txBuf, 8);
 		  txBuf[8] = (crc & 0xFF); // crc L
 		  txBuf[9] = (crc >> 8) & 0xFF; // crc H
 

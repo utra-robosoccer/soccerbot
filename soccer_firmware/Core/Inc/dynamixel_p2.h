@@ -13,8 +13,11 @@
 
 void write_goal_position_p2(MotorPort *p, uint8_t id, uint16_t angle);
 void update_motor_led_p2(MotorPort *p, uint8_t id, uint8_t val);
+void update_motor_id_p2(MotorPort *p, uint8_t id, uint8_t new_id);
 void motor_torque_en_p2(MotorPort *p, uint8_t id, uint8_t val);
-void _motor_write_p2(MotorPort *p, uint8_t id, uint16_t addr, uint8_t* data, uint8_t dataLen);
+void _motor_write_p2(MotorPort *p, uint8_t id, uint16_t addr, uint8_t* data, uint16_t dataLen);
+void _motor_read_p2(MotorPort *p, uint8_t id, uint16_t addr, uint8_t* data, uint16_t dataLen);
+void _motor_get_status_p2(MotorPort *p, uint16_t packetLen);
 unsigned short _update_crc(unsigned short crc_accum, unsigned char *data_blk_ptr, unsigned short data_blk_size);
 
 

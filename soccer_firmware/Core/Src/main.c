@@ -44,8 +44,6 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
-CRC_HandleTypeDef hcrc;
-
 I2C_HandleTypeDef hi2c1;
 
 UART_HandleTypeDef huart4;
@@ -88,7 +86,6 @@ static void MX_USART2_UART_Init(void);
 static void MX_USART3_UART_Init(void);
 static void MX_USART6_UART_Init(void);
 static void MX_I2C1_Init(void);
-static void MX_CRC_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -104,8 +101,10 @@ void init_ports() {
     .pinPort        = USART1_DIR_GPIO_Port,
     .dirPinNum      = USART1_DIR_Pin,
     .dmaDoneReading = false,
+    .currMotor      = 0,
     .numMotors      = 1,
-    .motorIds       = {1}
+    .motorIds       = {0x2},
+    .protocol       = {1}
   };
 
   port2 = (MotorPort){
@@ -115,8 +114,10 @@ void init_ports() {
       .pinPort        = USART2_DIR_GPIO_Port,
       .dirPinNum      = USART2_DIR_Pin,
       .dmaDoneReading = false,
+      .currMotor      = 0,
       .numMotors      = 1,
-      .motorIds       = {1}
+      .motorIds       = {0x1},
+      .protocol       = {2}
     };
 
   port3 = (MotorPort){
@@ -126,7 +127,7 @@ void init_ports() {
       .pinPort        = USART3_DIR_GPIO_Port,
       .dirPinNum      = USART3_DIR_Pin,
       .dmaDoneReading = false,
-      .numMotors      = 1,
+      .numMotors      = 0,
       .motorIds       = {1}
     };
 
@@ -137,7 +138,7 @@ void init_ports() {
       .pinPort        = USART4_DIR_GPIO_Port,
       .dirPinNum      = USART4_DIR_Pin,
       .dmaDoneReading = false,
-      .numMotors      = 1,
+      .numMotors      = 0,
       .motorIds       = {1}
     };
 
@@ -148,7 +149,7 @@ void init_ports() {
       .pinPort        = USART5_DIR_GPIO_Port,
       .dirPinNum      = USART5_DIR_Pin,
       .dmaDoneReading = false,
-      .numMotors      = 1,
+      .numMotors      = 0,
       .motorIds       = {1}
     };
 
@@ -159,7 +160,7 @@ void init_ports() {
       .pinPort        = USART6_DIR_GPIO_Port,
       .dirPinNum      = USART6_DIR_Pin,
       .dmaDoneReading = false,
-      .numMotors      = 1,
+      .numMotors      = 0,
       .motorIds       = {1}
     };
 
@@ -209,7 +210,6 @@ int main(void)
   MX_USART3_UART_Init();
   MX_USART6_UART_Init();
   MX_I2C1_Init();
-  MX_CRC_Init();
   /* USER CODE BEGIN 2 */
   init_ports();
   /* USER CODE END 2 */
@@ -218,36 +218,29 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+
+//    _motor_get_status_p2(&port2, 11);
+//    update_motor_id_p2(&port2, 0xfe, 0x3);
+//    while(port2.dmaDoneReading == false){
+//    }
+//    port2.rxBuffer[0];
+//    HAL_Delay(100);
+
+     // test DYnamixel 2.0
 //    test_led_p2(&port2);
-//    test_motor_sweep2(&port2);
+    test_motor_sweep2(&port2);
+//    test_ping2()
+
+
+//    test_motor_sweep1(&port3, 0x2);
+//    _motor_ping_p1(&port3, 0x2);
 //    id_motor_and_blink_led(2);
 //    dynamixel_test();
 //	  update();
-	  HAL_GPIO_TogglePin(GPIOA, GREEN_LED_Pin);
-	  HAL_Delay(10);
-
-
-//	  test_motor_sweep1(&port1, 0x0);
-//	  for(uint8_t i=0; i < 10; i++) {
-//		  update_motor_led_p1(motorPorts[1], 0x1, 0);
-//		  HAL_Delay(100);
-//		  update_motor_led_p1(motorPorts[1], 0x1, 1);
-//		  HAL_Delay(100);
-//	  }
-
-	  test_motor_sweep1(&port1, 0x1);
-	  HAL_Delay(100);
-
-//	  _motor_ping_p1(&port3, 0x1);
+//	  HAL_GPIO_TogglePin(GPIOA, GREEN_LED_Pin);
 //	  HAL_Delay(10);
-//	  _motor_ping_p1(&port3, 0x2);
-//	  HAL_Delay(10);
-//	  _motor_ping_p1(&port3, 0x3);
-//	  HAL_Delay(10);
-	  test_ping2(port1.pinPort, port1.dirPinNum, *port1.huart);
-	  HAL_Delay(100);
-//	  _motor_ping_p1(&port2, 0xb);
-//	  HAL_Delay(100);
+
+//	  test_motor_sweep1(&port1, 0x1);
 //	  HAL_Delay(100);
     /* USER CODE END WHILE */
 
@@ -300,32 +293,6 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
-}
-
-/**
-  * @brief CRC Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_CRC_Init(void)
-{
-
-  /* USER CODE BEGIN CRC_Init 0 */
-
-  /* USER CODE END CRC_Init 0 */
-
-  /* USER CODE BEGIN CRC_Init 1 */
-
-  /* USER CODE END CRC_Init 1 */
-  hcrc.Instance = CRC;
-  if (HAL_CRC_Init(&hcrc) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN CRC_Init 2 */
-
-  /* USER CODE END CRC_Init 2 */
-
 }
 
 /**
@@ -477,7 +444,7 @@ static void MX_USART2_UART_Init(void)
 
   /* USER CODE END USART2_Init 1 */
   huart2.Instance = USART2;
-  huart2.Init.BaudRate = 1000000;
+  huart2.Init.BaudRate = 57600;
   huart2.Init.WordLength = UART_WORDLENGTH_8B;
   huart2.Init.StopBits = UART_STOPBITS_1;
   huart2.Init.Parity = UART_PARITY_NONE;

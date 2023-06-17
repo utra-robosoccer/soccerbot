@@ -22,7 +22,7 @@
 #include "usbd_cdc_if.h"
 
 /* USER CODE BEGIN INCLUDE */
-
+#include <stdbool.h>
 /* USER CODE END INCLUDE */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -268,7 +268,7 @@ static int8_t CDC_Receive_FS(uint8_t* Buf, uint32_t *Len)
   // keep things simple assume packet is good, no crc checking
   for(uint8_t i = 0; i < *Len; i++)usbRxBuffer[i] = Buf[i];
   usbRxBufferSize = *Len;
-  usb_received = 1;
+  usb_received = true;
 
   return (USBD_OK);
   /* USER CODE END 6 */

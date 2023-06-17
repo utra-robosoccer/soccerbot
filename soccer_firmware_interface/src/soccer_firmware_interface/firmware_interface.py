@@ -27,8 +27,10 @@ class FirmwareInterface:
     def reconnect_serial_port(self):
         if self.serial is None:
             # todo: loop through ACMs see which one connects
-            self.i = (self.i + 1) % 1 + 1
+            self.i = self.i % 2
+            self.i += 1
             self.serial = serial.Serial(f"/dev/ttyACM{self.i}")
+            rospy.loginfo(f"connected to: /dev/ttyACM{self.i}")
 
     def firmware_update_loop(self):
         while not rospy.is_shutdown():
@@ -91,6 +93,7 @@ class FirmwareInterface:
         try:
             self.reconnect_serial_port()
 
+            # [0xff, 0xff, angle1_lo, angle1_hi, angle2_lo ..., crc_lo, crc_hi]
             bytes_to_write = [0xFF] * (18 * 2 + 2)
 
             for name, angle in zip(joint_state.name, joint_state.position):

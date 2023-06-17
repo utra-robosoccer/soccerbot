@@ -33,7 +33,6 @@ extern "C" {
 /* USER CODE BEGIN Includes */
 #include <stdbool.h>
 
-extern CRC_HandleTypeDef hcrc;
 extern uint8_t usb_received;
 extern uint32_t usbRxBufferCount;
 extern uint32_t usbRxBufferSize;
@@ -50,13 +49,22 @@ typedef struct {
   uint8_t rxBuffer[100]; // 100bytes is enough to store packets from Dynamixel
   bool dmaDoneReading;
 
+  uint8_t currMotor;
   uint8_t numMotors; // how many motors connected to this uart port?
   uint8_t motorIds[10]; // support at most 10 motors
+  uint8_t protocol[10];
   uint16_t currMotorPositions[10];
 } MotorPort;
 
 extern MotorPort* motorPorts[6];
 extern MotorPort port1, port2, port3, port4, port5, port6;
+
+typedef enum
+{
+  BUFFER_READ = 0,
+  BUFFER_WRITE
+}Buffer_state;
+
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/

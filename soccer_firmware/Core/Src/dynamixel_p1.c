@@ -91,6 +91,8 @@ void _motor_write_p1(MotorPort *p, uint8_t id, uint8_t addr, uint8_t* data, uint
 
   // Write to Motor on UART
   HAL_UART_Transmit(p->huart, txBuf, packetLen, 1000);
+
+  // TODO: process status packet
 }
 
 
@@ -192,5 +194,4 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 		  motorPorts[i]->dmaDoneReading = true;
 	  }
   }
-
 }
