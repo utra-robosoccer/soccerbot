@@ -37,10 +37,16 @@ class Communication:
 
         for motor in self._motor_map:
             self._motor_map[motor]["value"] = 0.0
+        self._motor_angles = [0] * len(self._motor_map)
+        for motor in self._motor_map:
+            self._motor_angles[int(self._motor_map[motor]["id"])] = float(self._motor_map[motor]["offset"])
 
     def run(self):
         self._rx_thread.start()
-        rp.spin()
+        rr = rp.Rate(100)
+        while not rp.is_shutdown():
+            self._tx_thread._send_packet_to_mcu(self._tx_thread._vec2bytes(self._motor_angles))
+            rr.sleep()
 
     def joint_command_callback(self, joint_command):
         for motor_name, target in zip(joint_command.name, joint_command.position):
@@ -52,7 +58,7 @@ class Communication:
             motor_angles[int(self._motor_map[motor]["id"])] = np.rad2deg(
                 self._motor_map[motor]["value"] * float(self._motor_map[motor]["direction"])
             ) + float(self._motor_map[motor]["offset"])
-        self._tx_thread._send_packet_to_mcu(self._tx_thread._vec2bytes(motor_angles))
+        self._motor_angles = motor_angles
 
     def receive_callback(self, received_angles, received_imu):
         self._last_angles = received_angles
