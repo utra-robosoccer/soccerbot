@@ -1,12 +1,13 @@
 import os
 
 from soccer_common import Transformation
+from soccer_strategy.referee_2d import Referee2D
 from soccer_strategy.strategy.strategy_determine_side import StrategyDetermineSide
 
 os.environ["ROS_NAMESPACE"] = "/robot1"
 
 from unittest import TestCase
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 import numpy as np
 import rospy
@@ -380,3 +381,8 @@ class TestGameEngine2D(TestCase):
                             Utility.navigate_to_position_with_offset = MagicMock()
                             Utility.navigate_to_scoring_position(robot, ball_position, goal_position)
                             Utility.navigate_to_position_with_offset = navigate_to_position_with_offset_original
+
+    @patch("referee.Supervisor")
+    def test_2d_with_referee(self, referee):
+        referee2d = Referee2D()
+        pass
