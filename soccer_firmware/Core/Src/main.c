@@ -103,7 +103,7 @@ void init_ports() {
     .dmaDoneReading = false,
     .currMotor      = 0,
     .numMotors      = 1,
-    .motorIds       = {0x2},
+    .motorIds       = {2},
     .protocol       = {1}
   };
 
@@ -115,9 +115,9 @@ void init_ports() {
       .dirPinNum      = USART2_DIR_Pin,
       .dmaDoneReading = false,
       .currMotor      = 0,
-      .numMotors      = 1,
-      .motorIds       = {0x1},
-      .protocol       = {2}
+      .numMotors      = 2,
+      .motorIds       = {1, 1},
+      .protocol       = {2, 2}
     };
 
   port3 = (MotorPort){
@@ -171,6 +171,22 @@ void init_ports() {
   motorPorts[4] = &port5;
   motorPorts[5] = &port6;
 }
+
+void init_motors() {
+  // TODO: set motor position limits
+
+  // TODO: enable torques
+  motor_torque_en_p2(motorPorts[1], 1, 1);
+  motor_torque_en_p2(motorPorts[1], 3, 1);
+
+  // TODO: set PIDs
+
+  // TODO: response latency
+
+  // TODO: zero motors
+  // slowly bring motors to zero position
+}
+
 /* USER CODE END 0 */
 
 /**
@@ -212,6 +228,7 @@ int main(void)
   MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
   init_ports();
+  init_motors();
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -224,7 +241,9 @@ int main(void)
 //    test_led_p2(&port2);
 //    test_motor_sweep2(&port2);
 //    test_ping2(&port2);
+    motor_torque_en_p2(&port2, 0xfe, 0);
 //    update_motor_id_p2(&port2, 0x1, 0x3);
+    test_led_p2(&port2);
 //    _motor_get_status_p2(&port2, 11);
 //    while(port2.dmaDoneReading == false){
 //    }

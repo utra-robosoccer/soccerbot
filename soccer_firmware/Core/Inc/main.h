@@ -65,6 +65,8 @@ typedef enum
   BUFFER_WRITE
 }Buffer_state;
 
+void init_ports();
+void init_motors();
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
