@@ -19,6 +19,18 @@ void write_goal_position_p1(MotorPort *port, uint8_t id, uint16_t angle) {
   //TODO: handle status packet
 }
 
+
+/*
+ * Dynamixel 1.0
+ * https://emanual.robotis.com/docs/en/dxl/ax/ax-12a/
+ */
+void read_present_position_p1(MotorPort *port, uint8_t id) {
+  uint8_t dataLen = 2;
+  uint8_t addr = 36;
+  _motor_read_p1(port, id, addr, port->rxBuffer, dataLen);
+}
+
+
 void motor_torque_en_p1(MotorPort *p, uint8_t id, uint8_t val) {
   uint8_t data[1] = {val};
   uint16_t dataLen = 1;
@@ -49,19 +61,6 @@ void update_motor_id_p1(MotorPort* p, uint8_t new_id) {
   _motor_write_p1(p, 0xfe, addr, data, dataLen);
 }
 
-/*
- * trigger dma to read incoming data
- */
-void dma_rx_read_p1() {
-  // how does this work?
-}
-
-/*
- * when dma is done reading it will call this function
- */
-void dma_rx_complete_p1() {
-  // how does this work?
-}
 
 /*
  * Write to specified address. Will be used by most functions to interact with motors
@@ -116,6 +115,8 @@ void _motor_read_p1(MotorPort *p, uint8_t id, uint8_t addr, uint8_t* buf, uint8_
     checksum += txBuf[i];
   txBuf[7] = ~checksum;
 
+  p->dmaDoneReading = false;
+
   // set write direction
   HAL_GPIO_WritePin(p->pinPort, p->dirPinNum, GPIO_PIN_SET);
 
@@ -129,8 +130,9 @@ void _motor_read_p1(MotorPort *p, uint8_t id, uint8_t addr, uint8_t* buf, uint8_
   uint8_t packetLen = 6 + dataLen;
   HAL_UART_Receive_DMA(p->huart, rxBuf, packetLen);
 
-  //TODO: add timeout
-  while(p->dmaDoneReading == false){
+  uint32_t tLast = HAL_GetTick();
+  uint32_t TIMEOUT = 10; // milliseconds
+  while(p->dmaDoneReading == false && HAL_GetTick() - tLast < TIMEOUT){
   }
   p->dmaDoneReading = false;
 

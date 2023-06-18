@@ -18,21 +18,21 @@ void update()
   uint32_t lastTime = HAL_GetTick();
   while(1)
   {
-    if (usb_received)
+    if (usb_received) // when we receive USB packet, service it right away
     {
       command_motors();
       usb_received = false;
     }
 
-    if(HAL_GetTick() - lastTime > UPDATE_PERIOD)
+    if(HAL_GetTick() - lastTime > UPDATE_PERIOD) // send IMU/ANGLES periodically back to main computer
     {
-      uint8_t txBuf[100];
+      lastTime = HAL_GetTick();
+      uint8_t txBuf[18 * 2 + 6]; // 18 motors * 2 bytes each + 6 bytes for IMU
 
-      read_motors();
-      read_imu();
+      read_motors(txBuf);
+      read_imu(txBuf);
       CDC_Transmit_FS((uint8_t *) txBuf, sizeof(txBuf));
 
-      lastTime = HAL_GetTick();
     }
   }
 }
@@ -79,11 +79,40 @@ void command_motors() {
   }
 }
 
-void read_imu() {
+void read_imu(uint8_t *rxBuf) {
   //TODO: fill this out
 }
 
 
-void read_motors() {
-  //TODO: fill this out
+void read_motors(uint8_t *rxBuf) {
+  for (uint16_t i = 0; i < 6; i++) {// reset variables
+    motorPorts[i]->currMotor = 0;
+    motorPorts[i]->dmaDoneReading = false;
+    motorPorts[i]->readRequestSent = false;
+  }
+
+  while(1)
+  {
+    bool doneWithAllMotors = true;
+    for (uint16_t i = 0; i < 2; i++)
+    {
+      uint8_t idx = motorPorts[i]->currMotor;
+      uint8_t motorId = motorPorts[i]->motorIds[idx];
+      uint8_t protocol = motorPorts[i]->protocol[idx];
+
+      if (idx >= motorPorts[i]->numMotors){ // skip port if all motors already serviced
+        continue;
+      } else {
+        doneWithAllMotors = false;
+      }
+
+      if(protocol == 1) read_present_position_p1(motorPorts[i], motorId);
+      else              read_present_position_p1(motorPorts[i], motorId);
+      rxBuf[motorId * 2] = motorPorts[i]->rxBuffer[0];
+      rxBuf[motorId * 2 + 1] = motorPorts[i]->rxBuffer[1];
+      motorPorts[i]->currMotor = idx + 1;
+    }
+
+    if(doneWithAllMotors) return; // all motors serviced, peace out
+  }
 }

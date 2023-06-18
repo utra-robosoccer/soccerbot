@@ -251,7 +251,7 @@ int main(void)
 //    HAL_Delay(100);
 
     // test Dynamixel 1.0
-//    test_motor_sweep1(&port1, 0x2);
+    test_motor_sweep1(&port1, 0x2);
 //    _motor_ping_p1(&port1, 0x2);
 
 	  HAL_GPIO_TogglePin(GPIOA, GREEN_LED_Pin);

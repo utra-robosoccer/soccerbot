@@ -51,10 +51,11 @@ class FirmwareInterface:
                 # IMU pitch (rad)               2 bytes
                 # IMU roll (rad)                2 bytes
                 # (optional CRC)   1 byte
-                data_l = self.serial.read()
-                data_h = self.serial.read()
-                angle = data_l[0] | (data_h[0] << 8)
-                print(data_h[0], data_l[0], angle)
+                # data_l = self.serial.read()
+                # data_h = self.serial.read()
+                # angle = data_l[0] | (data_h[0] << 8)
+                # print(data_h[0], data_l[0], angle)
+                print(self.serial.read(size=42))
                 continue
 
                 # Publish the Joint State
