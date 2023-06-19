@@ -235,15 +235,23 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    update();
+//    update();
 
     // test Dynamixel 2.0
-//    test_led_p2(&port2);
+//    test_led_p2(&port2, 0x2);
 //    test_motor_sweep2(&port2);
 //    test_ping2(&port2);
     motor_torque_en_p2(&port2, 0xfe, 0);
+    update_baud_rate_p2(&port2, 0x1, 3);
 //    update_motor_id_p2(&port2, 0x1, 0x3);
-    test_led_p2(&port2);
+//    test_led_p2(&port2);
+    read_motor_present_position(&port2, 0x1);
+//    update_motor_id_p2(&port2, 0x1, 0x2);
+//    read_motor_id(&port2);
+    uint8_t a1 = port2.rxBuffer[9];
+    uint8_t a2 = port2.rxBuffer[10];
+    uint8_t a3 = port2.rxBuffer[11];
+    uint8_t a4 = port2.rxBuffer[12];
 //    _motor_get_status_p2(&port2, 11);
 //    while(port2.dmaDoneReading == false){
 //    }
@@ -251,7 +259,7 @@ int main(void)
 //    HAL_Delay(100);
 
     // test Dynamixel 1.0
-    test_motor_sweep1(&port1, 0x2);
+//    test_motor_sweep1(&port1, 0x2);
 //    _motor_ping_p1(&port1, 0x2);
 
 	  HAL_GPIO_TogglePin(GPIOA, GREEN_LED_Pin);
@@ -458,7 +466,7 @@ static void MX_USART2_UART_Init(void)
 
   /* USER CODE END USART2_Init 1 */
   huart2.Instance = USART2;
-  huart2.Init.BaudRate = 57600;
+  huart2.Init.BaudRate = 1000000;
   huart2.Init.WordLength = UART_WORDLENGTH_8B;
   huart2.Init.StopBits = UART_STOPBITS_1;
   huart2.Init.Parity = UART_PARITY_NONE;

@@ -67,10 +67,10 @@ void dynamixel_test() {
  * Dynamixel 2.0
  * set baud rate to 57600bps
  */
-void test_led_p2(MotorPort *port) {
+void test_led_p2(MotorPort *port, uint8_t id) {
   for(uint16_t i = 0; i < 6; i++)
   {
-      update_motor_led_p2(port, 0x1, i%2);
+      update_motor_led_p2(port, id, i%2);
       HAL_Delay(100);
   }
 }

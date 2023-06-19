@@ -50,6 +50,25 @@ void update_motor_id_p2(MotorPort *p, uint8_t id, uint8_t new_id) {
   _motor_write_p2(p, id, addr, data, dataLen);
 }
 
+void update_baud_rate_p2(MotorPort *p, uint8_t id, uint8_t rate) {
+  uint8_t data[1] = {rate};
+  uint16_t dataLen = 1;
+  uint16_t addr = 8;
+  _motor_write_p2(p, id, addr, data, dataLen);
+}
+
+void read_motor_id(MotorPort * p) {
+  uint16_t dataLen = 1;
+  uint16_t addr = 7;
+  _motor_read_p2(p, 0x2, addr, dataLen);
+}
+
+void read_motor_present_position(MotorPort * p, uint8_t id) {
+  uint16_t dataLen = 4;
+  uint16_t addr = 132;
+  _motor_read_p2(p, id, addr, dataLen);
+}
+
 /*
  * Write to specified address. Will be used by most functions to interact with motors
  * https://emanual.robotis.com/docs/en/dxl/protocol2/
@@ -92,10 +111,51 @@ void _motor_write_p2(MotorPort *p, uint8_t id, uint16_t addr, uint8_t* data, uin
  * Write to specified address. Will be used by most functions to interact with motors
  * https://emanual.robotis.com/docs/en/dxl/protocol2/
  */
-void _motor_read_p2(MotorPort *p, uint8_t id, uint16_t addr, uint8_t* data, uint16_t dataLen) {
-  //TODO: implement
+void _motor_read_p2(MotorPort *p, uint8_t id, uint16_t addr, uint16_t dataLen) {
+  // setup message packet
+  uint8_t packetLen = 14;
+  uint8_t txBuf[50]; //set size to something much bigger than we will need
+  txBuf[0] = 0xFF;
+  txBuf[1] = 0xFF;
+  txBuf[2] = 0xFD;
+  txBuf[3] = 0x00;
+  txBuf[4] = id; // Packet ID (don't use 0xFE = broadcast, doesn't work for read instruction)
+
+  uint8_t length = 7;
+  txBuf[5] = length & 0xff; // length
+  txBuf[6] = (length >> 8) & 0xff;
+
+  txBuf[7] = 0x02; // read instruction
+
+  txBuf[8] = addr & 0xff;   // address
+  txBuf[9] = (addr>>8) & 0xff;
+
+  txBuf[10] = dataLen & 0xff; // data length
+  txBuf[11] = (dataLen >> 8) & 0xff;
+
+  uint16_t crc = _update_crc(0, txBuf, 12);
+  txBuf[12] = crc & 0xff;
+  txBuf[13] = (crc >> 8) & 0xff;
+
+  HAL_GPIO_WritePin(p->pinPort, p->dirPinNum, BUFFER_WRITE);
+
+  HAL_UART_Transmit(p->huart, txBuf, packetLen, 1000);
+
+  HAL_GPIO_WritePin(p->pinPort, p->dirPinNum, BUFFER_READ);
+
+  p->rxPacketLen = 11 + dataLen;
+  HAL_UART_Receive_DMA(p->huart, p->rxBuffer, p->rxPacketLen);
+
+  uint32_t tLast = HAL_GetTick();
+  uint32_t TIMEOUT = 10; // milliseconds
+  while(p->dmaDoneReading == false && HAL_GetTick() - tLast < TIMEOUT){
+  }
+  p->dmaDoneReading = false;
 }
 
+void wait_for_dma_read_p2(MotorPort *p) {
+
+}
 
 /*
  * Read status after a Write command has been issued

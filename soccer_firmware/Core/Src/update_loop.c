@@ -27,7 +27,7 @@ void update()
     if(HAL_GetTick() - lastTime > UPDATE_PERIOD) // send IMU/ANGLES periodically back to main computer
     {
       lastTime = HAL_GetTick();
-      uint8_t txBuf[18 * 2 + 6]; // 18 motors * 2 bytes each + 6 bytes for IMU
+      uint8_t txBuf[18 * 2 + 6] = {0}; // 18 motors * 2 bytes each + 6 bytes for IMU
 
       read_motors(txBuf);
       read_imu(txBuf);
