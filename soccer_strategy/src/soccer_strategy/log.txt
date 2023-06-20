@@ -1,0 +1,28 @@
+[0000.000|0000.000] Info: Simulation will run as fast as possible, real time waiting times will be minimal.
+[0000.014|0000.000] Info: Spawned RED_PLAYER_1 SimpleBez1 on port 10001 at halfTimeStartingPose: translation (-1 -3.15 0.33), rotation (0 0 1 1.57).
+[0000.014|0000.000] Info: Spawned RED_PLAYER_2 SimpleBez1 on port 10002 at halfTimeStartingPose: translation (-4 -3.15 0.33), rotation (0 0 1 1.57).
+[0000.014|0000.000] Info: Spawned RED_PLAYER_3 SimpleBez1 on port 10003 at halfTimeStartingPose: translation (-1 3.15 0.33), rotation (0 0 1 -1.57).
+[0000.014|0000.000] Info: Spawned RED_PLAYER_4 SimpleBez1 on port 10004 at halfTimeStartingPose: translation (-4 3.15 0.33), rotation (0 0 1 -1.57).
+[0000.014|0000.000] Info: Spawned BLUE_PLAYER_1 SimpleBez1 on port 10021 at halfTimeStartingPose: translation (4 -3.15 0.33), rotation (0 0 1 1.571592653589793).
+[0000.014|0000.000] Info: Spawned BLUE_PLAYER_2 SimpleBez1 on port 10022 at halfTimeStartingPose: translation (1 -3.15 0.33), rotation (0 0 1 1.571592653589793).
+[0000.015|0000.000] Info: Spawned BLUE_PLAYER_3 SimpleBez1 on port 10023 at halfTimeStartingPose: translation (1 3.15 0.33), rotation (0 0 1 4.711592653589793).
+[0000.015|0000.000] Info: Spawned BLUE_PLAYER_4 SimpleBez1 on port 10024 at halfTimeStartingPose: translation (4 3.15 0.33), rotation (0 0 1 4.711592653589793).
+[0000.015|0000.000] Warning: Could not connect to GameController at localhost:8750: [Errno 111] Connection refused. Retrying (1/10)...
+[0001.018|0000.000] Info: Connected to GameControllerSimulator at localhost:8750.
+[0001.020|0000.000] Info: Game type is NORMAL.
+[0001.020|0000.000] Info: Red team is "UTRA 1", playing on left side.
+[0001.020|0000.000] Info: Blue team is "UTRA 2", playing on right side.
+[0001.020|0000.000] Info: Sending 1:SIDE_LEFT:16 to GameController.
+[0001.020|0000.000] Info: Waiting for GameController to answer to 1:SIDE_LEFT:16.
+[0001.221|0000.000] Info: Waiting for GameController to answer to 1:SIDE_LEFT:16.
+[0001.423|0000.000] Info: New state received from GameController: STATE_INITIAL.
+[0001.423|0000.000] Info: State has successfully changed to INITIAL
+[0001.423|0000.000] Info: New secondary state received from GameController: STATE_NORMAL, phase 0.
+[0001.425|0000.000] Info: Regular start: Waiting 5 seconds (real-time) before going to READY
+[0001.425|0000.000] Info: Kick-off is red.
+[0001.430|0000.000] Info: Moved ball out of the field temporarily
+[0001.430|0000.000] Info: Ball not in play, will be kicked by a player from the red team.
+[0001.430|0000.000] Info: Sending 4:KICKOFF:16 to GameController.
+[0001.430|0000.000] Info: Waiting for GameController to answer to 4:KICKOFF:16.
+[0001.634|0000.000] Info: Waiting for GameController to answer to 4:KICKOFF:16.
+[0001.834|0000.000] Info: Start animation Recording
