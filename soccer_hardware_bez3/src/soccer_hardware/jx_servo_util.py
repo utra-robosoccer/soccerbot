@@ -14,7 +14,7 @@ class CMD_HEADS(Enum):
 
 
 class CMDS(Enum):
-    POSITION, SPEED, PID_COEFF, PID_STATE, SPEED_FILTER_WIDTH, MAX_DRIVE, INVALID = range(7)
+    POSITION, SPEED, PID_COEFF, PID_STATE, SPEED_FILTER_WIDTH, MAX_DRIVE, SERVO_IDX, INVALID = range(8)
 
 
 class RWS(Enum):
@@ -114,7 +114,6 @@ def uart_transact(ser, B, cmd, rw, preflush=True):
         # empty_frames = 0
 
         time_rx_packet0 = None
-        _saw_master_start = False
         poll_iters = 0
         while uart_state != UART_STATES.ENDED:
             # # examine timeout condition
@@ -128,36 +127,21 @@ def uart_transact(ser, B, cmd, rw, preflush=True):
             for ri, r in enumerate(r0):
                 r_head = r & 0xC0
                 r_data = r & 0x3F
-                if not _saw_master_start and r_head == CMD_HEADS.MASTER_START.value:
-                    # sometimes corrupted frames will transmit a master start while we're collecting data, reject these attempts to move backwards in the state machine
-                    uart_state = UART_STATES.MASTER_HEADED
-                    _saw_master_start = True
+                if r_head == CMD_HEADS.SERVO_START.value:
                     time_rx_packet0 = time.time() # start ticking on read frames
-                elif r_head == CMD_HEADS.SERVO_START.value:
                     servo_idx = r_data
                     if servo_idx not in servo_frames:
                         servo_frames[servo_idx] = [False, b""]
                         uart_state = UART_STATES.SERVO_HEADED
                 elif r_head == CMD_HEADS.END.value:
-                    if uart_state == UART_STATES.MASTER_HEADED:
-                        if rw == RWS.WRITE:
-                            uart_state = UART_STATES.ENDED
-                            break
-                        elif rw == RWS.READ:
-                            uart_state = UART_STATES.MASTER_ENDED
-
-                    elif uart_state == UART_STATES.SERVO_HEADED:
+                    if uart_state == UART_STATES.SERVO_HEADED:
                         uart_state = UART_STATES.SERVO_ENDED
 
                 # record data
-                if _saw_master_start:
-                    rbyte = struct.pack(
-                        "B", r
-                    )  # interestingly (read: annoyingly) looping over bytestring makes ints. see stackoverflow.com/questions/14267452
-                    if uart_state in (UART_STATES.MASTER_HEADED, UART_STATES.MASTER_ENDED):
-                        master_frame += rbyte
-                    else:
-                        servo_frames[servo_idx][1] += rbyte
+                rbyte = struct.pack(
+                    "B", r
+                )  # interestingly (read: annoyingly) looping over bytestring makes ints. see stackoverflow.com/questions/14267452
+                servo_frames[servo_idx][1] += rbyte
 
                 if uart_state == UART_STATES.SERVO_ENDED:
                     # CRC check.
@@ -171,7 +155,7 @@ def uart_transact(ser, B, cmd, rw, preflush=True):
                 if uart_state == UART_STATES.SERVO_ENDED and (
                     (servo_idx == MAX_JX_SERVO_IDX and servo_frames[servo_idx][0])
                     or len(servo_frames) == N_SERVOS
-                ) and _saw_master_start: # allow both seeing the CRC-validated last servo frame, or all of the servo frames (even if the last is corrupted) as the exit condition
+                ): # allow both seeing the CRC-validated last servo frame, or all of the servo frames (even if the last is corrupted) as the exit condition
                     # exit no matter what, even if there are more bytes to be read, which is pretty weird unless we're a full frame behind
                     uart_state = UART_STATES.ENDED
                     break
@@ -184,9 +168,9 @@ def uart_transact(ser, B, cmd, rw, preflush=True):
                 print(rw, (uart_state == UART_STATES.START or time_rx_packet0 is None))
                 break
 
-            if uart_state in (UART_STATES.START, UART_STATES.MASTER_HEADED):
+            if uart_state in (UART_STATES.START,):
                 expect_len = len(Astr) + 1 - len(master_frame)
-            elif uart_state in (UART_STATES.SERVO_HEADED, UART_STATES.MASTER_ENDED, UART_STATES.SERVO_ENDED):
+            elif uart_state in (UART_STATES.SERVO_HEADED, UART_STATES.SERVO_ENDED):
                 w = CMD_WIDTHS[cmd.value] + 2
                 l = len(servo_frames[servo_idx]) if servo_idx in servo_frames else 0
                 expect_len = max(0, (w - (l % w)))  # both full and empty frames will trigger a full frame read
@@ -254,14 +238,21 @@ if __name__ == '__main__':
 
     MIN_POT=0x27E
     MAX_POT=0xE64
-    with serial.Serial(sys.argv[1], 115200, timeout=0) as ser:
+
+    with serial.Serial(sys.argv[1], int(3E5), timeout=0) as ser:
+
+        if len(sys.argv) > 2:
+            try:
+                uart_transact(ser, [int(sys.argv[2])], CMDS.SERVO_IDX, RWS.WRITE)
+            except ValueError:
+                pass
         print(uart_transact(ser, [], CMDS.POSITION, RWS.READ))
         uart_transact(ser, [4000, 1, 90] * 13, CMDS.PID_COEFF, RWS.WRITE, preflush=True)  # push initial PID gains
-        uart_transact(ser, [0x27E] * 1, CMDS.POSITION, RWS.WRITE, preflush=True) # * (MAX_JX_SERVO_IDX + 1), CMDS.POSITION, RWS.WRITE)
+        uart_transact(ser, [0x27E] * 13, CMDS.POSITION, RWS.WRITE, preflush=True) # * (MAX_JX_SERVO_IDX + 1), CMDS.POSITION, RWS.WRITE)
         print(uart_transact(ser, [], CMDS.POSITION, RWS.READ))
         input()
         t0 = time.time()
-        T0 = 6
+        T0 = 0.3
         while True:
             uart_transact(ser, [((-np.cos((time.time() - t0) / T0 * 2 * np.pi) / 2 + 0.5) * (MAX_POT-MIN_POT) + MIN_POT).astype(np.uint16)] * (MAX_JX_SERVO_IDX+1), CMDS.POSITION, RWS.WRITE)
             print(uart_transact(ser, [], CMDS.POSITION, RWS.READ))
