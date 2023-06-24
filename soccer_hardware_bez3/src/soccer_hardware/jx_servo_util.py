@@ -14,7 +14,7 @@ class CMD_HEADS(Enum):
 
 
 class CMDS(Enum):
-    POSITION, SPEED, PID_COEFF, PID_STATE, SPEED_FILTER_WIDTH, MAX_DRIVE, SERVO_IDX, INVALID = range(8)
+    POSITION, SPEED, PID_COEFF, PID_STATE, SPEED_FILTER_WIDTH, MAX_DRIVE, SERVO_IDX, ADC_SHUNT, ADC_TEMP, ADC_VREFINT, INVALID = range(11)
 
 
 class RWS(Enum):
@@ -30,7 +30,7 @@ class UART_STATES(Enum):
 # EXPECT_BYTE_RX_TIME = 25e-6  # based on servo microcontroller nominal wait width per byte plus margin
 # EXPECT_BYTE_TX_TIME = 25e-6
 
-CMD_WIDTHS = [2, 2, 7, 6, 2]
+CMD_WIDTHS = [2, 2, 6, 6, 1, 2, 1, 1, 2, 2]
 SILENT_READ_TIMEOUT = 20E-3 # time to give the kernel to stall waiting to push out bytes or pull in bytes before giving up, assuming we've missed the frame read
 # worst-case catch-all for any corruption that fails the state machine, so we can clean the read buffer and start from fresh.
 READ_POLL_RATE = 1E-4 # Make this << OS tick rate, so we can pull from the read buffer with minimal delay when the data is available (without tight-looping and hogging CPU)
@@ -141,7 +141,8 @@ def uart_transact(ser, B, cmd, rw, preflush=True):
                 rbyte = struct.pack(
                     "B", r
                 )  # interestingly (read: annoyingly) looping over bytestring makes ints. see stackoverflow.com/questions/14267452
-                servo_frames[servo_idx][1] += rbyte
+                if uart_state in (UART_STATES.SERVO_HEADED, UART_STATES.SERVO_ENDED):
+                    servo_frames[servo_idx][1] += rbyte
 
                 if uart_state == UART_STATES.SERVO_ENDED:
                     # CRC check.
@@ -239,7 +240,7 @@ if __name__ == '__main__':
     MIN_POT=0x27E
     MAX_POT=0xE64
 
-    with serial.Serial(sys.argv[1], int(3E5), timeout=0) as ser:
+    with serial.Serial(sys.argv[1], int(230400), timeout=0) as ser:
 
         if len(sys.argv) > 2:
             try:
@@ -247,12 +248,16 @@ if __name__ == '__main__':
             except ValueError:
                 pass
         print(uart_transact(ser, [], CMDS.POSITION, RWS.READ))
+        print(uart_transact(ser, [], CMDS.ADC_SHUNT, RWS.READ))
+        print(uart_transact(ser, [], CMDS.ADC_TEMP, RWS.READ))
+        print(uart_transact(ser, [], CMDS.ADC_VREFINT, RWS.READ))
+        input()
         uart_transact(ser, [4000, 1, 90] * 13, CMDS.PID_COEFF, RWS.WRITE, preflush=True)  # push initial PID gains
         uart_transact(ser, [0x27E] * 13, CMDS.POSITION, RWS.WRITE, preflush=True) # * (MAX_JX_SERVO_IDX + 1), CMDS.POSITION, RWS.WRITE)
         print(uart_transact(ser, [], CMDS.POSITION, RWS.READ))
         input()
         t0 = time.time()
-        T0 = 0.3
+        T0 = 4 
         while True:
             uart_transact(ser, [((-np.cos((time.time() - t0) / T0 * 2 * np.pi) / 2 + 0.5) * (MAX_POT-MIN_POT) + MIN_POT).astype(np.uint16)] * (MAX_JX_SERVO_IDX+1), CMDS.POSITION, RWS.WRITE)
             print(uart_transact(ser, [], CMDS.POSITION, RWS.READ))
