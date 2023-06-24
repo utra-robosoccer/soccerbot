@@ -496,9 +496,14 @@ class TestObjectLocalization(TestCase):
 
     def test_robot_detection(self):
         src_path = os.path.dirname(os.path.realpath(__file__))
-        test_path = src_path + "/../../../soccer_object_detection/images/simulation"
-        download_dataset("https://drive.google.com/uc?id=11nN58j8_PBoLNRAzOEdk7fMe1UK1diCc", folder_path=test_path)
+        # test_path = src_path + "/../../../soccer_object_detection/images/simulation"
+        test_path = src_path + "/../../../soccer_object_detection/images/reality"
 
+        # a small set of images from UTRA google drive (simulation images)
+        # download_dataset("https://drive.google.com/uc?id=11nN58j8_PBoLNRAzOEdk7fMe1UK1diCc", folder_path=test_path)
+
+        # a small set of images from UTRA google drive (real world images)
+        download_dataset("https://drive.google.com/file/d/18TuO5Q4r45ZZqDdKirt2dhzQPREWA1QA", folder_path=test_path)
         rospy.init_node("test")
 
         Camera.reset_position = MagicMock()
@@ -545,10 +550,17 @@ class TestObjectLocalization(TestCase):
             if n.pub_boundingbox.publish.call_args is not None:
                 bounding_boxes = n.pub_boundingbox.publish.call_args[0][0]
                 do.objectDetectorCallback(bounding_boxes)
+                print(bounding_boxes)
+
+            file_name_short, file_extension = os.path.splitext(file_name)
+            with open(os.path.join(f"{test_path}/labels", file_name.replace(file_extension, ".txt"))) as f:
+                lines = f.readlines()
 
             if "DISPLAY" in os.environ:
                 mat = cvbridge.imgmsg_to_cv2(n.pub_detection.publish.call_args[0][0])
                 cv2.imshow("Image", mat)
+                print(mat.shape)
                 cv2.waitKey()
-
+                cv2.imshow("img", img)
+                cv2.waitKey()
         cv2.destroyAllWindows()

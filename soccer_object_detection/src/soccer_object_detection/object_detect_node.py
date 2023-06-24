@@ -112,7 +112,7 @@ class ObjectDetectionNode(object):
         self.camera.reset_position(timestamp=msg.header.stamp)
 
         # cover horizon to help robot ignore things outside field
-        cover_horizon_up_threshold = rospy.get_param("cover_horizon_up_threshold", 30)
+        cover_horizon_up_threshold = rospy.get_param("cover_horizon_up_threshold", 250)
         h = max(self.camera.calculateHorizonCoverArea() - cover_horizon_up_threshold, 0)
 
         if image is not None:

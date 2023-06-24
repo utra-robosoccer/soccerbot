@@ -49,7 +49,6 @@ class TestObjectDetection(TestCase):
         src_path = os.path.dirname(os.path.realpath(__file__))
         test_path = src_path + "/../../images/simulation"
         download_dataset("https://drive.google.com/uc?id=11nN58j8_PBoLNRAzOEdk7fMe1UK1diCc", folder_path=test_path)
-
         rospy.init_node("test")
 
         Camera.reset_position = MagicMock()
@@ -156,7 +155,7 @@ class TestObjectDetection(TestCase):
         annotation_path = "/home/robosoccer/hdd/dataset/dataV2/TORSO-21/simulation/train/annotations.yaml"
         annotation_pickle = "/home/robosoccer/hdd/dataset/dataV2/TORSO-21/simulation/train/annotation.pkl"
         image_path = "/home/robosoccer//hdd/dataset/dataV2/TORSO-21/simulation/train/images"
-
+        image_path = "/home/robosoccer//hdd/dataset/dataV2/TORSO-21/reality/train/images"
         if not os.path.exists(annotation_pickle):
             with open(annotation_path) as f:
                 print("Pickling annotation, will take a long time")
