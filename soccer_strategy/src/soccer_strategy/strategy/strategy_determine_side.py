@@ -9,6 +9,7 @@ import rospy
 import tf
 
 from soccer_common import Transformation
+from soccer_common.utils import wrapTo2Pi
 from soccer_msgs.msg import GameState
 from soccer_strategy.robot import Robot
 from soccer_strategy.strategy.strategy import Strategy, get_back_up
@@ -65,12 +66,12 @@ class StrategyDetermineSide(Strategy):
             determine_side_timeout = 0 if rospy.get_param("skip_determine_side", False) else 10
             if (rospy.Time.now() - self.time_strategy_started) > rospy.Duration(determine_side_timeout):
                 rospy.logwarn("Timeout error, cannot determine side, determining side as from default")
-                self.determine_side_initial(current_robot, game_state)
+                self.determine_side_initial(current_robot, friendly_team, game_state)
                 self.determine_role(current_robot, friendly_team)
                 current_robot.status = Robot.Status.READY
                 current_robot.localized = True
             elif footprint_to_goal_post is not None:
-                side_determined = self.determine_side(current_robot, footprint_to_goal_post, game_state)
+                side_determined = self.determine_side(current_robot, friendly_team, footprint_to_goal_post, game_state)
                 if not side_determined:
                     return
 
@@ -87,8 +88,18 @@ class StrategyDetermineSide(Strategy):
             current_robot.status = Robot.Status.READY
             self.complete = True
 
-    def determine_side_initial(self, current_robot, game_state: GameState):
-        team_id = int(os.getenv("ROBOCUP_TEAM_ID", 16))
+    def flip_player_sides(self, team_info):
+        for player in team_info["players"].values():
+            translation = player["reentryStartingPose"]["translation"]
+            translation[0] = -translation[0]
+            translation[1] = -translation[1]
+            player["reentryStartingPose"]["translation"] = translation
+            rotation = player["reentryStartingPose"]["rotation"]
+            rotation[3] = wrapTo2Pi(rotation[3] + np.pi)
+            player["reentryStartingPose"]["rotation"] = rotation
+
+    def determine_side_initial(self, current_robot, friendly_team, game_state: GameState):
+        team_id = friendly_team.id
         if team_id == 16:
             file = "team_1.json"
         else:
@@ -98,6 +109,9 @@ class StrategyDetermineSide(Strategy):
 
         with open(config_folder_path) as json_file:
             team_info = json.load(json_file)
+
+        if team_id != 16:
+            self.flip_player_sides(team_info)
 
         translation = team_info["players"][str(current_robot.robot_id)]["reentryStartingPose"]["translation"]
         rotation = team_info["players"][str(current_robot.robot_id)]["reentryStartingPose"]["rotation"]
@@ -107,12 +121,12 @@ class StrategyDetermineSide(Strategy):
         rospy.loginfo(f"Robot Position Determined, Determining Roles, Position: {current_robot.position}")
         current_robot.reset_initial_position()
 
-    def determine_side(self, current_robot, footprint_to_goal_post: Transformation, game_state: GameState) -> bool:
+    def determine_side(self, current_robot, friendly_team, footprint_to_goal_post: Transformation, game_state: GameState) -> bool:
 
         if footprint_to_goal_post.position[0] < 0:
             return False
 
-        team_id = int(os.getenv("ROBOCUP_TEAM_ID", 16))
+        team_id = friendly_team.id
         if team_id == 16:
             file = "team_1.json"
         else:
@@ -122,6 +136,9 @@ class StrategyDetermineSide(Strategy):
 
         with open(config_folder_path) as json_file:
             team_info = json.load(json_file)
+
+        if team_id != 16:
+            self.flip_player_sides(team_info)
 
         # Rulebook http://humanoid.robocup.org/wp-content/uploads/RC-HL-2022-Rules-Changes-Marked-3.pdf
         FIELD_LENGTH = 9

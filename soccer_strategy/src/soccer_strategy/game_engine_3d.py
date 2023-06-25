@@ -19,6 +19,73 @@ from soccer_strategy.strategy.strategy_stationary import StrategyStationary
 from soccer_strategy.team import Team
 
 
+def decide_next_strategy(strategy, gameState: GameState, this_robot):
+    """
+    Take information from the gamestate obtained by the game controller and decide what strategy based on the game controller
+    Etc: If the game just started, it is in initial state, then the robot is in determining side.
+
+    :return:
+    """
+
+    new_strategy = StrategyStationary
+    current_strategy = type(strategy)
+
+    if gameState.gameState == GameState.GAMESTATE_INITIAL:
+        new_strategy = StrategyDetermineSide
+    elif gameState.gameState == GameState.GAMESTATE_READY:
+        if this_robot.status in [
+            Robot.Status.DISCONNECTED,
+            Robot.Status.PENALIZED,
+        ]:
+            new_strategy = StrategyStationary
+        elif this_robot.status == Robot.Status.DETERMINING_SIDE:
+            new_strategy = StrategyDetermineSide
+        else:
+            if rospy.get_param("skip_ready_strategy", False):
+                new_strategy = StrategyDummy
+            else:
+                new_strategy = StrategyReady
+    elif gameState.gameState == GameState.GAMESTATE_SET:
+        if this_robot.status == Robot.Status.PENALIZED:
+            new_strategy = StrategyStationary
+        else:
+            new_strategy = StrategySet
+    elif gameState.gameState == GameState.GAMESTATE_FINISHED:
+        new_strategy = StrategyFinished
+    elif gameState.gameState == GameState.GAMESTATE_PLAYING:
+        if gameState.secondaryState == GameState.STATE_NORMAL:
+            if this_robot.status == Robot.Status.PENALIZED:
+                new_strategy = StrategyStationary
+            elif this_robot.status == Robot.Status.DETERMINING_SIDE:
+                new_strategy = StrategyDetermineSide
+            elif current_strategy == StrategyDetermineSide and strategy.complete:
+                new_strategy = StrategyReady
+            elif current_strategy == StrategyReady and strategy.complete:
+                new_strategy = StrategyDummy
+            elif gameState.hasKickOff:
+                new_strategy = StrategyDummy
+            else:
+                new_strategy = StrategyDummy
+        elif gameState.secondaryState == GameState.STATE_DIRECT_FREEKICK:
+            new_strategy = StrategyFreekick
+        elif gameState.secondaryState == GameState.STATE_INDIRECT_FREEKICK:
+            new_strategy = StrategyFreekick
+        elif gameState.secondaryState == GameState.STATE_CORNER_KICK:
+            new_strategy = StrategyFreekick
+        elif gameState.secondaryState == GameState.STATE_GOAL_KICK:
+            new_strategy = StrategyFreekick
+        elif gameState.secondaryState == GameState.STATE_THROW_IN:
+            new_strategy = StrategyFreekick
+        elif gameState.secondaryState == GameState.STATE_PENALTYKICK:
+            new_strategy = StrategyPenaltykick
+        elif gameState.secondaryState == GameState.STATE_PENALTYSHOOT:
+            new_strategy = StrategyPenaltykick
+    else:
+        raise Exception("No strategy covered by the current states")
+
+    return new_strategy
+
+
 class GameEngine3D:
     """
     Main game engine used by the actual robot and for webot's simulation
@@ -50,10 +117,9 @@ class GameEngine3D:
                     )
                 )
         self.team1 = Team(robots)
-        self.team1.strategy = StrategyDetermineSide()
         self.team2 = Team([])
-        self.team2.strategy = StrategyDetermineSide()
         self.ball = Ball()
+        self.strategy = StrategyDetermineSide()
 
         # GameState
         self.gameState = GameState()
@@ -90,73 +156,6 @@ class GameEngine3D:
         elif self.this_robot.status in [Robot.Status.DISCONNECTED, Robot.Status.PENALIZED]:
             self.this_robot.status = Robot.Status.DETERMINING_SIDE
 
-    def decide_strategy(self):
-        """
-        Take information from the gamestate obtained by the game controller and decide what strategy based on the game controller
-        Etc: If the game just started, it is in initial state, then the robot is in determining side.
-
-        :return:
-        """
-
-        new_strategy = StrategyStationary
-        current_strategy = type(self.team1.strategy)
-
-        if self.gameState.gameState == GameState.GAMESTATE_INITIAL:
-            new_strategy = StrategyDetermineSide
-        elif self.gameState.gameState == GameState.GAMESTATE_READY:
-            if self.this_robot.status in [
-                Robot.Status.DISCONNECTED,
-                Robot.Status.PENALIZED,
-            ]:
-                new_strategy = StrategyStationary
-            elif self.this_robot.status == Robot.Status.DETERMINING_SIDE:
-                new_strategy = StrategyDetermineSide
-            else:
-                if rospy.get_param("skip_ready_strategy", False):
-                    new_strategy = StrategyDummy
-                else:
-                    new_strategy = StrategyReady
-        elif self.gameState.gameState == GameState.GAMESTATE_SET:
-            if self.this_robot.status == Robot.Status.PENALIZED:
-                new_strategy = StrategyStationary
-            else:
-                new_strategy = StrategySet
-        elif self.gameState.gameState == GameState.GAMESTATE_FINISHED:
-            new_strategy = StrategyFinished
-        elif self.gameState.gameState == GameState.GAMESTATE_PLAYING:
-            if self.gameState.secondaryState == GameState.STATE_NORMAL:
-                if self.this_robot.status == Robot.Status.PENALIZED:
-                    new_strategy = StrategyStationary
-                elif self.this_robot.status == Robot.Status.DETERMINING_SIDE:
-                    new_strategy = StrategyDetermineSide
-                elif current_strategy == StrategyDetermineSide and self.team1.strategy.complete:
-                    new_strategy = StrategyReady
-                elif current_strategy == StrategyReady and self.team1.strategy.complete:
-                    new_strategy = StrategyDummy
-                elif self.gameState.hasKickOff:
-                    new_strategy = StrategyDummy
-                else:
-                    new_strategy = StrategyDummy
-            elif self.gameState.secondaryState == GameState.STATE_DIRECT_FREEKICK:
-                new_strategy = StrategyFreekick
-            elif self.gameState.secondaryState == GameState.STATE_INDIRECT_FREEKICK:
-                new_strategy = StrategyFreekick
-            elif self.gameState.secondaryState == GameState.STATE_CORNER_KICK:
-                new_strategy = StrategyFreekick
-            elif self.gameState.secondaryState == GameState.STATE_GOAL_KICK:
-                new_strategy = StrategyFreekick
-            elif self.gameState.secondaryState == GameState.STATE_THROW_IN:
-                new_strategy = StrategyFreekick
-            elif self.gameState.secondaryState == GameState.STATE_PENALTYKICK:
-                new_strategy = StrategyPenaltykick
-            elif self.gameState.secondaryState == GameState.STATE_PENALTYSHOOT:
-                new_strategy = StrategyPenaltykick
-        else:
-            raise Exception("No strategy covered by the current states")
-
-        if type(self.team1.strategy) != new_strategy:
-            self.team1.strategy = new_strategy()
-
     # run loop
     def run(self):
         """
@@ -166,15 +165,17 @@ class GameEngine3D:
         while not rospy.is_shutdown():
 
             # Decide what strategy to run
-            self.decide_strategy()
+            new_strategy = decide_next_strategy(strategy=self.strategy, gameState=self.gameState, this_robot=self.this_robot)
+            if type(self.strategy) != new_strategy:
+                self.strategy = new_strategy()
 
             # Log information about the strategy and run the strategy in the step_strategy function
             penalize_str = f"(P{self.gameState.penalty} - {self.gameState.secondsTillUnpenalized})" if self.gameState.penalty != 0 else ""
             print(
-                f"\033[1mRobot {self.robot_id} Running {str(type(self.team1.strategy))} ({self.team1.strategy.iteration}) | Game State: {GameEngine3D.GAMESTATE_LOOKUP[self.gameState.gameState]}, Secondary State: {GameEngine3D.SECONDARY_STATE_LOOKUP[self.gameState.secondaryState]}, Secondary State Mode: {GameEngine3D.SECONDARY_STATE_MODE_LOOKUP[self.gameState.secondaryStateMode]} {penalize_str} [{rospy.Time.now().secs}.{rospy.Time.now().nsecs}]\033[0m"
+                f"\033[1mRobot {self.robot_id} Running {str(type(self.strategy))} ({self.strategy.iteration}) | Game State: {GameEngine3D.GAMESTATE_LOOKUP[self.gameState.gameState]}, Secondary State: {GameEngine3D.SECONDARY_STATE_LOOKUP[self.gameState.secondaryState]}, Secondary State Mode: {GameEngine3D.SECONDARY_STATE_MODE_LOOKUP[self.gameState.secondaryStateMode]} {penalize_str} [{rospy.Time.now().secs}.{rospy.Time.now().nsecs}]\033[0m"
             )
             self.team1.log()
-            self.team1.strategy.step_strategy(self.team1, self.team2, self.gameState)
+            self.strategy.step_strategy(self.team1, self.team2, self.gameState)
 
             # Sleep for a determined period of time decided by the strategy
-            rospy.sleep(self.team1.strategy.update_frequency)
+            rospy.sleep(self.strategy.update_frequency)

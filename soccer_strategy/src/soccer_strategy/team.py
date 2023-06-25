@@ -56,10 +56,11 @@ class Team:
         self.observed_ball: Optional[Ball] = None
         self.field_side = FieldSide.NORMAL
         self.is_first_half = False
-        self.strategy = None
         self.formation = None
         self.formations = DEFAULT_FORMATIONS
         self.enemy_goal_position = [4.5, 0]
+
+        self.id = int(os.getenv("ROBOCUP_TEAM_ID", 16))
 
     def flip_positions(self):
         """

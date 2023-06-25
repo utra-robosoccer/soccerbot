@@ -3,6 +3,7 @@ import threading
 
 from soccer_common import Transformation
 from soccer_strategy.communication.game_controller_receiver import GameStateReceiver
+from soccer_strategy.game_engine_2d_with_referee import GameEngine2DWithReferee
 from soccer_strategy.referee_2d import Referee2D
 from soccer_strategy.strategy.strategy_determine_side import StrategyDetermineSide
 
@@ -389,7 +390,7 @@ class TestGameEngine2D(TestCase):
         rospy.init_node("test")
         os.chdir("../../../external/hlvs_webots/controllers/referee")
 
-        g = GameEngine2D(display=self.display, team_1_strategy=StrategyDummy, team_2_strategy=StrategyDummy, game_duration=6)
+        g = GameEngine2DWithReferee(display=self.display, team_1_strategy=StrategyDummy, team_2_strategy=StrategyDummy, game_duration=6)
 
         # Referee
         referee2d = Referee2D(game_engine_2d=g)
@@ -412,10 +413,13 @@ class TestGameEngine2D(TestCase):
                 game_controller_receivers_threads[(team, player)] = threading.Thread(target=game_controller_receivers[(team, player)].receive_forever)
                 game_controller_receivers_threads[(team, player)].start()
 
-        # friendly_points, opponent_points = g.run()
-        # print(f"Friendly: {friendly_points}, opponent: {opponent_points}")
+        # Referee thread
+        referee_main_loop_thread = threading.Thread(target=referee2d.main_loop)
+        referee_main_loop_thread.start()
+        game_controller_receivers_threads["referee"] = referee_main_loop_thread
 
-        referee2d.main_loop()
+        # Game running
+        g.run()
 
         for gcrt in game_controller_receivers_threads.values():
             gcrt.join()

@@ -39,6 +39,9 @@ class RobotControlled2D(RobotControlled):
     def __index__(self):
         return self.robot_id, self.team
 
+    def __hash__(self):
+        return hash((self.robot_id, self.team))
+
     def kick(self, kick_velocity):
         """
         Set's a kick velocity for the ball
