@@ -36,7 +36,7 @@ class GameEngine2DWithReferee(GameEngine2D):
                     team_id = 5
                 else:
                     team_id = 16
-                robot_id = robot.robot_id + 1
+                robot_id = robot.robot_id
 
                 self.game_state_subscribers[(team, robot)] = rospy.Subscriber(
                     f"/team_{team_id}/robot{robot_id}/gamestate", GameState, self.gamestate_callback_robot, robot
