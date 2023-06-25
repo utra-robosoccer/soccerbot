@@ -90,7 +90,7 @@ class GameEngine2DWithReferee(GameEngine2D):
             self.scene.update(self.team1.robots + self.team2.robots, self.ball)
             self.last_display_update_time = rospy.Time.now()
 
-            print(1, f"Physics Update Time {t1 - t_start} Strategy Update Time {t2 - t1}")
+            rospy.loginfo_throttle(5, f"Physics Update Time {t1 - t_start} Strategy Update Time {t2 - t1}")
 
         return
 
