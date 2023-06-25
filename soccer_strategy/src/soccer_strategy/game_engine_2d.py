@@ -1,4 +1,6 @@
 import copy
+import json
+import os
 import random
 from typing import Optional
 
@@ -14,6 +16,7 @@ from soccer_strategy.game_engine_2d_scene import Scene
 from soccer_strategy.robot import Robot
 from soccer_strategy.robot_controlled_2d import RobotControlled2D
 from soccer_strategy.strategy.strategy import Strategy
+from soccer_strategy.strategy.strategy_determine_side import flip_player_sides
 from soccer_strategy.strategy.strategy_dummy import StrategyDummy
 from soccer_strategy.strategy.strategy_stationary import StrategyStationary
 from soccer_strategy.team import Team
@@ -35,6 +38,7 @@ class GameEngine2D:
         team_1: Optional[Team] = None,
         team_2: Optional[Team] = None,
         game_duration: float = 20,
+        set_to_ready_location=False,
     ):
         """
 
@@ -123,6 +127,23 @@ class GameEngine2D:
         if team_2 is not None:
             self.team2 = team_2
         self.team2.id = 5
+
+        if set_to_ready_location:
+            for team, file in zip([self.team1, self.team2], ["team_1.json", "team_2.json"]):
+
+                file_path = os.path.dirname(os.path.abspath(__file__))
+                config_folder_path = f"{file_path}/../../config/{file}"
+
+                with open(config_folder_path) as json_file:
+                    team_info = json.load(json_file)
+
+                if team == self.team2:
+                    flip_player_sides(team_info)
+
+                for robot, robot_json in zip(team.robots, team_info["players"].values()):
+                    trans = np.array(robot_json["reentryStartingPose"]["translation"])
+                    angle = robot_json["reentryStartingPose"]["rotation"][3]
+                    robot.position = np.array([trans[0], trans[1], angle])
 
         self.robot_strategies = {}
         for robot in self.team1.robots:

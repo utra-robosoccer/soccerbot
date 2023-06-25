@@ -16,6 +16,17 @@ from soccer_strategy.strategy.strategy import Strategy, get_back_up
 from soccer_strategy.team import Team
 
 
+def flip_player_sides(team_info):
+    for player in team_info["players"].values():
+        translation = player["reentryStartingPose"]["translation"]
+        translation[0] = -translation[0]
+        translation[1] = -translation[1]
+        player["reentryStartingPose"]["translation"] = translation
+        rotation = player["reentryStartingPose"]["rotation"]
+        rotation[3] = wrapTo2Pi(rotation[3] + np.pi)
+        player["reentryStartingPose"]["rotation"] = rotation
+
+
 class StrategyDetermineSide(Strategy):
     """
     Initial strategy to determine the position and side of the robot
@@ -88,16 +99,6 @@ class StrategyDetermineSide(Strategy):
             current_robot.status = Robot.Status.READY
             self.complete = True
 
-    def flip_player_sides(self, team_info):
-        for player in team_info["players"].values():
-            translation = player["reentryStartingPose"]["translation"]
-            translation[0] = -translation[0]
-            translation[1] = -translation[1]
-            player["reentryStartingPose"]["translation"] = translation
-            rotation = player["reentryStartingPose"]["rotation"]
-            rotation[3] = wrapTo2Pi(rotation[3] + np.pi)
-            player["reentryStartingPose"]["rotation"] = rotation
-
     def determine_side_initial(self, current_robot, friendly_team, game_state: GameState):
         team_id = friendly_team.id
         if team_id == 16:
@@ -111,7 +112,7 @@ class StrategyDetermineSide(Strategy):
             team_info = json.load(json_file)
 
         if team_id != 16:
-            self.flip_player_sides(team_info)
+            flip_player_sides(team_info)
 
         translation = team_info["players"][str(current_robot.robot_id)]["reentryStartingPose"]["translation"]
         rotation = team_info["players"][str(current_robot.robot_id)]["reentryStartingPose"]["rotation"]

@@ -390,7 +390,9 @@ class TestGameEngine2D(TestCase):
         rospy.init_node("test")
         os.chdir("../../../external/hlvs_webots/controllers/referee")
 
-        g = GameEngine2DWithReferee(display=self.display, team_1_strategy=StrategyDummy, team_2_strategy=StrategyDummy, game_duration=6)
+        g = GameEngine2DWithReferee(
+            display=self.display, team_1_strategy=StrategyDummy, team_2_strategy=StrategyDummy, game_duration=6, set_to_ready_location=True
+        )
 
         # Referee
         referee2d = Referee2D(game_engine_2d=g)
