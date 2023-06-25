@@ -15,7 +15,7 @@ class GameEngine2DWithReferee(GameEngine2D):
     """
 
     PHYSICS_UPDATE_INTERVAL = 0.1
-    DISPLAY_UPDATE_INTERVAL = 0.1
+    DISPLAY_UPDATE_INTERVAL = 0.01
 
     GAMESTATE_LOOKUP = {getattr(GameState, key): key for key in dir(GameState) if key.startswith("GAMESTATE")}
     SECONDARY_STATE_LOOKUP = {getattr(GameState, key): key for key in dir(GameState) if key.startswith("STATE")}
@@ -87,16 +87,10 @@ class GameEngine2DWithReferee(GameEngine2D):
 
             t2 = time.time()
 
-            if self.display and rospy.Time.now() - self.last_display_update_time > rospy.Duration(GameEngine2D.DISPLAY_UPDATE_INTERVAL):
-                t2_5 = time.time()
+            self.scene.update(self.team1.robots + self.team2.robots, self.ball)
+            self.last_display_update_time = rospy.Time.now()
 
-                self.scene.update(self.team1.robots + self.team2.robots, self.ball)
-                self.last_display_update_time = rospy.Time.now()
-
-                t3 = time.time()
-                print(f"Display update took {t3 - t2} seconds")
-
-            rospy.loginfo_throttle(1, f"Physics Update Time {t1 - t_start} Strategy Update Time {t2 - t1}")
+            print(1, f"Physics Update Time {t1 - t_start} Strategy Update Time {t2 - t1}")
 
         return
 
