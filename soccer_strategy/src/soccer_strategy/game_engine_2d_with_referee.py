@@ -1,3 +1,5 @@
+import time
+
 import rospy
 
 from soccer_msgs.msg import GameState
@@ -12,12 +14,12 @@ class GameEngine2DWithReferee(GameEngine2D):
     2D simualtor for the game engine, used for testing strategy quickly without interfacing with webots
     """
 
+    PHYSICS_UPDATE_INTERVAL = 0.1
+    DISPLAY_UPDATE_INTERVAL = 0.1
+
     GAMESTATE_LOOKUP = {getattr(GameState, key): key for key in dir(GameState) if key.startswith("GAMESTATE")}
     SECONDARY_STATE_LOOKUP = {getattr(GameState, key): key for key in dir(GameState) if key.startswith("STATE")}
     SECONDARY_STATE_MODE_LOOKUP = {getattr(GameState, key): key for key in dir(GameState) if key.startswith("MODE")}
-
-    PHYSICS_UPDATE_INTERVAL = 0.25  # 4 Times per second
-    DISPLAY_UPDATE_INTERVAL = 0.5  # Every 5 seconds
 
     def __init__(self, *args, **kwargs):
 
@@ -47,8 +49,13 @@ class GameEngine2DWithReferee(GameEngine2D):
         if self.display:
             for i in range(10):
                 self.scene.update(self.team1.robots + self.team2.robots, self.ball)
+
         while not rospy.is_shutdown():
+            t_start = time.time()
+
             self.update_estimated_physics(self.team1.robots + self.team2.robots, self.ball)
+
+            t1 = time.time()
 
             for robot in self.team1.robots:
                 strategy = self.robot_strategies[(robot.team, robot.robot_id)]
@@ -78,15 +85,19 @@ class GameEngine2DWithReferee(GameEngine2D):
                     robot.active = False
                     self.individual_robot_last_strategy_update_time[robot] = rospy.Time.now()
 
+            t2 = time.time()
+
             if self.display and rospy.Time.now() - self.last_display_update_time > rospy.Duration(GameEngine2D.DISPLAY_UPDATE_INTERVAL):
+                t2_5 = time.time()
+
                 self.scene.update(self.team1.robots + self.team2.robots, self.ball)
                 self.last_display_update_time = rospy.Time.now()
 
-            # Step the ros time manually
-            rospy.rostime._rostime_current += rospy.Duration(1)
+                t3 = time.time()
+                print(f"Display update took {t3 - t2} seconds")
 
-        rospy.set_param("/use_sim_time", False)
-        rospy.rostime._rostime_current = None
+            rospy.loginfo_throttle(1, f"Physics Update Time {t1 - t_start} Strategy Update Time {t2 - t1}")
+
         return
 
     def gamestate_callback_robot(self, gameState: GameState, robot: RobotControlled2D):
