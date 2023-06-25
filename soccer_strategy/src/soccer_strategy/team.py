@@ -1,3 +1,4 @@
+import copy
 import enum
 import os
 from typing import Optional
@@ -57,7 +58,7 @@ class Team:
         self.field_side = FieldSide.NORMAL
         self.is_first_half = False
         self.formation = None
-        self.formations = DEFAULT_FORMATIONS
+        self.formations = copy.deepcopy(DEFAULT_FORMATIONS)
         self.enemy_goal_position = [4.5, 0]
 
         self.id = int(os.getenv("ROBOCUP_TEAM_ID", 16))

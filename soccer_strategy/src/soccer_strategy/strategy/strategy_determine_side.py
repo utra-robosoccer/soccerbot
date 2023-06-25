@@ -139,7 +139,7 @@ class StrategyDetermineSide(Strategy):
             team_info = json.load(json_file)
 
         if team_id != 16:
-            self.flip_player_sides(team_info)
+            flip_player_sides(team_info)
 
         # Rulebook http://humanoid.robocup.org/wp-content/uploads/RC-HL-2022-Rules-Changes-Marked-3.pdf
         FIELD_LENGTH = 9
