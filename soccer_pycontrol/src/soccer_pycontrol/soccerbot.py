@@ -145,6 +145,14 @@ class Soccerbot:
             output_limits=(-1.57, 1.57),
         )
 
+        self.walking_pid_roll = PID(
+            Kp=rospy.get_param("walking_roll_Kp", 0.8),
+            Kd=rospy.get_param("walking_roll_Kd", 0.0),
+            Ki=rospy.get_param("walking_roll_Ki", 0.0005),
+            setpoint=rospy.get_param("walking_roll_setpoint", -0.01),
+            output_limits=(-1.57, 1.57),
+        )
+
         self.get_ready_rate = rospy.get_param("get_ready_rate", 0.02)
 
         #: Odom pose at start of path, reset everytime a new path is created
@@ -546,10 +554,15 @@ class Soccerbot:
         if pose is None:
             return
 
-        [_, pitch, _] = pose.orientation_euler
+        [roll, pitch, _] = pose.orientation_euler
         F = self.walking_pid.update(pitch)
         self.configuration_offset[Joints.LEFT_LEG_3] = F
         self.configuration_offset[Joints.RIGHT_LEG_3] = F
+
+        G = self.walking_pid_roll.update(roll)
+        self.configuration_offset[Joints.LEFT_LEG_2] = G
+        self.configuration_offset[Joints.RIGHT_LEG_2] = -G
+
         return F
 
     def apply_imu_feedback_standing(self, pose: Transformation):
@@ -574,6 +587,7 @@ class Soccerbot:
         """
 
         self.walking_pid.reset()
+        self.walking_pid_roll.reset()
         self.standing_pid.reset()
 
     def apply_head_rotation(self):

@@ -37,9 +37,11 @@ class Navigator:
         pb.resetDebugVisualizerCamera(cameraDistance=0.5, cameraYaw=0, cameraPitch=0, cameraTargetPosition=[0, 0, 0.25])
         pb.setGravity(0, 0, -9.81)
         pb.configureDebugVisualizer(pb.COV_ENABLE_GUI, 0)
-        self.ramp = Ramp("plane.urdf", (0, 0, 0), (0, 0, 0), lateralFriction=0.9, spinningFriction=0.9, rollingFriction=0.0)
 
         self.soccerbot = Soccerbot(Transformation(), useFixedBase=False, useCalibration=useCalibration)
+
+        self.ramp = Ramp("plane.urdf", (0, 0, 0), (0, 0, 0), lateralFriction=0.9, spinningFriction=0.9, rollingFriction=0.0)
+
         self.terminate_walk = False
 
         self.t = 0
@@ -98,8 +100,10 @@ class Navigator:
         :param single_trajectory: If set to true, then the software will exit after a single trajectory is completed
         :return: True if the robot succeeds navigating to the goal, False if it doesn't reach the goal and falls
         """
+        logging_id = pb.startStateLogging(pb.STATE_LOGGING_GENERIC_ROBOT, "/tmp/simulation_record.bullet", physicsClientId=self.client_id)
 
         if self.soccerbot.robot_path.duration() == 0:
+            pb.stopStateLogging(logging_id)
             return True
 
         self.t = -2
@@ -124,10 +128,12 @@ class Navigator:
             [roll, pitch, yaw] = self.soccerbot.get_imu().orientation_euler
             if pitch > angle_threshold:
                 print("Fallen Back")
+                pb.stopStateLogging(logging_id)
                 return False
 
             elif pitch < -angle_threshold:
                 print("Fallen Front")
+                pb.stopStateLogging(logging_id)
                 return False
 
             pb.setJointMotorControlArray(
@@ -140,4 +146,6 @@ class Navigator:
             self.t = self.t + Navigator.PYBULLET_STEP
             if self.real_time:
                 time.sleep(Navigator.PYBULLET_STEP)
+
+        pb.stopStateLogging(logging_id)
         return True
