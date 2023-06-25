@@ -422,6 +422,7 @@ class TestGameEngine2D(TestCase):
 
         # Game running
         g.run()
+        rospy.spin()
 
         for gcrt in game_controller_receivers_threads.values():
             gcrt.join()

@@ -5,8 +5,10 @@ from unittest.mock import MagicMock, patch
 
 import controller
 import numpy as np
+import rospy
 from geometry import distance2
 from referee import Referee
+from rosgraph_msgs.msg import Clock
 
 from soccer_strategy.game_engine_2d import GameEngine2D
 from soccer_strategy.robot_controlled import RobotControlled
@@ -62,6 +64,23 @@ class Referee2D(Referee):
         self.game.ball_position = self.game_engine_2d.ball.position
 
         self.game.ball_translation = Referee2D.BallTranslation2D(game_engine_2d)
+
+        self.progress_ms_original = self.sim_time.progress_ms
+        self.sim_time.progress_ms = self.progress_milliseconds_and_publish_clock
+
+        self.clock_publisher = rospy.Publisher("/clock", Clock, queue_size=1)
+
+    def progress_milliseconds_and_publish_clock(self, milliseconds):
+        self.progress_ms_original(milliseconds)
+
+        ms = self.sim_time.get_ms()
+
+        msg = Clock()
+        msg.clock.secs = int(ms // 1000)
+        msg.clock.nsecs = int((ms % 1000) * 1e6)
+
+        self.clock_publisher.publish(msg)
+        pass
 
     def list_player_solids(self, *args, **kwargs):
         pass
