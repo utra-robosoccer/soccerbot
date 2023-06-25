@@ -12,6 +12,7 @@ from rosgraph_msgs.msg import Clock
 
 from soccer_strategy.game_engine_2d import GameEngine2D
 from soccer_strategy.robot_controlled import RobotControlled
+from soccer_strategy.robot_controlled_2d import RobotControlled2D
 
 GAME_INTERRUPTIONS = {
     "DIRECT_FREEKICK": "direct free kick",
@@ -40,6 +41,13 @@ class Referee2D(Referee):
         def setSFVec3f(self, target_location):
             self.game_engine_2d.ball.position = np.array([target_location[0], target_location[1]])
 
+    class MockSolid:
+        def __init__(self, robot_game_engine_2d: RobotControlled2D):
+            self.robot_game_engine_2d = robot_game_engine_2d
+
+        def getPosition(self):
+            return [self.robot_game_engine_2d.position[0], self.robot_game_engine_2d.position[1]]
+
     def __init__(self, game_engine_2d: GameEngine2D):
         os.system("/bin/bash -c 'killall python3 || echo 'No Python Executables running''")
         os.system("/bin/bash -c 'killall /usr/bin/java || echo 'No Java Executables running''")
@@ -67,6 +75,21 @@ class Referee2D(Referee):
 
         self.progress_ms_original = self.sim_time.progress_ms
         self.sim_time.progress_ms = self.progress_milliseconds_and_publish_clock
+
+        for team in [self.red_team, self.blue_team]:
+            for number, player in team.players.items():
+                if team.color == "red":
+                    team_game_engine_2d = self.game_engine_2d.team1
+                else:
+                    team_game_engine_2d = self.game_engine_2d.team2
+
+                robot_game_engine_2d = team_game_engine_2d.robots[int(number) - 1]
+                player["solids"] = [
+                    Referee2D.MockSolid(robot_game_engine_2d),
+                    Referee2D.MockSolid(robot_game_engine_2d),
+                    Referee2D.MockSolid(robot_game_engine_2d),
+                    Referee2D.MockSolid(robot_game_engine_2d),
+                ]  # TODO use the 2 corners
 
         self.clock_publisher = rospy.Publisher("/clock", Clock, queue_size=1)
 
