@@ -102,9 +102,9 @@ void init_ports() {
     .dirPinNum      = USART1_DIR_Pin,
     .dmaDoneReading = false,
     .currMotor      = 0,
-    .numMotors      = 1,
-    .motorIds       = {2},
-    .protocol       = {1}
+    .numMotors      = 0,
+    .motorIds       = {7, 8, 9},
+    .protocol       = {1, 1, 1}
   };
 
   port2 = (MotorPort){
@@ -115,9 +115,9 @@ void init_ports() {
       .dirPinNum      = USART2_DIR_Pin,
       .dmaDoneReading = false,
       .currMotor      = 0,
-      .numMotors      = 2,
-      .motorIds       = {1, 1},
-      .protocol       = {2, 2}
+      .numMotors      = 3,
+      .motorIds       = {13, 14, 15},
+      .protocol       = {1, 1, 1}
     };
 
   port3 = (MotorPort){
@@ -176,8 +176,12 @@ void init_motors() {
   // TODO: set motor position limits
 
   // TODO: enable torques
-  motor_torque_en_p2(motorPorts[1], 1, 1);
-  motor_torque_en_p2(motorPorts[1], 3, 1);
+//  motor_torque_en_p2(motorPorts[1], 4, 1);
+//  HAL_Delay(10);
+//  motor_torque_en_p2(motorPorts[1], 5, 1);
+//  HAL_Delay(10);
+//  motor_torque_en_p2(motorPorts[1], 6, 1);
+//  HAL_Delay(10);
 
   // TODO: set PIDs
 
@@ -235,23 +239,23 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-//    update();
+    update();
 
     // test Dynamixel 2.0
-//    test_led_p2(&port2, 0x2);
+    test_led_p2(&port2, 0x6);
 //    test_motor_sweep2(&port2);
 //    test_ping2(&port2);
-    motor_torque_en_p2(&port2, 0xfe, 0);
-    update_baud_rate_p2(&port2, 0x1, 3);
+//    motor_torque_en_p2(&port2, 0xfe, 0);
+//    update_baud_rate_p2(&port2, 0x1, 3);
 //    update_motor_id_p2(&port2, 0x1, 0x3);
 //    test_led_p2(&port2);
-    read_motor_present_position(&port2, 0x1);
+//    read_motor_present_position(&port2, 0x1);
 //    update_motor_id_p2(&port2, 0x1, 0x2);
 //    read_motor_id(&port2);
-    uint8_t a1 = port2.rxBuffer[9];
-    uint8_t a2 = port2.rxBuffer[10];
-    uint8_t a3 = port2.rxBuffer[11];
-    uint8_t a4 = port2.rxBuffer[12];
+//    uint8_t a1 = port2.rxBuffer[9];
+//    uint8_t a2 = port2.rxBuffer[10];
+//    uint8_t a3 = port2.rxBuffer[11];
+//    uint8_t a4 = port2.rxBuffer[12];
 //    _motor_get_status_p2(&port2, 11);
 //    while(port2.dmaDoneReading == false){
 //    }

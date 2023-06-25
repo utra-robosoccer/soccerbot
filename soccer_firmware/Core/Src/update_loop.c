@@ -24,16 +24,18 @@ void update()
       usb_received = false;
     }
 
-    if(HAL_GetTick() - lastTime > UPDATE_PERIOD) // send IMU/ANGLES periodically back to main computer
-    {
-      lastTime = HAL_GetTick();
-      uint8_t txBuf[18 * 2 + 6] = {0}; // 18 motors * 2 bytes each + 6 bytes for IMU
-
-      read_motors(txBuf);
-      read_imu(txBuf);
-      CDC_Transmit_FS((uint8_t *) txBuf, sizeof(txBuf));
-
-    }
+//    if(HAL_GetTick() - lastTime > UPDATE_PERIOD) // send IMU/ANGLES periodically back to main computer
+//    {
+//      lastTime = HAL_GetTick();
+//      uint8_t txBuf[18 * 2 + 6] = {0}; // 18 motors * 2 bytes each + 6 bytes for IMU
+//
+//      read_motors(txBuf);
+//      read_imu(txBuf);
+//      CDC_Transmit_FS((uint8_t *) txBuf, sizeof(txBuf));
+//
+//    }
+    HAL_GPIO_TogglePin(GPIOA, GREEN_LED_Pin);
+    HAL_Delay(100);
   }
 }
 

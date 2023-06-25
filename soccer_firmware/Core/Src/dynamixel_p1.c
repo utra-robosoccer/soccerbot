@@ -63,6 +63,30 @@ void update_motor_id_p1(MotorPort* p, uint8_t new_id) {
 
 
 /*
+ * Dynamixel 1.0
+ * https://emanual.robotis.com/docs/en/dxl/ax/ax-12a/
+ */
+//void update_cw_angle_limit_p1(MotorPort* p, uint8_t new_id) {
+//  uint8_t data[1] = {new_id};
+//  uint8_t dataLen = 2;
+//  uint8_t addr = ;
+//  _motor_write_p1(p, 0xfe, addr, data, dataLen);
+//}
+//
+//
+///*
+// * Dynamixel 1.0
+// * https://emanual.robotis.com/docs/en/dxl/ax/ax-12a/
+// */
+//void update_ccw_angle_limit_p1(MotorPort* p, uint8_t new_id) {
+//  uint8_t data[1] = {new_id};
+//  uint8_t dataLen = 2;
+//  uint8_t addr = ;
+//  _motor_write_p1(p, 0xfe, addr, data, dataLen);
+//}
+
+
+/*
  * Write to specified address. Will be used by most functions to interact with motors
  * https://emanual.robotis.com/docs/en/dxl/protocol1/
  */

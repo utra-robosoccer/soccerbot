@@ -1,3 +1,5 @@
+import importlib
+import logging
 import math
 import os
 import time
@@ -34,6 +36,8 @@ def test_send_command():
 def test_firmware_interface():
     rospy.init_node("test")
 
+    importlib.reload(logging)
+
     with open((os.path.dirname(os.path.abspath(__file__)) + "/../../config/motor_types.yaml")) as f:
         param_info = yaml.safe_load(f)
         rosparam.upload_params("motor_types", param_info)
@@ -46,9 +50,9 @@ def test_firmware_interface():
 
     for i in range(50000):
         j = JointState()
-        j.name = ["left_leg_motor_2", "left_leg_motor_1", "left_leg_motor_3"]
-        j.position = [math.sin(i / 180 * math.pi) * 2, math.cos(i / 180 * math.pi) * 2, 0]
-        # j.position = [-math.pi, -math.pi]
+        j.name = ["right_leg_motor_3", "right_leg_motor_4", "right_leg_motor_5"]
+        j.position = [math.sin(i / 180 * math.pi) * 1, math.cos(i / 180 * math.pi) * 1, math.cos(i / 180 * math.pi) * 1]
+        # j.position = [0, 0, 0]
         j.header.stamp = rospy.Time.now()
 
         f.joint_command_callback(j)

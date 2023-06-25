@@ -19,6 +19,25 @@ void write_goal_position_p2(MotorPort *port, uint8_t id, uint16_t angle) {
   _motor_write_p2(port, id, addr, data, dataLen);
 }
 
+/*
+ * Dynamixel 2.0
+ */
+//void update_cw_angle_limit_p2(MotorPort *p, uint8_t id, uint8_t val) {
+//  uint8_t data[1] = {val};
+//  uint16_t dataLen = ;
+//  uint16_t addr = ;
+//  _motor_write_p2(p, id, addr, data, dataLen);
+//}
+//
+///*
+// * Dynamixel 2.0
+// */
+//void update_ccw_angle_limit_p2(MotorPort *p, uint8_t id, uint8_t val) {
+//  uint8_t data[1] = {val};
+//  uint16_t dataLen = ;
+//  uint16_t addr = ;
+//  _motor_write_p2(p, id, addr, data, dataLen);
+//}
 
 /*
  * Dynamixel 2.0
