@@ -29,3 +29,4 @@ venv/
 *.bag
 /soccer_object_localization/images/
 /soccer_object_detection/images/*
+/soccer_strategy/src/soccer_strategy/log.txt

@@ -389,31 +389,34 @@ class TestGameEngine2D(TestCase):
         rospy.init_node("test")
         os.chdir("../../../external/hlvs_webots/controllers/referee")
 
+        g = GameEngine2D(display=self.display, team_1_strategy=StrategyDummy, team_2_strategy=StrategyDummy, game_duration=6)
+
         # Referee
-        referee2d = Referee2D()
+        referee2d = Referee2D(game_engine_2d=g)
 
         # Game Controller receiver
         publisher_init_orig = rospy.Publisher.__init__
 
         game_controller_receivers = {}
         game_controller_receivers_threads = {}
-        for team in [16, 25]:
+        for team in [16, 5]:
             os.environ["ROBOCUP_TEAM_ID"] = str(team)
             for player in [1, 2, 3, 4]:
                 rospy.set_param("robot_id", player)
                 os.environ["ROS_NAMESPACE"] = f"robot{player}"
 
-                rospy.Publisher.__init__ = lambda self, name, *args, **kwargs: publisher_init_orig(self, f"robot{player}/{name}", *args, **kwargs)
+                rospy.Publisher.__init__ = lambda self, name, *args, **kwargs: publisher_init_orig(
+                    self, f"team_{team}/robot{player}/{name}", *args, **kwargs
+                )
                 game_controller_receivers[(team, player)] = GameStateReceiver()
                 game_controller_receivers_threads[(team, player)] = threading.Thread(target=game_controller_receivers[(team, player)].receive_forever)
                 game_controller_receivers_threads[(team, player)].start()
 
-        # g = GameEngine2D(display=self.display, team_1_strategy=StrategyDummy, team_2_strategy=StrategyDummy, game_duration=6)
         # friendly_points, opponent_points = g.run()
         # print(f"Friendly: {friendly_points}, opponent: {opponent_points}")
-        rospy.spin()
+
+        referee2d.main_loop()
 
         for gcrt in game_controller_receivers_threads.values():
             gcrt.join()
-
         pass
