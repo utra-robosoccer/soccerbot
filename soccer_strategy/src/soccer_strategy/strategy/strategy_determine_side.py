@@ -77,25 +77,21 @@ class StrategyDetermineSide(Strategy):
             determine_side_timeout = 0 if rospy.get_param("skip_determine_side", False) else 1
             if (rospy.Time.now() - self.time_strategy_started) > rospy.Duration(determine_side_timeout):
                 rospy.logwarn("Timeout error, cannot determine side, determining side as from default")
-                self.determine_side_initial(current_robot, friendly_team, game_state)
-                self.determine_role(current_robot, friendly_team)
-                current_robot.status = Robot.Status.READY
+                self.determine_side_initial(current_robot, game_state)
                 current_robot.localized = True
             elif footprint_to_goal_post is not None:
                 side_determined = self.determine_side(current_robot, friendly_team, footprint_to_goal_post, game_state)
                 if not side_determined:
                     return
 
-                self.determine_role(current_robot, friendly_team)
-                current_robot.status = Robot.Status.READY
                 current_robot.localized = True
-        else:
+
+        if current_robot.localized:
             for robot in friendly_team.robots:
                 if robot.status is Robot.Status.DETERMINING_SIDE and not robot.localized:
                     rospy.logwarn_throttle(1, f"robot {robot.robot_id} has not determined position")
                     return
             self.determine_role(current_robot, friendly_team)
-
             current_robot.status = Robot.Status.READY
             self.complete = True
 

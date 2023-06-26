@@ -17,15 +17,15 @@ from soccer_pycontrol.links import Links
 from soccer_pycontrol.navigator import Navigator
 from soccer_pycontrol.navigator_ros import NavigatorRos
 
-joint_state = MagicMock()
-joint_state.position = [0.0] * 18
-rospy.wait_for_message = MagicMock(return_value=joint_state)
-
 
 class TestWalking:
     @staticmethod
     @pytest.fixture
     def walker(request) -> Navigator:
+        joint_state = MagicMock()
+        joint_state.position = [0.0] * 18
+        rospy.wait_for_message = MagicMock(return_value=joint_state)
+
         robot_model = request.param
 
         file_path = os.path.dirname(os.path.abspath(__file__))
@@ -43,6 +43,10 @@ class TestWalking:
     @staticmethod
     @pytest.fixture
     def walker_ros(request) -> NavigatorRos:
+        joint_state = MagicMock()
+        joint_state.position = [0.0] * 18
+        rospy.wait_for_message = MagicMock(return_value=joint_state)
+
         robot_model = request.param
 
         os.system(
@@ -69,7 +73,7 @@ class TestWalking:
         file_path = os.path.dirname(os.path.abspath(__file__))
         config_folder_path = f"{file_path}/../../config/"
         config_path = config_folder_path + f"{robot_model}.yaml"
-        set_rosparam_from_yaml_file(param_path=config_path)
+        set_rosparam_from_yaml_file(param_path=config_path, delete_params=False, convert_logs_to_prints=False)
 
         c = NavigatorRos()
         yield c
@@ -125,17 +129,17 @@ class TestWalking:
         distance_offset = np.linalg.norm((final_position - goal_position.position)[0:2])
         print(f"Final distance offset {distance_offset}")
 
-    @pytest.mark.skip
-    def test_walk_1_real_robot(self, walker_ros: NavigatorRos):
-        walker_ros.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
-        walker_ros.ready()
-        walker_ros.wait(200)
+    # @pytest.mark.skip
+    @pytest.mark.parametrize("walker_real_robot", ["bez1"], indirect=True)
+    def test_walk_1_real_robot(self, walker_real_robot: NavigatorRos):
+        walker_real_robot.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
+        walker_real_robot.wait(200)
         goal_position = Transformation([1, 0, 0], [0, 0, 0, 1])
-        walker_ros.setGoal(goal_position)
-        walk_success = walker_ros.run(single_trajectory=True)
+        walker_real_robot.setGoal(goal_position)
+        walk_success = walker_real_robot.run(single_trajectory=True)
         assert walk_success
 
-        final_position = walker_ros.getPose()
+        final_position = walker_real_robot.getPose()
         distance_offset = np.linalg.norm((final_position - goal_position.position)[0:2])
 
     @pytest.mark.timeout(30)
@@ -501,6 +505,67 @@ class TestWalking:
         create_angle_plot("Yaws", yaws)
         create_angle_plot("Rolls", rolls)
         create_foot_pressure_sensor_plot()
+
+        if "DISPLAY" in os.environ:
+            plt.show()
+
+    @pytest.mark.parametrize("walker_real_robot", ["bez1"], indirect=True)
+    def test_imu_feedback_real(self, walker_real_robot: NavigatorRos):
+
+        walker_real_robot.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
+        walker_real_robot.wait(200)
+        goal_position = Transformation([0.25, 0, 0], [0, 0, 0, 1])
+        walker_real_robot.setGoal(goal_position)
+
+        get_imu_original = walker_real_robot.soccerbot.get_imu
+        pitches = []
+        rolls = []
+        yaws = []
+        times = []
+
+        def walker_get_imu_patch():
+            imu_transform = get_imu_original()
+            pitches.append(imu_transform.orientation_euler[1])
+            yaws.append(imu_transform.orientation_euler[0])
+            rolls.append(imu_transform.orientation_euler[2])
+            times.append(walker_real_robot.t)
+            return imu_transform
+
+        walker_real_robot.soccerbot.get_imu = walker_get_imu_patch
+
+        walk_success = walker_real_robot.run(single_trajectory=True)
+        assert walk_success
+
+        def create_angle_plot(angle_name: str, angle_data):
+            plt.figure(angle_name)
+            plt.plot(times, angle_data, label=f"{angle_name} of robot over time")
+            times_after_walk = [t for t in times if t < 0]
+            angle_data_after_walk = angle_data[len(times_after_walk) :]
+
+            if angle_name == "Pitches":
+                max_angle_offset = round(max(angle_data_after_walk) - walker_real_robot.soccerbot.walking_pid.setpoint, 5)
+                min_angle_offset = round(min(angle_data_after_walk) - walker_real_robot.soccerbot.walking_pid.setpoint, 5)
+                plt.axhline(max(angle_data_after_walk), color="red", label=f"Max {angle_name} Offset {max_angle_offset} rad")
+                plt.axhline(min(angle_data_after_walk), color="red", label=f"Min {angle_name} Offset {min_angle_offset} rad")
+                plt.axhline(walker_real_robot.soccerbot.walking_pid.setpoint, color="green", label="Walking set point")
+
+            times_before_walk = [t for t in times if t < 0]
+            angle_data_before_walk = angle_data[0 : len(times_before_walk)]
+
+            if angle_name == "Pitches":
+                max_pitch_pre_walk = round(max(angle_data_before_walk), 5)
+                min_pitch_pre_walk = round(min(angle_data_before_walk), 5)
+                plt.axhline(max(angle_data_before_walk), color="yellow", label=f"Max {angle_name} Pre Walk Offset {max_pitch_pre_walk} rad")
+                plt.axhline(min(angle_data_before_walk), color="yellow", label=f"Min {angle_name} Pre Walk Offset {min_pitch_pre_walk} rad")
+
+            plt.xlabel("Time (t)")
+            plt.ylabel(f"Forward {angle_name} of robot in radians")
+            plt.grid()
+            plt.legend()
+
+        create_angle_plot("Pitches", pitches)
+        create_angle_plot("Yaws", yaws)
+        create_angle_plot("Rolls", rolls)
 
         if "DISPLAY" in os.environ:
             plt.show()

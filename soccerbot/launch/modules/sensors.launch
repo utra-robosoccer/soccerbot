@@ -13,7 +13,7 @@
     </group>
 
     <group unless="$(arg play_rosbag)">
-        <node name="camera" pkg="usb_cam" type="usb_cam_node" output="screen">
+        <node name="camera" pkg="usb_cam" type="usb_cam_node" output="screen" respawn="true" respawn_delay="30">
             <param name="video_device" value="/dev/video0" />
             <param name="image_width" value="640" />
             <param name="image_height" value="480" />

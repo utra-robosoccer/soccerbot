@@ -113,6 +113,11 @@ class Utility:
 
         # generate destination pose
         ball_position = np.array(destination_position)
+        if ball_position[0] >= 4.5:
+            ball_position[0] = 4.49999
+        elif ball_position[0] <= -4.5:
+            ball_position[0] = -4.49999
+
         player_position = robot.position[0:2]
 
         diff = target_position - ball_position

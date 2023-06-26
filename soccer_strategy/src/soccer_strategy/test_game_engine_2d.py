@@ -192,6 +192,31 @@ class TestGameEngine2D(TestCase):
         print(f"Friendly: {friendly_points}, opponent: {opponent_points}")
         assert not (friendly_points == 0 and opponent_points == 0)
 
+    def test_ball_on_goalline(self):
+        rospy.init_node("test")
+
+        team1 = Team(
+            [
+                RobotControlled2D(
+                    robot_id=1,
+                    team=Robot.Team.FRIENDLY,
+                    role=Robot.Role.STRIKER,
+                    status=Robot.Status.READY,
+                    position=np.array([3.5, 0, 0]),
+                )
+            ]
+        )
+
+        team2 = Team([])
+
+        g = GameEngine2D(
+            display=self.display, team_1_strategy=StrategyDummy, team_2_strategy=StrategyStationary, team_1=team1, team_2=team2, game_duration=0.3
+        )
+        g.ball.position = np.array([4.5, 0])
+        friendly_points, opponent_points = g.run()
+        print(f"Friendly: {friendly_points}, opponent: {opponent_points}")
+        assert not (friendly_points == 0 and opponent_points == 0)
+
     def test_search_for_ball(self):
         rospy.init_node("test")
 
