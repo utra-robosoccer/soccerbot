@@ -100,3 +100,16 @@ class RobotControlled2D(RobotControlled):
                     o.team = robot.team
                     o.probability = (self.ObservationConstants.VISION_RANGE - distance) / self.ObservationConstants.VISION_RANGE
                     self.observed_obstacles.append(o)
+
+    def get_robot_polygon(self):
+        l = self.BODY_LENGTH
+        w = self.BODY_WIDTH
+        a = self.position[0:2]
+        t = self.position[2]
+        rotm = np.array([[np.cos(t), -np.sin(t)], [np.sin(t), np.cos(t)]])
+        p1 = a + rotm @ np.array([l, w])
+        p2 = a + rotm @ np.array([l, -w])
+        p3 = a + rotm @ np.array([-l, -w])
+        p4 = a + rotm @ np.array([-l, w])
+
+        return [p1, p2, p3, p4]
