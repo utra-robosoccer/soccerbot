@@ -36,6 +36,12 @@ class RobotControlled2D(RobotControlled):
         self.path = None
         self.trajectory_timeout = 0
 
+    def __index__(self):
+        return self.robot_id, self.team
+
+    def __hash__(self):
+        return hash((self.robot_id, self.team))
+
     def kick(self, kick_velocity):
         """
         Set's a kick velocity for the ball

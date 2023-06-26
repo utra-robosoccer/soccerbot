@@ -1,4 +1,6 @@
 import copy
+import json
+import os
 import random
 from typing import Optional
 
@@ -14,6 +16,7 @@ from soccer_strategy.game_engine_2d_scene import Scene
 from soccer_strategy.robot import Robot
 from soccer_strategy.robot_controlled_2d import RobotControlled2D
 from soccer_strategy.strategy.strategy import Strategy
+from soccer_strategy.strategy.strategy_determine_side import flip_player_sides
 from soccer_strategy.strategy.strategy_dummy import StrategyDummy
 from soccer_strategy.strategy.strategy_stationary import StrategyStationary
 from soccer_strategy.team import Team
@@ -35,6 +38,7 @@ class GameEngine2D:
         team_1: Optional[Team] = None,
         team_2: Optional[Team] = None,
         game_duration: float = 20,
+        set_to_ready_location=False,
     ):
         """
 
@@ -55,76 +59,105 @@ class GameEngine2D:
                 RobotControlled2D(
                     robot_id=1,
                     team=Robot.Team.FRIENDLY,
-                    role=Robot.Role.GOALIE,
-                    status=Robot.Status.READY,
+                    role=Robot.Role.UNASSIGNED,
+                    status=Robot.Status.DISCONNECTED,
                     position=np.array([-4, 0, 0]),
                 ),
                 RobotControlled2D(
                     robot_id=2,
                     team=Robot.Team.FRIENDLY,
-                    role=Robot.Role.LEFT_WING,
-                    status=Robot.Status.READY,
+                    role=Robot.Role.UNASSIGNED,
+                    status=Robot.Status.DISCONNECTED,
                     position=np.array([-1, -1, 0]),
                 ),
                 RobotControlled2D(
                     robot_id=3,
                     team=Robot.Team.FRIENDLY,
-                    role=Robot.Role.RIGHT_WING,
-                    status=Robot.Status.READY,
+                    role=Robot.Role.UNASSIGNED,
+                    status=Robot.Status.DISCONNECTED,
                     position=np.array([-1, 1, 0]),
                 ),
                 RobotControlled2D(
                     robot_id=4,
                     team=Robot.Team.FRIENDLY,
-                    role=Robot.Role.STRIKER,
-                    status=Robot.Status.READY,
+                    role=Robot.Role.UNASSIGNED,
+                    status=Robot.Status.DISCONNECTED,
                     position=np.array([-0.5, 0, 0]),
                 ),
             ]
         )
         if team_1 is not None:
             self.team1 = team_1
-
-        self.team1.strategy = team_1_strategy()
+        self.team1.id = 16
 
         self.team1_init = copy.deepcopy(self.team1)
 
         self.team2 = Team(
             [
                 RobotControlled2D(
-                    robot_id=5,
+                    robot_id=1,
                     team=Robot.Team.OPPONENT,
-                    role=Robot.Role.GOALIE,
-                    status=Robot.Status.READY,
+                    # role=Robot.Role.GOALIE,
+                    role=Robot.Role.UNASSIGNED,
+                    status=Robot.Status.DISCONNECTED,
                     position=np.array([4, 0, -3.14]),
                 ),
                 RobotControlled2D(
-                    robot_id=6,
+                    robot_id=2,
                     team=Robot.Team.OPPONENT,
-                    role=Robot.Role.LEFT_WING,
-                    status=Robot.Status.READY,
+                    # role=Robot.Role.LEFT_WING,
+                    role=Robot.Role.UNASSIGNED,
+                    status=Robot.Status.DISCONNECTED,
                     position=np.array([1, -1, -3.14]),
                 ),
                 RobotControlled2D(
-                    robot_id=7,
+                    robot_id=3,
                     team=Robot.Team.OPPONENT,
-                    role=Robot.Role.RIGHT_WING,
-                    status=Robot.Status.READY,
+                    # role=Robot.Role.RIGHT_WING,
+                    role=Robot.Role.UNASSIGNED,
+                    status=Robot.Status.DISCONNECTED,
                     position=np.array([1, 1, -3.14]),
                 ),
                 RobotControlled2D(
-                    robot_id=8,
+                    robot_id=4,
                     team=Robot.Team.OPPONENT,
-                    role=Robot.Role.STRIKER,
-                    status=Robot.Status.READY,
+                    # role=Robot.Role.STRIKER,
+                    role=Robot.Role.UNASSIGNED,
+                    status=Robot.Status.DISCONNECTED,
                     position=np.array([0.5, 0, -3.14]),
                 ),
             ]
         )
         if team_2 is not None:
             self.team2 = team_2
+        self.team2.id = 5
 
-        self.team2.strategy = team_2_strategy()
+        if set_to_ready_location:
+            team_1_strategy = StrategyStationary
+            team_2_strategy = StrategyStationary
+
+            for team, file in zip([self.team1, self.team2], ["team_1.json", "team_2.json"]):
+
+                file_path = os.path.dirname(os.path.abspath(__file__))
+                config_folder_path = f"{file_path}/../../config/{file}"
+
+                with open(config_folder_path) as json_file:
+                    team_info = json.load(json_file)
+
+                if team == self.team2:
+                    flip_player_sides(team_info)
+
+                for robot, robot_json in zip(team.robots, team_info["players"].values()):
+                    trans = np.array(robot_json["reentryStartingPose"]["translation"])
+                    angle = robot_json["reentryStartingPose"]["rotation"][3]
+                    robot.position = np.array([trans[0], trans[1], angle])
+
+        self.robot_strategies = {}
+        for robot in self.team1.robots:
+            self.robot_strategies[(robot.team, robot.robot_id)] = team_1_strategy()
+        for robot in self.team2.robots:
+            self.robot_strategies[(robot.team, robot.robot_id)] = team_2_strategy()
+
         self.team2.flip_positions()
         self.team2_init = copy.deepcopy(self.team2)
 
@@ -136,7 +169,7 @@ class GameEngine2D:
             self.scene = Scene(self.team1.robots + self.team2.robots, self.ball)
 
         self.gameState = GameState()
-        self.gameState.gameState = GameState.GAMESTATE_PLAYING
+        self.gameState.gameState = GameState.GAMESTATE_INITIAL
         self.gameState.secondaryState = GameState.STATE_NORMAL
 
     def run(self):
@@ -162,16 +195,18 @@ class GameEngine2D:
 
             self.update_estimated_physics(self.team1.robots + self.team2.robots, self.ball)
 
-            if step % self.team1.strategy.update_frequency == 0:
-                for robot in self.team1.robots:
+            for robot in self.team1.robots:
+                strategy = self.robot_strategies[(robot.team, robot.robot_id)]
+                if step % strategy.update_frequency == 0:
                     robot.active = True
-                    self.team1.strategy.step_strategy(self.team1, self.team2, self.gameState)
+                    strategy.step_strategy(self.team1, self.team2, self.gameState)
                     robot.active = False
 
-            if step % self.team2.strategy.update_frequency == 0:
-                for robot in self.team2.robots:
+            for robot in self.team2.robots:
+                strategy = self.robot_strategies[(robot.team, robot.robot_id)]
+                if step % strategy.update_frequency == 0:
                     robot.active = True
-                    self.team2.strategy.step_strategy(self.team2, self.team1, self.gameState)
+                    strategy.step_strategy(self.team2, self.team1, self.gameState)
                     robot.active = False
 
             # Check victory condition
