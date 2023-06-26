@@ -1,3 +1,4 @@
+import copy
 import time
 
 import rospy
@@ -41,7 +42,7 @@ class GameEngine2DWithReferee(GameEngine2D):
                 self.game_state_subscribers[(team, robot)] = rospy.Subscriber(
                     f"/team_{team_id}/robot{robot_id}/gamestate", GameState, self.gamestate_callback_robot, robot
                 )
-                self.individual_robot_gamestates[robot] = self.gameState
+                self.individual_robot_gamestates[robot] = copy.deepcopy(self.gameState)
                 self.individual_robot_last_strategy_update_time[robot] = rospy.Time.now()
 
     def run(self):
@@ -57,33 +58,23 @@ class GameEngine2DWithReferee(GameEngine2D):
 
             t1 = time.time()
 
-            for robot in self.team1.robots:
-                strategy = self.robot_strategies[(robot.team, robot.robot_id)]
-                gameState = self.individual_robot_gamestates[robot]
+            for teama, teamb in zip([self.team1, self.team2], [self.team2, self.team1]):
 
-                new_strategy = decide_next_strategy(strategy=strategy, gameState=gameState, this_robot=robot)
-                if type(strategy) != new_strategy:
-                    self.robot_strategies[(robot.team, robot.robot_id)] = new_strategy()
+                for robot in teama.robots:
+                    strategy = self.robot_strategies[(robot.team, robot.robot_id)]
+                    gameState = self.individual_robot_gamestates[robot]
 
-                if rospy.Time.now() - self.individual_robot_last_strategy_update_time[robot] > rospy.Duration(strategy.update_frequency):
-                    robot.active = True
-                    strategy.step_strategy(self.team1, self.team2, self.gameState)
-                    robot.active = False
-                    self.individual_robot_last_strategy_update_time[robot] = rospy.Time.now()
+                    new_strategy = decide_next_strategy(strategy=strategy, gameState=gameState, this_robot=robot)
+                    if type(strategy) != new_strategy:
+                        self.robot_strategies[(robot.team, robot.robot_id)] = new_strategy()
+                        rospy.loginfo(f"Team {robot.team} Robot {robot.robot_id} transitioned to strategy {str(new_strategy.__name__)}")
 
-            for robot in self.team2.robots:
-                strategy = self.robot_strategies[(robot.team, robot.robot_id)]
-                gameState = self.individual_robot_gamestates[robot]
+                    if rospy.Time.now() - self.individual_robot_last_strategy_update_time[robot] > rospy.Duration(strategy.update_frequency):
 
-                new_strategy = decide_next_strategy(strategy=strategy, gameState=gameState, this_robot=robot)
-                if type(strategy) != new_strategy:
-                    self.robot_strategies[(robot.team, robot.robot_id)] = new_strategy()
-
-                if rospy.Time.now() - self.individual_robot_last_strategy_update_time[robot] > rospy.Duration(strategy.update_frequency):
-                    robot.active = True
-                    strategy.step_strategy(self.team2, self.team1, self.gameState)
-                    robot.active = False
-                    self.individual_robot_last_strategy_update_time[robot] = rospy.Time.now()
+                        robot.active = True
+                        strategy.step_strategy(teama, teamb, self.gameState)
+                        robot.active = False
+                        self.individual_robot_last_strategy_update_time[robot] = rospy.Time.now()
 
             t2 = time.time()
 
@@ -100,16 +91,17 @@ class GameEngine2DWithReferee(GameEngine2D):
 
         :param gameState: Contains information about the game, whether it is playing or paused etc
         """
-        if (
-            self.gameState.gameState != gameState.gameState
-            or self.gameState.secondaryState != gameState.secondaryState
-            or self.gameState.secondaryStateMode != gameState.secondaryStateMode
-        ):
-            print(
-                f"\033[92mGame State Changed: {GameEngine2DWithReferee.GAMESTATE_LOOKUP[gameState.gameState]}, Secondary State: {GameEngine2DWithReferee.SECONDARY_STATE_LOOKUP[gameState.secondaryState]}, Secondary State Mode: {GameEngine2DWithReferee.SECONDARY_STATE_MODE_LOOKUP[gameState.secondaryStateMode]}\033[0m"
-            )
+        if robot.robot_id == 1 and robot.team == Robot.Team.FRIENDLY:
+            if (
+                self.gameState.gameState != gameState.gameState
+                or self.gameState.secondaryState != gameState.secondaryState
+                or self.gameState.secondaryStateMode != gameState.secondaryStateMode
+            ):
+                self.gameState = gameState
+                print(
+                    f"\033[92mGame State Changed: {GameEngine2DWithReferee.GAMESTATE_LOOKUP[gameState.gameState]}, Secondary State: {GameEngine2DWithReferee.SECONDARY_STATE_LOOKUP[gameState.secondaryState]}, Secondary State Mode: {GameEngine2DWithReferee.SECONDARY_STATE_MODE_LOOKUP[gameState.secondaryStateMode]}\033[0m"
+                )
 
-        self.gameState = gameState
         if gameState.penalty != GameState.PENALTY_NONE:
             robot.status = Robot.Status.PENALIZED
         elif robot.status in [Robot.Status.DISCONNECTED, Robot.Status.PENALIZED]:

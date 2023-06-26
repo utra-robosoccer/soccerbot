@@ -40,7 +40,7 @@ def decide_next_strategy(strategy, gameState: GameState, this_robot):
             new_strategy = StrategyStationary
         elif this_robot.status == Robot.Status.DETERMINING_SIDE:
             new_strategy = StrategyDetermineSide
-        else:
+        elif this_robot.role != Robot.Role.UNASSIGNED:
             if rospy.get_param("skip_ready_strategy", False):
                 new_strategy = StrategyDummy
             else:

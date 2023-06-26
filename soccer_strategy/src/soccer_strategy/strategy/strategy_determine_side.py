@@ -74,7 +74,7 @@ class StrategyDetermineSide(Strategy):
 
                 rospy.logwarn_throttle(30, "Unable to get robot to camera pose")
 
-            determine_side_timeout = 0 if rospy.get_param("skip_determine_side", False) else 10
+            determine_side_timeout = 0 if rospy.get_param("skip_determine_side", False) else 1
             if (rospy.Time.now() - self.time_strategy_started) > rospy.Duration(determine_side_timeout):
                 rospy.logwarn("Timeout error, cannot determine side, determining side as from default")
                 self.determine_side_initial(current_robot, friendly_team, game_state)
@@ -235,6 +235,8 @@ class StrategyDetermineSide(Strategy):
                     continue
                 if robot.role == Robot.Role.UNASSIGNED:
                     unassigned_robots.append(robot)
+                else:
+                    available_roles.pop(available_roles.index(robot.role))
 
             print("  Available Robots", [robot.robot_id for robot in unassigned_robots])
             print("  Available Robot Positions", [robot.position for robot in unassigned_robots])
@@ -243,6 +245,8 @@ class StrategyDetermineSide(Strategy):
                 "  Available Roles Positions",
                 [friendly_team.formations["ready"][role][0:2] for role in available_roles],
             )
+
+            role_assignment = {}
             while len(unassigned_robots) > 0:
                 closest_robot: Optional[Robot] = None
                 closest_role_index = 0
@@ -256,14 +260,20 @@ class StrategyDetermineSide(Strategy):
                             closest_distance = distance
                             closest_robot = unassigned_robots[i]
                             closest_role_index = j
+                        elif distance == closest_distance:
+                            if unassigned_robots[i].robot_id < closest_robot.robot_id:
+                                closest_distance = distance
+                                closest_robot = unassigned_robots[i]
+                                closest_role_index = j
 
                 print(
                     f"  Assigning Robot {closest_robot.robot_id} { closest_robot.position } to {available_roles[closest_role_index].name} with location {friendly_team.formations['ready'][available_roles[closest_role_index]][0:2]}"
                 )
-                if closest_robot.robot_id == current_robot.robot_id:
-                    current_robot.role = available_roles[closest_role_index]
-                    print("  Completed Assignment")
-                    break
-                else:
-                    unassigned_robots.pop(unassigned_robots.index(closest_robot))
-                    available_roles.pop(closest_role_index)
+                role_assignment[closest_robot.robot_id] = available_roles[closest_role_index]
+                unassigned_robots.pop(unassigned_robots.index(closest_robot))
+                available_roles.pop(closest_role_index)
+
+            current_robot.role = role_assignment[current_robot.robot_id]
+            print(
+                f"  Completed Assignment for team {current_robot.team} robot {current_robot.robot_id} to {role_assignment[current_robot.robot_id].name}"
+            )

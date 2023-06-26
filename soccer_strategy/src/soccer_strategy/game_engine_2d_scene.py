@@ -211,3 +211,4 @@ class Scene:
             )
 
         pygame.display.flip()
+        pygame.event.get()

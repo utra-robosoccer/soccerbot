@@ -59,29 +59,29 @@ class GameEngine2D:
                 RobotControlled2D(
                     robot_id=1,
                     team=Robot.Team.FRIENDLY,
-                    role=Robot.Role.GOALIE,
-                    status=Robot.Status.READY,
+                    role=Robot.Role.UNASSIGNED,
+                    status=Robot.Status.DISCONNECTED,
                     position=np.array([-4, 0, 0]),
                 ),
                 RobotControlled2D(
                     robot_id=2,
                     team=Robot.Team.FRIENDLY,
-                    role=Robot.Role.LEFT_WING,
-                    status=Robot.Status.READY,
+                    role=Robot.Role.UNASSIGNED,
+                    status=Robot.Status.DISCONNECTED,
                     position=np.array([-1, -1, 0]),
                 ),
                 RobotControlled2D(
                     robot_id=3,
                     team=Robot.Team.FRIENDLY,
-                    role=Robot.Role.RIGHT_WING,
-                    status=Robot.Status.READY,
+                    role=Robot.Role.UNASSIGNED,
+                    status=Robot.Status.DISCONNECTED,
                     position=np.array([-1, 1, 0]),
                 ),
                 RobotControlled2D(
                     robot_id=4,
                     team=Robot.Team.FRIENDLY,
-                    role=Robot.Role.STRIKER,
-                    status=Robot.Status.READY,
+                    role=Robot.Role.UNASSIGNED,
+                    status=Robot.Status.DISCONNECTED,
                     position=np.array([-0.5, 0, 0]),
                 ),
             ]
@@ -97,29 +97,33 @@ class GameEngine2D:
                 RobotControlled2D(
                     robot_id=1,
                     team=Robot.Team.OPPONENT,
-                    role=Robot.Role.GOALIE,
-                    status=Robot.Status.READY,
+                    # role=Robot.Role.GOALIE,
+                    role=Robot.Role.UNASSIGNED,
+                    status=Robot.Status.DISCONNECTED,
                     position=np.array([4, 0, -3.14]),
                 ),
                 RobotControlled2D(
                     robot_id=2,
                     team=Robot.Team.OPPONENT,
-                    role=Robot.Role.LEFT_WING,
-                    status=Robot.Status.READY,
+                    # role=Robot.Role.LEFT_WING,
+                    role=Robot.Role.UNASSIGNED,
+                    status=Robot.Status.DISCONNECTED,
                     position=np.array([1, -1, -3.14]),
                 ),
                 RobotControlled2D(
                     robot_id=3,
                     team=Robot.Team.OPPONENT,
-                    role=Robot.Role.RIGHT_WING,
-                    status=Robot.Status.READY,
+                    # role=Robot.Role.RIGHT_WING,
+                    role=Robot.Role.UNASSIGNED,
+                    status=Robot.Status.DISCONNECTED,
                     position=np.array([1, 1, -3.14]),
                 ),
                 RobotControlled2D(
                     robot_id=4,
                     team=Robot.Team.OPPONENT,
-                    role=Robot.Role.STRIKER,
-                    status=Robot.Status.READY,
+                    # role=Robot.Role.STRIKER,
+                    role=Robot.Role.UNASSIGNED,
+                    status=Robot.Status.DISCONNECTED,
                     position=np.array([0.5, 0, -3.14]),
                 ),
             ]
@@ -129,6 +133,9 @@ class GameEngine2D:
         self.team2.id = 5
 
         if set_to_ready_location:
+            team_1_strategy = StrategyStationary
+            team_2_strategy = StrategyStationary
+
             for team, file in zip([self.team1, self.team2], ["team_1.json", "team_2.json"]):
 
                 file_path = os.path.dirname(os.path.abspath(__file__))
