@@ -25,6 +25,7 @@ ruamel.yaml
 filterpy
 gdown==4.5.4
 pybullet
+pygame
 
 # object detection
 requests==2.31.0

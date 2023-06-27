@@ -1,6 +1,7 @@
 import os
 import subprocess
 import threading
+import time
 from unittest.mock import MagicMock, patch
 
 import controller
@@ -42,11 +43,13 @@ class Referee2D(Referee):
             self.game_engine_2d.ball.position = np.array([target_location[0], target_location[1]])
 
     class MockSolid:
-        def __init__(self, robot_game_engine_2d: RobotControlled2D):
+        def __init__(self, robot_game_engine_2d: RobotControlled2D, point_idx):
             self.robot_game_engine_2d = robot_game_engine_2d
+            self.point_idx = point_idx
 
         def getPosition(self):
-            return [self.robot_game_engine_2d.position[0], self.robot_game_engine_2d.position[1]]
+            polygon = self.robot_game_engine_2d.get_robot_polygon()
+            return list(polygon[self.point_idx])
 
     def __init__(self, game_engine_2d: GameEngine2D):
         os.system("/bin/bash -c 'killall python3 || echo 'No Python Executables running''")
@@ -85,10 +88,10 @@ class Referee2D(Referee):
 
                 robot_game_engine_2d = team_game_engine_2d.robots[int(number) - 1]
                 player["solids"] = [
-                    Referee2D.MockSolid(robot_game_engine_2d),
-                    Referee2D.MockSolid(robot_game_engine_2d),
-                    Referee2D.MockSolid(robot_game_engine_2d),
-                    Referee2D.MockSolid(robot_game_engine_2d),
+                    Referee2D.MockSolid(robot_game_engine_2d, 0),
+                    Referee2D.MockSolid(robot_game_engine_2d, 1),
+                    Referee2D.MockSolid(robot_game_engine_2d, 2),
+                    Referee2D.MockSolid(robot_game_engine_2d, 3),
                 ]  # TODO use the 2 corners
 
         self.clock_publisher = rospy.Publisher("/clock", Clock, queue_size=1)
@@ -140,21 +143,21 @@ class Referee2D(Referee):
             l2 = len(player["velocity_buffer"][0])  # should be 6 (velocity vector size)
             player["velocity_buffer"][int(self.sim_time.get_ms() / self.time_step) % l1] = [robot_velocity[0], robot_velocity[1], 0, 0, 0, 0]
             sum = [0] * l2
-            for v in player["velocity_buffer"]:
-                for i in range(l2):
-                    sum[i] += v[i]
-            player["velocity"] = [s / l1 for s in sum]
+
+            player["velocity"] = [robot_velocity[0], robot_velocity[1], 0, 0, 0, 0]
 
             # Calculate contact point with other robots
             contact_points = []
             for other_robot_position in other_robot_positions:
-                if np.linalg.norm(robot_position - other_robot_position) < (RobotControlled.BODY_WIDTH * 2):
-                    contact_points.append(list(0.5 * robot_position + 0.5 * other_robot_position))
+                if np.linalg.norm(robot_position[0:2] - other_robot_position[0:2]) < (RobotControlled.BODY_WIDTH * 2):
+                    temp = list(0.5 * robot_position[0:2] + 0.5 * other_robot_position[0:2])
+                    contact_points.append([temp[0], temp[1], 0])
 
             # Calculate contact point with ball
             ball_position_3d = np.array([ball_position[0], ball_position[1], 0])
-            if np.linalg.norm(robot_position - ball_position_3d) < (RobotControlled.BODY_WIDTH + 0.07):
-                contact_points.append(list(ball_position_3d))
+            if np.linalg.norm(robot_position[0:2] - ball_position_3d[0:2]) < (RobotControlled.BODY_WIDTH + 0.07):
+                temp = list(ball_position_3d[0:2])
+                contact_points.append([temp[0], temp[1], 0])
 
             n = len(contact_points)
             player["contact_points"] = []
@@ -172,7 +175,7 @@ class Referee2D(Referee):
             for i in range(n):
                 point = contact_points[i]
 
-                if not early_game_interruption and point == ball_position:  # ball contact
+                if not early_game_interruption and point == [ball_position[0], ball_position[1], 0]:  # ball contact
                     if self.game.ball_first_touch_time == 0:
                         self.game.ball_first_touch_time = self.sim_time.get_ms()
                     self.game.ball_last_touch_time = self.sim_time.get_ms()
@@ -225,6 +228,12 @@ class Referee2D(Referee):
             else:
                 player["left_turf_time"] = None
 
-    def place_player_at_penalty(self, player, team, number):
-        # TODO write this
-        pass
+    def reset_player(self, color, number, pose, custom_t=None, custom_r=None):
+        super().reset_player(color, number, pose, custom_t, custom_r)
+
+        team = self.game_engine_2d.team1 if color == "red" else self.game_engine_2d.team2
+        player = team.robots[int(number) - 1]
+
+        t = custom_t if custom_t else player[pose]["translation"]
+        r = custom_r if custom_r else player[pose]["rotation"]
+        player.position = [t[0], t[1], r[3]]

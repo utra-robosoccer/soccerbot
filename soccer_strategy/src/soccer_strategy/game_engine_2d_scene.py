@@ -91,24 +91,6 @@ class Scene:
             points.append(self.convert_point_to_pixel_coordinates(l))
         return points
 
-    def get_robot_polygon(self, robot: RobotControlled2D):
-        """
-        Creates a robot polygon shape dimensions from the robot
-        :return: list of points for the polygon in real world coordinates
-        """
-
-        l = robot.BODY_LENGTH
-        w = robot.BODY_WIDTH
-        a = robot.position[0:2]
-        t = robot.position[2]
-        rotm = np.array([[np.cos(t), -np.sin(t)], [np.sin(t), np.cos(t)]])
-        p1 = a + rotm @ np.array([l, w])
-        p2 = a + rotm @ np.array([l, -w])
-        p3 = a + rotm @ np.array([-l, -w])
-        p4 = a + rotm @ np.array([-l, w])
-
-        return [p1, p2, p3, p4]
-
     def update(self, robots: List[RobotControlled2D], ball: Ball):
         self.screen.fill((0, 0, 0))
         self.screen.blit(self.screen_overlay_0, (0, 0))
@@ -118,7 +100,7 @@ class Scene:
             y = robot.position[1]
             position = (x, y)
 
-            polygon_points = self.get_robot_polygon(robot)
+            polygon_points = robot.get_robot_polygon()
             polygon_points_pixel = self.convert_list_of_points_to_pixel_coordinates(polygon_points)
             pygame.draw.polygon(self.screen, THECOLORS["white"], polygon_points_pixel)
             if robot.team == Robot.Team.OPPONENT:
