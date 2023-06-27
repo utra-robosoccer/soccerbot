@@ -89,7 +89,7 @@ class RobotControlled2D(RobotControlled):
                 arrow_end_y = math.sin(theta) * arrow_len
                 robot_direction = np.array([arrow_end_x, arrow_end_y])
                 obstacle_position = robot.position[0:2]
-                obstacle_to_robot = obstacle_position - self.position[0:2]
+                obstacle_to_robot = np.array(obstacle_position) - np.array(self.position[0:2])
                 angle = np.arccos(
                     np.dot(obstacle_to_robot[0:2], robot_direction) / (np.linalg.norm(obstacle_to_robot[0:2]) * np.linalg.norm(robot_direction))
                 )

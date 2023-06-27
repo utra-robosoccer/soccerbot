@@ -34,9 +34,9 @@ class GameEngine2DWithReferee(GameEngine2D):
         for team in [self.team1, self.team2]:
             for robot in team.robots:
                 if team == self.team1:
-                    team_id = 5
-                else:
                     team_id = 16
+                else:
+                    team_id = 5
                 robot_id = robot.robot_id
 
                 self.game_state_subscribers[(team, robot)] = rospy.Subscriber(
@@ -72,7 +72,7 @@ class GameEngine2DWithReferee(GameEngine2D):
                     if rospy.Time.now() - self.individual_robot_last_strategy_update_time[robot] > rospy.Duration(strategy.update_frequency):
 
                         robot.active = True
-                        strategy.step_strategy(teama, teamb, self.gameState)
+                        strategy.step_strategy(teama, teamb, gameState)
                         robot.active = False
                         self.individual_robot_last_strategy_update_time[robot] = rospy.Time.now()
 

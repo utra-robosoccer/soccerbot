@@ -124,8 +124,8 @@ class Referee2D(Referee):
             robot_game_engine_2d = team_game_engine_2d.robots[int(number) - 1]
 
             other_robot_positions = []
-            for team in [self.game_engine_2d.team1, self.game_engine_2d.team2]:
-                for robot in team.robots:
+            for t in [self.game_engine_2d.team1, self.game_engine_2d.team2]:
+                for robot in t.robots:
                     if robot != robot_game_engine_2d:
                         other_robot_positions.append(robot.position)
 
@@ -135,7 +135,7 @@ class Referee2D(Referee):
             robot_velocity = np.array([0, 0])
             if robot_game_engine_2d in self.robot_last_position:
                 last_position = self.robot_last_position[robot_game_engine_2d]
-                robot_velocity = robot_game_engine_2d.position - last_position
+                robot_velocity = np.array(robot_game_engine_2d.position) - np.array(last_position)
 
             self.robot_last_position[robot_game_engine_2d] = robot_game_engine_2d.position
 
@@ -149,7 +149,7 @@ class Referee2D(Referee):
             # Calculate contact point with other robots
             contact_points = []
             for other_robot_position in other_robot_positions:
-                if np.linalg.norm(robot_position[0:2] - other_robot_position[0:2]) < (RobotControlled.BODY_WIDTH * 2):
+                if np.linalg.norm(np.array(robot_position[0:2]) - np.array(other_robot_position[0:2])) < (RobotControlled.BODY_WIDTH * 2):
                     temp = list(0.5 * robot_position[0:2] + 0.5 * other_robot_position[0:2])
                     contact_points.append([temp[0], temp[1], 0])
 
@@ -228,6 +228,12 @@ class Referee2D(Referee):
             else:
                 player["left_turf_time"] = None
 
-    def place_player_at_penalty(self, player, team, number):
-        # TODO write this
-        pass
+    def reset_player(self, color, number, pose, custom_t=None, custom_r=None):
+        super().reset_player(color, number, pose, custom_t, custom_r)
+
+        team = self.game_engine_2d.team1 if color == "red" else self.game_engine_2d.team2
+        player = team.robots[int(number) - 1]
+
+        t = custom_t if custom_t else player[pose]["translation"]
+        r = custom_r if custom_r else player[pose]["rotation"]
+        player.position = [t[0], t[1], r[3]]

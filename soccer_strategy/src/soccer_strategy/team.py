@@ -71,7 +71,7 @@ class Team:
         for formation in self.formations:
             for role in self.formations[formation]:
                 self.formations[formation][role][0] = -self.formations[formation][role][0]
-                self.formations[formation][role][2] = -3.14
+                self.formations[formation][role][2] = np.pi - self.formations[formation][role][2]
 
     def update_average_ball_position(self):
         """

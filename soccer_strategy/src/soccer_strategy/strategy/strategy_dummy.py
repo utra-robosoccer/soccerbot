@@ -75,6 +75,12 @@ class StrategyDummy(Strategy):
                         # TODO more intelligent strategy where other robot goes for the ball if it is not going
                         return
 
+                    # Initial kick off
+                    if game_state.secondary_seconds_remaining != 0:
+                        if not game_state.hasKickOff:
+                            rospy.loginfo_throttle(15, f"Team {this_robot.team.name} waiting for other team to kickoff")
+                            return
+
                     # Ball localized, move to ball
                     if (rospy.Time.now() - this_robot.robot_focused_on_ball_time) < rospy.Duration(2):
                         blocked_position = Utility.is_obstacle_blocking(this_robot, this_robot.position[0:2], ball.position)
