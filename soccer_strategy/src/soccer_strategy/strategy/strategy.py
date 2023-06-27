@@ -8,6 +8,7 @@ from soccer_msgs.msg import GameState
 from soccer_strategy.ball import Ball
 from soccer_strategy.robot import Robot
 from soccer_strategy.robot_controlled import RobotControlled
+from soccer_strategy.robot_controlled_2d import RobotControlled2D
 from soccer_strategy.team import Team
 
 
@@ -104,6 +105,26 @@ class Strategy:
 
         raise AssertionError
 
+    # def who_has_the_ball(self, robots: [Robot], ball: Ball) -> Robot:
+    #     """
+    #     Gets the robot who has the ball, at the moment just uses the closest robot
+    #
+    #     :param robots: List of robots to see which one has the ball
+    #     :param ball: The ball object
+    #     :return: The robot that is closest to the ball
+    #     """
+    #     closest_dist = math.inf
+    #     current_closest = None
+    #     for robot in robots:
+    #         if robot.status not in [Robot.Status.READY, Robot.Status.WALKING, Robot.Status.KICKING, Robot.Status.GETTING_BACK_UP]:
+    #             continue
+    #
+    #         dist = np.linalg.norm(ball.position[0:2] - robot.position[0:2])
+    #         if dist < closest_dist:
+    #             closest_dist = dist
+    #             current_closest = robot
+    #     return current_closest
+
     def who_has_the_ball(self, robots: [Robot], ball: Ball) -> Robot:
         """
         Gets the robot who has the ball, at the moment just uses the closest robot
@@ -114,12 +135,30 @@ class Strategy:
         """
         closest_dist = math.inf
         current_closest = None
+        has_ball_in_vision_cone = False
+
         for robot in robots:
             if robot.status not in [Robot.Status.READY, Robot.Status.WALKING, Robot.Status.KICKING, Robot.Status.GETTING_BACK_UP]:
                 continue
 
             dist = np.linalg.norm(ball.position[0:2] - robot.position[0:2])
-            if dist < closest_dist:
+            robot_facing_angle = robot.position[2]
+            robot_to_ball_angle = np.arctan2(ball.position[1] - robot.position[1], ball.position[0] - robot.position[0])
+            abs_diff = np.abs(robot_to_ball_angle - robot_facing_angle)
+            ball_in_vision_cone = (
+                abs_diff < RobotControlled2D.ObservationConstants.FOV / 2 and dist < RobotControlled2D.ObservationConstants.VISION_RANGE
+            )
+
+            if not has_ball_in_vision_cone and ball_in_vision_cone:
+                has_ball_in_vision_cone = True
                 closest_dist = dist
                 current_closest = robot
+            elif has_ball_in_vision_cone:
+                if dist < closest_dist and ball_in_vision_cone:
+                    closest_dist = dist
+                    current_closest = robot
+            else:
+                if dist < closest_dist:
+                    closest_dist = dist
+                    current_closest = robot
         return current_closest
