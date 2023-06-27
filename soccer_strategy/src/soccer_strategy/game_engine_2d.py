@@ -247,16 +247,31 @@ class GameEngine2D:
             robot.observe_ball(ball)
             robot.observe_obstacles(robots)
             if robot.status == Robot.Status.WALKING:
+                previous_transformation: Transformation = robot.path.estimatedPositionAtTime(robot.path_time)
+                next_transformation: Transformation = robot.path.estimatedPositionAtTime(robot.path_time + GameEngine2D.PHYSICS_UPDATE_INTERVAL)
                 robot.path_time = robot.path_time + GameEngine2D.PHYSICS_UPDATE_INTERVAL
-                update_position_transformation: Transformation = robot.path.estimatedPositionAtTime(robot.path_time)
-                update_position = update_position_transformation.pos_theta
+
+                relative_transformation = np.linalg.inv(previous_transformation) @ next_transformation
+
+                original_position = Transformation(pos_theta=robot.position)
+                new_position_3d = original_position @ relative_transformation
+                new_position = new_position_3d.pos_theta
+
+                update = True
+                for bot in robots:
+                    if robot.robot_id != bot.robot_id:
+                        bot_to_cur_bot = bot.position[0:2] - new_position[0:2]
+                        distance = np.linalg.norm(bot_to_cur_bot)
+                        if distance < robot.BODY_WIDTH * 2:
+                            update = False
+
+                if update:
+                    robot.position = new_position
+
                 if robot.path.isFinished(robot.path_time):
                     robot.status = Robot.Status.READY
-                    robot.position = robot.path.end_transform.pos_theta
                     robot.path_time = 0
                     continue
-
-                robot.position = update_position
 
             elif robot.status == Robot.Status.KICKING:
                 if ball.kick_timeout == 0:
