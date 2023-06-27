@@ -105,11 +105,11 @@ class Scene:
             pygame.draw.polygon(self.screen, THECOLORS["white"], polygon_points_pixel)
             if robot.team == Robot.Team.OPPONENT:
                 pygame.draw.circle(
-                    self.screen, THECOLORS["red"], center=self.convert_point_to_pixel_coordinates(position), radius=self.meter_to_pixel_x * 0.05
+                    self.screen, THECOLORS["blue"], center=self.convert_point_to_pixel_coordinates(position), radius=self.meter_to_pixel_x * 0.05
                 )
             else:
                 pygame.draw.circle(
-                    self.screen, THECOLORS["blue"], center=self.convert_point_to_pixel_coordinates(position), radius=self.meter_to_pixel_x * 0.05
+                    self.screen, THECOLORS["red"], center=self.convert_point_to_pixel_coordinates(position), radius=self.meter_to_pixel_x * 0.05
                 )
 
             text = self.font.render(f"{robot.robot_id}", True, THECOLORS["white"])
