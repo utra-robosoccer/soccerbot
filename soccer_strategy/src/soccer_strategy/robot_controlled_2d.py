@@ -36,6 +36,12 @@ class RobotControlled2D(RobotControlled):
         self.path = None
         self.trajectory_timeout = 0
 
+    def __index__(self):
+        return self.robot_id, self.team
+
+    def __hash__(self):
+        return hash((self.robot_id, self.team))
+
     def kick(self, kick_velocity):
         """
         Set's a kick velocity for the ball
@@ -83,7 +89,7 @@ class RobotControlled2D(RobotControlled):
                 arrow_end_y = math.sin(theta) * arrow_len
                 robot_direction = np.array([arrow_end_x, arrow_end_y])
                 obstacle_position = robot.position[0:2]
-                obstacle_to_robot = obstacle_position - self.position[0:2]
+                obstacle_to_robot = np.array(obstacle_position) - np.array(self.position[0:2])
                 angle = np.arccos(
                     np.dot(obstacle_to_robot[0:2], robot_direction) / (np.linalg.norm(obstacle_to_robot[0:2]) * np.linalg.norm(robot_direction))
                 )
@@ -94,3 +100,16 @@ class RobotControlled2D(RobotControlled):
                     o.team = robot.team
                     o.probability = (self.ObservationConstants.VISION_RANGE - distance) / self.ObservationConstants.VISION_RANGE
                     self.observed_obstacles.append(o)
+
+    def get_robot_polygon(self):
+        l = self.BODY_LENGTH
+        w = self.BODY_WIDTH
+        a = self.position[0:2]
+        t = self.position[2]
+        rotm = np.array([[np.cos(t), -np.sin(t)], [np.sin(t), np.cos(t)]])
+        p1 = a + rotm @ np.array([l, w])
+        p2 = a + rotm @ np.array([l, -w])
+        p3 = a + rotm @ np.array([-l, -w])
+        p4 = a + rotm @ np.array([-l, w])
+
+        return [p1, p2, p3, p4]

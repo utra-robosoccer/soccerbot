@@ -12,6 +12,7 @@ from std_msgs.msg import Bool, Empty
 from soccer_common import Transformation
 from soccer_msgs.msg import FixedTrajectoryCommand, RobotState
 from soccer_strategy.ball import Ball
+from soccer_strategy.obstacle import Obstacle
 from soccer_strategy.robot import Robot
 from soccer_strategy.robot_controlled import RobotControlled
 
@@ -112,6 +113,22 @@ class RobotControlled3D(RobotControlled):
         except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException, tf2_py.TransformException):
             rospy.loginfo_throttle(30, "Still looking for ball in TF Tree")
             self.observed_ball = None
+
+        # Get Obstacles from TF
+        self.observed_obstacles.clear()
+        more_obstacles = True
+        obstacle_num = 0
+        while more_obstacles:
+            try:
+                obstacle_pose = self.tf_listener.lookupTransform(
+                    "world", "robot" + str(self.robot_id) + "/obstacle_" + str(obstacle_num), rospy.Time(0)
+                )
+                o = Obstacle()
+                o.position = np.array([obstacle_pose[0][0], obstacle_pose[0][1]])
+                self.observed_obstacles.append(o)
+            except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException, tf2_py.TransformException):
+                more_obstacles = False
+            obstacle_num += 1
 
         # Get Robot Position from TF
         trans = [self.position[0], self.position[1], 0]
