@@ -14,7 +14,7 @@ class CMD_HEADS(Enum):
 
 
 class CMDS(Enum):
-    POSITION, SPEED, PID_COEFF, PID_STATE, SPEED_FILTER_WIDTH, MAX_DRIVE, SERVO_IDX, ADC_SHUNT, ADC_TEMP, ADC_VREFINT, INVALID = range(11)
+    POSITION, SPEED, PID_COEFF, PID_STATE, SPEED_FILTER_WIDTH, MAX_DRIVE, SERVO_IDX, ADC_SHUNT, ADC_TEMP, ADC_VREFINT, TX_DELAY_PER_BYTE, SHUNT_LIMIT, INVALID = range(13)
 
 
 class RWS(Enum):
@@ -30,12 +30,12 @@ class UART_STATES(Enum):
 # EXPECT_BYTE_RX_TIME = 25e-6  # based on servo microcontroller nominal wait width per byte plus margin
 # EXPECT_BYTE_TX_TIME = 25e-6
 
-CMD_WIDTHS = [2, 2, 6, 6, 1, 2, 1, 1, 2, 2]
+CMD_WIDTHS = [2, 2, 6, 6, 1, 2, 1, 1, 2, 2, 1, 1]
 SILENT_READ_TIMEOUT = 20E-3 # time to give the kernel to stall waiting to push out bytes or pull in bytes before giving up, assuming we've missed the frame read
 # worst-case catch-all for any corruption that fails the state machine, so we can clean the read buffer and start from fresh.
 READ_POLL_RATE = 1E-4 # Make this << OS tick rate, so we can pull from the read buffer with minimal delay when the data is available (without tight-looping and hogging CPU)
 
-ACTIVE_READ_TIMEOUT = 3E-3 # allow this time after we've received the head frame but still haven't seen enough returns.
+ACTIVE_READ_TIMEOUT = 1E-3 # allow this time after we've received the head frame but still haven't seen enough returns.
 # ^^ This number is important and based on two factors:
 # 1. Fully flushing the read buffer / not missing frames. This guards against if the read buffer is slow to pop the contents.
 #    This part of the number is based on roundtrip analyses on Ubuntu 20 on an AMD processor as well as Ubuntu 18 on a Jetson Nano showing quantization to 1ms ticks: in the worst-case scenario, we read the head frame right before one tick and the rest of the packet comes in the next tick.
@@ -166,7 +166,8 @@ def uart_transact(ser, B, cmd, rw, preflush=True):
 
             (time0_, read_timeout_) = (time0, SILENT_READ_TIMEOUT) if (uart_state == UART_STATES.START or time_rx_packet0 is None) else (time_rx_packet0, ACTIVE_READ_TIMEOUT)
             if time.time() - time0_ > read_timeout_:
-                print(rw, (uart_state == UART_STATES.START or time_rx_packet0 is None))
+                if DEBUG:
+                    print(rw, (uart_state == UART_STATES.START or time_rx_packet0 is None))
                 break
 
             if uart_state in (UART_STATES.START,):
@@ -224,8 +225,9 @@ def uart_transact(ser, B, cmd, rw, preflush=True):
         # checked_servo_frames = {si: tuple(s) for si, s in servo_frames.items() if len(s) == CMD_WIDTHS[cmd.value] + 2} # (((le_crc(s[:-1]) ^ s[-1]) & 0x3F) == 0, s)
 
         # print('OUT')
-        if jx_iter % 128 == 0:
-            print(jx_iter, poll_iters)
+        if DEBUG:
+            if jx_iter % 128 == 0:
+                print(jx_iter, poll_iters)
         jx_iter += 1
 
         return (uart_state == UART_STATES.ENDED, servo_frames) # empty_frames < MAX_EMPTY_FRAMES
@@ -247,19 +249,25 @@ if __name__ == '__main__':
                 uart_transact(ser, [int(sys.argv[2])], CMDS.SERVO_IDX, RWS.WRITE)
             except ValueError:
                 pass
+        print(uart_transact(ser, [2400]*8, CMDS.MAX_DRIVE, RWS.WRITE))
+        print(uart_transact(ser, [20]*8, CMDS.SHUNT_LIMIT, RWS.WRITE))
+
+        print(uart_transact(ser, [], CMDS.MAX_DRIVE, RWS.READ))
         print(uart_transact(ser, [], CMDS.POSITION, RWS.READ))
         print(uart_transact(ser, [], CMDS.ADC_SHUNT, RWS.READ))
         print(uart_transact(ser, [], CMDS.ADC_TEMP, RWS.READ))
         print(uart_transact(ser, [], CMDS.ADC_VREFINT, RWS.READ))
         input()
         uart_transact(ser, [4000, 1, 90] * 13, CMDS.PID_COEFF, RWS.WRITE, preflush=True)  # push initial PID gains
-        uart_transact(ser, [0x27E] * 13, CMDS.POSITION, RWS.WRITE, preflush=True) # * (MAX_JX_SERVO_IDX + 1), CMDS.POSITION, RWS.WRITE)
+        uart_transact(ser, [0x600] * 13, CMDS.POSITION, RWS.WRITE, preflush=True) # * (MAX_JX_SERVO_IDX + 1), CMDS.POSITION, RWS.WRITE)
         print(uart_transact(ser, [], CMDS.POSITION, RWS.READ))
         input()
         t0 = time.time()
         T0 = 4 
         while True:
             uart_transact(ser, [((-np.cos((time.time() - t0) / T0 * 2 * np.pi) / 2 + 0.5) * (MAX_POT-MIN_POT) + MIN_POT).astype(np.uint16)] * (MAX_JX_SERVO_IDX+1), CMDS.POSITION, RWS.WRITE)
-            print(uart_transact(ser, [], CMDS.POSITION, RWS.READ))
-            time.sleep(0.05)
+            u = uart_transact(ser, [], CMDS.ADC_SHUNT, RWS.READ)[1]
+            if 0 in u:
+                print(u[0][1][1])
+            # time.sleep(0.05)
         
