@@ -6,7 +6,6 @@ roslibpy
 scipy>=1.6.2
 prettytable
 pyserial>=3.5
-serial>=0.0.97
 transforms3d
 construct==2.10.67
 opencv-python>=4.5.5.62
