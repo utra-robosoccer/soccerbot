@@ -135,6 +135,7 @@ class Soccerbot:
             setpoint=rospy.get_param("standing_setpoint", -0.01),
             output_limits=(-1.57, 1.57),
         )
+        self.standing_offset = rospy.get_param("standing_offset", 0.0)
 
         #: PID values to adjust the torso's front and back movement while walking
         self.walking_pid = PID(
@@ -144,6 +145,7 @@ class Soccerbot:
             setpoint=rospy.get_param("walking_setpoint", -0.01),
             output_limits=(-1.57, 1.57),
         )
+        self.walking_offset = rospy.get_param("walking_offset", 0.0)
 
         self.walking_pid_roll = PID(
             Kp=rospy.get_param("walking_roll_Kp", 0.8),
@@ -556,12 +558,12 @@ class Soccerbot:
 
         [roll, pitch, _] = pose.orientation_euler
         F = self.walking_pid.update(pitch)
-        self.configuration_offset[Joints.LEFT_LEG_3] = F
-        self.configuration_offset[Joints.RIGHT_LEG_3] = F
+        self.configuration_offset[Joints.LEFT_LEG_3] = F + self.walking_offset
+        self.configuration_offset[Joints.RIGHT_LEG_3] = F + self.walking_offset
 
-        G = self.walking_pid_roll.update(roll)
-        self.configuration_offset[Joints.LEFT_LEG_2] = G
-        self.configuration_offset[Joints.RIGHT_LEG_2] = -G
+        # G = self.walking_pid_roll.update(roll)
+        # self.configuration_offset[Joints.LEFT_LEG_2] = G
+        # self.configuration_offset[Joints.RIGHT_LEG_2] = -G
 
         return F
 
@@ -577,8 +579,8 @@ class Soccerbot:
             return
         [roll, pitch, yaw] = pose.orientation_euler
         F = self.standing_pid.update(pitch)
-        self.configuration_offset[Joints.LEFT_LEG_5] = F
-        self.configuration_offset[Joints.RIGHT_LEG_5] = F
+        self.configuration_offset[Joints.LEFT_LEG_5] = F + self.standing_offset
+        self.configuration_offset[Joints.RIGHT_LEG_5] = F + self.standing_offset
         return pitch
 
     def reset_imus(self):

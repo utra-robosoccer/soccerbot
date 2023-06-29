@@ -43,6 +43,7 @@ class Navigator:
         self.ramp = Ramp("plane.urdf", (0, 0, 0), (0, 0, 0), lateralFriction=0.9, spinningFriction=0.9, rollingFriction=0.0)
 
         self.terminate_walk = False
+        self.prepare_walk_time = rospy.get_param("prepare_walk_time", 2)
 
         self.t = 0
 
@@ -106,7 +107,7 @@ class Navigator:
             pb.stopStateLogging(logging_id)
             return True
 
-        self.t = -2
+        self.t = -self.prepare_walk_time
         stable_count = 20
 
         while self.t <= self.soccerbot.robot_path.duration():

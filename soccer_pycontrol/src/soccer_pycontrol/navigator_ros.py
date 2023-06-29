@@ -39,6 +39,8 @@ class NavigatorRos(Navigator):
         self.new_goal = self.goal
         self.terminated = None
 
+        self.prepare_walk_time = rospy.get_param("prepare_walk_time", 2)
+
         self.tf_listener = tf.TransformListener()
 
         self.t = 0
@@ -216,7 +218,7 @@ class NavigatorRos(Navigator):
                 print_pose("Start Pose", self.robot_pose.pose)
                 print_pose("End Pose", self.goal.pose)
                 self.soccerbot.createPathToGoal(Transformation(pose=self.goal.pose))
-                self.t = -0.5
+                self.t = -self.prepare_walk_time
 
                 # self.soccerbot.robot_path.show()
                 self.soccerbot.publishPath()
