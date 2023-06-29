@@ -25,6 +25,7 @@ filterpy
 gdown==4.5.4
 pybullet
 pygame
+ultralytics
 
 # object detection
 requests==2.31.0
