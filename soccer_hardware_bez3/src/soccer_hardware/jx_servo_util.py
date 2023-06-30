@@ -35,7 +35,7 @@ SILENT_READ_TIMEOUT = 20E-3 # time to give the kernel to stall waiting to push o
 # worst-case catch-all for any corruption that fails the state machine, so we can clean the read buffer and start from fresh.
 READ_POLL_RATE = 1E-4 # Make this << OS tick rate, so we can pull from the read buffer with minimal delay when the data is available (without tight-looping and hogging CPU)
 
-ACTIVE_READ_TIMEOUT = 1E-3 # allow this time after we've received the head frame but still haven't seen enough returns.
+ACTIVE_READ_TIMEOUT = 7E-3 # allow this time after we've received the head frame but still haven't seen enough returns.
 # ^^ This number is important and based on two factors:
 # 1. Fully flushing the read buffer / not missing frames. This guards against if the read buffer is slow to pop the contents.
 #    This part of the number is based on roundtrip analyses on Ubuntu 20 on an AMD processor as well as Ubuntu 18 on a Jetson Nano showing quantization to 1ms ticks: in the worst-case scenario, we read the head frame right before one tick and the rest of the packet comes in the next tick.
@@ -44,8 +44,8 @@ ACTIVE_READ_TIMEOUT = 1E-3 # allow this time after we've received the head frame
 #    This needs to be at least as long as the packet itself for another reason: we can't have this read routine exit prematurely and give control before the servos have a chance to respond.
 #    This is expected to be the lax constraint, unless the OS ticks start getting faster. Currently, with ~10 servos at 40 bits per response (10 bits per frame), margining to twice that amount of time for padding time (very pessmistic) at 1Mb/s, expecting ~1ms for transmission.
 
-MAX_JX_SERVO_IDX = 12
-N_SERVOS = 12 # TODO: Centralize this (where's the authority on this number?)
+MAX_JX_SERVO_IDX = 15
+N_SERVOS = 16 # TODO: Centralize this (where's the authority on this number?)
 
 def cmd_print(A):
     log_string("".join([format((a >> 6) & 0x3, "02b") + " " + format(a & 0x3F, "06b") + " | " for a in A]))
