@@ -24,7 +24,7 @@ void write_goal_position_p1(MotorPort *port, uint8_t id, uint16_t angle) {
  * Dynamixel 1.0
  * https://emanual.robotis.com/docs/en/dxl/ax/ax-12a/
  */
-void read_present_position_p1(MotorPort *port, uint8_t id) {
+void read_motor_present_position_p1(MotorPort *port, uint8_t id) {
   uint8_t dataLen = 2;
   uint8_t addr = 36;
   _motor_read_p1(port, id, addr, port->rxBuffer, dataLen);

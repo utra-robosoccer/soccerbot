@@ -50,8 +50,8 @@ def test_firmware_interface():
 
     for i in range(50000):
         j = JointState()
-        j.name = ["right_leg_motor_3", "right_leg_motor_4", "right_leg_motor_5"]
-        j.position = [math.sin(i / 180 * math.pi) * 1, math.cos(i / 180 * math.pi) * 1, math.cos(i / 180 * math.pi) * 1]
+        j.name = ["left_arm_motor_0", "left_arm_motor_1"]
+        j.position = [math.sin(i / 180 * math.pi) * 0.1, math.cos(i / 180 * math.pi) * 0.1]
         # j.position = [0, 0, 0]
         j.header.stamp = rospy.Time.now()
 

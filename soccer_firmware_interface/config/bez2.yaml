@@ -35,22 +35,22 @@ left_leg_motor_5:
   angle_max: 360
   angle_min: 0
 right_leg_motor_0:
-  id: 9
-  type: "ax12"
-  angle_zero: 150
-  angle_max: 300
+  id: 10
+  type: "xm430"
+  angle_zero: 180
+  angle_max: 360
   angle_min: 0
 right_leg_motor_1:
-  id: 7
-  type: "ax12"
-  angle_zero: 150
-  angle_max: 300
+  id: 11
+  type: "xm430"
+  angle_zero: 180
+  angle_max: 360
   angle_min: 0
 right_leg_motor_2:
-  id: 8
-  type: "ax12"
-  angle_zero: 150
-  angle_max: 300
+  id: 12
+  type: "xm430"
+  angle_zero: 180
+  angle_max: 360
   angle_min: 0
 right_leg_motor_3:
   id: 13
@@ -71,38 +71,38 @@ right_leg_motor_5:
   angle_max: 360
   angle_min: 0
 left_arm_motor_0:
-  id: 12
-  type: "ax12"
-  angle_zero: 150
-  angle_max: 300
+  id: 0
+  type: "xm430"
+  angle_zero: 180
+  angle_max: 360
   angle_min: 0
 left_arm_motor_1:
-  id: 13
-  type: "ax12"
-  angle_zero: 150
-  angle_max: 300
+  id: 1
+  type: "xm430"
+  angle_zero: 180
+  angle_max: 360
   angle_min: 0
 right_arm_motor_0:
-  id: 14
-  type: "ax12"
-  angle_zero: 150
-  angle_max: 300
+  id: 2
+  type: "xm430"
+  angle_zero: 180
+  angle_max: 360
   angle_min: 0
 right_arm_motor_1:
-  id: 15
-  type: "ax12"
-  angle_zero: 150
-  angle_max: 300
+  id: 3
+  type: "xm430"
+  angle_zero: 180
+  angle_max: 360
   angle_min: 0
 head_motor_0:
   id: 16
-  type: "ax12"
-  angle_zero: 150
-  angle_max: 300
+  type: "xl430"
+  angle_zero: 180
+  angle_max: 360
   angle_min: 0
 head_motor_1:
   id: 17
-  type: "ax12"
-  angle_zero: 150
-  angle_max: 300
+  type: "xl430"
+  angle_zero: 180
+  angle_max: 360
   angle_min: 0

@@ -25,6 +25,7 @@
 #include <stdbool.h>
 #include "bringup_tests.h"
 #include "update_loop.h"
+#include "dynamixel_p1.h"
 #include "dynamixel_p2.h"
 /* USER CODE END Includes */
 
@@ -102,9 +103,9 @@ void init_ports() {
     .dirPinNum      = USART1_DIR_Pin,
     .dmaDoneReading = false,
     .currMotor      = 0,
-    .numMotors      = 0,
-    .motorIds       = {7, 8, 9},
-    .protocol       = {1, 1, 1}
+    .numMotors      = 2,
+    .motorIds       = {16, 17},
+    .protocol       = {1, 1}
   };
 
   port2 = (MotorPort){
@@ -115,9 +116,9 @@ void init_ports() {
       .dirPinNum      = USART2_DIR_Pin,
       .dmaDoneReading = false,
       .currMotor      = 0,
-      .numMotors      = 3,
-      .motorIds       = {13, 14, 15},
-      .protocol       = {1, 1, 1}
+      .numMotors      = 4,
+      .motorIds       = {0, 1, 2, 3},
+      .protocol       = {2, 2, 2, 2}
     };
 
   port3 = (MotorPort){
@@ -127,8 +128,9 @@ void init_ports() {
       .pinPort        = USART3_DIR_GPIO_Port,
       .dirPinNum      = USART3_DIR_Pin,
       .dmaDoneReading = false,
-      .numMotors      = 0,
-      .motorIds       = {1}
+      .numMotors      = 3,
+      .motorIds       = {13, 14, 15},
+      .protocol       = {1, 1, 1}
     };
 
   port4 = (MotorPort){
@@ -138,8 +140,9 @@ void init_ports() {
       .pinPort        = USART4_DIR_GPIO_Port,
       .dirPinNum      = USART4_DIR_Pin,
       .dmaDoneReading = false,
-      .numMotors      = 0,
-      .motorIds       = {1}
+      .numMotors      = 3,
+      .motorIds       = {7, 8, 9},
+      .protocol       = {1, 1, 1}
     };
 
   port5 = (MotorPort){
@@ -149,8 +152,9 @@ void init_ports() {
       .pinPort        = USART5_DIR_GPIO_Port,
       .dirPinNum      = USART5_DIR_Pin,
       .dmaDoneReading = false,
-      .numMotors      = 0,
-      .motorIds       = {1}
+      .numMotors      = 3,
+      .motorIds       = {4, 5, 6},
+      .protocol       = {2, 2, 2}
     };
 
   port6 = (MotorPort){
@@ -160,8 +164,9 @@ void init_ports() {
       .pinPort        = USART6_DIR_GPIO_Port,
       .dirPinNum      = USART6_DIR_Pin,
       .dmaDoneReading = false,
-      .numMotors      = 0,
-      .motorIds       = {1}
+      .numMotors      = 3,
+      .motorIds       = {10, 11, 12},
+      .protocol       = {2, 2, 2}
     };
 
   motorPorts[0] = &port1;
@@ -173,15 +178,24 @@ void init_ports() {
 }
 
 void init_motors() {
-  // TODO: set motor position limits
+  for(uint8_t p = 0; p < 6; p++)
+  {
+	  uint8_t numMotors = motorPorts[p]->numMotors;
+	  for(uint8_t m = 0; m < numMotors; m++)
+	  {
+	    uint8_t motorId = motorPorts[p]->motorIds[m];
+	    uint8_t protocol = motorPorts[p]->protocol[m];
 
-  // TODO: enable torques
-//  motor_torque_en_p2(motorPorts[1], 4, 1);
-//  HAL_Delay(10);
-//  motor_torque_en_p2(motorPorts[1], 5, 1);
-//  HAL_Delay(10);
-//  motor_torque_en_p2(motorPorts[1], 6, 1);
-//  HAL_Delay(10);
+		// Enable Torques
+		if(protocol == 1)
+		  motor_torque_en_p1(motorPorts[p], motorId, 1);
+		else
+		  motor_torque_en_p2(motorPorts[p], motorId, 1);
+
+		HAL_Delay(20);
+	  }
+
+
 
   // TODO: set PIDs
 
@@ -189,6 +203,7 @@ void init_motors() {
 
   // TODO: zero motors
   // slowly bring motors to zero position
+  }
 }
 
 /* USER CODE END 0 */
@@ -242,7 +257,7 @@ int main(void)
     update();
 
     // test Dynamixel 2.0
-    test_led_p2(&port2, 0x6);
+//    test_led_p2(&port2, 0x6);
 //    test_motor_sweep2(&port2);
 //    test_ping2(&port2);
 //    motor_torque_en_p2(&port2, 0xfe, 0);
@@ -263,8 +278,8 @@ int main(void)
 //    HAL_Delay(100);
 
     // test Dynamixel 1.0
-//    test_motor_sweep1(&port1, 0x2);
-//    _motor_ping_p1(&port1, 0x2);
+//    test_motor_sweep1(&port2, 13);
+//    _motor_ping_p1(&port6, 13);
 
 	  HAL_GPIO_TogglePin(GPIOA, GREEN_LED_Pin);
 	  HAL_Delay(100);

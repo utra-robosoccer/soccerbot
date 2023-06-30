@@ -113,9 +113,8 @@ void test_motor_sweep1(MotorPort *port, uint8_t id) {
 	uint16_t angle = 0;
 	uint16_t count = 0;
 	int16_t dir = 1;
-	motor_torque_en_p2(&port1, 10, 1);
-	motor_torque_en_p2(&port1, 11, 1);
-	motor_torque_en_p2(&port1, 12, 1);
+	motor_torque_en_p1(port, id, 1);
+	HAL_Delay(20);
 	while (1)
 	{
 		  if(dir) angle += 5;
@@ -128,19 +127,10 @@ void test_motor_sweep1(MotorPort *port, uint8_t id) {
 		  if(count == 2) break; // end test
 		  angle %= 0x3ff;
 
-		  HAL_Delay(5);
-
-		  write_goal_position_p1(&port2, 0x1, angle);
-		  write_goal_position_p2(&port1, 10, angle);
-	      HAL_Delay(10);
-		  write_goal_position_p1(&port2, 0x2, angle);
-		  write_goal_position_p2(&port1, 11, angle);
-		  HAL_Delay(10);
-		  write_goal_position_p1(&port2, 0x3, angle);
-		  write_goal_position_p2(&port1, 12, angle);
-//		  if(angle % 100 == 0) led = led ^ 1;
-//		  update_motor_led_p2(&port4, 12, led);
-		  HAL_Delay(10);
+		  // set write direction
+		  HAL_GPIO_WritePin(port->pinPort, port->dirPinNum, GPIO_PIN_SET);
+		  write_goal_position_p1(port, id, angle);
+		  HAL_Delay(20);
 	}
 }
 

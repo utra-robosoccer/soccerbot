@@ -17,8 +17,8 @@ void update_motor_id_p2(MotorPort *p, uint8_t id, uint8_t new_id);
 void update_baud_rate_p2(MotorPort *p, uint8_t id, uint8_t rate);
 void motor_torque_en_p2(MotorPort *p, uint8_t id, uint8_t val);
 
-void read_motor_id(MotorPort * p);
-void read_motor_present_position(MotorPort * p, uint8_t id);
+void read_motor_id_p2(MotorPort * p);
+void read_motor_present_position_p2(MotorPort * p, uint8_t id);
 
 void _motor_write_p2(MotorPort *p, uint8_t id, uint16_t addr, uint8_t* data, uint16_t dataLen);
 void _motor_read_p2(MotorPort *p, uint8_t id, uint16_t addr, uint16_t dataLen);

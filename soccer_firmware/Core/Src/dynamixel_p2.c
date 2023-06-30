@@ -76,13 +76,13 @@ void update_baud_rate_p2(MotorPort *p, uint8_t id, uint8_t rate) {
   _motor_write_p2(p, id, addr, data, dataLen);
 }
 
-void read_motor_id(MotorPort * p) {
+void read_motor_id_p2(MotorPort * p) {
   uint16_t dataLen = 1;
   uint16_t addr = 7;
   _motor_read_p2(p, 0x2, addr, dataLen);
 }
 
-void read_motor_present_position(MotorPort * p, uint8_t id) {
+void read_motor_present_position_p2(MotorPort * p, uint8_t id) {
   uint16_t dataLen = 4;
   uint16_t addr = 132;
   _motor_read_p2(p, id, addr, dataLen);
@@ -162,14 +162,14 @@ void _motor_read_p2(MotorPort *p, uint8_t id, uint16_t addr, uint16_t dataLen) {
 
   HAL_GPIO_WritePin(p->pinPort, p->dirPinNum, BUFFER_READ);
 
-  p->rxPacketLen = 11 + dataLen;
-  HAL_UART_Receive_DMA(p->huart, p->rxBuffer, p->rxPacketLen);
-
-  uint32_t tLast = HAL_GetTick();
-  uint32_t TIMEOUT = 10; // milliseconds
-  while(p->dmaDoneReading == false && HAL_GetTick() - tLast < TIMEOUT){
-  }
-  p->dmaDoneReading = false;
+//  p->rxPacketLen = 11 + dataLen;
+//  HAL_UART_Receive_DMA(p->huart, p->rxBuffer, p->rxPacketLen);
+//
+//  uint32_t tLast = HAL_GetTick();
+//  uint32_t TIMEOUT = 10; // milliseconds
+//  while(p->dmaDoneReading == false && HAL_GetTick() - tLast < TIMEOUT){
+//  }
+//  p->dmaDoneReading = false;
 }
 
 void wait_for_dma_read_p2(MotorPort *p) {

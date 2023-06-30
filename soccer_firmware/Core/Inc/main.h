@@ -49,8 +49,10 @@ typedef struct {
   uint8_t rxBuffer[100]; // 100bytes is enough to store packets from Dynamixel
   bool dmaDoneReading;
   bool readRequestSent;
+  uint16_t timeout;
 
-  uint8_t currMotor;
+  uint8_t currMotor; // for keeping track of which motor to write to
+  uint8_t currReadMotor; // for keeping track of which motor to read from
   uint8_t numMotors; // how many motors connected to this uart port?
   uint8_t motorIds[10]; // support at most 10 motors
   uint8_t protocol[10];
