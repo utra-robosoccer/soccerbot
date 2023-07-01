@@ -55,7 +55,7 @@ class FirmwareInterface:
                 # data_h = self.serial.read()
                 # angle = data_l[0] | (data_h[0] << 8)
                 # print(data_h[0], data_l[0], angle)
-                print(self.serial.read(size=42))
+                print("read:", list(self.serial.read(size=42)))
                 continue
 
                 # Publish the Joint State
@@ -120,7 +120,7 @@ class FirmwareInterface:
                 bytes_to_write[id * 2 + 1] = angle_final_bytes_2
                 pass
 
-            print(bytes_to_write)
+            # print('write:', bytes_to_write)
             self.serial.write(bytes_to_write)
 
         except Exception as ex:

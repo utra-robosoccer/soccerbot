@@ -48,7 +48,7 @@ typedef struct {
   uint8_t rxPacketLen; // received packet length should be smaller then max buffer size
   uint8_t rxBuffer[100]; // 100bytes is enough to store packets from Dynamixel
   bool dmaDoneReading;
-  bool readRequestSent;
+  bool motorServiced;
   uint16_t timeout;
 
   uint8_t currMotor; // for keeping track of which motor to write to

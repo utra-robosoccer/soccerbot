@@ -150,22 +150,22 @@ void _motor_read_p1(MotorPort *p, uint8_t id, uint8_t addr, uint8_t* buf, uint8_
   // set read direction
   HAL_GPIO_WritePin(p->pinPort, p->dirPinNum, GPIO_PIN_RESET);
 
-  uint8_t rxBuf[10];
-  uint8_t packetLen = 6 + dataLen;
-  HAL_UART_Receive_DMA(p->huart, rxBuf, packetLen);
-
-  uint32_t tLast = HAL_GetTick();
-  uint32_t TIMEOUT = 10; // milliseconds
-  while(p->dmaDoneReading == false && HAL_GetTick() - tLast < TIMEOUT){
-  }
-  p->dmaDoneReading = false;
-
-  // TODO: check crc
-
-  uint8_t err = rxBuf[4];
-  for(uint8_t i = 0; i < dataLen; i++) {
-    buf[i] = rxBuf[5+i];
-  }
+//  uint8_t rxBuf[10];
+//  uint8_t packetLen = 6 + dataLen;
+//  HAL_UART_Receive_DMA(p->huart, rxBuf, packetLen);
+//
+//  uint32_t tLast = HAL_GetTick();
+//  uint32_t TIMEOUT = 10; // milliseconds
+//  while(p->dmaDoneReading == false && HAL_GetTick() - tLast < TIMEOUT){
+//  }
+//  p->dmaDoneReading = false;
+//
+//  // TODO: check crc
+//
+//  uint8_t err = rxBuf[4];
+//  for(uint8_t i = 0; i < dataLen; i++) {
+//    buf[i] = rxBuf[5+i];
+//  }
 }
 
 

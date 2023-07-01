@@ -164,11 +164,12 @@ void _motor_read_p2(MotorPort *p, uint8_t id, uint16_t addr, uint16_t dataLen) {
 
 //  p->rxPacketLen = 11 + dataLen;
 //  HAL_UART_Receive_DMA(p->huart, p->rxBuffer, p->rxPacketLen);
-//
+
 //  uint32_t tLast = HAL_GetTick();
 //  uint32_t TIMEOUT = 10; // milliseconds
 //  while(p->dmaDoneReading == false && HAL_GetTick() - tLast < TIMEOUT){
 //  }
+//  crc = _update_crc(0, p->rxBuffer, 13);
 //  p->dmaDoneReading = false;
 }
 
