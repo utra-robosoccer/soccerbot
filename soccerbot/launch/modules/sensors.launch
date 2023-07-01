@@ -1,6 +1,6 @@
 <!-- Launches the sensors and darknet for the robot -->
 <launch>
-    <arg name="robot_model" default="bez1" />
+    <arg name="robot_model" default="bez2" />
     <arg name="play_rosbag" default="false" />
     <arg name="record_rosbag" default="false" />
     <arg name="rosbag_file" default="$(find soccer_common)/bags/localization_1.bag" />
@@ -23,8 +23,9 @@
         </node>
 
         <!-- Motor Drivers -->
-        <node pkg="soccer_firmware_interface" type="main.py" output="screen">
+        <node name="firmware_interface" pkg="soccer_firmware_interface" type="main.py" output="screen">
             <param name="motor_mapping" value="$(find soccer_firmware_interface)/config/$(arg robot_model).yaml" />
+            <param name="motor_types" value="$(find soccer_firmware_interface)/config/motor_types.yaml" />
         </node>
     </group>
 </launch>

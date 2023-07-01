@@ -1,7 +1,9 @@
+#!/usr/bin/env python3
 import time
 
 import rospy
 import serial
+
 from soccer_firmware_interface.firmware_interface import FirmwareInterface
 
 

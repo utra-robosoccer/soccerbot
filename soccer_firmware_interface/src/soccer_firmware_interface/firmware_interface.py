@@ -1,18 +1,27 @@
 import math
+import os
 import threading
 
+import rosparam
 import rospy
 import serial
+import yaml
 from sensor_msgs.msg import Imu, JointState
 
 
 class FirmwareInterface:
     def __init__(self):
         self.joint_command_subscriber = rospy.Subscriber("joint_command", JointState, self.joint_command_callback)
-        self.joint_state_publisher = rospy.Publisher("joint_state", JointState)
-        self.imu_publisher = rospy.Publisher("imu_raw", Imu)
+        self.joint_state_publisher = rospy.Publisher("joint_state", JointState, queue_size=10)
+        self.imu_publisher = rospy.Publisher("imu_raw", Imu, queue_size=10)
         self.serial = None
         self.i = 0
+        with open(rospy.get_param("firmware_interface/motor_types")) as f:
+            param_info = yaml.safe_load(f)
+            rosparam.upload_params("motor_types", param_info)
+        with open(rospy.get_param("firmware_interface/motor_mapping")) as f:
+            param_info = yaml.safe_load(f)
+            rosparam.upload_params("motor_mapping", param_info)
         self.motor_mapping = rospy.get_param("motor_mapping")
         self.motor_id_to_name_dict = {self.motor_mapping[m]["id"]: m for m in self.motor_mapping}
 

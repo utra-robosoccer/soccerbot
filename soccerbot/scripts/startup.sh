@@ -6,5 +6,5 @@ MY_IP=$(ifconfig wlan0 | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo 
 export ROS_IP=$MY_IP
 export ROS_MASTER_URI="http://"$ROS_IP":11311"
 echo $ROS_MASTER_URI
-roslaunch soccer_hardware soccer_hardware.launch
+roslaunch soccer_firmware_interface soccer_hardware.launch
 read -p "Press any key to continue... " -n1 -s
