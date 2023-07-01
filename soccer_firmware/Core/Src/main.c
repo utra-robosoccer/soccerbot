@@ -148,7 +148,7 @@ void init_ports() {
   port5 = (MotorPort){
       .huart          = &huart5,
       .hdma_uart_tx   = &hdma_uart5_tx,
-      .hdma_uart_rx   = &hdma_uart5_rx ,
+      .hdma_uart_rx   = &hdma_uart5_rx,
       .pinPort        = USART5_DIR_GPIO_Port,
       .dirPinNum      = USART5_DIR_Pin,
       .dmaDoneReading = false,
@@ -246,8 +246,13 @@ int main(void)
   MX_USART6_UART_Init();
   MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
+
+  // give some time for motors to power on and initialize, before we try to talk to them
+  HAL_Delay(1000);
+
   init_ports();
   init_motors();
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -281,8 +286,8 @@ int main(void)
 //    test_motor_sweep1(&port2, 13);
 //    _motor_ping_p1(&port6, 13);
 
-	  HAL_GPIO_TogglePin(GPIOA, GREEN_LED_Pin);
-	  HAL_Delay(100);
+//	  HAL_GPIO_TogglePin(GPIOA, GREEN_LED_Pin);
+//	  HAL_Delay(1000);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
