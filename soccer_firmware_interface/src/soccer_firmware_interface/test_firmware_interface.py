@@ -9,6 +9,7 @@ import rospy
 import serial
 import yaml
 from sensor_msgs.msg import JointState
+
 from soccer_firmware_interface.firmware_interface import FirmwareInterface
 
 
@@ -71,12 +72,13 @@ def test_firmware_interface():
             "right_leg_motor_5",
         ]
         # j.position = [math.sin(i / 180 * math.pi) * 0.1, math.cos(i / 180 * math.pi) * 0.1]
-        ang = math.sin(i / 180 * math.pi) * 0.2
+        # ang = math.sin(i / 180 * math.pi) * 0.2
+        ang = 0.0
         j.position = [ang] * 18
         j.header.stamp = rospy.Time.now()
 
         f.joint_command_callback(j)
 
-        time.sleep(0.01)
+        # time.sleep(0.01)
 
     pass

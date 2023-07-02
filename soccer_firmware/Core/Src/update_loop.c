@@ -21,6 +21,11 @@ void update()
   {
     if (usb_received) // when we receive USB packet, service it right away
     {
+      // check for header packet
+      if(usbRxBuffer[0] != 0xff || usbRxBuffer[1] != 0xff) {
+    	  continue;
+      }
+
       command_motors();
       usb_received = false;
 
@@ -66,7 +71,7 @@ void command_motors() {
       }
 
       // angle format depends on how Python script
-      uint16_t angle = usbRxBuffer[motorId * 2] | (usbRxBuffer[motorId * 2 + 1] << 8);
+      uint16_t angle = usbRxBuffer[2 + motorId * 2] | (usbRxBuffer[2 + motorId * 2 + 1] << 8);
 
       if(protocol == 1) {
         write_goal_position_p1(motorPorts[i], motorId, angle);

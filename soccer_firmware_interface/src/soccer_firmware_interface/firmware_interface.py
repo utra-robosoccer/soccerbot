@@ -11,11 +11,12 @@ from sensor_msgs.msg import Imu, JointState
 
 class FirmwareInterface:
     def __init__(self):
-        self.joint_command_subscriber = rospy.Subscriber("joint_command", JointState, self.joint_command_callback)
-        self.joint_state_publisher = rospy.Publisher("joint_state", JointState, queue_size=10)
-        self.imu_publisher = rospy.Publisher("imu_raw", Imu, queue_size=10)
+        self.joint_command_subscriber = rospy.Subscriber("robot1/joint_command", JointState, self.joint_command_callback)
+        self.joint_state_publisher = rospy.Publisher("robot1/joint_state", JointState, queue_size=1)
+        self.imu_publisher = rospy.Publisher("imu_raw", Imu, queue_size=1)
         self.serial = None
         self.i = 0
+
         with open(rospy.get_param("firmware_interface/motor_types")) as f:
             param_info = yaml.safe_load(f)
             rosparam.upload_params("motor_types", param_info)
@@ -64,7 +65,7 @@ class FirmwareInterface:
                 # data_h = self.serial.read()
                 # angle = data_l[0] | (data_h[0] << 8)
                 # print(data_h[0], data_l[0], angle)
-                print("read:", list(self.serial.read(size=42)))
+                # print("read:", list(self.serial.read(size=42)))
                 continue
 
                 # Publish the Joint State
@@ -104,7 +105,9 @@ class FirmwareInterface:
             self.reconnect_serial_port()
 
             # [0xff, 0xff, angle1_lo, angle1_hi, angle2_lo ..., crc_lo, crc_hi]
-            bytes_to_write = [0x0] * (18 * 2)
+            bytes_to_write = [0x0] * (2 + 18 * 2)
+            bytes_to_write[0] = 0xFF
+            bytes_to_write[1] = 0xFF
 
             for name, angle in zip(joint_state.name, joint_state.position):
                 id = self.motor_mapping[name]["id"]
@@ -125,11 +128,11 @@ class FirmwareInterface:
                 angle_final_bytes_2 = (angle_final_bytes >> 8) & 0xFF
 
                 assert id < 18
-                bytes_to_write[id * 2] = angle_final_bytes_1
-                bytes_to_write[id * 2 + 1] = angle_final_bytes_2
+                bytes_to_write[2 + id * 2] = angle_final_bytes_1
+                bytes_to_write[2 + id * 2 + 1] = angle_final_bytes_2
                 pass
 
-            # print('write:', bytes_to_write)
+            print("write:", bytes_to_write)
             self.serial.write(bytes_to_write)
 
         except Exception as ex:
