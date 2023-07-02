@@ -11,6 +11,7 @@ from rospy.impl.tcpros_base import DEFAULT_BUFF_SIZE
 if "ROS_NAMESPACE" not in os.environ:
     os.environ["ROS_NAMESPACE"] = "/robot1"
 
+import time
 from argparse import ArgumentParser
 
 import cv2
@@ -58,6 +59,8 @@ class ObjectDetectionNode(object):
     """
 
     def __init__(self, model_path):
+        self._first_run = True
+        self.__tmp_img = None
         self.SOCCER_BALL = 0
         self.CONFIDENCE_THRESHOLD = rospy.get_param("~ball_confidence_threshold", 0.75)
 
@@ -96,20 +99,33 @@ class ObjectDetectionNode(object):
 
     def callback(self, msg: Image):
         # webots: 480x640x4pixels
+
         if self.robot_state.status not in [
             RobotState.STATUS_LOCALIZING,
             RobotState.STATUS_READY,
             RobotState.ROLE_UNASSIGNED,
         ]:
-            return
+            pass  # return
 
         if self.game_state.gameState != GameState.GAMESTATE_PLAYING:
-            return
+            pass  # return
 
-        rospy.loginfo_once("Object Detection Receiving image")
+        rospy.loginfo("Object Detection Receiving image")
+        t0 = time.time()
         # width x height x channels (bgra8)
-        image = self.br.imgmsg_to_cv2(msg)
-        self.camera.reset_position(timestamp=msg.header.stamp)
+        rospy.logwarn(self._first_run)
+        rospy.logwarn(id(self))
+
+        if self._first_run:
+            rospy.loginfo("Retransforming image")
+            self.__tmp_img = self.br.imgmsg_to_cv2(msg)
+            self.camera.reset_position(timestamp=msg.header.stamp)
+
+        self._first_run = False
+
+        image = self.__tmp_img
+        rospy.loginfo(image.shape)
+        rospy.loginfo("c1: %.3e" % (time.time() - t0))
 
         # cover horizon to help robot ignore things outside field
         cover_horizon_up_threshold = rospy.get_param("cover_horizon_up_threshold", 30)
@@ -123,11 +139,14 @@ class ObjectDetectionNode(object):
             # 2. inference
 
             results = self.model(img)
+            rospy.loginfo("c2: %.3e" % (time.time() - t0))
+            rospy.loginfo(results)
 
             bbs_msg = BoundingBoxes()
-            id = 0
+            _id = 0
             for prediction in results.xyxy[0]:
                 x1, y1, x2, y2, confidence, img_class = prediction.cpu().numpy()
+                rospy.loginfo("c3: %.3e" % (time.time() - t0))
                 y1 += h + 1
                 y2 += h + 1
                 if img_class in [label.value for label in Label] and confidence > self.CONFIDENCE_THRESHOLD:
@@ -137,7 +156,7 @@ class ObjectDetectionNode(object):
                     bb_msg.xmax = round(x2)  # bottom right of bounding box
                     bb_msg.ymax = round(y2)
                     bb_msg.probability = confidence
-                    bb_msg.id = id
+                    bb_msg.id = _id
                     bb_msg.Class = str(int(img_class))
                     # TODO Joanne look the pixels of the image in addition to the bounding box,
                     #  calculate likely foot coordinate xy
@@ -154,7 +173,7 @@ class ObjectDetectionNode(object):
                             bb_msg.obstacle_detected = True
 
                     bbs_msg.bounding_boxes.append(bb_msg)
-                    id += 1
+                    _id += 1
 
             bbs_msg.header = msg.header
             try:
