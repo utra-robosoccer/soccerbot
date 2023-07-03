@@ -1,406 +1,343 @@
 #include "MPU6050.h"
+#include <stdbool.h>
+//uint16_t devAddr = MPU6050_DEFAULT_ADDRESS; // default I2C address(?)
+//I2C_HandleTypeDef hi2c1;
 
-//The first section of this is new content. This, along with MPU6050.h, are being rebuilt from scratch. The code which previously existed is further below.
+// Reference file from existing Robosoccer repo under soccer_embedded on firmware branch:
+// https://github.com/utra-robosoccer/soccerbot/blob/firmware/soccer_embedded/Common/component/MPU6050/MPU6050.cpp
 
-/** Default constructor, uses default I2C address.
- * @see MPU6050_DEFAULT_ADDRESS
- */
+// --------------------------- WORKAROUND FUNCTIONS -------------------------------------------------
+// We only need these functions for a silicon issue that affects the F446RE and
+// not the F767ZI
+#if defined(USE_I2C_SILICON_BUG_FIX)
+// Note: The following 2 functions are used as a workaround for an issue where the BUSY flag of the
+// I2C module is erroneously asserted in the hardware (a silicon bug, essentially). This workaround has
+// not been thoroughly tested, but we know it works
+//
+// Overall, use these functions with EXTREME caution.
+/**
+  * @brief   Helper function for I2C_ClearBusyFlagErratum.
+  * @param   None
+  * @return  None
+  */
+uint8_t wait_for_gpio_state_timeout(
+    GPIO_TypeDef* port,
+    uint16_t pin,
+    GPIO_PinState state,
+    uint8_t timeout
+)
+{
 
-uint16_t devAddr = MPU6050_DEFAULT_ADDRESS;
-
-
-/*
- * MPU6050:MPU6050_writereg(MPU6050_HandleTypeDef *sMPU6050,uint8_t reg_addr, uint8_t data){
-		HAL_I2C_Mem_Write(sMPU6050 -> _I2C_Handle, (uint16_t) MPU6050_ADDR, (uint16_t) reg_addr, 1, &data, 1, 10);
-}*/
-
-
-void MPU6050_init(MPU6050_HandleTypeDef *sMPU6050) {
-
-	 // Initialize MPU6050 device
-    sMPU6050->_I2C_Handle = &hi2c2;
-
-    // get stable time source
-    MPU6050_WRITE_REG(sMPU6050, MPU6050_RA_PWR_MGMT_1, 0x01);
-
-    // Configure Gyro and Accelerometer
-    // Disable FSYNC and set accelerometer and gyro bandwidth to 44 and 42 Hz, respectively;
-    // DLPF_CFG = bits 2:0 = 010; this sets the sample rate at 1 kHz for both
-    MPU6050_WRITE_REG(sMPU6050, MPU6050_RA_CONFIG, 0x03);
-
-    // Set sample rate = gyroscope output rate/(1 + SMPLRT_DIV)
-    MPU6050_WRITE_REG(sMPU6050, MPU6050_RA_SMPLRT_DIV, 0x04);
-
-    // Set gyroscope full scale range
-    // Range selects FS_SEL and AFS_SEL are 0 - 3, so 2-bit values are left-shifted into positions 4:3
-    uint8_t c = MPU6050_READ_REG(sMPU6050, MPU6050_RA_GYRO_CONFIG);
-    writeByte(MPU6050_ADDRESS, GYRO_CONFIG, c & ~0xE0);
-    writeByte(MPU6050_ADDRESS, GYRO_CONFIG, c & ~0x18);
-    writeByte(MPU6050_ADDRESS, GYRO_CONFIG, c | Gscale << 3);
-
-    // Set accelerometer configuration
-    c = readByte(MPU6050_ADDRESS, ACCEL_CONFIG);
-    writeByte(MPU6050_ADDRESS, ACCEL_CONFIG, c & ~0xE0);
-    writeByte(MPU6050_ADDRESS, ACCEL_CONFIG, c & ~0x18);
-    writeByte(MPU6050_ADDRESS, ACCEL_CONFIG, c | Ascale << 3);
-
-    // Configure Interrupts and Bypass Enable
-    // Set interrupt pin active high, push-pull, and clear on read of INT_STATUS, enable I2C_BYPASS_EN so additional chips
-    // can join the I2C bus and all can be controlled by the Arduino as master
-    writeByte(MPU6050_ADDRESS, INT_PIN_CFG, 0x02);
-    writeByte(MPU6050_ADDRESS, INT_ENABLE, 0x01);
+    uint32_t tick_start = HAL_GetTick();
+    uint8_t ret = 0;
+    /* Wait until flag is set */
+    while((state != HAL_GPIO_ReadPin(port, pin)) && (1 == ret)){
+        /* Check for the timeout */
+        if ((timeout == 0U) || (HAL_GetTick() - tick_start >= timeout)){
+            ret = 0;
+        }
+        asm("nop");
+    }
+    return ret;
 }
 
+/**
+  * @brief   This function big-bangs the I2C master clock
+  *          https://electronics.stackexchange.com/questions/267972/i2c-busy-flag-strange-behaviour/281046#281046
+  *          https://community.st.com/thread/35884-cant-reset-i2c-in-stm32f407-to-release-i2c-lines
+  *          https://electronics.stackexchange.com/questions/272427/stm32-busy-flag-is-set-after-i2c-initialization
+  *          http://www.st.com/content/ccc/resource/technical/document/errata_sheet/f5/50/c9/46/56/db/4a/f6/CD00197763.pdf/files/CD00197763.pdf/jcr:content/translations/en.CD00197763.pdf
+  * @param   num_clocks The number of times to cycle the I2C master clock
+  * @param   send_stop_bits 1 if stop bits are to be sent on SDA
+  * @return  None
+  */
+void generateClocks(uint8_t num_clocks, uint8_t send_stop_bits){
+    static struct I2C_Module{
+        I2C_HandleTypeDef* instance;
+        uint16_t           sda_pin;
+        GPIO_TypeDef*      sda_port;
+        uint16_t           scl_pin;
+        GPIO_TypeDef*      scl_port;
+    }i2cmodule = {&hi2c1, GPIO_PIN_7, GPIOB, GPIO_PIN_6, GPIOB};
 
+    static struct I2C_Module* i2c = &i2cmodule;
+    static uint8_t timeout = 1;
 
-void MPU6050_READ_DATA(__I2C_HandleTypeDef* _I2C_Handle, uint8_t Reg_addr, uint8_t* sensor_buffer){
-	uint8_t status = HAL_I2C_Mem_Read(_I2C_Handle,(uint16_t) MPU6050_ADDR,(uint16_t) Reg_addr, 1 , sensor_buffer, 6,1000);
+    GPIO_InitTypeDef gpio_init_struct;
+
+    I2C_HandleTypeDef* handler = NULL;
+
+    handler = i2c->instance;
+
+    // 1. Clear PE bit.
+    CLEAR_BIT(handler->Instance->CR1, I2C_CR1_PE);
+
+    gpio_init_struct.Mode = GPIO_MODE_OUTPUT_OD;
+    gpio_init_struct.Pull = GPIO_NOPULL;
+    gpio_init_struct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+
+    gpio_init_struct.Pin = i2c->scl_pin;
+    HAL_GPIO_Init(i2c->scl_port, &gpio_init_struct);
+
+    gpio_init_struct.Pin = i2c->sda_pin;
+    HAL_GPIO_Init(i2c->sda_port, &gpio_init_struct);
+
+    for(uint8_t i = 0; i < num_clocks; i++){
+        // 3. Check SCL and SDA High level in GPIOx_IDR.
+        if(send_stop_bits){
+            HAL_GPIO_WritePin(i2c->sda_port, i2c->sda_pin, GPIO_PIN_SET);
+        }
+        HAL_GPIO_WritePin(i2c->scl_port, i2c->scl_pin, GPIO_PIN_SET);
+
+        wait_for_gpio_state_timeout(i2c->scl_port, i2c->scl_pin, GPIO_PIN_SET, timeout);
+        if(send_stop_bits){
+            wait_for_gpio_state_timeout(i2c->sda_port, i2c->sda_pin, GPIO_PIN_SET, timeout);
+        }
+
+        // 4. Configure the SDA I/O as General Purpose Output Open-Drain, Low level (Write 0 to GPIOx_ODR).
+        if(send_stop_bits){
+            HAL_GPIO_WritePin(i2c->sda_port, i2c->sda_pin, GPIO_PIN_RESET);
+            wait_for_gpio_state_timeout(i2c->sda_port, i2c->sda_pin, GPIO_PIN_RESET, timeout); // 5. Check SDA Low level in GPIOx_IDR
+        }
+
+        // 6. Configure the SCL I/O as General Purpose Output Open-Drain, Low level (Write 0 to GPIOx_ODR).
+        HAL_GPIO_WritePin(i2c->scl_port, i2c->scl_pin, GPIO_PIN_RESET);
+        wait_for_gpio_state_timeout(i2c->scl_port, i2c->scl_pin, GPIO_PIN_RESET, timeout); // 7. Check SCL Low level in GPIOx_IDR.
+
+        // 8. Configure the SCL I/O as General Purpose Output Open-Drain, High level (Write 1 to GPIOx_ODR).
+        HAL_GPIO_WritePin(i2c->scl_port, i2c->scl_pin, GPIO_PIN_SET);
+        wait_for_gpio_state_timeout(i2c->scl_port, i2c->scl_pin, GPIO_PIN_SET, timeout); // 9. Check SCL High level in GPIOx_IDR.
+
+        // 10. Configure the SDA I/O as General Purpose Output Open-Drain , High level (Write 1 to GPIOx_ODR).
+        if(send_stop_bits){
+            HAL_GPIO_WritePin(i2c->sda_port, i2c->sda_pin, GPIO_PIN_SET);
+            wait_for_gpio_state_timeout(i2c->sda_port, i2c->sda_pin, GPIO_PIN_SET, timeout); // 11. Check SDA High level in GPIOx_IDR.
+        }
+    }
+
+    // 12. Configure the SCL and SDA I/Os as Alternate function Open-Drain.
+    gpio_init_struct.Mode = GPIO_MODE_AF_OD;
+    gpio_init_struct.Alternate = GPIO_AF4_I2C1;
+
+    gpio_init_struct.Pin = i2c->scl_pin;
+    HAL_GPIO_Init(i2c->scl_port, &gpio_init_struct);
+
+    gpio_init_struct.Pin = i2c->sda_pin;
+    HAL_GPIO_Init(i2c->sda_port, &gpio_init_struct);
+
+    // 13. Set SWRST bit in I2Cx_CR1 register.
+    SET_BIT(handler->Instance->CR1, I2C_CR1_SWRST);
+    asm("nop");
+
+    /* 14. Clear SWRST bit in I2Cx_CR1 register. */
+    CLEAR_BIT(handler->Instance->CR1, I2C_CR1_SWRST);
+    asm("nop");
+
+    /* 15. Enable the I2C peripheral by setting the PE bit in I2Cx_CR1 register */
+    SET_BIT(handler->Instance->CR1, I2C_CR1_PE);
+    asm("nop");
+
+    HAL_I2C_Init(handler);
 }
-
-void MPU6050_WRITE_REG(__I2C_HandleTypeDef* _I2C_Handle,uint8_t reg_addr, uint8_t data){
-	HAL_I2C_Mem_Write(_I2C_Handle, (uint16_t) MPU6050_ADDR, (uint16_t) reg_addr, 1, &data, 1, 10);
-}
-
-uint8_t MPU6050_READ_REG(__I2C_HandleTypeDef* _I2C_Handle, uint8_t reg_addr){
-	uint8_t receivebyte;
-	uint8_t status = HAL_I2C_Mem_Read(_I2C_Handle,(uint16_t) MPU6050_ADDR,(uint16_t) reg_addr, 1,  &receivebyte, 1,1000);
-	return receivebyte;
-}
+#endif
+// --------------------------- END OF WORKAROUND FUNCTIONS -------------------------------------------------
 
 
-	/*
+/********************************* MPU6050 ***********************************/
+ImuSensor imuSensor;
+ImuStruct_t p_data;
 
-//Below this line is what already was here:
- Reads data stored in sensor output registers and stores data into a buffer
+extern I2C_HandleTypeDef hi2c1;
 
-   Parameters: Reg_addr: address of register required to be read from
-   	       sensor_buffer: an 8-bit array used to store sensor output data. Number of bytes aims to be stored in the buffer at a time is selected by
-	 		      	  	  the user.
+extern NOTIFIED_FROM_RX_ISR;
+extern MAX_DELAY_TIME;
 
-void MPU6050_READ_DATA(MPU6050_HandleTypeDef *sMPU6050, uint8_t Reg_addr, uint8_t* sensor_buffer){
-	uint8_t status = HAL_I2C_Mem_Read(sMPU6050 -> _I2C_Handle ,(uint16_t) MPU6050_ADDR,(uint16_t) Reg_addr, 1 , sensor_buffer, 6,1000);
-}
+extern lpf;
 
- Write one-byte to sensor register
- * Returns: None
+void MPU6050_init() {
+	imuSensor = (ImuSensor){
+		.m_i2c_handle = &hi2c1,
+		.devAddr = MPU6050_ADDR,
+		.m_ax = 0,
+		.m_ay = 0,
+		.m_az = 0,
+		.m_vx = 0,
+		.m_vy = 0,
+		.m_vz = 0,
+		.m_recv_byte = 0
+	};
 
-void MPU6050_WRITE_REG(MPU6050_HandleTypeDef *sMPU6050,uint8_t reg_addr, uint8_t data){
-	HAL_I2C_Mem_Write(sMPU6050 -> _I2C_Handle, (uint16_t) MPU6050_ADDR, (uint16_t) reg_addr, 1, &data, 1, 10);
-}
+	// write the values to it's corresponding register
+	Write_Reg(MPU6050_RA_I2C_MST_CTRL, 0b00001101); //0b00001101 is FAST MODE = 400 kHz
+	Write_Reg(MPU6050_RA_ACCEL_CONFIG, 0);
+	Write_Reg(MPU6050_RA_GYRO_CONFIG, 0);
+	Write_Reg(MPU6050_RA_PWR_MGMT_1, 0);
+	Write_Reg(MPU6050_RA_PWR_MGMT_2, 0);
+	Write_Reg(MPU6050_RA_SMPLRT_DIV, MPU6050_CLOCK_DIV_296);
 
-
- Reads data from registers via I2C3 and prints out the 8-bit data value via USART2
-   Return: None
-
-void MPU6050_READ_REG(MPU6050_HandleTypeDef *sMPU6050, uint8_t reg_addr){
-	uint8_t receivebyte;
-	uint8_t status = HAL_I2C_Mem_Read(sMPU6050 -> _I2C_Handle,(uint16_t) MPU6050_ADDR,(uint16_t) reg_addr, 1,  &receivebyte, 1,1000);
-}
-
-
- Initializes registers of sensor control:
-   MPU6050_RA_GYRO_CONFIG:  register address: 1B
-   		            configuration: Disables self-test mode for gyroscope, and sets gyroscope full scale range to ± 250 °/s
-   MPU6050_RA_ACCEL_CONFIG: register address：1C
-   		  	    configuration: Disables self-test mode for accelerometer, and sets acceerometer  full scale range to ± 2g
-   MPU6050_RA_PWR_MGMT_1:   register address: 6B
-   			    configuration: Disables sleep mode, set clock source as internal 8MHz oscillator
-   MPU6050_RA_PWR_MGMT_1:   register address: 6C
-   			    configuration: Disables standby mode for both sensors
-   MPU6050_RA_SMPLRT_DIV:   register address: 19
-   			    configuration: Specifies the divider from the gyroscope output rate to generate the Sample Rate for MPU-6050
-			    		   Sample Rate = Gyroscope Output Rate / (1 + SMPLRT_DIV)
-					   		Gyroscope Output Rate = 8KHz
-   Return: None
-
-void MPU6050_init(MPU6050_HandleTypeDef *sMPU6050){
-	MPU6050_WRITE_REG(sMPU6050, MPU6050_RA_ACCEL_CONFIG, 0);
-	MPU6050_WRITE_REG(sMPU6050, MPU6050_RA_GYRO_CONFIG, 0);
-	MPU6050_WRITE_REG(sMPU6050, MPU6050_RA_PWR_MGMT_1, 0);
-	MPU6050_WRITE_REG(sMPU6050, MPU6050_RA_PWR_MGMT_2, 0);
-	MPU6050_WRITE_REG(sMPU6050, MPU6050_RA_SMPLRT_DIV, MPU6050_CLOCK_DIV_296);
-	sMPU6050 -> _Sample_Rate = 8000/ (1+ MPU6050_CLOCK_DIV_296);
-}
-
- Resets the signal paths for all sensors (gyroscopes, accelerometers, and temperature sensor). This operation will also clear the sensor registers.
-   This bit automatically clears to 0 after the reset has been triggered.
-
-   register address: 6A
-   Return: None
-
-void MPU6050_RESET_SENSOR_REG(MPU6050_HandleTypeDef *sMPU6050){
-	MPU6050_WRITE_REG(sMPU6050, MPU6050_RA_USER_CTRL, 1);
-}
-
-
- Disables all interrupts
-   Register address： 38
-   Returns : None
-
-void MPU6050_Clear_Int(MPU6050_HandleTypeDef *sMPU6050){
-	MPU6050_WRITE_REG(sMPU6050, MPU6050_RA_INT_ENABLE, 0);
-}
-
-
- Enables data ready interrupt
-   Register address： 38
-   Returns : None
-
-void MPU6050_Data_Ready_Int(MPU6050_HandleTypeDef *sMPU6050){
-	MPU6050_WRITE_REG(sMPU6050, MPU6050_RA_INT_ENABLE, 1);
-}
-
- Reads output data stored in gyroscope output registers and prints out angular velocity
-    Returns : None
-
-
-void MPU6050_Get_Val_Gyro(){
-	MPU6050_Read_Gyroscope();
-	MPU6050_print_Angular_Velocity();
-}
-
- Only for testing
-
-void MPU6050_print_Angular_Velocity(MPU6050_HandleTypeDef *sMPU6050){
-	char buffer_X[20];
-	char buffer_Y[20];
-	char buffer_Z[20];
-	char buffer_remx[20];
-	char buffer_remy[20];
-	char buffer_remz[20];
-
-// 	Convert Integers to Characters
-	itoa(Gyro_X, buffer_X, 10);
-	itoa(Gyro_Y, buffer_Y, 10);
-	itoa(Gyro_Z, buffer_Z, 10);
-	itoa(Rem_X_Gyro, buffer_remx, 10);
-	itoa(Rem_Y_Gyro, buffer_remy, 10);
-	itoa(Rem_Z_Gyro, buffer_remz, 10);
-
-	HAL_UART_Transmit(&(sMPU6050 -> UART_Handle) , &Sign_X_Gyro ,1, 10);
-	HAL_UART_Transmit(sMPU6050 -> _UART_Handle, buffer_X ,3, 10);
-	HAL_UART_Transmit(sMPU6050 -> _UART_Handle,"." ,1 , 10);
-	HAL_UART_Transmit(sMPU6050 -> _UART_Handle,buffer_remx,1 , 10);
-	HAL_UART_Transmit(sMPU6050 -> _UART_Handle,"    " ,4 , 10);
-
-	HAL_UART_Transmit(sMPU6050 -> _UART_Handle, &Sign_Y_Gyro ,1, 10);
-	HAL_UART_Transmit(sMPU6050 -> _UART_Handle, buffer_Y ,3, 10);
-	HAL_UART_Transmit(sMPU6050 -> _UART_Handle,"." ,1 , 10);
-	HAL_UART_Transmit(sMPU6050 -> _UART_Handle,buffer_remy,1 , 10);
-	HAL_UART_Transmit(sMPU6050 -> _UART_Handle,"    " ,4 , 10);
-
-	HAL_UART_Transmit(sMPU6050 -> _UART_Handle, &Sign_Z_Gyro ,1, 10);
-	HAL_UART_Transmit(sMPU6050 -> _UART_Handle, buffer_Z ,3, 10);
-	HAL_UART_Transmit(sMPU6050 -> _UART_Handle,"." ,1 , 10);
-	HAL_UART_Transmit(sMPU6050 -> _UART_Handle,buffer_remz,1, 10);
-	HAL_UART_Transmit(sMPU6050 -> _UART_Handle,"    " ,4 , 10);
-	HAL_UART_Transmit(sMPU6050 -> _UART_Handle,"\n\r" ,2 , 10);
+	Set_LPF(lpf); // I don't know what lpf should be set to
 
 }
 
-
-//Only for testing
-
-void MPU6050_print_Acceleration(MPU6050_HandleTypeDef *sMPU6050){
-	char buffer_X[20];
-	char buffer_Y[20];
-	char buffer_Z[20];
-	char buffer_remx[20];
-	char buffer_remy[20];
-	char buffer_remz[20];
-
-// 	Convert Integers to Characters
-	itoa(Acc_X, buffer_X, 10);
-	itoa(Acc_Y, buffer_Y, 10);
-	itoa(Acc_Z, buffer_Z, 10);
-	itoa(Rem_X_Accel, buffer_remx, 10);
-	itoa(Rem_Y_Accel, buffer_remy, 10);
-	itoa(Rem_Z_Accel, buffer_remz, 10);
-
-	HAL_UART_Transmit(sMPU6050 -> _UART_Handle, &Sign_X_Accel ,1, 10);
-	HAL_UART_Transmit(sMPU6050 -> _UART_Handle, buffer_X ,3, 10);
-	HAL_UART_Transmit(sMPU6050 -> _UART_Handle,"." ,1 , 10);
-	HAL_UART_Transmit(sMPU6050 -> _UART_Handle,buffer_remx,3 , 10);
-	HAL_UART_Transmit(sMPU6050 -> _UART_Handle,"    " ,4 , 10);
-
-	HAL_UART_Transmit(sMPU6050 -> _UART_Handle, &Sign_Y_Accel ,1, 10);
-	HAL_UART_Transmit(sMPU6050 -> _UART_Handle, buffer_Y ,3, 10);
-	HAL_UART_Transmit(sMPU6050 -> _UART_Handle,"." ,1 , 10);
-	HAL_UART_Transmit(sMPU6050 -> _UART_Handle,buffer_remy,3 , 10);
-	HAL_UART_Transmit(sMPU6050 -> _UART_Handle,"    " ,4 , 10);
-
-	HAL_UART_Transmit(sMPU6050 -> _UART_Handle, &Sign_Z_Accel ,1, 10);
-	HAL_UART_Transmit(sMPU6050 -> _UART_Handle, buffer_Z ,3, 10);
-	HAL_UART_Transmit(sMPU6050 -> _UART_Handle,"." ,1 , 10);
-	HAL_UART_Transmit(sMPU6050 -> _UART_Handle,buffer_remz,3, 10);
-	HAL_UART_Transmit(sMPU6050 -> _UART_Handle,"    " ,4 , 10);
-	HAL_UART_Transmit(sMPU6050 -> _UART_Handle,"\n\r" ,2 , 10);
-
+HAL_StatusTypeDef Write_Reg(uint8_t reg_addr, uint8_t data){
+    return HAL_I2C_Mem_Write(
+    		imuSensor.m_i2c_handle,
+        (uint16_t) MPU6050_ADDR,
+        (uint16_t) reg_addr,
+        1,
+        &data,
+        1,
+        10
+    );
 }
 
-Reads output data stored in gyroscope output registers, and converts the data in 2's complement to decimal numbers
-  Returns : None
-void MPU6050_Read_Gyroscope(MPU6050_HandleTypeDef *sMPU6050){
-
-	uint8_t output_buffer[6];
-	MPU6050_READ_DATA(sMPU6050, MPU6050_RA_GYRO_XOUT_H,output_buffer);
-	uint16_t X = ((int16_t)(output_buffer[0]<<8|output_buffer[1]));
-	uint16_t Y = ((int16_t)(output_buffer[2]<<8|output_buffer[3]));
-	uint16_t Z = ((int16_t)(output_buffer[4]<<8|output_buffer[5]));
-	sMPU6050 ->_X_GYRO = X;
-	sMPU6050 ->_Y_GYRO = Y;
-	sMPU6050 ->_Z_GYRO = Z;
-
-	************The following part modifies outputs for printing prpose*********
-	X = abs((int16_t)(output_buffer[0]<<8|output_buffer[1]));
-	Y = abs((int16_t)(output_buffer[2]<<8|output_buffer[3]));
-	Z = abs((int16_t)(output_buffer[4]<<8|output_buffer[5]));
-	Sign_X_Gyro = (output_buffer[0] >> 7) ? '-' : '+';
-	Sign_Y_Gyro = (output_buffer[2] >> 7) ? '-' : '+';
-	Sign_Z_Gyro = (output_buffer[4] >> 7) ? '-' : '+';
-	Gyro_X = X/131;
-	Gyro_Y = Y/131;
-	Gyro_Z = Z/131;
-	Rem_X_Gyro = (int)(X % 131)*10;
-	Rem_Y_Gyro = (int)(Y % 131)*10;
-	Rem_Z_Gyro = (int)(Z % 131)*10;
+HAL_StatusTypeDef Read_Reg(uint8_t reg_addr){
+    return HAL_I2C_Mem_Read(
+    	imuSensor.m_i2c_handle,
+        (uint16_t) MPU6050_ADDR,
+        (uint16_t) reg_addr,
+        1,
+        &(imuSensor.m_recv_byte),
+        1,
+        1000
+    );
 }
 
-
-Reads output data stored in accelerometer output registers, and converts the data in 2's complement to decimal numbers
-  Returns : None
-void MPU6050_Read_Accelerometer(MPU6050_HandleTypeDef *sMPU6050){
-
-	uint8_t output_buffer[6];
-	MPU6050_READ_DATA(sMPU6050, MPU6050_RA_ACCEL_XOUT_H,output_buffer);
-	uint16_t X_A = (int16_t)(output_buffer[0]<<8|output_buffer[1]);
-	uint16_t Y_A = (int16_t)(output_buffer[2]<<8|output_buffer[3]);
-	uint16_t Z_A  = (int16_t)(output_buffer[4]<<8|output_buffer[5]);
-	sMPU6050 ->_X_ACCEL = X_A;
-	sMPU6050 ->_Y_ACCEL = Y_A;
-	sMPU6050 ->_Z_ACCEL = Z_A;
-
-	************The following part modifies outputs for printing prpose*********
-	uint16_t X = abs((int16_t)(output_buffer[0]<<8|output_buffer[1]));
-	uint16_t Y = abs((int16_t)(output_buffer[2]<<8|output_buffer[3]));
-	uint16_t Z = abs((int16_t)(output_buffer[4]<<8|output_buffer[5]));
-	Sign_X_Accel = (output_buffer[0] >> 7) ? '-' : '+';
-	Sign_Y_Accel = (output_buffer[2] >> 7) ? '-' : '+';
-	Sign_Z_Accel = (output_buffer[4] >> 7) ? '-' : '+';
-	Acc_X = X/INT_COEF;
-	acc_X =  X/INT_COEF;;
-	Acc_Y = Y/INT_COEF;
-	Acc_Z = Z/INT_COEF;
-	Rem_X_Accel = (int)(X % REM_COEF)*10;
-	Rem_Y_Accel = (int)(Y % REM_COEF)*10;
-	Rem_Z_Accel = (int)(Z % REM_COEF)*10;
+HAL_StatusTypeDef Read_Data_IT(uint8_t reg_addr, uint8_t* sensor_buffer){
+    return HAL_I2C_Mem_Read_IT(
+    	imuSensor.m_i2c_handle,
+        (uint16_t) MPU6050_ADDR,
+        (uint16_t) reg_addr,
+        1,
+        sensor_buffer,
+        6
+    );
 }
 
-For testing only.
-  Reads output data stored in accelerometer output registers(in decimal form) and prints out the value via USART2
-  Returns: None
+HAL_StatusTypeDef Read_Data(uint8_t reg_addr, uint8_t* sensor_buffer){
+    return HAL_I2C_Mem_Read(
+    	imuSensor.m_i2c_handle,
+        (uint16_t) MPU6050_ADDR,
+        (uint16_t) reg_addr,
+        1,
+        sensor_buffer,
+        6,
+        1000
+    );
+}
 
+bool Set_LPF(uint8_t lpf){
+    bool retval = false;
+    if(lpf <= 6){
+        // the LPF reg is decimal 26
+        uint8_t current_value;
+        uint8_t bitmask=7; // 00000111
 
-void MPU6050_Get_Val_Accel(){
-	MPU6050_Read_Accelerometer();
-    	MPU6050_print_Acceleration();
+        Read_Reg(26); //read the current value of the LPF reg, and save it to received_byte
+        current_value = imuSensor.m_recv_byte;
+
+        // note that this reg also contains unneeded fsync data which should be preserved
+        current_value = (current_value & (~bitmask)) | lpf;
+        if(Write_Reg(26, current_value) == HAL_OK){
+            retval = true;
+        }
+    }
+    return retval;
 }
 
 
-This function is called automatically when a interrupt is generated. Any instructions from the user given a specific interrupt is to be written in this function.
- The following instructions show an example of dealing with a data ready interrupt
+void Read_Gyroscope(){
+    uint8_t output_buffer[6];
+    Read_Data(MPU6050_RA_GYRO_XOUT_H,output_buffer);
+    int16_t vx = (int16_t)(output_buffer[0]<<8|output_buffer[1]);
+    int16_t vy = (int16_t)(output_buffer[2]<<8|output_buffer[3]);
+    int16_t vz = (int16_t)(output_buffer[4]<<8|output_buffer[5]);
 
- Parameter：GPIO_Pin: This parameter is automatically inputted by EXTI(X)_HANDLER function and indicates upon which pin the interrupt is generated. By physically
- connecting interrupt pins on MPU6050 to a pin on microcontroller(requires pre-configuration beforehand), the user will be able to tell if the interrupt is generated
- by MPU6050 or other devices if possible.
-
- Return: None
-
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
-		uint8_t output[2];
-	**************for matlab simulation***************************************************************
-
-		HAL_I2C_Mem_Read(&hi2c3,(uint16_t) MPU6050_ADDR, MPU6050_RA_GYRO_YOUT_H, 1 , output, 2,1000);
-		HAL_UART_Transmit(&huart2,&output[0],1,100);
-		HAL_UART_Transmit(&huart2,&output[1],1,100);
-
-	output values from gyroscope or accelerometer
-		 eg. MPU6050_Get_Val_Gyro();
-
-}
-
-**************************** FIFO, will not be used***************************************************************
-
-void MPU6050_Set_Gyro_FIFO_Enabled(){
-	//MPU6050_WRITE_REG(MPU6050_RA_FIFO_EN, MPU6050_XG_FIFO_EN_BIT | 1<<MPU6050_YG_FIFO_EN_BIT | 1<<MPU6050_ZG_FIFO_EN_BIT);
-	MPU6050_WRITE_REG(MPU6050_RA_FIFO_EN, MPU6050_XG_FIFO_EN_BIT);
-	MPU6050_WRITE_REG(MPU6050_RA_USER_CTRL, 1<<6);
-}
-
-void set_Accel_FIFO_Enabled(){
-
-	MPU6050_WRITE_REG(MPU6050_RA_FIFO_EN, MPU6050_XG_FIFO_EN_BIT | 1<<MPU6050_YG_FIFO_EN_BIT | 1<<MPU6050_ZG_FIFO_EN_BIT | 1<<MPU6050_ACCEL_FIFO_EN_BIT);
-	MPU6050_WRITE_REG(MPU6050_RA_USER_CTRL, 1<<6);
-}
-
-void FIFOcount(){
-	uint8_t count_H,count_L;
-	HAL_I2C_Mem_Read(&hi2c3,(uint16_t) MPU6050_ADDR,(uint16_t) MPU6050_RA_FIFO_COUNTH, 1 , &count_H, 6,1000);
-	HAL_I2C_Mem_Read(&hi2c3,(uint16_t) MPU6050_ADDR,(uint16_t) MPU6050_RA_FIFO_COUNTL, 1 , &count_L, 6,1000);
-
-	TOTAL_COUNT=(count_H<<8|count_L);
-}
-/* Clear FIFO buffer
-   Return: None
-
-void MPU6050_RESET_FIFO(){
-	MPU6050_WRITE_REG(MPU6050_RA_USER_CTRL, 1<<MPU6050_USERCTRL_FIFO_RESET_BIT);
-}
-
-void MPU6050_Read_FIFO_REG(uint8_t* buffer_gyro,uint8_t* buffer_accel){
-	    // HAL_I2C_Mem_Read(&hi2c3,(uint16_t) 0b11010000,(uint16_t) MPU6050_RA_FIFO_R_W, 1, buffer_gyro , 6 , 100);
-	    HAL_I2C_Mem_Read(&hi2c3,(uint16_t) 0b11010000,(uint16_t) MPU6050_RA_FIFO_R_W, 1, &buffer_gyro[0] , 1 , 100);
-	    HAL_I2C_Mem_Read(&hi2c3,(uint16_t) 0b11010000,(uint16_t) MPU6050_RA_FIFO_R_W, 1, &buffer_gyro[1] , 1 , 100);
-	    HAL_I2C_Mem_Read(&hi2c3,(uint16_t) 0b11010000,(uint16_t) MPU6050_RA_FIFO_R_W, 1, &buffer_gyro[2] , 1 , 100);
-	    HAL_I2C_Mem_Read(&hi2c3,(uint16_t) 0b11010000,(uint16_t) MPU6050_RA_FIFO_R_W, 1, &buffer_gyro[3] , 1 , 100);
-	    HAL_I2C_Mem_Read(&hi2c3,(uint16_t) 0b11010000,(uint16_t) MPU6050_RA_FIFO_R_W, 1, &buffer_gyro[4] , 1 , 100);
-	    HAL_I2C_Mem_Read(&hi2c3,(uint16_t) 0b11010000,(uint16_t) MPU6050_RA_FIFO_R_W, 1, &buffer_gyro[5] , 1 , 100);
-
-	    HAL_I2C_Mem_Read(&hi2c3,(uint16_t) 0b11010000,(uint16_t) MPU6050_RA_FIFO_R_W, 1, &buffer_accel[0] ,1 , 100);
-	    HAL_I2C_Mem_Read(&hi2c3,(uint16_t) 0b11010000,(uint16_t) MPU6050_RA_FIFO_R_W, 1, &buffer_accel[1] ,1 , 100);
-	    HAL_I2C_Mem_Read(&hi2c3,(uint16_t) 0b11010000,(uint16_t) MPU6050_RA_FIFO_R_W, 1, &buffer_accel[2] ,1 , 100);
-	    HAL_I2C_Mem_Read(&hi2c3,(uint16_t) 0b11010000,(uint16_t) MPU6050_RA_FIFO_R_W, 1, &buffer_accel[3] ,1 , 100);
-	    HAL_I2C_Mem_Read(&hi2c3,(uint16_t) 0b11010000,(uint16_t) MPU6050_RA_FIFO_R_W, 1, &buffer_accel[4] ,1 , 100);
-	    HAL_I2C_Mem_Read(&hi2c3,(uint16_t) 0b11010000,(uint16_t) MPU6050_RA_FIFO_R_W, 1, &buffer_accel[5] ,1 , 100);
-
-	    	uint16_t X = abs((int16_t)(buffer_gyro[0]<<8|buffer_gyro[1]));
-	    	uint16_t Y = abs((int16_t)(buffer_gyro[2]<<8|buffer_gyro[3]));
-	    	uint16_t Z = abs((int16_t)(buffer_gyro[4]<<8|buffer_gyro[5]));
-	    	Sign_X_Gyro = (buffer_gyro[0] >> 7) ? '-' : '+';
-	    	Sign_Y_Gyro = (buffer_gyro[2] >> 7) ? '-' : '+';
-	    	Sign_Z_Gyro = (buffer_gyro[4] >> 7) ? '-' : '+';
-
-	    	Gyro_X = X/131.0;
-	    	Gyro_Y = Y/131.0;
-	    	Gyro_Z = Z/131.0;
-	    	Rem_X_Gyro = (int)(X % 131)*10;
-	    	Rem_Y_Gyro = (int)(Y % 131)*10;
-	    	Rem_Z_Gyro = (int)(Z % 131)*10;
-
-	    	X = abs((int16_t)(buffer_accel[0]<<8|buffer_accel[1]));
-	    	Y = abs((int16_t)(buffer_accel[2]<<8|buffer_accel[3]));
-	    	Z = abs((int16_t)(buffer_accel[4]<<8|buffer_accel[5]));
-	    	Sign_X_Accel = (buffer_accel[0] >> 7) ? '-' : '+';
-	    	Sign_Y_Accel = (buffer_accel[2] >> 7) ? '-' : '+';
-	   		Sign_Z_Accel = (buffer_accel[4] >> 7) ? '-' : '+';
-
-    		Acc_X = X/INT_COEF;
-	   		Acc_Y = Y/INT_COEF;
-	   		Acc_Z = Z/INT_COEF;
-	  		Rem_X_Accel = (int)(X % REM_COEF)*10;
-	   		Rem_Y_Accel = (int)(Y % REM_COEF)*10;
-	   		Rem_Z_Accel = (int)(Z % REM_COEF)*10;
+    imuSensor.m_vx = (float)(vx) / IMU_GY_RANGE;
+    imuSensor.m_vy = (float)(vy) / IMU_GY_RANGE;
+    imuSensor.m_vz = (float)(vz) / IMU_GY_RANGE;
 }
 
 
-*/
+void Read_Gyroscope_IT(){
+    uint8_t output_buffer[6];
+    uint32_t notification;
+    BaseType_t status;
+
+    if(Read_Data_IT(MPU6050_RA_GYRO_XOUT_H,output_buffer) != HAL_OK){
+#ifdef STM32F446xx
+        // Try fix for flag bit silicon bug
+        generateClocks(1, 1);
+#endif
+        return;
+    }
+
+    do{
+        status = xTaskNotifyWait(0, NOTIFIED_FROM_RX_ISR, &notification, MAX_DELAY_TIME);
+        if(status != pdTRUE){
+            return;
+        }
+    }while((notification & NOTIFIED_FROM_RX_ISR) != NOTIFIED_FROM_RX_ISR);
+
+    int16_t vx = (int16_t)(output_buffer[0]<<8|output_buffer[1]);
+    int16_t vy = (int16_t)(output_buffer[2]<<8|output_buffer[3]);
+    int16_t vz = (int16_t)(output_buffer[4]<<8|output_buffer[5]);
+
+
+    imuSensor.m_vx = (float)(vx) / IMU_GY_RANGE;
+    imuSensor.m_vy = (float)(vy) / IMU_GY_RANGE;
+    imuSensor.m_vz = (float)(vz) / IMU_GY_RANGE;
+}
+
+void Read_Accelerometer(){
+    uint8_t output_buffer[6];
+    Read_Data(MPU6050_RA_ACCEL_XOUT_H,output_buffer);
+    int16_t ax = (int16_t)(output_buffer[0]<<8|output_buffer[1]);
+    int16_t ay = (int16_t)(output_buffer[2]<<8|output_buffer[3]);
+    int16_t az  = (int16_t)(output_buffer[4]<<8|output_buffer[5]);
+
+    imuSensor.m_ax = -(ax * g / ACC_RANGE);
+    imuSensor.m_ay = -(ay * g / ACC_RANGE);
+    imuSensor.m_az = -(az * g / ACC_RANGE);
+}
+
+
+void Read_Accelerometer_IT(){
+    uint8_t output_buffer[6];
+    uint32_t notification;
+    BaseType_t status;
+
+    if(Read_Data_IT(MPU6050_RA_ACCEL_XOUT_H, output_buffer)){
+#ifdef STM32F446xx
+        // Try fix for flag bit silicon bug
+        generateClocks(1, 1);
+#endif
+    }
+
+    do{
+        status = xTaskNotifyWait(0, NOTIFIED_FROM_RX_ISR, &notification, MAX_DELAY_TIME);
+        if(status != pdTRUE){
+            return;
+        }
+    }while((notification & NOTIFIED_FROM_RX_ISR) != NOTIFIED_FROM_RX_ISR);
+
+    int16_t ax = (int16_t)(output_buffer[0]<<8|output_buffer[1]);
+    int16_t ay = (int16_t)(output_buffer[2]<<8|output_buffer[3]);
+    int16_t az  = (int16_t)(output_buffer[4]<<8|output_buffer[5]);
+
+    imuSensor.m_ax = -(ax * g / ACC_RANGE);
+    imuSensor.m_ay = -(ay * g / ACC_RANGE);
+    imuSensor.m_az = -(az * g / ACC_RANGE);
+}
+
+
+void Fill_Struct(ImuStruct_t* p_data){
+    p_data->x_Accel = imuSensor.m_ax;
+    p_data->y_Accel = imuSensor.m_ay;
+    p_data->z_Accel = imuSensor.m_az;
+
+    p_data->x_Gyro = imuSensor.m_vx;
+    p_data->y_Gyro = imuSensor.m_vy;
+    p_data->z_Gyro = imuSensor.m_vz;
+}
+/********************************* MPU6050 end ***********************************/
