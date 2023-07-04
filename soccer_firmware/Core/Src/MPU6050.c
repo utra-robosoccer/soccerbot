@@ -259,68 +259,9 @@ void Read_Gyroscope(){
 }
 
 
-void Read_Gyroscope_IT(){
-    uint8_t output_buffer[6];
-    uint32_t notification;
-    BaseType_t status;
-
-    if(Read_Data_IT(MPU6050_RA_GYRO_XOUT_H,output_buffer) != HAL_OK){
-#ifdef STM32F446xx
-        // Try fix for flag bit silicon bug
-        generateClocks(1, 1);
-#endif
-        return;
-    }
-
-    do{
-        status = xTaskNotifyWait(0, NOTIFIED_FROM_RX_ISR, &notification, MAX_DELAY_TIME);
-        if(status != pdTRUE){
-            return;
-        }
-    }while((notification & NOTIFIED_FROM_RX_ISR) != NOTIFIED_FROM_RX_ISR);
-
-    int16_t vx = (int16_t)(output_buffer[0]<<8|output_buffer[1]);
-    int16_t vy = (int16_t)(output_buffer[2]<<8|output_buffer[3]);
-    int16_t vz = (int16_t)(output_buffer[4]<<8|output_buffer[5]);
-
-
-    imuSensor.m_vx = (float)(vx) / IMU_GY_RANGE;
-    imuSensor.m_vy = (float)(vy) / IMU_GY_RANGE;
-    imuSensor.m_vz = (float)(vz) / IMU_GY_RANGE;
-}
-
 void Read_Accelerometer(){
     uint8_t output_buffer[6];
     Read_Data(MPU6050_RA_ACCEL_XOUT_H,output_buffer);
-    int16_t ax = (int16_t)(output_buffer[0]<<8|output_buffer[1]);
-    int16_t ay = (int16_t)(output_buffer[2]<<8|output_buffer[3]);
-    int16_t az  = (int16_t)(output_buffer[4]<<8|output_buffer[5]);
-
-    imuSensor.m_ax = -(ax * g / ACC_RANGE);
-    imuSensor.m_ay = -(ay * g / ACC_RANGE);
-    imuSensor.m_az = -(az * g / ACC_RANGE);
-}
-
-
-void Read_Accelerometer_IT(){
-    uint8_t output_buffer[6];
-    uint32_t notification;
-    BaseType_t status;
-
-    if(Read_Data_IT(MPU6050_RA_ACCEL_XOUT_H, output_buffer)){
-#ifdef STM32F446xx
-        // Try fix for flag bit silicon bug
-        generateClocks(1, 1);
-#endif
-    }
-
-    do{
-        status = xTaskNotifyWait(0, NOTIFIED_FROM_RX_ISR, &notification, MAX_DELAY_TIME);
-        if(status != pdTRUE){
-            return;
-        }
-    }while((notification & NOTIFIED_FROM_RX_ISR) != NOTIFIED_FROM_RX_ISR);
-
     int16_t ax = (int16_t)(output_buffer[0]<<8|output_buffer[1]);
     int16_t ay = (int16_t)(output_buffer[2]<<8|output_buffer[3]);
     int16_t az  = (int16_t)(output_buffer[4]<<8|output_buffer[5]);

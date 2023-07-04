@@ -1,12 +1,6 @@
 #ifndef MPU_REGS_H_
 #define MPU_REGS_H_
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-
-#include "main.h"
 
 #include "stm32f4xx_hal.h"
 #include "stm32f4xx_hal_i2c.h"
@@ -383,10 +377,5 @@ void MPU6050_Read_Accelerometer(MPU6050_HandleTypeDef *sMPU6050);
 
 
 */
-
-#ifdef __cplusplus
-}
-#endif
-
 
 #endif /* MPU6050_H_ */

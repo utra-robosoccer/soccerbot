@@ -10,6 +10,7 @@
 #include "dynamixel_p2.h"
 #include "main.h"
 #include "usbd_cdc_if.h"
+#include "MPU6050.h"
 
 #define UPDATE_PERIOD 10 // milliseconds
 
@@ -26,16 +27,16 @@ void update()
       HAL_GPIO_TogglePin(GPIOA, GREEN_LED_Pin);
     }
 
-//    if(HAL_GetTick() - lastTime > UPDATE_PERIOD) // send IMU/ANGLES periodically back to main computer
-//    {
-//      lastTime = HAL_GetTick();
-//      uint8_t txBuf[18 * 2 + 6] = {0}; // 18 motors * 2 bytes each + 6 bytes for IMU
-//
+    if(HAL_GetTick() - lastTime > UPDATE_PERIOD) // send IMU/ANGLES periodically back to main computer
+    {
+      lastTime = HAL_GetTick();
+      uint8_t txBuf[18 * 2 + 6] = {0}; // 18 motors * 2 bytes each + 6 bytes for IMU
+
 //      read_motors(txBuf);
-//      read_imu(txBuf);
-//      CDC_Transmit_FS((uint8_t *) txBuf, sizeof(txBuf));
-//
-//    }
+      read_imu(txBuf);
+      CDC_Transmit_FS((uint8_t *) txBuf, sizeof(txBuf));
+
+    }
 
   }
 }
@@ -83,8 +84,19 @@ void command_motors() {
 }
 
 void read_imu(uint8_t *rxBuf) {
-  //TODO: fill this out
+	// every 2 ms
+	ImuStruct_t imu_data;
+//    TxData_t data_to_send = {eImuData, &imu_data};
+//  uint8_t num_samples = 0;
+//  bool need_to_process = false;
+//  need_to_process = readFromSensor(imu_data, &num_samples);
+//  imu_data.Fill_Struct(&imu_data);
+
+//  if(need_to_process){
+//    processImuData(imu_data);
+//  }
 }
+
 
 
 void read_motors(uint8_t *rxBuf) {
