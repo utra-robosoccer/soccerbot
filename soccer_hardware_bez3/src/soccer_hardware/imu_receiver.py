@@ -21,10 +21,21 @@ class IMUReceiver(Receiver):
 
     def _receive_packet_from_mcu(self, timeout):
         #print(self._working_buf)
-        self._ser.timeout = timeout
-        self._working_buf += self._ser.read(28)
+        self._ser.timeout = 1E-6 # timeout
+
+        r = b'\0'
+        while len(r) > 0:
+            r = self._ser.read(4096)
+            self._working_buf += r
+
         #print("IMU RECEIVER: ", self._working_buf)
         D = self._working_buf.split(NAN_HEAD)
+        if len(D) > 0:
+            if len(D[-1]) >= 24:
+                self._working_buf = b"" # last incomplete packet
+            else:
+                self._working_buf = self._working_buf[-len(D[-1])-4:]
+
         ret = (False, None)
         if len(D) > 0:
             # if len(D[-1]) >= 24: # clear the buffer if it's readable
@@ -32,10 +43,9 @@ class IMUReceiver(Receiver):
             # else:
             # 	self._working_buf = D[-1]
 
-            for d in D[::-1]:
+            for d in D:
                 if len(d) >= 24:
                     ret = (True, struct.unpack("<" + "f" * 6, d[:24]))
                     break
-            self._working_buf = D[-1]
 
         return ret

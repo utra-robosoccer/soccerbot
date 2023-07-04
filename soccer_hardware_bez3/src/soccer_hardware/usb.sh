@@ -7,6 +7,7 @@ EDIT_CMD="echo '$SUDOER_LINE' >> $SUDOERD_FILE"
 if ! [ -e "$SUDOERD_FILE" ]; then
 	echo "!!!"
 	sudo touch "$SUDOERD_FILE"
+	sudo chmod +r "$SUDOERD_FILE"
 fi
 
 if [ -z "$(grep -F "$SUDOER_LINE" "$SUDOERD_FILE")" ]; then
