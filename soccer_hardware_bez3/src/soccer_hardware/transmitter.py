@@ -129,8 +129,8 @@ class Transmitter(Thread):
 
         while not rp.is_shutdown():
             try:
-                # if self._num_tx == 0:
-                #     self._reconfig()
+                if self._num_tx == 0:
+                    self._reconfig()
                 while not self._cmd_queue.empty():
                     if self._num_tx % 512 == 0:
                         self._reconfig()
@@ -150,9 +150,11 @@ class Transmitter(Thread):
 
                 t_excepts_ = t_excepts[e._which.port]
                 t_excepts_.append(time.time())
-                if len(t_excepts_) > 1 and 1 / np.mean(np.diff(np.array(t_excepts_))) > MAX_T_EXCEPT_DENSITY:
+                if len(t_excepts_) > 1 and 1 / np.mean(np.diff(np.array(t_excepts_))[-5:]) > MAX_T_EXCEPT_DENSITY:
                     e._which.reopen()
                     del t_excepts_[:]
+
+                    self._reconfig()
 
                 print(e)
         log_string("Stopping Tx thread ({0})...".format(self._name))

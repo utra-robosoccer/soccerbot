@@ -30,5 +30,7 @@ class MotorReceiver(Receiver):
                 self.consec_empty = 0
                 rp.logwarn('REOPENING SERIAL PORT %s' % self._ser.port)
                 self._ser.reopen()
+        else:
+            self.consec_empty = 0
         rp.loginfo_throttle(1, pos)
         return (valid or True, pos)

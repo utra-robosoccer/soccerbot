@@ -30,6 +30,9 @@ class SerialWrapper:
         # TODO: consider enabling sudo for `setserial` in general and iterating over all `pre*`
         subprocess.run(['%s/usb.sh' % os.path.dirname(os.path.realpath(__file__))]) # NOTE: this will sometimes say "/dev/tty... No such file or directory" as the OS scrambles to reopen the port, so don't be confused from the output
         with self.lock:
+            if self._ser_wrap_ser is not None:
+                self._ser_wrap_ser.close()
+
             e = serial.serialutil.SerialException('No working ports with prefix `%s`' % self._ser_wrap_pre)
             for _ in range(self.MAX_REOPEN_TRIES):
                 ser = None
@@ -38,10 +41,16 @@ class SerialWrapper:
                         ser = serial.Serial(p, *self._ser_wrap_args, **self._ser_wrap_kwargs)
                         self._ser_wrap_ser = ser
                         return
+                    except PermissionError as _e:
+                        # It's possible for this to be a transient error, seen during testing. I think it also flows into a serial exception on attempt of an actual read/write
+                        e = _e
+                        pass
                     except OSError as _e:
                         e = _e
-                        if e.errno == 5:
-                            # Input/output error, caused by misc serial device problems
+                        if e.errno in [5, 19]:
+                            # 5: Input/output error, caused by misc serial device problems
+                            # 19: No such device, probably caused by race condition on the device waking up
+                            # 
                             pass
                         else:
                             raise e
