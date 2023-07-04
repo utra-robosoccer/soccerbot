@@ -106,7 +106,6 @@ class SoccerbotRos(Soccerbot):
         """
         Send the robot angles based on self.configuration + self.configuration_offset to ROS
         """
-
         js = JointState()
         js.name = []
         js.header.stamp = rospy.Time.now()

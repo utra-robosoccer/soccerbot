@@ -1,3 +1,4 @@
+import copy
 import enum
 import os
 from typing import Optional
@@ -56,10 +57,11 @@ class Team:
         self.observed_ball: Optional[Ball] = None
         self.field_side = FieldSide.NORMAL
         self.is_first_half = False
-        self.strategy = None
         self.formation = None
-        self.formations = DEFAULT_FORMATIONS
+        self.formations = copy.deepcopy(DEFAULT_FORMATIONS)
         self.enemy_goal_position = [4.5, 0]
+
+        self.id = int(os.getenv("ROBOCUP_TEAM_ID", 16))
 
     def flip_positions(self):
         """
@@ -69,7 +71,7 @@ class Team:
         for formation in self.formations:
             for role in self.formations[formation]:
                 self.formations[formation][role][0] = -self.formations[formation][role][0]
-                self.formations[formation][role][2] = -3.14
+                self.formations[formation][role][2] = np.pi - self.formations[formation][role][2]
 
     def update_average_ball_position(self):
         """
