@@ -39,12 +39,12 @@ class Communication:
         self.pitch = 0
         self.roll = 0
 
-        imu_pwm_servo_ser._motor_lock = (
-            Lock()
-        ) # IMU ser is also used for PWM servos
-        jx_ser._motor_lock = (
-            Lock()
-        )  # TODO improve on this hacky exclusive lock over the serial port for motor TX/RX (which always requires flushing the RX buffer via the state machine due to echo, hence exclusive lock)
+        # imu_pwm_servo_ser._motor_lock = (
+        #     Lock()
+        # ) # IMU ser is also used for PWM servos
+        # jx_ser._motor_lock = (
+        #     Lock()
+        # )  # TODO improve on this hacky exclusive lock over the serial port for motor TX/RX (which always requires flushing the RX buffer via the state machine due to echo, hence exclusive lock)
 
         # TODO: Serial fail handling
         #    e.g. put all thread creation in a conditional timed loop, so if the serial temporarily disconnects we can reconnect and restart the thread. Alternatively, give the threads the serial object factory
@@ -91,6 +91,7 @@ class Communication:
 
 
         while not rp.is_shutdown():
+            # assume all of these exceptions are for non-serial related events: leave it to each thread to handle serial exceptions and restart the port as necessary
             if not self._tx_servo_thread.is_alive():
                 self.init_tx_servo_thread()
                 self._tx_servo_thread.start()

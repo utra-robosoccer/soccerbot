@@ -53,13 +53,12 @@ class Transmitter(Thread):
         self._num_tx = 0
         self._num_tx_lock = Lock()
 
-    def start(self, *args, **kwargs):
-        super().start(*args, **kwargs)
-        # return
-        self._reconfig()
+    # def start(self, *args, **kwargs):
+    #     super().start(*args, **kwargs)
+    #     # return
 
     def _reconfig(self):
-        with self._jx_ser._motor_lock:
+        with self._jx_ser.lock:
             jx_servo_util.uart_transact(self._jx_ser, [4000, 1, 90] * 13, CMDS.PID_COEFF,
                                         RWS.WRITE)  # push initial PID gains
             jx_servo_util.uart_transact(self._jx_ser, [3000] * 13, CMDS.MAX_DRIVE,
@@ -77,27 +76,35 @@ class Transmitter(Thread):
 
     def _send_packet_to_mcu(self, goal_motor_angles):
         """Sends bytes to the MCU with the header sequence attached. Angles in degrees."""
-        with self._jx_ser._motor_lock:  # NOTE: possibly replace with acquire-release with timeout
-            jx_goal_angles, gobilda_goal_angles = [
-                np.array([(int(motor["id"]), angle) for (motor_name, motor), angle in goal_motor_angles if motor_name in js])
-                for js in [JX_JOINTS, GOBILDA_JOINTS]
-            ]
+        try:
+            with self._jx_ser.lock:  # NOTE: possibly replace with acquire-release with timeout
+                jx_goal_angles, gobilda_goal_angles = [
+                    np.array([(int(motor["id"]), angle) for (motor_name, motor), angle in goal_motor_angles if motor_name in js])
+                    for js in [JX_JOINTS, GOBILDA_JOINTS]
+                ]
 
-            flat_jx_goal_angles = [0] * int(np.amax(jx_goal_angles[:, 0]) + 1)
-            for idx, v in jx_goal_angles:
-                flat_jx_goal_angles[int(idx)] = constrain(int(v * ANGLE2JX_POT_VOLTS), 0, 0xFFF)
-            jx_servo_util.uart_transact(self._jx_ser, flat_jx_goal_angles, CMDS.POSITION, RWS.WRITE, preflush=True)
+                flat_jx_goal_angles = [0] * int(np.amax(jx_goal_angles[:, 0]) + 1)
+                for idx, v in jx_goal_angles:
+                    flat_jx_goal_angles[int(idx)] = constrain(int(v * ANGLE2JX_POT_VOLTS), 0, 0xFFF)
+                jx_servo_util.uart_transact(self._jx_ser, flat_jx_goal_angles, CMDS.POSITION, RWS.WRITE, preflush=True)
+        except serial.serialutil.SerialException as e:
+            e._which = self._jx_ser # wish pyserial would pin the object responsible in the exception like this
+            raise e
 
-        with self._pwm_ser._motor_lock:  # NOTE: possibly replace with acquire-release with timeout
-            GOBILDA_IDX_BASE = np.amin(gobilda_goal_angles[:, 0])
-            flat_gobilda_goal_angles = [0x800] * int(np.amax(gobilda_goal_angles[:, 0]) - GOBILDA_IDX_BASE + 1)
-            for idx, v in gobilda_goal_angles:
-                flat_gobilda_goal_angles[int(idx - GOBILDA_IDX_BASE)] = constrain(int(v * ANGLE2GOBILDA_PWM), 0, 0xFFF)
-                # print(int(v * ANGLE2GOBILDA_PWM), constrain(int(v * ANGLE2GOBILDA_PWM), 0, 0xFFF))
-                # pass
-            # print(flat_gobilda_goal_angles)
-            # flat_gobilda_goal_angles = [0x800] * int(np.amax(gobilda_goal_angles[:, 0]) - GOBILDA_IDX_BASE + 1)
-            gobilda_servo_util.uart_transact(self._pwm_ser, flat_gobilda_goal_angles)
+        try:
+            with self._pwm_ser.lock:  # NOTE: possibly replace with acquire-release with timeout
+                GOBILDA_IDX_BASE = np.amin(gobilda_goal_angles[:, 0])
+                flat_gobilda_goal_angles = [0x800] * int(np.amax(gobilda_goal_angles[:, 0]) - GOBILDA_IDX_BASE + 1)
+                for idx, v in gobilda_goal_angles:
+                    flat_gobilda_goal_angles[int(idx - GOBILDA_IDX_BASE)] = constrain(int(v * ANGLE2GOBILDA_PWM), 0, 0xFFF)
+                    # print(int(v * ANGLE2GOBILDA_PWM), constrain(int(v * ANGLE2GOBILDA_PWM), 0, 0xFFF))
+                    # pass
+                # print(flat_gobilda_goal_angles)
+                # flat_gobilda_goal_angles = [0x800] * int(np.amax(gobilda_goal_angles[:, 0]) - GOBILDA_IDX_BASE + 1)
+                gobilda_servo_util.uart_transact(self._pwm_ser, flat_gobilda_goal_angles)
+        except serial.serialutil.SerialException as e:
+            e._which = self._jx_ser # wish pyserial would pin the object responsible in the exception like this
+            raise e
 
     def get_num_tx(self):
         with self._num_tx_lock:
@@ -114,19 +121,38 @@ class Transmitter(Thread):
         """
         Services the command queue; sends packets to the microcontroller.
         """
+
         log_string("Starting Tx thread ({0})...".format(self._name))
-        try:
-            while not rp.is_shutdown():
+
+        MAX_T_EXCEPT_DENSITY = 10 # fails/s
+        t_excepts = {}
+
+        while not rp.is_shutdown():
+            try:
+                # if self._num_tx == 0:
+                #     self._reconfig()
                 while not self._cmd_queue.empty():
+                    if self._num_tx % 512 == 0:
+                        self._reconfig()
+
                     goal_motor_angles = self._cmd_queue.get()
                     self._send_packet_to_mcu(goal_motor_angles)
-                    if self._num_tx % 128 == 0:
-                        self._reconfig()
 
                     with self._num_tx_lock:
                         self._num_tx = self._num_tx + 1
+
                 time.sleep(0)
-        except serial.serialutil.SerialException as e:
-            log_string("Serial exception in thread {0}".format(self._name))
-            print(e)
+            except serial.serialutil.SerialException as e:
+                log_string("Serial exception in thread {0}".format(self._name))
+
+                if e._which.port not in t_excepts:
+                    t_excepts[e._which.port] = []
+
+                t_excepts_ = t_excepts[e._which.port]
+                t_excepts_.append(time.time())
+                if len(t_excepts_) > 1 and 1 / np.mean(np.diff(np.array(t_excepts_))) > MAX_T_EXCEPT_DENSITY:
+                    e._which.reopen()
+                    del t_excepts_[:]
+
+                print(e)
         log_string("Stopping Tx thread ({0})...".format(self._name))

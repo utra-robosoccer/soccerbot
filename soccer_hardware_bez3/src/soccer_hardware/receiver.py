@@ -54,14 +54,24 @@ class Receiver(Thread):
         application through a callback function
         """
         log_string("Starting Rx thread ({0})...".format(self._name))
-        try:
-            while not rp.is_shutdown() and not self._stop_requested():
+
+        MAX_T_EXCEPT_DENSITY = 10 # fails/s
+        t_excepts_ = []
+
+        while not rp.is_shutdown() and not self._stop_requested():
+            try:
                 (receive_succeeded, result) = self._receive_packet_from_mcu(self._timeout)
                 if receive_succeeded:
                     self._callback(result)
                     with self._num_rx_lock:
                         self._num_rx = self._num_rx + 1
-        except serial.serialutil.SerialException as e:
-            print(e)
-            log_string("Serial exception in thread {0}".format(self._name))
+            except serial.serialutil.SerialException as e:
+                print(e)
+                log_string("Serial exception in thread {0}".format(self._name))
+
+                t_excepts_.append(time.time())
+                if len(t_excepts_) > 1 and 1 / np.mean(np.diff(np.array(t_excepts_))) > MAX_T_EXCEPT_DENSITY:
+                    self._ser.reopen()
+                    del t_excepts_[:]
+
         log_string("Stopping Rx thread ({0})...".format(self._name))
