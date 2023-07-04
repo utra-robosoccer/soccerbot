@@ -13,11 +13,12 @@ find_package(
     bez2_description
     bez3_description
     soccer_strategy
+    soccer_hardware
     soccer_object_localization
     soccer_localization
     soccer_pycontrol
-    soccer_hardware
     soccer_hardware_bez3
+    soccer_firmware_interface
 )
 
 catkin_package(CATKIN_DEPENDS soccer_msgs soccer_object_detection)

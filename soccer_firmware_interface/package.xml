@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>soccer_firmware_interface</name>
+  <version>0.0.0</version>
+  <description>Contains the python code for communication with the microcontroller
+  </description>
+
+  <author email="jiashen.wang@mail.utoronto.ca">Jason</author>
+  <maintainer email="namnam.nguyen@mail.utoronto.ca">Nam</maintainer>
+
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <depend>std_msgs</depend>
+  <depend>sensor_msgs</depend>
+  <depend>rospy</depend>
+
+</package>

@@ -19,7 +19,7 @@ class TestTrajectory:
         os.system(
             "/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_strategy /robot1/soccer_pycontrol /robot1/soccer_trajectories'"
         )
-        robot_model = "bez1"
+        robot_model = "bez2"
         file_path = os.path.dirname(os.path.abspath(__file__))
         config_path = f"{file_path}/../../../{robot_model}_description/config/motor_mapping.yaml"
         set_rosparam_from_yaml_file(param_path=config_path)
