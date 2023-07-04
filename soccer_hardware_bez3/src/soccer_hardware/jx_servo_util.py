@@ -65,7 +65,6 @@ def uart_transact(ser, B, cmd, rw, preflush=True):
         # we know two threads accessing the same ser object is dangerous, and even the same port (although less dangerous, given the ser object has lots of state that we are manipulating here). however it's the stronger condition to exclude by port, as long as it's usually canonical. it's not safe to compare by `id()` since these are reused after object destruction so we have to be nuanced about what uniqueness will give us safety.
     
     with MUTEXES[ser.port]:
-        # print('IN')
         # do not attempt a timeout, the timeouts of this routine must be tuned to the OS UART tick rates to avoid clobbering and stale data
         time0 = time.time()
 
