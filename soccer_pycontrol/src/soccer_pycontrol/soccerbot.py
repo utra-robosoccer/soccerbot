@@ -643,6 +643,7 @@ class Soccerbot:
         self.walking_pid_roll.reset()
         self.standing_pid.reset()
 
+    def reset_roll_feedback_parameters(self):
         sampling_frequency = 100
         self.roll_feedback_steps_per_second = self.robot_path.path_sections[0].linearStepCount() / self.robot_path.path_sections[0].duration()
         cutoff_frequency = self.roll_feedback_steps_per_second / 4

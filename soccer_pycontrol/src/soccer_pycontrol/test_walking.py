@@ -431,14 +431,7 @@ class TestWalking:
         assert abs(new_new_end_transform.position[1] - end_transform.position[1]) < 0.01
         assert abs(new_new_end_transform.orientation_euler[0] - end_transform.orientation_euler[0]) < 0.01
 
-    # @pytest.mark.timeout(30)
-    @pytest.mark.parametrize("walker", ["bez1"], indirect=True)
-    def test_imu_feedback(self, walker: Navigator):
-        walker.setPose(Transformation([0, 0, 0], [0, 0, 0, 1]))
-        walker.real_time = False
-        walker.ready()
-        walker.wait(100)
-        walker.setGoal(Transformation([1.5, 0, 0], [0, 0, 0, 1]))
+    def run_feedback(self, walker):
 
         get_imu_original = walker.soccerbot.get_imu
         pitches = []
@@ -453,9 +446,6 @@ class TestWalking:
             yaws.append(imu_transform.orientation_euler[0])
             rolls.append(imu_transform.orientation_euler[2])
             times.append(walker.t)
-            get_foot_pressure = walker.soccerbot.get_foot_pressure_sensors(walker.ramp.plane)
-            for i in range(len(locations)):
-                locations[i].append(int(get_foot_pressure[i]))
             return imu_transform
 
         walker.soccerbot.get_imu = walker_get_imu_patch
@@ -492,9 +482,7 @@ class TestWalking:
                 # assert abs(min_angle_offset) < 0.03
 
             if angle_name == "Rolls":
-                steps_per_second = (
-                    walker.soccerbot.robot_path.path_sections[0].linearStepCount() / walker.soccerbot.robot_path.path_sections[0].duration()
-                )
+                steps_per_second = walker.soccerbot.roll_feedback_steps_per_second
                 sin_wave = np.sin(np.array(2 * np.pi * np.array(times) * steps_per_second / 2)) * 0.1
                 cos_wave = np.cos(np.array(2 * np.pi * np.array(times) * steps_per_second / 2))
 
@@ -534,26 +522,23 @@ class TestWalking:
             plt.grid()
             plt.legend()
 
-        def create_foot_pressure_sensor_plot():
-            fig, axs = plt.subplots(8)
-            fig.suptitle("Foot Pressure Sensor Locations")
-
-            for i in range(len(locations)):
-                axs[i].plot(times, locations[i], label="Foot Pressure Sensor %s of robot over time" % (i))
-
-            for ax in axs.flat:
-                ax.set(xlabel="Time (t)", ylabel="Sensor Value")
-                ax.set_xlim([0, max(times)])
-                ax.grid()
-                ax.legend()
-
         create_angle_plot("Pitches", pitches)
         create_angle_plot("Yaws", yaws)
         create_angle_plot("Rolls", rolls)
-        create_foot_pressure_sensor_plot()
 
         if "DISPLAY" in os.environ:
             plt.show()
+
+    # @pytest.mark.timeout(30)
+    @pytest.mark.parametrize("walker", ["bez1"], indirect=True)
+    def test_imu_feedback(self, walker: Navigator):
+        walker.setPose(Transformation([0, 0, 0], [0, 0, 0, 1]))
+        walker.real_time = False
+        walker.ready()
+        walker.wait(100)
+        walker.setGoal(Transformation([1.5, 0, 0], [0, 0, 0, 1]))
+
+        self.run_feedback(walker)
 
     @pytest.mark.parametrize("walker_real_robot", ["bez1"], indirect=True)
     def test_imu_feedback_real(self, walker_real_robot: NavigatorRos):
@@ -563,58 +548,7 @@ class TestWalking:
         goal_position = Transformation([0.5, 0, 0], [0, 0, 0, 1])
         walker_real_robot.setGoal(goal_position)
 
-        get_imu_original = walker_real_robot.soccerbot.get_imu
-        pitches = []
-        rolls = []
-        yaws = []
-        times = []
-
-        def walker_get_imu_patch():
-            imu_transform = get_imu_original()
-            pitches.append(imu_transform.orientation_euler[1])
-            yaws.append(imu_transform.orientation_euler[0])
-            rolls.append(imu_transform.orientation_euler[2])
-            times.append(walker_real_robot.t)
-            return imu_transform
-
-        walker_real_robot.soccerbot.get_imu = walker_get_imu_patch
-
-        walk_success = walker_real_robot.run(single_trajectory=True)
-        assert walk_success
-
-        def create_angle_plot(angle_name: str, angle_data):
-            plt.figure(angle_name)
-            plt.plot(times, angle_data, label=f"{angle_name} of robot over time")
-            times_after_walk = [t for t in times if t < 0]
-            angle_data_after_walk = angle_data[len(times_after_walk) :]
-
-            if angle_name == "Pitches":
-                max_angle_offset = round(max(angle_data_after_walk) - walker_real_robot.soccerbot.walking_pid.setpoint, 5)
-                min_angle_offset = round(min(angle_data_after_walk) - walker_real_robot.soccerbot.walking_pid.setpoint, 5)
-                plt.axhline(max(angle_data_after_walk), color="red", label=f"Max {angle_name} Offset {max_angle_offset} rad")
-                plt.axhline(min(angle_data_after_walk), color="red", label=f"Min {angle_name} Offset {min_angle_offset} rad")
-                plt.axhline(walker_real_robot.soccerbot.walking_pid.setpoint, color="green", label="Walking set point")
-
-            times_before_walk = [t for t in times if t < 0]
-            angle_data_before_walk = angle_data[0 : len(times_before_walk)]
-
-            if angle_name == "Pitches":
-                max_pitch_pre_walk = round(max(angle_data_before_walk), 5)
-                min_pitch_pre_walk = round(min(angle_data_before_walk), 5)
-                plt.axhline(max(angle_data_before_walk), color="yellow", label=f"Max {angle_name} Pre Walk Offset {max_pitch_pre_walk} rad")
-                plt.axhline(min(angle_data_before_walk), color="yellow", label=f"Min {angle_name} Pre Walk Offset {min_pitch_pre_walk} rad")
-
-            plt.xlabel("Time (t)")
-            plt.ylabel(f"Forward {angle_name} of robot in radians")
-            plt.grid()
-            plt.legend()
-
-        create_angle_plot("Pitches", pitches)
-        create_angle_plot("Yaws", yaws)
-        create_angle_plot("Rolls", rolls)
-
-        if "DISPLAY" in os.environ:
-            plt.show()
+        self.run_feedback(walker_real_robot)
 
     @pytest.mark.parametrize("walker", ["bez1"], indirect=True)
     def test_replay_simulation(self, walker: Navigator):

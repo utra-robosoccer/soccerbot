@@ -110,6 +110,7 @@ class Navigator:
         self.t = -self.prepare_walk_time
         stable_count = 20
         self.soccerbot.reset_imus()
+        self.soccerbot.reset_roll_feedback_parameters()
 
         while self.t <= self.soccerbot.robot_path.duration():
             if self.t < 0:

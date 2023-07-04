@@ -36,6 +36,11 @@ standing_Kd: 0.5
 standing_setpoint: 0.19
 standing_offset: 0.03
 
+walking_roll_Kp: 0.0
+walking_roll_Ki: 0.05
+walking_roll_Kd: 0.0
+walking_roll_setpoint: 0.0
+
 # Head rotation parameters
 head_rotation_yaw_center: 0.205
 head_rotation_yaw_range: 0.15

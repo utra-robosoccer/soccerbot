@@ -3,7 +3,7 @@
   <component name="WebServers">
     <option name="servers">
       <webServer id="13a02daf-7dc5-4013-b62a-137cf92a794c" name="Robot1" url="http://192.168.0.101">
-        <fileTransfer rootFolder="/home/robot1" accessType="SFTP" host="192.168.1.209" port="22" sshConfigId="7a5c6586-b729-49c8-9739-2da0ee14d462" sshConfig="robot1@192.168.1.209:22 password">
+        <fileTransfer rootFolder="/home/robot1" accessType="SFTP" host="192.168.1.101" port="22" sshConfigId="7a5c6586-b729-49c8-9739-2da0ee14d462" sshConfig="robot1@192.168.1.101:22 password">
           <advancedOptions>
             <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" isUseRsync="true" />
           </advancedOptions>
