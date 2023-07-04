@@ -28,7 +28,7 @@ class PathSection(ABC):
         self.torso_step_length = rospy.get_param("torso_step_length", torso_step_length)
 
         #: How many torso steps per second, approximately equivalent to foot steps per second
-        self.steps_per_second_default = rospy.get_param("steps_per_second_default", 3.5)
+        self.steps_per_second_default = rospy.get_param("steps_per_second_default", 2.5)
 
         self.start_transform: Transformation = start_transform
         self.end_transform: Transformation = end_transform
