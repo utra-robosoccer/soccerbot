@@ -34,7 +34,7 @@ class Navigator:
         else:
             self.client_id = pb.connect(pb.DIRECT)
         pb.setAdditionalSearchPath(pybullet_data.getDataPath())  # optionally
-        pb.resetDebugVisualizerCamera(cameraDistance=0.5, cameraYaw=0, cameraPitch=0, cameraTargetPosition=[0, 0, 0.25])
+        pb.resetDebugVisualizerCamera(cameraDistance=1.0, cameraYaw=90, cameraPitch=0, cameraTargetPosition=[0, 0, 0.25])
         pb.setGravity(0, 0, -9.81)
         pb.configureDebugVisualizer(pb.COV_ENABLE_GUI, 0)
 
@@ -109,6 +109,7 @@ class Navigator:
 
         self.t = -self.prepare_walk_time
         stable_count = 20
+        self.soccerbot.reset_imus()
 
         while self.t <= self.soccerbot.robot_path.duration():
             if self.t < 0:
@@ -121,8 +122,10 @@ class Navigator:
                     stable_count = 5
             else:
                 if self.soccerbot.current_step_time <= self.t <= self.soccerbot.robot_path.duration():
-                    self.soccerbot.stepPath(self.t)
-                    self.soccerbot.apply_imu_feedback(self.soccerbot.get_imu())
+                    imu = self.soccerbot.get_imu()
+                    t_offset = self.soccerbot.apply_phase_difference_roll_feedback(self.t, imu)
+                    self.soccerbot.stepPath(t_offset)
+                    self.soccerbot.apply_imu_feedback(imu)
                     self.soccerbot.current_step_time = self.soccerbot.current_step_time + self.soccerbot.robot_path.step_precision
 
             angle_threshold = 1.25  # in radian

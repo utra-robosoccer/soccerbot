@@ -16,11 +16,6 @@ walking_Ki: 0.0000
 walking_Kd: 20.2
 walking_setpoint: 0.02
 
-walking_roll_Kp: 3
-walking_roll_Ki: 0.0000
-walking_roll_Kd: 20.2
-walking_roll_setpoint: 0
-
 standing_Kp: 2.0
 standing_Ki: 0.015
 standing_Kd: 10.5

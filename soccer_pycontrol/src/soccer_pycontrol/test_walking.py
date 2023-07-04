@@ -3,6 +3,7 @@ import struct
 import time
 
 import pybullet_data
+from scipy.signal import butter, lfilter
 
 os.environ["ROS_NAMESPACE"] = "/robot1"
 
@@ -459,10 +460,23 @@ class TestWalking:
 
         walker.soccerbot.get_imu = walker_get_imu_patch
 
+        roll_feedback = []
+        roll_feedback_t = []
+        get_phase_difference_roll_original = walker.soccerbot.get_phase_difference_roll
+
+        def walker_get_phase_difference_roll_patch(t, pose: Transformation):
+            val = get_phase_difference_roll_original(t, pose)
+            roll_feedback.append(val)
+            roll_feedback_t.append(t)
+            return val
+
+        walker.soccerbot.get_phase_difference_roll = walker_get_phase_difference_roll_patch
+
         walk_success = walker.run(single_trajectory=True)
         # assert walk_success
 
         def create_angle_plot(angle_name: str, angle_data):
+
             plt.figure(angle_name)
             plt.plot(times, angle_data, label=f"{angle_name} of robot over time")
             times_after_walk = [t for t in times if t < 0]
@@ -476,6 +490,34 @@ class TestWalking:
                 plt.axhline(walker.soccerbot.walking_pid.setpoint, color="green", label="Walking set point")
                 # assert abs(max_angle_offset) < 0.03
                 # assert abs(min_angle_offset) < 0.03
+
+            if angle_name == "Rolls":
+                steps_per_second = (
+                    walker.soccerbot.robot_path.path_sections[0].linearStepCount() / walker.soccerbot.robot_path.path_sections[0].duration()
+                )
+                sin_wave = np.sin(np.array(2 * np.pi * np.array(times) * steps_per_second / 2)) * 0.1
+                cos_wave = np.cos(np.array(2 * np.pi * np.array(times) * steps_per_second / 2))
+
+                plt.plot(times, sin_wave, label="Expected phase of walking")
+                # plt.plot(times, cos_wave, label="Expected phase of walking cos")
+
+                multiplied_signal = angle_data * cos_wave
+                plt.plot(times, multiplied_signal, label="Multiplied Signal")
+
+                # Calculate the digital frequency
+                sampling_frequency = 100
+                cutoff_frequency = steps_per_second / 4
+                normalized_cutoff = cutoff_frequency / (0.5 * sampling_frequency)
+                filter_order = 4
+                # Design the Butterworth filter
+                b, a = butter(filter_order, normalized_cutoff, btype="low", analog=False, output="ba")
+
+                # Apply the filter to the signal
+                filtered_signal = lfilter(b, a, multiplied_signal)
+                plt.plot(times, filtered_signal, label="Multiplied Signal after Low Pass (Phase difference)")
+
+                # Plot the live signal filter
+                plt.plot(roll_feedback_t, roll_feedback, label="Multiplied Signal after Low Pass (Live)")
 
             times_before_walk = [t for t in times if t < 0]
             angle_data_before_walk = angle_data[0 : len(times_before_walk)]
