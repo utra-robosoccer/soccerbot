@@ -109,7 +109,7 @@ bool Set_LPF(uint8_t lpf);
 /**
   * @brief   Reads the gyroscope with offsets without interrupts
   */
-void Read_Gyroscope();
+void Read_Gyroscope(uint8_t *buff);
 
 void Read_Gyroscope_IT(uint8_t *buff);
 

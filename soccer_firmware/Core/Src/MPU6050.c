@@ -248,9 +248,9 @@ bool Set_LPF(uint8_t lpf){
 }
 
 
-void Read_Gyroscope(){
+void Read_Gyroscope(uint8_t *buff){
     uint8_t output_buffer[6];
-    Read_Data_IT(MPU6050_RA_GYRO_XOUT_H,output_buffer);
+    Read_Data(MPU6050_RA_GYRO_XOUT_H,output_buffer);
     int16_t vx = (int16_t)(output_buffer[0]<<8|output_buffer[1]);
     int16_t vy = (int16_t)(output_buffer[2]<<8|output_buffer[3]);
     int16_t vz = (int16_t)(output_buffer[4]<<8|output_buffer[5]);
@@ -258,6 +258,11 @@ void Read_Gyroscope(){
     imuSensor.m_vx = (float)(vx) / IMU_GY_RANGE;
     imuSensor.m_vy = (float)(vy) / IMU_GY_RANGE;
     imuSensor.m_vz = (float)(vz) / IMU_GY_RANGE;
+
+    for(uint8_t i = 0; i < 6; i++)
+    {
+      buff[i] = output_buffer[i];
+    }
 }
 
 

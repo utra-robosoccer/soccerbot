@@ -206,7 +206,7 @@ MPU6050::MPU6050(I2C_HandleTypeDef* m_i2c_handle)
     this -> m_recv_byte = 0;
 }
 
-void MPU6050::init(uint8_t lpf){
+    void MPU6050::init(uint8_t lpf){
     MPU6050::Write_Reg(MPU6050_RA_I2C_MST_CTRL, 0b00001101); //0b00001101 is FAST MODE = 400 kHz
     MPU6050::Write_Reg(MPU6050_RA_ACCEL_CONFIG, 0);
     MPU6050::Write_Reg(MPU6050_RA_GYRO_CONFIG, 0);

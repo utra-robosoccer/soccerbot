@@ -86,11 +86,13 @@ void command_motors() {
 }
 
 void read_imu(uint8_t *rxBuf) {
+  uint8_t gyrBuff[6] = {0};
+  Read_Gyroscope(gyrBuff);
+  HAL_Delay(1); // wait some time before sending next request
+
+
   uint8_t accBuff[6] = {0};
   Read_Accelerometer_IT(accBuff);
-  HAL_Delay(1); // wait some time before sending next request
-  uint8_t gyrBuff[6] = {0};
-  Read_Gyroscope_IT(gyrBuff);
 
   for(uint8_t i = 0; i < 6; i++) {
     rxBuf[2 + 18 * 2 + i] = accBuff[i];
