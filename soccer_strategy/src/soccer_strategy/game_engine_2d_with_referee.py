@@ -51,10 +51,13 @@ class GameEngine2DWithReferee(GameEngine2D):
             for i in range(10):
                 self.scene.update(self.team1.robots + self.team2.robots, self.ball)
 
+        t = rospy.Time.now()
         while not rospy.is_shutdown():
             t_start = time.time()
 
-            self.update_estimated_physics(self.team1.robots + self.team2.robots, self.ball)
+            time_passed = rospy.Time.now() - t
+            t = rospy.Time.now()
+            self.update_estimated_physics(self.team1.robots + self.team2.robots, self.ball, time_passed=time_passed.to_sec())
 
             t1 = time.time()
 

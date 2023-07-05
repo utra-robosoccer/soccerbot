@@ -452,7 +452,10 @@ class TestGameEngine2D(TestCase):
                             Utility.navigate_to_scoring_position(robot, ball_position, goal_position)
                             Utility.navigate_to_position_with_offset = navigate_to_position_with_offset_original
 
-    @patch("referee.Supervisor")
+    referee_mock = MagicMock()
+    referee_mock.getBasicTimeStep.return_value = 2.5
+
+    @patch("referee.Supervisor", return_value=referee_mock)
     def test_2d_with_referee(self, referee):
         rospy.init_node("test")
         os.chdir("../../../external/hlvs_webots/controllers/referee")

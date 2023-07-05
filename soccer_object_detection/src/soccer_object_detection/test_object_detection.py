@@ -6,6 +6,7 @@ from unittest import TestCase
 from unittest.mock import MagicMock
 
 import cv2
+import message_filters
 import numpy as np
 import pytest
 import rospy
@@ -13,6 +14,7 @@ import tf2_ros
 import yaml
 from cv2 import Mat
 from cv_bridge import CvBridge
+from geometry_msgs.msg import Pose
 from sensor_msgs.msg import CameraInfo, Image
 
 from soccer_common import Camera
@@ -42,6 +44,13 @@ def IoU(boxA, boxB):
     iou = interArea / float(boxAArea + boxBArea - interArea)
     # return the intersection over union value
     return iou
+
+
+def camera_callback(rgb_msg, camera_info):
+    rgb_image = CvBridge().imgmsg_to_cv2(rgb_msg, desired_encoding="rgb8")
+    camera_info_K = np.array(camera_info.K).reshape([3, 3])
+    camera_info_D = np.array(camera_info.D)
+    rgb_undist = cv2.undistort(rgb_image, camera_info_K, camera_info_D)
 
 
 class TestObjectDetection(TestCase):
@@ -334,3 +343,61 @@ class TestObjectDetection(TestCase):
                 sys.stdout.write("\x1b[A")
                 sys.stdout.write("\x1b[A")
                 print(f"Current image number {i} name {f}\n")
+
+    def test_camera_detection(self):
+        rospy.init_node("test")
+        src_path = os.path.dirname(os.path.realpath(__file__))
+        model_path = src_path + "/../../models/half_5.pt"
+
+        n = ObjectDetectionNode(model_path=model_path)
+
+        n.robot_state.status = RobotState.STATUS_READY
+        n.game_state.gameState = GameState.GAMESTATE_PLAYING
+        cvbridge = CvBridge()
+        cap = cv2.VideoCapture("/dev/video2")
+        while True:
+            success, frame = cap.read()
+            if cv2.waitKey(1) & 0xFF == 27:  # Esc pressed
+                break
+
+            frame = cv2.resize(frame, dsize=(640, 480))
+
+            img_msg: Image = cvbridge.cv2_to_imgmsg(frame)
+
+            n.pub_detection = MagicMock()
+            n.pub_boundingbox = MagicMock()
+            n.pub_detection.get_num_connections = MagicMock(return_value=1)
+            n.pub_boundingbox.get_num_connections = MagicMock(return_value=1)
+            n.pub_detection.publish = MagicMock()
+            n.pub_boundingbox.publish = MagicMock()
+
+            ci = CameraInfo()
+            ci.height = frame.shape[0]
+            ci.width = frame.shape[1]
+            n.camera.camera_info = ci
+            n.camera.pose.orientation_euler = [0, np.pi / 8, 0]
+            n.callback(img_msg)
+
+            mat = cvbridge.imgmsg_to_cv2(n.pub_detection.publish.call_args[0][0])
+            cv2.imshow("Image", mat)
+            cv2.waitKey(1000)
+
+            if n.pub_boundingbox.publish.call_args is not None:
+                for bounding_box in n.pub_boundingbox.publish.call_args[0][0].bounding_boxes:
+                    if bounding_box.probability >= n.CONFIDENCE_THRESHOLD and int(bounding_box.Class) in [Label.BALL.value, Label.ROBOT.value]:
+                        bounding_boxes = [
+                            bounding_box.xmin,
+                            bounding_box.ymin,
+                            bounding_box.xmax,
+                            bounding_box.ymax,
+                        ]
+
+                        # if "DISPLAY" in os.environ:
+                        #     cv2.rectangle(
+                        #         img=mat,
+                        #         pt1=(best_dimensions[0], best_dimensions[1]),
+                        #         pt2=(best_dimensions[2], best_dimensions[3]),
+                        #         color=(255, 255, 255),
+                        #     )
+                        #     if bounding_box.obstacle_detected is True:
+                        #         cv2.circle(mat, (bounding_box.xbase, bounding_box.ybase), 0, (0, 255, 255), 3)
