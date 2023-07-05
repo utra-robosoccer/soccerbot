@@ -97,15 +97,14 @@ def open_ser():
     log_string("\tIMU Port: " + imu_port)
     log_string("\tIMU Baud rate: " + str(imu_baud))
 
+    imu_ser = None
+    servo_ser = None
     try:
         imu_ser = SerialWrapper(imu_port, imu_baud)
         servo_ser = SerialWrapper(servo_port, servo_baud)
     except serial.serialutil.SerialException:
         rospy.logerr(
-            "No serial port found: "
-            + ("IMU port `%s`" % imu_port if imu_ser is None else "")
-            + (" and " if imu_ser is None and servo_ser is None else "")
-            + ("Servo port `%s`" % servo_port if servo_ser is None else "")
+            f"Opening either the IMU port at {imu_port} or the servo port at {servo_port} failed"
         )
 
     return (servo_ser, imu_ser)

@@ -18,6 +18,7 @@ class IMUReceiver(Receiver):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self._working_buf = b""
+        self._ser.write(0)
 
     def _receive_packet_from_mcu(self, timeout):
         #print(self._working_buf)
@@ -28,7 +29,7 @@ class IMUReceiver(Receiver):
             r = self._ser.read(4096)
             self._working_buf += r
 
-        #print("IMU RECEIVER: ", self._working_buf)
+        # print("IMU RECEIVER: ", self._working_buf)
         D = self._working_buf.split(NAN_HEAD)
         if len(D) > 0:
             if len(D[-1]) >= 24:

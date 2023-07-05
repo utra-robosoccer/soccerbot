@@ -19,6 +19,7 @@ class Receiver(Thread):
         self._ser = ser
         self._num_rx_lock = Lock()
         self._timeout = 0.010  # 10 ms
+        self._rate = 100
         self._imu_payload = np.ndarray(shape=(6, 1))
         self._angles_payload = np.ndarray(shape=(12, 1))
 
@@ -58,6 +59,7 @@ class Receiver(Thread):
         MAX_T_EXCEPT_DENSITY = 10 # fails/s
         t_excepts_ = []
 
+        r = rp.Rate(self._rate)
         while not rp.is_shutdown() and not self._stop_requested():
             try:
                 (receive_succeeded, result) = self._receive_packet_from_mcu(self._timeout)
@@ -73,5 +75,6 @@ class Receiver(Thread):
                 if len(t_excepts_) > 1 and 1 / np.mean(np.diff(np.array(t_excepts_))) > MAX_T_EXCEPT_DENSITY:
                     self._ser.reopen()
                     del t_excepts_[:]
+            r.sleep()
 
         log_string("Stopping Rx thread ({0})...".format(self._name))
