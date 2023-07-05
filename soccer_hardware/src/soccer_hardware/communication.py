@@ -37,32 +37,28 @@ class Communication:
 
         for motor in self._motor_map:
             self._motor_map[motor]["value"] = 0.0
-
-        self._publish_timer = rp.Timer(rp.Duration(nsecs=25000000), self.send_angles)
+        self._motor_angles = [0] * len(self._motor_map)
+        for motor in self._motor_map:
+            self._motor_angles[int(self._motor_map[motor]["id"])] = float(self._motor_map[motor]["offset"])
 
     def run(self):
         self._rx_thread.start()
-        self._tx_thread.start()
-
-        tx_cycle = WaitForMs(10)
-        tx_cycle.set_e_gain(1.5)
-        # Never need to wait longer than the target time, but allow calls to
-        # time.sleep for down to 3 ms less than the desired time
-        tx_cycle.set_e_lim(0, -3.0)
-        rp.spin()
+        rr = rp.Rate(100)
+        while not rp.is_shutdown():
+            self._tx_thread._send_packet_to_mcu(self._tx_thread._vec2bytes(self._motor_angles))
+            rr.sleep()
 
     def joint_command_callback(self, joint_command):
         for motor_name, target in zip(joint_command.name, joint_command.position):
             if motor_name in self._motor_map:
                 self._motor_map[motor_name]["value"] = target
 
-    def send_angles(self, event):
         motor_angles = [0] * len(self._motor_map)
         for motor in self._motor_map:
             motor_angles[int(self._motor_map[motor]["id"])] = np.rad2deg(
                 self._motor_map[motor]["value"] * float(self._motor_map[motor]["direction"])
             ) + float(self._motor_map[motor]["offset"])
-        self._tx_thread.send(motor_angles)
+        self._motor_angles = motor_angles
 
     def receive_callback(self, received_angles, received_imu):
         self._last_angles = received_angles

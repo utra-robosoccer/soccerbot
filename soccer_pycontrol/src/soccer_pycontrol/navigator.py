@@ -34,13 +34,16 @@ class Navigator:
         else:
             self.client_id = pb.connect(pb.DIRECT)
         pb.setAdditionalSearchPath(pybullet_data.getDataPath())  # optionally
-        pb.resetDebugVisualizerCamera(cameraDistance=0.5, cameraYaw=0, cameraPitch=0, cameraTargetPosition=[0, 0, 0.25])
+        pb.resetDebugVisualizerCamera(cameraDistance=1.0, cameraYaw=90, cameraPitch=0, cameraTargetPosition=[0, 0, 0.25])
         pb.setGravity(0, 0, -9.81)
         pb.configureDebugVisualizer(pb.COV_ENABLE_GUI, 0)
-        self.ramp = Ramp("plane.urdf", (0, 0, 0), (0, 0, 0), lateralFriction=0.9, spinningFriction=0.9, rollingFriction=0.0)
 
         self.soccerbot = Soccerbot(Transformation(), useFixedBase=False, useCalibration=useCalibration)
+
+        self.ramp = Ramp("plane.urdf", (0, 0, 0), (0, 0, 0), lateralFriction=0.9, spinningFriction=0.9, rollingFriction=0.0)
+
         self.terminate_walk = False
+        self.prepare_walk_time = rospy.get_param("prepare_walk_time", 2)
 
         self.t = 0
 
@@ -98,12 +101,16 @@ class Navigator:
         :param single_trajectory: If set to true, then the software will exit after a single trajectory is completed
         :return: True if the robot succeeds navigating to the goal, False if it doesn't reach the goal and falls
         """
+        logging_id = pb.startStateLogging(pb.STATE_LOGGING_GENERIC_ROBOT, "/tmp/simulation_record.bullet", physicsClientId=self.client_id)
 
         if self.soccerbot.robot_path.duration() == 0:
+            pb.stopStateLogging(logging_id)
             return True
 
-        self.t = -2
+        self.t = -self.prepare_walk_time
         stable_count = 20
+        self.soccerbot.reset_imus()
+        self.soccerbot.reset_roll_feedback_parameters()
 
         while self.t <= self.soccerbot.robot_path.duration():
             if self.t < 0:
@@ -116,18 +123,22 @@ class Navigator:
                     stable_count = 5
             else:
                 if self.soccerbot.current_step_time <= self.t <= self.soccerbot.robot_path.duration():
-                    self.soccerbot.stepPath(self.t)
-                    self.soccerbot.apply_imu_feedback(self.soccerbot.get_imu())
+                    imu = self.soccerbot.get_imu()
+                    t_offset = self.soccerbot.apply_phase_difference_roll_feedback(self.t, imu)
+                    self.soccerbot.stepPath(t_offset)
+                    self.soccerbot.apply_imu_feedback(imu)
                     self.soccerbot.current_step_time = self.soccerbot.current_step_time + self.soccerbot.robot_path.step_precision
 
             angle_threshold = 1.25  # in radian
             [roll, pitch, yaw] = self.soccerbot.get_imu().orientation_euler
             if pitch > angle_threshold:
                 print("Fallen Back")
+                pb.stopStateLogging(logging_id)
                 return False
 
             elif pitch < -angle_threshold:
                 print("Fallen Front")
+                pb.stopStateLogging(logging_id)
                 return False
 
             pb.setJointMotorControlArray(
@@ -140,4 +151,6 @@ class Navigator:
             self.t = self.t + Navigator.PYBULLET_STEP
             if self.real_time:
                 time.sleep(Navigator.PYBULLET_STEP)
+
+        pb.stopStateLogging(logging_id)
         return True
