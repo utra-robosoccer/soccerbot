@@ -8,11 +8,10 @@
 #include <stdbool.h>
 #include "dynamixel_p1.h"
 #include "dynamixel_p2.h"
-#include "main.h"
 #include "usbd_cdc_if.h"
 #include "MPU6050.h"
 
-#define UPDATE_PERIOD 10 // milliseconds
+#define UPDATE_PERIOD 100 // milliseconds
 
 void update()
 {
@@ -30,14 +29,17 @@ void update()
     if(HAL_GetTick() - lastTime > UPDATE_PERIOD) // send IMU/ANGLES periodically back to main computer
     {
       lastTime = HAL_GetTick();
-      uint8_t txBuf[18 * 2 + 6] = {0}; // 18 motors * 2 bytes each + 6 bytes for IMU
+      uint8_t txBuf[2 + 18 * 2 + 6 + 6] = {0}; // 18 motors * 2 bytes each + 6 bytes for IMU
+      txBuf[0] = txBuf[1] = 0xfe;
 
+      // we read want to read 1 motor position from each port
 //      read_motors(txBuf);
+
+      // get current linear Acceleration and Rotational speed
       read_imu(txBuf);
+
       CDC_Transmit_FS((uint8_t *) txBuf, sizeof(txBuf));
-
     }
-
   }
 }
 
@@ -84,17 +86,19 @@ void command_motors() {
 }
 
 void read_imu(uint8_t *rxBuf) {
-	// every 2 ms
-	ImuStruct_t imu_data;
-//    TxData_t data_to_send = {eImuData, &imu_data};
-//  uint8_t num_samples = 0;
-//  bool need_to_process = false;
-//  need_to_process = readFromSensor(imu_data, &num_samples);
-//  imu_data.Fill_Struct(&imu_data);
+  uint8_t accBuff[6] = {0};
+  Read_Accelerometer_IT(accBuff);
+  HAL_Delay(1); // wait some time before sending next request
+  uint8_t gyrBuff[6] = {0};
+  Read_Gyroscope_IT(gyrBuff);
 
-//  if(need_to_process){
-//    processImuData(imu_data);
-//  }
+  for(uint8_t i = 0; i < 6; i++) {
+    rxBuf[2 + 18 * 2 + i] = accBuff[i];
+  }
+
+  for(uint8_t i = 0; i < 6; i++) {
+    rxBuf[2 + 18 * 2 + 6 + i] = gyrBuff[i];
+  }
 }
 
 

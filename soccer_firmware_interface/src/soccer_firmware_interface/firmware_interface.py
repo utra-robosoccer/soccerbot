@@ -55,11 +55,10 @@ class FirmwareInterface:
                 # data_h = self.serial.read()
                 # angle = data_l[0] | (data_h[0] << 8)
                 # print(data_h[0], data_l[0], angle)
-                print(self.serial.read(size=42))
-                continue
+                data = self.serial.read(size=2 + 2 * 18 + 12)
+                print("read:", data)
 
                 # Publish the Joint State
-                data = []
                 j = JointState()
                 j.header.stamp = rospy.Time.now()
                 for i in range(18):
@@ -74,16 +73,38 @@ class FirmwareInterface:
 
                 imu = Imu()
                 imu.header.stamp = rospy.Time.now()
-                imu.linear_acceleration.x = 0  # TODO nam fill out
-                imu.linear_acceleration.y = 0
-                imu.linear_acceleration.z = 0
-                imu.angular_velocity.x = 0
-                imu.angular_velocity.y = 0
-                imu.angular_velocity.z = 0
-                imu.orientation.x = 0
-                imu.orientation.y = 0
-                imu.orientation.z = 0
-                imu.orientation.w = 0
+
+                imu_data = data[2 + 2 * 18 : 2 + 2 * 18 + 12]
+                print("imu:", imu_data)
+
+                ACC_RANGE = 16384.0
+                IMU_GY_RANGE = 131
+                G = 9.81
+
+                ax = int.from_bytes(imu_data[0:2], byteorder="big", signed=True)
+                ay = int.from_bytes(imu_data[2:4], byteorder="big", signed=True)
+                az = int.from_bytes(imu_data[4:6], byteorder="big", signed=True)
+                print("hello")
+                print("acc", ax, ay, az)
+
+                imu.linear_acceleration.x = -(ax) * G / ACC_RANGE
+                imu.linear_acceleration.y = -(ay) * G / ACC_RANGE
+                imu.linear_acceleration.z = -(az) * G / ACC_RANGE
+
+                print(imu.linear_acceleration.x, imu.linear_acceleration.y, imu.linear_acceleration.z)
+
+                vx = int.from_bytes(imu_data[6:8], byteorder="big", signed=True) / IMU_GY_RANGE
+                vy = int.from_bytes(imu_data[8:10], byteorder="big", signed=True) / IMU_GY_RANGE
+                vz = int.from_bytes(imu_data[10:12], byteorder="big", signed=True) / IMU_GY_RANGE
+
+                imu.angular_velocity.x = vx
+                imu.angular_velocity.y = vy
+                imu.angular_velocity.z = vz
+                print("ang vel:", vx, vy, vz)
+                # imu.orientation.x = 0
+                # imu.orientation.y = 0
+                # imu.orientation.z = 0
+                # imu.orientation.w = 0
                 self.imu_publisher.publish(imu)
 
             except Exception as ex:
@@ -120,7 +141,7 @@ class FirmwareInterface:
                 bytes_to_write[id * 2 + 1] = angle_final_bytes_2
                 pass
 
-            print(bytes_to_write)
+            # print(bytes_to_write)
             self.serial.write(bytes_to_write)
 
         except Exception as ex:

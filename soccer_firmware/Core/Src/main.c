@@ -22,11 +22,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include <stdbool.h>
-#include "bringup_tests.h"
-#include "update_loop.h"
-#include "dynamixel_p1.h"
-#include "dynamixel_p2.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -247,6 +243,7 @@ int main(void)
   MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
   init_ports();
+  MPU6050_init();
   init_motors();
   /* USER CODE END 2 */
 

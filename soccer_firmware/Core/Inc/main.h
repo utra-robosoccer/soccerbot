@@ -33,10 +33,13 @@ extern "C" {
 /* USER CODE BEGIN Includes */
 #include <stdbool.h>
 
+extern I2C_HandleTypeDef hi2c1;
+
 extern uint8_t usb_received;
 extern uint32_t usbRxBufferCount;
 extern uint32_t usbRxBufferSize;
 extern uint8_t usbRxBuffer[100];
+
 
 typedef struct {
   UART_HandleTypeDef *huart; // uart configuration
@@ -70,6 +73,8 @@ typedef enum
 
 void init_ports();
 void init_motors();
+
+
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/

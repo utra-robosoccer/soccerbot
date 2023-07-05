@@ -1,4 +1,9 @@
 #include "MPU6050.h"
+
+float g = 9.81;
+uint8_t IMU_GY_RANGE = 250; /**< divide by this to get degrees per second */
+float ACC_RANGE = 16384.0;
+
 #include <stdbool.h>
 //uint16_t devAddr = MPU6050_DEFAULT_ADDRESS; // default I2C address(?)
 //I2C_HandleTypeDef hi2c1;
@@ -9,7 +14,6 @@
 // --------------------------- WORKAROUND FUNCTIONS -------------------------------------------------
 // We only need these functions for a silicon issue that affects the F446RE and
 // not the F767ZI
-#if defined(USE_I2C_SILICON_BUG_FIX)
 // Note: The following 2 functions are used as a workaround for an issue where the BUSY flag of the
 // I2C module is erroneously asserted in the hardware (a silicon bug, essentially). This workaround has
 // not been thoroughly tested, but we know it works
@@ -139,7 +143,7 @@ void generateClocks(uint8_t num_clocks, uint8_t send_stop_bits){
 
     HAL_I2C_Init(handler);
 }
-#endif
+
 // --------------------------- END OF WORKAROUND FUNCTIONS -------------------------------------------------
 
 
@@ -148,9 +152,6 @@ ImuSensor imuSensor;
 ImuStruct_t p_data;
 
 extern I2C_HandleTypeDef hi2c1;
-
-extern NOTIFIED_FROM_RX_ISR;
-extern MAX_DELAY_TIME;
 
 extern lpf;
 
@@ -175,7 +176,8 @@ void MPU6050_init() {
 	Write_Reg(MPU6050_RA_PWR_MGMT_2, 0);
 	Write_Reg(MPU6050_RA_SMPLRT_DIV, MPU6050_CLOCK_DIV_296);
 
-	Set_LPF(lpf); // I don't know what lpf should be set to
+	const uint8_t IMU_DIGITAL_LOWPASS_FILTER_SETTING = 6;
+	Set_LPF(IMU_DIGITAL_LOWPASS_FILTER_SETTING); // I don't know what lpf should be set to
 
 }
 
@@ -248,7 +250,7 @@ bool Set_LPF(uint8_t lpf){
 
 void Read_Gyroscope(){
     uint8_t output_buffer[6];
-    Read_Data(MPU6050_RA_GYRO_XOUT_H,output_buffer);
+    Read_Data_IT(MPU6050_RA_GYRO_XOUT_H,output_buffer);
     int16_t vx = (int16_t)(output_buffer[0]<<8|output_buffer[1]);
     int16_t vy = (int16_t)(output_buffer[2]<<8|output_buffer[3]);
     int16_t vz = (int16_t)(output_buffer[4]<<8|output_buffer[5]);
@@ -256,6 +258,30 @@ void Read_Gyroscope(){
     imuSensor.m_vx = (float)(vx) / IMU_GY_RANGE;
     imuSensor.m_vy = (float)(vy) / IMU_GY_RANGE;
     imuSensor.m_vz = (float)(vz) / IMU_GY_RANGE;
+}
+
+
+void Read_Gyroscope_IT(uint8_t *buff){
+    uint8_t output_buffer[6];
+
+    if(Read_Data_IT(MPU6050_RA_GYRO_XOUT_H,output_buffer) != HAL_OK){
+        // Try fix for flag bit silicon bug
+        generateClocks(1, 1);
+        return;
+    }
+
+    int16_t vx = (int16_t)(output_buffer[0]<<8|output_buffer[1]);
+    int16_t vy = (int16_t)(output_buffer[2]<<8|output_buffer[3]);
+    int16_t vz = (int16_t)(output_buffer[4]<<8|output_buffer[5]);
+
+    float m_vx = (float)(vx) / IMU_GY_RANGE;
+    float m_vy = (float)(vy) / IMU_GY_RANGE;
+    float m_vz = (float)(vz) / IMU_GY_RANGE;
+
+    for(uint8_t i = 0; i < 6; i++)
+    {
+      buff[i] = output_buffer[i];
+    }
 }
 
 
@@ -271,6 +297,27 @@ void Read_Accelerometer(){
     imuSensor.m_az = -(az * g / ACC_RANGE);
 }
 
+void Read_Accelerometer_IT(uint8_t *buff){
+    uint8_t output_buffer[6];
+
+    if(Read_Data(MPU6050_RA_ACCEL_XOUT_H,output_buffer)){
+      // Try fix for flag bit silicon bug
+      generateClocks(1, 1);
+    }
+
+    int16_t ax = (int16_t)(output_buffer[0]<<8|output_buffer[1]);
+    int16_t ay = (int16_t)(output_buffer[2]<<8|output_buffer[3]);
+    int16_t az  = (int16_t)(output_buffer[4]<<8|output_buffer[5]);
+
+    float m_ax = -(ax * g / ACC_RANGE);
+    float m_ay = -(ay * g / ACC_RANGE);
+    float m_az = -(az * g / ACC_RANGE);
+
+    for(uint8_t i = 0; i < 6; i++)
+    {
+      buff[i] = output_buffer[i];
+    }
+}
 
 void Fill_Struct(ImuStruct_t* p_data){
     p_data->x_Accel = imuSensor.m_ax;
