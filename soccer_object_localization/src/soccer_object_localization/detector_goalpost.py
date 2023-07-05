@@ -7,6 +7,7 @@ from rospy.impl.tcpros_base import DEFAULT_BUFF_SIZE
 
 if "ROS_NAMESPACE" not in os.environ:
     os.environ["ROS_NAMESPACE"] = "/robot1"
+
 import math
 
 import cv2
@@ -17,7 +18,6 @@ from sensor_msgs.msg import Image
 
 from soccer_msgs.msg import RobotState
 from soccer_object_localization.detector import Detector
-from soccer_object_localization.detector_fieldline import DetectorFieldline
 
 
 class DetectorGoalPost(Detector):
@@ -31,10 +31,10 @@ class DetectorGoalPost(Detector):
         cv2.setRNGSeed(12345)
         pass
 
-    def image_callback(self, img: Image):
+    def image_callback(self, img: Image, debug=False):
         t_start = time.time()
 
-        if self.robot_state.status is not RobotState.STATUS_DETERMINING_SIDE:
+        if self.robot_state.status not in [RobotState.STATUS_DETERMINING_SIDE, RobotState.STATUS_LOCALIZING]:
             return
 
         if not self.camera.ready():
@@ -43,104 +43,119 @@ class DetectorGoalPost(Detector):
         self.camera.reset_position(timestamp=img.header.stamp)
 
         image = CvBridge().imgmsg_to_cv2(img, desired_encoding="rgb8")
-        hsv = cv2.cvtColor(src=image, code=cv2.COLOR_BGR2HSV)
-
-        h = self.camera.calculateHorizonCoverArea()
-        cv2.rectangle(image, [0, 0], [640, int(h * 7 / 10.0)], [0, 0, 0], cv2.FILLED)
-
-        # Field line detection
-        mask2 = cv2.inRange(hsv, (0, 0, 255 - 65), (255, 65, 255))
-        out = cv2.bitwise_and(image, image, mask=mask2)
-
-        kernel = np.ones((7, 7), np.uint8)
-        out = cv2.morphologyEx(out, cv2.MORPH_CLOSE, kernel)
-
-        cdst = cv2.cvtColor(out, cv2.COLOR_BGR2GRAY)
-        retval, dst = cv2.threshold(cdst, 127, 255, cv2.THRESH_BINARY)
-        edges = cv2.Canny(dst, 50, 150)
-
-        lines = cv2.HoughLinesP(
-            edges,
-            rho=DetectorFieldline.HOUGH_RHO,
-            theta=DetectorFieldline.HOUGH_THETA,
-            threshold=DetectorFieldline.HOUGH_THRESHOLD,
-            minLineLength=DetectorFieldline.HOUGH_MIN_LINE_LENGTH,
-            maxLineGap=DetectorFieldline.HOUGH_MAX_LINE_GAP,
-        )
-
-        ccdst = cv2.cvtColor(cdst, cv2.COLOR_GRAY2RGB)
-
-        if lines is None:
+        vertical_lines, image_out = self.get_vlines_from_img(image, debug=debug)
+        if vertical_lines is None:
             return
 
-        computed_lines = []
-        vert_x_max, vert_x_min, vert_y_max, vert_y_min = 0, 1000, 0, 1000
-        for l in lines:
-            x1, y1, x2, y2 = l[0]
-            # computing magnitude and angle of the line
-            mag = np.sqrt((x2 - x1) ** 2.0 + (y2 - y1) ** 2.0)
-            if x2 == x1:
-                angle = 0
+        # Get vertical line in 3D position to the camera assuming that the lower point of the line is on the grass
+        closest_distance = np.inf
+        closest_line = None
+        closest_line_relative_position_post_to_robot = None
+        min_horizon_pixel = self.camera.calculateHorizonCoverArea()
+
+        for line in vertical_lines:
+            if line[1] > line[3]:
+                lower_point = [line[0], line[1]]
             else:
-                angle = np.rad2deg(np.arctan((y2 - y1) / (x2 - x1)))
+                lower_point = [line[2], line[3]]
 
-            computed_lines += [(mag, angle)]
+            if lower_point[1] < min_horizon_pixel:
+                continue
 
-            pt1 = (x1, y1)
-            pt2 = (x2, y2)
-            if abs(angle) < 10:  # Horizontal
-                cv2.line(ccdst, pt1, pt2, (255, 0, 0), thickness=3, lineType=cv2.LINE_AA)
-            elif abs(abs(angle) - 90) < 10:  # Vertical
-                cv2.line(ccdst, pt1, pt2, (0, 255, 0), thickness=3, lineType=cv2.LINE_AA)
-                vert_x_max = max(vert_x_max, x1, x2)
-                vert_x_min = min(vert_x_min, x1, x2)
-                vert_y_max = max(vert_y_max, y1, y2)
-                vert_y_min = min(vert_y_min, y1, y2)
-            else:
-                cv2.line(ccdst, pt1, pt2, (0, 0, 255), thickness=3, lineType=cv2.LINE_AA)
+            relative_position_post_to_robot = self.camera.findFloorCoordinate(lower_point)
+            if np.linalg.norm(relative_position_post_to_robot) < closest_distance:
+                closest_distance = np.linalg.norm(relative_position_post_to_robot)
+                closest_line = line
+                closest_line_relative_position_post_to_robot = relative_position_post_to_robot
 
-        computed_lines = np.array(computed_lines)
-
-        # an image has a goalpost if two perpendicular lines with 0 degrees and 90 degrees intersect
-        vertical_line = len(computed_lines[(abs(abs(computed_lines[:, 1]) - 90) < 10)]) > 0
-
-        if vertical_line:
-            w = vert_y_max - vert_y_min
-            l = vert_x_max - vert_x_min
-            area = w * l
-            if area < 50000:
-                cv2.rectangle(ccdst, [vert_x_min, vert_y_min], [vert_x_max, vert_y_max], [0, 255, 255], thickness=2)
-                x_avg = (vert_x_max + vert_x_min) / 2
-                [floor_center_x, floor_center_y, _] = self.camera.findFloorCoordinate([x_avg, vert_y_max])
-                [floor_close_x, floor_close_y, _] = self.camera.findFloorCoordinate([x_avg, vert_y_max])
-
-                camera_pose = self.camera.pose
-
-                distance = ((floor_center_x - camera_pose.position[0]) ** 2 + (floor_center_y - camera_pose.position[1]) ** 2) ** 0.5
-                theta = math.atan2(distance, camera_pose.position[2])
-                ratio = math.tan(theta) ** 2
-                ratio2 = 1 / (1 + ratio)
-                if 1 < ratio2 < 0:
-                    print("here")  # TODO
-
-                floor_x = floor_close_x * (1 - ratio2) + floor_center_x * ratio2
-                floor_y = floor_close_y * (1 - ratio2) + floor_center_y * ratio2
-                if floor_x > 0.0:
-                    self.br.sendTransform(
-                        (floor_x, floor_y, 0),
-                        (0, 0, 0, 1),
-                        img.header.stamp,
-                        self.robot_name + "/goal_post",
-                        self.robot_name + "/base_footprint",
-                    )
-
+        if closest_line is not None:
+            cv2.line(image_out, (closest_line[0], closest_line[1]), (closest_line[2], closest_line[3]), (255, 0, 0), 2)
+            self.br.sendTransform(
+                closest_line_relative_position_post_to_robot,
+                (0, 0, 0, 1),
+                img.header.stamp,
+                self.robot_name + "/goal_post",
+                self.robot_name + "/base_footprint",
+            )
         if self.image_publisher.get_num_connections() > 0:
-            img_out = CvBridge().cv2_to_imgmsg(ccdst)
+            img_out = CvBridge().cv2_to_imgmsg(image_out)
             img_out.header = img.header
             self.image_publisher.publish(img_out)
 
         t_end = time.time()
         rospy.loginfo_throttle(60, "GoalPost detection rate: " + str(t_end - t_start))
+
+    """
+        Retrieves the vertical lines in image by isolating the grass in the field, removing it and then uses
+        Canny and Hough to detect the lines using hough_theta, hough_threshold, hough_min_line_length,
+        hough_max_line_gap and returns lines that are within angle_tol_deg of vertical.
+        Returns vertical lines as a list of lists where each line's coordinates are stored as:
+        [x_start, y_start, x_end, y_end]
+        and the original image with the vertical lines drawn on it
+    """
+
+    def get_vlines_from_img(
+        self, image, debug=False, angle_tol_deg=3, hough_theta=np.pi / 180, hough_threshold=30, hough_min_line_length=30, hough_max_line_gap=10
+    ):
+        # Isolate and remove field from image
+        image_blurred = cv2.bilateralFilter(image, 9, 75, 75)
+        image_hsv = cv2.cvtColor(src=image_blurred, code=cv2.COLOR_BGR2HSV)
+        image_hsv_filter = cv2.inRange(image_hsv, (0, 0, 150), (255, 50, 255))
+        h = self.camera.calculateHorizonCoverArea()
+        image_crop = image_hsv[h + 1 :, :, :]
+        grass_only = cv2.inRange(image_crop, (35, 85, 0), (115, 255, 255))
+        grass_only = cv2.vconcat([np.zeros((h + 1, grass_only.shape[1]), dtype=grass_only.dtype), grass_only])
+        # Use odd numbers for all circular masks otherwise the line will shift location
+        grass_only_0 = cv2.morphologyEx(grass_only, cv2.MORPH_OPEN, self.circular_mask(5))
+        grass_only_1 = cv2.morphologyEx(grass_only, cv2.MORPH_CLOSE, self.circular_mask(5))
+        grass_only_2 = cv2.morphologyEx(grass_only_1, cv2.MORPH_OPEN, self.circular_mask(21))
+        grass_only_3 = cv2.morphologyEx(grass_only_2, cv2.MORPH_CLOSE, self.circular_mask(61))
+        grass_only_morph = cv2.morphologyEx(grass_only_3, cv2.MORPH_ERODE, self.circular_mask(9))
+        grass_only_flipped = cv2.bitwise_not(grass_only_morph)
+
+        image_bw = cv2.bitwise_and(image, image, mask=image_hsv_filter)
+        image_bw = cv2.bitwise_and(image_bw, image_bw, mask=grass_only_flipped)
+        image_bw = cv2.cvtColor(image_bw, cv2.COLOR_BGR2GRAY)
+        image_bw_eroded = cv2.morphologyEx(image_bw, cv2.MORPH_ERODE, self.circular_mask(5))
+
+        # Isolate all lines using Canny edge detection and Hough lines with the provided settings
+        image_edges = cv2.Canny(image_bw_eroded, 50, 150, apertureSize=3)
+        lines = cv2.HoughLinesP(
+            image_edges, rho=1, theta=hough_theta, threshold=hough_threshold, minLineLength=hough_min_line_length, maxLineGap=hough_max_line_gap
+        )
+        if lines is None:
+            return None, None
+        if debug:
+            image_hough = image.copy()
+            for line in lines:
+                x1, y1, x2, y2 = line[0]
+                cv2.line(image_hough, (x1, y1), (x2, y2), (0, 255, 0), 2)
+
+        # Isolate vertical lines
+        angle_tol_rad = np.radians(angle_tol_deg)  # +-deg from vertical
+        image_out = image.copy()
+
+        vertical_lines = []
+        for line in lines:
+            x1, y1, x2, y2 = line[0]
+            abs_line_angle = math.atan2(y2 - y1, x2 - x1)
+            if abs(abs_line_angle - np.pi / 2) < angle_tol_rad:
+                vertical_lines.append(line[0])
+                cv2.line(image_out, (x1, y1), (x2, y2), (0, 255, 0), 2)
+
+        if debug and "DISPLAY" in os.environ:
+            cv2.imshow("image_blurred", image_blurred)
+            cv2.imshow("image_hsv", image_hsv)
+            cv2.imshow("image_hsv_filter", image_hsv_filter)
+            cv2.imshow("grass_only", grass_only_flipped)
+
+            cv2.imshow("image_bw", image_bw)
+            cv2.imshow("image_bw_eroded", image_bw_eroded)
+            cv2.imshow("image_edges", image_edges)
+            cv2.imshow("image_hough", image_hough)
+
+            cv2.waitKey(0)
+        return vertical_lines, image_out
 
 
 if __name__ == "__main__":

@@ -11,14 +11,20 @@ services:
     extends:
       file: docker-compose.yaml
       service: simulator
+    networks:
+      soccer_network:
+        ipv4_address: 172.18.0.10
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix:rw
       - /dev/dri:/dev/dri:rw
       - /dev/snd:/dev/snd:rw
-      - ./external/webots/projects/samples/contests/robocup/controllers/referee/team_1.json:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/team_1.json:rw
-      - ./external/webots/projects/samples/contests/robocup/controllers/referee/team_2.json:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/team_2.json:rw
-      - ./external/webots/projects/samples/contests/robocup/protos/:/usr/local/webots/projects/samples/contests/robocup/protos/:rw
-      - ./external/webots/projects/samples/contests/robocup/controllers/referee/game.json:/usr/local/webots/projects/samples/contests/robocup/controllers/referee/game.json:rw
+      - ./external/hlvs_webots/controllers/referee/team_1.json:/usr/local/hlvs_webots/controllers/referee/team_1.json:rw
+      - ./external/hlvs_webots/controllers/referee/team_2.json:/usr/local/hlvs_webots/controllers/referee/team_2.json:rw
+      - ./external/hlvs_webots/protos/:/usr/local/hlvs_webots/protos/:rw
+      - ./external/hlvs_webots/controllers/referee/game.json:/usr/local/hlvs_webots/controllers/referee/game.json:rw
+    environment:
+      TEAM_1_PLAYERS_ON_FIELD: "1,2,3,4"
+      TEAM_2_PLAYERS_ON_FIELD: ""
 
   friendly1:
     extends:
@@ -27,6 +33,8 @@ services:
     networks:
       soccer_network:
         ipv4_address: 172.18.0.2
+    ports:
+      - 11311:11311
     environment:
       ROBOCUP_ROBOT_ID: 1
       ROBOCUP_TEAM_COLOR: "red"
@@ -43,6 +51,8 @@ services:
     networks:
       soccer_network:
         ipv4_address: 172.18.0.3
+    ports:
+      - 11312:11311
     environment:
       ROBOCUP_ROBOT_ID: 2
       ROBOCUP_TEAM_ID: 16
@@ -59,6 +69,8 @@ services:
     networks:
       soccer_network:
         ipv4_address: 172.18.0.4
+    ports:
+      - 11313:11311
     environment:
       ROBOCUP_ROBOT_ID: 3
       ROBOCUP_TEAM_ID: 16
@@ -75,6 +87,8 @@ services:
     networks:
       soccer_network:
         ipv4_address: 172.18.0.5
+    ports:
+      - 11314:11311
     environment:
       ROBOCUP_ROBOT_ID: 4
       ROBOCUP_TEAM_ID: 16
@@ -83,67 +97,67 @@ services:
       ROBOCUP_GAMECONTROLLER_IP: "simulator"
       ROBOCUP_MIRROR_SERVER_IP: "simulator"
       PYTHONUNBUFFERED: 1
-
-  oppponent1: # Goalie
-    extends:
-      file: docker-compose.yaml
-      service: opponent
-    networks:
-      soccer_network:
-        ipv4_address: 172.18.0.6
-    environment:
-      ROBOCUP_TEAM_ID: 5
-      ROBOCUP_ROBOT_ID: 1
-      ROBOCUP_TEAM_COLOR: "blue"
-      ROBOCUP_SIMULATOR_ADDR: "simulator:10021"
-      ROBOCUP_GAMECONTROLLER_IP: "simulator"
-      ROBOCUP_MIRROR_SERVER_IP: "simulator"
-      PYTHONUNBUFFERED: 1
-
-  oppponent2: # Left midfield
-    extends:
-      file: docker-compose.yaml
-      service: opponent
-    networks:
-      soccer_network:
-        ipv4_address: 172.18.0.7
-    environment:
-      ROBOCUP_TEAM_ID: 5
-      ROBOCUP_ROBOT_ID: 2
-      ROBOCUP_TEAM_COLOR: "blue"
-      ROBOCUP_SIMULATOR_ADDR: "simulator:10022"
-      ROBOCUP_GAMECONTROLLER_IP: "simulator"
-      ROBOCUP_MIRROR_SERVER_IP: "simulator"
-      PYTHONUNBUFFERED: 1
-
-  oppponent3: # Striker
-    extends:
-      file: docker-compose.yaml
-      service: opponent
-    networks:
-      soccer_network:
-        ipv4_address: 172.18.0.8
-    environment:
-      ROBOCUP_TEAM_ID: 5
-      ROBOCUP_ROBOT_ID: 3
-      ROBOCUP_TEAM_COLOR: "blue"
-      ROBOCUP_SIMULATOR_ADDR: "simulator:10023"
-      ROBOCUP_GAMECONTROLLER_IP: "simulator"
-      ROBOCUP_MIRROR_SERVER_IP: "simulator"
-      PYTHONUNBUFFERED: 1
-
-  oppponent4: # Right midfield
-    extends:
-      file: docker-compose.yaml
-      service: opponent
-    networks:
-      soccer_network:
-        ipv4_address: 172.18.0.9
-    environment:
-      ROBOCUP_TEAM_ID: 5
-      ROBOCUP_ROBOT_ID: 4
-      ROBOCUP_TEAM_COLOR: "blue"
-      ROBOCUP_SIMULATOR_ADDR: "simulator:10024"
-      ROBOCUP_GAMECONTROLLER_IP: "simulator"
-      ROBOCUP_MIRROR_SERVER_IP: "simulator"
-      PYTHONUNBUFFERED: 1
+#
+#  oppponent1: # Goalie
+#    extends:
+#      file: docker-compose.yaml
+#      service: opponent
+#    networks:
+#      soccer_network:
+#        ipv4_address: 172.18.0.6
+#    environment:
+#      ROBOCUP_TEAM_ID: 5
+#      ROBOCUP_ROBOT_ID: 1
+#      ROBOCUP_TEAM_COLOR: "blue"
+#      ROBOCUP_SIMULATOR_ADDR: "simulator:10021"
+#      ROBOCUP_GAMECONTROLLER_IP: "simulator"
+#      ROBOCUP_MIRROR_SERVER_IP: "simulator"
+#      PYTHONUNBUFFERED: 1
+#
+#  oppponent2: # Left midfield
+#    extends:
+#      file: docker-compose.yaml
+#      service: opponent
+#    networks:
+#      soccer_network:
+#        ipv4_address: 172.18.0.7
+#    environment:
+#      ROBOCUP_TEAM_ID: 5
+#      ROBOCUP_ROBOT_ID: 2
+#      ROBOCUP_TEAM_COLOR: "blue"
+#      ROBOCUP_SIMULATOR_ADDR: "simulator:10022"
+#      ROBOCUP_GAMECONTROLLER_IP: "simulator"
+#      ROBOCUP_MIRROR_SERVER_IP: "simulator"
+#      PYTHONUNBUFFERED: 1
+#
+#  oppponent3: # Striker
+#    extends:
+#      file: docker-compose.yaml
+#      service: opponent
+#    networks:
+#      soccer_network:
+#        ipv4_address: 172.18.0.8
+#    environment:
+#      ROBOCUP_TEAM_ID: 5
+#      ROBOCUP_ROBOT_ID: 3
+#      ROBOCUP_TEAM_COLOR: "blue"
+#      ROBOCUP_SIMULATOR_ADDR: "simulator:10023"
+#      ROBOCUP_GAMECONTROLLER_IP: "simulator"
+#      ROBOCUP_MIRROR_SERVER_IP: "simulator"
+#      PYTHONUNBUFFERED: 1
+#
+#  oppponent4: # Right midfield
+#    extends:
+#      file: docker-compose.yaml
+#      service: opponent
+#    networks:
+#      soccer_network:
+#        ipv4_address: 172.18.0.9
+#    environment:
+#      ROBOCUP_TEAM_ID: 5
+#      ROBOCUP_ROBOT_ID: 4
+#      ROBOCUP_TEAM_COLOR: "blue"
+#      ROBOCUP_SIMULATOR_ADDR: "simulator:10024"
+#      ROBOCUP_GAMECONTROLLER_IP: "simulator"
+#      ROBOCUP_MIRROR_SERVER_IP: "simulator"
+#      PYTHONUNBUFFERED: 1

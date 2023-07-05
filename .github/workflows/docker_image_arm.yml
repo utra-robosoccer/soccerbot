@@ -3,6 +3,12 @@ name: Docker Image ARM
 
 on:
   workflow_dispatch:
+    inputs:
+      use_cached_image:
+        description: "Use cached image"
+        required: false
+        default: true
+        type: boolean
   schedule:
     - cron: "0 1 1 * *"
   push:
@@ -12,7 +18,7 @@ on:
 
 jobs:
   build_arm:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     env:
       DOCKER_TARGET_PLATFORM: linux/arm64/v8
     concurrency:
@@ -25,20 +31,33 @@ jobs:
           sudo rm -rf /usr/share/dotnet
           sudo rm -rf /opt/ghc
           df -h
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           lfs: true
           submodules: recursive
+      # Ensure that the filesystem permissions are consistent across all umasks, all git checkouts:
+      - name: Set filesystems permissions
+        run: |
+          chmod -R g+w .
       - name: Docker Login
-        uses: docker/login-action@v1.12.0
+        uses: docker/login-action@v2.2.0
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
       - name: Set up Docker Buildx
-        uses: crazy-max/ghaction-docker-buildx@v1
+        uses: docker/setup-buildx-action@v2
+      - name: Build Image
+        uses: docker/build-push-action@v4
         with:
-          version: latest
-      - name: Build the Docker image
-        run: |
-          docker pull utrarobosoccer/soccerbot:arm64 || echo "Starting from scratch"
-          docker buildx build . --file Dockerfile --platform linux/arm64 --progress=plain --tag utrarobosoccer/soccerbot:arm64 --push --cache-from utrarobosoccer/soccerbot:arm64 --build-arg BUILDKIT_INLINE_CACHE=1 --build-arg BASE_IMAGE=arm64v8/ros:noetic-robot --build-arg ARCHITECTURE=sbsa
+          context: .
+          push: true
+          file: Dockerfile
+          platforms: linux/arm64
+          tags: utrarobosoccer/soccerbot:arm64
+          cache-from: type=registry,ref=utrarobosoccer/soccerbot:arm64
+          cache-to: type=inline
+          build-args: |
+            BASE_IMAGE=arm64v8/ros:noetic-robot
+            ARCHITECTURE=sbsa

@@ -91,7 +91,7 @@ motor_mapping:
 
   ######################################
   ######################################
-  
+
   left_arm_motor_0:
     id: 15
     direction: 1 # 1 # arm goes forwards

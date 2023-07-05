@@ -44,15 +44,15 @@ services:
     command:
       /bin/bash -c "source ~/catkin_ws/devel/setup.bash && sudo chmod +s /usr/bin/nice &&
       if [[ $$TEST_CONTROL == 'true' ]]; then roslaunch soccer_hardware soccer_hardware.launch test_walking:=true  __ns:=robot$$ROBOCUP_ROBOT_ID;
-      else roslaunch soccerbot soccerbot.launch simulation:=false __ns:=robot$$ROBOCUP_ROBOT_ID; fi || sleep infinity"
+      else roslaunch soccerbot soccerbot.launch simulation:=false __ns:=robot$$ROBOCUP_ROBOT_ID ; fi || sleep infinity"
     environment:
       ROS_MASTER_URI: ${ROS_MASTER_URI}
+      ROS_IP: ${ROS_IP}
       TEST_CONTROL: "false"
+      ROBOT_MODEL: ${ROBOT_MODEL:-bez1}
       ROBOCUP_ROBOT_ID: ${ROBOCUP_ROBOT_ID:-1}
       ROBOCUP_TEAM_COLOR: "red"
       ROBOCUP_GAMECONTROLLER_IP: "192.168.0.2"
       ROBOCUP_TEAM_ID: ${ROBOCUP_TEAM_ID:-10}
       PYTHONUNBUFFERED: 1
-      X_POS: ${X_POS:--4}
-      Y_POS: ${X_POS:--3.15}
-      YAW: ${YAW:-1.57}
+      PYTHONPATH: /home/robosoccer/catkin_ws/devel/lib/python3/dist-packages:/opt/ros/noetic/lib/python3/dist-packages:/home/robosoccer/.local/lib/python3.8/site-packages

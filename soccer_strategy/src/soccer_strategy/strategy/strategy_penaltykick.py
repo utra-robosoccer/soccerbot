@@ -11,7 +11,7 @@ class StrategyPenaltykick(StrategyFreekick):
     def step_strategy(self, friendly_team: Team, opponent_team: Team, game_state: GameState):
         super().step_strategy(friendly_team, opponent_team, game_state)
 
-        if friendly_team.average_ball_position is None:
+        if friendly_team.observed_ball is None:
             return
 
         for robot in friendly_team.robots:

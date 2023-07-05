@@ -1,9 +1,11 @@
 import enum
+from typing import List, Optional
 
-import numpy
+import numpy as np
 
 from soccer_msgs.msg import RobotState
 from soccer_strategy.ball import Ball
+from soccer_strategy.obstacle import Obstacle
 
 
 class Robot:
@@ -49,7 +51,7 @@ class Robot:
         FALLEN_FRONT = RobotState.STATUS_FALLEN_FRONT
         FALLEN_BACK = RobotState.STATUS_FALLEN_BACK
         FALLEN_SIDE = RobotState.STATUS_FALLEN_SIDE
-        TRAJECTORY_IN_PROGRESS = RobotState.STATUS_TRAJECTORY_IN_PROGRESS
+        GETTING_BACK_UP = RobotState.STATUS_GETTING_BACK_UP
         PENALIZED = RobotState.STATUS_PENALIZED
         STOPPED = RobotState.STATUS_STOPPED
 
@@ -59,7 +61,7 @@ class Robot:
         team=Team.UNKNOWN,
         role=Role.UNASSIGNED,
         status=Status.DISCONNECTED,
-        position=numpy.array([0, 0, 0]),
+        position=np.array([0, 0, 0]),
     ):
         """
         Initializes the robot structure
@@ -73,6 +75,8 @@ class Robot:
         self.team = team
         self.role = role
         self.status = status
-        self.position = position
-        self.robot_id = robot_id
-        self.observed_ball = Ball()
+        self.position: np.ndarray = position
+        self.localized: bool = False
+        self.robot_id: int = robot_id
+        self.observed_ball: Optional[Ball] = None
+        self.observed_obstacles: List[Obstacle] = []

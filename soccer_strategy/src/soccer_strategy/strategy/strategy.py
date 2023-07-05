@@ -3,6 +3,7 @@ import math
 import numpy as np
 import rospy
 
+from soccer_common import Transformation
 from soccer_msgs.msg import GameState
 from soccer_strategy.ball import Ball
 from soccer_strategy.robot import Robot
@@ -35,14 +36,29 @@ def get_back_up(update_next_strategy):
         current_robot = self.get_current_robot(friendly_team)
         if current_robot.status == Robot.Status.FALLEN_BACK:
             current_robot.run_fixed_trajectory("getupback")
+            transform_current = Transformation(pos_theta=current_robot.position)
+            transform_recovery = Transformation(position=[0, 0, 0])
+            transform_new = transform_current @ transform_recovery
+            current_robot.position = transform_new.pos_theta
+            print(f"Updating Current Robot Position {transform_current.pos_theta} -> {transform_new.pos_theta}")
             return
         elif current_robot.status == Robot.Status.FALLEN_FRONT:
             current_robot.run_fixed_trajectory("getupfront")
+            transform_current = Transformation(pos_theta=current_robot.position)
+            transform_recovery = Transformation(position=[-0.3, 0, 0])
+            transform_new = transform_current @ transform_recovery
+            current_robot.position = transform_new.pos_theta
+            print(f"Updating Current Robot Position {transform_current.pos_theta} -> {transform_new.pos_theta}")
             return
         elif current_robot.status == Robot.Status.FALLEN_SIDE:
             current_robot.run_fixed_trajectory("getupside")
+            transform_current = Transformation(pos_theta=current_robot.position)
+            transform_recovery = Transformation(position=[0, 0, 0])
+            transform_new = transform_current @ transform_recovery
+            current_robot.position = transform_new.pos_theta
+            print(f"Updating Current Robot Position {transform_current.pos_theta} -> {transform_new.pos_theta}")
             return
-        elif current_robot.status == Robot.Status.TRAJECTORY_IN_PROGRESS:
+        elif current_robot.status == Robot.Status.GETTING_BACK_UP:
             return
         elif current_robot.status == Robot.Status.LOCALIZING:
             # Wait for localization status
@@ -99,7 +115,7 @@ class Strategy:
         closest_dist = math.inf
         current_closest = None
         for robot in robots:
-            if robot.status not in [Robot.Status.READY, Robot.Status.WALKING, Robot.Status.KICKING]:
+            if robot.status not in [Robot.Status.READY, Robot.Status.WALKING, Robot.Status.KICKING, Robot.Status.GETTING_BACK_UP]:
                 continue
 
             dist = np.linalg.norm(ball.position[0:2] - robot.position[0:2])

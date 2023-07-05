@@ -39,6 +39,8 @@ class NavigatorRos(Navigator):
         self.new_goal = self.goal
         self.terminated = None
 
+        self.prepare_walk_time = rospy.get_param("prepare_walk_time", 2)
+
         self.tf_listener = tf.TransformListener()
 
         self.t = 0
@@ -150,16 +152,19 @@ class NavigatorRos(Navigator):
             time_start = time.time()
 
             # Always publish odometry no matter what state
-            self.soccerbot.publishOdometry()
+            self.soccerbot.publishOdometry(r.last_time)
+
+            # Always apply head rotation
+            self.soccerbot.apply_head_rotation()
 
             if self.soccerbot.robot_state.status in [
                 RobotState.STATUS_DISCONNECTED,
-                RobotState.STATUS_DETERMINING_SIDE,
                 RobotState.STATUS_FALLEN_FRONT,
                 RobotState.STATUS_FALLEN_BACK,
                 RobotState.STATUS_FALLEN_SIDE,
+                RobotState.STATUS_GETTING_BACK_UP,
+                RobotState.STATUS_KICKING,
                 RobotState.STATUS_PENALIZED,
-                RobotState.STATUS_TRAJECTORY_IN_PROGRESS,
             ]:
                 self.soccerbot.robot_path = None
                 self.goal = self.new_goal
@@ -193,6 +198,13 @@ class NavigatorRos(Navigator):
                 rospy.loginfo("Received New Goal")
                 time_now = rospy.Time.now()
 
+                # Minimum goal movement tolerance check
+                if (self.new_goal.pose.position.x - self.robot_pose.pose.position.x) ** 2 + (
+                    self.new_goal.pose.position.y - self.robot_pose.pose.position.y
+                ) ** 2 < 0.03**2:
+                    self.new_goal.pose.position.x = self.robot_pose.pose.position.x
+                    self.new_goal.pose.position.y = self.robot_pose.pose.position.y
+
                 self.goal = self.new_goal
                 self.soccerbot.reset_imus()
                 self.soccerbot.ready()
@@ -206,7 +218,8 @@ class NavigatorRos(Navigator):
                 print_pose("Start Pose", self.robot_pose.pose)
                 print_pose("End Pose", self.goal.pose)
                 self.soccerbot.createPathToGoal(Transformation(pose=self.goal.pose))
-                self.t = -0.5
+                self.soccerbot.reset_roll_feedback_parameters()
+                self.t = -self.prepare_walk_time
 
                 # self.soccerbot.robot_path.show()
                 self.soccerbot.publishPath()
@@ -219,11 +232,15 @@ class NavigatorRos(Navigator):
                 self.soccerbot.robot_path = self.new_path
 
             if self.soccerbot.robot_path is not None and 0 <= self.t <= self.soccerbot.robot_path.duration():
-                self.soccerbot.stepPath(self.t)
 
                 # IMU feedback while walking (Average Time: 0.00017305118281667)
+                t_adj = self.t
                 if self.soccerbot.imu_ready:
-                    self.soccerbot.apply_imu_feedback(self.soccerbot.get_imu())
+                    imu_pose = self.soccerbot.get_imu()
+                    self.soccerbot.apply_imu_feedback(imu_pose)
+                    t_adj = self.soccerbot.apply_phase_difference_roll_feedback(self.t, imu_pose)
+
+                self.soccerbot.stepPath(t_adj)
 
                 self.soccerbot.current_step_time = self.t
 
@@ -239,8 +256,6 @@ class NavigatorRos(Navigator):
                 self.completed_walk_publisher.publish(e)
 
             if self.soccerbot.robot_path is None or self.t > self.soccerbot.robot_path.duration():
-                self.soccerbot.publishHeight()
-                self.soccerbot.apply_head_rotation()
                 self.soccerbot.robot_path = None
                 pass
 
@@ -293,7 +308,4 @@ class NavigatorRos(Navigator):
 
             self.t = self.t + Navigator.PYBULLET_STEP
 
-            try:
-                r.sleep()
-            except rospy.exceptions.ROSInterruptException:
-                break
+            r.sleep()

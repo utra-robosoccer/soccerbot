@@ -4,6 +4,7 @@ import tf
 import tf.transformations
 
 from soccer_msgs.msg import RobotState
+from soccer_strategy.ball import Ball
 from soccer_strategy.robot import Robot
 
 
@@ -23,7 +24,11 @@ class RobotObserved(Robot):
         self.status = Robot.Status(r.status)
         self.role = Robot.Role(r.role)
         eul = tf.transformations.euler_from_quaternion([r.pose.orientation.x, r.pose.orientation.y, r.pose.orientation.z, r.pose.orientation.w])
+        self.localized = r.localized
         self.position = np.array([r.pose.position.x, r.pose.position.y, eul[2]])
 
-        self.observed_ball.position[0] = r.ball_pose.x
-        self.observed_ball.position[1] = r.ball_pose.y
+        if r.ball_detected is not None:
+            if self.observed_ball is None:
+                self.observed_ball = Ball()
+            self.observed_ball.position[0] = r.ball_pose.x
+            self.observed_ball.position[1] = r.ball_pose.y

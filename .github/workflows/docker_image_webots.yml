@@ -2,7 +2,7 @@ name: Docker Image Webots
 
 on:
   schedule:
-  - cron: "0 1 1 * *"
+    - cron: "0 1 1 * *"
   push:
     branches: [master]
     paths-ignore:
@@ -11,25 +11,35 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
       cancel-in-progress: true
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           submodules: recursive
           lfs: true
-
+      # Ensure that the filesystem permissions are consistent across all umasks, all git checkouts:
+      - name: Set filesystems permissions
+        run: |
+          chmod -R g+w .
       - name: Docker Login
-        uses: docker/login-action@v1.12.0
+        uses: docker/login-action@v2.2.0
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
-      - name: Build the Docker image
-        run: |
-          docker pull utrarobosoccer/webots
-          docker buildx build external --file external/Dockerfile --tag utrarobosoccer/webots --progress=plain --cache-from utrarobosoccer/webots --build-arg BUILDKIT_INLINE_CACHE=1
-      - name: Build and push Docker images
-        run: docker push utrarobosoccer/webots
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Build Image
+        uses: docker/build-push-action@v4
+        with:
+          context: external
+          push: true
+          file: external/Dockerfile
+          tags: utrarobosoccer/webots
+          cache-from: type=registry,ref=utrarobosoccer/webots
+          cache-to: type=inline

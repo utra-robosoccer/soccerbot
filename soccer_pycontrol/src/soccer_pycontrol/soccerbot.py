@@ -1,4 +1,5 @@
 import math
+import queue
 from copy import deepcopy
 from os.path import expanduser
 from typing import Union
@@ -10,6 +11,7 @@ import pybullet as pb
 import rospy
 import scipy
 from rospy import ROSException
+from scipy.signal import butter, filtfilt, lfilter
 from sensor_msgs.msg import JointState
 
 from soccer_common.pid import PID
@@ -63,6 +65,8 @@ class Soccerbot:
             basePosition=[pose.position[0], pose.position[1], pose.position[2]],
             baseOrientation=pose.quaternion,
         )
+        rospy.loginfo("List of joints for loaded URDF")
+        rospy.loginfo([pb.getJointInfo(self.body, i)[1] for i in range(pb.getNumJoints(self.body))])
         self.pybullet_offset = pb.getBasePositionAndOrientation(self.body)[0][:2] + (0,)  # pb.getLinkState(self.body, Links.TORSO)[4:6]
         self.motor_names = [pb.getJointInfo(self.body, i)[1].decode("utf-8") for i in range(18)]
 
@@ -106,7 +110,6 @@ class Soccerbot:
         pitch_correction = Transformation([0, 0, 0], euler=[0, rospy.get_param("torso_offset_pitch", 0.0), 0])
         self.torso_offset = Transformation([rospy.get_param("torso_offset_x", 0), 0, 0]) @ pitch_correction
         self.robot_path: Union[PathRobot, None] = None
-        self.robot_odom_path: Union[PathRobot, None] = None
 
         self.configuration = [0.0] * len(Joints)  #: The 18x1 float array motor angle configuration for the robot's 18 motors
         self.configuration_offset = [0.0] * len(Joints)  #: The offset for the 18x1 motor angle configurations
@@ -135,6 +138,7 @@ class Soccerbot:
             setpoint=rospy.get_param("standing_setpoint", -0.01),
             output_limits=(-1.57, 1.57),
         )
+        self.standing_offset = rospy.get_param("standing_offset", 0.0)
 
         #: PID values to adjust the torso's front and back movement while walking
         self.walking_pid = PID(
@@ -144,10 +148,27 @@ class Soccerbot:
             setpoint=rospy.get_param("walking_setpoint", -0.01),
             output_limits=(-1.57, 1.57),
         )
+        self.walking_offset = rospy.get_param("walking_offset", 0.0)
+
+        # All related to the roll feedback
+        self.roll_feedback_low_pass_filter_butterworth_filter_params = None
+        self.roll_feedback_low_pass_filter_order = 8
+        self.roll_feedback_steps_per_second = 0  #
+        self.roll_feedback_x = queue.Queue(maxsize=self.roll_feedback_low_pass_filter_order + 1)
+        self.roll_feedback_y = queue.Queue(maxsize=self.roll_feedback_low_pass_filter_order + 1)
+        self.walking_pid_roll = PID(
+            Kp=rospy.get_param("walking_roll_Kp", 0),
+            Kd=rospy.get_param("walking_roll_Kd", 0),
+            Ki=rospy.get_param("walking_roll_Ki", 0.05),
+            setpoint=rospy.get_param("walking_roll_setpoint", 0.0),
+            output_limits=(-0.1, 0.1),
+        )
 
         self.get_ready_rate = rospy.get_param("get_ready_rate", 0.02)
 
+        #: Odom pose at start of path, reset everytime a new path is created
         #: Odom pose, always starts at (0,0) and is the odometry of the robot's movement. All odom paths start from odom pose
+        self.odom_pose_start_path = Transformation()
         self.odom_pose = Transformation()
 
     def get_angles(self):
@@ -202,8 +223,8 @@ class Soccerbot:
         configuration[Links.LEFT_LEG_1 : Links.LEFT_LEG_6 + 1] = thetas[0:6]
 
         # head
-        configuration[Joints.HEAD_1] = 0
-        configuration[Joints.HEAD_2] = 0
+        configuration[Joints.HEAD_1] = self.configuration[Joints.HEAD_1]
+        configuration[Joints.HEAD_2] = self.configuration[Joints.HEAD_2]
 
         # Slowly ease into the ready position
         previous_configuration = self.configuration
@@ -368,13 +389,14 @@ class Soccerbot:
         )
 
         self.robot_path = PathRobot(startPose, endPoseCalibrated, self.foot_center_to_floor)
-        self.robot_odom_path = PathRobot(self.odom_pose, self.odom_pose @ (scipy.linalg.inv(startPose) @ endPose), self.foot_center_to_floor)
 
         # obj.rate = rateControl(1 / obj.robot_path.step_size); -- from findPath
         self.rate = 1 / self.robot_path.step_precision
         self.period = self.robot_path.step_precision
 
         self.current_step_time = 0
+
+        self.odom_pose_start_path = deepcopy(self.odom_pose)
         return self.robot_path
 
     def stepPath(self, t):
@@ -540,38 +562,86 @@ class Soccerbot:
             locations[index[1] + (index[0] * 2) + 4] = True
         return locations
 
-    def apply_imu_feedback(self, pose: Transformation):
+    def apply_imu_feedback(self, imu_pose: Transformation):
         """
         Adds IMU feedback while the robot is moving to the arms
 
-        :param pose: Pose of the torso
+        :param imu_pose: Pose of the torso
         :return: The value for the walking_pid controller
         """
 
-        if pose is None:
+        if imu_pose is None:
             return
 
-        [_, pitch, _] = pose.orientation_euler
+        [_, pitch, _] = imu_pose.orientation_euler
         F = self.walking_pid.update(pitch)
-        self.configuration_offset[Joints.LEFT_LEG_3] = F
-        self.configuration_offset[Joints.RIGHT_LEG_3] = F
+        self.configuration_offset[Joints.LEFT_LEG_3] = F + self.walking_offset
+        self.configuration_offset[Joints.RIGHT_LEG_3] = F + self.walking_offset
+
         return F
 
-    def apply_imu_feedback_standing(self, pose: Transformation):
+    def apply_imu_feedback_standing(self, imu_pose: Transformation):
         """
         Adds IMU feedback while the robot is standing or getting ready to the arms
 
-        :param pose: Pose of the torso
+        :param imu_pose: Pose of the torso
         :return: The value for the walking_pid controller
         """
 
-        if pose is None:
+        if imu_pose is None:
             return
-        [roll, pitch, yaw] = pose.orientation_euler
+        [yaw, pitch, roll] = imu_pose.orientation_euler
         F = self.standing_pid.update(pitch)
-        self.configuration_offset[Joints.LEFT_LEG_5] = F
-        self.configuration_offset[Joints.RIGHT_LEG_5] = F
+        self.configuration_offset[Joints.LEFT_LEG_5] = F + self.standing_offset
+        self.configuration_offset[Joints.RIGHT_LEG_5] = F + self.standing_offset
         return pitch
+
+    def get_phase_difference_roll(self, t, imu_pose: Transformation):
+
+        if imu_pose is None:
+            return
+
+        [_, _, roll] = imu_pose.orientation_euler
+        cos_value = np.cos(np.array(2 * np.pi * t * self.roll_feedback_steps_per_second / 2))
+
+        x = roll * cos_value
+
+        # https://en.wikipedia.org/wiki/Infinite_impulse_response
+        if self.roll_feedback_x.full():
+            self.roll_feedback_x.get()
+        self.roll_feedback_x.put(x)
+
+        b, a = self.roll_feedback_low_pass_filter_butterworth_filter_params
+
+        sum = 0
+        for p in range(len(b)):
+            sum += b[p] * self.roll_feedback_x.queue[len(b) - p - 1]
+
+        for q in range(1, len(a)):
+            sum -= a[q] * self.roll_feedback_y.queue[len(a) - q]
+
+        y_n = sum / a[0]
+
+        if self.roll_feedback_y.full():
+            self.roll_feedback_y.get()
+        self.roll_feedback_y.put(y_n)
+
+        return y_n
+
+    def apply_phase_difference_roll_feedback(self, t, imu_pose: Transformation):
+        """
+        Adds IMU feedback while the robot is moving to the arms
+
+        :param imu_pose: Pose of the torso
+        :return: The value for the walking_pid controller
+        """
+
+        if imu_pose is None:
+            return
+
+        y_n = self.get_phase_difference_roll(t, imu_pose)
+        F = self.walking_pid_roll.update(y_n)
+        return min(t + F, self.robot_path.duration())
 
     def reset_imus(self):
         """
@@ -579,7 +649,23 @@ class Soccerbot:
         """
 
         self.walking_pid.reset()
+        self.walking_pid_roll.reset()
         self.standing_pid.reset()
+
+    def reset_roll_feedback_parameters(self):
+        sampling_frequency = 100
+        self.roll_feedback_steps_per_second = self.robot_path.path_sections[0].linearStepCount() / self.robot_path.path_sections[0].duration()
+        cutoff_frequency = self.roll_feedback_steps_per_second / 4
+        normalized_cutoff = cutoff_frequency / (0.5 * sampling_frequency)
+
+        # Design the Butterworth filter
+        self.roll_feedback_low_pass_filter_butterworth_filter_params = butter(
+            self.roll_feedback_low_pass_filter_order, normalized_cutoff, btype="low", analog=False, output="ba"
+        )
+        for i in range(self.roll_feedback_low_pass_filter_order + 1):
+            self.roll_feedback_x.put(0)
+            self.roll_feedback_y.put(0)
+        pass
 
     def apply_head_rotation(self):
         """

@@ -1,3 +1,4 @@
+import cv2
 import rospy
 import tf
 
@@ -20,3 +21,6 @@ class Detector:
 
     def robot_state_callback(self, robot_state: RobotState):
         self.robot_state = robot_state
+
+    def circular_mask(self, radius: int):
+        return cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (radius, radius))

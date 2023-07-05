@@ -2,16 +2,16 @@ name: "CodeQL"
 
 on:
   push:
-    branches: [ "master" ]
+    branches: ["master"]
   pull_request:
-    branches: [ "master" ]
+    branches: ["master"]
   schedule:
-    - cron: '19 17 * * 1'
+    - cron: "19 17 * * 1"
 
 jobs:
   analyze:
     name: Analyze
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
       cancel-in-progress: true
@@ -23,18 +23,18 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: ['python' ]
+        language: ["python"]
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
-      with:
-        lfs: true
-        submodules: recursive
-    - name: Initialize CodeQL
-      uses: github/codeql-action/init@v2
-      with:
-        languages: ${{ matrix.language }}
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          lfs: true
+          submodules: recursive
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v2
+        with:
+          languages: ${{ matrix.language }}
 
-    - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v2
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v2

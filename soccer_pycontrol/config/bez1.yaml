@@ -1,11 +1,11 @@
 control_frequency: 0.02
 
 # Path parameters
-walking_torso_height: 0.3 # not sure
+walking_torso_height: 0.33 # not sure
 
-bodystep_size_default: 0.02
-bodystep_size_short_backwards: 0.01
-bodystep_size_short_forwards: 0.025
+torso_step_length: 0.02
+torso_step_length_short_backwards: 0.01
+torso_step_length_short_forwards: 0.025
 
 steps_per_second_default: 2.6
 foot_separation: 0.043
@@ -22,15 +22,24 @@ get_ready_rate: 0.03
 #pre_footstep_ratio: 0.05
 post_footstep_ratio: 0.2
 
-walking_Kp: 3.0
-walking_Ki: 0.0000
-walking_Kd: 20.2
-walking_setpoint: 0.02
+prepare_walk_time: 2
 
-standing_Kp: 2.0
-standing_Ki: 0.015
-standing_Kd: 10.5
-standing_setpoint: 0.0
+walking_Kp: 0.07
+walking_Ki: 0.0000
+walking_Kd: 0.5
+walking_setpoint: 0.27
+walking_offset: -0.06
+
+standing_Kp: 0.07
+standing_Ki: 0
+standing_Kd: 0.5
+standing_setpoint: 0.19
+standing_offset: 0.03
+
+walking_roll_Kp: 0.0
+walking_roll_Ki: 0.05
+walking_roll_Kd: 0.0
+walking_roll_setpoint: 0.0
 
 # Head rotation parameters
 head_rotation_yaw_center: 0.205

@@ -20,20 +20,20 @@ class GameControllerBridge:
         self.base_frame = robot_name
         self.MIN_FRAME_STEP = 16  # ms
         self.MIN_CONTROL_STEP = 8  # ms
-        self.joint_command = [0, 1.5, 0, 1.5, 0, 0, 0.564, -1.176, 0.613, 0, 0, 0, 0.564, -1.176, 0.613, 0, 0, 0]
+        self.joint_command = JointState()
         self.motor_names = [
-            "left_arm_motor_0 [shoulder]",
+            "left_arm_motor_0",
             "left_arm_motor_1",
-            "right_arm_motor_0 [shoulder]",
+            "right_arm_motor_0",
             "right_arm_motor_1",
             "right_leg_motor_0",
-            "right_leg_motor_1 [hip]",
+            "right_leg_motor_1",
             "right_leg_motor_2",
             "right_leg_motor_3",
             "right_leg_motor_4",
             "right_leg_motor_5",
             "left_leg_motor_0",
-            "left_leg_motor_1 [hip]",
+            "left_leg_motor_1",
             "left_leg_motor_2",
             "left_leg_motor_3",
             "left_leg_motor_4",
@@ -41,11 +41,16 @@ class GameControllerBridge:
             "head_motor_0",
             "head_motor_1",
         ]
-        self.external_motor_names = [s.replace(" [shoulder]", "").replace(" [hip]", "") for s in self.motor_names]
+        self.motor_name_to_proto_name_exception_mapping = {
+            "left_arm_motor_0": "left_arm_motor_0 [shoulder]",
+            "right_arm_motor_0": "right_arm_motor_0 [shoulder]",
+            "left_leg_motor_1": "left_leg_motor_1 [hip]",
+            "right_leg_motor_1": "right_leg_motor_1 [hip]",
+        }
 
         self.motor_count = len(self.motor_names)
 
-        self.sensor_names = [s + "_sensor" for s in self.external_motor_names]
+        self.sensor_names = [s + "_sensor" for s in self.motor_names]
         self.regular_sensor_names = ["imu accelerometer", "imu gyro", "imu accelerometer", "camera"]
         self.sensor_names.extend(self.regular_sensor_names)
         self.pressure_sensor_names = [
@@ -60,8 +65,15 @@ class GameControllerBridge:
         ]
         self.sensor_names.extend(self.pressure_sensor_names)
 
-        self.create_publishers()
-        self.create_subscribers()
+        self.pub_clock = rospy.Publisher("/clock", Clock, queue_size=1)
+        self.pub_server_time_clock = rospy.Publisher("/server_time_clock", Clock, queue_size=1)
+        self.pub_camera = rospy.Publisher("camera/image_raw", Image, queue_size=1)
+        self.pub_camera_info = rospy.Publisher("camera/camera_info", CameraInfo, queue_size=1, latch=True)
+        self.pub_imu = rospy.Publisher("imu_raw", Imu, queue_size=1)
+        self.pub_imu_first = 2
+        self.pressure_sensors_pub = {i: rospy.Publisher("foot_contact_{}".format(i), Bool, queue_size=10) for i in range(8)}
+        self.pub_joint_states = rospy.Publisher("joint_states", JointState, queue_size=1)
+        self.joint_command_subscriber = rospy.Subscriber("joint_command", JointState, self.joint_command_callback)
 
         self.addr = os.getenv("ROBOCUP_SIMULATOR_ADDR", "127.0.0.1:10001")
 
@@ -120,29 +132,8 @@ class GameControllerBridge:
 
         self.close_connection()
 
-    def create_publishers(self):
-        self.pub_clock = rospy.Publisher("/clock", Clock, queue_size=1)
-        self.pub_server_time_clock = rospy.Publisher("/server_time_clock", Clock, queue_size=1)
-        self.pub_camera = rospy.Publisher("camera/image_raw", Image, queue_size=1)
-        self.pub_camera_info = rospy.Publisher("camera/camera_info", CameraInfo, queue_size=1, latch=True)
-        self.pub_imu = rospy.Publisher("imu_raw", Imu, queue_size=1)
-        self.pub_imu_first = 2
-        self.pressure_sensors_pub = {i: rospy.Publisher("foot_contact_{}".format(i), Bool, queue_size=10) for i in range(8)}
-        self.pub_joint_states = rospy.Publisher("joint_states", JointState, queue_size=1)
-
-    def create_subscribers(self):
-        self.joint_command_subscriber = rospy.Subscriber("joint_command", JointState, self.joint_command_callback)
-
     def joint_command_callback(self, msg: JointState):
-        motor_dictionary = {}
-        for i in range(len(msg.name)):
-            motor_dictionary[msg.name[i]] = msg.position[i]
-
-        for i in range(len(self.external_motor_names)):
-            if self.external_motor_names[i] in motor_dictionary:
-                self.joint_command[i] = motor_dictionary[self.external_motor_names[i]]
-            else:
-                self.joint_command[i] = 0
+        self.joint_command = msg
 
     def get_connection(self, addr):
         host, port = addr.split(":")
@@ -196,7 +187,6 @@ class GameControllerBridge:
         msg = Clock()
         msg.clock.secs = time // 1000
         msg.clock.nsecs = (time % 1000) * 10**6
-        # if self.base_frame == 'robot1':
         self.pub_server_time_clock.publish(msg)
 
     def handle_messages(self, messages):
@@ -350,38 +340,24 @@ class GameControllerBridge:
         if sensor_time_steps is not None:
             actuator_requests.sensor_time_steps.extend(sensor_time_steps)
 
-        for i, name in enumerate(self.motor_names):
+        for name, position in zip(self.joint_command.name, self.joint_command.position):
             motor_position = messages_pb2.MotorPosition()
+            name = self.motor_name_to_proto_name_exception_mapping.get(name, name)
             motor_position.name = name
-            assert len(self.joint_command) == len(self.motor_names)
-            motor_position.position = self.joint_command[i]
+            motor_position.position = position
             actuator_requests.motor_positions.append(motor_position)
 
-            if not (
-                name
-                in [
-                    "left_arm_motor_0 [shoulder]",
-                    "left_arm_motor_1",
-                    "right_arm_motor_0 [shoulder]",
-                    "right_arm_motor_1",
-                ]
-            ):
-                # print(name)
-                # print(not (name in ["left_arm_motor_0", "left_arm_motor_1", "right_arm_motor_0", "right_arm_motor_1"]))
-                motor_pid = messages_pb2.MotorPID()
-                motor_pid.name = name
+            motor_pid = messages_pb2.MotorPID()
+            motor_pid.name = name
+            if "arm" in name:
+                motor_pid.PID.X = 15
+                motor_pid.PID.Y = 0.000
+                motor_pid.PID.Z = 0.00
+            else:
                 motor_pid.PID.X = 10
                 motor_pid.PID.Y = 0.000
                 motor_pid.PID.Z = 0.00
-                actuator_requests.motor_pids.append(motor_pid)
-
-            else:
-                motor_pid = messages_pb2.MotorPID()
-                motor_pid.name = name
-                motor_pid.PID.X = 15
-                motor_pid.PID.Y = 0.00
-                motor_pid.PID.Z = 0
-                actuator_requests.motor_pids.append(motor_pid)
+            actuator_requests.motor_pids.append(motor_pid)
 
         msg = actuator_requests.SerializeToString()
         msg_size = struct.pack(">L", len(msg))

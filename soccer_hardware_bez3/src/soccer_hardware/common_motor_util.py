@@ -1,5 +1,6 @@
 import struct
 
+
 def crc32mpeg2(buf, crc=0xFFFFFFFF):
     CRC32_POLY = 0x104C11DB7
     for val in buf:
@@ -35,13 +36,14 @@ def unpack6(bs, _signed=True):
 
     return c
 
+
 def constrain(x, a, b):
     return min(max(x, min(a, b)), max(a, b))
 
+
 def pack6(A):
-	b = []
-	for a in A:
-		b += [a & 0x3F, (a >> 6) & 0x3F]
+    b = []
+    for a in A:
+        b += [a & 0x3F, (a >> 6) & 0x3F]
 
-	return bytepack(b)
-
+    return bytepack(b)
