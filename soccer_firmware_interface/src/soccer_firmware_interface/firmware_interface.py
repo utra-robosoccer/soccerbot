@@ -106,7 +106,7 @@ class FirmwareInterface:
                     *v_filt[0]
                 )
                 
-                print("ang vel:", vx, vy, vz)
+                print("ang vel:", *v_filt[0])
                 # imu.orientation.x = 0
                 # imu.orientation.y = 0
                 # imu.orientation.z = 0
