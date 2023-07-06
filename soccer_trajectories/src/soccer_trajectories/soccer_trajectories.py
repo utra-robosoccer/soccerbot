@@ -31,6 +31,15 @@ class Trajectory:
         self.step_map = {}
         self.time_to_last_pose = 2  # seconds
         self.trajectory_path = trajectory_path
+
+        last_joint_state = JointState()
+        try:
+            last_joint_state = rospy.wait_for_message("joint_states", JointState, timeout=2)
+        except (ROSException, AttributeError) as ex:
+            rospy.logerr(ex)
+        except ValueError as ex:
+            print(ex)
+
         with open(trajectory_path) as f:
             csv_traj = csv.reader(f)
             for row in csv_traj:
@@ -39,15 +48,16 @@ class Trajectory:
                     continue
                 if joint_name == "time":
                     self.times = list(map(float, row[1:]))
-                    self.times = [0] + self.times + [self.times[-1] + self.time_to_last_pose]
+                    self.times = [0] + self.times  # + [self.times[-1] + self.time_to_last_pose]
                     self.max_time = self.times[-1]
                 else:
                     joint_values = list(map(float, row[1:]))
 
-                    last_pose_value = float(rospy.get_param(f"motor_mapping/{joint_name}/initial_state"))
+                    last_pose_value = 0
+                    if joint_name in last_joint_state.name:
+                        last_pose_value = last_joint_state.position[last_joint_state.name.index(joint_name)]
 
-                    # last_pose_value = 0.0
-                    joint_values = [last_pose_value] + joint_values + [last_pose_value]
+                    joint_values = [last_pose_value] + joint_values  # + [last_pose_value]
                     self.splines[joint_name] = interp1d(self.times, joint_values)
 
     def get_setpoint(self, timestamp):
@@ -61,7 +71,7 @@ class Trajectory:
         return self.splines.keys()
 
     def run(self, real_time=True):
-        pub_all_motor = rospy.Publisher("joint_command", JointState, queue_size=10)
+        pub_all_motor = rospy.Publisher("joint_command", JointState, queue_size=2)
         rate = rospy.Rate(Trajectory.RATE)
         t = 0
         while not rospy.is_shutdown() and t < self.max_time and not self.terminate:
@@ -84,13 +94,21 @@ class Trajectory:
                 print(ex)
                 exit(0)
             t = t + 0.01
+            if int(t + 0.01) != int(t):
+                print(f"Trajectory at t={t}")
             if real_time:
                 rate.sleep()
 
 
 class TrajectoryManager:
     def __init__(self):
-        self.trajectory_path = rospy.get_param("~trajectory_path", os.path.join(os.path.dirname(__file__), "../../trajectories/bez1"))
+        use_sim_time_prefix = "_sim" if rospy.get_param("use_sim_time", "false") == "true" else ""
+        self.trajectory_path = (
+            rospy.get_param_cached(
+                "~trajectory_path", os.path.join(os.path.dirname(__file__), "../../trajectories/") + rospy.get_param_cached("robot_model", "bez1")
+            )
+            + use_sim_time_prefix
+        )
         self.trajectory: Optional[Trajectory] = None
         self.command_subscriber = rospy.Subscriber("command", FixedTrajectoryCommand, self.command_callback, queue_size=1)
         self.robot_state_subscriber = rospy.Subscriber("state", RobotState, self.robot_state_callback, queue_size=1)

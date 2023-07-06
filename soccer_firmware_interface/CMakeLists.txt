@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(soccer_hardware)
+project(soccer_firmware_interface)
 
 find_package(
     catkin
@@ -8,3 +8,4 @@ find_package(
 )
 
 catkin_package()
+catkin_python_setup()

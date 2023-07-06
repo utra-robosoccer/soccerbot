@@ -1,24 +1,38 @@
 import math
+import os
 import threading
 
+import numpy as np
+import rosparam
 import rospy
+import scipy
 import serial
+import yaml
+from geometry_msgs.msg import Vector3
 from sensor_msgs.msg import Imu, JointState
 
 
 class FirmwareInterface:
     def __init__(self):
-        self.joint_command_subscriber = rospy.Subscriber("joint_command", JointState, self.joint_command_callback)
-        self.joint_state_publisher = rospy.Publisher("joint_state", JointState)
-        self.imu_publisher = rospy.Publisher("imu_raw", Imu)
+        self.joint_command_subscriber = rospy.Subscriber("joint_command", JointState, self.joint_command_callback, queue_size=1)
+        self.joint_state_publisher = rospy.Publisher("joint_states", JointState, queue_size=1)
+        self.imu_publisher = rospy.Publisher("imu_raw", Imu, queue_size=1)
         self.serial = None
-        self.i = 0
+
+        # with open(rospy.get_param("motor_types")) as f:
+        #     param_info = yaml.safe_load(f)
+        #     rosparam.upload_params("motor_types", param_info)
+        # with open(rospy.get_param("motor_mapping")) as f:
+        #     param_info = yaml.safe_load(f)
+        #     rosparam.upload_params("motor_mapping", param_info)
         self.motor_mapping = rospy.get_param("motor_mapping")
         self.motor_id_to_name_dict = {self.motor_mapping[m]["id"]: m for m in self.motor_mapping}
 
         self.motor_types = rospy.get_param("motor_types")
-        
-        self._IMU_FILT_B = np.array([0.030738841, 0.048424201, 0.083829062, 0.11125669, 0.13424691, 0.14013315, 0.13424691, 0.11125669, 0.083829062, 0.048424201, 0.030738841]) # from embedded code
+
+        self._IMU_FILT_B = np.array(
+            [0.030738841, 0.048424201, 0.083829062, 0.11125669, 0.13424691, 0.14013315, 0.13424691, 0.11125669, 0.083829062, 0.048424201, 0.030738841]
+        )  # from embedded code
         self._imu_filt_zi = np.zeros((len(self._IMU_FILT_B) - 1, 3))
 
         # Start the thread
@@ -30,10 +44,12 @@ class FirmwareInterface:
     def reconnect_serial_port(self):
         if self.serial is None:
             # todo: loop through ACMs see which one connects
-            self.i = self.i % 2
-            self.i += 1
-            self.serial = serial.Serial(f"/dev/ttyACM{self.i}")
-            rospy.loginfo(f"connected to: /dev/ttyACM{self.i}")
+            for i in range(1, 10):
+                rospy.loginfo_throttle(10, f"Trying connection to /dev/ttyACM{i}")
+                if os.path.exists(f"/dev/ttyACM{i}"):
+                    self.serial = serial.Serial(f"/dev/ttyACM{i}")
+                    rospy.loginfo(f"connected to: /dev/ttyACM{i}")
+                    break
 
     def firmware_update_loop(self):
         while not rospy.is_shutdown():
@@ -64,8 +80,10 @@ class FirmwareInterface:
                 # Publish the Joint State
                 j = JointState()
                 j.header.stamp = rospy.Time.now()
+                motor_ang = []
                 for i in range(18):
                     val = data[i * 2 + 2] | data[i * 2 + 3] << 8
+                    motor_ang.append(val)
 
                     motor_name = self.motor_id_to_name_dict[i]
                     # TODO Nam calculation val to radians
@@ -73,6 +91,7 @@ class FirmwareInterface:
                     j.name.append(motor_name)
                     j.position.append(position_radians)
                 self.joint_state_publisher.publish(j)
+                print(motor_ang)
 
                 imu = Imu()
                 imu.header.stamp = rospy.Time.now()
@@ -99,13 +118,13 @@ class FirmwareInterface:
                 vx = int.from_bytes(imu_data[6:8], byteorder="big", signed=True) / IMU_GY_RANGE
                 vy = int.from_bytes(imu_data[8:10], byteorder="big", signed=True) / IMU_GY_RANGE
                 vz = int.from_bytes(imu_data[10:12], byteorder="big", signed=True) / IMU_GY_RANGE
-                
+
                 # implement low-pass filter from embedded system
-                v_filt, self._imu_filt_zi = scipy.signal.lfilter(self._IMU_FILT_B, [1], [[vx, vy, vz]], axis=0, zi=self._imu_filt_zi) # note: expected to be shape (1, 3), double nested list is intentional
-                imu.angular_velocity = Vector3(
-                    *v_filt[0]
-                )
-                
+                v_filt, self._imu_filt_zi = scipy.signal.lfilter(
+                    self._IMU_FILT_B, [1], [[vx, vy, vz]], axis=0, zi=self._imu_filt_zi
+                )  # note: expected to be shape (1, 3), double nested list is intentional
+                imu.angular_velocity = Vector3(*v_filt[0])
+
                 print("ang vel:", *v_filt[0])
                 # imu.orientation.x = 0
                 # imu.orientation.y = 0
@@ -122,7 +141,9 @@ class FirmwareInterface:
             self.reconnect_serial_port()
 
             # [0xff, 0xff, angle1_lo, angle1_hi, angle2_lo ..., crc_lo, crc_hi]
-            bytes_to_write = [0x0] * (18 * 2)
+            bytes_to_write = [0x0] * (2 + 18 * 2)
+            bytes_to_write[0] = 0xFF
+            bytes_to_write[1] = 0xFF
 
             for name, angle in zip(joint_state.name, joint_state.position):
                 id = self.motor_mapping[name]["id"]
@@ -130,6 +151,10 @@ class FirmwareInterface:
                 angle_zero = self.motor_mapping[name]["angle_zero"] / 180 * math.pi
                 angle_max = self.motor_mapping[name]["angle_max"] / 180 * math.pi
                 angle_min = self.motor_mapping[name]["angle_min"] / 180 * math.pi
+
+                flipped = "flipped" in self.motor_mapping[name] and self.motor_mapping[name]["flipped"] == "true"
+                if flipped:
+                    angle = -angle
 
                 angle_final = max(min(angle + angle_zero, angle_max), angle_min)
 
@@ -143,13 +168,14 @@ class FirmwareInterface:
                 angle_final_bytes_2 = (angle_final_bytes >> 8) & 0xFF
 
                 assert id < 18
-                bytes_to_write[id * 2] = angle_final_bytes_1
-                bytes_to_write[id * 2 + 1] = angle_final_bytes_2
+                bytes_to_write[2 + id * 2] = angle_final_bytes_1
+                bytes_to_write[2 + id * 2 + 1] = angle_final_bytes_2
                 pass
 
-            # print(bytes_to_write)
+            # print("write:", bytes_to_write)
             self.serial.write(bytes_to_write)
 
         except Exception as ex:
             rospy.logerr_throttle(10, f"Lost connection to serial port {ex}, retrying...")
+            self.serial = None
             pass

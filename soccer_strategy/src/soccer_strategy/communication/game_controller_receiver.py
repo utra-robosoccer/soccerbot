@@ -21,16 +21,16 @@ class GameStateReceiver:
     Get information about the GameState and publish to /robotx/game_state
     """
 
-    team_id = int(os.getenv("ROBOCUP_TEAM_ID", 16))
-    robot_id = rospy.get_param("robot_id", 1)
-
     DEFAULT_LISTENING_HOST = "0.0.0.0"
     GAME_CONTROLLER_LISTEN_PORT = 3838
     GAME_CONTROLLER_ANSWER_PORT = 3939
 
     def __init__(self):
+        self.team_id = int(os.getenv("ROBOCUP_TEAM_ID", 16))
+        self.robot_id = rospy.get_param("robot_id", 1)
+
         rospy.loginfo("Listening to " + str(self.GAME_CONTROLLER_LISTEN_PORT) + " " + str(self.GAME_CONTROLLER_ANSWER_PORT))
-        rospy.loginfo("We are playing as player {} in team {}".format(self.robot_id, self.team_id))
+        rospy.loginfo(f"We are playing as player {self.robot_id} in team {self.team_id}")
 
         self.state_publisher = rospy.Publisher("gamestate", GameStateMsg, queue_size=1)
 
@@ -40,8 +40,6 @@ class GameStateReceiver:
         self.receiver_socket.settimeout(2)
         self.receiver_socket.bind((self.DEFAULT_LISTENING_HOST, self.GAME_CONTROLLER_LISTEN_PORT))
         self.send_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.send_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-        self.send_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
 
     def receive_forever(self):
         """

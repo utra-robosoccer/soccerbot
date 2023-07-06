@@ -40,7 +40,6 @@ extern uint32_t usbRxBufferCount;
 extern uint32_t usbRxBufferSize;
 extern uint8_t usbRxBuffer[100];
 
-
 typedef struct {
   UART_HandleTypeDef *huart; // uart configuration
   DMA_HandleTypeDef *hdma_uart_tx; // uart dma configuration
@@ -52,6 +51,7 @@ typedef struct {
   uint8_t rxBuffer[100]; // 100bytes is enough to store packets from Dynamixel
   bool dmaDoneReading;
   bool readRequestSent;
+  bool motorServiced;
   uint16_t timeout;
 
   uint8_t currMotor; // for keeping track of which motor to write to
@@ -73,8 +73,6 @@ typedef enum
 
 void init_ports();
 void init_motors();
-
-
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/

@@ -56,31 +56,3 @@ class Transmitter(Thread):
         for element in vec:
             byte_arr = byte_arr + struct.pack("f", element)
         return byte_arr
-
-    def get_num_tx(self):
-        with self._num_tx_lock:
-            return self._num_tx
-
-    def send(self, goal_angles):
-        """
-        Adds a set of goal angles to the command queue.
-        """
-        if not self._stopped():
-            self._cmd_queue.put(goal_angles)
-
-    def run(self):
-        """
-        Services the command queue; sends packets to the microcontroller.
-        """
-        log_string("Starting Tx thread ({0})...".format(self._name))
-        try:
-            while not rp.is_shutdown():
-                while not self._cmd_queue.empty():
-                    goal_angles = self._cmd_queue.get()
-                    self._send_packet_to_mcu(self._vec2bytes(goal_angles))
-                    with self._num_tx_lock:
-                        self._num_tx = self._num_tx + 1
-                time.sleep(0.001)
-        except serial.serialutil.SerialException:
-            log_string("Serial exception in thread {0}".format(self._name))
-        log_string("Stopping Tx thread ({0})...".format(self._name))

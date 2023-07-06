@@ -144,7 +144,7 @@ void init_ports() {
   port5 = (MotorPort){
       .huart          = &huart5,
       .hdma_uart_tx   = &hdma_uart5_tx,
-      .hdma_uart_rx   = &hdma_uart5_rx ,
+      .hdma_uart_rx   = &hdma_uart5_rx,
       .pinPort        = USART5_DIR_GPIO_Port,
       .dirPinNum      = USART5_DIR_Pin,
       .dmaDoneReading = false,
@@ -242,9 +242,13 @@ int main(void)
   MX_USART6_UART_Init();
   MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
+  // give some time for motors to power on and initialize, before we try to talk to them
+  HAL_Delay(1000);
+
   init_ports();
   MPU6050_init();
-  init_motors();
+//  init_motors();
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
