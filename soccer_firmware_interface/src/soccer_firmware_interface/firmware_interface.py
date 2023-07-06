@@ -17,6 +17,9 @@ class FirmwareInterface:
         self.motor_id_to_name_dict = {self.motor_mapping[m]["id"]: m for m in self.motor_mapping}
 
         self.motor_types = rospy.get_param("motor_types")
+        
+        self._IMU_FILT_B = np.array([0.030738841, 0.048424201, 0.083829062, 0.11125669, 0.13424691, 0.14013315, 0.13424691, 0.11125669, 0.083829062, 0.048424201, 0.030738841]) # from embedded code
+        self._imu_filt_zi = np.zeros((len(self._IMU_FILT_B) - 1, 3))
 
         # Start the thread
         serial_thread = threading.Thread(target=self.firmware_update_loop)
@@ -96,10 +99,13 @@ class FirmwareInterface:
                 vx = int.from_bytes(imu_data[6:8], byteorder="big", signed=True) / IMU_GY_RANGE
                 vy = int.from_bytes(imu_data[8:10], byteorder="big", signed=True) / IMU_GY_RANGE
                 vz = int.from_bytes(imu_data[10:12], byteorder="big", signed=True) / IMU_GY_RANGE
-
-                imu.angular_velocity.x = vx
-                imu.angular_velocity.y = vy
-                imu.angular_velocity.z = vz
+                
+                # implement low-pass filter from embedded system
+                v_filt, self._imu_filt_zi = scipy.signal.lfilter(self._IMU_FILT_B, [1], [[vx, vy, vz]], axis=0, zi=self._imu_filt_zi) # note: expected to be shape (1, 3), double nested list is intentional
+                imu.angular_velocity = Vector3(
+                    *v_filt[0]
+                )
+                
                 print("ang vel:", vx, vy, vz)
                 # imu.orientation.x = 0
                 # imu.orientation.y = 0
