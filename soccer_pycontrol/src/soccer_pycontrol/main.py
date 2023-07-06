@@ -1,4 +1,13 @@
 #!/usr/bin/env python3
+
+import psutil
+
+pid = psutil.Process()
+try:
+    pid.nice(-15)  # Will increase priority for a real robot run
+except Exception as ex:
+    pass
+
 import os
 
 if "ROS_NAMESPACE" not in os.environ:
