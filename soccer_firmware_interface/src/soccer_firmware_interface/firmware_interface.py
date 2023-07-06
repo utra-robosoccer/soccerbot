@@ -12,7 +12,7 @@ from sensor_msgs.msg import Imu, JointState
 class FirmwareInterface:
     def __init__(self):
         self.joint_command_subscriber = rospy.Subscriber("joint_command", JointState, self.joint_command_callback, queue_size=1)
-        self.joint_state_publisher = rospy.Publisher("joint_state", JointState, queue_size=1)
+        self.joint_state_publisher = rospy.Publisher("joint_states", JointState, queue_size=1)
         self.imu_publisher = rospy.Publisher("imu_raw", Imu, queue_size=1)
         self.serial = None
 
