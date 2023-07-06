@@ -1,2 +1,35 @@
 # Path parameters
 robot_model: bez2
+
+walking_torso_height: 0.37
+steps_per_second_default: 2.65
+torso_step_length: 0.03
+torso_step_length_short_backwards: 0.03
+torso_step_length_short_forwards: 0.03
+foot_separation: 0.050
+step_outwardness: 0.035
+torso_offset_x_ready: -0.08 # positive is forward
+torso_offset_x: 0
+torso_offset_pitch_ready: -0.05
+torso_offset_pitch: 0.12
+merge_fixed_links: true
+foot_box: [0.09, 0.07, 0.05] # TODO: update this!
+right_foot_joint_center_to_collision_box_center: [0.00385, 0.00401, -0.00737] # TODO: update this!
+
+torso_sidediff_sway: 0.01
+step_height: 0.04
+
+walking_Kp: 0
+walking_Ki: 0.0000
+walking_Kd: 0
+walking_setpoint: 0.02
+
+standing_Kp: 0
+standing_Ki: 0
+standing_Kd: 0.0
+standing_setpoint: 0.0
+
+calibration_trans_a: -0.020357517843533346
+calibration_trans_b: 0.6492919423070727
+calibration_trans_a2: 0.8427201135750022
+calibration_rot_a: 0.7052919512780853

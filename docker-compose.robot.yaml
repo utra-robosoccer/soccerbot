@@ -49,9 +49,8 @@ services:
       ROS_IP: ${ROS_IP}
       TEST_CONTROL: "false"
       ROBOT_MODEL: ${ROBOT_MODEL:-bez1}
-      ROBOCUP_ROBOT_ID: ${ROBOCUP_ROBOT_ID:-1}
-      ROBOCUP_TEAM_COLOR: "red"
-      ROBOCUP_GAMECONTROLLER_IP: "192.168.0.2"
+      ROBOCUP_ROBOT_ID: ${ROBOCUP_ROBOT_ID:-2}
+      ROBOCUP_TEAM_COLOR: ${ROBOCUP_TEAM_COLOR:-"blue"}
       ROBOCUP_TEAM_ID: ${ROBOCUP_TEAM_ID:-10}
       PYTHONUNBUFFERED: 1
       PYTHONPATH: /home/robosoccer/catkin_ws/devel/lib/python3/dist-packages:/opt/ros/noetic/lib/python3/dist-packages:/home/robosoccer/.local/lib/python3.8/site-packages

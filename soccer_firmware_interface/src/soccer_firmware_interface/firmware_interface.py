@@ -11,16 +11,15 @@ from sensor_msgs.msg import Imu, JointState
 
 class FirmwareInterface:
     def __init__(self):
-        self.joint_command_subscriber = rospy.Subscriber("robot1/joint_command", JointState, self.joint_command_callback)
-        self.joint_state_publisher = rospy.Publisher("robot1/joint_state", JointState, queue_size=1)
+        self.joint_command_subscriber = rospy.Subscriber("joint_command", JointState, self.joint_command_callback, queue_size=1)
+        self.joint_state_publisher = rospy.Publisher("joint_states", JointState, queue_size=1)
         self.imu_publisher = rospy.Publisher("imu_raw", Imu, queue_size=1)
         self.serial = None
-        self.i = 0
 
-        with open(rospy.get_param("firmware_interface/motor_types")) as f:
+        with open(rospy.get_param("motor_types")) as f:
             param_info = yaml.safe_load(f)
             rosparam.upload_params("motor_types", param_info)
-        with open(rospy.get_param("firmware_interface/motor_mapping")) as f:
+        with open(rospy.get_param("motor_mapping")) as f:
             param_info = yaml.safe_load(f)
             rosparam.upload_params("motor_mapping", param_info)
         self.motor_mapping = rospy.get_param("motor_mapping")
@@ -37,10 +36,12 @@ class FirmwareInterface:
     def reconnect_serial_port(self):
         if self.serial is None:
             # todo: loop through ACMs see which one connects
-            self.i = self.i % 2
-            self.i += 1
-            self.serial = serial.Serial(f"/dev/ttyACM{self.i}")
-            rospy.loginfo(f"connected to: /dev/ttyACM{self.i}")
+            for i in range(10):
+                rospy.loginfo_throttle(10, f"Trying connection to /dev/ttyACM{i}")
+                if os.path.exists(f"/dev/ttyACM{i}"):
+                    self.serial = serial.Serial(f"/dev/ttyACM{i}")
+                    rospy.loginfo(f"connected to: /dev/ttyACM{i}")
+                    break
 
     def firmware_update_loop(self):
         while not rospy.is_shutdown():
@@ -97,7 +98,8 @@ class FirmwareInterface:
                 self.imu_publisher.publish(imu)
 
             except Exception as ex:
-                rospy.logerr_throttle(10, f"Lost connection to serial port {ex}, retrying...")
+                rospy.logerr_throttle(10, f"Lost connection to serial port reason {ex}, retrying...")
+                self.serial = None
                 pass
 
     def joint_command_callback(self, joint_state: JointState):
@@ -115,6 +117,10 @@ class FirmwareInterface:
                 angle_zero = self.motor_mapping[name]["angle_zero"] / 180 * math.pi
                 angle_max = self.motor_mapping[name]["angle_max"] / 180 * math.pi
                 angle_min = self.motor_mapping[name]["angle_min"] / 180 * math.pi
+
+                flipped = "flipped" in self.motor_mapping[name] and self.motor_mapping[name]["flipped"] == "true"
+                if flipped:
+                    angle = -angle
 
                 angle_final = max(min(angle + angle_zero, angle_max), angle_min)
 
@@ -137,4 +143,5 @@ class FirmwareInterface:
 
         except Exception as ex:
             rospy.logerr_throttle(10, f"Lost connection to serial port {ex}, retrying...")
+            self.serial = None
             pass

@@ -1,11 +1,11 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Python tests for test_walking.TestWalking.test_walk_1_real_robot" type="tests" factoryName="Autodetect" nameIsGenerated="true">
+  <configuration default="false" name="Python tests for test_walking.TestWalking.test_imu_feedback_real" type="tests" factoryName="Autodetect" nameIsGenerated="true">
     <module name="soccerbot" />
     <option name="INTERPRETER_OPTIONS" value="" />
     <option name="PARENT_ENVS" value="true" />
     <envs>
-      <env name="ROS_IP" value="192.168.1.100" />
-      <env name="ROS_MASTER_URI" value="http://192.168.1.100:11311" />
+      <env name="ROS_IP" value="192.168.1.109" />
+      <env name="ROS_MASTER_URI" value="http://192.168.1.109:11311" />
     </envs>
     <option name="SDK_HOME" value="" />
     <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/soccer_pycontrol/src/soccer_pycontrol" />
@@ -14,7 +14,7 @@
     <option name="ADD_SOURCE_ROOTS" value="true" />
     <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
     <option name="_new_additionalArguments" value="&quot;-s&quot;" />
-    <option name="_new_target" value="&quot;test_walking.TestWalking.test_walk_1_real_robot&quot;" />
+    <option name="_new_target" value="&quot;test_walking.TestWalking.test_imu_feedback_real&quot;" />
     <option name="_new_targetType" value="&quot;PYTHON&quot;" />
     <method v="2" />
   </configuration>

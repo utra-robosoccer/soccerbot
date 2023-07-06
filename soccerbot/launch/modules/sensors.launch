@@ -27,9 +27,8 @@
         <!-- Propriertary driver will delete soon TODO -->
         <include file="$(find soccer_hardware)/launch/soccer_hardware.launch" if="$(eval robot_model == 'bez1')" />
 
-        <node name="firmware_interface" pkg="soccer_firmware_interface" type="main.py" output="screen" unless="$(eval robot_model == 'bez1')">
-            <param name="motor_mapping" value="$(find soccer_firmware_interface)/config/$(arg robot_model).yaml" />
-            <param name="motor_types" value="$(find soccer_firmware_interface)/config/motor_types.yaml" />
-        </node>
+        <param name="motor_mapping" value="$(find soccer_firmware_interface)/config/$(arg robot_model).yaml" />
+        <param name="motor_types" value="$(find soccer_firmware_interface)/config/motor_types.yaml" />
+        <node name="firmware_interface" pkg="soccer_firmware_interface" type="main.py" output="screen" unless="$(eval robot_model == 'bez1')" />
     </group>
 </launch>

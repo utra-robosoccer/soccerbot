@@ -1,7 +1,10 @@
+import os
+
+if "ROS_NAMESPACE" not in os.environ:
+    os.environ["ROS_NAMESPACE"] = "/robot1"
+
 import importlib
 import logging
-import math
-import os
 import time
 
 import rosparam
@@ -82,3 +85,17 @@ def test_firmware_interface():
         # time.sleep(0.01)
 
     pass
+
+
+def test_firmware_interface_normal():
+    rospy.init_node("firmware_interface")
+    rospy.set_param("motor_mapping", os.path.dirname(os.path.realpath(__file__)) + "/../../config/bez2.yaml")
+    rospy.set_param("motor_types", os.path.dirname(os.path.realpath(__file__)) + "/../../config/motor_types.yaml")
+
+    rospy.loginfo("Initializing Soccer Firmware")
+    f = FirmwareInterface()
+    rospy.loginfo("Starting Firmware")
+    try:
+        rospy.spin()
+    except rospy.exceptions.ROSException as ex:
+        exit(0)
