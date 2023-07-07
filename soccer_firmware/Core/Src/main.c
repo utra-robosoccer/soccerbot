@@ -247,7 +247,7 @@ int main(void)
 
   init_ports();
   MPU6050_init();
-//  init_motors();
+  init_motors();
 
   /* USER CODE END 2 */
 
