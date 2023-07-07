@@ -256,7 +256,6 @@ int main(void)
   while (1)
   {
     update();
-
     // test Dynamixel 2.0
 //    test_led_p2(&port2, 0x6);
 //    test_motor_sweep2(&port2);
@@ -281,7 +280,6 @@ int main(void)
     // test Dynamixel 1.0
 //    test_motor_sweep1(&port2, 13);
 //    _motor_ping_p1(&port6, 13);
-
 	  HAL_GPIO_TogglePin(GPIOA, GREEN_LED_Pin);
 	  HAL_Delay(100);
     /* USER CODE END WHILE */

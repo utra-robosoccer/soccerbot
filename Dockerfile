@@ -91,6 +91,9 @@ RUN groupadd -g 1000 robosoccer && \
     echo "robosoccer ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \
     usermod --append --groups 29,20,104,46,5,44 robosoccer
 
+# Allow nice for all users
+RUN echo "*                -       priority        -20" >> /etc/security/limits.conf
+
 # Install apt dependencies
 COPY --from=dependencies /tmp/catkin_install_list /tmp/catkin_install_list
 RUN (apt-get update || echo "Apt Error") && apt-fast install -y --no-install-recommends $(cat /tmp/catkin_install_list)

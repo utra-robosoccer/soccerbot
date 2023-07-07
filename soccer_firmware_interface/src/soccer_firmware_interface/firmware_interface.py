@@ -19,12 +19,12 @@ class FirmwareInterface:
         self.imu_publisher = rospy.Publisher("imu_raw", Imu, queue_size=1)
         self.serial = None
 
-        # with open(rospy.get_param("motor_types")) as f:
-        #     param_info = yaml.safe_load(f)
-        #     rosparam.upload_params("motor_types", param_info)
-        # with open(rospy.get_param("motor_mapping")) as f:
-        #     param_info = yaml.safe_load(f)
-        #     rosparam.upload_params("motor_mapping", param_info)
+        with open(rospy.get_param("motor_types")) as f:
+            param_info = yaml.safe_load(f)
+            rosparam.upload_params("motor_types", param_info)
+        with open(rospy.get_param("motor_mapping")) as f:
+            param_info = yaml.safe_load(f)
+            rosparam.upload_params("motor_mapping", param_info)
         self.motor_mapping = rospy.get_param("motor_mapping")
         self.motor_id_to_name_dict = {self.motor_mapping[m]["id"]: m for m in self.motor_mapping}
 
@@ -44,7 +44,7 @@ class FirmwareInterface:
     def reconnect_serial_port(self):
         if self.serial is None:
             # todo: loop through ACMs see which one connects
-            for i in range(1, 10):
+            for i in range(10):
                 rospy.loginfo_throttle(10, f"Trying connection to /dev/ttyACM{i}")
                 if os.path.exists(f"/dev/ttyACM{i}"):
                     self.serial = serial.Serial(f"/dev/ttyACM{i}")
@@ -172,7 +172,7 @@ class FirmwareInterface:
                 bytes_to_write[2 + id * 2 + 1] = angle_final_bytes_2
                 pass
 
-            # print("write:", bytes_to_write)
+            print("write:", bytes_to_write)
             self.serial.write(bytes_to_write)
 
         except Exception as ex:

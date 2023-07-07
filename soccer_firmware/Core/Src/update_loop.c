@@ -28,7 +28,7 @@ void update()
     	  continue;
       }
 
-//      command_motors();
+      command_motors();
       usb_received = false;
 
       HAL_GPIO_TogglePin(GPIOA, GREEN_LED_Pin);
@@ -149,15 +149,12 @@ void read_motors(uint8_t *rxBuf) {
   uint8_t numMotorsReceived = 0;
   while(1)
   {
-    for (uint16_t i = 1; i < 6; i++)
+    for (uint16_t i = 0; i < 6; i++)
     {
       MotorPort *p = motorPorts[i];
       uint8_t idx = p->currReadMotor;
       uint8_t motorId = p->motorIds[idx];
       uint8_t protocol = p->protocol[idx];
-
-      if(motorId == 15)
-        HAL_Delay(1);
 
       if (p->numMotors == 0 || p->motorServiced) {
         continue;

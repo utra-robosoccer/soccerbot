@@ -137,7 +137,7 @@ class TestWalking:
         print(f"Final distance offset {distance_offset}")
 
     # @pytest.mark.skip
-    @pytest.mark.parametrize("walker_real_robot", ["bez2"], indirect=True)
+    @pytest.mark.parametrize("walker_real_robot", ["bez1"], indirect=True)
     def test_walk_1_real_robot(self, walker_real_robot: NavigatorRos):
         walker_real_robot.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
         walker_real_robot.wait(200)

@@ -43,13 +43,13 @@ def test_firmware_interface():
 
     importlib.reload(logging)
 
-    # with open((os.path.dirname(os.path.abspath(__file__)) + "/../../config/motor_types.yaml")) as f:
-    #     param_info = yaml.safe_load(f)
-    #     rosparam.upload_params("motor_types", param_info)
-    #
-    # with open((os.path.dirname(os.path.abspath(__file__)) + "/../../config/bez2.yaml")) as f:
-    #     param_info = yaml.safe_load(f)
-    #     rosparam.upload_params("motor_mapping", param_info)
+    with open((os.path.dirname(os.path.abspath(__file__)) + "/../../config/motor_types.yaml")) as f:
+        param_info = yaml.safe_load(f)
+        rosparam.upload_params("motor_types", param_info)
+
+    with open((os.path.dirname(os.path.abspath(__file__)) + "/../../config/bez2.yaml")) as f:
+        param_info = yaml.safe_load(f)
+        rosparam.upload_params("motor_mapping", param_info)
 
     f = FirmwareInterface()
 
@@ -83,7 +83,7 @@ def test_firmware_interface():
 
         f.joint_command_callback(j)
 
-        time.sleep(0.01)
+        # time.sleep(0.01)
 
     pass
 
