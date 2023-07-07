@@ -5,6 +5,7 @@ if "ROS_NAMESPACE" not in os.environ:
 
 import importlib
 import logging
+import math
 import time
 
 import rosparam

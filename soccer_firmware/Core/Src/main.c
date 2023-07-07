@@ -22,11 +22,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include <stdbool.h>
-#include "bringup_tests.h"
-#include "update_loop.h"
-#include "dynamixel_p1.h"
-#include "dynamixel_p2.h"
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -246,11 +242,11 @@ int main(void)
   MX_USART6_UART_Init();
   MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
-
   // give some time for motors to power on and initialize, before we try to talk to them
   HAL_Delay(1000);
 
   init_ports();
+  MPU6050_init();
   init_motors();
 
   /* USER CODE END 2 */
@@ -260,9 +256,6 @@ int main(void)
   while (1)
   {
     update();
-
-//	  read_motor_present_position_p2(&port2, 0);
-
     // test Dynamixel 2.0
 //    test_led_p2(&port2, 0x6);
 //    test_motor_sweep2(&port2);
@@ -287,10 +280,8 @@ int main(void)
     // test Dynamixel 1.0
 //    test_motor_sweep1(&port2, 13);
 //    _motor_ping_p1(&port6, 13);
-//    read_motor_present_position_p1(&port3, 14);
-
-//	  HAL_GPIO_TogglePin(GPIOA, GREEN_LED_Pin);
-//	  HAL_Delay(1000);
+	  HAL_GPIO_TogglePin(GPIOA, GREEN_LED_Pin);
+	  HAL_Delay(100);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

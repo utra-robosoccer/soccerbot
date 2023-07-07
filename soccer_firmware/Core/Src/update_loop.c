@@ -10,12 +10,14 @@
 #include "dynamixel_p2.h"
 #include "main.h"
 #include "usbd_cdc_if.h"
+#include "MPU6050.h"
 
 #define UPDATE_PERIOD 3 // milliseconds
 
 void update()
 {
-  uint8_t txBuf[18 * 2 + 6] = {0}; // 18 motors * 2 bytes each + 6 bytes for IMU
+  uint8_t txBuf[2 + 18 * 2 + 6 + 6] = {0}; // 18 motors * 2 bytes each + 6 bytes for IMU
+  txBuf[0] = txBuf[1] = 0xfe;
   uint32_t lastTime = HAL_GetTick();
   while(1)
   {
@@ -36,13 +38,14 @@ void update()
     {
       lastTime = HAL_GetTick();
 
-
+      // we read want to read 1 motor position from each port
       read_motors(txBuf);
-//      read_imu(txBuf);
+
+      // get current linear Acceleration and Rotational speed
+      read_imu(txBuf);
+
       CDC_Transmit_FS((uint8_t *) txBuf, sizeof(txBuf));
-
     }
-
   }
 }
 
@@ -89,12 +92,24 @@ void command_motors() {
 }
 
 void read_imu(uint8_t *rxBuf) {
-  //TODO: fill this out
+  uint8_t gyrBuff[6] = {0};
+  Read_Gyroscope(gyrBuff);
+  HAL_Delay(1); // wait some time before sending next request
+
+  uint8_t accBuff[6] = {0};
+  Read_Accelerometer_IT(accBuff);
+
+  for(uint8_t i = 0; i < 6; i++) {
+    rxBuf[2 + 18 * 2 + i] = accBuff[i];
+  }
+
+  for(uint8_t i = 0; i < 6; i++) {
+    rxBuf[2 + 18 * 2 + 6 + i] = gyrBuff[i];
+  }
 }
 
-
 void read_motors(uint8_t *rxBuf) {
-  for (uint16_t i = 0; i < 6; i++) {// reset variables
+  for (uint16_t i = 1; i < 6; i++) {// reset variables
     motorPorts[i]->dmaDoneReading = false;
     motorPorts[i]->timeout = 0;
     motorPorts[i]->motorServiced = false;
@@ -102,32 +117,32 @@ void read_motors(uint8_t *rxBuf) {
 
   // send read command to 1 motor on each port
   uint8_t numMotorsRequested = 0;
-  for (uint8_t i = 0; i < 6; i ++) {
-	  MotorPort *p = motorPorts[i];
-	  uint8_t currMotor = p->currReadMotor;
-	  uint8_t motorId = p->motorIds[currMotor];
-	  uint8_t protocol = p->protocol[currMotor];
+  for (uint8_t i = 1; i < 6; i ++) {
+    MotorPort *p = motorPorts[i];
+    uint8_t currMotor = p->currReadMotor;
+    uint8_t motorId = p->motorIds[currMotor];
+    uint8_t protocol = p->protocol[currMotor];
 
-	  if (p->numMotors == 0) {
-		  continue;
-	  }
+    if (p->numMotors == 0) {
+      continue;
+    }
 
-	  if (protocol == 1) { // expect different length based on protocol
-		  motor_torque_en_p1(p, motorId, 1);
-		  HAL_Delay(1);
-		  p->rxPacketLen = 8;
-		  HAL_UART_Receive_DMA(p->huart, p->rxBuffer, p->rxPacketLen);
-		  read_motor_present_position_p1(p, motorId);
-	  } else {
-		  motor_torque_en_p2(p, motorId, 1);
-		  HAL_Delay(1);
-		  p->rxPacketLen = 15;
-		  HAL_UART_Receive_DMA(p->huart, p->rxBuffer, p->rxPacketLen);
-		  read_motor_present_position_p2(p, motorId);
-	  }
-	  p->currReadMotor = (currMotor + 1) % p->numMotors;
-	  p->timeout = HAL_GetTick();
-	  numMotorsRequested++; // keep track of how many motors we are reading
+    if (protocol == 1) { // expect different length based on protocol
+      motor_torque_en_p1(p, motorId, 1);
+      HAL_Delay(1);
+      p->rxPacketLen = 8;
+      HAL_UART_Receive_DMA(p->huart, p->rxBuffer, p->rxPacketLen);
+      read_motor_present_position_p1(p, motorId);
+    } else {
+      motor_torque_en_p2(p, motorId, 1);
+      HAL_Delay(1);
+      p->rxPacketLen = 15;
+      HAL_UART_Receive_DMA(p->huart, p->rxBuffer, p->rxPacketLen);
+      read_motor_present_position_p2(p, motorId);
+    }
+    p->currReadMotor = (currMotor + 1) % p->numMotors;
+    p->timeout = HAL_GetTick();
+    numMotorsRequested++; // keep track of how many motors we are reading
   }
 
   // now we wait for all motors to respond back
@@ -142,33 +157,28 @@ void read_motors(uint8_t *rxBuf) {
       uint8_t protocol = p->protocol[idx];
 
       if (p->numMotors == 0 || p->motorServiced) {
-	    continue;
-	  }
-
-      if (p->dmaDoneReading) {
-    	  if (protocol == 1) {
-    		  rxBuf[motorId * 2] = p->rxBuffer[5];
-    		  rxBuf[motorId * 2 + 1] = p->rxBuffer[6];
-    	  } else {
-    		  rxBuf[motorId * 2] = p->rxBuffer[9];
-			  rxBuf[motorId * 2 + 1] = p->rxBuffer[10];
-    	  }
-    	  p->dmaDoneReading = false;
-    	  numMotorsReceived++;
-    	  p->motorServiced = true;
-      } else {
-    	  //timeout logic
-    	  if(HAL_GetTick() - p->timeout > 2) { // units in milliseconds
-    		  // debug
-    		  rxBuf[18 * 2 + 1] = 117;
-    		  rxBuf[18 * 2 + 2] = motorId;
-    		  rxBuf[18 * 2 + 3] = i;
-    		  HAL_UART_DMAStop(p->huart);
-    		  numMotorsReceived++; // unsuccesful but we still count as received
-    		  p->motorServiced = true;
-    	  }
+        continue;
       }
 
+      if (p->dmaDoneReading) {
+        if (protocol == 1) {
+          rxBuf[2 + motorId * 2] = motorId;//p->rxBuffer[5];
+          rxBuf[2 + motorId * 2 + 1] = 0xaa; //p->rxBuffer[6];
+        } else {
+          rxBuf[2 + motorId * 2] = motorId;//p->rxBuffer[9];
+          rxBuf[2 + motorId * 2 + 1] = 0xaa;//p->rxBuffer[10];
+        }
+        p->dmaDoneReading = false;
+        numMotorsReceived++;
+        p->motorServiced = true;
+      } else {
+        //timeout logic
+        if(HAL_GetTick() - p->timeout > 10) { // units in milliseconds
+          HAL_UART_DMAStop(p->huart);
+          numMotorsReceived++; // unsuccesful but we still count as received
+          p->motorServiced = true;
+        }
+      }
     }
 
     if(numMotorsReceived == numMotorsRequested) return; // all motors serviced, peace out

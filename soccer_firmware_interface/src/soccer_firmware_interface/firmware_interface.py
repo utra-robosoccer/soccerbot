@@ -2,10 +2,13 @@ import math
 import os
 import threading
 
+import numpy as np
 import rosparam
 import rospy
+import scipy
 import serial
 import yaml
+from geometry_msgs.msg import Vector3
 from sensor_msgs.msg import Imu, JointState
 
 
@@ -26,6 +29,11 @@ class FirmwareInterface:
         self.motor_id_to_name_dict = {self.motor_mapping[m]["id"]: m for m in self.motor_mapping}
 
         self.motor_types = rospy.get_param("motor_types")
+
+        self._IMU_FILT_B = np.array(
+            [0.030738841, 0.048424201, 0.083829062, 0.11125669, 0.13424691, 0.14013315, 0.13424691, 0.11125669, 0.083829062, 0.048424201, 0.030738841]
+        )  # from embedded code
+        self._imu_filt_zi = np.zeros((len(self._IMU_FILT_B) - 1, 3))
 
         # Start the thread
         serial_thread = threading.Thread(target=self.firmware_update_loop)
@@ -66,15 +74,16 @@ class FirmwareInterface:
                 # data_h = self.serial.read()
                 # angle = data_l[0] | (data_h[0] << 8)
                 # print(data_h[0], data_l[0], angle)
-                # print("read:", list(self.serial.read(size=42)))
-                continue
+                data = self.serial.read(size=2 + 2 * 18 + 12)
+                print("read:", data)
 
                 # Publish the Joint State
-                data = []
                 j = JointState()
                 j.header.stamp = rospy.Time.now()
+                motor_ang = []
                 for i in range(18):
                     val = data[i * 2 + 2] | data[i * 2 + 3] << 8
+                    motor_ang.append(val)
 
                     motor_name = self.motor_id_to_name_dict[i]
                     # TODO Nam calculation val to radians
@@ -82,24 +91,49 @@ class FirmwareInterface:
                     j.name.append(motor_name)
                     j.position.append(position_radians)
                 self.joint_state_publisher.publish(j)
+                print(motor_ang)
 
                 imu = Imu()
                 imu.header.stamp = rospy.Time.now()
-                imu.linear_acceleration.x = 0  # TODO nam fill out
-                imu.linear_acceleration.y = 0
-                imu.linear_acceleration.z = 0
-                imu.angular_velocity.x = 0
-                imu.angular_velocity.y = 0
-                imu.angular_velocity.z = 0
-                imu.orientation.x = 0
-                imu.orientation.y = 0
-                imu.orientation.z = 0
-                imu.orientation.w = 0
+
+                imu_data = data[2 + 2 * 18 : 2 + 2 * 18 + 12]
+                print("imu:", imu_data)
+
+                ACC_RANGE = 16384.0
+                IMU_GY_RANGE = 131
+                G = 9.81
+
+                ax = int.from_bytes(imu_data[0:2], byteorder="big", signed=True)
+                ay = int.from_bytes(imu_data[2:4], byteorder="big", signed=True)
+                az = int.from_bytes(imu_data[4:6], byteorder="big", signed=True)
+                print("hello")
+                print("acc", ax, ay, az)
+
+                imu.linear_acceleration.x = -(ax) * G / ACC_RANGE
+                imu.linear_acceleration.y = -(ay) * G / ACC_RANGE
+                imu.linear_acceleration.z = -(az) * G / ACC_RANGE
+
+                print(imu.linear_acceleration.x, imu.linear_acceleration.y, imu.linear_acceleration.z)
+
+                vx = int.from_bytes(imu_data[6:8], byteorder="big", signed=True) / IMU_GY_RANGE
+                vy = int.from_bytes(imu_data[8:10], byteorder="big", signed=True) / IMU_GY_RANGE
+                vz = int.from_bytes(imu_data[10:12], byteorder="big", signed=True) / IMU_GY_RANGE
+
+                # implement low-pass filter from embedded system
+                v_filt, self._imu_filt_zi = scipy.signal.lfilter(
+                    self._IMU_FILT_B, [1], [[vx, vy, vz]], axis=0, zi=self._imu_filt_zi
+                )  # note: expected to be shape (1, 3), double nested list is intentional
+                imu.angular_velocity = Vector3(*v_filt[0])
+
+                print("ang vel:", *v_filt[0])
+                # imu.orientation.x = 0
+                # imu.orientation.y = 0
+                # imu.orientation.z = 0
+                # imu.orientation.w = 0
                 self.imu_publisher.publish(imu)
 
             except Exception as ex:
-                rospy.logerr_throttle(10, f"Lost connection to serial port reason {ex}, retrying...")
-                self.serial = None
+                rospy.logerr_throttle(10, f"Lost connection to serial port {ex}, retrying...")
                 pass
 
     def joint_command_callback(self, joint_state: JointState):

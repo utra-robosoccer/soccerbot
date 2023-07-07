@@ -33,6 +33,8 @@ extern "C" {
 /* USER CODE BEGIN Includes */
 #include <stdbool.h>
 
+extern I2C_HandleTypeDef hi2c1;
+
 extern uint8_t usb_received;
 extern uint32_t usbRxBufferCount;
 extern uint32_t usbRxBufferSize;
@@ -48,6 +50,7 @@ typedef struct {
   uint8_t rxPacketLen; // received packet length should be smaller then max buffer size
   uint8_t rxBuffer[100]; // 100bytes is enough to store packets from Dynamixel
   bool dmaDoneReading;
+  bool readRequestSent;
   bool motorServiced;
   uint16_t timeout;
 

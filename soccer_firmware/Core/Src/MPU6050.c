@@ -1,59 +1,19 @@
-/**
-  *****************************************************************************
-  * @file
-  * @author  Izaak
-  * @author  Tyler
-  * @author  Jenny
-  * @brief   Implements all functions in the MPU6060 class.
-  *
-  * @defgroup MPU6050
-  * @brief    Module for the MPU6050 IMU sensor
-  * @{
-  *****************************************************************************
-  */
-
-
-
-
-/********************************* Includes **********************************/
 #include "MPU6050.h"
-#include <math.h>
-#include "i2c.h"
-#ifdef STM32F446xx
-#include "gpio.h"
-#include "SystemConf.h"
-#endif
 
+float g = 9.81;
+uint8_t IMU_GY_RANGE = 250; /**< divide by this to get degrees per second */
+float ACC_RANGE = 16384.0;
 
+#include <stdbool.h>
+//uint16_t devAddr = MPU6050_DEFAULT_ADDRESS; // default I2C address(?)
+//I2C_HandleTypeDef hi2c1;
 
+// Reference file from existing Robosoccer repo under soccer_embedded on firmware branch:
+// https://github.com/utra-robosoccer/soccerbot/blob/firmware/soccer_embedded/Common/component/MPU6050/MPU6050.cpp
 
-/******************************** File-local *********************************/
-namespace {
-// Constants
-// ----------------------------------------------------------------------------
-constexpr uint8_t MPU6050_ADDR=            0b11010000;  // ID
-constexpr uint8_t MPU6050_RA_GYRO_CONFIG=      0x1B;
-constexpr uint8_t MPU6050_RA_ACCEL_CONFIG=     0x1C;
-constexpr uint8_t MPU6050_RA_I2C_MST_CTRL=     0x24;
-constexpr uint8_t MPU6050_RA_SMPLRT_DIV=       0x19;
-
-// Output
-constexpr uint8_t MPU6050_RA_ACCEL_XOUT_H=     0x3B;
-constexpr uint8_t MPU6050_RA_GYRO_XOUT_H=      0x43;
-constexpr uint8_t MPU6050_RA_PWR_MGMT_1=       0x6B;
-constexpr uint8_t MPU6050_RA_PWR_MGMT_2=       0x6C;
-
-// Sample Rate DIV
-constexpr uint8_t MPU6050_CLOCK_DIV_296=       0x4;
-
-
-
-
-// Functions
-// ----------------------------------------------------------------------------
+// --------------------------- WORKAROUND FUNCTIONS -------------------------------------------------
 // We only need these functions for a silicon issue that affects the F446RE and
 // not the F767ZI
-#if defined(USE_I2C_SILICON_BUG_FIX)
 // Note: The following 2 functions are used as a workaround for an issue where the BUSY flag of the
 // I2C module is erroneously asserted in the hardware (a silicon bug, essentially). This workaround has
 // not been thoroughly tested, but we know it works
@@ -103,6 +63,7 @@ void generateClocks(uint8_t num_clocks, uint8_t send_stop_bits){
         uint16_t           scl_pin;
         GPIO_TypeDef*      scl_port;
     }i2cmodule = {&hi2c1, GPIO_PIN_7, GPIOB, GPIO_PIN_6, GPIOB};
+
     static struct I2C_Module* i2c = &i2cmodule;
     static uint8_t timeout = 1;
 
@@ -182,138 +143,47 @@ void generateClocks(uint8_t num_clocks, uint8_t send_stop_bits){
 
     HAL_I2C_Init(handler);
 }
-#endif
 
-} // end anonymous namespace
-
-
+// --------------------------- END OF WORKAROUND FUNCTIONS -------------------------------------------------
 
 
 /********************************* MPU6050 ***********************************/
-using imu::MPU6050;
-// Public
-// ----------------------------------------------------------------------------
-MPU6050::MPU6050(I2C_HandleTypeDef* m_i2c_handle)
-    : m_i2c_handle(m_i2c_handle)
-{
-    // Initialize all the variables
-    this -> m_ax = 0;
-    this -> m_ay = 0;
-    this -> m_az = 0;
-    this -> m_vx = 0;
-    this -> m_vy = 0;
-    this -> m_vz = 0;
-    this -> m_recv_byte = 0;
+ImuSensor imuSensor;
+ImuStruct_t p_data;
+
+extern I2C_HandleTypeDef hi2c1;
+
+extern lpf;
+
+void MPU6050_init() {
+	imuSensor = (ImuSensor){
+		.m_i2c_handle = &hi2c1,
+		.devAddr = MPU6050_ADDR,
+		.m_ax = 0,
+		.m_ay = 0,
+		.m_az = 0,
+		.m_vx = 0,
+		.m_vy = 0,
+		.m_vz = 0,
+		.m_recv_byte = 0
+	};
+
+	// write the values to it's corresponding register
+	Write_Reg(MPU6050_RA_I2C_MST_CTRL, 0b00001101); //0b00001101 is FAST MODE = 400 kHz
+	Write_Reg(MPU6050_RA_ACCEL_CONFIG, 0);
+	Write_Reg(MPU6050_RA_GYRO_CONFIG, 0);
+	Write_Reg(MPU6050_RA_PWR_MGMT_1, 0);
+	Write_Reg(MPU6050_RA_PWR_MGMT_2, 0);
+	Write_Reg(MPU6050_RA_SMPLRT_DIV, MPU6050_CLOCK_DIV_296);
+
+	const uint8_t IMU_DIGITAL_LOWPASS_FILTER_SETTING = 6;
+	Set_LPF(IMU_DIGITAL_LOWPASS_FILTER_SETTING); // I don't know what lpf should be set to
+
 }
 
-    void MPU6050::init(uint8_t lpf){
-    MPU6050::Write_Reg(MPU6050_RA_I2C_MST_CTRL, 0b00001101); //0b00001101 is FAST MODE = 400 kHz
-    MPU6050::Write_Reg(MPU6050_RA_ACCEL_CONFIG, 0);
-    MPU6050::Write_Reg(MPU6050_RA_GYRO_CONFIG, 0);
-    MPU6050::Write_Reg(MPU6050_RA_PWR_MGMT_1, 0);
-    MPU6050::Write_Reg(MPU6050_RA_PWR_MGMT_2, 0);
-    MPU6050::Write_Reg(MPU6050_RA_SMPLRT_DIV, MPU6050_CLOCK_DIV_296);
-
-    this->Set_LPF(lpf);
-}
-
-void MPU6050::Read_Gyroscope(){
-    uint8_t output_buffer[6];
-    MPU6050::Read_Data(MPU6050_RA_GYRO_XOUT_H,output_buffer);
-    int16_t vx = (int16_t)(output_buffer[0]<<8|output_buffer[1]);
-    int16_t vy = (int16_t)(output_buffer[2]<<8|output_buffer[3]);
-    int16_t vz = (int16_t)(output_buffer[4]<<8|output_buffer[5]);
-
-    this ->m_vx = (float)(vx) / IMU_GY_RANGE;
-    this ->m_vy = (float)(vy) / IMU_GY_RANGE;
-    this ->m_vz = (float)(vz) / IMU_GY_RANGE;
-}
-
-void MPU6050::Read_Gyroscope_IT(){
-    uint8_t output_buffer[6];
-    uint32_t notification;
-    BaseType_t status;
-
-    if(MPU6050::Read_Data_IT(MPU6050_RA_GYRO_XOUT_H,output_buffer) != HAL_OK){
-#ifdef STM32F446xx
-        // Try fix for flag bit silicon bug
-        generateClocks(1, 1);
-#endif
-        return;
-    }
-
-    do{
-        status = xTaskNotifyWait(0, NOTIFIED_FROM_RX_ISR, &notification, MAX_DELAY_TIME);
-        if(status != pdTRUE){
-            return;
-        }
-    }while((notification & NOTIFIED_FROM_RX_ISR) != NOTIFIED_FROM_RX_ISR);
-
-    int16_t vx = (int16_t)(output_buffer[0]<<8|output_buffer[1]);
-    int16_t vy = (int16_t)(output_buffer[2]<<8|output_buffer[3]);
-    int16_t vz = (int16_t)(output_buffer[4]<<8|output_buffer[5]);
-
-
-    this ->m_vx = (float)(vx) / IMU_GY_RANGE;
-    this ->m_vy = (float)(vy) / IMU_GY_RANGE;
-    this ->m_vz = (float)(vz) / IMU_GY_RANGE;
-}
-
-void MPU6050::Read_Accelerometer(){
-    uint8_t output_buffer[6];
-    MPU6050::Read_Data(MPU6050_RA_ACCEL_XOUT_H,output_buffer);
-    int16_t ax = (int16_t)(output_buffer[0]<<8|output_buffer[1]);
-    int16_t ay = (int16_t)(output_buffer[2]<<8|output_buffer[3]);
-    int16_t az  = (int16_t)(output_buffer[4]<<8|output_buffer[5]);
-
-    this ->m_ax = -(ax * g / ACC_RANGE);
-    this ->m_ay = -(ay * g / ACC_RANGE);
-    this ->m_az = -(az * g / ACC_RANGE);
-}
-
-void MPU6050::Read_Accelerometer_IT(){
-    uint8_t output_buffer[6];
-    uint32_t notification;
-    BaseType_t status;
-
-    if(MPU6050::Read_Data_IT(MPU6050_RA_ACCEL_XOUT_H,output_buffer)){
-#ifdef STM32F446xx
-        // Try fix for flag bit silicon bug
-        generateClocks(1, 1);
-#endif
-    }
-
-    do{
-        status = xTaskNotifyWait(0, NOTIFIED_FROM_RX_ISR, &notification, MAX_DELAY_TIME);
-        if(status != pdTRUE){
-            return;
-        }
-    }while((notification & NOTIFIED_FROM_RX_ISR) != NOTIFIED_FROM_RX_ISR);
-
-    int16_t ax = (int16_t)(output_buffer[0]<<8|output_buffer[1]);
-    int16_t ay = (int16_t)(output_buffer[2]<<8|output_buffer[3]);
-    int16_t az  = (int16_t)(output_buffer[4]<<8|output_buffer[5]);
-
-    this ->m_ax = -(ax * g / ACC_RANGE);
-    this ->m_ay = -(ay * g / ACC_RANGE);
-    this ->m_az = -(az * g / ACC_RANGE);
-}
-
-void MPU6050::Fill_Struct(ImuStruct_t* p_data){
-    p_data->x_Accel = this->m_ax;
-    p_data->y_Accel = this->m_ay;
-    p_data->z_Accel = this->m_az;
-
-    p_data->x_Gyro = this->m_vx;
-    p_data->y_Gyro = this->m_vy;
-    p_data->z_Gyro = this->m_vz;
-}
-
-// Private
-// ----------------------------------------------------------------------------
-HAL_StatusTypeDef MPU6050::Write_Reg(uint8_t reg_addr, uint8_t data){
+HAL_StatusTypeDef Write_Reg(uint8_t reg_addr, uint8_t data){
     return HAL_I2C_Mem_Write(
-        const_cast<I2C_HandleTypeDef*>(this->m_i2c_handle),
+    		imuSensor.m_i2c_handle,
         (uint16_t) MPU6050_ADDR,
         (uint16_t) reg_addr,
         1,
@@ -323,21 +193,21 @@ HAL_StatusTypeDef MPU6050::Write_Reg(uint8_t reg_addr, uint8_t data){
     );
 }
 
-HAL_StatusTypeDef MPU6050::Read_Reg(uint8_t reg_addr){
+HAL_StatusTypeDef Read_Reg(uint8_t reg_addr){
     return HAL_I2C_Mem_Read(
-        const_cast<I2C_HandleTypeDef*>(this->m_i2c_handle),
+    	imuSensor.m_i2c_handle,
         (uint16_t) MPU6050_ADDR,
         (uint16_t) reg_addr,
         1,
-        &(this->m_recv_byte),
+        &(imuSensor.m_recv_byte),
         1,
         1000
     );
 }
 
-HAL_StatusTypeDef MPU6050::Read_Data_IT(uint8_t reg_addr, uint8_t* sensor_buffer){
+HAL_StatusTypeDef Read_Data_IT(uint8_t reg_addr, uint8_t* sensor_buffer){
     return HAL_I2C_Mem_Read_IT(
-        const_cast<I2C_HandleTypeDef*>(this->m_i2c_handle),
+    	imuSensor.m_i2c_handle,
         (uint16_t) MPU6050_ADDR,
         (uint16_t) reg_addr,
         1,
@@ -346,9 +216,9 @@ HAL_StatusTypeDef MPU6050::Read_Data_IT(uint8_t reg_addr, uint8_t* sensor_buffer
     );
 }
 
-HAL_StatusTypeDef MPU6050::Read_Data(uint8_t reg_addr, uint8_t* sensor_buffer){
+HAL_StatusTypeDef Read_Data(uint8_t reg_addr, uint8_t* sensor_buffer){
     return HAL_I2C_Mem_Read(
-        const_cast<I2C_HandleTypeDef*>(this->m_i2c_handle),
+    	imuSensor.m_i2c_handle,
         (uint16_t) MPU6050_ADDR,
         (uint16_t) reg_addr,
         1,
@@ -358,26 +228,109 @@ HAL_StatusTypeDef MPU6050::Read_Data(uint8_t reg_addr, uint8_t* sensor_buffer){
     );
 }
 
-bool MPU6050::Set_LPF(uint8_t lpf){
+bool Set_LPF(uint8_t lpf){
     bool retval = false;
     if(lpf <= 6){
         // the LPF reg is decimal 26
         uint8_t current_value;
         uint8_t bitmask=7; // 00000111
 
-        MPU6050::Read_Reg(26); //read the current value of the LPF reg, and save it to received_byte
-        current_value=this->m_recv_byte;
+        Read_Reg(26); //read the current value of the LPF reg, and save it to received_byte
+        current_value = imuSensor.m_recv_byte;
 
         // note that this reg also contains unneeded fsync data which should be preserved
         current_value = (current_value & (~bitmask)) | lpf;
-        if(MPU6050::Write_Reg(26, current_value) == HAL_OK){
+        if(Write_Reg(26, current_value) == HAL_OK){
             retval = true;
         }
     }
     return retval;
 }
 
-/**
- * @}
- */
-/* end - MPU6050 */
+
+void Read_Gyroscope(uint8_t *buff){
+    uint8_t output_buffer[6];
+    Read_Data(MPU6050_RA_GYRO_XOUT_H,output_buffer);
+    int16_t vx = (int16_t)(output_buffer[0]<<8|output_buffer[1]);
+    int16_t vy = (int16_t)(output_buffer[2]<<8|output_buffer[3]);
+    int16_t vz = (int16_t)(output_buffer[4]<<8|output_buffer[5]);
+
+    imuSensor.m_vx = (float)(vx) / IMU_GY_RANGE;
+    imuSensor.m_vy = (float)(vy) / IMU_GY_RANGE;
+    imuSensor.m_vz = (float)(vz) / IMU_GY_RANGE;
+
+    for(uint8_t i = 0; i < 6; i++)
+    {
+      buff[i] = output_buffer[i];
+    }
+}
+
+
+void Read_Gyroscope_IT(uint8_t *buff){
+    uint8_t output_buffer[6];
+
+    if(Read_Data_IT(MPU6050_RA_GYRO_XOUT_H,output_buffer) != HAL_OK){
+        // Try fix for flag bit silicon bug
+        generateClocks(1, 1);
+        return;
+    }
+
+    int16_t vx = (int16_t)(output_buffer[0]<<8|output_buffer[1]);
+    int16_t vy = (int16_t)(output_buffer[2]<<8|output_buffer[3]);
+    int16_t vz = (int16_t)(output_buffer[4]<<8|output_buffer[5]);
+
+    float m_vx = (float)(vx) / IMU_GY_RANGE;
+    float m_vy = (float)(vy) / IMU_GY_RANGE;
+    float m_vz = (float)(vz) / IMU_GY_RANGE;
+
+    for(uint8_t i = 0; i < 6; i++)
+    {
+      buff[i] = output_buffer[i];
+    }
+}
+
+
+void Read_Accelerometer(){
+    uint8_t output_buffer[6];
+    Read_Data(MPU6050_RA_ACCEL_XOUT_H,output_buffer);
+    int16_t ax = (int16_t)(output_buffer[0]<<8|output_buffer[1]);
+    int16_t ay = (int16_t)(output_buffer[2]<<8|output_buffer[3]);
+    int16_t az  = (int16_t)(output_buffer[4]<<8|output_buffer[5]);
+
+    imuSensor.m_ax = -(ax * g / ACC_RANGE);
+    imuSensor.m_ay = -(ay * g / ACC_RANGE);
+    imuSensor.m_az = -(az * g / ACC_RANGE);
+}
+
+void Read_Accelerometer_IT(uint8_t *buff){
+    uint8_t output_buffer[6];
+
+    if(Read_Data(MPU6050_RA_ACCEL_XOUT_H,output_buffer)){
+      // Try fix for flag bit silicon bug
+      generateClocks(1, 1);
+    }
+
+    int16_t ax = (int16_t)(output_buffer[0]<<8|output_buffer[1]);
+    int16_t ay = (int16_t)(output_buffer[2]<<8|output_buffer[3]);
+    int16_t az  = (int16_t)(output_buffer[4]<<8|output_buffer[5]);
+
+    float m_ax = -(ax * g / ACC_RANGE);
+    float m_ay = -(ay * g / ACC_RANGE);
+    float m_az = -(az * g / ACC_RANGE);
+
+    for(uint8_t i = 0; i < 6; i++)
+    {
+      buff[i] = output_buffer[i];
+    }
+}
+
+void Fill_Struct(ImuStruct_t* p_data){
+    p_data->x_Accel = imuSensor.m_ax;
+    p_data->y_Accel = imuSensor.m_ay;
+    p_data->z_Accel = imuSensor.m_az;
+
+    p_data->x_Gyro = imuSensor.m_vx;
+    p_data->y_Gyro = imuSensor.m_vy;
+    p_data->z_Gyro = imuSensor.m_vz;
+}
+/********************************* MPU6050 end ***********************************/
