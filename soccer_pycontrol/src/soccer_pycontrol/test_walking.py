@@ -108,7 +108,7 @@ class TestWalking:
                 _ = _
             pb.stepSimulation()
 
-    @pytest.mark.parametrize("walker", ["bez2"], indirect=True)
+    @pytest.mark.parametrize("walker", ["bez1"], indirect=True)
     def test_walk_1(self, walker: Navigator):
         walker.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
         walker.ready()
@@ -141,7 +141,7 @@ class TestWalking:
     def test_walk_1_real_robot(self, walker_real_robot: NavigatorRos):
         walker_real_robot.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
         walker_real_robot.wait(200)
-        goal_position = Transformation([0.5, 0, 0], [0, 0, 0, 1])
+        goal_position = Transformation([10, 0, 0], [0, 0, 0, 1])
         walker_real_robot.setGoal(goal_position)
         walk_success = walker_real_robot.run(single_trajectory=True)
         assert walk_success
@@ -542,7 +542,7 @@ class TestWalking:
 
         self.run_feedback(walker)
 
-    @pytest.mark.parametrize("walker_real_robot", ["bez1"], indirect=True)
+    @pytest.mark.parametrize("walker_real_robot", ["bez2"], indirect=True)
     def test_imu_feedback_real(self, walker_real_robot: NavigatorRos):
 
         walker_real_robot.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
@@ -552,7 +552,7 @@ class TestWalking:
 
         self.run_feedback(walker_real_robot)
 
-    @pytest.mark.parametrize("walker", ["bez1"], indirect=True)
+    @pytest.mark.parametrize("walker", ["bez2"], indirect=True)
     def test_replay_simulation(self, walker: Navigator):
         def readLogFile(filename, verbose=True):
             f = open(filename, "rb")

@@ -14,7 +14,6 @@
             <excludedPath local="true" path="$PROJECT_DIR$/soccer_object_detection/images" />
             <excludedPath local="true" path="$PROJECT_DIR$/soccer_localization/data" />
             <excludedPath local="true" path="$PROJECT_DIR$/bez2_description/meshes" />
-            <excludedPath local="true" path="$PROJECT_DIR$/bez1_description/meshes" />
             <excludedPath local="true" path="$PROJECT_DIR$/bez3_description/meshes" />
             <excludedPath local="true" path="$PROJECT_DIR$/soccer_hardware_bez3" />
             <excludedPath local="true" path="$PROJECT_DIR$/docs" />

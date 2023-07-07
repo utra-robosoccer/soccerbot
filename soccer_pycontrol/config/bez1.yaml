@@ -11,8 +11,8 @@ steps_per_second_default: 2.6
 foot_separation: 0.043
 step_height: 0.02
 
-torso_offset_x_ready: 0.012 # positive is forward
-torso_offset_x: 0.02 # positive is forward
+torso_offset_x_ready: 0.022 # positive is forward
+torso_offset_x: 0.03 # positive is forward
 
 torso_offset_pitch_ready: -0.1
 torso_offset_pitch: 0.2
