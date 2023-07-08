@@ -310,7 +310,6 @@ void DMA1_Stream6_IRQHandler(void)
 }
 
 /**
-<<<<<<< HEAD
   * @brief This function handles I2C1 event interrupt.
   */
 void I2C1_EV_IRQHandler(void)
@@ -325,8 +324,6 @@ void I2C1_EV_IRQHandler(void)
 }
 
 /**
-=======
->>>>>>> master
   * @brief This function handles DMA1 stream7 global interrupt.
   */
 void DMA1_Stream7_IRQHandler(void)

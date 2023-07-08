@@ -111,3 +111,5 @@ HAL_StatusTypeDef HAL_I2CEx_ConfigDigitalFilter(I2C_HandleTypeDef *hi2c, uint32_
 #endif
 
 #endif /* __STM32F4xx_HAL_I2C_EX_H */
+
+

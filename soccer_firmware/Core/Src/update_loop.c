@@ -21,10 +21,24 @@ void update()
   uint32_t lastTime = HAL_GetTick();
   while(1)
   {
+	if(HAL_GetTick() - lastTime > UPDATE_PERIOD) // send IMU/ANGLES periodically back to main computer
+	{
+	  lastTime = HAL_GetTick();
+
+	  // we read want to read 1 motor position from each port
+	  read_motors(txBuf);
+
+	  // get current linear Acceleration and Rotational speed
+	  read_imu(txBuf);
+
+	  CDC_Transmit_FS((uint8_t *) txBuf, sizeof(txBuf));
+	}
+
     if (usb_received) // when we receive USB packet, service it right away
     {
       // check for header packet
       if(usbRxBuffer[0] != 0xff || usbRxBuffer[1] != 0xff) {
+    	  usb_received = false;
     	  continue;
       }
 
@@ -34,18 +48,6 @@ void update()
       HAL_GPIO_TogglePin(GPIOA, GREEN_LED_Pin);
     }
 
-    if(HAL_GetTick() - lastTime > UPDATE_PERIOD) // send IMU/ANGLES periodically back to main computer
-    {
-      lastTime = HAL_GetTick();
-
-      // we read want to read 1 motor position from each port
-      read_motors(txBuf);
-
-      // get current linear Acceleration and Rotational speed
-      read_imu(txBuf);
-
-      CDC_Transmit_FS((uint8_t *) txBuf, sizeof(txBuf));
-    }
   }
 }
 
@@ -162,11 +164,11 @@ void read_motors(uint8_t *rxBuf) {
 
       if (p->dmaDoneReading) {
         if (protocol == 1) {
-          rxBuf[2 + motorId * 2] = motorId;//p->rxBuffer[5];
-          rxBuf[2 + motorId * 2 + 1] = 0xaa; //p->rxBuffer[6];
+          rxBuf[2 + motorId * 2] = p->rxBuffer[5];
+          rxBuf[2 + motorId * 2 + 1] = p->rxBuffer[6];
         } else {
-          rxBuf[2 + motorId * 2] = motorId;//p->rxBuffer[9];
-          rxBuf[2 + motorId * 2 + 1] = 0xaa;//p->rxBuffer[10];
+          rxBuf[2 + motorId * 2] = p->rxBuffer[9];
+          rxBuf[2 + motorId * 2 + 1] = p->rxBuffer[10];
         }
         p->dmaDoneReading = false;
         numMotorsReceived++;

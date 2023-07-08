@@ -2782,12 +2782,12 @@ void HAL_RCCEx_SelectLSEMode(uint8_t Mode)
 /** @defgroup RCCEx_Exported_Functions_Group2 Extended Clock management functions
  *  @brief  Extended Clock management functions
  *
-@verbatim
+@verbatim   
  ===============================================================================
                 ##### Extended clock management functions  #####
  ===============================================================================
     [..]
-    This subsection provides a set of functions allowing to control the
+    This subsection provides a set of functions allowing to control the 
     activation or deactivation of PLLI2S, PLLSAI.
 @endverbatim
   * @{
@@ -3781,3 +3781,4 @@ void HAL_RCC_GetOscConfig(RCC_OscInitTypeDef  *RCC_OscInitStruct)
 /**
   * @}
   */
+

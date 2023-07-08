@@ -176,3 +176,4 @@ uint8_t USBD_CDC_TransmitPacket(USBD_HandleTypeDef *pdev);
 /**
   * @}
   */
+

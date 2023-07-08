@@ -881,3 +881,4 @@ HAL_StatusTypeDef UART_Start_Receive_DMA(UART_HandleTypeDef *huart, uint8_t *pDa
 #endif
 
 #endif /* __STM32F4xx_HAL_UART_H */
+

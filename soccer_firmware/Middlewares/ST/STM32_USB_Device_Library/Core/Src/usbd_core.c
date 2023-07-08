@@ -1217,3 +1217,4 @@ USBD_DescHeaderTypeDef *USBD_GetNextDesc(uint8_t *pbuf, uint16_t *ptr)
 /**
   * @}
   */
+

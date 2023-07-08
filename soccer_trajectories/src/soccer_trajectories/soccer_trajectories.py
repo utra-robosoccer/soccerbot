@@ -76,7 +76,7 @@ class Trajectory:
         t = 0
         while not rospy.is_shutdown() and t < self.max_time and not self.terminate:
             js = JointState()
-            js.header.stamp = rospy.Time.now()  # rospy.Time.from_seconds(self.time)
+            js.header.stamp = rospy.Time.now()
 
             for joint, setpoint in self.get_setpoint(t).items():
 

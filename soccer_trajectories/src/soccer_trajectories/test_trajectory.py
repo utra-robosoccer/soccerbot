@@ -11,8 +11,8 @@ from soccer_trajectories.soccer_trajectories import Trajectory, TrajectoryManage
 
 
 class TestTrajectory:
-    @pytest.mark.parametrize("robot_model", ["bez1"])
-    @pytest.mark.parametrize("trajectory_name", ["getupback"])
+    @pytest.mark.parametrize("robot_model", ["bez2"])
+    @pytest.mark.parametrize("trajectory_name", ["fix_angle_test"])
     def test_all_trajectories(self, robot_model: str, trajectory_name: str):
         rospy.init_node("test")
         os.system(

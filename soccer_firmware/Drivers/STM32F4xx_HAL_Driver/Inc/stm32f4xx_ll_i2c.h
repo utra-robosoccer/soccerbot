@@ -1887,3 +1887,4 @@ void LL_I2C_StructInit(LL_I2C_InitTypeDef *I2C_InitStruct);
 #endif
 
 #endif /* __STM32F4xx_LL_I2C_H */
+

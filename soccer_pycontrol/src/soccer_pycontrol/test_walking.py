@@ -5,7 +5,7 @@ import time
 import pybullet_data
 from scipy.signal import butter, lfilter
 
-os.environ["ROS_NAMESPACE"] = "/robot2"
+os.environ["ROS_NAMESPACE"] = "/robot1"
 
 from unittest.mock import MagicMock
 
@@ -542,7 +542,7 @@ class TestWalking:
 
         self.run_feedback(walker)
 
-    @pytest.mark.parametrize("walker_real_robot", ["bez1"], indirect=True)
+    @pytest.mark.parametrize("walker_real_robot", ["bez2"], indirect=True)
     def test_imu_feedback_real(self, walker_real_robot: NavigatorRos):
 
         walker_real_robot.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))

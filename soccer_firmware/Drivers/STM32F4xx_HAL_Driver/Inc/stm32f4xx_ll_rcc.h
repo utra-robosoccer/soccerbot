@@ -96,7 +96,7 @@ typedef struct
 
 /** @defgroup RCC_LL_EC_OSC_VALUES Oscillator Values adaptation
   * @brief    Defines used to adapt values of different oscillators
-  * @note     These values could be modified in the user environment according to
+  * @note     These values could be modified in the user environment according to 
   *           HW set-up.
   * @{
   */
@@ -4871,7 +4871,7 @@ __STATIC_INLINE uint32_t LL_RCC_PLL_GetN(void)
 }
 
 /**
-  * @brief  Get Main PLL division factor for PLLP
+  * @brief  Get Main PLL division factor for PLLP 
   * @rmtoll PLLCFGR      PLLP       LL_RCC_PLL_GetP
   * @retval Returned value can be one of the following values:
   *         @arg @ref LL_RCC_PLLP_DIV_2
@@ -7093,3 +7093,4 @@ uint32_t    LL_RCC_GetDSIClockFreq(uint32_t DSIxSource);
 #endif
 
 #endif /* __STM32F4xx_LL_RCC_H */
+
