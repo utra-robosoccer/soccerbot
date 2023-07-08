@@ -74,11 +74,10 @@ class Trajectory:
         pub_all_motor = rospy.Publisher("joint_command", JointState, queue_size=2)
         rate = rospy.Rate(Trajectory.RATE)
         t = 0
-        while not rospy.is_shutdown() and t < self.max_time and not self.terminate:
+        while not rospy.is_shutdown() and t <= self.max_time + 0.01 and not self.terminate:
             js = JointState()
             js.header.stamp = rospy.Time.now()
-
-            for joint, setpoint in self.get_setpoint(t).items():
+            for joint, setpoint in self.get_setpoint(round(t * 100) / 100).items():
 
                 if self.mirror:
                     if "left" in joint:
@@ -93,7 +92,7 @@ class Trajectory:
             except ROSException as ex:
                 print(ex)
                 exit(0)
-            t = t + 0.01
+            t += 0.01
             if int(t + 0.01) != int(t):
                 print(f"Trajectory at t={t}")
             if real_time:
