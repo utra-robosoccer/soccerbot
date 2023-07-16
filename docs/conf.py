@@ -20,8 +20,8 @@ sys.path.insert(0, os.path.abspath('/opt/ros/noetic/lib/python3/dist-packages/')
 # -- Project information -----------------------------------------------------
 
 project = 'soccerbot'
-copyright = '2022, Jason Wang'
-author = 'Jason Wang'
+copyright = '2023, UTRA Robosoccer'
+author = 'UTRA Robosoccer'
 
 
 # -- General configuration ---------------------------------------------------
