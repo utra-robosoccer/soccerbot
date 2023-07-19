@@ -19,7 +19,7 @@ jobs:
       cancel-in-progress: true
 
     steps:
-      - uses: ros-tooling/setup-ros@v0.6
+      - uses: ros-tooling/setup-ros@v0.7
         with:
           required-ros-distributions: noetic
       - uses: actions/checkout@v3
