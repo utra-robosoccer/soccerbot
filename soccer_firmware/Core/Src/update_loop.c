@@ -111,7 +111,7 @@ void read_imu(uint8_t *rxBuf) {
 }
 
 void read_motors(uint8_t *rxBuf) {
-  for (uint16_t i = 1; i < 6; i++) {// reset variables
+  for (uint16_t i = 0; i < 6; i++) {// reset variables
     motorPorts[i]->dmaDoneReading = false;
     motorPorts[i]->timeout = 0;
     motorPorts[i]->motorServiced = false;
@@ -119,7 +119,7 @@ void read_motors(uint8_t *rxBuf) {
 
   // send read command to 1 motor on each port
   uint8_t numMotorsRequested = 0;
-  for (uint8_t i = 1; i < 6; i ++) {
+  for (uint8_t i = 0; i < 6; i ++) {
     MotorPort *p = motorPorts[i];
     uint8_t currMotor = p->currReadMotor;
     uint8_t motorId = p->motorIds[currMotor];
@@ -142,7 +142,6 @@ void read_motors(uint8_t *rxBuf) {
       HAL_UART_Receive_DMA(p->huart, p->rxBuffer, p->rxPacketLen);
       read_motor_present_position_p2(p, motorId);
     }
-    p->currReadMotor = (currMotor + 1) % p->numMotors;
     p->timeout = HAL_GetTick();
     numMotorsRequested++; // keep track of how many motors we are reading
   }
@@ -173,12 +172,14 @@ void read_motors(uint8_t *rxBuf) {
         p->dmaDoneReading = false;
         numMotorsReceived++;
         p->motorServiced = true;
+        p->currReadMotor = (p->currReadMotor + 1) % p->numMotors;
       } else {
         //timeout logic
         if(HAL_GetTick() - p->timeout > 10) { // units in milliseconds
           HAL_UART_DMAStop(p->huart);
           numMotorsReceived++; // unsuccesful but we still count as received
           p->motorServiced = true;
+          p->currReadMotor = (p->currReadMotor + 1) % p->numMotors;
         }
       }
     }
