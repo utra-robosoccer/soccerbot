@@ -88,10 +88,10 @@ class FirmwareInterface:
                     val = data[i * 2 + 2] | data[i * 2 + 3] << 8
 
                     motor_name = self.motor_id_to_name_dict[i]
-                    motor_type = self.motor_mapping[motor_name]['type']
-                    motor_angle_zero = self.motor_mapping[motor_name]['angle_zero']
-                    max_angle_bytes = self.motor_types[motor_type]['max_angle_bytes']
-                    max_angle_radians = self.motor_types[motor_type]['max_angle_degrees'] / 180 * math.pi
+                    motor_type = self.motor_mapping[motor_name]["type"]
+                    motor_angle_zero = self.motor_mapping[motor_name]["angle_zero"]
+                    max_angle_bytes = self.motor_types[motor_type]["max_angle_bytes"]
+                    max_angle_radians = self.motor_types[motor_type]["max_angle_degrees"] / 180 * math.pi
 
                     motor_angle_zero_radian = motor_angle_zero / 180 * math.pi
 
@@ -100,12 +100,7 @@ class FirmwareInterface:
                     if flipped:
                         motor_angle_radian = -motor_angle_radian
                     j.name.append(motor_name)
-
-                    # TODO debug head motor angles
-                    if "head" in motor_name:
-                        j.position.append(0)
-                    else:
-                        j.position.append(motor_angle_radian)
+                    j.position.append(motor_angle_radian)
                 self.joint_state_publisher.publish(j)
 
                 imu = Imu()
@@ -124,7 +119,6 @@ class FirmwareInterface:
                 imu.linear_acceleration.x = -(ax) * G / ACC_RANGE
                 imu.linear_acceleration.y = -(ay) * G / ACC_RANGE
                 imu.linear_acceleration.z = -(az) * G / ACC_RANGE
-
 
                 vx = int.from_bytes(imu_data[6:8], byteorder="big", signed=True) / IMU_GY_RANGE
                 vy = int.from_bytes(imu_data[8:10], byteorder="big", signed=True) / IMU_GY_RANGE
@@ -162,7 +156,6 @@ class FirmwareInterface:
                 if time_diff_real < time_diff_message_in:
                     rospy.sleep(time_diff_message_in - time_diff_real)
 
-
             t1 = time.time()
 
             self.reconnect_serial_port()
@@ -199,15 +192,15 @@ class FirmwareInterface:
                 bytes_to_write[2 + id * 2 + 1] = angle_final_bytes_2
                 pass
 
-
             t2 = time.time()
 
             self.serial.write(bytes_to_write)
             self.last_motor_publish_time_real = rospy.Time.now()
             self.last_motor_publish_time = joint_state.header.stamp
             t3 = time.time()
-            rospy.loginfo(f"Time Lag : {(rospy.Time.now() - joint_state.header.stamp).to_sec()}  Bytes Written: {bytes_to_write} Time Take {t2-t1} {t3-t1}")
-
+            rospy.loginfo(
+                f"Time Lag : {(rospy.Time.now() - joint_state.header.stamp).to_sec()}  Bytes Written: {bytes_to_write} Time Take {t2-t1} {t3-t1}"
+            )
 
         except Exception as ex:
             rospy.logerr_throttle(10, f"Lost connection to serial port {ex}, retrying...")
