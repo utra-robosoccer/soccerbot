@@ -297,7 +297,9 @@ class NavigatorRos(Navigator):
                         return False
 
             # Publishes angles to robot (Average Time: 0.00041992547082119)
+            # self.soccerbot.robot_path.show()
             self.soccerbot.publishAngles()
+
 
             time_end = time.time()
             if time_end - time_start > Navigator.PYBULLET_STEP * 1.2:

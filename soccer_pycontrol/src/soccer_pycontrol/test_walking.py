@@ -547,7 +547,7 @@ class TestWalking:
 
         walker_real_robot.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
         walker_real_robot.wait(200)
-        goal_position = Transformation([0.5, 0, 0], [0, 0, 0, 1])
+        goal_position = Transformation([1.0, 0, 0], [0, 0, 0, 1])
         walker_real_robot.setGoal(goal_position)
 
         self.run_feedback(walker_real_robot)

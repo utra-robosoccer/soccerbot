@@ -27,3 +27,9 @@ https://github.com/utra-robosoccer/soccerbot/wiki
 #### Getting Started
 
 https://github.com/utra-robosoccer/soccerbot/wiki/Onboarding
+
+
+#### Testing Motion on Robot
+```bash
+roslaunch soccerbot sensors.launch __ns:=robot1
+```

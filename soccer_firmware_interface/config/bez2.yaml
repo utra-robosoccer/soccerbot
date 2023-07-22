@@ -1,6 +1,6 @@
 left_leg_motor_0:
   id: 4
-  type: "xl430"
+  type: "xm430"
   angle_zero: 180
   angle_max: 360
   angle_min: 0
