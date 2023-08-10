@@ -4,3 +4,4 @@ soccer_webots/protos/postures.json
 .idea
 soccer_strategy/src/communication/robot_state_pb2.py
 soccer_webots/src/soccer_webots/messages_pb2.py
+soccerbot/rviz/RoboSoccer.json

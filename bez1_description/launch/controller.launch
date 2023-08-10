@@ -1,7 +1,7 @@
 <launch>
     <rosparam file="$(find bez1_description)/launch/controller.yaml" command="load" />
-    <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" ns="bez1" args="left_arm_motor_0_position_controller left_arm_motor_1_position_controller right_arm_motor_0_position_controller right_arm_motor_1_position_controller left_leg_motor_0_position_controller right_leg_motor_1_position_controller left_leg_motor_1_position_controller left_leg_motor_2_position_controller right_leg_motor_2_position_controller right_leg_motor_5_position_controller left_leg_motor_5_position_controller head_motor_1_position_controller right_leg_motor_3_position_controller left_leg_motor_3_position_controller left_leg_motor_4_position_controller right_leg_motor_4_position_controller head_camera_position_controller torso_imu_position_controller head_motor_0_position_controller right_leg_motor_0_position_controller joint_state_controller " />
+    <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" ns="robot1" args="left_arm_motor_0 left_arm_motor_1 right_arm_motor_0 right_arm_motor_1 left_leg_motor_0 right_leg_motor_1 left_leg_motor_1 left_leg_motor_2 right_leg_motor_2 right_leg_motor_5 left_leg_motor_5 head_motor_1 right_leg_motor_3 left_leg_motor_3 left_leg_motor_4 right_leg_motor_4 head_camera torso_imu head_motor_0 right_leg_motor_0 joint_state_controller " />
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen">
-        <remap from="/joint_states" to="/bez1/joint_states" />
+        <remap from="/joint_states" to="/robot1/joint_states" />
     </node>
 </launch>
