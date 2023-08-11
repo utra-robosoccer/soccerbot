@@ -16,10 +16,10 @@ torso_step_length_short_forwards: 0.03
 
 #: The seperation of the feet while walking
 # How much space between the feet along the path
-foot_separation: 0.050
+foot_separation: 0.0415
 
 #: The height of the step from the ground
-step_height: 0.04
+step_height: 0.03
 
 #: The distance to the outwards direction when the robot takes a step
 # How much does the foot step outside from the center of the path like a side step
@@ -30,12 +30,12 @@ step_outwardness: 0.035 # positive means away from the Path
 step_rotation: 0.05 # positive means the feet turns outwards to the side
 
 #: How much the torso is forward in the x axis
-torso_offset_x_ready: -0.08 # positive is forward
-torso_offset_x: 0
+torso_offset_x_ready: -0.06 # positive is forward
+torso_offset_x: 0.02
 
 #: How much the torso is rotated in the x axis
-torso_offset_pitch_ready: -0.05
-torso_offset_pitch: 0.12
+torso_offset_pitch_ready: -0.12
+torso_offset_pitch: 0.10
 
 # Rate for it to get into the ready state
 get_ready_rate: 0.03
