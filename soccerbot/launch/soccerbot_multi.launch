@@ -8,7 +8,9 @@
         <env name="ROBOT_MODEL" value="$(arg robot_model)" />
         <arg name="single" value="$(arg single)" />
     </include>
-
+    <include file="$(find foxglove_bridge)/launch/foxglove_bridge.launch">
+        <arg name="port" value="8765" />
+    </include>
     <include file="$(find soccerbot)/launch/modules/gui.launch" />
 
     <include file="$(find soccerbot)/launch/soccerbot.launch" ns="robot1">

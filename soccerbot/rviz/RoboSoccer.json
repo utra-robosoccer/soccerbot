@@ -5,9 +5,22 @@
         "distance": 20,
         "perspective": true,
         "phi": 60,
-        "target": [0, 0, 0],
-        "targetOffset": [0, 0, 0],
-        "targetOrientation": [0, 0, 0, 1],
+        "target": [
+          0,
+          0,
+          0
+        ],
+        "targetOffset": [
+          0,
+          0,
+          0
+        ],
+        "targetOrientation": [
+          0,
+          0,
+          0,
+          1
+        ],
         "thetaOffset": 45,
         "fovy": 45,
         "near": 0.5,
@@ -37,9 +50,22 @@
         "distance": 20,
         "perspective": true,
         "phi": 60,
-        "target": [0, 0, 0],
-        "targetOffset": [0, 0, 0],
-        "targetOrientation": [0, 0, 0, 1],
+        "target": [
+          0,
+          0,
+          0
+        ],
+        "targetOffset": [
+          0,
+          0,
+          0
+        ],
+        "targetOrientation": [
+          0,
+          0,
+          0,
+          1
+        ],
         "thetaOffset": 45,
         "fovy": 45,
         "near": 0.5,
@@ -69,9 +95,22 @@
         "distance": 20,
         "perspective": true,
         "phi": 60,
-        "target": [0, 0, 0],
-        "targetOffset": [0, 0, 0],
-        "targetOrientation": [0, 0, 0, 1],
+        "target": [
+          0,
+          0,
+          0
+        ],
+        "targetOffset": [
+          0,
+          0,
+          0
+        ],
+        "targetOrientation": [
+          0,
+          0,
+          0,
+          1
+        ],
         "thetaOffset": 45,
         "fovy": 45,
         "near": 0.5,
@@ -101,9 +140,22 @@
         "distance": 20,
         "perspective": true,
         "phi": 60,
-        "target": [0, 0, 0],
-        "targetOffset": [0, 0, 0],
-        "targetOrientation": [0, 0, 0, 1],
+        "target": [
+          0,
+          0,
+          0
+        ],
+        "targetOffset": [
+          0,
+          0,
+          0
+        ],
+        "targetOrientation": [
+          0,
+          0,
+          0,
+          1
+        ],
         "thetaOffset": 45,
         "fovy": 45,
         "near": 0.5,
@@ -153,14 +205,25 @@
     "3D!3l175lw": {
       "cameraState": {
         "perspective": true,
-        "distance": 1.988805139734924,
-        "phi": 59.66372248538646,
-        "thetaOffset": 53.61634160767657,
+        "distance": 4.292775278843672,
+        "phi": 59.66372248538623,
+        "thetaOffset": 53.61634160767656,
         "targetOffset": [
-          -0.6364335485263735, -1.1493424299184536, 2.664770817469469e-16
+          -0.4327897329893991,
+          -2.051331864986416,
+          2.312661527082919e-16
         ],
-        "target": [0, 0, 0],
-        "targetOrientation": [0, 0, 0, 1],
+        "target": [
+          0,
+          0,
+          0
+        ],
+        "targetOrientation": [
+          0,
+          0,
+          0,
+          1
+        ],
         "fovy": 45,
         "near": 0.5,
         "far": 5000
@@ -281,7 +344,11 @@
         "/robot1/goal": {
           "visible": true,
           "type": "arrow",
-          "arrowScale": [0.298, 0.03, 0.03],
+          "arrowScale": [
+            0.298,
+            0.03,
+            0.03
+          ],
           "color": "#4e9a06ff"
         },
         "/robot1/field_point_cloud": {
@@ -314,7 +381,11 @@
           "visible": true,
           "type": "arrow",
           "color": "#ff1900ff",
-          "arrowScale": [0.4, 0.03, 0.03],
+          "arrowScale": [
+            0.4,
+            0.03,
+            0.03
+          ],
           "covarianceColor": "#8d18d5ff",
           "showCovariance": true
         }
@@ -346,8 +417,16 @@
           "divisions": 10,
           "lineWidth": 1,
           "color": "#248eff",
-          "position": [0, 0, 0],
-          "rotation": [0, 0, 0],
+          "position": [
+            0,
+            0,
+            0
+          ],
+          "rotation": [
+            0,
+            0,
+            0
+          ],
           "order": 2
         },
         "ff077557-0716-4a37-be43-d18c3a727c56": {

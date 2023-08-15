@@ -3,7 +3,7 @@ project(bez1_description)
 
 find_package(
     catkin
-    REQUIRED urdf xacro
+    REQUIRED urdf xacro foxglove_bridge
 )
 
 catkin_package(CATKIN_DEPENDS urdf xacro)

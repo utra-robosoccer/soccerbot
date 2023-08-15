@@ -19,6 +19,7 @@ find_package(
     soccer_pycontrol
     soccer_hardware_bez3
     soccer_firmware_interface
+    foxglove_bridge
 )
 
 catkin_package(CATKIN_DEPENDS soccer_msgs soccer_object_detection)
