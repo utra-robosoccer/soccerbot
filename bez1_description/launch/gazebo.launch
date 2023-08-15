@@ -10,7 +10,7 @@
     <param name="robot_description" command="xacro '$(find bez1_description)/urdf/bez1.xacro'
         robot_name:=robot1
         model_type:=dae
-        file_path:=file:///$(arg home_path)/catkin_ws/src/soccerbot/bez1_description
+        file_path:=package://bez1_description
         has_base_footprint:=false
         tf_prefix:=robot1
         "

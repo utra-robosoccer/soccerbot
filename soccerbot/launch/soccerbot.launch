@@ -4,7 +4,6 @@
     <param name="robot_id" value="$(arg robot_id)" />
     <arg name="robot_name" value="robot$(arg robot_id)" />
     <arg name="robot_model" default="$(optenv ROBOT_MODEL bez1)" />
-    <arg name="home_path" default="$(optenv HOME bez1)" />
 
     <env name="ROSCONSOLE_FORMAT" value="[${severity}] [${time: %r}] [${node} ${function} ${line}]: ${message}" />
     <env name="ROSCONSOLE_CONFIG_FILE" value="$(find soccerbot)/config/rosconsole.conf" />
@@ -16,7 +15,7 @@
     <param name="robot_description" if="$(eval robot_model == 'bez1')" command="xacro '$(find bez1_description)/urdf/bez1.xacro'
         robot_name:=$(arg robot_name)
         model_type:=dae
-        file_path:=file:///$(arg home_path)/catkin_ws/src/soccerbot/bez1_description
+        file_path:=package://bez1_description
         has_base_footprint:=false
         tf_prefix:=$(arg robot_name)
         "
