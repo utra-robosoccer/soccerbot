@@ -20,8 +20,8 @@
     <include file="$(find soccerbot)/launch/soccerbot.launch" ns="robot2" unless="$(arg single)">
         <arg name="simulation" value="true" />
         <arg name="robot_id" value="2" />
-        <arg name="robot_model" value="bez1" />
-    </include>
+        <arg name="robot_model" value="bez1" /> </include
+    >source ~/.bashrc roslaunch soccerbot soccerbot_multi.launch
 
     <include file="$(find soccerbot)/launch/soccerbot.launch" ns="robot3" unless="$(arg single)">
         <arg name="simulation" value="true" />
