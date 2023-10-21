@@ -26,6 +26,7 @@ gdown==4.5.4
 pybullet
 pygame
 ultralytics
+py_trees
 
 # object detection
 requests==2.31.0
