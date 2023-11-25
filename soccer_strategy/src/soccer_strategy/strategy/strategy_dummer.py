@@ -18,7 +18,15 @@ from soccer_strategy.team import Team
 
 
 def create_tree():
-    root = py_trees.composites.Sequence("Dummber BT", memory=False)
+    root = py_trees.composites.Selector("Dummber BT", memory=False)
+
+    have_you_seen_the_ball = py_trees.composites.Selector("seen_ball", memory=False)
+    have_you_seen_the_ball.add_children()
+
+    # Base layer
+    root.add_children(Check_Robot_Status_Non_Idle)  # Check if the robot is in any idle state
+    root.add_children(Have_seen_ball)  # If we have seen ball
+    root.add_children(Have_not_seen_ball)  # If we have not seen the ball
 
     return root
 
@@ -38,3 +46,5 @@ class StrategyDummer(Strategy):
 
         this_robot = self.get_current_robot(friendly_team)
         tree = create_tree()
+
+        tree.tick_once()
