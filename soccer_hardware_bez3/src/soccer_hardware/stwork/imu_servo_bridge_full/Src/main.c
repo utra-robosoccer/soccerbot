@@ -202,6 +202,7 @@ int main(void)
 				memcpy((void*)uart_rx_buf_stash, (void*)uart_rx_buf, read_size);
 				HAL_StatusTypeDef status = HAL_UART_Receive_IT(&huart2, (uint8_t*)&uart_rx_buf, UART_RX_BUF_SIZE);
 				uint16_t ccrs[NUM_PWM_SERVOS] = { 0 };
+				uint8_t _crc_valid = 0;
 				for(uint8_t i = NUM_PWM_SERVOS * 2; i < UART_RX_BUF_SIZE; i++) {
 					if((uart_rx_buf_stash[i % UART_RX_BUF_SIZE] >> 6) == 0b01) {
 						uint32_t idx0 = i - PWM_SERVO_PACKET_SIZE;
@@ -209,6 +210,7 @@ int main(void)
 						volatile uint16_t n_crc32 = ((max(PWM_SERVO_PACKET_SIZE, 1) - 1) / 4) + 1;
 						volatile uint8_t crc = HAL_CRC_Calculate(&hcrc, (uint32_t*)uart_rx_crc_buf, n_crc32);
 						if(((crc ^ uart_rx_buf_stash[i]) & 0x3F) == 0) {
+							_crc_valid = 1;
 							for(uint8_t servo_idx = 0; servo_idx < NUM_PWM_SERVOS; servo_idx++) {
 								uint32_t ccr = (uart_rx_buf_stash[(idx0 + servo_idx * 2)]) & 0x3F;
 								ccr |= ((uint16_t)uart_rx_buf_stash[(idx0 + servo_idx * 2 + 1)] & 0x3F) << 6;
@@ -217,8 +219,10 @@ int main(void)
 						}
 					}
 				}
-				for(uint8_t servo_idx = 0; servo_idx < NUM_PWM_SERVOS; servo_idx++) {
-					*servo_ccrs[servo_idx] = ccrs[servo_idx];
+				if(_crc_valid) {
+					for(uint8_t servo_idx = 0; servo_idx < NUM_PWM_SERVOS; servo_idx++) {
+						*servo_ccrs[servo_idx] = ccrs[servo_idx];
+					}
 				}
 			}
 		}

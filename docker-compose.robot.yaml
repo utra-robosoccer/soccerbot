@@ -2,6 +2,7 @@ version: "3.3"
 
 services:
   friendly1:
+    runtime: nvidia
     network_mode: host
     extends:
       file: docker-compose.yaml
