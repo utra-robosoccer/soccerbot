@@ -319,6 +319,48 @@ class TestGameEngine2D(TestCase):
         friendly_points, opponent_points = g.run()
         print(f"Friendly: {friendly_points}, opponent: {opponent_points}")
 
+    def test_ball_priority(self):
+        # robot with vision has higher priority than robot without vision
+        rospy.init_node("test")
+
+        team1 = Team(
+            [
+                RobotControlled2D(
+                    robot_id=1,
+                    team=Robot.Team.FRIENDLY,
+                    role=Robot.Role.STRIKER,
+                    status=Robot.Status.READY,
+                    position=np.array([-0.5, 0, 0]),
+                ),
+                RobotControlled2D(
+                    robot_id=2,
+                    team=Robot.Team.FRIENDLY,
+                    role=Robot.Role.LEFT_WING,
+                    status=Robot.Status.READY,
+                    position=np.array([0.25, 0, 0]),
+                ),
+            ]
+        )
+
+        team2 = Team(
+            [
+                RobotControlled2D(
+                    robot_id=2,
+                    team=Robot.Team.OPPONENT,
+                    role=Robot.Role.GOALIE,
+                    status=Robot.Status.READY,
+                    position=np.array([4, 0, -3.14]),
+                )
+            ]
+        )
+
+        g = GameEngine2D(
+            display=self.display, team_1_strategy=StrategyDummy, team_2_strategy=StrategyStationary, team_1=team1, team_2=team2, game_duration=4
+        )
+
+        friendly_points, opponent_points = g.run()
+        print(f"Friendly: {friendly_points}, opponent: {opponent_points}")
+
     def test_navigate_to_scoring_position_with_offset_case_1(self):
 
         robot = MagicMock()
@@ -410,7 +452,10 @@ class TestGameEngine2D(TestCase):
                             Utility.navigate_to_scoring_position(robot, ball_position, goal_position)
                             Utility.navigate_to_position_with_offset = navigate_to_position_with_offset_original
 
-    @patch("referee.Supervisor")
+    referee_mock = MagicMock()
+    referee_mock.getBasicTimeStep.return_value = 2.5
+
+    @patch("referee.Supervisor", return_value=referee_mock)
     def test_2d_with_referee(self, referee):
         rospy.init_node("test")
         os.chdir("../../../external/hlvs_webots/controllers/referee")

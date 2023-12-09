@@ -234,6 +234,9 @@ class Referee2D(Referee):
         team = self.game_engine_2d.team1 if color == "red" else self.game_engine_2d.team2
         player = team.robots[int(number) - 1]
 
-        t = custom_t if custom_t else player[pose]["translation"]
-        r = custom_r if custom_r else player[pose]["rotation"]
+        team_referee = self.red_team if color == "red" else self.blue_team
+        player_referee = team_referee.players[number]
+        t = custom_t if custom_t else player_referee[pose]["translation"]
+        r = custom_r if custom_r else player_referee[pose]["rotation"]
+
         player.position = [t[0], t[1], r[3]]

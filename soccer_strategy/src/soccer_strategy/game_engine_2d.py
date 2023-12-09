@@ -233,7 +233,7 @@ class GameEngine2D:
         rospy.rostime._rostime_current = None
         return friendly_points, opponent_points
 
-    def update_estimated_physics(self, robots: [RobotControlled2D], ball: Ball):
+    def update_estimated_physics(self, robots: [RobotControlled2D], ball: Ball, time_passed=PHYSICS_UPDATE_INTERVAL):
         """
         Executes the world physics step, robot's movement, ball movement, and for fairness it runs through the priority
         for kicks in a random fashion.
@@ -248,8 +248,8 @@ class GameEngine2D:
             robot.observe_obstacles(robots)
             if robot.status == Robot.Status.WALKING:
                 previous_transformation: Transformation = robot.path.estimatedPositionAtTime(robot.path_time)
-                next_transformation: Transformation = robot.path.estimatedPositionAtTime(robot.path_time + GameEngine2D.PHYSICS_UPDATE_INTERVAL)
-                robot.path_time = robot.path_time + GameEngine2D.PHYSICS_UPDATE_INTERVAL
+                next_transformation: Transformation = robot.path.estimatedPositionAtTime(robot.path_time + time_passed)
+                robot.path_time = robot.path_time + time_passed
 
                 relative_transformation = np.linalg.inv(previous_transformation) @ next_transformation
 
@@ -303,13 +303,13 @@ class GameEngine2D:
 
         # update ball position
         self.ball.position_is_live_timeout = 10
-        self.ball.position = self.ball.position + self.ball.velocity * GameEngine2D.PHYSICS_UPDATE_INTERVAL
+        self.ball.position = self.ball.position + self.ball.velocity * time_passed
 
         # slow down ball with friction
         if not np.array_equal(self.ball.velocity, np.array([0, 0])):
             ball_unit_velocity = self.ball.velocity / np.linalg.norm(self.ball.velocity)
 
-            ball_delta_speed = Ball.FRICTION * GameEngine2D.PHYSICS_UPDATE_INTERVAL
+            ball_delta_speed = Ball.FRICTION * time_passed
             ball_speed = np.linalg.norm(self.ball.velocity)
             if ball_speed > ball_delta_speed:
                 self.ball.velocity = self.ball.velocity - ball_delta_speed * ball_unit_velocity
