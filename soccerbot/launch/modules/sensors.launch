@@ -2,16 +2,25 @@
 <launch>
     <arg name="robot_model" default="bez2" />
     <arg name="play_rosbag" default="false" />
-    <arg name="record_rosbag" default="false" />
-    <arg name="rosbag_file" default="$(find soccer_common)/bags/localization_1.bag" />
+    <arg name="record_rosbag" default="true" />
+<!--    <arg name="rosbag_file" default="$(find soccer_common)/bags/bez2.bag" />-->
 
-    <node pkg="rosbag" if="$(arg record_rosbag)" name="rosbag_record" type="record" args="-O $(arg rosbag_file) /robot1/imu_raw /robot1/joint_states /robot1/camera/image_raw /robot1/camera/camera_info" />
+<!--    <node pkg="rosbag" if="$(arg record_rosbag)" name="rosbag_record" type="record" args="-O $(arg rosbag_file) /robot1/imu_raw /robot1/joint_states /robot1/camera/image_raw /robot1/camera/camera_info" />-->
 
-    <group if="$(arg play_rosbag)">
-        <node pkg="rosbag" name="rosbag_player" type="play" args="$(arg rosbag_file)" />
-        <include file="$(find soccerbot)/launch/modules/gui.launch" />
-    </group>
-
+<!--    <group if="$(arg play_rosbag)">-->
+<!--        <node pkg="rosbag" name="rosbag_player" type="play" args="$(arg rosbag_file)" />-->
+<!--        <include file="$(find soccerbot)/launch/modules/gui.launch" />-->
+<!--    </group>-->
+    <!-- Localization bag -->
+    <node
+        pkg="rosbag"
+        type="record"
+        name="rosbag_bez2"
+        args="-O $(find soccerbot)/bags/bez1_back.bag
+        /robot1/imu_raw
+        /robot1/imu_filtered
+    "
+    />
     <group unless="$(arg play_rosbag)">
 <!--        <node name="camera" pkg="usb_cam" type="usb_cam_node" output="screen" respawn="true" respawn_delay="30">-->
 <!--            <param name="video_device" value="/dev/video0" />-->
@@ -25,10 +34,23 @@
         <!-- Motor Drivers -->
 
         <!-- Propriertary driver will delete soon TODO -->
-        <include file="$(find soccer_hardware)/launch/soccer_hardware.launch" if="$(eval robot_model == 'bez1')" />
-
+<!--        <include file="$(find soccer_hardware)/launch/soccer_hardware.launch" if="$(eval robot_model == 'bez1')" />-->
+<!--        <node pkg="imu_complementary_filter" type="complementary_filter_node" name="imu_complementary_filter" output="log">-->
+<!--            <rosparam file="$(find soccerbot)/config/imu_complementary_filter.yaml" command="load" />-->
+<!--            <remap from="imu/data_raw" to="imu_raw" />-->
+<!--            <remap from="imu/data" to="imu_filtered" />-->
+<!--        </node>-->
+<!--        <param name="motor_mapping" value="$(find soccer_firmware_interface)/config/$(arg robot_model).yaml" />-->
+<!--        <param name="motor_types" value="$(find soccer_firmware_interface)/config/motor_types.yaml" />-->
+<!--        <node name="firmware_interface" pkg="soccer_firmware_interface" type="main.py" output="screen" unless="$(eval robot_model == 'bez1')" />-->
+    </group>
+    <include file="$(find soccer_hardware)/launch/soccer_hardware.launch" if="$(eval robot_model == 'bez1')" />
+        <node pkg="imu_complementary_filter" type="complementary_filter_node" name="imu_complementary_filter" output="log">
+            <rosparam file="$(find soccerbot)/config/imu_complementary_filter.yaml" command="load" />
+            <remap from="imu/data_raw" to="imu_raw" />
+            <remap from="imu/data" to="imu_filtered" />
+        </node>
         <param name="motor_mapping" value="$(find soccer_firmware_interface)/config/$(arg robot_model).yaml" />
         <param name="motor_types" value="$(find soccer_firmware_interface)/config/motor_types.yaml" />
         <node name="firmware_interface" pkg="soccer_firmware_interface" type="main.py" output="screen" unless="$(eval robot_model == 'bez1')" />
-    </group>
 </launch>
