@@ -30,3 +30,4 @@ venv/
 /soccer_object_localization/images/
 /soccer_object_detection/images/*
 /soccer_strategy/src/soccer_strategy/log.txt
+cuda-ubuntu2004.pin.1
