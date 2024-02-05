@@ -40,7 +40,7 @@ class TestTrajectory:
         self.run_real_trajectory(robot_model, trajectory_name, real_time)
 
     @pytest.mark.parametrize("robot_model", ["bez2"])
-    @pytest.mark.parametrize("trajectory_name", ["getupfront"])
+    @pytest.mark.parametrize("trajectory_name", ["rightkick_2"])
     @pytest.mark.parametrize("real_time", [True])
     def test_getupfront_trajectories(self, robot_model: str, trajectory_name: str, real_time: bool):
         self.run_real_trajectory(robot_model, trajectory_name, real_time)

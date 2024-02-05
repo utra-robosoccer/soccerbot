@@ -28,20 +28,20 @@
     <arg name="param_file_name" value="$(arg robot_model)" unless="$(arg simulation)" />
 
     <group unless="$(arg play_rosbag)">
-        <node name="camera" pkg="usb_cam" type="usb_cam_node" output="screen" respawn="true" respawn_delay="30">
-            <param name="video_device" value="/dev/video4" />
-            <param name="image_width" value="640" />
-            <param name="image_height" value="480" />
-            <param name="pixel_format" value="yuyv" />
-            <param name="camera_frame_id" value="camera" />
-            <param name="io_method" value="mmap" />
-        </node>
-        <node pkg="soccer_object_localization" type="detector_objects.py" name="ball_detector" output="screen">
-            <rosparam file="$(find soccer_object_localization)/config/$(arg param_file_name).yaml" command="load" />
-        </node>
-        <node name="object_detector" pkg="soccer_object_detection" type="object_detect_node.py" output="screen" args="--model $(find soccer_object_detection)/models/half_5.pt">
-            <rosparam file="$(find soccer_object_detection)/config/$(arg param_file_name).yaml" command="load" />
-        </node>
+<!--        <node name="camera" pkg="usb_cam" type="usb_cam_node" output="screen" respawn="true" respawn_delay="30">-->
+<!--            <param name="video_device" value="/dev/video4" />-->
+<!--            <param name="image_width" value="640" />-->
+<!--            <param name="image_height" value="480" />-->
+<!--            <param name="pixel_format" value="yuyv" />-->
+<!--            <param name="camera_frame_id" value="camera" />-->
+<!--            <param name="io_method" value="mmap" />-->
+<!--        </node>-->
+<!--        <node pkg="soccer_object_localization" type="detector_objects.py" name="ball_detector" output="screen">-->
+<!--            <rosparam file="$(find soccer_object_localization)/config/$(arg param_file_name).yaml" command="load" />-->
+<!--        </node>-->
+<!--        <node name="object_detector" pkg="soccer_object_detection" type="object_detect_node.py" output="screen" args="&#45;&#45;model $(find soccer_object_detection)/models/half_5.pt">-->
+<!--            <rosparam file="$(find soccer_object_detection)/config/$(arg param_file_name).yaml" command="load" />-->
+<!--        </node>-->
 
         <!-- Motor Drivers -->
 
@@ -52,9 +52,9 @@
 <!--            <remap from="imu/data_raw" to="imu_raw" />-->
 <!--            <remap from="imu/data" to="imu_filtered" />-->
 <!--        </node>-->
-<!--        <param name="motor_mapping" value="$(find soccer_firmware_interface)/config/$(arg robot_model).yaml" />-->
-<!--        <param name="motor_types" value="$(find soccer_firmware_interface)/config/motor_types.yaml" />-->
-<!--        <node name="firmware_interface" pkg="soccer_firmware_interface" type="main.py" output="screen" unless="$(eval robot_model == 'bez1')" />-->
+        <param name="motor_mapping" value="$(find soccer_firmware_interface)/config/$(arg robot_model).yaml" />
+        <param name="motor_types" value="$(find soccer_firmware_interface)/config/motor_types.yaml" />
+        <node name="firmware_interface" pkg="soccer_firmware_interface" type="main.py" output="screen" unless="$(eval robot_model == 'bez1')" />
     </group>
 <!--    <include file="$(find soccer_hardware)/launch/soccer_hardware.launch" if="$(eval robot_model == 'bez1')" />-->
 <!--        <node pkg="imu_complementary_filter" type="complementary_filter_node" name="imu_complementary_filter" output="log">-->
