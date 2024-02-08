@@ -8,8 +8,11 @@
 #include "stm32f4xx_hal.h"
 
 void update(void);
+void update_imu(void);
+void update_imu(void);
 void command_motors(void);
 void read_imu(uint8_t *rxBuf);
+void read_imu_only(uint8_t *rxBuf);
 void read_motors(uint8_t *rxBuf);
 
 

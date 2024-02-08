@@ -11,6 +11,7 @@
 #include "main.h"
 #include "usbd_cdc_if.h"
 #include "MPU6050.h"
+#include "bringup_tests.h"
 
 #define UPDATE_PERIOD 3 // milliseconds
 
@@ -42,14 +43,14 @@ void update()
     	  continue;
       }
 
-      command_motors();
+      //command_motors();
       usb_received = false;
-
       HAL_GPIO_TogglePin(GPIOA, GREEN_LED_Pin);
     }
 
   }
 }
+
 
 /*
  * Send commands in parallel on all ports to reduce latency
@@ -109,6 +110,7 @@ void read_imu(uint8_t *rxBuf) {
     rxBuf[2 + 18 * 2 + 6 + i] = gyrBuff[i];
   }
 }
+
 
 void read_motors(uint8_t *rxBuf) {
   for (uint16_t i = 0; i < 6; i++) {// reset variables
@@ -185,5 +187,48 @@ void read_motors(uint8_t *rxBuf) {
     }
 
     if(numMotorsReceived == numMotorsRequested) return; // all motors serviced, peace out
+  }
+}
+
+
+
+// ---------------- Testing these functions  ------------------------
+void read_imu_only(uint8_t *rxBuf) {
+  uint8_t gyrBuff[6] = {0};
+//  Read_Gyroscope(gyrBuff);
+  Read_Gyroscope(gyrBuff);
+  HAL_Delay(1); // wait some time before sending next request
+
+  uint8_t accBuff[6] = {0};
+  Read_Accelerometer(accBuff);
+
+  for(uint8_t i = 0; i < 6; i++) {
+    rxBuf[i] = accBuff[i];
+  }
+
+  for(uint8_t i = 0; i < 6; i++) {
+    rxBuf[6 + i] = gyrBuff[i];
+  }
+}
+
+void update_imu()
+{
+  uint8_t txBuf[6 + 6] = {0}; // 6 bytes accelerometer, 6 bytes gyro for IMU
+  uint32_t lastTime = HAL_GetTick();
+  while(1)
+  {
+	if(HAL_GetTick() - lastTime > UPDATE_PERIOD) // send IMU/ANGLES periodically back to main computer
+	{
+	  lastTime = HAL_GetTick();
+	  printf("before read_imu_only(txBuf) \n");
+	  // get current linear Acceleration and Rotational speed
+	  read_imu_only(txBuf);
+	  printf("after read_imu_only(txBuf) \n");
+
+	  CDC_Transmit_FS((uint8_t *) txBuf, sizeof(txBuf));
+	  printf("after CDC_Transmit_FS(txBuf) \n");
+	}
+	printf("waiting for UPDATE_PERIOD to finish... \n");
+	HAL_Delay(1);
   }
 }

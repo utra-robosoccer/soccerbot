@@ -17,14 +17,12 @@
   */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
-
 #include "main.h"
-#include "usb_device.h"
-#include "dynamixel_p1.h"
-#include "dynamixel_p2.h"
 #include "MPU6050.h"
 #include "update_loop.h"
-#include "bringup_tests.h"
+#include "dynamixel_p1.h"
+#include "dynamixel_p2.h"
+#include "usb_device.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -199,6 +197,7 @@ void init_motors() {
 
 
 
+
   // TODO: set PIDs
 
   // TODO: response latency
@@ -206,6 +205,16 @@ void init_motors() {
   // TODO: zero motors
   // slowly bring motors to zero position
   }
+}
+
+int _write(int le, char *ptr, int len) {
+	int dataIdx;
+
+	for (dataIdx = 0; dataIdx < len; dataIdx++) {
+		ITM_SendChar(*ptr++);
+	}
+	return len;
+
 }
 
 /* USER CODE END 0 */
@@ -253,15 +262,47 @@ int main(void)
 
   init_ports();
   MPU6050_init();
+
+  // ----------- Debug: Check if we can communicate to MPU6050 first -----
+//  uint8_t check1;
+//  uint8_t check2;
+//  uint8_t check3;
+//  // figuring out which is the correct MPU6050 address:
+//  HAL_StatusTypeDef ret1 = HAL_I2C_Mem_Read(&hi2c1, 0xD0,MPU6050_WHO_AM_I,1, &check1, 1, 1000);
+//  HAL_StatusTypeDef ret2 = HAL_I2C_Mem_Read(&hi2c1, 0x68,MPU6050_WHO_AM_I,1, &check2, 1, 1000);
+//  HAL_StatusTypeDef ret3 = HAL_I2C_Mem_Read(&hi2c1, 0x69,MPU6050_WHO_AM_I,1, &check3, 1, 1000);
+
+//  HAL_StatusTypeDef ret = HAL_I2C_IsDeviceReady(&hi2c1, MPU6050_ADDR, 1, 100);
+//  if (ret == HAL_OK) {
+//	  printf("I2C communication with MPU6050 is ready \n");
+//  } else {
+//	  printf("MPU6050 is not ready. Check cables, \n");
+//  }
+// ---------------------- Debug END -------------------------
+
   init_motors();
+  HAL_Delay(100);
+
+
 
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+
+//  uint8_t gyrBuff[6] = {0};
+//  gyro_selfTestIMU(gyrBuff);
+//  fp=fopen("mytest.txt", "w");
+
   while (1)
   {
+
+//	  printf("Hello World \n");
+//	  HAL_Delay(1000);
+//	  Read_IMU_all();
+//	  HAL_Delay(100);
     update();
+//    update_imu();
     // test Dynamixel 2.0
 //    test_led_p2(&port2, 0x6);
 //    test_motor_sweep2(&port2);
@@ -678,6 +719,27 @@ static void MX_GPIO_Init(void)
 /* USER CODE BEGIN 4 */
 
 /* USER CODE END 4 */
+
+/**
+  * @brief  Period elapsed callback in non blocking mode
+  * @note   This function is called  when TIM8 interrupt took place, inside
+  * HAL_TIM_IRQHandler(). It makes a direct call to HAL_IncTick() to increment
+  * a global variable "uwTick" used as application time base.
+  * @param  htim : TIM handle
+  * @retval None
+  */
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+  /* USER CODE BEGIN Callback 0 */
+
+  /* USER CODE END Callback 0 */
+  if (htim->Instance == TIM8) {
+    HAL_IncTick();
+  }
+  /* USER CODE BEGIN Callback 1 */
+
+  /* USER CODE END Callback 1 */
+}
 
 /**
   * @brief  This function is executed in case of error occurrence.

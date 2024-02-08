@@ -1,7 +1,8 @@
 #include "MPU6050.h"
 
 float g = 9.81;
-uint8_t IMU_GY_RANGE = 250; /**< divide by this to get degrees per second */
+//uint8_t IMU_GY_RANGE 250; /**< divide by this to get degrees per second */
+uint8_t IMU_GY_RANGE = 131;  //250.0f/32768.0f;
 float ACC_RANGE = 16384.0;
 
 #include <stdbool.h>
@@ -153,7 +154,8 @@ ImuStruct_t p_data;
 
 extern I2C_HandleTypeDef hi2c1;
 
-extern lpf;
+//extern lpf;
+////uint8_t lpf = 6;
 
 void MPU6050_init() {
 	imuSensor = (ImuSensor){
@@ -279,9 +281,13 @@ void Read_Gyroscope_IT(uint8_t *buff){
     int16_t vy = (int16_t)(output_buffer[2]<<8|output_buffer[3]);
     int16_t vz = (int16_t)(output_buffer[4]<<8|output_buffer[5]);
 
-    float m_vx = (float)(vx) / IMU_GY_RANGE;
-    float m_vy = (float)(vy) / IMU_GY_RANGE;
-    float m_vz = (float)(vz) / IMU_GY_RANGE;
+//    float m_vx = (float)(vx) / IMU_GY_RANGE;
+//    float m_vy = (float)(vy) / IMU_GY_RANGE;
+//    float m_vz = (float)(vz) / IMU_GY_RANGE;
+
+    imuSensor.m_vx = (float)(vx) / IMU_GY_RANGE;
+    imuSensor.m_vy = (float)(vy) / IMU_GY_RANGE;
+    imuSensor.m_vz = (float)(vz) / IMU_GY_RANGE;
 
     for(uint8_t i = 0; i < 6; i++)
     {
@@ -314,9 +320,13 @@ void Read_Accelerometer_IT(uint8_t *buff){
     int16_t ay = (int16_t)(output_buffer[2]<<8|output_buffer[3]);
     int16_t az  = (int16_t)(output_buffer[4]<<8|output_buffer[5]);
 
-    float m_ax = -(ax * g / ACC_RANGE);
-    float m_ay = -(ay * g / ACC_RANGE);
-    float m_az = -(az * g / ACC_RANGE);
+//    float m_ax = -(ax * g / ACC_RANGE);
+//    float m_ay = -(ay * g / ACC_RANGE);
+//    float m_az = -(az * g / ACC_RANGE);
+
+    imuSensor.m_ax = (ax * g / ACC_RANGE);
+    imuSensor.m_ay = (ay * g / ACC_RANGE);
+    imuSensor.m_az = (az * g / ACC_RANGE);
 
     for(uint8_t i = 0; i < 6; i++)
     {
@@ -333,4 +343,71 @@ void Fill_Struct(ImuStruct_t* p_data){
     p_data->y_Gyro = imuSensor.m_vy;
     p_data->z_Gyro = imuSensor.m_vz;
 }
+
+void Read_MPU6050_burst(uint8_t *buff){
+	// Ensure that we are sampling the gyrp and accel values at the same time
+	uint8_t output_buffer[14];
+	HAL_StatusTypeDef ret;
+	// Read 14 Bytes of data starting from ACCEL_XOUY_H register
+	ret = HAL_I2C_Mem_Read(imuSensor.m_i2c_handle, MPU6050_ADDR, MPU6050_RA_ACCEL_XOUT_H, 1, output_buffer, 14, 1000);
+
+	if (ret == HAL_OK) {
+		printf("Read_IMU_all() I2C read success! %d \n", ret);
+	} else {
+		printf("Read_IMU_all() I2C read failed! %d \n", ret);
+	};
+
+    int16_t ax_raw = (int16_t)(output_buffer[0]<<8 | output_buffer[1]);
+    int16_t ay_raw = (int16_t)(output_buffer[2]<<8 | output_buffer[3]);
+    int16_t az_raw = (int16_t)(output_buffer[4]<<8 | output_buffer[5]);
+
+//    int16_t temp = (int16_t)(output_buffer[6] << 8 | output_buffer[7]); // we don't really care about temperature
+
+	int16_t vx_raw = (int16_t)(output_buffer[8]<<8 | output_buffer[9]);
+    int16_t vy_raw = (int16_t)(output_buffer[10]<<8 | output_buffer[11]);
+    int16_t vz_raw = (int16_t)(output_buffer[12]<<8 | output_buffer[13]);
+
+    imuSensor.m_ax = -(ax_raw * g / ACC_RANGE);
+    imuSensor.m_ay = -(ay_raw * g / ACC_RANGE);
+    imuSensor.m_az = -(az_raw * g / ACC_RANGE);
+
+    imuSensor.m_vx = (float)(vx_raw) / IMU_GY_RANGE;
+    imuSensor.m_vy = (float)(vy_raw) / IMU_GY_RANGE;
+    imuSensor.m_vz = (float)(vz_raw) / IMU_GY_RANGE;
+
+    for(uint8_t i = 0; i < 6; i++)
+    {
+      buff[i] = output_buffer[i];
+    }
+
+    printf("ax_raw = %d | ay_raw = %d  |  az_raw = %d \n", ax_raw, ay_raw, az_raw);
+    printf("ax = %f     | ay  = %f     |  az = %f \n\n", imuSensor.m_ax , imuSensor.m_ay, imuSensor.m_az);
+
+    printf("vx_raw = %d | vy_raw = %d  |  vz_raw = %d \n", vx_raw, vy_raw, vz_raw);
+    printf("vx = %f     | vy  = %f     |  vz = %f \n", imuSensor.m_vx , imuSensor.m_vy, imuSensor.m_vz);
+}
+
+//void accel_selfTestIMU() {
+//
+//
+//}
+//
+//void gyro_selfTestIMU(uint8_t *buff) {
+//	//d'224 = 8'b1110 0000, writing 1's to self test x,y,z bits
+//	Write_Reg(MPU6050_RA_GYRO_CONFIG, 224);
+//
+//	Read_Gyroscope(buff);
+//
+//
+//}
+//
+//void selfTestIMU() {
+//	printf("---------- INFO: IMU SELF-TEST START ---------");
+////	accel_selfTestIMU();
+
+//
+//	printf("---------- INFO: IMU SELF-TEST COMPLETED ----------");
+//
+//}
+
 /********************************* MPU6050 end ***********************************/

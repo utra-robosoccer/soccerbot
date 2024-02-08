@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <math.h>
 #include "main.h"
 
 
@@ -14,6 +15,7 @@
 
 
 #define MPU6050_ADDR 0xD0
+#define MPU6050_WHO_AM_I 0x75
 #define MPU6050_RA_GYRO_CONFIG 0x1B
 #define MPU6050_RA_ACCEL_CONFIG 0x1C
 #define MPU6050_RA_I2C_MST_CTRL 0x24
@@ -26,8 +28,8 @@
 #define MPU6050_RA_PWR_MGMT_2 0x6C
 
 // Sample Rate DIV
-#define MPU6050_CLOCK_DIV_296 0x4
-
+//#define MPU6050_CLOCK_DIV_296 0x4 // <-- try changing this to 0x7
+#define MPU6050_CLOCK_DIV_296 0x7
 //---------------  Constants -------------
 extern float g;
 
@@ -135,3 +137,7 @@ uint8_t wait_for_gpio_state_timeout(
     GPIO_PinState state,
     uint8_t timeout
 );
+
+void gyro_selfTestIMU(uint8_t *buff) ;
+void selfTestIMU();
+void Read_MPU6050_burst(uint8_t *buff);

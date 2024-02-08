@@ -144,7 +144,7 @@ void test_motor_sweep2(MotorPort *port) {
   int16_t dir = 1;
 
 
-  motor_torque_en_p2(port, 0x1, 1);
+  motor_torque_en_p2(port, 0xa, 1);
   HAL_Delay(5);
 
 
@@ -160,7 +160,7 @@ void test_motor_sweep2(MotorPort *port) {
     if(count == 2) break; // end test
     angle %= 0xfff;
 
-    write_goal_position_p2(port, 0x1, angle);
+    write_goal_position_p2(port, 0xa, angle);
 
     HAL_Delay(3);
 	}
