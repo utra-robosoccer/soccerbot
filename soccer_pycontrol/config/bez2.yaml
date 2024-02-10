@@ -7,16 +7,16 @@ robot_model: bez2
 walking_torso_height: 0.37
 
 #: How many torso steps per second, approximately equivalent to foot steps per second
-steps_per_second_default: 2.65
+steps_per_second_default: 2
 
 #: How much distance is a torso step (equivalent to a half step)
-torso_step_length: 0.03
+torso_step_length: 0.02
 torso_step_length_short_backwards: 0.03
 torso_step_length_short_forwards: 0.03
 
 #: The seperation of the feet while walking
 # How much space between the feet along the path
-foot_separation: 0.0415
+foot_separation: 0.045
 
 #: The height of the step from the ground
 step_height: 0.03

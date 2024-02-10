@@ -32,13 +32,13 @@ class Trajectory:
         self.time_to_last_pose = 2  # seconds
         self.trajectory_path = trajectory_path
 
-        last_joint_state = JointState()
-        try:
-            last_joint_state = rospy.wait_for_message("joint_states", JointState, timeout=2)
-        except (ROSException, AttributeError) as ex:
-            rospy.logerr(ex)
-        except ValueError as ex:
-            print(ex)
+        # last_joint_state = JointState()
+        # try:
+        #     last_joint_state = rospy.wait_for_message("joint_states", JointState, timeout=2)
+        # except (ROSException, AttributeError) as ex:
+        #     rospy.logerr(ex)
+        # except ValueError as ex:
+        #     print(ex)
 
         with open(trajectory_path) as f:
             csv_traj = csv.reader(f)
@@ -48,17 +48,17 @@ class Trajectory:
                     continue
                 if joint_name == "time":
                     self.times = list(map(float, row[1:]))
-                    self.times = [0] + self.times #+ [self.times[-1] + self.time_to_last_pose]
+                    self.times = [0] + self.times + [self.times[-1] + self.time_to_last_pose]
                     self.max_time = self.times[-1]
                 else:
                     joint_values = list(map(float, row[1:]))
 
-                    # last_pose_value = float(rospy.get_param(f"motor_mapping/{joint_name}/initial_state"))
-                    last_pose_value = 0.0
+                    last_pose_value = float(rospy.get_param(f"motor_mapping/{joint_name}/initial_state"))
+                    # last_pose_value = 0.0
                     # if joint_name in last_joint_state.name:
                     #     last_pose_value = last_joint_state.position[last_joint_state.name.index(joint_name)]
 
-                    joint_values = [last_pose_value] + joint_values#  + [last_pose_value]
+                    joint_values = [last_pose_value] + joint_values + [last_pose_value]
                     self.splines[joint_name] = interp1d(self.times, joint_values)
 
     def get_setpoint(self, timestamp):
