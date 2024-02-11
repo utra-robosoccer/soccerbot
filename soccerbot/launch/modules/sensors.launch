@@ -12,20 +12,6 @@
 <!--        <include file="$(find soccerbot)/launch/modules/gui.launch" />-->
 <!--    </group>-->
     <!-- Localization bag -->
-    <node
-        pkg="rosbag"
-        type="record"
-        name="rosbag_bez2"
-        args="-O $(find soccerbot)/bags/bez1_back.bag
-        /robot1/imu_raw
-        /robot1/imu_filtered
-    "
-    />
-    <arg name="simulation" default="false" />
-
-
-    <arg name="param_file_name" value="$(arg robot_model)_sim" if="$(arg simulation)" />
-    <arg name="param_file_name" value="$(arg robot_model)" unless="$(arg simulation)" />
 
     <group unless="$(arg play_rosbag)">
 <!--        <node name="camera" pkg="usb_cam" type="usb_cam_node" output="screen" respawn="true" respawn_delay="30">-->

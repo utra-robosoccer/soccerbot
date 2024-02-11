@@ -553,6 +553,18 @@ class TestWalking:
 
         final_position = walker_real_robot.getPose()
         distance_offset = np.linalg.norm((final_position - goal_position.position)[0:2])
+
+    @pytest.mark.parametrize("walker_real_robot", ["bez2"], indirect=True)
+    def test_walk_orin_real_robot(self, walker_real_robot: NavigatorRos):
+        walker_real_robot.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
+        walker_real_robot.wait(200)
+        goal_position = Transformation([0.5, 0, 0], [0, 0, 0, 1])
+        walker_real_robot.setGoal(goal_position)
+        walk_success = walker_real_robot.run(single_trajectory=True)
+        assert walk_success
+
+        final_position = walker_real_robot.getPose()
+        distance_offset = np.linalg.norm((final_position - goal_position.position)[0:2])
     @pytest.mark.parametrize("walker", ["bez1"], indirect=True)
     def test_replay_simulation(self, walker: Navigator):
         def readLogFile(filename, verbose=True):

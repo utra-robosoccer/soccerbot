@@ -18,11 +18,11 @@ class TestTrajectory:
             "/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_strategy "
             "/robot1/soccer_pycontrol /robot1/soccer_trajectories'"
         )
+
         file_path = os.path.dirname(os.path.abspath(__file__))
         config_path = f"{file_path}/../../../{robot_model}_description/config/motor_mapping.yaml"
         set_rosparam_from_yaml_file(param_path=config_path)
         rospy.set_param("robot_model", robot_model)
-
         if "DISPLAY" not in os.environ:
             Trajectory.RATE = 10000
         c = TrajectoryManager()
