@@ -17,20 +17,6 @@ from soccer_strategy.strategy.utils import Utility
 from soccer_strategy.team import Team
 
 
-def create_tree():
-    root = py_trees.composites.Selector("Dummber BT", memory=False)
-
-    have_you_seen_the_ball = py_trees.composites.Selector("seen_ball", memory=False)
-    have_you_seen_the_ball.add_children()
-
-    # Base layer
-    root.add_children(Check_Robot_Status_Non_Idle)  # Check if the robot is in any idle state
-    root.add_children(Have_seen_ball)  # If we have seen ball
-    root.add_children(Have_not_seen_ball)  # If we have not seen the ball
-
-    return root
-
-
 class StrategyDummer(Strategy):
     """
     A More basic strategy, we are not even thnking that much
@@ -45,6 +31,21 @@ class StrategyDummer(Strategy):
         super().step_strategy(friendly_team, opponent_team, game_state)
 
         this_robot = self.get_current_robot(friendly_team)
-        tree = create_tree()
-
+        tree = self.create_tree(self, friendly_team, opponent_team, game_state, this_robot)
         tree.tick_once()
+
+    def create_tree(self, friendly_team: Team, opponent_team: Team, game_state: GameState, robot: Robot):
+        root = py_trees.composites.Sequence("Dummber BT", memory=False)
+
+        # Base layer
+        non_action_decider = py_trees.composites.Parallel("non_action_decider", policy=py_trees.common.ParallelPolicy.SuccessOnAll())
+        non_action_decider.add_children(Not_In_Action(self, robot=robot, time=self.time_of_end_of_action))
+        non_action_decider.add_children(Game_Status(self, game_state, robot=robot))
+
+        root.add_child(non_action_decider)
+        root.add_child(Seen_Ball_2sec(self, friendly_team))
+
+        # movement behaviors
+        movement_selector = py_trees.composites.Selector("movement_selector", memory=True)
+
+        return root
