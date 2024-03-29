@@ -11,7 +11,6 @@ from soccer_trajectories.soccer_trajectories import Trajectory, TrajectoryManage
 
 
 class TestTrajectory:
-
     def run_real_trajectory(self, robot_model: str, trajectory_name: str, real_time: bool):
         rospy.init_node("test")
         os.system(
@@ -23,8 +22,8 @@ class TestTrajectory:
         config_path = f"{file_path}/../../../{robot_model}_description/config/motor_mapping.yaml"
         set_rosparam_from_yaml_file(param_path=config_path)
         rospy.set_param("robot_model", robot_model)
-        if "DISPLAY" not in os.environ:
-            Trajectory.RATE = 10000
+        # if "DISPLAY" not in os.environ:
+        #     Trajectory.RATE = 10000
         c = TrajectoryManager()
         rospy.init_node("test")
         msg = FixedTrajectoryCommand()
@@ -45,10 +44,8 @@ class TestTrajectory:
     def test_getupfront_trajectories(self, robot_model: str, trajectory_name: str, real_time: bool):
         self.run_real_trajectory(robot_model, trajectory_name, real_time)
 
-
     @pytest.mark.parametrize("robot_model", ["bez2"])
     @pytest.mark.parametrize("trajectory_name", ["fix_angle_test"])
     @pytest.mark.parametrize("real_time", [True])
     def test_all_trajectories(self, robot_model: str, trajectory_name: str, real_time: bool):
         self.run_real_trajectory(robot_model, trajectory_name, real_time)
-

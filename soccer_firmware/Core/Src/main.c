@@ -18,6 +18,12 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+
+#include "bringup_tests.h"
+#include "dynamixel_p1.h"
+#include "dynamixel_p2.h"
+#include "MPU6050.h"
+#include "update_loop.h"
 #include "usb_device.h"
 
 /* Private includes ----------------------------------------------------------*/

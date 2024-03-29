@@ -28,8 +28,14 @@ https://github.com/utra-robosoccer/soccerbot/wiki
 
 https://github.com/utra-robosoccer/soccerbot/wiki/Onboarding
 
-
 #### Testing Motion on Robot
+
 ```bash
 roslaunch soccerbot sensors.launch __ns:=robot1
 ```
+
+pytest src/soccerbot/soccer_trajectories/src/soccer_trajectories/test_trajectory.py::TestTrajectory::test_fixed_angles_trajectories
+
+pytest src/soccerbot/soccer_trajectories/src/soccer_trajectories/test_trajectory.py::TestTrajectory::test_getupfront_trajectories
+
+pytest src/soccerbot/soccer_pycontrol/src/soccer_pycontrol/test_walking.py::TestWalking::test_walk_1_real_robot
