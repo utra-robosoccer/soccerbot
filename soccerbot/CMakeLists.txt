@@ -5,7 +5,6 @@ find_package(
     catkin
     REQUIRED
     soccer_common
-    soccer_webots
     soccer_msgs
     soccer_trajectories
     soccer_object_detection

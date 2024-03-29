@@ -20,16 +20,13 @@ class TrajectoryManager:
     def __init__(self):
         use_sim_time_prefix = "_sim" if rospy.get_param("use_sim_time", "false") == "true" else ""
         self.trajectory_path = (
-                rospy.get_param_cached(
-                    "~trajectory_path",
-                    os.path.join(os.path.dirname(__file__), "../../trajectories/") + rospy.get_param_cached(
-                        "robot_model", "bez1")
-                )
-                + use_sim_time_prefix
+            rospy.get_param_cached(
+                "~trajectory_path", os.path.join(os.path.dirname(__file__), "../../trajectories/") + rospy.get_param_cached("robot_model", "bez1")
+            )
+            + use_sim_time_prefix
         )
         self.trajectory: Optional[Trajectory] = None
-        self.command_subscriber = rospy.Subscriber("command", FixedTrajectoryCommand, self.command_callback,
-                                                   queue_size=1)
+        self.command_subscriber = rospy.Subscriber("command", FixedTrajectoryCommand, self.command_callback, queue_size=1)
         self.robot_state_subscriber = rospy.Subscriber("state", RobotState, self.robot_state_callback, queue_size=1)
         self.finish_trajectory_publisher = rospy.Publisher("action_complete", Empty, queue_size=1)
 
@@ -77,8 +74,7 @@ if __name__ == "__main__":
     r = rospy.Rate(100)
     while not rospy.is_shutdown():
         if trajectory_class.trajectory is not None:
-            rospy.loginfo(
-                "Running Trajectory: " + trajectory_class.trajectory.trajectory_path + f" {trajectory_class.trajectory.mirror}")
+            rospy.loginfo("Running Trajectory: " + trajectory_class.trajectory.trajectory_path + f" {trajectory_class.trajectory.mirror}")
             trajectory_class.run()
             rospy.loginfo("Finished Trajectory: " + trajectory_class.trajectory.trajectory_path)
             trajectory_class.finish_trajectory_publisher.publish()

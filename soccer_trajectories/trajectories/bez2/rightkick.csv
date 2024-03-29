@@ -1,6 +1,6 @@
 time,0.5,1.5,2,2.5,5,8,8.1,8.3
 left_leg_motor_0,0,0,0,0,0,0,0,0
-left_leg_motor_1,0.1,0.1,-0.15,-0.15,-0.25,-0.25,-0.25,-0.25
+left_leg_motor_1,0.1,0.1,-0.15,-0.15,-0.15,-0.15,-0.15,-0.15
 left_leg_motor_2,0.25,0.25,0.25,0.25,0.25,0.25,0.25,0.25
 left_leg_motor_3,-0.4,-0.4,-0.4,-0.4,-0.4,-0.4,-0.4,-0.4
 left_leg_motor_4,0.2,0.2,0.2,0.2,0.2,0.2,0.2,0.2
@@ -16,3 +16,5 @@ right_leg_motor_5,-0.1,-0.1,-0.1,-0.1,-0.2,-0.2,-0.2,-0.2
 right_arm_motor_0,0,0,0,0,1,1,-1,-1
 right_arm_motor_1,2,2,2,2,2,2,2,2
 comment,stance,x,lean to the side,x,lift leg up,x,kick,step to balance
+head_motor_0,0,0,0,0,0,0,0,0
+head_motor_1,0,0,0,0,0,0,0,0

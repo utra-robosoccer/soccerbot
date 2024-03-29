@@ -35,6 +35,5 @@ class TrajectoryManager:
 
 
 if __name__ == "__main__":
-    tm = TrajectoryManager(os.path.join(os.path.dirname(__file__), "../../trajectories/bez1_sim/getupfront.csv"),
-                           "bez1")
+    tm = TrajectoryManager(os.path.join(os.path.dirname(__file__), "../../trajectories/bez1_sim/getupfront.csv"), "bez1")
     tm.run()

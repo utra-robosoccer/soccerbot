@@ -110,11 +110,26 @@ if __name__ == "__main__":
     traj = Trajectory(os.path.join(os.path.dirname(__file__), "../../trajectories/bez1_sim/getupfront.csv"))
     #
     joint_state = JointState()
-    joint_state.name = ['right_leg_motor_0', 'left_leg_motor_0', 'right_leg_motor_1', 'left_leg_motor_1',
-                        'right_leg_motor_2', 'left_leg_motor_2', 'right_leg_motor_3', 'left_leg_motor_3',
-                        'right_leg_motor_4', 'left_leg_motor_4', 'right_leg_motor_5', 'left_leg_motor_5',
-                        'right_arm_motor_0', 'left_arm_motor_0', 'right_arm_motor_1', 'left_arm_motor_1',
-                        'head_motor_0', 'head_motor_1']
+    joint_state.name = [
+        "right_leg_motor_0",
+        "left_leg_motor_0",
+        "right_leg_motor_1",
+        "left_leg_motor_1",
+        "right_leg_motor_2",
+        "left_leg_motor_2",
+        "right_leg_motor_3",
+        "left_leg_motor_3",
+        "right_leg_motor_4",
+        "left_leg_motor_4",
+        "right_leg_motor_5",
+        "left_leg_motor_5",
+        "right_arm_motor_0",
+        "left_arm_motor_0",
+        "right_arm_motor_1",
+        "left_arm_motor_1",
+        "head_motor_0",
+        "head_motor_1",
+    ]
     joint_state.position = [0.0] * 18
 
     traj.read_trajectory(joint_state)
