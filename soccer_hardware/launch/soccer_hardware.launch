@@ -25,4 +25,14 @@
         <param name="output_frame" value="$(arg robot_name)/odom" />
         <param name="base_footprint_frame" value="$(arg robot_name)/base_footprint" />
     </node>
+
+    <node
+        pkg="rosbag"
+        type="record"
+        name="rosbag_bez1"
+        args="-O $(find soccerbot)/bags/bez1_back.bag
+        /robot1/imu_raw
+        /robot1/imu_filtered
+    "
+    />
 </launch>

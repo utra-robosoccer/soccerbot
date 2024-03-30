@@ -3,11 +3,6 @@ import csv
 import os
 from typing import List
 
-if "ROS_NAMESPACE" not in os.environ:
-    os.environ["ROS_NAMESPACE"] = "/robot1"
-
-import rospy
-from rospy import ROSException
 from scipy.interpolate import interp1d
 from sensor_msgs.msg import JointState
 
@@ -17,14 +12,13 @@ class Trajectory:
     Interpolates a CSV trajectory for multiple joints.
     """
 
-    RATE = 100
-
     def __init__(self, trajectory_path: str, mirror=False):
-        """Initialize a Trajectory from a CSV file at trajectory_path.
+        """
+        Initialize a Trajectory from a CSV file at trajectory_path.
         if it's getup trajectory append the desired final pose so the robot is ready for next action
-        expects rectangular shape for csv table"""
+        expects rectangular shape for csv table
+        """
 
-        self.terminate = False
         self.mirror = mirror
         self.splines = {}
         self.time_to_last_pose = 2  # seconds
@@ -34,15 +28,6 @@ class Trajectory:
         #
         # TODO add unit testing
 
-    # def read_joint_state(self):
-    #     last_joint_state = JointState()
-    #     try:
-    #         last_joint_state = rospy.wait_for_message("joint_states", JointState, timeout=2)
-    #     except (ROSException, AttributeError) as ex:
-    #         rospy.logerr(ex)
-    #     except ValueError as ex:
-    #         print(ex)
-    #     return
     def read_trajectory(self, init_joint_state: JointState) -> None:
         with open(self.trajectory_path) as f:
             csv_traj = csv.reader(f)
@@ -79,13 +64,10 @@ class Trajectory:
     def create_joint_states(self, timestamp: float) -> JointState:
         js = JointState()
         for joint, setpoint in self.get_setpoint(timestamp).items():
+            joint = self.joint_mirror(joint)
 
-            if self.mirror:
-                if "left" in joint:
-                    joint = joint.replace("left", "right")
-                elif "right" in joint:
-                    joint = joint.replace("right", "left")
             js.name.append(joint)
+
             js.position.append(float(setpoint))
         return js
 
@@ -94,16 +76,21 @@ class Trajectory:
         for index, name in enumerate(motor_name):
             for joint, setpoint in self.get_setpoint(timestamp).items():
 
-                if self.mirror:
-                    if "left" in joint:
-                        joint = joint.replace("left", "right")
-                    elif "right" in joint:
-                        joint = joint.replace("right", "left")
+                joint = self.joint_mirror(joint)
 
                 if joint == name:
                     states[index] = float(setpoint)
                     break
         return states
+
+    def joint_mirror(self, joint: str) -> str:
+        if self.mirror:
+            if "left" in joint:
+                joint = joint.replace("left", "right")
+            elif "right" in joint:
+                joint = joint.replace("right", "left")
+
+        return joint
 
 
 if __name__ == "__main__":
