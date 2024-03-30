@@ -22,7 +22,6 @@ from soccer_msgs.msg import FixedTrajectoryCommand
 
 
 class TestTrajectory(TestCase):
-
     def setup(self) -> None:
         super().setUpClass()
 
@@ -58,7 +57,10 @@ class TestTrajectory(TestCase):
 
         traj.read_trajectory(joint_state)
 
-        self.assertEqual(traj.create_joint_states(traj.max_time).position, [0.0, 0.0, 0.0, 0.0, 0.564, 0.564, -1.176, -1.176, 0.613, 0.613, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+        self.assertEqual(
+            traj.create_joint_states(traj.max_time).position,
+            [0.0, 0.0, 0.0, 0.0, 0.564, 0.564, -1.176, -1.176, 0.613, 0.613, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        )
 
     def test_pybullet(self):
         """
@@ -76,8 +78,7 @@ class TestTrajectory(TestCase):
         :return: None
         """
         time.sleep(1)
-        tm = TrajectoryManager(os.path.join(os.path.dirname(__file__), "../trajectories/bez1_sim/getupfront.csv"),
-                               "bez1")
+        tm = TrajectoryManager(os.path.join(os.path.dirname(__file__), "../trajectories/bez1_sim/getupfront.csv"), "bez1")
         tm.run()
         assert True
         # TODO add more testing from pybullet so like the height will reach a threshold and it doesnt fall over for

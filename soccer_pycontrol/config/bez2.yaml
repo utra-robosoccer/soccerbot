@@ -88,7 +88,6 @@ head_rotation_yaw_range: 0.15
 head_pitch_freq: 0.01
 head_yaw_freq: 0.01
 
-
 # TODO Needs description
 calibration_trans_a: -0.020357517843533346
 calibration_trans_b: 0.6492919423070727

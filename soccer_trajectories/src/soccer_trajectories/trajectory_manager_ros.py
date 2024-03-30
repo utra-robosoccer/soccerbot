@@ -26,11 +26,10 @@ class TrajectoryManagerRos(TrajectoryManager):
         use_sim_time_prefix = "_sim" if rospy.get_param("use_sim_time", "false") == "true" else ""
         # TODO fix
         self.trajectory_path = (
-                rospy.get_param_cached(
-                    "~trajectory_path", os.path.join(os.path.dirname(__file__), "../../trajectories/") +
-                                        rospy.get_param_cached("robot_model", "bez1")
-                )
-                + use_sim_time_prefix
+            rospy.get_param_cached(
+                "~trajectory_path", os.path.join(os.path.dirname(__file__), "../../trajectories/") + rospy.get_param_cached("robot_model", "bez1")
+            )
+            + use_sim_time_prefix
         )
         # TODO fix later
         self.trajectory: Optional[Trajectory] = None
@@ -38,8 +37,7 @@ class TrajectoryManagerRos(TrajectoryManager):
 
         self.rate = rospy.Rate(100)
 
-        self.command_subscriber = rospy.Subscriber("command", FixedTrajectoryCommand, self.command_callback,
-                                                   queue_size=1)
+        self.command_subscriber = rospy.Subscriber("command", FixedTrajectoryCommand, self.command_callback, queue_size=1)
         self.robot_state_subscriber = rospy.Subscriber("state", RobotState, self.robot_state_callback, queue_size=1)
 
         self.pub_all_motor = rospy.Publisher("joint_command", JointState, queue_size=2)
@@ -62,8 +60,7 @@ class TrajectoryManagerRos(TrajectoryManager):
             rospy.logerr(f"Trajectory doesn't exist in path {path}")
             return
 
-        rospy.loginfo(
-            "Running Trajectory: " + trajectory_class.trajectory.trajectory_path + f" {trajectory_class.trajectory.mirror}")
+        rospy.loginfo("Running Trajectory: " + trajectory_class.trajectory.trajectory_path + f" {trajectory_class.trajectory.mirror}")
         # TODO Clean up more
         self.trajectory = Trajectory(path, command.mirror)
         self.trajectory.read_trajectory(self.read_joint_state())

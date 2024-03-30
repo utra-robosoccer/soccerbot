@@ -65,8 +65,7 @@ class TestObjectDetection(TestCase):
         cvbridge = CvBridge()
         for file_name in os.listdir(f"{test_path}/images"):
             print(file_name)
-            img: Mat = cv2.imread(
-                os.path.join(f"{test_path}/images", file_name))  # ground truth box = (68, 89) (257, 275)
+            img: Mat = cv2.imread(os.path.join(f"{test_path}/images", file_name))  # ground truth box = (68, 89) (257, 275)
             img_original_size = img.size
             img = cv2.resize(img, dsize=(640, 480))
 
@@ -99,8 +98,7 @@ class TestObjectDetection(TestCase):
             # Check assertion
             if n.pub_boundingbox.publish.call_args is not None:
                 for bounding_box in n.pub_boundingbox.publish.call_args[0][0].bounding_boxes:
-                    if bounding_box.probability >= n.CONFIDENCE_THRESHOLD and int(bounding_box.Class) in [
-                        Label.BALL.value, Label.ROBOT.value]:
+                    if bounding_box.probability >= n.CONFIDENCE_THRESHOLD and int(bounding_box.Class) in [Label.BALL.value, Label.ROBOT.value]:
                         bounding_boxes = [
                             bounding_box.xmin,
                             bounding_box.ymin,
@@ -131,8 +129,7 @@ class TestObjectDetection(TestCase):
                                 best_iou = iou
                                 best_dimensions = ground_truth_boxes
 
-                        self.assertGreater(best_iou, 0.05,
-                                           f"bounding boxes are off by too much! Image= {file_name} Best IOU={best_iou}")
+                        self.assertGreater(best_iou, 0.05, f"bounding boxes are off by too much! Image= {file_name} Best IOU={best_iou}")
                         if best_iou < 0.5:
                             rospy.logwarn(f"bounding boxes lower than 0.5 Image= {file_name} Best IOU={best_iou}")
 
@@ -202,8 +199,7 @@ class TestObjectDetection(TestCase):
             # Check assertion
             if n.pub_boundingbox.publish.call_args is not None:
                 for bounding_box in n.pub_boundingbox.publish.call_args[0][0].bounding_boxes:
-                    if bounding_box.probability >= n.CONFIDENCE_THRESHOLD and int(bounding_box.Class) in [
-                        Label.BALL.value, Label.ROBOT.value]:
+                    if bounding_box.probability >= n.CONFIDENCE_THRESHOLD and int(bounding_box.Class) in [Label.BALL.value, Label.ROBOT.value]:
                         bounding_boxes = [
                             bounding_box.xmin,
                             bounding_box.ymin,
@@ -331,8 +327,7 @@ class TestObjectDetection(TestCase):
                         elif not a["in_image"]:
                             if not_in_image:
                                 cv2.putText(
-                                    img, f"{a['type']} not in image", (0, y), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255),
-                                    int(text_thickness / 2)
+                                    img, f"{a['type']} not in image", (0, y), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), int(text_thickness / 2)
                                 )
                                 y += 20
                         else:
@@ -355,8 +350,7 @@ class TestObjectDetection(TestCase):
 
                             if a["type"] == "obstacle" and not show_obstacles:
                                 pass
-                            elif a["type"] == "robot" or a["type"] == "ball" or a[
-                                "type"] == "obstacle":  # bounding boxes
+                            elif a["type"] == "robot" or a["type"] == "ball" or a["type"] == "obstacle":  # bounding boxes
                                 x_start = int(a["vector"][0][0])
                                 x_stop = int(a["vector"][1][0])
                                 y_start = int(a["vector"][0][1])
@@ -371,8 +365,7 @@ class TestObjectDetection(TestCase):
                                 contours[3][0] = x_stop
                                 contours[3][1] = y_start
                                 cv2.drawContours(img, [contours], -1, color, line_thickness)
-                            elif a["type"] == "goalpost" or a["type"] == "left_goalpost" or a[
-                                "type"] == "right_goalpost" or a["type"] == "crossbar":
+                            elif a["type"] == "goalpost" or a["type"] == "left_goalpost" or a["type"] == "right_goalpost" or a["type"] == "crossbar":
                                 contours = np.ndarray((4, 2), dtype=int)
                                 contours[0][0] = int(a["vector"][0][0])
                                 contours[0][1] = int(a["vector"][0][1])
@@ -405,8 +398,7 @@ class TestObjectDetection(TestCase):
                                 cv2.putText(
                                     img,
                                     txt,
-                                    (int(a["vector"][0][0] - (txt_size[0][0] / 2)),
-                                     int(a["vector"][0][1] + (txt_size[0][1] / 2))),
+                                    (int(a["vector"][0][0] - (txt_size[0][0] / 2)), int(a["vector"][0][1] + (txt_size[0][1] / 2))),
                                     cv2.FONT_HERSHEY_SIMPLEX,
                                     1,
                                     (0, 0, 0),

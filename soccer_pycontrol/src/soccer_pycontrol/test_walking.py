@@ -136,8 +136,6 @@ class TestWalking:
         distance_offset = np.linalg.norm((final_position - goal_position.position)[0:2])
         print(f"Final distance offset {distance_offset}")
 
-
-
     @pytest.mark.timeout(30)
     @pytest.mark.flaky(reruns=1)
     @pytest.mark.parametrize("walker", ["bez1"], indirect=True)

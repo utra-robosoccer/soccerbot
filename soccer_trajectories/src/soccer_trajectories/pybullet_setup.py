@@ -29,8 +29,7 @@ class PybulletSetup:
         else:
             self.client_id = pb.connect(pb.DIRECT)
         pb.setAdditionalSearchPath(pybullet_data.getDataPath())  # optionally
-        pb.resetDebugVisualizerCamera(cameraDistance=1.0, cameraYaw=90, cameraPitch=0,
-                                      cameraTargetPosition=[0, 0, 0.25])
+        pb.resetDebugVisualizerCamera(cameraDistance=1.0, cameraYaw=90, cameraPitch=0, cameraTargetPosition=[0, 0, 0.25])
         pb.setGravity(0, 0, -9.81)
         pb.configureDebugVisualizer(pb.COV_ENABLE_GUI, 0)
 
@@ -40,11 +39,10 @@ class PybulletSetup:
             useFixedBase=False,
             flags=pb.URDF_USE_INERTIA_FROM_FILE | (pb.URDF_MERGE_FIXED_LINKS if False else 0),
             basePosition=[0, 0, 0.070],
-            baseOrientation=[0.0,  0.707, 0.0,  0.707],
+            baseOrientation=[0.0, 0.707, 0.0, 0.707],
         )
 
-        self.ramp = Ramp("plane.urdf", (0, 0, 0), (0, 0, 0), lateralFriction=0.9, spinningFriction=0.9,
-                         rollingFriction=0.0)
+        self.ramp = Ramp("plane.urdf", (0, 0, 0), (0, 0, 0), lateralFriction=0.9, spinningFriction=0.9, rollingFriction=0.0)
 
         self.motor_names = [pb.getJointInfo(self.body, i)[1].decode("utf-8") for i in range(18)]
         self.t = 0
