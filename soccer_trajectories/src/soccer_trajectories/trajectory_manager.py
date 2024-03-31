@@ -1,45 +1,35 @@
 #!/usr/bin/env python3
-import os
+from abc import ABC, abstractmethod
 
 from sensor_msgs.msg import JointState
 
-from soccer_trajectories.pybullet_setup import PybulletSetup
 from soccer_trajectories.trajectory import Trajectory
 
 
-class TrajectoryManager:
+class TrajectoryManager(ABC):
     """
     Interfaces with trajectory and sends to pybullet
     """
 
-    def __init__(self, trajectory_path: str, robot_model: str, mirror=False, real_time=False):
-        # TODO add something to set the start pose and orientation for different trajectories
-        self.sim = PybulletSetup(real_time=real_time, robot_model=robot_model)
-
+    def __init__(self, trajectory_path: str, mirror: bool = False):
         self.trajectory_path = trajectory_path
+        self.trajectory = Trajectory(trajectory_path, mirror=mirror)
 
-        self.trajectory = Trajectory(self.trajectory_path, mirror)
-        joint_state = JointState(name=self.sim.motor_names, position=[0.0] * 18)
+    def process_trajectory(self, path: str, mirror: bool):
+        self.trajectory.trajectory_path = path
+        self.trajectory.mirror = mirror
+        self.trajectory.reset()
 
-        self.trajectory.read_trajectory(joint_state)
+        self.trajectory.read_trajectory(self.read_joint_state())
 
-    def run(self, real_time=True):
-        t = 0
-        while t <= self.trajectory.max_time:
-            try:
-                states = self.trajectory.create_pybullet_states(t, self.sim.motor_names)
+    @abstractmethod
+    def read_joint_state(self) -> JointState:
+        pass
 
-                self.sim.motor_control(states)
-            except Exception as ex:
-                print(ex)
-                exit(0)
-            t += 0.01
+    @abstractmethod
+    def send_trajectory(self) -> None:
+        pass
 
-            self.sim.step()
-
-        self.sim.close()
-
-
-if __name__ == "__main__":
-    tm = TrajectoryManager(os.path.join(os.path.dirname(__file__), "../../trajectories/bez1_sim/getupfront.csv"), "bez1")
-    tm.run()
+    @abstractmethod
+    def send_joint_msg(self, timestamp: float) -> None:
+        pass

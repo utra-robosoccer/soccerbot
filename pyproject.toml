@@ -33,11 +33,8 @@ warn_unused_configs = true
 ignore_missing_imports = true
 check_untyped_defs = true
 exclude = "cmake-build-debug|setup.py|external"
-
-# Per-module options:
-[[tool.mypy.overrides]]
-module = "soccer_msgs.*"
 disable_error_code = "attr-defined"
+
 
 [tool.coverage.run]
 branch = true

@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 import csv
-import os
-from typing import List
+from typing import List, Tuple
 
 from scipy.interpolate import interp1d
 from sensor_msgs.msg import JointState
@@ -20,13 +19,11 @@ class Trajectory:
         """
 
         self.mirror = mirror
-        self.splines = {}
+        self.splines: dict = {}
         self.time_to_last_pose = 2  # seconds
 
         self.trajectory_path = trajectory_path
-        self.max_time = 0
-        #
-        # TODO add unit testing
+        self.max_time: float = 0
 
     def read_trajectory(self, init_joint_state: JointState) -> None:
         with open(self.trajectory_path) as f:
@@ -54,71 +51,31 @@ class Trajectory:
                     joint_values = [init_pose_value] + joint_values  # + [last_pose_value]
                     self.splines[joint_name] = interp1d(times, joint_values)
 
-    def get_setpoint(self, timestamp: float) -> dict:
+    def get_set_point(self, timestamp: float) -> dict:
         """Get the position of each joint at timestamp.
         If timestamp < 0 or timestamp > self.total_time this will throw a ValueError.
         """
         _timestamp = round(timestamp * 100) / 100
         return {joint: spline(_timestamp) for joint, spline in self.splines.items()}
 
-    def create_joint_states(self, timestamp: float) -> JointState:
-        js = JointState()
-        for joint, setpoint in self.get_setpoint(timestamp).items():
-            joint = self.joint_mirror(joint)
+    def create_joint_states(self, timestamp: float) -> Tuple[List[str], List[float]]:
 
-            js.name.append(joint)
+        joints = list(self.get_set_point(timestamp).keys())
+        joints = self.joint_mirror(joints)
+        angles = list(map(float, self.get_set_point(timestamp).values()))
 
-            js.position.append(float(setpoint))
-        return js
+        return joints, angles
 
-    def create_pybullet_states(self, timestamp: float, motor_name: List[str]) -> List[float]:
-        states = [0.0] * 18
-        for index, name in enumerate(motor_name):
-            for joint, setpoint in self.get_setpoint(timestamp).items():
-
-                joint = self.joint_mirror(joint)
-
-                if joint == name:
-                    states[index] = float(setpoint)
-                    break
-        return states
-
-    def joint_mirror(self, joint: str) -> str:
+    def joint_mirror(self, joints: List[str]) -> List[str]:
         if self.mirror:
-            if "left" in joint:
-                joint = joint.replace("left", "right")
-            elif "right" in joint:
-                joint = joint.replace("right", "left")
+            for i, joint in enumerate(joints):
+                if "left" in joint:
+                    joints[i] = joint.replace("left", "right")
+                elif "right" in joint:
+                    joints[i] = joint.replace("right", "left")
 
-        return joint
+        return joints
 
-
-if __name__ == "__main__":
-    traj = Trajectory(os.path.join(os.path.dirname(__file__), "../../trajectories/bez1_sim/getupfront.csv"))
-    #
-    joint_state = JointState()
-    joint_state.name = [
-        "right_leg_motor_0",
-        "left_leg_motor_0",
-        "right_leg_motor_1",
-        "left_leg_motor_1",
-        "right_leg_motor_2",
-        "left_leg_motor_2",
-        "right_leg_motor_3",
-        "left_leg_motor_3",
-        "right_leg_motor_4",
-        "left_leg_motor_4",
-        "right_leg_motor_5",
-        "left_leg_motor_5",
-        "right_arm_motor_0",
-        "left_arm_motor_0",
-        "right_arm_motor_1",
-        "left_arm_motor_1",
-        "head_motor_0",
-        "head_motor_1",
-    ]
-    joint_state.position = [0.0] * 18
-
-    traj.read_trajectory(joint_state)
-
-    print(traj.create_joint_states(traj.max_time).position)
+    def reset(self):
+        self.splines = {}
+        self.max_time = 0

@@ -4,6 +4,7 @@ from os.path import expanduser
 import pybullet as pb
 import pybullet_data
 
+from soccer_common import Transformation
 from soccer_pycontrol.ramp import Ramp
 
 
@@ -12,7 +13,7 @@ class PybulletSetup:
     Sets up pybullet simulation for basic usage
     """
 
-    def __init__(self, real_time=False, display=True, robot_model: str = "bez1", rate: int = 100):
+    def __init__(self, pose: Transformation = Transformation(), robot_model: str = "bez1", real_time=False, rate: int = 100, display=True):
         """
         Initialize the Navigator
 
@@ -21,13 +22,14 @@ class PybulletSetup:
         """
         self.rate = rate
         self.display = display
-        # TODO fix real_time
         self.real_time = real_time
+
         assert pb.isConnected() == 0
         if display:
             self.client_id = pb.connect(pb.GUI)
         else:
             self.client_id = pb.connect(pb.DIRECT)
+
         pb.setAdditionalSearchPath(pybullet_data.getDataPath())  # optionally
         pb.resetDebugVisualizerCamera(cameraDistance=1.0, cameraYaw=90, cameraPitch=0, cameraTargetPosition=[0, 0, 0.25])
         pb.setGravity(0, 0, -9.81)
@@ -38,8 +40,8 @@ class PybulletSetup:
             home + f"/catkin_ws/src/soccerbot/{robot_model}_description/urdf/{robot_model}.urdf",
             useFixedBase=False,
             flags=pb.URDF_USE_INERTIA_FROM_FILE | (pb.URDF_MERGE_FIXED_LINKS if False else 0),
-            basePosition=[0, 0, 0.070],
-            baseOrientation=[0.0, 0.707, 0.0, 0.707],
+            basePosition=pose.position,
+            baseOrientation=pose.quaternion,
         )
 
         self.ramp = Ramp("plane.urdf", (0, 0, 0), (0, 0, 0), lateralFriction=0.9, spinningFriction=0.9, rollingFriction=0.0)

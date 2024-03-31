@@ -1,14 +1,12 @@
 import os
-import time
 import unittest
-from unittest import TestCase
 
 from sensor_msgs.msg import JointState
 
-from soccer_trajectories.pybullet_setup import PybulletSetup
+from soccer_common import Transformation
 from soccer_trajectories.trajectory import Trajectory
-from soccer_trajectories.trajectory_manager import TrajectoryManager
 from soccer_trajectories.trajectory_manager_ros import TrajectoryManagerRos
+from soccer_trajectories.trajectory_manager_sim import TrajectoryManagerSim
 
 os.environ["ROS_NAMESPACE"] = "/robot1"
 
@@ -21,10 +19,7 @@ from soccer_common.utils_rosparam import set_rosparam_from_yaml_file
 from soccer_msgs.msg import FixedTrajectoryCommand
 
 
-class TestTrajectory(TestCase):
-    def setup(self) -> None:
-        super().setUpClass()
-
+class TestTrajectory(unittest.TestCase):
     def test_trajectory(self):
         """
         Case 1: Standard case
@@ -56,62 +51,64 @@ class TestTrajectory(TestCase):
         joint_state.position = [0.0] * 18
 
         traj.read_trajectory(joint_state)
+        _, angles = traj.create_joint_states(traj.max_time)
+        self.assertEqual(angles, [0.0, 0.0, 0.0, 0.0, 0.564, 0.564, -1.176, -1.176, 0.613, 0.613, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
 
-        self.assertEqual(
-            traj.create_joint_states(traj.max_time).position,
-            [0.0, 0.0, 0.0, 0.0, 0.564, 0.564, -1.176, -1.176, 0.613, 0.613, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
-        )
 
-    def test_pybullet(self):
-        """
-        Case 1: Standard case
-        :return: None
-        """
-        p = PybulletSetup(robot_model="bez2")
-        p.wait(1)
-        p.close()
-        assert True
+@pytest.mark.parametrize("trajectory_name", ["getupfront", "getupback", "rightkick"])
+@pytest.mark.parametrize("robot_model", ["bez1", "bez2"])
+@pytest.mark.parametrize("real_time", [False])
+def test_trajectory_sim(trajectory_name: str, robot_model: str, real_time: bool):
+    """
+    Case 1: Standard case
+    :return: None
+    """
+    if trajectory_name == "getupfront":
+        pose = Transformation(position=[0, 0, 0.070], quaternion=[0.0, 0.707, 0.0, 0.707])
+    elif trajectory_name == "getupback":
+        pose = Transformation(position=[0, 0, 0.070], quaternion=[0.0, 0.707, 0.0, -0.707])
+    else:
+        pose = Transformation(position=[0, 0, 0.315], quaternion=[0.0, 0.0, 0.0, 1])
 
-    def test_trajectory_manager(self):
-        """
-        Case 1: Standard case
-        :return: None
-        """
-        time.sleep(1)
-        tm = TrajectoryManager(os.path.join(os.path.dirname(__file__), "../trajectories/bez1_sim/getupfront.csv"), "bez1")
-        tm.run()
-        assert True
-        # TODO add more testing from pybullet so like the height will reach a threshold and it doesnt fall over for
-        #  some time
+    tm = TrajectoryManagerSim(
+        os.path.join(os.path.dirname(__file__), "../trajectories/bez1_sim/" + trajectory_name + ".csv"), pose, robot_model, real_time
+    )
+    tm.send_trajectory()
+    assert True
+    # TODO add more testing from pybullet so like the height will reach a threshold and it doesnt fall over for
+    #  some time also maybe split it per trajectory type
 
-    def run_real_trajectory(self, robot_model: str, trajectory_name: str, real_time: bool):
-        # TODO clean up
-        rospy.init_node("test")
-        os.system(
-            "/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_strategy "
-            "/robot1/soccer_pycontrol /robot1/soccer_trajectories'"
-        )
 
-        file_path = os.path.dirname(os.path.abspath(__file__))
-        config_path = f"{file_path}/../../../{robot_model}_description/config/motor_mapping.yaml"
-        set_rosparam_from_yaml_file(param_path=config_path)
-        rospy.set_param("robot_model", robot_model)
-        # if "DISPLAY" not in os.environ:
-        #     Trajectory.RATE = 10000
-        c = TrajectoryManagerRos()
-        rospy.init_node("test")
-        msg = FixedTrajectoryCommand()
-        msg.trajectory_name = trajectory_name
-        msg.mirror = False
-        joint_state = MagicMock()
-        joint_state.position = [0.0] * 18
-        rospy.wait_for_message = MagicMock(return_value=joint_state)
-        c.command_callback(command=msg)
-        c.run(real_time=real_time)
+def run_real_trajectory(robot_model: str, trajectory_name: str, real_time: bool):
+    # TODO clean up
+    rospy.init_node("test")
+    os.system(
+        "/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_strategy "
+        "/robot1/soccer_pycontrol /robot1/soccer_trajectories'"
+    )
 
-    @pytest.mark.parametrize("robot_model", ["bez1"])
-    @pytest.mark.parametrize("trajectory_name", ["getupfront"])
-    @pytest.mark.parametrize("real_time", [True])
-    @unittest.skip("Not integrated in CI")
-    def test_traj_ros(self, robot_model: str, trajectory_name: str, real_time: bool):
-        self.run_real_trajectory(robot_model, trajectory_name, real_time)
+    file_path = os.path.dirname(os.path.abspath(__file__))
+    config_path = f"{file_path}/../../../{robot_model}_description/config/motor_mapping.yaml"
+    set_rosparam_from_yaml_file(param_path=config_path)
+    rospy.set_param("robot_model", robot_model)
+
+    c = TrajectoryManagerRos()
+    rospy.init_node("test")
+    msg = FixedTrajectoryCommand()
+    msg.trajectory_name = trajectory_name
+    msg.mirror = False
+
+    joint_state = MagicMock()
+    joint_state.position = [0.0] * 18
+    rospy.wait_for_message = MagicMock(return_value=joint_state)
+
+    c.command_callback(command=msg)
+    c.send_trajectory(real_time=real_time)
+
+
+@pytest.mark.parametrize("robot_model", ["bez1"])
+@pytest.mark.parametrize("trajectory_name", ["getupfront"])
+@pytest.mark.parametrize("real_time", [True])
+@unittest.skip("Not integrated in CI")
+def test_traj_ros(robot_model: str, trajectory_name: str, real_time: bool):
+    run_real_trajectory(robot_model, trajectory_name, real_time)

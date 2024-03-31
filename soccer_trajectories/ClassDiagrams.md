@@ -8,10 +8,10 @@ classDiagram
     direction LR
 
 
-    TrajectoryManager *--|> Pybullet
-    TrajectoryManager *--|> Trajectory
-
-    TrajectoryManagerRos --|>  TrajectoryManager
+    TrajectoryManagerSim *--|> Pybullet
+    Trajectory <|--* TrajectoryManager
+    TrajectoryManager <|-- TrajectoryManagerSim
+    TrajectoryManager <|--  TrajectoryManagerRos
 
 
 ```
