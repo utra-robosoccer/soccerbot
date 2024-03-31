@@ -1,3 +1,0 @@
-<map id="Dynamixel_SetGoalVelocity" name="Dynamixel_SetGoalVelocity">
-<area shape="rect" id="node2" href="$d5/d08/group___dynamixel_protocol_v1_header.html#ga018df076095889475b42e8e21a26dc1e" title="Sets the control registers such that the rotational angle of the motor is not bounded. " alt="" coords="237,5,428,32"/>
-</map>

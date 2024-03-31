@@ -392,12 +392,14 @@ class IntegrationTestPlaying(IntegrationTest):
         from cv_bridge import CvBridge
         from sensor_msgs.msg import Image
 
-        if not os.path.exists("soccer_object_localization/images"):
-            os.makedirs("soccer_object_localization/images")
+        if not os.path.exists("soccer_perception/soccer_object_localization/images"):
+            os.makedirs("soccer_perception/soccer_object_localization/images")
 
         j = 0
         for file in [
-            f for f in os.listdir("soccer_object_localization/images") if os.path.isfile(os.path.join("soccer_object_localization/images", f))
+            f
+            for f in os.listdir("soccer_perception/soccer_object_localization/images")
+            if os.path.isfile(os.path.join("soccer_perception/soccer_object_localization/images", f))
         ]:
             if "border" in file:
                 continue
@@ -440,7 +442,7 @@ class IntegrationTestPlaying(IntegrationTest):
             self.camera.reset_position(from_world_frame=True, camera_frame="/camera_gt", timestamp=image_msg.header.stamp)
 
             if create_localization_labels:
-                filePath = f"soccer_object_localization/images/img{j}_{robot_x}_{robot_y}_{robot_theta}.png"
+                filePath = f"soccer_perception/soccer_object_localization/images/img{j}_{robot_x}_{robot_y}_{robot_theta}.png"
                 if os.path.exists(filePath):
                     os.remove(filePath)
                 cv2.imwrite(filePath, image)
