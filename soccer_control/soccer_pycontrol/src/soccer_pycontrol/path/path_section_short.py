@@ -3,7 +3,7 @@ from copy import deepcopy
 
 import numpy as np
 import rospy
-from soccer_pycontrol.path_section import PathSection
+from soccer_pycontrol.path.path_section import PathSection
 
 from soccer_common.transformation import Transformation
 from soccer_common.utils import wrapToPi

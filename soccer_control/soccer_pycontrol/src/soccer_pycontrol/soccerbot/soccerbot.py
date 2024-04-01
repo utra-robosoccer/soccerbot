@@ -10,12 +10,12 @@ import pybullet as pb
 import rospy
 import scipy
 from rospy import ROSException
-from scipy.signal import butter, filtfilt, lfilter
+from scipy.signal import butter
 from sensor_msgs.msg import JointState
 from soccer_pycontrol.calibration import adjust_navigation_transform
 from soccer_pycontrol.joints import Joints
 from soccer_pycontrol.links import Links
-from soccer_pycontrol.path_robot import PathRobot
+from soccer_pycontrol.path.path_robot import PathRobot
 
 from soccer_common.pid import PID
 from soccer_common.transformation import Transformation
@@ -35,14 +35,16 @@ class Soccerbot:
         :param useFixedBase: Whether to fix the base_link in the air for movement testing
         :param useCalibration: Whether to use calibration for walking path calculations
         """
-
+        # TODO remove ros dependencies maybe a yaml file to read from
         #: Height of the robot's torso (center between two arms) while walking
         self.walking_torso_height = rospy.get_param("walking_torso_height", 0.315)
 
         #: Dimensions of the foot collision box #TODO get it from URDF
         self.foot_box = rospy.get_param("foot_box", [0.09, 0.07, 0.01474])
 
-        #: Transformations from the right foots joint position to the center of the collision box of the foot (https://docs.google.com/presentation/d/10DKYteySkw8dYXDMqL2Klby-Kq4FlJRnc4XUZyJcKsw/edit#slide=id.g163c1c67b73_0_0)
+        # : Transformations from the right foots joint position to the center of the collision box of the foot (
+        # https://docs.google.com/presentation/d/10DKYteySkw8dYXDMqL2Klby-Kq4FlJRnc4XUZyJcKsw/edit#slide=id
+        # .g163c1c67b73_0_0)
         self.right_foot_joint_center_to_collision_box_center = rospy.get_param(
             "right_foot_joint_center_to_collision_box_center", [0.00385, 0.00401, -0.00737]
         )
@@ -54,16 +56,20 @@ class Soccerbot:
         self.arm_1_center = rospy.get_param("arm_0_center", np.pi * 0.8)
 
         self.useCalibration = useCalibration
+        # TODO is this ever used
         self.merged_fixed_links = rospy.get_param("merge_fixed_links", False)
+
+        # TODO should separate and make this more of a data class
         home = expanduser("~")
         self.body = pb.loadURDF(
             home
-            + f"/catkin_ws/src/soccerbot/{rospy.get_param('robot_model', 'bez1')}_description/urdf/{rospy.get_param('robot_model', 'bez1')}.urdf",
+            + f"/catkin_ws/src/soccerbot/soccer_description/{rospy.get_param('robot_model', 'bez1')}_description/urdf/{rospy.get_param('robot_model', 'bez1')}.urdf",
             useFixedBase=useFixedBase,
             flags=pb.URDF_USE_INERTIA_FROM_FILE | (pb.URDF_MERGE_FIXED_LINKS if self.merged_fixed_links else 0),
             basePosition=[pose.position[0], pose.position[1], pose.position[2]],
             baseOrientation=pose.quaternion,
         )
+
         rospy.loginfo("List of joints for loaded URDF")
         rospy.loginfo([pb.getJointInfo(self.body, i)[1] for i in range(pb.getNumJoints(self.body))])
         self.pybullet_offset = pb.getBasePositionAndOrientation(self.body)[0][:2] + (0,)  # pb.getLinkState(self.body, Links.TORSO)[4:6]
@@ -71,13 +77,14 @@ class Soccerbot:
 
         # IMU Stuff
         self.prev_lin_vel = [0, 0, 0]
-        self.time_step_sim = 1.0 / 240
+        self.time_step_sim = 1.0 / 240  # TODO hard coded ?
 
         self.foot_center_to_floor = -self.right_foot_joint_center_to_collision_box_center[2] + self.foot_box[2]
 
         # Calculate Constants
         H34 = self.get_link_transformation(Links.RIGHT_LEG_4, Links.RIGHT_LEG_3)
         H45 = self.get_link_transformation(Links.RIGHT_LEG_5, Links.RIGHT_LEG_4)
+        # TODO verify calculations
         self.DH = np.array(
             [
                 [0, -np.pi / 2, 0, 0],
@@ -228,6 +235,7 @@ class Soccerbot:
         # Slowly ease into the ready position
         previous_configuration = self.configuration
         try:
+            # TODO Remove ros dependency
             joint_state = rospy.wait_for_message("joint_states", JointState, timeout=3)
             indexes = [joint_state.name.index(motor_name) for motor_name in self.motor_names]
             previous_configuration = [joint_state.position[i] for i in indexes]
@@ -269,7 +277,7 @@ class Soccerbot:
 
         :param position: 2D position of the robot's torso in a 3D transformation format
         """
-
+        # TODO why is this so weirdly complicated
         p = pose
         position = p.position
         position[2] = self.walking_torso_height
@@ -283,6 +291,7 @@ class Soccerbot:
         :param transformation: The 3D transformation from the torso center to the foot center
         :return: 6x1 Motor angles for the right foot
         """
+        # TODO add plots and verify calculations
         transformation[0:3, 3] = transformation[0:3, 3] - self.torso_to_right_hip[0:3, 3]
         invconf = scipy.linalg.inv(transformation)
         d3 = self.DH[2, 0]
@@ -345,7 +354,7 @@ class Soccerbot:
 
         :param pose: 3D position in pybullet
         """
-
+        # TODO maybe separate pybullet class
         self.pose = self.setWalkingTorsoHeight(pose)
 
         # Remove the roll and yaw from the pose
@@ -361,6 +370,7 @@ class Soccerbot:
         :param endPose: 3D transformation
         :return: Robot path
         """
+        # TODO why is this here? should be in an integrator
         startPose = self.setWalkingTorsoHeight(self.pose)
         endPose = self.setWalkingTorsoHeight(endPose)
 
@@ -491,7 +501,7 @@ class Soccerbot:
         :param verbose: Optional - Set to True to print the linear acceleration and angular velocity
         :return: concatenated 3-axes values for linear acceleration and angular velocity
         """
-
+        # TODO is not used
         quart_link, lin_vel, ang_vel = pb.getBasePositionAndOrientation(self.body)[1:2] + pb.getBaseVelocity(self.body)
         # [lin_vel, ang_vel] = p.getLinkState(bodyUniqueId=self.soccerbotUid, linkIndex=Links.HEAD_1, computeLinkVelocity=1)[6:8]
         # print(p.getLinkStates(bodyUniqueId=self.soccerbotUid, linkIndices=range(0,18,1), computeLinkVelocity=1))

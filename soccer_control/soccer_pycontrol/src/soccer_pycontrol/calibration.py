@@ -30,7 +30,7 @@ def calibrate_x():
         setup_calibration()
 
     from soccer_pycontrol.navigator import Navigator
-    from soccer_pycontrol.navigator_ros import NavigatorRos
+    from soccer_pycontrol.navigator.navigator_ros import NavigatorRos
 
     start_positions = []
     final_positions = []
@@ -93,7 +93,7 @@ def calibrate_theta():
         setup_calibration()
 
     from soccer_pycontrol.navigator import Navigator
-    from soccer_pycontrol.navigator_ros import NavigatorRos
+    from soccer_pycontrol.navigator.navigator_ros import NavigatorRos
 
     start_angles = []
     final_angles = []

@@ -6,7 +6,7 @@ from copy import deepcopy
 import matplotlib.pyplot as plt
 import numpy as np
 import rospy
-from soccer_pycontrol.path import Path
+from soccer_pycontrol.path.path import Path
 
 from soccer_common.transformation import Transformation
 

@@ -1,7 +1,7 @@
 import pybullet as p
 
 
-class Ramp:
+class PybulletDynamics:
     """
     Ramp object for the robot to walk on
     """
@@ -17,6 +17,7 @@ class Ramp:
         :param spinningFriction: spinningFriction
         :param rollingFriction: rollingFriction
         """
+        # TODO should this be merged with world?
         self.orientation = orientation
         self.position = position
         self.path = path

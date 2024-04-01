@@ -3,9 +3,9 @@ import math
 import matplotlib.pyplot as plt
 import numpy as np
 import scipy
-from soccer_pycontrol.path import Path
-from soccer_pycontrol.path_foot import PathFoot
-from soccer_pycontrol.path_torso import PathTorso
+from soccer_pycontrol.path.path import Path
+from soccer_pycontrol.path.path_foot import PathFoot
+from soccer_pycontrol.path.path_torso import PathTorso
 
 
 class PathRobot(PathTorso):

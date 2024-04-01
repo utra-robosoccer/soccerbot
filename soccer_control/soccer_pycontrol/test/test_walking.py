@@ -2,7 +2,6 @@ import os
 import struct
 import time
 
-import pybullet_data
 from scipy.signal import butter, lfilter
 
 os.environ["ROS_NAMESPACE"] = "/robot1"
@@ -16,8 +15,8 @@ import rospy
 from matplotlib import pyplot as plt
 from soccer_pycontrol.calibration import adjust_navigation_transform
 from soccer_pycontrol.links import Links
-from soccer_pycontrol.navigator import Navigator
-from soccer_pycontrol.navigator_ros import NavigatorRos
+from soccer_pycontrol.navigator.navigator import Navigator
+from soccer_pycontrol.navigator.navigator_ros import NavigatorRos
 
 from soccer_common.transformation import Transformation
 from soccer_common.utils_rosparam import set_rosparam_from_yaml_file

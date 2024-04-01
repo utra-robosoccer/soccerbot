@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Python tests for soccer_pycontrol.test_walking.TestWalking" type="tests" factoryName="Autodetect" nameIsGenerated="true">
+  <configuration default="false" name="Python tests for soccer_control.soccer_pycontrol.test.test_walking.TestWalking" type="tests" factoryName="Autodetect" nameIsGenerated="true">
     <module name="soccerbot" />
     <option name="ENV_FILES" value="" />
     <option name="INTERPRETER_OPTIONS" value="" />
@@ -11,7 +11,7 @@
     <option name="ADD_SOURCE_ROOTS" value="true" />
     <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
     <option name="_new_additionalArguments" value="&quot;-s&quot;" />
-    <option name="_new_target" value="&quot;soccer_pycontrol.test_walking.TestWalking&quot;" />
+    <option name="_new_target" value="&quot;soccer_control.soccer_pycontrol.test.test_walking.TestWalking&quot;" />
     <option name="_new_targetType" value="&quot;PYTHON&quot;" />
     <method v="2" />
   </configuration>

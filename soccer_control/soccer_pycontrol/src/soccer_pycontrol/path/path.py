@@ -2,17 +2,13 @@ import functools
 import math
 from math import ceil, floor
 
-import cachetools
 import matplotlib.pyplot as plt
 import numpy as np
 import rospy
 import scipy
-from mpl_toolkits.mplot3d import (
-    Axes3D,  # <--- This is important for 3d plotting, do not remove
-)
-from soccer_pycontrol.path_section import PathSection
-from soccer_pycontrol.path_section_bezier import PathSectionBezier
-from soccer_pycontrol.path_section_short import PathSectionShort
+from soccer_pycontrol.path.path_section import PathSection
+from soccer_pycontrol.path.path_section_bezier import PathSectionBezier
+from soccer_pycontrol.path.path_section_short import PathSectionShort
 
 from soccer_common import Transformation
 from soccer_common.utils import wrapToPi

@@ -1,15 +1,22 @@
+import math
 import os
 from typing import Optional
 
+import rospy
 import tf
 import tf2_py
 import torch
 from geometry_msgs.msg import Pose2D, PoseStamped
 from nav_msgs.msg import Odometry, Path
-from sensor_msgs.msg import Imu
+from rospy import ROSException
+from sensor_msgs.msg import Imu, JointState
+from soccer_pycontrol.calibration import adjust_navigation_transform
+from soccer_pycontrol.joints import Joints
 from soccer_pycontrol.soccerbot import *
+from soccer_pycontrol.soccerbot.soccerbot import Soccerbot
 from std_msgs.msg import Empty, Float64
 
+from soccer_common import Transformation
 from soccer_msgs.msg import RobotState
 
 
@@ -227,6 +234,7 @@ class SoccerbotRos(Soccerbot):
         pass
 
     def apply_head_rotation(self):
+        # TODO this feels overly complicated
         if self.robot_state.status == RobotState.STATUS_PENALIZED:
             self.configuration[Joints.HEAD_1] = 0
             self.configuration[Joints.HEAD_2] = 0

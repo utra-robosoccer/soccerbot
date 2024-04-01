@@ -1,6 +1,5 @@
 import math
 import os
-import sys
 import unittest
 
 import numpy as np
@@ -33,7 +32,7 @@ config_path = f"{file_path}/../../config/bez1_sim_pybullet.yaml"
 set_rosparam_from_yaml_file(param_path=config_path)
 
 from soccer_pycontrol.navigator import Navigator
-from soccer_pycontrol.navigator_ros import NavigatorRos
+from soccer_pycontrol.navigator.navigator_ros import NavigatorRos
 from soccer_pycontrol.path import Path
 
 

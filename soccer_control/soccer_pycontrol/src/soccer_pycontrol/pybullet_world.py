@@ -8,13 +8,18 @@ from soccer_pycontrol.pybullet_dynamics import PybulletDynamics
 from soccer_common import Transformation
 
 
-class PybulletSetup:
+class PybulletWorld:
     """
     Sets up pybullet simulation for basic usage
     """
 
     # TODO update with the modified for pycontrol
-    def __init__(self, pose: Transformation = Transformation(), robot_model: str = "bez1", real_time=False, rate: int = 100, display=True):
+    def __init__(
+        self,
+        real_time: bool = False,
+        rate: int = 100,
+        display: bool = True,
+    ):
         """
         Initialize the Navigator
 
@@ -31,23 +36,16 @@ class PybulletSetup:
         else:
             self.client_id = pb.connect(pb.DIRECT)
 
+        self.setup_world()
+
+        self.world = PybulletDynamics("plane.urdf", (0, 0, 0), (0, 0, 0), lateralFriction=0.9, spinningFriction=0.9, rollingFriction=0.0)
+
+    @staticmethod
+    def setup_world():
         pb.setAdditionalSearchPath(pybullet_data.getDataPath())  # optionally
         pb.resetDebugVisualizerCamera(cameraDistance=1.0, cameraYaw=90, cameraPitch=0, cameraTargetPosition=[0, 0, 0.25])
         pb.setGravity(0, 0, -9.81)
         pb.configureDebugVisualizer(pb.COV_ENABLE_GUI, 0)
-
-        home = expanduser("~")
-        self.body = pb.loadURDF(
-            home + f"/catkin_ws/src/soccerbot/soccer_description/{robot_model}_description/urdf/{robot_model}.urdf",
-            useFixedBase=False,
-            flags=pb.URDF_USE_INERTIA_FROM_FILE | (pb.URDF_MERGE_FIXED_LINKS if False else 0),
-            basePosition=pose.position,
-            baseOrientation=pose.quaternion,
-        )
-
-        self.ramp = PybulletDynamics("plane.urdf", (0, 0, 0), (0, 0, 0), lateralFriction=0.9, spinningFriction=0.9, rollingFriction=0.0)
-
-        self.motor_names = [pb.getJointInfo(self.body, i)[1].decode("utf-8") for i in range(18)]
 
     def close(self):
         if pb.isConnected(self.client_id):
@@ -55,11 +53,6 @@ class PybulletSetup:
         assert pb.isConnected() == 0
 
     def wait(self, steps) -> None:
-        """
-        Make the robot wait for a few steps
-
-        :param steps: Defined by Navigator.PYBULLET_STEP, which is usually 0.01
-        """
         for i in range(steps):
             self.step()
 
@@ -68,15 +61,7 @@ class PybulletSetup:
             time.sleep(1 / self.rate)
         pb.stepSimulation()
 
-    def motor_control(self, target: list) -> None:
-        pb.setJointMotorControlArray(
-            bodyIndex=self.body,
-            controlMode=pb.POSITION_CONTROL,
-            jointIndices=list(range(0, 18, 1)),
-            targetPositions=target,
-        )
-
 
 if __name__ == "__main__":
-    p = PybulletSetup(robot_model="bez2")
+    p = PybulletWorld(real_time=True)
     p.wait(1000)
