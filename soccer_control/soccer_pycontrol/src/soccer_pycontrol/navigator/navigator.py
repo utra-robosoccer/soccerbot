@@ -4,7 +4,7 @@ import pybullet as pb
 import pybullet_data
 import rospy
 from soccer_pycontrol.links import Links
-from soccer_pycontrol.pybullet_dynamics import PybulletDynamics
+from soccer_pycontrol.pybullet_world import PybulletDynamics
 from soccer_pycontrol.soccerbot import Soccerbot
 
 from soccer_common.transformation import Transformation

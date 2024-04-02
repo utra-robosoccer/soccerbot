@@ -56,24 +56,10 @@ class Soccerbot:
         self.arm_1_center = rospy.get_param("arm_0_center", np.pi * 0.8)
 
         self.useCalibration = useCalibration
-        # TODO is this ever used
-        self.merged_fixed_links = rospy.get_param("merge_fixed_links", False)
-
-        # TODO should separate and make this more of a data class
-        home = expanduser("~")
-        self.body = pb.loadURDF(
-            home
-            + f"/catkin_ws/src/soccerbot/soccer_description/{rospy.get_param('robot_model', 'bez1')}_description/urdf/{rospy.get_param('robot_model', 'bez1')}.urdf",
-            useFixedBase=useFixedBase,
-            flags=pb.URDF_USE_INERTIA_FROM_FILE | (pb.URDF_MERGE_FIXED_LINKS if self.merged_fixed_links else 0),
-            basePosition=[pose.position[0], pose.position[1], pose.position[2]],
-            baseOrientation=pose.quaternion,
-        )
 
         rospy.loginfo("List of joints for loaded URDF")
         rospy.loginfo([pb.getJointInfo(self.body, i)[1] for i in range(pb.getNumJoints(self.body))])
         self.pybullet_offset = pb.getBasePositionAndOrientation(self.body)[0][:2] + (0,)  # pb.getLinkState(self.body, Links.TORSO)[4:6]
-        self.motor_names = [pb.getJointInfo(self.body, i)[1].decode("utf-8") for i in range(18)]
 
         # IMU Stuff
         self.prev_lin_vel = [0, 0, 0]
@@ -492,76 +478,6 @@ class Soccerbot:
 
         fig.canvas.draw()
         plt.show()
-
-    def get_imu_raw(self, verbose=False):
-        """
-        Simulates the IMU at the IMU link location.
-        TODO: Add noise model, make the refresh rate vary (currently in sync with the PyBullet time steps)
-
-        :param verbose: Optional - Set to True to print the linear acceleration and angular velocity
-        :return: concatenated 3-axes values for linear acceleration and angular velocity
-        """
-        # TODO is not used
-        quart_link, lin_vel, ang_vel = pb.getBasePositionAndOrientation(self.body)[1:2] + pb.getBaseVelocity(self.body)
-        # [lin_vel, ang_vel] = p.getLinkState(bodyUniqueId=self.soccerbotUid, linkIndex=Links.HEAD_1, computeLinkVelocity=1)[6:8]
-        # print(p.getLinkStates(bodyUniqueId=self.soccerbotUid, linkIndices=range(0,18,1), computeLinkVelocity=1))
-        # p.getBaseVelocity(self.soccerbotUid)
-        lin_vel = np.array(lin_vel, dtype=np.float32)
-        self.gravity = [0, 0, -9.81]
-        lin_acc = (lin_vel - self.prev_lin_vel) / self.time_step_sim
-        lin_acc -= self.gravity
-        rot_mat = np.array(pb.getMatrixFromQuaternion(quart_link), dtype=np.float32).reshape((3, 3))
-        lin_acc = np.matmul(rot_mat, lin_acc)
-        ang_vel = np.array(ang_vel, dtype=np.float32)
-        self.prev_lin_vel = lin_vel
-        if verbose:
-            print(f"lin_acc = {lin_acc}", end="\t\t")
-            print(f"ang_vel = {ang_vel}")
-        return np.concatenate((lin_acc, ang_vel))
-
-    def get_imu(self):
-        """
-        Simulates the IMU at the IMU link location.
-        TODO: Add noise model, make the refresh rate vary (currently in sync with the PyBullet time steps)
-
-        :return: concatenated 3-axes values for linear acceleration and angular velocity
-        """
-        if self.merged_fixed_links:
-            [quat_pos, quat_orientation] = pb.getBasePositionAndOrientation(self.body)[0:2]
-        else:
-            [quat_pos, quat_orientation] = pb.getLinkState(self.body, linkIndex=Links.IMU, computeLinkVelocity=1)[4:6]
-
-        return Transformation(quat_pos, quat_orientation)
-
-    def get_foot_pressure_sensors(self, floor):
-        """
-        Checks if 4 corners of the each feet are in contact with ground #TODO fix docstring
-
-        | Indices for looking from above on the feet plates
-        |   Left         Right
-        | 4-------5    0-------1
-        | |   ^   |    |   ^   |      ^
-        | |   |   |    |   |   |      | forward direction
-        | |       |    |       |
-        | 6-------7    2-------3
-
-        :param floor: PyBullet body id of the plane the robot is walking on.
-        :return: boolean array of 8 contact points on both feet, True: that point is touching the ground False: otherwise
-        """
-        locations = [False] * 8
-        right_pts = pb.getContactPoints(bodyA=self.body, bodyB=floor, linkIndexA=Links.RIGHT_LEG_6)
-        left_pts = pb.getContactPoints(bodyA=self.body, bodyB=floor, linkIndexA=Links.LEFT_LEG_6)
-        right_center = np.array(pb.getLinkState(self.body, linkIndex=Links.RIGHT_LEG_6)[4])
-        left_center = np.array(pb.getLinkState(self.body, linkIndex=Links.LEFT_LEG_6)[4])
-        right_tr = Transformation(quaternion=pb.getLinkState(self.body, linkIndex=Links.RIGHT_LEG_6)[5]).rotation_matrix
-        left_tr = Transformation(quaternion=pb.getLinkState(self.body, linkIndex=Links.LEFT_LEG_6)[5]).rotation_matrix
-        for point in right_pts:
-            index = np.signbit(np.matmul(right_tr, point[5] - right_center))[0:2]
-            locations[index[1] + index[0] * 2] = True
-        for point in left_pts:
-            index = np.signbit(np.matmul(left_tr, point[5] - left_center))[0:2]
-            locations[index[1] + (index[0] * 2) + 4] = True
-        return locations
 
     def apply_imu_feedback(self, imu_pose: Transformation):
         """

@@ -6,6 +6,7 @@ class Links(enum.IntEnum):
     The list of links of the robot `Joint Table <https://docs.google.com/spreadsheets/d/1KgIYwm3fNen8yjLEa-FEWq-GnRUnBjyg4z64nZ2uBv8/edit#gid=0>`_
     """
 
+    # TODO should i change this?
     TORSO = -1
     LEFT_ARM_1 = 0
     LEFT_ARM_2 = 1

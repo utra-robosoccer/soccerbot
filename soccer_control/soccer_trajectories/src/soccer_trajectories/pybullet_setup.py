@@ -3,7 +3,7 @@ from os.path import expanduser
 
 import pybullet as pb
 import pybullet_data
-from soccer_pycontrol.pybullet_dynamics import PybulletDynamics
+from soccer_pycontrol.pybullet_world import PybulletDynamics
 
 from soccer_common import Transformation
 
