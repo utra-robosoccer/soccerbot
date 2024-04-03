@@ -64,7 +64,7 @@ class PybulletModel:
         """
         Checks if 4 corners of the each feet are in contact with ground #
         TODO fix docstring
-        # TODO add unit test with vis
+        # TODO add unit test with matplot for imu
         | Indices for looking from above on the feet plates
         |   Left         Right
         | 4-------5    0-------1
@@ -87,6 +87,7 @@ class PybulletModel:
         right_tr = Transformation(quaternion=pb.getLinkState(self.body, linkIndex=Links.RIGHT_LEG_6)[5]).rotation_matrix
         left_tr = Transformation(quaternion=pb.getLinkState(self.body, linkIndex=Links.LEFT_LEG_6)[5]).rotation_matrix
 
+        # TODO verify calculations
         for point in right_pts:
             index = np.signbit(np.matmul(right_tr, point[5] - right_center))[0:2]
             locations[index[1] + index[0] * 2] = True
