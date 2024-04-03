@@ -81,9 +81,7 @@ class PybulletEnv:
 
 if __name__ == "__main__":
     world = PybulletWorld()
-    model = PybulletModel(
-        Transformation(position=(0, 0, 0.315)),
-    )
+    model = PybulletModel()
     p = PybulletEnv(model, world, real_time=True)
     p.wait(1000)
     p.world.close()
