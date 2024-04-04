@@ -1,5 +1,6 @@
-# from soccer_common import Transformation
 # from soccer_pycontrol.joints import Joints
+#
+# from soccer_common import Transformation
 #
 #
 # class PID:

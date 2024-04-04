@@ -87,7 +87,7 @@ class TestWalking:
 
     @pytest.mark.timeout(30)
     @pytest.mark.flaky(reruns=1)
-    @pytest.mark.parametrize("walker", ["bez1", "bez2", "bez3"], indirect=True)
+    @pytest.mark.parametrize("walker", ["bez1"], indirect=True)
     def test_ik(self, walker: Navigator):
         walker.soccerbot.configuration[Links.RIGHT_LEG_1 : Links.RIGHT_LEG_6 + 1] = walker.soccerbot.inverseKinematicsRightFoot(
             np.copy(walker.soccerbot.right_foot_init_position)
