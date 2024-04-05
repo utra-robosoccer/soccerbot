@@ -1,16 +1,20 @@
+from typing import List
+
 import numpy as np
 import pybullet as pb
 import scipy
 from soccer_pycontrol.joints import Joints
 from soccer_pycontrol.links import Links
-from soccer_pycontrol.pybullet_model import PybulletModel
+from soccer_pycontrol.motor_control import MotorControl
 
 from soccer_common import Transformation
 
 
 class InverseKinematics:
-    def __init__(self, bez: PybulletModel):
-        self.bez = bez
+    def __init__(self, body: pb.loadURDF, walking_torso_height: float):
+        # TODO might change these dependcies later
+        self.body = body
+
         #: Ready Pose angle for arm 1
         self.arm_0_center = -0.45  # rospy.get_param("arm_0_center", -0.45)
 
@@ -56,22 +60,20 @@ class InverseKinematics:
 
         pitch_correction = Transformation([0, 0, 0], euler=[0, 0, 0])
         # rospy.get_param("torso_offset_pitch_ready", 0.0), 0])
-
+        print(-walking_torso_height + self.foot_center_to_floor)
         self.right_foot_init_position = self.get_link_transformation(Links.TORSO, Links.RIGHT_LEG_6)
-        print(self.right_foot_init_position)
-        # TODO what does this do
-        self.right_foot_init_position[2, 3] = -self.bez.walking_torso_height + self.foot_center_to_floor
+        print(self.right_foot_init_position.position)
+        # TODO what does this do also dont like that it needs to happen as first step
+        self.right_foot_init_position[2, 3] = -walking_torso_height + self.foot_center_to_floor
         self.right_foot_init_position[0, 3] -= 0.0  # rospy.get_param("torso_offset_x_ready", 0.0)
-        print(self.right_foot_init_position)
+        print(self.right_foot_init_position.position)
         # self.right_foot_init_position = pitch_correction @ self.right_foot_init_position
 
         self.left_foot_init_position = self.get_link_transformation(Links.TORSO, Links.LEFT_LEG_6)
-        self.left_foot_init_position[2, 3] = -self.bez.walking_torso_height + self.foot_center_to_floor
+        self.left_foot_init_position[2, 3] = -walking_torso_height + self.foot_center_to_floor
 
         self.left_foot_init_position[0, 3] -= 0.0  # rospy.get_param("torso_offset_x_ready", 0.0)
         # self.left_foot_init_position = pitch_correction @ self.left_foot_init_position
-
-        self.bez.set_pose()
 
     def get_link_transformation(self, link1, link2):
         """
@@ -84,12 +86,12 @@ class InverseKinematics:
         if link1 == Links.TORSO:
             link1world = ((0, 0, 0), (0, 0, 0, 1))
         else:
-            link1world = pb.getLinkState(self.bez.body, link1)[4:6]
+            link1world = pb.getLinkState(self.body, link1)[4:6]
 
         if link2 == Links.TORSO:
             link2world = ((0, 0, 0), (0, 0, 0, 1))
         else:
-            link2world = pb.getLinkState(self.bez.body, link2)[4:6]
+            link2world = pb.getLinkState(self.body, link2)[4:6]
 
         link1worldrev = pb.invertTransform(link1world[0], link1world[1])
 
@@ -104,6 +106,7 @@ class InverseKinematics:
         :return: 6x1 Motor angles for the right foot
         """
         # TODO add plots and verify calculations
+        # TODO all IK is done from 0,0,0 assumption
         transformation[0:3, 3] = transformation[0:3, 3] - self.torso_to_right_hip[0:3, 3]
         invconf = scipy.linalg.inv(transformation)
         d3 = self.DH[2, 0]
@@ -160,7 +163,7 @@ class InverseKinematics:
         [theta1, theta2, theta3, theta4, theta5, theta6] = self.inverseKinematicsRightFoot(transformation)
         return [-theta1, -theta2, theta3, theta4, theta5, -theta6]
 
-    def ready(self) -> None:
+    def ready(self) -> List[float]:
         """
         Sets the robot's joint angles for the robot to standing pose.
         """
@@ -180,22 +183,4 @@ class InverseKinematics:
         thetas = self.inverseKinematicsLeftFoot(np.copy(self.left_foot_init_position))
         configuration[Links.LEFT_LEG_1 : Links.LEFT_LEG_6 + 1] = thetas[0:6]
 
-        # head
-        configuration[Joints.HEAD_1] = self.bez.motor_control.configuration[Joints.HEAD_1]
-        configuration[Joints.HEAD_2] = self.bez.motor_control.configuration[Joints.HEAD_2]
-
-        # Slowly ease into the ready position
-        previous_configuration = self.bez.motor_control.configuration
-
-        for r in np.arange(0, 1.00, 0.040):
-            self.bez.motor_control.configuration[0:18] = (
-                np.array(np.array(configuration[0:18]) - np.array(previous_configuration[0:18])) * r + np.array(previous_configuration[0:18])
-            ).tolist()
-            self.bez.motor_control.set_motor()
-            pb.stepSimulation()
-            import time
-
-            time.sleep(1 / 10)
-
-        # TODO do i need this
-        # self.bez.motor_control.configuration_offset = [0] * len(Joints)
+        return configuration

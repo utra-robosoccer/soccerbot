@@ -5,6 +5,7 @@ import numpy as np
 import pybullet as pb
 import pybullet_data
 from matplotlib import pyplot as plt
+from soccer_pycontrol.links import Links
 from soccer_pycontrol.plot import BlitManager
 from soccer_pycontrol.pybullet_model import PybulletModel
 from soccer_pycontrol.pybullet_world import PybulletWorld
@@ -29,7 +30,6 @@ class PybulletEnv:
 
         self.world = world
         self.model = model
-        self.ik = InverseKinematics(self.model)
 
         # TODO cleanup
         # self.steps = []
@@ -57,10 +57,13 @@ class PybulletEnv:
         # plt.pause(0.1)
 
     def wait(self, steps) -> None:
-        self.t_start = time.time()
-        self.ik.ready()
+        # self.t_start = time.time()
+        self.model.ready()
         for i in range(steps):
 
+            print("Here: ", self.model.ik.get_link_transformation(Links.IMU, Links.RIGHT_LEG_6).position)
+            print(pb.getLinkState(self.model.body, linkIndex=Links.RIGHT_LEG_6)[4])
+            print(pb.getLinkState(self.model.body, linkIndex=Links.IMU)[4])
             self.step()
 
     def step(self) -> None:
@@ -82,8 +85,8 @@ class PybulletEnv:
 
 
 if __name__ == "__main__":
-    world = PybulletWorld()
-    model = PybulletModel()
+    world = PybulletWorld(path="")
+    model = PybulletModel(fixed_base=True)  # TODO dont know if i like this configuration
     p = PybulletEnv(model, world, real_time=True)
     p.wait(1000)
     p.world.close()

@@ -6,6 +6,7 @@ from soccer_pycontrol.joints import Joints
 from soccer_pycontrol.links import Links
 from soccer_pycontrol.motor_control import MotorControl
 from soccer_pycontrol.sensors import Sensors
+from soccer_pycontrol.soccerbot.inverse_kinematics import InverseKinematics
 
 from soccer_common import Transformation
 from soccer_common.utils import wrapToPi
@@ -17,7 +18,7 @@ class PybulletModel:
     """
 
     # TODO update with the modified for pycontrol
-    def __init__(self, pose: Transformation = Transformation(), robot_model: str = "bez1"):
+    def __init__(self, pose: Transformation = Transformation(), robot_model: str = "bez1", fixed_base: bool = False):
         """
         Class for interacting with pybullet model
 
@@ -27,20 +28,21 @@ class PybulletModel:
 
         # TODO read from yaml?
 
-        # self.pose = self.set_walking_torso_height(pose)
-
         home = expanduser("~")
         self.body = pb.loadURDF(
             home + f"/catkin_ws/src/soccerbot/soccer_description/{robot_model}_description/urdf/{robot_model}.urdf",
-            useFixedBase=False,
+            useFixedBase=fixed_base,
             flags=pb.URDF_USE_INERTIA_FROM_FILE | 0,
             basePosition=pose.position,
             baseOrientation=pose.quaternion,
         )
-        # self.set_pose(pose)
-
         self.motor_control = MotorControl(self.body)
         self.sensors = Sensors(self.body)
+        self.ik = InverseKinematics(self.body, self.walking_torso_height)
+
+        self.set_pose(pose)
+        if not fixed_base:
+            self.set_pose(pose)
 
     # Pose
     def set_walking_torso_height(self, pose: Transformation) -> Transformation:
@@ -66,3 +68,30 @@ class PybulletModel:
         self.pose.orientation_euler = [r, 0, 0]
         if pb.isConnected():
             pb.resetBasePositionAndOrientation(self.body, self.pose.position, self.pose.quaternion)
+
+    def ready(self) -> None:
+        """
+        Sets the robot's joint angles for the robot to standing pose.
+        """
+
+        configuration = self.ik.ready()
+
+        # head
+        configuration[Joints.HEAD_1] = self.motor_control.configuration[Joints.HEAD_1]
+        configuration[Joints.HEAD_2] = self.motor_control.configuration[Joints.HEAD_2]
+
+        # Slowly ease into the ready position
+        previous_configuration = self.motor_control.configuration
+
+        for r in np.arange(0, 1.00, 0.040):
+            self.motor_control.configuration[0:18] = (
+                np.array(np.array(configuration[0:18]) - np.array(previous_configuration[0:18])) * r + np.array(previous_configuration[0:18])
+            ).tolist()
+            self.motor_control.set_motor()
+            pb.stepSimulation()
+            import time
+
+            time.sleep(1 / 100)
+
+        # TODO do i need this
+        # self.motor_control.configuration_offset = [0] * len(Joints)

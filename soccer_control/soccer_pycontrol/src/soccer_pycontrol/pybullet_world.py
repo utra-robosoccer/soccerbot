@@ -36,16 +36,17 @@ class PybulletWorld:
 
         self.orientation = orientation
         self.position = position
-        self.path = path
-        self.plane = pb.loadURDF(self.path, basePosition=self.position, baseOrientation=pb.getQuaternionFromEuler(self.orientation))
 
-        pb.changeDynamics(
-            self.plane,
-            linkIndex=-1,
-            lateralFriction=lateral_friction,
-            spinningFriction=spinning_friction,
-            rollingFriction=rolling_friction,
-        )
+        if path != "":
+            self.plane = pb.loadURDF(path, basePosition=self.position, baseOrientation=pb.getQuaternionFromEuler(self.orientation))
+
+            pb.changeDynamics(
+                self.plane,
+                linkIndex=-1,
+                lateralFriction=lateral_friction,
+                spinningFriction=spinning_friction,
+                rollingFriction=rolling_friction,
+            )
 
     def close(self):
         if pb.isConnected(self.client_id):
