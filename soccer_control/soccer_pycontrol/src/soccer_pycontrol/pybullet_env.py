@@ -61,9 +61,8 @@ class PybulletEnv:
         self.model.ready()
         for i in range(steps):
 
-            print("Here: ", self.model.ik.get_link_transformation(Links.IMU, Links.RIGHT_LEG_6).position)
-            print(pb.getLinkState(self.model.body, linkIndex=Links.RIGHT_LEG_6)[4])
-            print(pb.getLinkState(self.model.body, linkIndex=Links.IMU)[4])
+            # print("Here: ", self.model.ik.get_link_transformation(Links.IMU, Links.RIGHT_LEG_6).position)
+            print("Here: ", pb.getLinkState(self.model.body, linkIndex=Links.RIGHT_LEG_6)[4])  # - self.model.ik.right_foot_init_position.position)
             self.step()
 
     def step(self) -> None:

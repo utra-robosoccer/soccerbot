@@ -31,8 +31,8 @@ class InverseKinematics:
         self.foot_box = [0.09, 0.07, 0.01474]
         #  rospy.get_param("foot_box", [0.09, 0.07, 0.01474])
 
-        # : Transformations from the right foots joint position to the center of the collision box of the foot (
-        # https://docs.google.com/presentation/d/10DKYteySkw8dYXDMqL2Klby-Kq4FlJRnc4XUZyJcKsw/edit#slide=id.g163c1c67b73_0_0)
+        # : Transformations from the right foots joint position to the center of the collision box of the foot
+        # https://docs.google.com/presentation/d/10DKYteySkw8dYXDMqL2Klby-Kq4FlJRnc4XUZyJcKsw/edit#slide=id.g163c1c67b73_0_0
         self.right_foot_joint_center_to_collision_box_center = [0.00385, 0.00401, -0.00737]
         # rospy.get_param("right_foot_joint_center_to_collision_box_center", [0.00385, 0.00401, -0.00737])
 
@@ -54,16 +54,15 @@ class InverseKinematics:
                 [0, 0, 0, 0],
             ]
         )
+        # TODO could get walking height from urdf but now need to know why it was chosen
         self.torso_to_right_hip = self.get_link_transformation(Links.TORSO, Links.RIGHT_LEG_1)
         self.right_hip_to_left_hip = self.get_link_transformation(Links.LEFT_LEG_1, Links.RIGHT_LEG_1)
-        self.hip_to_torso = abs(self.get_link_transformation(Links.RIGHT_LEG_1, Links.TORSO)[2, 3])
 
         pitch_correction = Transformation([0, 0, 0], euler=[0, 0, 0])
         # rospy.get_param("torso_offset_pitch_ready", 0.0), 0])
-        print(-walking_torso_height + self.foot_center_to_floor)
         self.right_foot_init_position = self.get_link_transformation(Links.TORSO, Links.RIGHT_LEG_6)
         print(self.right_foot_init_position.position)
-        # TODO what does this do also dont like that it needs to happen as first step
+        # TODO what does this do also dont like that it needs to happen as first step, clean up interface
         self.right_foot_init_position[2, 3] = -walking_torso_height + self.foot_center_to_floor
         self.right_foot_init_position[0, 3] -= 0.0  # rospy.get_param("torso_offset_x_ready", 0.0)
         print(self.right_foot_init_position.position)
@@ -177,6 +176,7 @@ class InverseKinematics:
 
         # right leg
         thetas = self.inverseKinematicsRightFoot(np.copy(self.right_foot_init_position))
+        # thetas = self.inverseKinematicsRightFoot(Transformation(position=[ -0.085, -0.035, -0.29289]))
         configuration[Links.RIGHT_LEG_1 : Links.RIGHT_LEG_6 + 1] = thetas[0:6]
 
         # left leg

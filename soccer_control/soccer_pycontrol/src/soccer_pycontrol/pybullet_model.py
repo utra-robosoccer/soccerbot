@@ -40,7 +40,6 @@ class PybulletModel:
         self.sensors = Sensors(self.body)
         self.ik = InverseKinematics(self.body, self.walking_torso_height)
 
-        self.set_pose(pose)
         if not fixed_base:
             self.set_pose(pose)
 
