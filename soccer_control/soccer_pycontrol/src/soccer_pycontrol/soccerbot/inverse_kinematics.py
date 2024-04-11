@@ -106,6 +106,7 @@ class InverseKinematics:
         """
         # TODO add plots and verify calculations
         # TODO all IK is done from 0,0,0 assumption
+        # TODO make the library independent from pybullet
         transformation[0:3, 3] = transformation[0:3, 3] - self.torso_to_right_hip[0:3, 3]
         invconf = scipy.linalg.inv(transformation)
         d3 = self.DH[2, 0]
