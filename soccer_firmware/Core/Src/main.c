@@ -17,14 +17,14 @@
   */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
-#include "main.h"
 
-#include "bringup_tests.h"
+#include "main.h"
+#include "usb_device.h"
 #include "dynamixel_p1.h"
 #include "dynamixel_p2.h"
 #include "MPU6050.h"
 #include "update_loop.h"
-#include "usb_device.h"
+#include "bringup_tests.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -132,7 +132,7 @@ void init_ports() {
       .dmaDoneReading = false,
       .numMotors      = 3,
       .motorIds       = {13, 14, 15},
-      .protocol       = {1, 1, 1}
+      .protocol       = {2, 2, 2}
     };
 
   port4 = (MotorPort){
@@ -144,7 +144,7 @@ void init_ports() {
       .dmaDoneReading = false,
       .numMotors      = 3,
       .motorIds       = {7, 8, 9},
-      .protocol       = {1, 1, 1}
+      .protocol       = {2, 2, 2}
     };
 
   port5 = (MotorPort){

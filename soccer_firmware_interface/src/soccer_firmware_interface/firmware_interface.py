@@ -20,12 +20,12 @@ class FirmwareInterface:
         self.imu_publisher = rospy.Publisher("imu_raw", Imu, queue_size=1)
         self.serial = None
 
-        with open(rospy.get_param("motor_types")) as f:
-            param_info = yaml.safe_load(f)
-            rosparam.upload_params("motor_types", param_info)
-        with open(rospy.get_param("motor_mapping")) as f:
-            param_info = yaml.safe_load(f)
-            rosparam.upload_params("motor_mapping", param_info)
+        # with open(rospy.get_param("motor_types")) as f:
+        #     param_info = yaml.safe_load(f)
+        #     rosparam.upload_params("motor_types", param_info)
+        # with open(rospy.get_param("motor_mapping")) as f:
+        #     param_info = yaml.safe_load(f)
+        #     rosparam.upload_params("motor_mapping", param_info)
         self.motor_mapping = rospy.get_param("motor_mapping")
         self.motor_id_to_name_dict = {self.motor_mapping[m]["id"]: m for m in self.motor_mapping}
 
@@ -88,10 +88,10 @@ class FirmwareInterface:
                     val = data[i * 2 + 2] | data[i * 2 + 3] << 8
 
                     motor_name = self.motor_id_to_name_dict[i]
-                    motor_type = self.motor_mapping[motor_name]['type']
-                    motor_angle_zero = self.motor_mapping[motor_name]['angle_zero']
-                    max_angle_bytes = self.motor_types[motor_type]['max_angle_bytes']
-                    max_angle_radians = self.motor_types[motor_type]['max_angle_degrees'] / 180 * math.pi
+                    motor_type = self.motor_mapping[motor_name]["type"]
+                    motor_angle_zero = self.motor_mapping[motor_name]["angle_zero"]
+                    max_angle_bytes = self.motor_types[motor_type]["max_angle_bytes"]
+                    max_angle_radians = self.motor_types[motor_type]["max_angle_degrees"] / 180 * math.pi
 
                     motor_angle_zero_radian = motor_angle_zero / 180 * math.pi
 
@@ -125,7 +125,6 @@ class FirmwareInterface:
                 imu.linear_acceleration.y = -(ay) * G / ACC_RANGE
                 imu.linear_acceleration.z = -(az) * G / ACC_RANGE
 
-
                 vx = int.from_bytes(imu_data[6:8], byteorder="big", signed=True) / IMU_GY_RANGE
                 vy = int.from_bytes(imu_data[8:10], byteorder="big", signed=True) / IMU_GY_RANGE
                 vz = int.from_bytes(imu_data[10:12], byteorder="big", signed=True) / IMU_GY_RANGE
@@ -149,19 +148,18 @@ class FirmwareInterface:
     def joint_command_callback(self, joint_state: JointState):
         try:
 
-            if self.last_motor_publish_time is not None:
-                time_diff_message_in = joint_state.header.stamp - self.last_motor_publish_time
-                time_diff_real = rospy.Time.now() - self.last_motor_publish_time_real
-
-                time_lag = rospy.Time.now() - joint_state.header.stamp
-                if time_lag > time_diff_message_in:
-                    print(f"Message Skipped Time Lag {time_lag}")
-                    self.last_motor_publish_time = joint_state.header.stamp
-                    return
-
-                if time_diff_real < time_diff_message_in:
-                    rospy.sleep(time_diff_message_in - time_diff_real)
-
+            # if self.last_motor_publish_time is not None:
+            #     time_diff_message_in = joint_state.header.stamp - self.last_motor_publish_time
+            #     time_diff_real = rospy.Time.now() - self.last_motor_publish_time_real
+            #
+            #     time_lag = rospy.Time.now() - joint_state.header.stamp
+            #     if time_lag > time_diff_message_in:
+            #         print(f"Message Skipped Time Lag {time_lag}")
+            #         self.last_motor_publish_time = joint_state.header.stamp
+            #         return
+            #
+            #     if time_diff_real < time_diff_message_in:
+            #         rospy.sleep(time_diff_message_in - time_diff_real)
 
             t1 = time.time()
 
@@ -199,15 +197,15 @@ class FirmwareInterface:
                 bytes_to_write[2 + id * 2 + 1] = angle_final_bytes_2
                 pass
 
-
             t2 = time.time()
 
             self.serial.write(bytes_to_write)
             self.last_motor_publish_time_real = rospy.Time.now()
             self.last_motor_publish_time = joint_state.header.stamp
             t3 = time.time()
-            rospy.loginfo(f"Time Lag : {(rospy.Time.now() - joint_state.header.stamp).to_sec()}  Bytes Written: {bytes_to_write} Time Take {t2-t1} {t3-t1}")
-
+            rospy.loginfo(
+                f"Time Lag : {(rospy.Time.now() - joint_state.header.stamp).to_sec()}  Bytes Written: {bytes_to_write} Time Take {t2-t1} {t3-t1}"
+            )
 
         except Exception as ex:
             rospy.logerr_throttle(10, f"Lost connection to serial port {ex}, retrying...")
