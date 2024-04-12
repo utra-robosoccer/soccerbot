@@ -4,6 +4,7 @@ from math import pi
 
 import numpy as np
 from visual_kinematics.RobotSerial import *
+from visual_kinematics.RobotSerial import RobotSerial
 
 
 def main():

@@ -5,6 +5,7 @@ import numpy as np
 import pybullet as pb
 import pybullet_data
 from matplotlib import pyplot as plt
+from soccer_pycontrol.joints import Joints
 from soccer_pycontrol.links import Links
 from soccer_pycontrol.plot import BlitManager
 from soccer_pycontrol.pybullet_model import PybulletModel
@@ -58,11 +59,16 @@ class PybulletEnv:
 
     def wait(self, steps) -> None:
         # self.t_start = time.time()
-        self.model.ready()
+        # self.model.ready()
         for i in range(steps):
 
             # print("Here: ", self.model.ik.get_link_transformation(Links.IMU, Links.RIGHT_LEG_6).position)
-            print("Here: ", pb.getLinkState(self.model.body, linkIndex=Links.RIGHT_LEG_6)[4])  # - self.model.ik.right_foot_init_position.position)
+            # print("Here: ", pb.getLinkState(self.model.body, linkIndex=Links.RIGHT_LEG_6)[4])  # - self.model.ik.right_foot_init_position.position)
+            # import time
+            #
+            # s = time.time()
+            # print(self.model.ik.inverseKinematicsRightFoot(np.copy(self.model.ik.right_foot_init_position)))
+            # print((time.time() - s) * 1000)
             self.step()
 
     def step(self) -> None:

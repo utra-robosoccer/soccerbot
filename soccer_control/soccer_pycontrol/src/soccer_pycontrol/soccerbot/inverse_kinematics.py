@@ -177,6 +177,7 @@ class InverseKinematics:
 
         # right leg
         thetas = self.inverseKinematicsRightFoot(np.copy(self.right_foot_init_position))
+
         # thetas = self.inverseKinematicsRightFoot(Transformation(position=[ -0.085, -0.035, -0.29289]))
         configuration[Links.RIGHT_LEG_1 : Links.RIGHT_LEG_6 + 1] = thetas[0:6]
 
