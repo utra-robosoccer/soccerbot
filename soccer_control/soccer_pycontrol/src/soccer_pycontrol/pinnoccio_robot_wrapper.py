@@ -63,7 +63,7 @@ import time
 # for i in range(1000):
 sart = time.time()
 JOINT_ID = model.getJointId("right_leg_motor_5")
-i = np.array([[1.0, 0.0, 0.0], [0.0, 0.0, -1.0], [0.0, 1.0, 0.0]])
+i = np.eye(3)  # np.array([[0.0, -1.0, 0.0], [1.0, 0.0, 0.0], [0.0, 0.0, -1.0]])
 oMdes = pinocchio.SE3(i, np.array([0.013500063680112362, -0.13500000014901161, -0.292939692735672]))
 # oMdes = pinocchio.SE3(np.eye(3), np.array([0.0135, -0.135, -0.29289]))
 

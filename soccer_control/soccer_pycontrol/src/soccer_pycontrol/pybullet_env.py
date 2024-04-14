@@ -67,7 +67,7 @@ class PybulletEnv:
             # import time
             #
             # s = time.time()
-            # print(self.model.ik.inverseKinematicsRightFoot(np.copy(self.model.ik.right_foot_init_position)))
+            print(self.model.ik.inverseKinematicsRightFoot(np.copy(self.model.ik.right_foot_init_position)))
             # print((time.time() - s) * 1000)
             self.step()
 
