@@ -102,6 +102,8 @@ class IK:
         denom = 2 * d3 * d4
         theta4 = np.arccos(num / denom) - np.pi  # TODO not sure why its neg
 
+        assert theta4 < 4.6
+
         num = d3 * np.sin(np.pi + theta4)
         denom = np.sqrt(r_2)
         alpha = np.arcsin(num / denom)
@@ -123,19 +125,12 @@ class IK:
 
 
 ik = IK()
-t = Transformation(position=[0.0135, 0.06, -0.29289])  # , quaternion=(0.0, 0.0, 0.7, 0.7))
-# print(t.rotation_matrix)
-#  -0.3188203886880778, 0.16530755885403078, -0.6302562811565202]
-
-# -6.060296883738752e-14, 0.6307211857938324, 0.15238157118365828, -0.31647168907303647, 0.16409011788943692, -2.20142051098441]
-for i in range(1000):
-    start = time.process_time_ns()
-    print(ik.inverseKinematicsRightFoot(np.copy(t)))
-    print((time.process_time_ns() - start) / 1e6)
-    start = time.process_time_ns()
-    print(ik.inverseKinematicsRightFoot2(np.copy(t)))
-    print((time.process_time_ns() - start) / 1e6)
-
+t = Transformation(position=[0.1835, -0.035, -0.17])  # , quaternion=(0.0, 0.0, 0.7, 0.7))
+# TODO should add a limit above -0.156 also not the same
+print(np.linalg.norm(t.position - [0.0135, -0.035, -0.156]), ik.DH[2, 0] + ik.DH[3, 0])
+# TODO script to take user input for ik for testing
+print(ik.inverseKinematicsRightFoot(np.copy(t)))
+print(ik.inverseKinematicsRightFoot2(np.copy(t)))
 
 # def tmp():
 #     print((time.process_time_ns() - start) / 1e6)
