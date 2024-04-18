@@ -35,9 +35,9 @@ for i in model.names:
 q[model.getJointId("right_leg_motor_0") - 1 : model.getJointId("right_leg_motor_5")] = [
     -0.0,
     0.0,
-    1.5989944518880537,
-    -0.22917719134937853,
-    -1.369817260538675,
+    2.031230955889592,
+    -1.5673589601356506,
+    -0.4638719957539408,
     0.0,
 ]
 q = np.array(q)

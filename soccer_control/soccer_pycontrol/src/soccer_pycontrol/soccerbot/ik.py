@@ -1,5 +1,6 @@
 import time
 
+import matplotlib.pyplot as plt
 import numpy as np
 import scipy
 from scipy.spatial.transform import Rotation as R
@@ -39,14 +40,14 @@ class IK:
         Yd = invconf[1, 3]
         Zd = invconf[2, 3]
 
-        if np.linalg.norm([Xd, Yd, Zd]) > (d3 + d4):
+        if np.round(np.linalg.norm([Xd, Yd, Zd]), 4) > (d3 + d4):
             print("IK Position Unreachable: Desired Distance: " + str(np.linalg.norm([Xd, Yd, Zd])) + ", Limited Distance: " + str(d3 + d4))
-        assert np.linalg.norm([Xd, Yd, Zd]) <= (d3 + d4)
+        assert np.round(np.linalg.norm([Xd, Yd, Zd]), 4)
 
         theta6 = -np.arctan2(Yd, Zd)
         tmp1 = Zd / np.cos(theta6)
         tmp2 = Xd
-        D = (((((tmp1**2) + (tmp2**2)) - ((d3**2) + (d4**2))) / 2) / d3) / d4  # TODO what the fuck is this
+        D = np.clip((((((tmp1**2) + (tmp2**2)) - ((d3**2) + (d4**2))) / 2) / d3) / d4, -1, 1)  # TODO what the fuck is this
         tmp3 = np.arctan2(D, -np.sqrt(1 - (D**2)))  # TODO how is this worse
 
         tmpX = tmp3 - (np.pi / 2)
@@ -92,15 +93,15 @@ class IK:
         Yd = invconf[1, 3]
         Zd = invconf[2, 3]
 
-        if np.linalg.norm([Xd, Yd, Zd]) > (d3 + d4):
+        if np.round(np.linalg.norm([Xd, Yd, Zd]), 4) > (d3 + d4):
             print("IK Position Unreachable: Desired Distance: " + str(np.linalg.norm([Xd, Yd, Zd])) + ", Limited Distance: " + str(d3 + d4))
-        assert np.linalg.norm([Xd, Yd, Zd]) <= (d3 + d4)
+        assert np.round(np.linalg.norm([Xd, Yd, Zd]), 4) <= (d3 + d4)
 
         theta6 = -np.arctan2(Yd, Zd)
         r_2 = Xd**2 + Yd**2 + Zd**2
         num = d3**2 + d4**2 - r_2
         denom = 2 * d3 * d4
-        theta4 = np.arccos(num / denom) - np.pi  # TODO not sure why its neg
+        theta4 = np.arccos(np.clip(num / denom, -1, 1)) - np.pi  # TODO not sure why its neg
 
         assert theta4 < 4.6
 
@@ -124,35 +125,64 @@ class IK:
         return [theta1, theta2, theta3, theta4, theta5, theta6]
 
 
-ik = IK()
-t = Transformation(position=[0.1835, -0.035, -0.17])  # , quaternion=(0.0, 0.0, 0.7, 0.7))
-# TODO should add a limit above -0.156 also not the same
-print(np.linalg.norm(t.position - [0.0135, -0.035, -0.156]), ik.DH[2, 0] + ik.DH[3, 0])
-# TODO script to take user input for ik for testing
-print(ik.inverseKinematicsRightFoot(np.copy(t)))
-print(ik.inverseKinematicsRightFoot2(np.copy(t)))
-
-# def tmp():
-#     print((time.process_time_ns() - start) / 1e6)
-#     print(theta4,theta5,theta6)
-#     start = time.process_time_ns()
-#     r_2 = Xd ** 2 + Yd ** 2 + Zd ** 2
-#     num = (d3 ** 2 + d4 ** 2 - r_2)
-#     denom = (2 * d3 * d4)
-#     theta4_2 = np.arccos(num / denom) - np.pi  # TODO not sure why its neg
+# ik = IK()
+# A = 0.089
+# B = 0.0827
+# H = 0.05
+# x = np.linspace(-(A + B-H), A + B-H)
+# xx = []
+# zz = []
+# for i in x:
+#     # t = Transformation(position=[0.1835, -0.035, -0.17])  # , quaternion=(0.0, 0.0, 0.7, 0.7))
+#     z = -np.sqrt((A + B-H) ** 2 - i ** 2) - 0.156
+#     t = Transformation(position=[i + 0.0135, -0.035, z])
+#     # # TODO should add a limit above -0.156 also not the same
+#     print(np.linalg.norm(t.position - [0.0135, -0.035, -0.156]), ik.DH[2, 0] + ik.DH[3, 0])
+#     # if np.linalg.norm(t.position - [0.0135, -0.035, -0.156]) > ik.DH[2, 0] + ik.DH[3, 0]: # TODO fix out of bound
+#     #     continue
 #
-#     num = d3 * np.sin(np.pi + theta4_2)
-#     denom = np.sqrt(r_2)
-#     alpha = np.arcsin(num / denom)
-#     theta5_2 = np.arctan2(Xd, np.sign(Zd) * np.sqrt(Yd ** 2 + Zd ** 2)) + alpha
-#     print((time.process_time_ns() - start) / 1e6)
-#     print(theta4_2, theta5_2, theta6)
-#     -1.2971196567286807 0.6763627196264181 0.0
-#     [
-#         -0.0,
-#         -2.220446049250313e-16,
-#         0.6207569371022629,
-#         -1.2971196567286807,
-#         0.6763627196264181,
-#         0.0,
-#     ]
+#     zz.append(z)
+#     xx.append(i + 0.0135)
+#     print(i + 0.0135, z)
+#     # TODO script to take user input for ik for testing
+#     ik1 = ik.inverseKinematicsRightFoot(np.copy(t))
+#     ik2 = ik.inverseKinematicsRightFoot2(np.copy(t))
+#     print("ik1: ", ik1)
+#     print("ik2: ", ik2)
+#     assert np.isclose(ik1, ik2).all()
+#     # [-0.0, 0.0, 2.031230955889592, -1.5673589601356506, -0.4638719957539408, 0.0]
+# plt.scatter(xx, zz)
+# plt.show()
+
+ik = IK()
+A = 0.089
+B = 0.0827
+H = 0.05
+y = np.linspace(-(A + B - H), A + B - H)
+yy = []
+zz = []
+for i in y:
+    # t = Transformation(position=[0.1835, -0.035, -0.17])  # , quaternion=(0.0, 0.0, 0.7, 0.7))
+    z = -np.sqrt((A + B - H) ** 2 - i**2) - 0.156
+    t = Transformation(position=[0.0135, i - 0.035, z])
+    # # TODO should add a limit above -0.156 also not the same
+    print(np.linalg.norm(t.position - [0.0135, -0.035, -0.156]), ik.DH[2, 0] + ik.DH[3, 0])
+    try:
+        ik1 = ik.inverseKinematicsRightFoot(np.copy(t))
+        ik2 = ik.inverseKinematicsRightFoot2(np.copy(t))
+    except Exception as e:
+        print(e)
+        continue
+
+    zz.append(z)
+    yy.append(i - 0.035)
+    print(i - 0.035, z)
+    # TODO script to take user input for ik for testing
+    print("ik1: ", ik1)
+    print("ik2: ", ik2)
+    print(np.isclose(ik1, ik2, rtol=1.0e-5, atol=1.0e-7))
+    assert np.isclose(ik1, ik2, rtol=1.0e-5, atol=1.0e-7).all()
+
+plt.scatter(yy, zz)
+plt.show()
+# TODO now put into pybullet and play it
