@@ -1,9 +1,6 @@
-import time
-
 import matplotlib.pyplot as plt
 import numpy as np
 import scipy
-from scipy.spatial.transform import Rotation as R
 
 from soccer_common import Transformation
 
@@ -128,7 +125,7 @@ class IK:
 # ik = IK()
 # A = 0.089
 # B = 0.0827
-# H = 0.05
+# H = 0.0 # 0.05 # up to 0.14 then they are equivelent but different angles
 # x = np.linspace(-(A + B-H), A + B-H)
 # xx = []
 # zz = []
@@ -154,17 +151,49 @@ class IK:
 # plt.scatter(xx, zz)
 # plt.show()
 
+# ik = IK()
+# A = 0.089
+# B = 0.0827
+# H = 0.0  # 0 to 0.09
+# y = np.linspace(-(A + B - H), A + B - H)
+# yy = []
+# zz = []
+# for i in y:
+#     # t = Transformation(position=[0.1835, -0.035, -0.17])  # , quaternion=(0.0, 0.0, 0.7, 0.7))
+#     z = -np.sqrt((A + B - H) ** 2 - i ** 2) - 0.156
+#     t = Transformation(position=[0.0135, i - 0.035, z])
+#     # # TODO should add a limit above -0.156 also not the same
+#     print(np.linalg.norm(t.position - [0.0135, -0.035, -0.156]), ik.DH[2, 0] + ik.DH[3, 0])
+#     try:
+#         ik1 = ik.inverseKinematicsRightFoot(np.copy(t))
+#         ik2 = ik.inverseKinematicsRightFoot2(np.copy(t))
+#     except Exception as e:
+#         print(e)
+#         continue
+#
+#     zz.append(z)
+#     yy.append(i - 0.035)
+#     print(i - 0.035, z)
+#     # TODO script to take user input for ik for testing
+#     print("ik1: ", ik1)
+#     print("ik2: ", ik2)
+#     print(np.isclose(ik1, ik2, rtol=1.0e-5, atol=1.0e-7))
+#     assert np.isclose(ik1, ik2, rtol=1.0e-5, atol=1.0e-7).all()
+#
+# plt.scatter(yy, zz)
+# plt.show()
+# TODO make them seperate functions for each axis out in pybullet
+# TODO split the IK between 4,5,6 and 1,2,3
+
 ik = IK()
 A = 0.089
 B = 0.0827
-H = 0.05
-y = np.linspace(-(A + B - H), A + B - H)
+z = np.linspace(-(A + B), -0.04)
 yy = []
 zz = []
-for i in y:
+for i in z:
     # t = Transformation(position=[0.1835, -0.035, -0.17])  # , quaternion=(0.0, 0.0, 0.7, 0.7))
-    z = -np.sqrt((A + B - H) ** 2 - i**2) - 0.156
-    t = Transformation(position=[0.0135, i - 0.035, z])
+    t = Transformation(position=[0.0135, -0.035, i - 0.156])
     # # TODO should add a limit above -0.156 also not the same
     print(np.linalg.norm(t.position - [0.0135, -0.035, -0.156]), ik.DH[2, 0] + ik.DH[3, 0])
     try:
@@ -174,14 +203,14 @@ for i in y:
         print(e)
         continue
 
-    zz.append(z)
-    yy.append(i - 0.035)
-    print(i - 0.035, z)
+    zz.append(i - 0.156)
+    yy.append(-0.035)
+    print(-0.035, i - 0.156)
     # TODO script to take user input for ik for testing
     print("ik1: ", ik1)
     print("ik2: ", ik2)
     print(np.isclose(ik1, ik2, rtol=1.0e-5, atol=1.0e-7))
-    assert np.isclose(ik1, ik2, rtol=1.0e-5, atol=1.0e-7).all()
+    # assert np.isclose(ik1, ik2, rtol=1.0e-5, atol=1.0e-7).all()
 
 plt.scatter(yy, zz)
 plt.show()

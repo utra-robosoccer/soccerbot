@@ -152,6 +152,8 @@ class InverseKinematics:
 
         return [theta1, theta2, theta3, theta4, theta5, theta6]
 
+    # TODO make the IK independent of pybullet
+
     def inverseKinematicsLeftFoot(self, transformation):
         """
         Inverse kinematic function for the left foot. Works due to symmetry between left and right foot.
