@@ -6,7 +6,10 @@ from soccer_common import Transformation
 
 
 class IK:
-    def __init__(self):
+    def __init__(self, thigh_length: float, tibia_length: float):
+        self.thigh_length = thigh_length
+        self.tibia_length = tibia_length
+
         self.DH = np.array(
             [
                 [0, -np.pi / 2, 0, 0],
@@ -30,8 +33,8 @@ class IK:
         # TODO make the library independent from pybullet
         transformation[0:3, 3] = transformation[0:3, 3] - Transformation(position=[0.0135, -0.035, -0.156])[0:3, 3]  # self.torso_to_right_hip[0:3, 3]
         invconf = scipy.linalg.inv(transformation)  # TODO why
-        d3 = self.DH[2, 0]
-        d4 = self.DH[3, 0]
+        d3 = self.thigh_length
+        d4 = self.tibia_length
 
         Xd = invconf[0, 3]
         Yd = invconf[1, 3]
@@ -83,8 +86,8 @@ class IK:
         """
         transformation[0:3, 3] = transformation[0:3, 3] - Transformation(position=[0.0135, -0.035, -0.156])[0:3, 3]  # self.torso_to_right_hip[0:3, 3]
         invconf = scipy.linalg.inv(transformation)  # TODO why
-        d3 = self.DH[2, 0]
-        d4 = self.DH[3, 0]
+        d3 = self.thigh_length
+        d4 = self.tibia_length
 
         Xd = invconf[0, 3]
         Yd = invconf[1, 3]
@@ -121,97 +124,96 @@ class IK:
         theta3 = np.pi / 2 - angles[0]
         return [theta1, theta2, theta3, theta4, theta5, theta6]
 
+    def test_z_height(self):
+        z = np.linspace(-(self.thigh_length + self.tibia_length), -0.04)
+        yy = []
+        zz = []
+        for i in z:
+            # t = Transformation(position=[0.1835, -0.035, -0.17])  # , quaternion=(0.0, 0.0, 0.7, 0.7))
+            t = Transformation(position=[0.0135, -0.035, i - 0.156])
+            # # TODO should add a limit above -0.156 also not the same
+            print(np.linalg.norm(t.position - [0.0135, -0.035, -0.156]), self.thigh_length + self.tibia_length)
+            try:
+                ik1 = self.inverseKinematicsRightFoot(np.copy(t))
+                ik2 = self.inverseKinematicsRightFoot2(np.copy(t))
+            except Exception as e:
+                print(e)
+                continue
 
-# ik = IK()
-# A = 0.089
-# B = 0.0827
-# H = 0.0 # 0.05 # up to 0.14 then they are equivelent but different angles
-# x = np.linspace(-(A + B-H), A + B-H)
-# xx = []
-# zz = []
-# for i in x:
-#     # t = Transformation(position=[0.1835, -0.035, -0.17])  # , quaternion=(0.0, 0.0, 0.7, 0.7))
-#     z = -np.sqrt((A + B-H) ** 2 - i ** 2) - 0.156
-#     t = Transformation(position=[i + 0.0135, -0.035, z])
-#     # # TODO should add a limit above -0.156 also not the same
-#     print(np.linalg.norm(t.position - [0.0135, -0.035, -0.156]), ik.DH[2, 0] + ik.DH[3, 0])
-#     # if np.linalg.norm(t.position - [0.0135, -0.035, -0.156]) > ik.DH[2, 0] + ik.DH[3, 0]: # TODO fix out of bound
-#     #     continue
-#
-#     zz.append(z)
-#     xx.append(i + 0.0135)
-#     print(i + 0.0135, z)
-#     # TODO script to take user input for ik for testing
-#     ik1 = ik.inverseKinematicsRightFoot(np.copy(t))
-#     ik2 = ik.inverseKinematicsRightFoot2(np.copy(t))
-#     print("ik1: ", ik1)
-#     print("ik2: ", ik2)
-#     assert np.isclose(ik1, ik2).all()
-#     # [-0.0, 0.0, 2.031230955889592, -1.5673589601356506, -0.4638719957539408, 0.0]
-# plt.scatter(xx, zz)
-# plt.show()
+            zz.append(i - 0.156)
+            yy.append(-0.035)
+            print(-0.035, i - 0.156)
+            # TODO script to take user input for ik for testing
+            print("ik1: ", ik1)
+            print("ik2: ", ik2)
+            print(np.isclose(ik1, ik2, rtol=1.0e-5, atol=1.0e-7))
+            # assert np.isclose(ik1, ik2, rtol=1.0e-5, atol=1.0e-7).all()
 
-# ik = IK()
-# A = 0.089
-# B = 0.0827
-# H = 0.0  # 0 to 0.09
-# y = np.linspace(-(A + B - H), A + B - H)
-# yy = []
-# zz = []
-# for i in y:
-#     # t = Transformation(position=[0.1835, -0.035, -0.17])  # , quaternion=(0.0, 0.0, 0.7, 0.7))
-#     z = -np.sqrt((A + B - H) ** 2 - i ** 2) - 0.156
-#     t = Transformation(position=[0.0135, i - 0.035, z])
-#     # # TODO should add a limit above -0.156 also not the same
-#     print(np.linalg.norm(t.position - [0.0135, -0.035, -0.156]), ik.DH[2, 0] + ik.DH[3, 0])
-#     try:
-#         ik1 = ik.inverseKinematicsRightFoot(np.copy(t))
-#         ik2 = ik.inverseKinematicsRightFoot2(np.copy(t))
-#     except Exception as e:
-#         print(e)
-#         continue
-#
-#     zz.append(z)
-#     yy.append(i - 0.035)
-#     print(i - 0.035, z)
-#     # TODO script to take user input for ik for testing
-#     print("ik1: ", ik1)
-#     print("ik2: ", ik2)
-#     print(np.isclose(ik1, ik2, rtol=1.0e-5, atol=1.0e-7))
-#     assert np.isclose(ik1, ik2, rtol=1.0e-5, atol=1.0e-7).all()
-#
-# plt.scatter(yy, zz)
-# plt.show()
+        plt.scatter(yy, zz)
+        plt.show()
+
+    def test_x(self):
+        H = 0.0  # subtract from z curve 0.05 # up to 0.14 then they are equivelent but different angles
+        x = np.linspace(-(self.thigh_length + self.tibia_length - H), self.thigh_length + self.tibia_length - H)
+        xx = []
+        zz = []
+        for i in x:
+            z = -np.sqrt((self.thigh_length + self.tibia_length - H) ** 2 - i**2) - 0.156
+            t = Transformation(position=[i + 0.0135, -0.035, z])
+            # # TODO should add a limit above -0.156 also not the same
+            print(np.linalg.norm(t.position - [0.0135, -0.035, -0.156]), self.thigh_length + self.tibia_length)
+
+            zz.append(z)
+            xx.append(i + 0.0135)
+            print(i + 0.0135, z)
+            # TODO script to take user input for ik for testing
+            ik1 = self.inverseKinematicsRightFoot(np.copy(t))
+            ik2 = self.inverseKinematicsRightFoot2(np.copy(t))
+            print("ik1: ", ik1)
+            print("ik2: ", ik2)
+            assert np.isclose(ik1, ik2).all()
+            # [-0.0, 0.0, 2.031230955889592, -1.5673589601356506, -0.4638719957539408, 0.0]
+        plt.scatter(xx, zz)
+        plt.show()
+
+    def test_y(self):
+        H = 0.0  # 0 to 0.09
+        y = np.linspace(-(self.thigh_length + self.tibia_length - H), self.thigh_length + self.tibia_length - H)
+        yy = []
+        zz = []
+        for i in y:
+            # t = Transformation(position=[0.1835, -0.035, -0.17])  # , quaternion=(0.0, 0.0, 0.7, 0.7))
+            z = -np.sqrt((self.thigh_length + self.tibia_length - H) ** 2 - i**2) - 0.156
+            t = Transformation(position=[0.0135, i - 0.035, z])
+            # # TODO should add a limit above -0.156 also not the same
+            print(np.linalg.norm(t.position - [0.0135, -0.035, -0.156]), self.thigh_length + self.tibia_length)
+            try:
+                ik1 = self.inverseKinematicsRightFoot(np.copy(t))
+                ik2 = self.inverseKinematicsRightFoot2(np.copy(t))
+            except Exception as e:
+                print(e)
+                continue
+
+            zz.append(z)
+            yy.append(i - 0.035)
+            print(i - 0.035, z)
+            # TODO script to take user input for ik for testing
+            print("ik1: ", ik1)
+            print("ik2: ", ik2)
+            print(np.isclose(ik1, ik2, rtol=1.0e-5, atol=1.0e-7))
+            assert np.isclose(ik1, ik2, rtol=1.0e-5, atol=1.0e-7).all()
+
+        plt.scatter(yy, zz)
+        plt.show()
+
+
 # TODO make them seperate functions for each axis out in pybullet
 # TODO split the IK between 4,5,6 and 1,2,3
-
-ik = IK()
 A = 0.089
 B = 0.0827
-z = np.linspace(-(A + B), -0.04)
-yy = []
-zz = []
-for i in z:
-    # t = Transformation(position=[0.1835, -0.035, -0.17])  # , quaternion=(0.0, 0.0, 0.7, 0.7))
-    t = Transformation(position=[0.0135, -0.035, i - 0.156])
-    # # TODO should add a limit above -0.156 also not the same
-    print(np.linalg.norm(t.position - [0.0135, -0.035, -0.156]), ik.DH[2, 0] + ik.DH[3, 0])
-    try:
-        ik1 = ik.inverseKinematicsRightFoot(np.copy(t))
-        ik2 = ik.inverseKinematicsRightFoot2(np.copy(t))
-    except Exception as e:
-        print(e)
-        continue
+ik = IK(A, B)
+ik.test_x()
+ik.test_y()
+ik.test_z_height()
 
-    zz.append(i - 0.156)
-    yy.append(-0.035)
-    print(-0.035, i - 0.156)
-    # TODO script to take user input for ik for testing
-    print("ik1: ", ik1)
-    print("ik2: ", ik2)
-    print(np.isclose(ik1, ik2, rtol=1.0e-5, atol=1.0e-7))
-    # assert np.isclose(ik1, ik2, rtol=1.0e-5, atol=1.0e-7).all()
-
-plt.scatter(yy, zz)
-plt.show()
 # TODO now put into pybullet and play it
