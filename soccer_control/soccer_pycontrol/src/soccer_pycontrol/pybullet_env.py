@@ -10,7 +10,9 @@ from soccer_pycontrol.links import Links
 from soccer_pycontrol.plot import BlitManager
 from soccer_pycontrol.pybullet_model import PybulletModel
 from soccer_pycontrol.pybullet_world import PybulletWorld
-from soccer_pycontrol.soccerbot.inverse_kinematics import InverseKinematics
+from soccer_pycontrol.soccerbot.inverse_kinematics_pybullet import (
+    InverseKinematicsPybullet,
+)
 
 from soccer_common import Transformation
 
@@ -59,7 +61,7 @@ class PybulletEnv:
 
     def wait(self, steps) -> None:
         # self.t_start = time.time()
-        # self.model.ready()
+        self.model.ready()
         for i in range(steps):
 
             # print("Here: ", self.model.ik.get_link_transformation(Links.IMU, Links.RIGHT_LEG_6).position)
@@ -67,7 +69,7 @@ class PybulletEnv:
             # import time
             #
             # s = time.time()
-            print(self.model.ik.inverseKinematicsRightFoot(np.copy(self.model.ik.right_foot_init_position)))
+            # print(self.model.ik.inverseKinematicsRightFoot(np.copy(self.model.ik.right_foot_init_position)))
             # print((time.time() - s) * 1000)
             self.step()
 

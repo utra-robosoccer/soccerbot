@@ -6,7 +6,9 @@ from soccer_pycontrol.joints import Joints
 from soccer_pycontrol.links import Links
 from soccer_pycontrol.motor_control import MotorControl
 from soccer_pycontrol.sensors import Sensors
-from soccer_pycontrol.soccerbot.inverse_kinematics import InverseKinematics
+from soccer_pycontrol.soccerbot.inverse_kinematics_pybullet import (
+    InverseKinematicsPybullet,
+)
 
 from soccer_common import Transformation
 from soccer_common.utils import wrapToPi
@@ -38,7 +40,7 @@ class PybulletModel:
         )
         self.motor_control = MotorControl(self.body)
         self.sensors = Sensors(self.body)
-        self.ik = InverseKinematics(self.body, self.walking_torso_height)
+        self.ik = InverseKinematicsPybullet(self.body, self.walking_torso_height)
 
         if not fixed_base:
             self.set_pose(pose)
@@ -82,6 +84,7 @@ class PybulletModel:
         # Slowly ease into the ready position
         previous_configuration = self.motor_control.configuration
 
+        # TODO clean up math
         for r in np.arange(0, 1.00, 0.040):
             self.motor_control.configuration[0:18] = (
                 np.array(np.array(configuration[0:18]) - np.array(previous_configuration[0:18])) * r + np.array(previous_configuration[0:18])
