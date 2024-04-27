@@ -160,7 +160,7 @@ class InverseKinematics:
         return np.array(thetas), np.ones_like(z) * self.torso_to_right_hip.position[1], z
 
 
-# TODO make them seperate functions for each axis out in pybullet
+# TODO make them separate functions for each axis out in pybullet
 if __name__ == "__main__":
     ik = InverseKinematics()
 
