@@ -60,7 +60,6 @@ class PybulletEnv:
         # plt.pause(0.1)
 
     def wait(self, steps) -> None:
-        # self.t_start = time.time()
         self.model.ready()
         h = 0
         x, _, _ = self.model.ik.ik.x_sweep(h)
@@ -75,29 +74,8 @@ class PybulletEnv:
                 ).tolist()
                 self.model.motor_control.set_motor()
                 self.step()
-            # pb.stepSimulation()
-        # for i in range(steps):
-        #     self.model.motor_control.configuration[Links.RIGHT_LEG_1 : Links.RIGHT_LEG_6 + 1] = x[i][0:6]
-        #     self.model.motor_control.set_motor()
-        #     # print("Here: ", self.model.ik.get_link_transformation(Links.IMU, Links.RIGHT_LEG_6).position)
-        #     # print("Here: ", pb.getLinkState(self.model.body, linkIndex=Links.RIGHT_LEG_6)[4])  # - self.model.ik.right_foot_init_position.position)
-        #     # import time
-        #     #
-        #     # s = time.time()
-        #     # print(self.model.ik.inverseKinematicsRightFoot(np.copy(self.model.ik.right_foot_init_position)))
-        #     # print((time.time() - s) * 1000)
-        #     self.step()
 
         for i in range(steps):
-            # self.model.motor_control.configuration[Links.RIGHT_LEG_1 : Links.RIGHT_LEG_6 + 1] = x[i][0:6]
-            # self.model.motor_control.set_motor()
-            # print("Here: ", self.model.ik.get_link_transformation(Links.IMU, Links.RIGHT_LEG_6).position)
-            # print("Here: ", pb.getLinkState(self.model.body, linkIndex=Links.RIGHT_LEG_6)[4])  # - self.model.ik.right_foot_init_position.position)
-            # import time
-            #
-            # s = time.time()
-            # print(self.model.ik.inverseKinematicsRightFoot(np.copy(self.model.ik.right_foot_init_position)))
-            # print((time.time() - s) * 1000)
             self.step()
 
         x, _, _ = self.model.ik.ik.y_sweep(h)
@@ -114,15 +92,6 @@ class PybulletEnv:
                 self.step()
 
         for i in range(steps):
-            # self.model.motor_control.configuration[Links.RIGHT_LEG_1 : Links.RIGHT_LEG_6 + 1] = x[i][0:6]
-            # self.model.motor_control.set_motor()
-            # print("Here: ", self.model.ik.get_link_transformation(Links.IMU, Links.RIGHT_LEG_6).position)
-            # print("Here: ", pb.getLinkState(self.model.body, linkIndex=Links.RIGHT_LEG_6)[4])  # - self.model.ik.right_foot_init_position.position)
-            # import time
-            #
-            # s = time.time()
-            # print(self.model.ik.inverseKinematicsRightFoot(np.copy(self.model.ik.right_foot_init_position)))
-            # print((time.time() - s) * 1000)
             self.step()
 
         x, _, _ = self.model.ik.ik.z_sweep()
@@ -139,15 +108,6 @@ class PybulletEnv:
                 self.step()
 
         for i in range(steps):
-            # self.model.motor_control.configuration[Links.RIGHT_LEG_1 : Links.RIGHT_LEG_6 + 1] = x[i][0:6]
-            # self.model.motor_control.set_motor()
-            # print("Here: ", self.model.ik.get_link_transformation(Links.IMU, Links.RIGHT_LEG_6).position)
-            # print("Here: ", pb.getLinkState(self.model.body, linkIndex=Links.RIGHT_LEG_6)[4])  # - self.model.ik.right_foot_init_position.position)
-            # import time
-            #
-            # s = time.time()
-            # print(self.model.ik.inverseKinematicsRightFoot(np.copy(self.model.ik.right_foot_init_position)))
-            # print((time.time() - s) * 1000)
             self.step()
 
     def step(self) -> None:
