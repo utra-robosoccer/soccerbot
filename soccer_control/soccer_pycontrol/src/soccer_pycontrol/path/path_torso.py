@@ -3,7 +3,7 @@ import math
 import numpy as np
 import rospy
 import scipy
-from soccer_pycontrol.calibration import adjust_navigation_transform
+from soccer_pycontrol.exp.calibration import adjust_navigation_transform
 from soccer_pycontrol.path.path_foot import PathFoot
 
 from soccer_common.transformation import Transformation

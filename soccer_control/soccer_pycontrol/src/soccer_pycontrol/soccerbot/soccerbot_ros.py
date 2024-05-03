@@ -2,7 +2,9 @@ import math
 import os
 from typing import Optional
 
+import numpy as np
 import rospy
+import scipy
 import tf
 import tf2_py
 import torch
@@ -10,11 +12,10 @@ from geometry_msgs.msg import Pose2D, PoseStamped
 from nav_msgs.msg import Odometry, Path
 from rospy import ROSException
 from sensor_msgs.msg import Imu, JointState
-from soccer_pycontrol.calibration import adjust_navigation_transform
+from soccer_pycontrol.exp.calibration import adjust_navigation_transform
 from soccer_pycontrol.joints import Joints
-from soccer_pycontrol.soccerbot import *
 from soccer_pycontrol.soccerbot.soccerbot import Soccerbot
-from std_msgs.msg import Empty, Float64
+from std_msgs.msg import Empty
 
 from soccer_common import Transformation
 from soccer_msgs.msg import RobotState

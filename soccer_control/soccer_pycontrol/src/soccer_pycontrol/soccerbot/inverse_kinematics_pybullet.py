@@ -15,6 +15,7 @@ class InverseKinematicsPybullet:
     def __init__(self, body: pb.loadURDF, walking_torso_height: float):
         # TODO might change these dependcies later
         self.body = body
+
         # TODO could get walking height from urdf but now need to know why it was chosen
         self.ik = InverseKinematics(
             thigh_length=self.get_link_transformation(Links.RIGHT_LEG_4, Links.RIGHT_LEG_3).position[2],
@@ -50,11 +51,10 @@ class InverseKinematicsPybullet:
         pitch_correction = Transformation([0, 0, 0], euler=[0, 0, 0])
         # rospy.get_param("torso_offset_pitch_ready", 0.0), 0])
         self.right_foot_init_position = self.get_link_transformation(Links.TORSO, Links.RIGHT_LEG_6)
-        print(self.right_foot_init_position.position)
+
         # TODO what does this do also dont like that it needs to happen as first step, clean up interface
         self.right_foot_init_position[2, 3] = -walking_torso_height + self.foot_center_to_floor
         self.right_foot_init_position[0, 3] -= 0.0  # rospy.get_param("torso_offset_x_ready", 0.0)
-        print(self.right_foot_init_position.position)
         # self.right_foot_init_position = pitch_correction @ self.right_foot_init_position
 
         self.left_foot_init_position = self.get_link_transformation(Links.TORSO, Links.LEFT_LEG_6)

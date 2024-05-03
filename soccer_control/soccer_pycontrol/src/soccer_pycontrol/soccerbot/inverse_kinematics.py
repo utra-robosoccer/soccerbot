@@ -22,6 +22,7 @@ class InverseKinematics:
         self.torso_to_right_hip = torso_to_right_hip
         self.right_hip_to_left_hip = right_hip_to_left_hip
 
+        # r, alpha, d, theta
         self.DH = np.array(
             [
                 [0, -np.pi / 2, 0, 0],

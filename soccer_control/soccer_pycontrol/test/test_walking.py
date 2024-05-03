@@ -13,7 +13,7 @@ import pybullet as pb
 import pytest
 import rospy
 from matplotlib import pyplot as plt
-from soccer_pycontrol.calibration import adjust_navigation_transform
+from soccer_pycontrol.exp.calibration import adjust_navigation_transform
 from soccer_pycontrol.links import Links
 from soccer_pycontrol.navigator.navigator import Navigator
 from soccer_pycontrol.navigator.navigator_ros import NavigatorRos

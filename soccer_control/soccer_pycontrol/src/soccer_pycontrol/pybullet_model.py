@@ -81,19 +81,8 @@ class PybulletModel:
         configuration[Joints.HEAD_1] = self.motor_control.configuration[Joints.HEAD_1]
         configuration[Joints.HEAD_2] = self.motor_control.configuration[Joints.HEAD_2]
 
-        # Slowly ease into the ready position
-        previous_configuration = self.motor_control.configuration
-
-        # TODO clean up math
-        for r in np.arange(0, 1.00, 0.040):
-            self.motor_control.configuration[0:18] = (
-                np.array(np.array(configuration[0:18]) - np.array(previous_configuration[0:18])) * r + np.array(previous_configuration[0:18])
-            ).tolist()
-            self.motor_control.set_motor()
-            pb.stepSimulation()
-            import time
-
-            time.sleep(1 / 100)
+        self.motor_control.configuration[0:18] = configuration
+        self.motor_control.set_motor()
 
         # TODO do i need this
         # self.motor_control.configuration_offset = [0] * len(Joints)

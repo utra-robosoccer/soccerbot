@@ -1,25 +1,9 @@
-import math
-import queue
 from copy import deepcopy
-from os.path import expanduser
-from typing import Union
 
-import matplotlib.pyplot as plt
-import numpy as np
 import pybullet as pb
 import rospy
-import scipy
-from rospy import ROSException
-from scipy.signal import butter
-from sensor_msgs.msg import JointState
-from soccer_pycontrol.calibration import adjust_navigation_transform
-from soccer_pycontrol.joints import Joints
-from soccer_pycontrol.links import Links
-from soccer_pycontrol.path.path_robot import PathRobot
 
-from soccer_common.pid import PID
 from soccer_common.transformation import Transformation
-from soccer_common.utils import wrapToPi
 
 
 class Soccerbot:
