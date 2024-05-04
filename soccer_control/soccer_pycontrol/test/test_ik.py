@@ -4,6 +4,8 @@ import unittest
 import numpy as np
 from matplotlib import pyplot as plt
 from soccer_pycontrol.links import Links
+from soccer_pycontrol.soccerbot.ik_actions import IKActions
+from soccer_pycontrol.soccerbot.ik_data import IKData
 from soccer_pycontrol.soccerbot.inverse_kinematics import InverseKinematics
 
 from soccer_common import Transformation
@@ -19,8 +21,10 @@ class TestIK(unittest.TestCase):
         Case 1: Standard case
         :return: None
         """
-        ik = InverseKinematics()
-        thetas, x, z = ik.x_sweep()
+        ik_data = IKData()
+        ik = InverseKinematics(ik_data)
+        ik_actions = IKActions(ik)
+        thetas, x, z = ik_actions.x_sweep()
         # np.save('ik_data''/x_sweep', thetas)
 
         assert np.allclose(thetas, np.load("ik_data" "/x_sweep.npy"))
@@ -33,8 +37,10 @@ class TestIK(unittest.TestCase):
         Case 1: Standard case
         :return: None
         """
-        ik = InverseKinematics()
-        thetas, y, z = ik.y_sweep()
+        ik_data = IKData()
+        ik = InverseKinematics(ik_data)
+        ik_actions = IKActions(ik)
+        thetas, y, z = ik_actions.y_sweep()
         # np.save('ik_data''/y_sweep', thetas)
 
         assert np.allclose(thetas, np.load("ik_data" "/y_sweep.npy"))
@@ -47,8 +53,10 @@ class TestIK(unittest.TestCase):
         Case 1: Standard case
         :return: None
         """
-        ik = InverseKinematics()
-        thetas, y, z = ik.z_sweep()
+        ik_data = IKData()
+        ik = InverseKinematics(ik_data)
+        ik_actions = IKActions(ik)
+        thetas, y, z = ik_actions.z_sweep()
         # np.save('ik_data''/z_sweep', thetas)
 
         assert np.allclose(thetas, np.load("ik_data" "/z_sweep.npy"))
@@ -57,7 +65,9 @@ class TestIK(unittest.TestCase):
             plt.show()
 
     def test_thetas(self):
-        ik = InverseKinematics()
+        ik_data = IKData()
+        ik = InverseKinematics(ik_data)
+        ik_actions = IKActions(ik)
         configuration = [0.0] * 18
         configuration_2 = [0.0] * 18
 
