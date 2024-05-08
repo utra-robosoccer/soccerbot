@@ -1,22 +1,19 @@
 import os
 import unittest
+from unittest.mock import MagicMock
 
+import pytest
+import rospy
 from sensor_msgs.msg import JointState
 from soccer_trajectories.trajectory import Trajectory
 from soccer_trajectories.trajectory_manager_ros import TrajectoryManagerRos
 from soccer_trajectories.trajectory_manager_sim import TrajectoryManagerSim
 
 from soccer_common import Transformation
-
-os.environ["ROS_NAMESPACE"] = "/robot1"
-
-from unittest.mock import MagicMock
-
-import pytest
-import rospy
-
 from soccer_common.utils_rosparam import set_rosparam_from_yaml_file
 from soccer_msgs.msg import FixedTrajectoryCommand
+
+os.environ["ROS_NAMESPACE"] = "/robot1"
 
 
 class TestTrajectory(unittest.TestCase):
@@ -63,6 +60,7 @@ def test_trajectory_sim(trajectory_name: str, robot_model: str, real_time: bool)
     Case 1: Standard case
     :return: None
     """
+    # TODO update with pybullet updates
     if trajectory_name == "getupfront":
         pose = Transformation(position=[0, 0, 0.070], quaternion=[0.0, 0.707, 0.0, 0.707])
     elif trajectory_name == "getupback":
@@ -75,7 +73,6 @@ def test_trajectory_sim(trajectory_name: str, robot_model: str, real_time: bool)
         os.path.join(os.path.dirname(__file__), "../trajectories/bez1_sim/" + trajectory_name + ".csv"), pose, robot_model, real_time
     )
     tm.send_trajectory()
-    assert True
     # TODO add more testing from pybullet so like the height will reach a threshold and it doesnt fall over for
     #  some time also maybe split it per trajectory type
 

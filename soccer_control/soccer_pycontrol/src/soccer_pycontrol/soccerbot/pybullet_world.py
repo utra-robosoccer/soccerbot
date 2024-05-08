@@ -22,7 +22,6 @@ class PybulletWorld:
 
 
         """
-
         assert pb.isConnected() == 0
         if display:
             self.client_id = pb.connect(pb.GUI)

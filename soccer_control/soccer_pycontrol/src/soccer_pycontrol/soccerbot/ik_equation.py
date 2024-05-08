@@ -8,7 +8,7 @@ from soccer_pycontrol.soccerbot.ik_data import IKData
 from soccer_common import Transformation
 
 
-class InverseKinematics:
+class IKEquation:
     def __init__(self, ik_data: IKData):
         self.ik_data = ik_data
 
@@ -31,9 +31,10 @@ class InverseKinematics:
         ry = invconf[1, 3]
         rz = invconf[2, 3]
 
+        # TODO should add unit test to test this limit and more robust the function
         if np.round(np.linalg.norm([rx, ry, rz]), 4) > (self.ik_data.thigh_length + self.ik_data.tibia_length):
             print(
-                "InverseKinematics Position Unreachable: Desired Distance: "
+                "IKEquation Position Unreachable: Desired Distance: "
                 + str(np.linalg.norm([rx, ry, rz]))
                 + ", Limited Distance: "
                 + str(self.ik_data.thigh_length + self.ik_data.tibia_length)
@@ -47,6 +48,7 @@ class InverseKinematics:
         denom = 2 * self.ik_data.thigh_length * self.ik_data.tibia_length
         theta4 = np.arccos(np.clip(num / denom, -1, 1)) - np.pi  # TODO not sure why its neg
 
+        # TODO should add unit test to test this limit and more robust the function
         assert theta4 < 4.6
 
         num = self.ik_data.thigh_length * np.sin(np.pi + theta4)
@@ -65,6 +67,7 @@ class InverseKinematics:
         final_rotation = Transformation(euler=[0, np.pi / 2, np.pi])
         T03 = np.matmul(np.matmul(transformation, final_rotation), scipy.linalg.inv(T36))
 
+        # TODO should add unit test to test this limit and more robust the function
         assert np.linalg.norm(T03[0:3, 3]) - self.ik_data.thigh_length < 0.03  # TODO why
         angles = Transformation(rotation_matrix=scipy.linalg.inv(T03[0:3, 0:3])).orientation_euler
 
@@ -96,10 +99,7 @@ class InverseKinematics:
         :param transformation: The 3D transformation from the torso center to the foot center
         :return: Motor angles for the left foot
         """
+        # TODO should add unit test to test this limit and more robust the function
         transformation[0:3, 3] = transformation[0:3, 3] + self.ik_data.right_hip_to_left_hip[0:3, 3]
         [theta1, theta2, theta3, theta4, theta5, theta6] = self.ik_right_foot(transformation)
         return [-theta1, -theta2, theta3, theta4, theta5, -theta6]
-
-
-if __name__ == "__main__":
-    pass

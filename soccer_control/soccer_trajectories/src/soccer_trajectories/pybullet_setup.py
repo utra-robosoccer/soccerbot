@@ -3,7 +3,7 @@ from os.path import expanduser
 
 import pybullet as pb
 import pybullet_data
-from soccer_pycontrol.pybullet_world import PybulletDynamics
+from soccer_pycontrol.soccerbot.pybullet_world import PybulletWorld
 
 from soccer_common import Transformation
 
@@ -25,17 +25,7 @@ class PybulletSetup:
         self.display = display
         self.real_time = real_time
 
-        assert pb.isConnected() == 0
-        if display:
-            self.client_id = pb.connect(pb.GUI)
-        else:
-            self.client_id = pb.connect(pb.DIRECT)
-
-        pb.setAdditionalSearchPath(pybullet_data.getDataPath())  # optionally
-        pb.resetDebugVisualizerCamera(cameraDistance=1.0, cameraYaw=90, cameraPitch=0, cameraTargetPosition=[0, 0, 0.25])
-        pb.setGravity(0, 0, -9.81)
-        pb.configureDebugVisualizer(pb.COV_ENABLE_GUI, 0)
-
+        self.ramp = PybulletWorld("plane.urdf", (0, 0, 0), (0, 0, 0), lateral_friction=0.9, spinning_friction=0.9, rolling_friction=0.0)
         home = expanduser("~")
         self.body = pb.loadURDF(
             home + f"/catkin_ws/src/soccerbot/soccer_description/{robot_model}_description/urdf/{robot_model}.urdf",
@@ -45,14 +35,7 @@ class PybulletSetup:
             baseOrientation=pose.quaternion,
         )
 
-        self.ramp = PybulletDynamics("plane.urdf", (0, 0, 0), (0, 0, 0), lateralFriction=0.9, spinningFriction=0.9, rollingFriction=0.0)
-
         self.motor_names = [pb.getJointInfo(self.body, i)[1].decode("utf-8") for i in range(18)]
-
-    def close(self):
-        if pb.isConnected(self.client_id):
-            pb.disconnect(self.client_id)
-        assert pb.isConnected() == 0
 
     def wait(self, steps) -> None:
         """
@@ -80,3 +63,4 @@ class PybulletSetup:
 if __name__ == "__main__":
     p = PybulletSetup(robot_model="bez2")
     p.wait(1000)
+    p.ramp.close()

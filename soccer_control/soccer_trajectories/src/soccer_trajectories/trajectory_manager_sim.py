@@ -44,5 +44,5 @@ class TrajectoryManagerSim(TrajectoryManager):
 
             self.sim.step()
 
-        self.sim.close()
+        self.sim.ramp.close()
         self.trajectory.reset()

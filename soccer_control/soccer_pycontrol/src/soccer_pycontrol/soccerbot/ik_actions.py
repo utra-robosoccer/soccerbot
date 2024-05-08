@@ -4,7 +4,7 @@ import numpy as np
 from soccer_pycontrol.joints import Joints
 from soccer_pycontrol.links import Links
 from soccer_pycontrol.soccerbot.ik_data import IKData
-from soccer_pycontrol.soccerbot.inverse_kinematics import InverseKinematics
+from soccer_pycontrol.soccerbot.ik_equation import IKEquation
 
 from soccer_common import Transformation
 
@@ -12,7 +12,7 @@ from soccer_common import Transformation
 class IKActions:
     def __init__(self, ik_data: IKData):
         self.ik_data = ik_data
-        self.ik = InverseKinematics(self.ik_data)
+        self.ik = IKEquation(self.ik_data)
 
     def ready(self) -> np.ndarray:
         """
