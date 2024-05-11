@@ -32,6 +32,7 @@ class HandleURDF:  # TODO Maybe rename to body
         # rospy.get_param("right_foot_joint_center_to_collision_box_center", [0.00385, 0.00401, -0.00737])
 
         self.ik_data = self.load_ik_data()
+
         # TODO not sure if i like this setup
         self.set_pose = SetPose(self.body, self.pose, self.fixed_base, self.walking_torso_height)
 

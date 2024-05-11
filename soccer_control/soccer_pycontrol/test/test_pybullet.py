@@ -51,7 +51,7 @@ def test_ready(robot_model: str):
 
 @pytest.mark.parametrize("sweep_name", ["x", "y", "z"])
 @pytest.mark.parametrize("h", [0.0, 0.05, 0.1])
-@pytest.mark.parametrize("robot_model", ["bez1"])
+@pytest.mark.parametrize("robot_model", ["bez1", "bez2"])
 def test_sweep(sweep_name: str, h: float, robot_model: str):
     """
     Case 1: Standard case
