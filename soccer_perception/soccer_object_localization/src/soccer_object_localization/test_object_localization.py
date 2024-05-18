@@ -45,9 +45,8 @@ class TestObjectLocalization(TestCase):
         self.assertAlmostEqual(p2[2], 0, delta=0.005)
 
     def test_camera_find_camera_coordinate(self):
-        rospy.init_node("test")
         p = Transformation([0, 0, 0.5], euler=[0, math.pi / 4, 0])
-        c = Camera("robot1")
+        c = Camera()
         c.pose = p
         ci = CameraInfo()
         ci.height = 240
@@ -59,9 +58,8 @@ class TestObjectLocalization(TestCase):
         self.assertAlmostEqual(p2[1], 240 / 2, delta=0.5)
 
     def test_camera_find_camera_coordinate_2(self):
-        rospy.init_node("test")
         p = Transformation([0, 0, 0.5], euler=[0, 0, 0])
-        c = Camera("robot1")
+        c = Camera()
         c.pose = p
         ci = CameraInfo()
         ci.height = 240

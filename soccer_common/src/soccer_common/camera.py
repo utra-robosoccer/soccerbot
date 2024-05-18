@@ -1,6 +1,8 @@
 import math
 from functools import cached_property
 
+import numpy as np
+
 from soccer_common.transformation import Transformation
 
 
@@ -31,6 +33,36 @@ class Camera:
 
         return [x_delta + camera_pose.position[0], y_delta + camera_pose.position[1], 0]
 
+    def findCameraCoordinate(self, pos: [int]) -> [int]:
+        """
+        From a 3d position on the field, get the camera coordinate, opposite of :func:`~soccer_common.Camera.findFloorCoordinate`
+
+        :param pos: The 3D coordinate of the object
+        :return: The 2D pixel (x, y) on the camera, if the object was projected on the camera
+        """
+        pos3d = Transformation(pos)
+        camera_pose = self.pose
+        pos3d_tr = np.linalg.inv(camera_pose) @ pos3d
+
+        return self.findCameraCoordinateFixedCamera(pos3d_tr.position)
+
+    def findCameraCoordinateFixedCamera(self, pos: [int]) -> [int]:
+        """
+        Helper function for :func:`~soccer_common.Camera.findCameraCoordinate`, finds the camera coordinate if the camera were fixed at the origin
+
+        :param pos: The 3D coordinate of the object
+        :return: The 2D pixel (x, y) on the camera, if the object was projected on the camera and the camera is placed at the origin
+        """
+
+        pos = Transformation(pos)
+
+        ratio = self.focal_length / pos.position[0]
+
+        tx = pos.position[1] * ratio
+        ty = pos.position[2] * ratio
+        x, y = self.worldToImageFrame(tx, ty)
+        return [x, y]
+
     def imageToWorldFrame(self, pixel_x: int, pixel_y: int) -> tuple:
         """
         From image pixel coordinates, get the coordinates of the pixel as if they have been projected ot the camera plane, which is
@@ -44,6 +76,20 @@ class Camera:
         return (
             (self.resolution_x / 2.0 - (pixel_x + 0.5)) * self.pixelWidth,
             (self.resolution_y / 2.0 - (pixel_y + 0.5)) * self.pixelHeight,
+        )
+
+    def worldToImageFrame(self, pos_x: float, pos_y: float) -> tuple:
+        """
+        Reverse function for  :func:`~soccer_common.Camera.imageToWorldFrame`, takes the 3D world coordinates of the camera plane
+        and returns pixels
+
+        :param pos_x: X position of the pixel on the world plane in meters
+        :param pos_y: Y position of the pixel on the world plane in meters
+        :return: Tuple (x, y) of the pixel coordinates of in the image
+        """
+        return (
+            (self.resolution_x / 2.0 + pos_x / self.pixelWidth) - 0.5,
+            (self.resolution_y / 2.0 + pos_y / self.pixelHeight) - 0.5,
         )
 
     # CACHED PROPERTIES ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
