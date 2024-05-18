@@ -30,9 +30,9 @@ from soccer_msgs.msg import GameState, RobotState
 
 class TestObjectLocalization(TestCase):
     def test_camera_find_floor_coordinate(self):
-        rospy.init_node("test")
+        # rospy.init_node("test")
         p = Transformation([0, 0, 0.5], euler=[0, math.pi / 4, 0])
-        c = Camera("robot1")
+        c = Camera()
         c.pose = p
         ci = CameraInfo()
         ci.height = 240
@@ -107,6 +107,7 @@ class TestObjectLocalization(TestCase):
 
         Camera.reset_position = MagicMock()
         Camera.ready = MagicMock()
+
         d = DetectorFieldline()
         d.robot_state.status = RobotState.STATUS_READY
         d.image_publisher.get_num_connections = MagicMock(return_value=1)
