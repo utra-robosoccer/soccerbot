@@ -71,12 +71,10 @@ class TestObjectLocalization(TestCase):
         self.assertAlmostEqual(p3[1], 240 / 2, delta=0.5)
 
     def test_calculate_bounding_boxes_from_ball(self):
-        rospy.init_node("test")
-
         for cam_angle in [0, 0.1, -0.1]:
             for cam_position in [[0, 0, 0], [0, 0, 0.1], [0, 0, -0.1]]:
                 p = Transformation(cam_position, euler=[cam_angle, 0, 0])
-                c = Camera("robot1")
+                c = Camera()
                 c.pose = p
                 ci = CameraInfo()
                 ci.height = 240
