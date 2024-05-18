@@ -33,30 +33,42 @@ class PathFoot(Path):
     Adds the path of the 2 feet on the left and right of the Path
     """
 
-    def __init__(self, start_transform, end_transform, foot_center_to_floor):
+    def __init__(
+        self,
+        start_transform,
+        end_transform,
+        foot_center_to_floor,
+        half_to_full_step_time_ratio: float = 0.7,
+        pre_footstep_ratio: float = 0.15,
+        post_footstep_ratio: float = 0.25,
+        foot_separation: float = 0.044,
+        step_height: float = 0.065,
+        step_outwardness: float = 0.015,
+        step_rotation: float = 0.05,
+    ):
         # : A half step is taken on the first and the last step to get the robot moving, this parameter indicates the
         # time ratio between the half step and the full step
-        self.half_to_full_step_time_ratio = rospy.get_param("half_to_full_step_time_ratio", 0.7)
+        self.half_to_full_step_time_ratio = half_to_full_step_time_ratio  # rospy.get_param("half_to_full_step_time_ratio", 0.7)
 
         # : Time ratio of a single step in range [0, 1], the ratio of time keeping the feet on the ground before
         # lifting it
-        self.pre_footstep_ratio = rospy.get_param("pre_footstep_ratio", 0.15)
+        self.pre_footstep_ratio = pre_footstep_ratio  # rospy.get_param("pre_footstep_ratio", 0.15)
 
         # : Time ratio of a single step in range  [0, 1], the ratio of time after making the step with the foot on
         # the ground
-        self.post_footstep_ratio = rospy.get_param("post_footstep_ratio", 0.25)
+        self.post_footstep_ratio = post_footstep_ratio  # rospy.get_param("post_footstep_ratio", 0.25)
 
         #: The seperation of the feet while walking
-        self.foot_separation = rospy.get_param("foot_separation", 0.044)
+        self.foot_separation = foot_separation  # rospy.get_param("foot_separation", 0.044)
 
         #: The height of the step from the ground
-        self.step_height = rospy.get_param("step_height", 0.065)
+        self.step_height = step_height  # rospy.get_param("step_height", 0.065)
 
         #: The distance to the outwards direction when the robot takes a step, positive means away from the Path
-        self.step_outwardness = rospy.get_param("step_outwardness", 0.015)
+        self.step_outwardness = step_outwardness  # rospy.get_param("step_outwardness", 0.015)
 
         #: The amount of rotation of the footstep, positive means the feet turns outwards to the side
-        self.step_rotation = rospy.get_param("step_rotation", 0.05)
+        self.step_rotation = step_rotation  # rospy.get_param("step_rotation", 0.05)
 
         #: Whether the first step is the left foot
         self.first_step_left = False
@@ -429,7 +441,6 @@ class PathFoot(Path):
         """
         if fig is None:
             fig = plt.figure(tight_layout=True)
-        ax = fig.gca(projection="3d")
         tfInterp_axis = np.zeros((3, length))
         axes = [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
         colors = ["r", "g", "b"]

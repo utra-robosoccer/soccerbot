@@ -7,6 +7,8 @@ import scipy
 from soccer_pycontrol.links import Links
 from soccer_pycontrol.path.path_robot import PathRobot
 from soccer_pycontrol.soccerbot.handle_urdf import HandleURDF
+from soccer_pycontrol.soccerbot.pybullet_env import PybulletEnv
+from soccer_pycontrol.soccerbot.pybullet_world import PybulletWorld
 
 from soccer_common import Transformation
 
@@ -104,4 +106,32 @@ class FootStepPlanner:
 
 
 if __name__ == "__main__":
+    world = PybulletWorld(path="")
+    model = HandleURDF(fixed_base=True)
+    p = PybulletEnv(model, world, real_time=True, rate=100)
+    fp = FootStepPlanner(p.handle_urdf)
+    p.wait(50)
+    p.motor_control.set_target_angles(p.ik_actions.ready())
+    fp.createPathToGoal(Transformation([5, 0, 0], [0, 0, 0, 1]))
+    # p.wmodelait(100)
+
+    pitches = []
+    times = []
     t = 0
+
+    while t <= fp.robot_path.duration():
+        if fp.current_step_time <= t <= fp.robot_path.duration():
+            torso_to_right_foot, torso_to_left_foot = fp.stepPath(t)
+            r_theta = p.ik_actions.ik.ik_right_foot(torso_to_right_foot)
+            l_theta = p.ik_actions.ik.ik_left_foot(torso_to_left_foot)
+            p.motor_control.set_right_leg_target_angles(r_theta[0:6])
+            p.motor_control.set_left_leg_target_angles(l_theta[0:6])
+            # pitch = self.walker.soccerbot.get_imu().orientation_euler[1]
+            # f = self.walker.soccerbot.apply_imu_feedback(t, self.walker.soccerbot.get_imu())
+            fp.current_step_time = fp.current_step_time + 0.01  # fp.robot_path.step_precision
+            times.append(t)
+            # pitches.append((pitch, f))
+        p.step()
+        t = t + 0.01
+
+    p.wait(100)

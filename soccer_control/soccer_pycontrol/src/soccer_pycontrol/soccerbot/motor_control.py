@@ -61,5 +61,5 @@ class MotorControl:
         self.set_motor()
 
     def set_left_leg_target_angles(self, target_angles: np.ndarray) -> None:
-        self.configuration[Links.RIGHT_LEG_1 : Links.LEFT_LEG_6 + 1] = target_angles
+        self.configuration[Links.LEFT_LEG_1 : Links.LEFT_LEG_6 + 1] = target_angles
         self.set_motor()

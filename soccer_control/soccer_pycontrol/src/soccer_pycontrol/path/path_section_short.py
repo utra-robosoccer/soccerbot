@@ -14,19 +14,27 @@ class PathSectionShort(PathSection):
     A path section made up an initial rotation, followed by a linear path and a final rotatio
     """
 
-    def __init__(self, start_transform: Transformation, end_transform: Transformation):
+    def __init__(
+        self,
+        start_transform: Transformation,
+        end_transform: Transformation,
+        steps_per_second_default: float = 2.5,
+        scale_yaw: float = 1.0,
+        torso_step_length_short_backwards: float = 0.025,
+        torso_step_length_short_forwards: float = 0.035,
+    ):
         self.start_transform: Transformation = start_transform
         self.end_transform: Transformation = end_transform
 
-        self.steps_per_second_default = rospy.get_param("steps_per_second_default", 2.5)  # try 6 motors P = 09.25
+        self.steps_per_second_default = steps_per_second_default  # rospy.get_param("steps_per_second_default", 2.5)  # try 6 motors P = 09.25
 
         #: How much to incrase the rotation angle when turning (for calibration purposes)
-        self.scale_yaw = rospy.get_param("scale_yaw", 1.0)  # Increase the rotation by angle
+        self.scale_yaw = scale_yaw  # rospy.get_param("scale_yaw", 1.0)  # Increase the rotation by angle
 
         if self.isWalkingBackwards():
-            torso_step_length = rospy.get_param("torso_step_length_short_backwards", 0.025)
+            torso_step_length = torso_step_length_short_backwards  # rospy.get_param("torso_step_length_short_backwards", 0.025)
         else:
-            torso_step_length = rospy.get_param("torso_step_length_short_forwards", 0.035)
+            torso_step_length = torso_step_length_short_forwards  # rospy.get_param("torso_step_length_short_forwards", 0.035)
 
         self.angular_torso_step_length = 0.25  # radians Radians per angular step
         self.angular_speed = self.steps_per_second_default * self.angular_torso_step_length  # Rotational speed in radians per second

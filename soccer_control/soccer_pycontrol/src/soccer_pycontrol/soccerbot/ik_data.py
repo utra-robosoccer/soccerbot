@@ -24,6 +24,7 @@ class IKData:
         self.tibia_length = tibia_length
         self.torso_to_right_hip = torso_to_right_hip
         self.right_hip_to_left_hip = right_hip_to_left_hip
+        self.foot_center_to_floor = foot_center_to_floor
 
         self.arm_0_center = arm_0_center
         self.arm_1_center = arm_1_center
