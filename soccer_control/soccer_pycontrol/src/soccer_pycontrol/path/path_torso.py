@@ -127,3 +127,8 @@ class PathTorso(PathFoot):
             tfInterp[:, :, i] = self.torsoPosition(t)
             i = i + 1
         self.show_tf(fig, tfInterp, len(iterator))
+
+
+if __name__ == "__main__":
+    p = PathTorso(Transformation(), Transformation([0.5, 0, 0], [0, 0, 0, 1]), 0.0221)
+    p.show()

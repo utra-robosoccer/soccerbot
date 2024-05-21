@@ -63,11 +63,7 @@ class FootStepPlanner:
 
         self.robot_path = PathRobot(startPose, endPoseCalibrated, self.urdf.ik_data.foot_center_to_floor)
 
-        # obj.rate = rateControl(1 / obj.robot_path.step_size); -- from findPath
-        self.rate = 1 / self.robot_path.step_precision
         # TODO this edits the rate for the controller need to figure out how to use it
-        self.period = self.robot_path.step_precision  # todo IS THIS USED
-
         self.current_step_time = 0
 
         self.odom_pose_start_path = deepcopy(self.odom_pose)
@@ -95,43 +91,6 @@ class FootStepPlanner:
 
         self.urdf.pose = torso_position
         # Inverse kinematics for both feet (Average Time: 0.0015840530395507812)
-        # right_thetas = self.inverseKinematicsRightFoot(torso_to_right_foot)
-        # self.configuration[Links.RIGHT_LEG_1: Links.RIGHT_LEG_6 + 1] = thetas[0:6]
-        #
-        # left_thetas = self.inverseKinematicsLeftFoot(torso_to_left_foot)
-        # self.configuration[Links.LEFT_LEG_1: Links.LEFT_LEG_6 + 1] = thetas[0:6]
 
         # TODO add unit test
         return torso_to_right_foot, torso_to_left_foot
-
-
-if __name__ == "__main__":
-    world = PybulletWorld(path="")
-    model = HandleURDF(fixed_base=True)
-    p = PybulletEnv(model, world, real_time=True, rate=100)
-    fp = FootStepPlanner(p.handle_urdf)
-    p.wait(50)
-    p.motor_control.set_target_angles(p.ik_actions.ready())
-    fp.createPathToGoal(Transformation([5, 0, 0], [0, 0, 0, 1]))
-    # p.wmodelait(100)
-
-    pitches = []
-    times = []
-    t = 0
-
-    while t <= fp.robot_path.duration():
-        if fp.current_step_time <= t <= fp.robot_path.duration():
-            torso_to_right_foot, torso_to_left_foot = fp.stepPath(t)
-            r_theta = p.ik_actions.ik.ik_right_foot(torso_to_right_foot)
-            l_theta = p.ik_actions.ik.ik_left_foot(torso_to_left_foot)
-            p.motor_control.set_right_leg_target_angles(r_theta[0:6])
-            p.motor_control.set_left_leg_target_angles(l_theta[0:6])
-            # pitch = self.walker.soccerbot.get_imu().orientation_euler[1]
-            # f = self.walker.soccerbot.apply_imu_feedback(t, self.walker.soccerbot.get_imu())
-            fp.current_step_time = fp.current_step_time + 0.01  # fp.robot_path.step_precision
-            times.append(t)
-            # pitches.append((pitch, f))
-        p.step()
-        t = t + 0.01
-
-    p.wait(100)

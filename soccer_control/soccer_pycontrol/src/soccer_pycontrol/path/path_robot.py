@@ -7,6 +7,8 @@ from soccer_pycontrol.path.path import Path
 from soccer_pycontrol.path.path_foot import PathFoot
 from soccer_pycontrol.path.path_torso import PathTorso
 
+from soccer_common import Transformation
+
 
 class PathRobot(PathTorso):
     """
@@ -128,4 +130,10 @@ class PathRobot(PathTorso):
         # plt.draw()
         fig.canvas.draw()
         plt.show(block=False)
-        # plt.show()
+        plt.show()
+
+
+if __name__ == "__main__":
+    p = PathRobot(Transformation(), Transformation([0.5, 0, 0], [0, 0, 0, 1]), 0.0221)
+    p.show()
+    p.showTimingDiagram()
