@@ -63,6 +63,8 @@ class Camera:
             try:
                 self.tf_listener.waitForTransform("world", self.robot_name + camera_frame, timestamp, rospy.Duration(nsecs=1000000))
                 (trans, rot) = self.tf_listener.lookupTransform("world", self.robot_name + camera_frame, timestamp)
+                print(trans)
+                print(rot)
                 self.pose = Transformation(trans, rot)
                 return
             except (
@@ -373,3 +375,13 @@ class Camera:
 
         (r, h) = self.worldToImageFrame(0, -d)
         return int(min(max(0, h), self.resolution_y))
+
+
+from unittest.mock import MagicMock
+
+if __name__ == "__main__":
+    rospy.init_node("camera_test")
+    c = Camera("robot")
+    c.reset_position = MagicMock(from_world_frame=True)
+    print(c.pose)
+    print(Transformation([0, 0, 0], [0, 0, 0, 1]))

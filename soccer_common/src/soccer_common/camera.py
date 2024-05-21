@@ -16,6 +16,80 @@ class Camera:
         self.horizontalFOV = Camera.HORIZONTAL_FOV
         self.focal_length = 3.67  #: Focal length of the camera (meters) distance to the camera plane as projected in 3D
 
+    def ready(self) -> bool:
+        """
+        Function to determine when the camera object has recieved the necessary information and is ready to be used
+
+        :return: True if the camera is ready, else False
+        """
+        return self.pose is not None and self.resolution_x is not None and self.resolution_y is not None and self.camera_info is not None
+
+    def reset_position(self, from_world_frame=False, camera_frame="/camera", skip_if_not_found=False):
+        # same hardcoded values
+        if from_world_frame:
+            trans = [0, 0, 0]
+            rot = [0, 0, 0, 1]
+            self.pose = Transformation(trans, rot)
+        else:
+            trans = [0, 0, 0]
+            rot = [0, 0, 0, 1]
+            self.pose = Transformation(trans, rot)
+        """
+        Resets the position of the camera, it uses a series of methods that fall back on each other to get the location of the camera
+
+        :param from_world_frame: If this is set to true, the camera position transformation will be from the world instead of the robot odom frame
+        :param timestamp: What time do we want the camera tf frame, rospy.Time(0) if get the latest transform
+        :param camera_frame: The name of the camera frame
+        :param skip_if_not_found: If set to true, then will not wait if it cannot find the camera transform after the specified duration (1 second), it will just return
+        """
+        """
+        if from_world_frame:
+            try:
+                self.tf_listener.waitForTransform("world", self.robot_name + camera_frame, timestamp, rospy.Duration(nsecs=1000000))
+                (trans, rot) = self.tf_listener.lookupTransform("world", self.robot_name + camera_frame, timestamp)
+                self.pose = Transformation(trans, rot)
+                return
+            except (
+                tf2_py.LookupException,
+                tf.LookupException,
+                tf.ConnectivityException,
+                tf.ExtrapolationException,
+                tf2_py.TransformException,
+            ) as ex:
+                rospy.logerr_throttle(5, f"Unable to find transformation from world to {self.robot_name + camera_frame}")
+                pass
+        else:
+
+            try:
+                # Find the odom to base_footprint and publish straight base footprint
+                self.tf_listener.waitForTransform(self.robot_name + "/odom", self.robot_name + "/base_footprint", timestamp, rospy.Duration(secs=1))
+                (trans, rot) = self.tf_listener.lookupTransform(self.robot_name + "/odom", self.robot_name + "/base_footprint", timestamp)
+                world_to_base_link = Transformation(trans, rot)
+                e = world_to_base_link.orientation_euler
+                e[1] = 0
+                e[2] = 0
+                world_to_base_link.orientation_euler = e
+                self.pose_base_link_straight = world_to_base_link
+
+                # Calculate the camera transformation
+                self.tf_listener.waitForTransform(self.robot_name + "/odom", self.robot_name + camera_frame, timestamp, rospy.Duration(secs=1))
+                (trans, rot) = self.tf_listener.lookupTransform(self.robot_name + "/odom", self.robot_name + camera_frame, timestamp)
+                world_to_camera = Transformation(trans, rot)
+
+                camera_to_base_link = scipy.linalg.inv(world_to_base_link) @ world_to_camera
+
+                self.pose = camera_to_base_link
+                return
+            except (
+                tf2_py.LookupException,
+                tf.LookupException,
+                tf.ConnectivityException,
+                tf.ExtrapolationException,
+                tf2_py.TransformException,
+            ) as ex:
+                rospy.logerr_throttle(5, f"Unable to find transformation from world to {self.robot_name + camera_frame}")
+        """
+
     def findFloorCoordinate(self, pos: [int]) -> [int]:
         """
         From a camera pixel, get a coordinate on the floor
@@ -208,6 +282,18 @@ class Camera:
         tr_cam = self.pose @ tr
 
         return tr_cam
+
+    def calculateHorizonCoverArea(self) -> int:
+        """
+        Given the camera's position, return the area that is covered by the horizon (that is not the field area) in pixels from the top position
+        :return: Pixel length from the top of the image to the point where it meets the horizon
+        """
+
+        pitch = self.pose.orientation_euler[1]
+        d = math.sin(pitch) * self.focal_length
+
+        (r, h) = self.worldToImageFrame(0, -d)
+        return int(min(max(0, h), self.resolution_y))
 
     # CACHED PROPERTIES ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     @cached_property

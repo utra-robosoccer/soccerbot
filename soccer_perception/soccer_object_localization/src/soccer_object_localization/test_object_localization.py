@@ -30,7 +30,6 @@ from soccer_msgs.msg import GameState, RobotState
 
 class TestObjectLocalization(TestCase):
     def test_camera_find_floor_coordinate(self):
-        # rospy.init_node("test")
         p = Transformation([0, 0, 0.5], euler=[0, math.pi / 4, 0])
         c = Camera()
         c.pose = p
@@ -232,10 +231,8 @@ class TestObjectLocalization(TestCase):
             cv2.destroyAllWindows()
 
     def test_goalpost_detection(self):
-        rospy.init_node("test")
-
         """
-            Returns whether a point at a given field coordinate is visible to the robot
+        Returns whether a point at a given field coordinate is visible to the robot
         """
 
         def get_point_visibility(robot_pose, point_coords):
@@ -290,14 +287,14 @@ class TestObjectLocalization(TestCase):
         test_path = src_path + "/../../images/goal_net"
         download_dataset(url="https://drive.google.com/uc?id=17qdnW7egoopXHvakiNnUUufP2MOjyZ18", folder_path=test_path)
 
-        Camera.reset_position = MagicMock()
-        Camera.ready = MagicMock()
+        # Camera.reset_position = MagicMock()
+        # Camera.ready = MagicMock()
         d = DetectorGoalPost()
         d.robot_state.status = RobotState.STATUS_DETERMINING_SIDE
         d.camera.pose = Transformation(position=[0, 0, 0.46])
-        d.image_publisher.get_num_connections = MagicMock(return_value=1)
+        # d.image_publisher.get_num_connections = MagicMock(return_value=1)
 
-        cvbridge = CvBridge()
+        # cvbridge = CvBridge()
 
         src_path = os.path.dirname(os.path.realpath(__file__))
         test_path = src_path + "/../../images/goal_net"
@@ -325,38 +322,34 @@ class TestObjectLocalization(TestCase):
 
             if "DISPLAY" in os.environ:
                 cv2.imshow("Before", img)
-                cv2.waitKey(0)
 
             c = CameraInfo()
             c.height = img.shape[0]
             c.width = img.shape[1]
             d.camera.camera_info = c
 
-            img_msg: Image = cvbridge.cv2_to_imgmsg(img, encoding="rgb8")
-            d.image_publisher.publish = MagicMock()
-            d.image_callback(img_msg, debug=True)
+            # img_msg: Image = cvbridge.cv2_to_imgmsg(img, encoding="rgb8")
+            # d.image_publisher.publish = MagicMock()
+            d.image_callback(img, debug=False)
 
             if "DISPLAY" in os.environ:
-                if d.image_publisher.publish.call_count != 0:
-                    img_out = cvbridge.imgmsg_to_cv2(d.image_publisher.publish.call_args[0][0])
-                    cv2.imshow("After", img_out)
-
+                # if d.image_publisher.publish.call_count != 0:
+                #     # img_out = cvbridge.imgmsg_to_cv2(d.image_publisher.publish.call_args[0][0])
+                cv2.imshow("After", d.img_out)
                 cv2.waitKey(0)
 
-    @pytest.mark.skip
+    # @pytest.mark.skip
     def test_goalpost_detection_tune(self):
         """
         Used for tuning vertical line detection parameters using sliders.
         """
 
-        rospy.init_node("test")
+        # rospy.init_node("test")
 
         src_path = os.path.dirname(os.path.realpath(__file__))
         test_path = src_path + "/../../images/goal_net"
         download_dataset(url="https://drive.google.com/uc?id=17qdnW7egoopXHvakiNnUUufP2MOjyZ18", folder_path=test_path)
 
-        Camera.reset_position = MagicMock()
-        Camera.ready = MagicMock()
         d = DetectorGoalPost()
 
         src_path = os.path.dirname(os.path.realpath(__file__))
