@@ -1,12 +1,16 @@
 import time
+from typing import Union
 
 import numpy as np
 import pybullet as pb
-from soccer_pycontrol.soccerbot.handle_urdf import HandleURDF
-from soccer_pycontrol.soccerbot.ik_actions import IKActions
-from soccer_pycontrol.soccerbot.motor_control import MotorControl
-from soccer_pycontrol.soccerbot.pybullet_world import PybulletWorld
-from soccer_pycontrol.soccerbot.sensors import Sensors
+from soccer_pycontrol.path.path_robot import PathRobot
+from soccer_pycontrol.soccerbot2.foot_step_planner import FootStepPlanner
+from soccer_pycontrol.soccerbot2.handle_urdf import HandleURDF
+from soccer_pycontrol.soccerbot2.ik.ik_actions import IKActions
+from soccer_pycontrol.soccerbot2.motor_control import MotorControl
+from soccer_pycontrol.soccerbot2.pybullet.pybullet_world import PybulletWorld
+from soccer_pycontrol.soccerbot2.sensors import Sensors
+from soccer_pycontrol.soccerbot2.walking_pid import WalkingPID
 
 
 class PybulletEnv:
@@ -20,6 +24,7 @@ class PybulletEnv:
         Initialize the Navigator
 
         """
+
         self.rate = rate
         self.real_time = real_time
 
@@ -31,6 +36,9 @@ class PybulletEnv:
         self.sensors = Sensors(self.body)
 
         self.ik_actions = IKActions(self.handle_urdf.ik_data)
+
+        self.step_planner = FootStepPlanner(self.handle_urdf)
+        self.pid = WalkingPID()
 
     def wait(self, steps: int) -> None:
         for i in range(steps):

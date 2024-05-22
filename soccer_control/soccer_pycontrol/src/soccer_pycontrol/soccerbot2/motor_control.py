@@ -54,12 +54,17 @@ class MotorControl:
 
     def set_target_angles(self, target_angles: np.ndarray) -> None:
         self.configuration[0:18] = target_angles
-        self.set_motor()
 
     def set_right_leg_target_angles(self, target_angles: np.ndarray) -> None:
         self.configuration[Links.RIGHT_LEG_1 : Links.RIGHT_LEG_6 + 1] = target_angles
-        self.set_motor()
 
     def set_left_leg_target_angles(self, target_angles: np.ndarray) -> None:
         self.configuration[Links.LEFT_LEG_1 : Links.LEFT_LEG_6 + 1] = target_angles
-        self.set_motor()
+
+    def set_leg_joint_3_target_angle(self, target: float) -> None:
+        self.configuration_offset[Joints.LEFT_LEG_3] = target
+        self.configuration_offset[Joints.RIGHT_LEG_3] = target
+
+    def set_leg_joint_5_target_angle(self, target: float) -> None:
+        self.configuration_offset[Joints.LEFT_LEG_5] = target
+        self.configuration_offset[Joints.RIGHT_LEG_5] = target

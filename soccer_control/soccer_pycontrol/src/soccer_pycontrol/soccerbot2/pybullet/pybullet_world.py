@@ -14,7 +14,7 @@ class PybulletWorld:
         orientation: tuple = (0, 0, 0),
         lateral_friction: float = 0.9,
         spinning_friction: float = 0.9,
-        rolling_friction: float = 0.9,
+        rolling_friction: float = 0.0,
         display: bool = True,
     ):
         """

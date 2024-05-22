@@ -1,10 +1,10 @@
-from typing import List, Tuple
+from typing import Tuple
 
 import numpy as np
 from soccer_pycontrol.joints import Joints
 from soccer_pycontrol.links import Links
-from soccer_pycontrol.soccerbot.ik_data import IKData
-from soccer_pycontrol.soccerbot.ik_equation import IKEquation
+from soccer_pycontrol.soccerbot2.ik.ik_data import IKData
+from soccer_pycontrol.soccerbot2.ik.ik_equation import IKEquation
 
 from soccer_common import Transformation
 

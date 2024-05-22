@@ -255,7 +255,7 @@ class TestSpecial(TestCase):
         self.walker.wait(100)
         self.walker.soccerbot.createPathToGoal(Transformation([2, 0, 0], [0, 0, 0, 1]))
         self.walker.soccerbot.robot_path.path_sections = path.path_sections
-        # self.walker.soccerbot.robot_path.show()
+        # self.walker.soccerbot2.robot_path.show()
         self.walker.run()
         pass
 

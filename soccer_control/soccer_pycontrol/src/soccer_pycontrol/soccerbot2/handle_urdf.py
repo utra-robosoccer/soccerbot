@@ -3,8 +3,8 @@ from os.path import expanduser
 import numpy as np
 import pybullet as pb
 from soccer_pycontrol.links import Links
-from soccer_pycontrol.soccerbot.ik_data import IKData
-from soccer_pycontrol.soccerbot.set_pose import SetPose
+from soccer_pycontrol.soccerbot2.ik.ik_data import IKData
+from soccer_pycontrol.soccerbot2.set_pose import SetPose
 
 from soccer_common import Transformation
 

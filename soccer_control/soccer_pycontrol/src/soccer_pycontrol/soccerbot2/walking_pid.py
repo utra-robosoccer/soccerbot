@@ -1,8 +1,10 @@
 import queue
+from typing import Union
 
 import numpy as np
 from scipy.signal import butter
 from soccer_pycontrol.joints import Joints
+from soccer_pycontrol.path.path_robot import PathRobot
 
 from soccer_common import PID, Transformation
 
@@ -72,12 +74,12 @@ class WalkingPID:
 
         [_, pitch, _] = imu_pose.orientation_euler
         F = self.walking_pid.update(pitch)
-        self.configuration_offset[Joints.LEFT_LEG_3] = F + self.walking_offset
-        self.configuration_offset[Joints.RIGHT_LEG_3] = F + self.walking_offset
+        # self.configuration_offset[Joints.LEFT_LEG_3] = F + self.walking_offset
+        # self.configuration_offset[Joints.RIGHT_LEG_3] = F + self.walking_offset
 
-        return F
+        return F + self.walking_offset
 
-    def apply_imu_feedback_standing(self, imu_pose: Transformation):
+    def apply_imu_feedback_standing(self, imu_pose: Transformation):  # -> float:
         """
         Adds IMU feedback while the robot is standing or getting ready to the arms
 
@@ -87,11 +89,11 @@ class WalkingPID:
 
         if imu_pose is None:
             return
-        [yaw, pitch, roll] = imu_pose.orientation_euler
+        [_, pitch, _] = imu_pose.orientation_euler
         F = self.standing_pid.update(pitch)
-        self.configuration_offset[Joints.LEFT_LEG_5] = F + self.standing_offset
-        self.configuration_offset[Joints.RIGHT_LEG_5] = F + self.standing_offset
-        return pitch
+        # self.configuration_offset[Joints.LEFT_LEG_5] = F + self.standing_offset
+        # self.configuration_offset[Joints.RIGHT_LEG_5] = F + self.standing_offset
+        return F + self.standing_offset
 
     def get_phase_difference_roll(self, t, imu_pose: Transformation):
         # TODO what does this do?
@@ -125,7 +127,7 @@ class WalkingPID:
 
         return y_n
 
-    def apply_phase_difference_roll_feedback(self, t, imu_pose: Transformation):
+    def apply_phase_difference_roll_feedback(self, t, imu_pose: Transformation, robot_path: PathRobot):
         """
         Adds IMU feedback while the robot is moving to the arms
 
@@ -138,7 +140,7 @@ class WalkingPID:
 
         y_n = self.get_phase_difference_roll(t, imu_pose)
         F = self.walking_pid_roll.update(y_n)
-        return min(t + F, self.robot_path.duration())
+        return min(t + F, robot_path.duration())
 
     def reset_imus(self):
         """
@@ -149,9 +151,9 @@ class WalkingPID:
         self.walking_pid_roll.reset()
         self.standing_pid.reset()
 
-    def reset_roll_feedback_parameters(self):
+    def reset_roll_feedback_parameters(self, robot_path: PathRobot):
         sampling_frequency = 100
-        self.roll_feedback_steps_per_second = self.robot_path.path_sections[0].linearStepCount() / self.robot_path.path_sections[0].duration()
+        self.roll_feedback_steps_per_second = robot_path.path_sections[0].linearStepCount() / robot_path.path_sections[0].duration()
         cutoff_frequency = self.roll_feedback_steps_per_second / 4
         normalized_cutoff = cutoff_frequency / (0.5 * sampling_frequency)
 

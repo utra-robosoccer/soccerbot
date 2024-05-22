@@ -15,7 +15,12 @@ class PathRobot(PathTorso):
     Subclass for the robot's path, contains functions to draw the path of the robot
     """
 
-    def __init__(self, start_transform, end_transform, foot_center_to_floor):
+    def __init__(
+        self,
+        start_transform: Transformation = Transformation(),
+        end_transform: Transformation = Transformation([0.5, 0, 0], [0, 0, 0, 1]),
+        foot_center_to_floor: float = 0.0221,
+    ):
         super().__init__(start_transform, end_transform, foot_center_to_floor)
 
     def show(self):

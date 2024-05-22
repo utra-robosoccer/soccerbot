@@ -1,9 +1,6 @@
-from typing import List, Tuple
-
-import matplotlib.pyplot as plt
 import numpy as np
 import scipy
-from soccer_pycontrol.soccerbot.ik_data import IKData
+from soccer_pycontrol.soccerbot2.ik.ik_data import IKData
 
 from soccer_common import Transformation
 

@@ -4,25 +4,28 @@ from typing import Union
 import scipy
 
 # from soccer_pycontrol.exp.calibration import adjust_navigation_transform
-from soccer_pycontrol.links import Links
 from soccer_pycontrol.path.path_robot import PathRobot
-from soccer_pycontrol.soccerbot.handle_urdf import HandleURDF
-from soccer_pycontrol.soccerbot.pybullet_env import PybulletEnv
-from soccer_pycontrol.soccerbot.pybullet_world import PybulletWorld
+from soccer_pycontrol.soccerbot2.handle_urdf import HandleURDF
 
 from soccer_common import Transformation
 
 
 class FootStepPlanner:
-    def __init__(self, urdf: HandleURDF, use_calibration: bool = False):
+    def __init__(
+        self,
+        urdf: HandleURDF,
+        use_calibration: bool = False,
+        torso_offset_pitch: float = 0.0,
+        torso_offset_x: float = 0.0,
+    ):
         # TODO lots of duplicates with inversekinematics need to fix it
         self.robot_path: Union[PathRobot, None] = None
         self.use_calibration = use_calibration
         self.urdf = urdf
 
-        pitch_correction = Transformation([0, 0, 0], euler=[0, 0.0, 0])
+        pitch_correction = Transformation([0, 0, 0], euler=[0, torso_offset_pitch, 0])
         # Transformation([0, 0, 0], euler=[0, rospy.get_param("torso_offset_pitch", 0.0), 0])
-        self.torso_offset = Transformation([0, 0, 0]) @ pitch_correction
+        self.torso_offset = Transformation([torso_offset_x, 0, 0]) @ pitch_correction
         # Transformation([rospy.get_param("torso_offset_x", 0), 0, 0]) @ pitch_correction
 
         # Odom pose at start of path, reset everytime a new path is created

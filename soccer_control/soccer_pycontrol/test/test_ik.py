@@ -3,12 +3,8 @@ import unittest
 
 import numpy as np
 from matplotlib import pyplot as plt
-from soccer_pycontrol.links import Links
-from soccer_pycontrol.soccerbot.ik_actions import IKActions
-from soccer_pycontrol.soccerbot.ik_data import IKData
-from soccer_pycontrol.soccerbot.ik_equation import IKEquation
-
-from soccer_common import Transformation
+from soccer_pycontrol.soccerbot2.ik.ik_actions import IKActions
+from soccer_pycontrol.soccerbot2.ik.ik_data import IKData
 
 os.environ["ROS_NAMESPACE"] = "/robot1"
 

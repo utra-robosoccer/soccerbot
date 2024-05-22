@@ -4,8 +4,8 @@ import pybullet as pb
 import pybullet_data
 import rospy
 from soccer_pycontrol.links import Links
-from soccer_pycontrol.soccerbot.pybullet_world import PybulletWorld
-from soccer_pycontrol.soccerbot.soccerbot import Soccerbot
+from soccer_pycontrol.ramp import Ramp
+from soccer_pycontrol.soccerbot import Soccerbot
 
 from soccer_common.transformation import Transformation
 
@@ -19,7 +19,7 @@ class Navigator:
 
     PYBULLET_STEP = rospy.get_param("control_frequency", 0.01)
 
-    def __init__(self, real_time=False, display=True, useCalibration=True):
+    def __init__(self, real_time=False, display=True, useCalibration=False):
         """
         Initialize the Navigator
 
@@ -40,7 +40,7 @@ class Navigator:
 
         self.soccerbot = Soccerbot(Transformation(), useFixedBase=False, useCalibration=useCalibration)
 
-        self.ramp = PybulletWorld()
+        self.ramp = Ramp("plane.urdf", (0, 0, 0), (0, 0, 0), lateralFriction=0.9, spinningFriction=0.9, rollingFriction=0.0)
 
         self.terminate_walk = False
         self.prepare_walk_time = rospy.get_param("prepare_walk_time", 2)
