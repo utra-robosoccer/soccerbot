@@ -21,18 +21,18 @@ void update()
   uint32_t lastTime = HAL_GetTick();
   while(1)
   {
-	if(HAL_GetTick() - lastTime > UPDATE_PERIOD) // send IMU/ANGLES periodically back to main computer
-	{
-	  lastTime = HAL_GetTick();
+    if(HAL_GetTick() - lastTime > UPDATE_PERIOD) // send IMU/ANGLES periodically back to main computer
+    {
+      lastTime = HAL_GetTick();
 
-	  // we read want to read 1 motor position from each port
-	  read_motors(txBuf);
+      // we read want to read 1 motor position from each port
+      read_motors(txBuf);
 
-	  // get current linear Acceleration and Rotational speed
-	  read_imu(txBuf);
+      // get current linear Acceleration and Rotational speed
+      read_imu(txBuf);
 
-	  CDC_Transmit_FS((uint8_t *) txBuf, sizeof(txBuf));
-	}
+      CDC_Transmit_FS((uint8_t *) txBuf, sizeof(txBuf));
+    }
 
     if (usb_received) // when we receive USB packet, service it right away
     {

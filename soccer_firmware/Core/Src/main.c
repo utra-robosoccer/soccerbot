@@ -17,18 +17,12 @@
   */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
-
 #include "main.h"
 #include "usb_device.h"
-#include "dynamixel_p1.h"
-#include "dynamixel_p2.h"
-#include "MPU6050.h"
-#include "update_loop.h"
-#include "bringup_tests.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "BMI088.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -252,8 +246,11 @@ int main(void)
   HAL_Delay(1000);
 
   init_ports();
-  MPU6050_init();
+//  MPU6050_init();
   init_motors();
+
+  BMI088 imu;
+  BMI088_Init(&imu, &hi2c1);
 
   /* USER CODE END 2 */
 
@@ -261,7 +258,12 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    update();
+    int16_t gyroX;
+    int16_t gyroY;
+    int16_t gyroZ;
+    readGyroscopeFromBMI088(&hi2c1, &gyroX, &gyroY, &gyroZ);
+//    read_temp();
+//    update();
     // test Dynamixel 2.0
 //    test_led_p2(&port2, 0x6);
 //    test_motor_sweep2(&port2);
@@ -287,7 +289,7 @@ int main(void)
 //    test_motor_sweep1(&port2, 13);
 //    _motor_ping_p1(&port6, 13);
 	  HAL_GPIO_TogglePin(GPIOA, GREEN_LED_Pin);
-	  HAL_Delay(100);
+	  HAL_Delay(50);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -357,7 +359,7 @@ static void MX_I2C1_Init(void)
 
   /* USER CODE END I2C1_Init 1 */
   hi2c1.Instance = I2C1;
-  hi2c1.Init.ClockSpeed = 100000;
+  hi2c1.Init.ClockSpeed = 50000;
   hi2c1.Init.DutyCycle = I2C_DUTYCYCLE_2;
   hi2c1.Init.OwnAddress1 = 0;
   hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
