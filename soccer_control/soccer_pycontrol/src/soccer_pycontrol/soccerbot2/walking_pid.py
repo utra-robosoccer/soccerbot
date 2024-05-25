@@ -17,9 +17,9 @@ class WalkingPID:
         standing_Ki: float = 0.001,
         standing_setpoint: float = -0.01,
         standing_offset: float = 0.0,
-        walking_Kp: float = 0.8,
-        walking_Kd: float = 0.0,
-        walking_Ki: float = 0.0005,
+        walking_Kp: float = 2.3,
+        walking_Kd: float = 0.5,
+        walking_Ki: float = 0.0000,
         walking_setpoint: float = -0.01,
         walking_offset: float = 0.0,
         walking_roll_Kp: float = 0,
@@ -77,7 +77,7 @@ class WalkingPID:
         # self.configuration_offset[Joints.LEFT_LEG_3] = F + self.walking_offset
         # self.configuration_offset[Joints.RIGHT_LEG_3] = F + self.walking_offset
 
-        return F + self.walking_offset
+        return F
 
     def apply_imu_feedback_standing(self, imu_pose: Transformation):  # -> float:
         """
@@ -93,7 +93,7 @@ class WalkingPID:
         F = self.standing_pid.update(pitch)
         # self.configuration_offset[Joints.LEFT_LEG_5] = F + self.standing_offset
         # self.configuration_offset[Joints.RIGHT_LEG_5] = F + self.standing_offset
-        return F + self.standing_offset
+        return (F), pitch
 
     def get_phase_difference_roll(self, t, imu_pose: Transformation):
         # TODO what does this do?

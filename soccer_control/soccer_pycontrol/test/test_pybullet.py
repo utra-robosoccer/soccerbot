@@ -6,6 +6,7 @@ from soccer_pycontrol.soccerbot2.foot_step_planner import FootStepPlanner
 from soccer_pycontrol.soccerbot2.handle_urdf import HandleURDF
 from soccer_pycontrol.soccerbot2.pybullet.pybullet_env import PybulletEnv
 from soccer_pycontrol.soccerbot2.pybullet.pybullet_world import PybulletWorld
+from soccer_pycontrol.soccerbot2.trajectory_following import TrajFollowing
 
 from soccer_common import Transformation
 
@@ -72,33 +73,48 @@ class TestPybullet(unittest.TestCase):
         p.motor_control.set_target_angles(p.ik_actions.ready())
         p.motor_control.set_motor()
         p.wait(50)
-        p.step_planner.createPathToGoal(Transformation([1, 1, 0], [0, 0, 0, 1]))
+        p.step_planner.createPathToGoal(Transformation([0.1, 0, 0], [0, 0, 0, 1]))
 
         p.pid.reset_imus()
         p.pid.reset_roll_feedback_parameters(p.step_planner.robot_path)
         times = []
-        t = 0
-        # TODO make a navigator class
-        while t <= p.step_planner.robot_path.duration():
-            if p.step_planner.current_step_time <= t <= p.step_planner.robot_path.duration():
-                imu = p.sensors.get_imu()
-                t_offset = p.pid.apply_phase_difference_roll_feedback(t, imu, p.step_planner.robot_path)
-                torso_to_right_foot, torso_to_left_foot = p.step_planner.stepPath(t_offset)
-                r_theta = p.ik_actions.ik.ik_right_foot(torso_to_right_foot)
-                l_theta = p.ik_actions.ik.ik_left_foot(torso_to_left_foot)
-                p.motor_control.set_right_leg_target_angles(r_theta[0:6])
-                p.motor_control.set_left_leg_target_angles(l_theta[0:6])
-                F = p.pid.apply_imu_feedback(imu)
-                p.motor_control.set_leg_joint_3_target_angle(F)
+        for i in range(10):
+            t = 0.0
+            p.step_planner.createPathToGoal(Transformation([0.15, 0, 0], [0, 0, 0, 1]))
+            # TODO make a navigator class
+            while t <= p.step_planner.robot_path.duration():
+                if p.step_planner.current_step_time <= t < p.step_planner.robot_path.duration():
+                    imu = p.sensors.get_imu()
+                    t_offset = p.pid.apply_phase_difference_roll_feedback(t, imu, p.step_planner.robot_path)
+                    torso_to_right_foot, torso_to_left_foot = p.step_planner.stepPath(t_offset)
+                    r_theta = p.ik_actions.ik.ik_right_foot(torso_to_right_foot)
+                    l_theta = p.ik_actions.ik.ik_left_foot(torso_to_left_foot)
+                    p.motor_control.set_right_leg_target_angles(r_theta[0:6])
+                    p.motor_control.set_left_leg_target_angles(l_theta[0:6])
+                    F = p.pid.apply_imu_feedback(imu)
+                    p.motor_control.set_leg_joint_3_target_angle(F)
 
-                p.motor_control.set_motor()
-                p.step_planner.current_step_time = (
-                    p.step_planner.current_step_time + p.step_planner.robot_path.step_precision
-                )  # TODO needs to be 0.02 or much more unstable
-                times.append(t)
-            p.step()
-            t = t + 0.01
+                    p.motor_control.set_motor()
+                    p.step_planner.current_step_time = (
+                        p.step_planner.current_step_time + p.step_planner.robot_path.step_precision
+                    )  # TODO needs to be 0.02 or much more unstable
+                    times.append(t)
+                p.step()
+                t = t + 0.01
 
+        p.wait(100)
+
+    def test_foot_step_planner_plane2(self):
+        world = PybulletWorld()
+        model = HandleURDF()
+        p = PybulletEnv(model, world, real_time=True, rate=100)
+        tf = TrajFollowing(p)
+
+        p.wait(50)
+        tf.ready()
+        p.wait(50)
+        tf.setGoal(Transformation([1, 0, 0], [0, 0, 0, 1]))
+        tf.run()
         p.wait(100)
 
 
