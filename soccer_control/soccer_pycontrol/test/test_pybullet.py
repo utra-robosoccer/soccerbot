@@ -3,9 +3,10 @@ import unittest
 import numpy as np
 import pytest
 from soccer_pycontrol.soccerbot2.foot_step_planner import FootStepPlanner
-from soccer_pycontrol.soccerbot2.handle_urdf import HandleURDF
+from soccer_pycontrol.soccerbot2.kinematic_data import KinematicData
 from soccer_pycontrol.soccerbot2.pybullet.pybullet_env import PybulletEnv
 from soccer_pycontrol.soccerbot2.pybullet.pybullet_world import PybulletWorld
+from soccer_pycontrol.soccerbot2.pybullet_load_model import LoadModel
 from soccer_pycontrol.soccerbot2.trajectory_following import TrajFollowing
 
 from soccer_common import Transformation
@@ -14,7 +15,7 @@ from soccer_common import Transformation
 class TestPybullet(unittest.TestCase):
     def test_imu(self):
         world = PybulletWorld()
-        model = HandleURDF()
+        model = LoadModel()
         p = PybulletEnv(model, world, real_time=True, rate=100)
         p.wait(100)
         print(p.sensors.get_imu().orientation_euler)
@@ -22,7 +23,7 @@ class TestPybullet(unittest.TestCase):
 
     def test_foot_sensor(self):
         world = PybulletWorld()
-        model = HandleURDF()
+        model = LoadModel()
         p = PybulletEnv(model, world, real_time=True, rate=100)
         p.wait(100)
         print(p.sensors.get_foot_pressure_sensors(p.world.plane))
@@ -30,7 +31,7 @@ class TestPybullet(unittest.TestCase):
 
     def test_foot_step_planner_fixed(self):
         world = PybulletWorld(path="")
-        model = HandleURDF(fixed_base=True)
+        model = LoadModel(fixed_base=True)
         p = PybulletEnv(model, world, real_time=True, rate=100)
         fp = FootStepPlanner(p.robot_path, p.handle_urdf)
         p.wait(50)
@@ -65,7 +66,7 @@ class TestPybullet(unittest.TestCase):
 
     def test_foot_step_planner_plane(self):
         world = PybulletWorld()
-        model = HandleURDF()
+        model = LoadModel()
         p = PybulletEnv(model, world, real_time=True, rate=100)
 
         p.wait(50)
@@ -106,7 +107,8 @@ class TestPybullet(unittest.TestCase):
 
     def test_foot_step_planner_plane2(self):
         world = PybulletWorld()
-        model = HandleURDF()
+        kd = KinematicData()
+        model = LoadModel(kd.urdf_model_path, kd.walking_torso_height, fixed_base=False)
         p = PybulletEnv(model, world, real_time=True, rate=100)
         tf = TrajFollowing(p)
 
@@ -125,7 +127,7 @@ def test_ready(robot_model: str):
     :return: None
     """
     world = PybulletWorld()
-    model = HandleURDF(robot_model=robot_model, pose=Transformation())
+    model = LoadModel(robot_model=robot_model, pose=Transformation())
     p = PybulletEnv(model, world, real_time=True, rate=250)
     p.wait(100)
     p.motor_control.set_target_angles(p.ik_actions.ready())
@@ -149,7 +151,7 @@ def test_sweep(sweep_name: str, h: float, robot_model: str):
     :return: None
     """
     world = PybulletWorld(path="")
-    model = HandleURDF(fixed_base=True, robot_model=robot_model)
+    model = LoadModel(fixed_base=True, robot_model=robot_model)
     p = PybulletEnv(model, world, real_time=True, rate=1000)
 
     steps = 50

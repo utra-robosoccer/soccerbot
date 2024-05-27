@@ -33,12 +33,9 @@ class PybulletWorld:
         pb.setGravity(0, 0, -9.81)
         pb.configureDebugVisualizer(pb.COV_ENABLE_GUI, 0)
 
-        self.orientation = orientation
-        self.position = position
-
         if path != "":
-            self.plane = pb.loadURDF(path, basePosition=self.position, baseOrientation=pb.getQuaternionFromEuler(self.orientation))
-
+            self.plane = pb.loadURDF(path, basePosition=position, baseOrientation=pb.getQuaternionFromEuler(orientation))
+            # TODO does this need to be a global var?
             pb.changeDynamics(
                 self.plane,
                 linkIndex=-1,

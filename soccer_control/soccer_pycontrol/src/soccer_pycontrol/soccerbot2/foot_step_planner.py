@@ -5,7 +5,7 @@ import scipy
 
 # from soccer_pycontrol.exp.calibration import adjust_navigation_transform
 from soccer_pycontrol.path.path_robot import PathRobot
-from soccer_pycontrol.soccerbot2.handle_urdf import HandleURDF
+from soccer_pycontrol.soccerbot2.pybullet_load_model import LoadModel
 
 from soccer_common import Transformation
 
@@ -13,7 +13,7 @@ from soccer_common import Transformation
 class FootStepPlanner:
     def __init__(
         self,
-        urdf: HandleURDF,
+        urdf: LoadModel,
         use_calibration: bool = False,
         torso_offset_pitch: float = 0.0,
         torso_offset_x: float = 0.0,

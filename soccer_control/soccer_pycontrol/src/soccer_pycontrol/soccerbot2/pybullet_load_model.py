@@ -1,18 +1,33 @@
+from os.path import expanduser
+
 import pybullet as pb
 
 from soccer_common import Transformation
 
 
-class SetPose:
-    def __init__(self, body: pb.loadURDF, pose: Transformation = Transformation(), fixed_base: bool = False, walking_torso_height: float = 0.315):
+class LoadModel:  # TODO Maybe rename to body
+    def __init__(self, urdf_model_path: str, walking_torso_height: float, pose: Transformation = Transformation(), fixed_base: bool = False):
         self.pose = pose
-        self.body = body
+
+        self.body = self.load_urdf_pybullet(urdf_model_path, fixed_base)
         self.walking_torso_height = walking_torso_height
 
         if not fixed_base:
             self.set_pose(pose)
 
+    def load_urdf_pybullet(self, urdf_model_path: str, fixed_base: bool) -> pb.loadURDF:
+        # TODO read from yaml? Also maybe put in world
+        body = pb.loadURDF(
+            urdf_model_path,
+            useFixedBase=fixed_base,
+            flags=pb.URDF_USE_INERTIA_FROM_FILE | 0,
+            basePosition=self.pose.position,
+            baseOrientation=self.pose.quaternion,
+        )
+        return body
+
     # Pose
+    # TODO still dont fully like these solutions
     def set_walking_torso_height(self, pose: Transformation) -> Transformation:
         """
         Takes a 2D pose and sets the height of the pose to the height of the torso
@@ -31,8 +46,7 @@ class SetPose:
         """
         self.pose = self.set_walking_torso_height(pose)
 
-        # Remove the roll and yaw from the pose TODO why also your code and comment is wrong
-        [r, p, y] = pose.orientation_euler
-        self.pose.orientation_euler = [r, 0, 0]
+        [y, _, _] = pose.orientation_euler
+        self.pose.orientation_euler = [y, 0, 0]
         if pb.isConnected():
             pb.resetBasePositionAndOrientation(self.body, self.pose.position, self.pose.quaternion)

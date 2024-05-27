@@ -5,7 +5,7 @@ from soccer_common import Transformation
 
 class IKData:
     def __init__(
-        self,  # TODO add the rosparam
+        self,  # TODO add the rosparam TODO add pinnochio instead of pybullet
         thigh_length: float = 0.089,
         tibia_length: float = 0.0827,
         torso_to_right_hip: Transformation = Transformation(position=[0.0135, -0.035, -0.156]),

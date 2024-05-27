@@ -5,6 +5,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 from soccer_pycontrol.soccerbot2.ik.ik_actions import IKActions
 from soccer_pycontrol.soccerbot2.ik.ik_data import IKData
+from soccer_pycontrol.soccerbot2.kinematic_data import KinematicData
 
 os.environ["ROS_NAMESPACE"] = "/robot1"
 
@@ -26,6 +27,22 @@ class TestIK(unittest.TestCase):
         if PLOT:
             plt.scatter(x, z)
             plt.show()
+
+    def test_xx_sweep(self):
+        """
+        Case 1: Standard case
+        :return: None
+        """
+        w = KinematicData()
+        # ik_data = IKData()
+        # ik_actions = IKActions(ik_data)
+        # thetas, x, z = ik_actions.x_sweep()
+        # # np.save('ik_data''/x_sweep', thetas)
+        #
+        # assert np.allclose(thetas, np.load("ik_data" "/x_sweep.npy"))
+        # if PLOT:
+        #     plt.scatter(x, z)
+        #     plt.show()
 
     def test_y_sweep(self):
         """

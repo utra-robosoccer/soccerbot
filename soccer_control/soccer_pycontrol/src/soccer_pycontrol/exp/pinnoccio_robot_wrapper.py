@@ -14,7 +14,7 @@ from pinocchio.robot_wrapper import RobotWrapper
 from pinocchio.visualize import GepettoVisualizer, MeshcatVisualizer
 
 # from soccer_pycontrol.joints import Joints
-
+# TODO should use pinnoccio as backend for rigid kinematics instead of pybullet. should be faster
 VISUALIZER = MeshcatVisualizer
 
 # Load the URDF model with RobotWrapper
@@ -31,25 +31,26 @@ data = robot.data
 
 def fwd_kinematics() -> np.ndarray:
     q = [0] * 18  # pinocchio.randomConfiguration(model)
-    for i in model.names:
-        print(i, model.getJointId(i))
-    q[model.getJointId("right_leg_motor_0") - 1 : model.getJointId("right_leg_motor_5")] = [
-        -4.440892098500626e-16,
-        1.5707963267948966,
-        1.5707963267948957,
-        -3.141592653589793,
-        1.5707963267948974,
-        -1.5707963267948966,
-    ]
+    # q = pinocchio.randomConfiguration(model)
+    # for i in model.names:
+    #     print(i, model.getJointId(i))
+    # q[model.getJointId("right_leg_motor_0") - 1 : model.getJointId("right_leg_motor_5")] = [
+    #     -4.440892098500626e-16,
+    #     1.5707963267948966,
+    #     1.5707963267948957,
+    #     -3.141592653589793,
+    #     1.5707963267948974,
+    #     -1.5707963267948966,
+    # ]
     q = np.array(q)
-    print("q: %s" % q.T)
-    print(model.getJointId("right_leg_motor_0"))
-    for i in model.names:
-        print(i, model.getJointId(i))
-    pinocchio.forwardKinematics(model, data, q)
+    # print("q: %s" % q.T)
+    # print(model.getJointId("right_leg_motor_0"))
+    # for i in model.names:
+    #     print(i, model.getJointId(i))
+    # pinocchio.forwardKinematics(model, data, q)
     # Print out the placement of each joint of the kinematic tree
     for name, oMi in zip(model.names, data.oMi):
-        print(("{:<24} : {: .2f} {: .2f} {: .2f}".format(name, *oMi.translation.T.flat)))
+        print(("{:<24} : {: .6f} {: .6f} {: .6f}".format(name, *oMi.translation.T.flat)))
     return q
 
 
@@ -98,6 +99,16 @@ if VISUALIZER:
     robot.setVisualizer(VISUALIZER())
     robot.initViewer()
     robot.loadViewerModel("pinocchio")
-    q = fwd_kinematics()
+    import time
+
+    for i in range(10):
+        s = time.time()
+
+        q = fwd_kinematics()
+        v = pinocchio.utils.zero(model.nv)
+        pinocchio.ccrba(model, data, q, v)
+        # print(data.Ig)
+        print(pinocchio.centerOfMass(model, data, q))
+        print(time.time() - s)
     # q = inverse_kinematics()
     robot.display(q)

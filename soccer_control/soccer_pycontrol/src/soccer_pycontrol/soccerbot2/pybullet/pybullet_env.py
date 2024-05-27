@@ -1,14 +1,12 @@
 import time
-from typing import Union
 
 import numpy as np
 import pybullet as pb
-from soccer_pycontrol.path.path_robot import PathRobot
 from soccer_pycontrol.soccerbot2.foot_step_planner import FootStepPlanner
-from soccer_pycontrol.soccerbot2.handle_urdf import HandleURDF
 from soccer_pycontrol.soccerbot2.ik.ik_actions import IKActions
 from soccer_pycontrol.soccerbot2.motor_control import MotorControl
 from soccer_pycontrol.soccerbot2.pybullet.pybullet_world import PybulletWorld
+from soccer_pycontrol.soccerbot2.pybullet_load_model import LoadModel
 from soccer_pycontrol.soccerbot2.sensors import Sensors
 from soccer_pycontrol.soccerbot2.walking_pid import WalkingPID
 
@@ -19,7 +17,7 @@ class PybulletEnv:
     """
 
     # TODO update with the modified for pycontrol
-    def __init__(self, model: HandleURDF, world: PybulletWorld, real_time: bool = False, rate: int = 100):
+    def __init__(self, model: LoadModel, world: PybulletWorld, real_time: bool = False, rate: int = 100):
         """
         Initialize the Navigator
 
@@ -58,7 +56,7 @@ class PybulletEnv:
 
 if __name__ == "__main__":
     world = PybulletWorld(path="")
-    model = HandleURDF(fixed_base=True)
+    model = LoadModel(fixed_base=True)
     p = PybulletEnv(model, world, real_time=True, rate=250)
 
     p.world.close()
