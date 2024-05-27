@@ -12,13 +12,13 @@ from soccer_common import PID, Transformation
 class WalkingPID:
     def __init__(
         self,
-        standing_Kp: float = 0.15,
-        standing_Kd: float = 0.0,
-        standing_Ki: float = 0.001,
-        standing_setpoint: float = -0.01,
+        standing_Kp: float = 1.5,
+        standing_Kd: float = 0.5,
+        standing_Ki: float = 0.00,
+        standing_setpoint: float = -0.0,
         standing_offset: float = 0.0,
         walking_Kp: float = 2.3,
-        walking_Kd: float = 0.5,
+        walking_Kd: float = 1,
         walking_Ki: float = 0.0000,
         walking_setpoint: float = -0.01,
         walking_offset: float = 0.0,
@@ -89,8 +89,8 @@ class WalkingPID:
 
         if imu_pose is None:
             return
-        [_, pitch, _] = imu_pose.orientation_euler
-        F = self.standing_pid.update(pitch)
+        [_, pitch, roll] = imu_pose.orientation_euler
+        F = self.standing_pid.update(roll)
         # self.configuration_offset[Joints.LEFT_LEG_5] = F + self.standing_offset
         # self.configuration_offset[Joints.RIGHT_LEG_5] = F + self.standing_offset
         return (F), pitch

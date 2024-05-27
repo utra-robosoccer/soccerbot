@@ -70,8 +70,9 @@ class TrajFollowing:
         self.env.pid.reset_imus()
         self.env.pid.reset_roll_feedback_parameters(self.env.step_planner.robot_path)
 
-        while self.t <= self.env.step_planner.robot_path.duration():
+        while True:
             if self.t < 0:
+                # todo should do roll
                 F, pitch = self.env.pid.apply_imu_feedback_standing(self.env.sensors.get_imu())
                 self.env.motor_control.set_leg_joint_5_target_angle(F)
                 self.env.motor_control.set_motor()
@@ -81,7 +82,7 @@ class TrajFollowing:
                         self.t = 0
                 else:
                     stable_count = 5
-            else:
+            elif self.t <= self.env.step_planner.robot_path.duration():
                 if self.env.step_planner.current_step_time <= self.t <= self.env.step_planner.robot_path.duration():
                     imu = self.env.sensors.get_imu()
                     t_offset = self.env.pid.apply_phase_difference_roll_feedback(self.t, imu, self.env.step_planner.robot_path)
@@ -92,14 +93,26 @@ class TrajFollowing:
                     self.env.motor_control.set_left_leg_target_angles(l_theta[0:6])
                     F = self.env.pid.apply_imu_feedback(imu)
                     self.env.motor_control.set_leg_joint_3_target_angle(F)
-                    # F, pitch = self.env.pid.apply_imu_feedback_standing(self.env.sensors.get_imu())
-                    # self.env.motor_control.set_leg_joint_5_target_angle(F)
+                    F, pitch = self.env.pid.apply_imu_feedback_standing(self.env.sensors.get_imu())
+                    self.env.motor_control.set_leg_joint_5_target_angle(F)
 
                     self.env.motor_control.set_motor()
                     self.env.step_planner.current_step_time = (
                         self.env.step_planner.current_step_time + self.env.step_planner.robot_path.step_precision
                     )
+            else:
+                # todo should do roll
+                F, pitch = self.env.pid.apply_imu_feedback_standing(self.env.sensors.get_imu())
+                self.env.motor_control.set_leg_joint_5_target_angle(F)
+                self.env.motor_control.set_motor()
+                if abs(pitch - self.env.pid.standing_pid.setpoint) < 0.025:
+                    stable_count = stable_count - 1
+                    if stable_count == 0:
+                        break
+                else:
+                    stable_count = 5
 
+            # TODO should add a stabilization after walk is done
             angle_threshold = 1.25  # in radian
             [_, pitch, _] = self.env.sensors.get_imu().orientation_euler
             if pitch > angle_threshold:
