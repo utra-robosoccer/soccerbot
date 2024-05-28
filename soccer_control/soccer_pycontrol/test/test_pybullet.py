@@ -4,10 +4,10 @@ import numpy as np
 import pytest
 from soccer_pycontrol.soccerbot2.foot_step_planner import FootStepPlanner
 from soccer_pycontrol.soccerbot2.kinematic_data import KinematicData
+from soccer_pycontrol.soccerbot2.nav import Nav
 from soccer_pycontrol.soccerbot2.pybullet.pybullet_env import PybulletEnv
 from soccer_pycontrol.soccerbot2.pybullet.pybullet_world import PybulletWorld
 from soccer_pycontrol.soccerbot2.pybullet_load_model import LoadModel
-from soccer_pycontrol.soccerbot2.trajectory_following import TrajFollowing
 
 from soccer_common import Transformation
 
@@ -38,7 +38,7 @@ class TestPybullet(unittest.TestCase):
         p.motor_control.set_target_angles(p.ik_actions.ready())
         p.motor_control.set_motor()
         p.wait(50)
-        fp.createPathToGoal(Transformation([1, 0, 0], [0, 0, 0, 1]))
+        fp.create_path_to_goal(Transformation([1, 0, 0], [0, 0, 0, 1]))
         # p.wmodelait(100)
 
         pitches = []
@@ -47,7 +47,7 @@ class TestPybullet(unittest.TestCase):
 
         while t <= fp.robot_path.duration():
             if fp.current_step_time <= t <= fp.robot_path.duration():
-                torso_to_right_foot, torso_to_left_foot = fp.stepPath(t)
+                torso_to_right_foot, torso_to_left_foot = fp.get_next_step(t)
                 r_theta = p.ik_actions.ik.get_right_leg_angles(torso_to_right_foot)
                 l_theta = p.ik_actions.ik.get_left_leg_angles(torso_to_left_foot)
                 p.motor_control.set_right_leg_target_angles(r_theta[0:6])
@@ -74,20 +74,20 @@ class TestPybullet(unittest.TestCase):
         p.motor_control.set_target_angles(p.ik_actions.ready())
         p.motor_control.set_motor()
         p.wait(50)
-        p.step_planner.createPathToGoal(Transformation([0.1, 0, 0], [0, 0, 0, 1]))
+        p.step_planner.create_path_to_goal(Transformation([0.1, 0, 0], [0, 0, 0, 1]))
 
         p.pid.reset_imus()
         p.pid.reset_roll_feedback_parameters(p.step_planner.robot_path)
         times = []
         for i in range(10):
             t = 0.0
-            p.step_planner.createPathToGoal(Transformation([0.15, 0, 0], [0, 0, 0, 1]))
+            p.step_planner.create_path_to_goal(Transformation([0.15, 0, 0], [0, 0, 0, 1]))
             # TODO make a navigator class
             while t <= p.step_planner.robot_path.duration():
                 if p.step_planner.current_step_time <= t < p.step_planner.robot_path.duration():
                     imu = p.sensors.get_imu()
                     t_offset = p.pid.apply_phase_difference_roll_feedback(t, imu, p.step_planner.robot_path)
-                    torso_to_right_foot, torso_to_left_foot = p.step_planner.stepPath(t_offset)
+                    torso_to_right_foot, torso_to_left_foot = p.step_planner.get_next_step(t_offset)
                     r_theta = p.ik_actions.ik.get_right_leg_angles(torso_to_right_foot)
                     l_theta = p.ik_actions.ik.get_left_leg_angles(torso_to_left_foot)
                     p.motor_control.set_right_leg_target_angles(r_theta[0:6])
@@ -108,15 +108,14 @@ class TestPybullet(unittest.TestCase):
     def test_foot_step_planner_plane2(self):
         world = PybulletWorld()
         kinematic_data = KinematicData()
-        model = LoadModel(kinematic_data.urdf_model_path, kinematic_data.walking_torso_height, fixed_base=False)
-        p = PybulletEnv(kinematic_data, model, world, real_time=True, rate=100)
-        tf = TrajFollowing(p)
+        p = PybulletEnv(kinematic_data, world, real_time=True, rate=100)
+        tf = Nav(p)
 
         p.wait(50)
         tf.ready()
         p.wait(50)
-        tf.setGoal(Transformation([1, 0, 0], [0, 0, 0, 1]))
-        tf.run()
+        tf.set_goal(Transformation([1, 0, 0], [0, 0, 0, 1]))
+        tf.walk()
         p.wait(100)
 
 
@@ -132,8 +131,6 @@ def test_ready(robot_model: str):
     p.wait(100)
     p.motor_control.set_target_angles(p.ik_actions.ready())
     p.motor_control.set_motor()
-    # TODO do i need this
-    # self.motor_control.configuration_offset = [0] * len(Joints)
 
     p.wait_motor()
     p.wait(100)

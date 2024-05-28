@@ -1,11 +1,10 @@
 from copy import deepcopy
-from typing import Union
+from typing import Tuple, Union
 
 import scipy
 
 # from soccer_pycontrol.exp.calibration import adjust_navigation_transform
 from soccer_pycontrol.path.path_robot import PathRobot
-from soccer_pycontrol.soccerbot2.pybullet_load_model import LoadModel
 
 from soccer_common import Transformation
 
@@ -13,16 +12,17 @@ from soccer_common import Transformation
 class FootStepPlanner:
     def __init__(
         self,
-        urdf: LoadModel,
         use_calibration: bool = False,
         torso_offset_pitch: float = 0.0,
         torso_offset_x: float = 0.0,
+        walking_torso_height: float = 0.315,
+        foot_center_to_floor: float = 0.0221,
     ):
-        # TODO lots of duplicates with inversekinematics need to fix it
         self.robot_path: Union[PathRobot, None] = None
         self.use_calibration = use_calibration
-        self.urdf = urdf
 
+        self.walking_torso_height = walking_torso_height
+        self.foot_center_to_floor = foot_center_to_floor
         pitch_correction = Transformation([0, 0, 0], euler=[0, torso_offset_pitch, 0])
         # Transformation([0, 0, 0], euler=[0, rospy.get_param("torso_offset_pitch", 0.0), 0])
         self.torso_offset = Transformation([torso_offset_x, 0, 0]) @ pitch_correction
@@ -36,35 +36,34 @@ class FootStepPlanner:
 
         self.current_step_time = 0
 
-    def createPathToGoal(self, endPose: Transformation) -> PathRobot:
+    def create_path_to_goal(self, end_pose: Transformation) -> PathRobot:
         """
         Creates a path from the robot's current location to the goal location
 
-        :param endPose: 3D transformation
+        :param end_pose: 3D transformation
         :return: Robot path
         """
-        # TODO why is this here? should be in an integrator
-        startPose = self.urdf.set_walking_torso_height(Transformation())
-        endPose = self.urdf.set_walking_torso_height(endPose)
+        # TODO is this the best place for it?
+        start_pose = Transformation(position=[0, 0, self.walking_torso_height])
+        end_pose.position = [end_pose.position[0], end_pose.position[1], self.walking_torso_height]
 
-        # Remove the roll and yaw from the designated position
-
-        [y, _, _] = endPose.orientation_euler
-        endPose.orientation_euler = [y, 0, 0]  # TODO this should remove roll & pitch
+        # Remove the roll and pitch from the designated position
+        [y, _, _] = end_pose.orientation_euler
+        end_pose.orientation_euler = [y, 0, 0]
 
         # Add calibration
         # TODO add when fixed
         # if self.use_calibration:
-        #     endPoseCalibrated = adjust_navigation_transform(startPose, endPose)
+        #     end_pose_calibrated = adjust_navigation_transform(start_pose, end_pose)
         # else:
-        endPoseCalibrated = endPose
+        end_pose_calibrated = end_pose
 
-        # print( f"\033[92mEnd Pose Calibrated: Position (xyz) [{endPoseCalibrated.position[0]:.3f} {
-        # endPoseCalibrated.position[1]:.3f} {endPoseCalibrated.position[2]:.3f}], " f"Orientation (xyzw) [{
-        # endPoseCalibrated.quaternion[0]:.3f} {endPoseCalibrated.quaternion[1]:.3f} {endPoseCalibrated.quaternion[
-        # 2]:.3f} {endPoseCalibrated.quaternion[3]:.3f}]\033[0m" )
+        # print( f"\033[92mEnd Pose Calibrated: Position (xyz) [{end_pose_calibrated.position[0]:.3f} {
+        # end_pose_calibrated.position[1]:.3f} {end_pose_calibrated.position[2]:.3f}], " f"Orientation (xyzw) [{
+        # end_pose_calibrated.quaternion[0]:.3f} {end_pose_calibrated.quaternion[1]:.3f} {end_pose_calibrated.quaternion[
+        # 2]:.3f} {end_pose_calibrated.quaternion[3]:.3f}]\033[0m" )
 
-        self.robot_path = PathRobot(startPose, endPoseCalibrated, self.urdf.ik_data.foot_center_to_floor)
+        self.robot_path = PathRobot(start_pose, end_pose_calibrated, self.foot_center_to_floor)
 
         # TODO this edits the rate for the controller need to figure out how to use it
         self.current_step_time = 0
@@ -73,7 +72,7 @@ class FootStepPlanner:
         # TODO add unit test
         return self.robot_path
 
-    def stepPath(self, t):
+    def get_next_step(self, t: float) -> Tuple[list, list]:
         """
         Updates the configuration for the robot for the next position t based on the current path
 
@@ -92,7 +91,9 @@ class FootStepPlanner:
         torso_to_left_foot = scipy.linalg.lstsq(torso_position, left_foot_position, lapack_driver="gelsy")[0]
         torso_to_right_foot = scipy.linalg.lstsq(torso_position, right_foot_position, lapack_driver="gelsy")[0]
 
-        self.urdf.pose = torso_position
+        # TODO is this needed ?
+        # self.urdf.pose = torso_position
+
         # Inverse kinematics for both feet (Average Time: 0.0015840530395507812)
 
         # TODO add unit test

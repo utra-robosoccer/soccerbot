@@ -1,3 +1,5 @@
+from typing import List
+
 import numpy as np
 import pybullet as pb
 from soccer_pycontrol.links import Links
@@ -11,7 +13,16 @@ class Sensors:
         # TODO does this need to be a class?
         self.body = body
 
-    def get_imu(self):
+    def get_pose(self) -> Transformation:
+        """
+        Get the 3D pose of the robot
+
+        :return: The 3D pose of the robot
+        """
+        [position, quaternion] = pb.getLinkState(self.body, linkIndex=Links.LEFT_LEG_6)[4:6]
+        return Transformation(position=position, quaternion=quaternion).pos_theta
+
+    def get_imu(self) -> Transformation:
         """
         Simulates the IMU at the IMU link location.
         TODO: Add noise model, make the refresh rate vary (currently in sync with the PyBullet time steps)
@@ -21,11 +32,19 @@ class Sensors:
         # TODO add unit test with rotation
 
         # 6:8 for linear and angular velocity this gets the imu link position and orientation
-        [quat_pos, quat_orientation] = pb.getLinkState(self.body, linkIndex=Links.IMU, computeLinkVelocity=1)[4:6]
+        [pos, orientation] = pb.getLinkState(self.body, linkIndex=Links.IMU, computeLinkVelocity=1)[4:6]
 
-        return Transformation(quat_pos, quat_orientation)
+        return Transformation(pos, orientation)
 
-    def get_foot_pressure_sensors(self, floor):
+    def get_euler_angles(self) -> np.ndarray:
+        imu = self.get_imu()
+
+        if imu is None:
+            return np.array([0, 0, 0])  # TODO should have a better error checking
+
+        return imu.orientation_euler
+
+    def get_foot_pressure_sensors(self, floor: pb.loadURDF) -> List[bool]:
         """
         Checks if 4 corners of the each feet are in contact with ground #
         TODO fix docstring

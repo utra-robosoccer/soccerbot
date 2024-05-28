@@ -9,7 +9,7 @@ from soccer_pycontrol.soccerbot2.motor_control import MotorControl
 from soccer_pycontrol.soccerbot2.pybullet.pybullet_world import PybulletWorld
 from soccer_pycontrol.soccerbot2.pybullet_load_model import LoadModel
 from soccer_pycontrol.soccerbot2.sensors import Sensors
-from soccer_pycontrol.soccerbot2.walking_pid import WalkingPID
+from soccer_pycontrol.soccerbot2.stabilize import Stabilize
 
 from soccer_common import Transformation
 
@@ -45,8 +45,10 @@ class PybulletEnv:
 
         self.ik_actions = IKActions(kinematic_data)
 
-        self.step_planner = FootStepPlanner(self.model)
-        self.pid = WalkingPID()
+        self.step_planner = FootStepPlanner(
+            walking_torso_height=kinematic_data.walking_torso_height, foot_center_to_floor=kinematic_data.foot_center_to_floor
+        )
+        self.pid = Stabilize()
 
     def wait(self, steps: int) -> None:
         for i in range(steps):

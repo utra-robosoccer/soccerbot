@@ -220,7 +220,7 @@ class NavigatorRos(Navigator):
 
                 print_pose("Start Pose", self.robot_pose.pose)
                 print_pose("End Pose", self.goal.pose)
-                self.soccerbot.createPathToGoal(Transformation(pose=self.goal.pose))
+                self.soccerbot.create_path_to_goal(Transformation(pose=self.goal.pose))
                 self.soccerbot.reset_roll_feedback_parameters()
                 self.t = -self.prepare_walk_time
 
@@ -243,7 +243,7 @@ class NavigatorRos(Navigator):
                     self.soccerbot.apply_imu_feedback(imu_pose)
                     t_adj = self.soccerbot.apply_phase_difference_roll_feedback(self.t, imu_pose)
 
-                self.soccerbot.stepPath(t_adj)
+                self.soccerbot.get_next_step(t_adj)
 
                 self.soccerbot.current_step_time = self.t
 

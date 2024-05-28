@@ -1,51 +1,20 @@
 import queue
-from typing import Union
 
 import numpy as np
 from scipy.signal import butter
-from soccer_pycontrol.joints import Joints
 from soccer_pycontrol.path.path_robot import PathRobot
 
 from soccer_common import PID, Transformation
 
 
-class WalkingPID:
+class StabilizePhase:
     def __init__(
         self,
-        standing_Kp: float = 1.5,
-        standing_Kd: float = 0.5,
-        standing_Ki: float = 0.00,
-        standing_setpoint: float = -0.0,
-        standing_offset: float = 0.0,
-        walking_Kp: float = 2.3,
-        walking_Kd: float = 1,
-        walking_Ki: float = 0.0000,
-        walking_setpoint: float = -0.01,
-        walking_offset: float = 0.0,
         walking_roll_Kp: float = 0,
         walking_roll_Kd: float = 0.0,
         walking_roll_Ki: float = 0.05,
         walking_roll_setpoint: float = 0.0,
     ):
-        #: PID values to adjust the torso's front and back movement while standing, getting ready to walk, and post walk
-        self.standing_pid = PID(
-            Kp=standing_Kp,  # rospy.get_param("standing_Kp", 0.15),
-            Kd=standing_Kd,  # rospy.get_param("standing_Kd", 0.0),
-            Ki=standing_Ki,  # rospy.get_param("standing_Ki", 0.001),
-            setpoint=standing_setpoint,  # rospy.get_param("standing_setpoint", -0.01),
-            output_limits=(-1.57, 1.57),
-        )
-        self.standing_offset = standing_offset  # rospy.get_param("standing_offset", 0.0)
-
-        #: PID values to adjust the torso's front and back movement while walking
-        self.walking_pid = PID(
-            Kp=walking_Kp,  # rospy.get_param("walking_Kp", 0.8),
-            Kd=walking_Kd,  # rospy.get_param("walking_Kd", 0.0),
-            Ki=walking_Ki,  # rospy.get_param("walking_Ki", 0.0005),
-            setpoint=walking_setpoint,  # rospy.get_param("walking_setpoint", -0.01),
-            output_limits=(-1.57, 1.57),
-        )
-        self.walking_offset = walking_offset  # rospy.get_param("walking_offset", 0.0)
 
         # All related to the roll feedback
         self.roll_feedback_low_pass_filter_butterworth_filter_params = None
@@ -60,40 +29,6 @@ class WalkingPID:
             setpoint=walking_roll_setpoint,  # rospy.get_param("walking_roll_setpoint", 0.0),
             output_limits=(-0.1, 0.1),
         )
-
-    def apply_imu_feedback(self, imu_pose: Transformation):
-        """
-        Adds IMU feedback while the robot is moving to the arms
-
-        :param imu_pose: Pose of the torso
-        :return: The value for the walking_pid controller
-        """
-
-        if imu_pose is None:
-            return
-
-        [_, pitch, _] = imu_pose.orientation_euler
-        F = self.walking_pid.update(pitch)
-        # self.configuration_offset[Joints.LEFT_LEG_3] = F + self.walking_offset
-        # self.configuration_offset[Joints.RIGHT_LEG_3] = F + self.walking_offset
-
-        return F
-
-    def apply_imu_feedback_standing(self, imu_pose: Transformation):  # -> float:
-        """
-        Adds IMU feedback while the robot is standing or getting ready to the arms
-
-        :param imu_pose: Pose of the torso
-        :return: The value for the walking_pid controller
-        """
-
-        if imu_pose is None:
-            return
-        [_, pitch, roll] = imu_pose.orientation_euler
-        F = self.standing_pid.update(roll)
-        # self.configuration_offset[Joints.LEFT_LEG_5] = F + self.standing_offset
-        # self.configuration_offset[Joints.RIGHT_LEG_5] = F + self.standing_offset
-        return (F), pitch
 
     def get_phase_difference_roll(self, t, imu_pose: Transformation):
         # TODO what does this do?
@@ -147,9 +82,7 @@ class WalkingPID:
         Reset the walking and standing PID values
         """
 
-        self.walking_pid.reset()
         self.walking_pid_roll.reset()
-        self.standing_pid.reset()
 
     def reset_roll_feedback_parameters(self, robot_path: PathRobot):
         sampling_frequency = 100

@@ -1,5 +1,3 @@
-from typing import List
-
 import numpy as np
 import pybullet as pb
 from soccer_pycontrol.joints import Joints
@@ -24,7 +22,8 @@ class MotorControl:
         self.motor_names = [pb.getJointInfo(self.body, i)[1].decode("utf-8") for i in range(18)]
 
         # Todo make it numpy and add getter and setters
-        self.configuration = [0.0] * len(Joints)  #: The 18x1 float array motor angle configuration for the robot's 18 motors
+        self.configuration = [0.0] * len(Joints)  # : The 18x1 float array motor angle configuration for the robot's
+        # 18 motors
         self.configuration_offset = [0.0] * len(Joints)  #: The offset for the 18x1 motor angle configurations
 
         self.max_forces = []
@@ -61,10 +60,18 @@ class MotorControl:
     def set_left_leg_target_angles(self, target_angles: np.ndarray) -> None:
         self.configuration[Links.LEFT_LEG_1 : Links.LEFT_LEG_6 + 1] = target_angles
 
+    def set_leg_joint_2_target_angle(self, target: float) -> None:
+        self.configuration_offset[Joints.LEFT_LEG_2] -= target
+        self.configuration_offset[Joints.RIGHT_LEG_2] += target
+
     def set_leg_joint_3_target_angle(self, target: float) -> None:
         self.configuration_offset[Joints.LEFT_LEG_3] += target
         self.configuration_offset[Joints.RIGHT_LEG_3] += target
 
     def set_leg_joint_5_target_angle(self, target: float) -> None:
-        self.configuration_offset[Joints.LEFT_LEG_2] -= target
-        self.configuration_offset[Joints.RIGHT_LEG_2] += target
+        self.configuration_offset[Joints.LEFT_LEG_5] += target
+        self.configuration_offset[Joints.RIGHT_LEG_5] += target
+
+    def set_leg_joint_6_target_angle(self, target: float) -> None:
+        self.configuration_offset[Joints.LEFT_LEG_6] -= target
+        self.configuration_offset[Joints.RIGHT_LEG_6] += target
