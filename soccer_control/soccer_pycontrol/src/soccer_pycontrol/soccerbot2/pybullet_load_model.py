@@ -6,13 +6,13 @@ from soccer_common import Transformation
 
 
 class LoadModel:  # TODO Maybe rename to body
-    def __init__(self, urdf_model_path: str, walking_torso_height: float, pose: Transformation = Transformation(), fixed_base: bool = False):
+    def __init__(self, urdf_model_path: str, walking_torso_height: float, pose: Transformation, fixed_base: bool):
         self.pose = pose
 
         self.body = self.load_urdf_pybullet(urdf_model_path, fixed_base)
         self.walking_torso_height = walking_torso_height
 
-        if not fixed_base:
+        if not fixed_base:  # TODO need way to have custom height
             self.set_pose(pose)
 
     def load_urdf_pybullet(self, urdf_model_path: str, fixed_base: bool) -> pb.loadURDF:

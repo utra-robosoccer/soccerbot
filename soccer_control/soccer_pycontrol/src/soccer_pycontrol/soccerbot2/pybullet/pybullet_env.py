@@ -4,11 +4,14 @@ import numpy as np
 import pybullet as pb
 from soccer_pycontrol.soccerbot2.foot_step_planner import FootStepPlanner
 from soccer_pycontrol.soccerbot2.ik.ik_actions import IKActions
+from soccer_pycontrol.soccerbot2.kinematic_data import KinematicData
 from soccer_pycontrol.soccerbot2.motor_control import MotorControl
 from soccer_pycontrol.soccerbot2.pybullet.pybullet_world import PybulletWorld
 from soccer_pycontrol.soccerbot2.pybullet_load_model import LoadModel
 from soccer_pycontrol.soccerbot2.sensors import Sensors
 from soccer_pycontrol.soccerbot2.walking_pid import WalkingPID
+
+from soccer_common import Transformation
 
 
 class PybulletEnv:
@@ -17,7 +20,15 @@ class PybulletEnv:
     """
 
     # TODO update with the modified for pycontrol
-    def __init__(self, model: LoadModel, world: PybulletWorld, real_time: bool = False, rate: int = 100):
+    def __init__(
+        self,
+        kinematic_data: KinematicData,
+        world: PybulletWorld,
+        pose: Transformation = Transformation(),
+        fixed_base: bool = False,
+        real_time: bool = False,
+        rate: int = 100,
+    ):
         """
         Initialize the Navigator
 
@@ -27,15 +38,14 @@ class PybulletEnv:
         self.real_time = real_time
 
         self.world = world
-        self.handle_urdf = model
-        self.body = self.handle_urdf.body
+        self.model = LoadModel(kinematic_data.urdf_model_path, kinematic_data.walking_torso_height, pose, fixed_base)
 
-        self.motor_control = MotorControl(self.body)
-        self.sensors = Sensors(self.body)
+        self.motor_control = MotorControl(self.model.body)
+        self.sensors = Sensors(self.model.body)
 
-        self.ik_actions = IKActions(self.handle_urdf.ik_data)
+        self.ik_actions = IKActions(kinematic_data)
 
-        self.step_planner = FootStepPlanner(self.handle_urdf)
+        self.step_planner = FootStepPlanner(self.model)
         self.pid = WalkingPID()
 
     def wait(self, steps: int) -> None:
@@ -55,8 +65,4 @@ class PybulletEnv:
 
 
 if __name__ == "__main__":
-    world = PybulletWorld(path="")
-    model = LoadModel(fixed_base=True)
-    p = PybulletEnv(model, world, real_time=True, rate=250)
-
-    p.world.close()
+    pass

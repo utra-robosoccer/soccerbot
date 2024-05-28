@@ -2,7 +2,6 @@ from os.path import expanduser
 
 import numpy as np
 import pinocchio
-from pinocchio.robot_wrapper import RobotWrapper
 
 from soccer_common import Transformation
 
@@ -19,9 +18,7 @@ class KinematicData:
     ):
         self.urdf_model_path = expanduser("~") + f"/catkin_ws/src/soccerbot/soccer_description/{robot_model}" f"_description/urdf/{robot_model}.urdf"
 
-        mesh_dir = expanduser("~") + f"/catkin_ws/src/soccerbot/soccer_description/{robot_model}_description"
-
-        motor_offsets = self.load_urdf(mesh_dir)
+        motor_offsets = self.load_urdf()
 
         self.arm_0_center = arm_0_center
         self.arm_1_center = arm_1_center
@@ -58,16 +55,25 @@ class KinematicData:
         self.left_foot_init_position[0, 3] -= torso_offset_x_ready
         self.left_foot_init_position = ready_pitch_correction @ self.left_foot_init_position
 
-    def load_urdf(self, mesh_dir: str):
+    def load_urdf(self):
         # TODO should make it modular in the future if we use pinnochio more
 
-        robot = RobotWrapper.BuildFromURDF(self.urdf_model_path, mesh_dir)
+        model = pinocchio.buildModelFromUrdf(self.urdf_model_path)
 
-        model = robot.model
-        data = robot.data
+        data = model.createData()
 
         q = np.zeros_like(pinocchio.randomConfiguration(model))
         v = pinocchio.utils.zero(model.nv)
-        pinocchio.ccrba(model, data, q, v)
 
+        pinocchio.ccrba(model, data, q, v)
+        # print(time.time() - s)
+        # for name, oMi in zip(model.names, data.oMi):
+        #     print(("{:<24} : {: .2f} {: .2f} {: .2f}"
+        #            .format(name, *oMi.translation.T.flat)))
+        # TODO should make a unit test to make sure the data is correct and maybe use pybullet toverify
         return {model.names[i]: data.oMi[i].translation.T for i in range(len(model.names))}
+
+
+if __name__ == "__main__":
+
+    k = KinematicData(robot_model="bez1")

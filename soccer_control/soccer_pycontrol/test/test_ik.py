@@ -4,7 +4,6 @@ import unittest
 import numpy as np
 from matplotlib import pyplot as plt
 from soccer_pycontrol.soccerbot2.ik.ik_actions import IKActions
-from soccer_pycontrol.soccerbot2.ik.ik_data import IKData
 from soccer_pycontrol.soccerbot2.kinematic_data import KinematicData
 
 os.environ["ROS_NAMESPACE"] = "/robot1"
@@ -18,8 +17,8 @@ class TestIK(unittest.TestCase):
         Case 1: Standard case
         :return: None
         """
-        ik_data = IKData()
-        ik_actions = IKActions(ik_data)
+        kinematic_data = KinematicData()
+        ik_actions = IKActions(kinematic_data)
         thetas, x, z = ik_actions.x_sweep()
         # np.save('ik_data''/x_sweep', thetas)
 
@@ -28,29 +27,13 @@ class TestIK(unittest.TestCase):
             plt.scatter(x, z)
             plt.show()
 
-    def test_xx_sweep(self):
-        """
-        Case 1: Standard case
-        :return: None
-        """
-        w = KinematicData()
-        # ik_data = IKData()
-        # ik_actions = IKActions(ik_data)
-        # thetas, x, z = ik_actions.x_sweep()
-        # # np.save('ik_data''/x_sweep', thetas)
-        #
-        # assert np.allclose(thetas, np.load("ik_data" "/x_sweep.npy"))
-        # if PLOT:
-        #     plt.scatter(x, z)
-        #     plt.show()
-
     def test_y_sweep(self):
         """
         Case 1: Standard case
         :return: None
         """
-        ik_data = IKData()
-        ik_actions = IKActions(ik_data)
+        kinematic_data = KinematicData()
+        ik_actions = IKActions(kinematic_data)
         thetas, y, z = ik_actions.y_sweep()
         # np.save('ik_data''/y_sweep', thetas)
 
@@ -64,8 +47,8 @@ class TestIK(unittest.TestCase):
         Case 1: Standard case
         :return: None
         """
-        ik_data = IKData()
-        ik_actions = IKActions(ik_data)
+        kinematic_data = KinematicData()
+        ik_actions = IKActions(kinematic_data)
         thetas, y, z = ik_actions.z_sweep()
         # np.save('ik_data''/z_sweep', thetas)
 
@@ -75,8 +58,8 @@ class TestIK(unittest.TestCase):
             plt.show()
 
     def test_ready(self):
-        ik_data = IKData()
-        ik_actions = IKActions(ik_data)
+        kinematic_data = KinematicData()
+        ik_actions = IKActions(kinematic_data)
         configuration = ik_actions.ready()
         # np.save('ik_data''/ready', configuration)
 

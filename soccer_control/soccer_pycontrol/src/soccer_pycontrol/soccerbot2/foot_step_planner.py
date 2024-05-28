@@ -44,8 +44,8 @@ class FootStepPlanner:
         :return: Robot path
         """
         # TODO why is this here? should be in an integrator
-        startPose = self.urdf.set_pose.set_walking_torso_height(Transformation())
-        endPose = self.urdf.set_pose.set_walking_torso_height(endPose)
+        startPose = self.urdf.set_walking_torso_height(Transformation())
+        endPose = self.urdf.set_walking_torso_height(endPose)
 
         # Remove the roll and yaw from the designated position
 
