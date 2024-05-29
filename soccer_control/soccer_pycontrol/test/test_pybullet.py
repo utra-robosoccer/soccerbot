@@ -1,7 +1,9 @@
 import unittest
 
 import numpy as np
+import pybullet as pb
 import pytest
+from soccer_pycontrol.links import Links
 from soccer_pycontrol.soccerbot2.kinematic_data import KinematicData
 from soccer_pycontrol.soccerbot2.nav import Nav
 from soccer_pycontrol.soccerbot2.pybullet.pybullet_env import PybulletEnv
@@ -42,7 +44,7 @@ class TestPybullet(unittest.TestCase):
         p.wait(100)
 
     def test_foot_step_planner_plane(self):
-        world = PybulletWorld()
+        world = PybulletWorld(camera_yaw=90)
         kinematic_data = KinematicData()
         p = PybulletEnv(kinematic_data, world, real_time=True, rate=100)
         tf = Nav(p)
@@ -51,6 +53,25 @@ class TestPybullet(unittest.TestCase):
         p.wait(50)
         tf.set_goal(Transformation([1, 0, 0], [0, 0, 0, 1]))
         tf.walk()
+        p.wait(100)
+
+    def test_stand_plane(self):
+        world = PybulletWorld(camera_yaw=0)
+        kinematic_data = KinematicData()
+        p = PybulletEnv(kinematic_data, world, real_time=True, rate=100)
+        tf = Nav(p)
+        p.wait(50)
+        tf.ready()
+        p.wait(50)
+        while tf.t < 1000:
+            [_, pitch, roll] = p.sensors.get_euler_angles()
+            # if tf.fallen(pitch):
+            #     pb.applyExternalForce(p.model.body, Links.TORSO, [0, 5, 0], [0, 0, 0], pb.LINK_FRAME)
+            # p.model.set_pose()
+            pb.applyExternalForce(p.model.body, Links.TORSO, [3, 0, 0], [0, 0, 0], pb.LINK_FRAME)
+            tf.stabilize_stand(pitch, roll)
+            p.step()
+            tf.t += +0.01
         p.wait(100)
 
 

@@ -19,7 +19,7 @@ class Path:
     Consists of a list of bezier or short path sections
     """
 
-    def __init__(self, start_transform: Transformation, end_transform: Transformation, step_precision: float = 0.02):
+    def __init__(self, start_transform: Transformation, end_transform: Transformation, step_precision: float = 0.01):
         """
         Initialization function for Path, creates a single path section, other path sections are only added when the route needs
         to change
@@ -30,7 +30,7 @@ class Path:
 
         #: How precise the curves are calculated. The amount of movement per given step_precision is calculated (s)
         self.step_precision = step_precision  # rospy.get_param("step_precision", 0.02)
-
+        # TODO only used for plotting
         self.start_transform: Transformation = start_transform
         self.end_transform: Transformation = end_transform
 

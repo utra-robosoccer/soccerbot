@@ -35,7 +35,6 @@ class Nav:
         self.env.motor_control.set_target_angles(self.env.ik_actions.ready())
         self.env.motor_control.set_motor()
 
-    # TODO getPose
     def set_goal(self, goal: Transformation) -> None:
         """
         Set the goal of the robot, will create the path to the goal that will be executed in the run() loop
@@ -44,92 +43,80 @@ class Nav:
         """
         self.env.step_planner.create_path_to_goal(goal)
 
+    def stand(self, timer: float) -> None:
+        while self.t < timer:
+            [_, pitch, roll] = self.env.sensors.get_euler_angles()
+            pb.applyExternalForce(self.env.model.body, Links.TORSO, [5, 0, 0], [0, 0, 0], pb.LINK_FRAME)
+            self.stabilize_stand(pitch, roll)
+            self.env.step()
+            self.t = self.t + 0.01
+
     def walk(self) -> bool:
         """
         The main run loop for the navigator, executes goals given through setGoal and then stops
 
         :return: True if the robot succeeds navigating to the goal, False if it doesn't reach the goal and falls
         """
-        logging_id = pb.startStateLogging(pb.STATE_LOGGING_GENERIC_ROBOT, "/tmp/simulation_record.bullet", physicsClientId=self.env.world.client_id)
-
-        if self.env.step_planner.robot_path.duration() == 0:
-            pb.stopStateLogging(logging_id)
-            return True
 
         self.t = -self.prepare_walk_time
         stable_count = 20
         self.env.pid.reset_imus()
-        # self.env.pid.reset_roll_feedback_parameters(self.env.step_planner.robot_path)
 
         while True:
             [_, pitch, roll] = self.env.sensors.get_euler_angles()
-            if self.t < 0:
-                F = self.env.pid.standing_pitch_pid.update(pitch)
+
+            if self.t <= self.env.step_planner.robot_path.duration():
+
+                torso_to_right_foot, torso_to_left_foot = self.env.step_planner.get_next_step(self.t)
+                r_theta = self.env.ik_actions.get_right_leg_angles(torso_to_right_foot)
+                l_theta = self.env.ik_actions.get_left_leg_angles(torso_to_left_foot)
+                self.env.motor_control.set_right_leg_target_angles(r_theta[0:6])
+                self.env.motor_control.set_left_leg_target_angles(l_theta[0:6])
+
+                F = self.env.pid.walking_pitch_pid.update(pitch)
                 self.env.motor_control.set_leg_joint_3_target_angle(F)
 
-                F = self.env.pid.standing_roll_pid.update(roll)
+                F = self.env.pid.walking_roll_pid.update(roll)
                 self.env.motor_control.set_leg_joint_2_target_angle(F)
 
                 self.env.motor_control.set_motor()
 
-                if abs(pitch - self.env.pid.standing_pitch_pid.setpoint) < 0.025 and abs(roll - self.env.pid.standing_roll_pid.setpoint) < 0.025:
-                    stable_count = stable_count - 1
-                    if stable_count == 0:
-                        self.t = 0
-                else:
-                    stable_count = 5
-
-            elif self.t <= self.env.step_planner.robot_path.duration():
-                if self.env.step_planner.current_step_time <= self.t <= self.env.step_planner.robot_path.duration():
-                    # t_offset = self.env.pid.apply_phase_difference_roll_feedback(self.t, imu,
-                    #                                                              self.env.step_planner.robot_path)
-                    torso_to_right_foot, torso_to_left_foot = self.env.step_planner.get_next_step(self.t)
-                    r_theta = self.env.ik_actions.get_right_leg_angles(torso_to_right_foot)
-                    l_theta = self.env.ik_actions.get_left_leg_angles(torso_to_left_foot)
-                    self.env.motor_control.set_right_leg_target_angles(r_theta[0:6])
-                    self.env.motor_control.set_left_leg_target_angles(l_theta[0:6])
-
-                    F = self.env.pid.walking_pitch_pid.update(pitch)
-                    self.env.motor_control.set_leg_joint_3_target_angle(F)
-
-                    F = self.env.pid.walking_roll_pid.update(roll)
-                    self.env.motor_control.set_leg_joint_2_target_angle(F)
-
-                    self.env.motor_control.set_motor()
-                    self.env.step_planner.current_step_time = (
-                        self.env.step_planner.current_step_time + self.env.step_planner.robot_path.step_precision
-                    )
-                    stable_count = 20
             else:
-                F = self.env.pid.standing_pitch_pid.update(pitch)
-                self.env.motor_control.set_leg_joint_3_target_angle(F)
-
-                F = self.env.pid.standing_roll_pid.update(roll)
-                self.env.motor_control.set_leg_joint_2_target_angle(F)
-
-                self.env.motor_control.set_motor()
-
+                self.stabilize_stand(pitch, roll)
                 if abs(pitch - self.env.pid.standing_pitch_pid.setpoint) < 0.025 and abs(roll - self.env.pid.standing_roll_pid.setpoint) < 0.025:
-                    stable_count = stable_count - 1
+                    stable_count -= 1
                     if stable_count == 0:
-                        break
+                        if self.t < 0:
+                            self.t = 0
+                            stable_count = 20
+                        else:
+                            break
                 else:
                     stable_count = 5
 
-            # TODO should add a stabilization after walk is done
-            angle_threshold = 1.25  # in radian
-            [_, pitch, _] = self.env.sensors.get_imu().orientation_euler
-            if pitch > angle_threshold:
-                print("Fallen Back")
-                pb.stopStateLogging(logging_id)
-                return False
-
-            elif pitch < -angle_threshold:
-                print("Fallen Front")
-                pb.stopStateLogging(logging_id)
+            if self.fallen(pitch):
                 return False
 
             self.env.step()
             self.t = self.t + 0.01
-        pb.stopStateLogging(logging_id)
         return True
+
+    def stabilize_stand(self, pitch: float, roll: float) -> None:
+        error_pitch = self.env.pid.standing_pitch_pid.update(pitch)
+        self.env.motor_control.set_leg_joint_3_target_angle(-error_pitch)
+        print(error_pitch)
+        # error_roll = self.env.pid.standing_roll_pid.update(roll)
+        # self.env.motor_control.set_leg_joint_2_target_angle(error_roll)
+
+        self.env.motor_control.set_motor()
+
+    @staticmethod
+    def fallen(pitch: float) -> bool:
+        angle_threshold = 1.25  # in radian
+        if pitch > angle_threshold:
+            print("Fallen Back")
+            return True
+
+        elif pitch < -angle_threshold:
+            print("Fallen Front")
+            return True

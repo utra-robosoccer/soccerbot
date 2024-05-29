@@ -139,6 +139,6 @@ class PathRobot(PathTorso):
 
 
 if __name__ == "__main__":
-    p = PathRobot(Transformation(), Transformation([0.5, 0, 0], [0, 0, 0, 1]), 0.0221)
+    p = PathRobot(Transformation(), Transformation([0, 0.5, 0], [0, 0, 0, 1]), 0.0221)
     p.show()
     p.showTimingDiagram()
