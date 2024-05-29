@@ -2,12 +2,10 @@ import unittest
 
 import numpy as np
 import pytest
-from soccer_pycontrol.soccerbot2.foot_step_planner import FootStepPlanner
 from soccer_pycontrol.soccerbot2.kinematic_data import KinematicData
 from soccer_pycontrol.soccerbot2.nav import Nav
 from soccer_pycontrol.soccerbot2.pybullet.pybullet_env import PybulletEnv
 from soccer_pycontrol.soccerbot2.pybullet.pybullet_world import PybulletWorld
-from soccer_pycontrol.soccerbot2.pybullet_load_model import LoadModel
 
 from soccer_common import Transformation
 
@@ -15,102 +13,39 @@ from soccer_common import Transformation
 class TestPybullet(unittest.TestCase):
     def test_imu(self):
         world = PybulletWorld()
-        model = LoadModel()
-        p = PybulletEnv(model, world, real_time=True, rate=100)
+        kinematic_data = KinematicData()
+        p = PybulletEnv(kinematic_data, world, real_time=True, rate=100)
         p.wait(100)
         print(p.sensors.get_imu().orientation_euler)
         # TODO add more
 
     def test_foot_sensor(self):
         world = PybulletWorld()
-        model = LoadModel()
-        p = PybulletEnv(model, world, real_time=True, rate=100)
+        kinematic_data = KinematicData()
+        p = PybulletEnv(kinematic_data, world, real_time=True, rate=100)
         p.wait(100)
         print(p.sensors.get_foot_pressure_sensors(p.world.plane))
         # TODO add more
 
     def test_foot_step_planner_fixed(self):
         world = PybulletWorld(path="")
-        model = LoadModel(fixed_base=True)
-        p = PybulletEnv(model, world, real_time=True, rate=100)
-        fp = FootStepPlanner(p.robot_path, p.handle_urdf)
+        # TODO fix with torso height or start pose
+
+        kinematic_data = KinematicData()
+        p = PybulletEnv(kinematic_data, world, fixed_base=True, real_time=True, rate=100)
+        tf = Nav(p)
         p.wait(50)
-        p.motor_control.set_target_angles(p.ik_actions.ready())
-        p.motor_control.set_motor()
+        tf.ready()
         p.wait(50)
-        fp.create_path_to_goal(Transformation([1, 0, 0], [0, 0, 0, 1]))
-        # p.wmodelait(100)
-
-        pitches = []
-        times = []
-        t = 0
-
-        while t <= fp.robot_path.duration():
-            if fp.current_step_time <= t <= fp.robot_path.duration():
-                torso_to_right_foot, torso_to_left_foot = fp.get_next_step(t)
-                r_theta = p.ik_actions.ik.get_right_leg_angles(torso_to_right_foot)
-                l_theta = p.ik_actions.ik.get_left_leg_angles(torso_to_left_foot)
-                p.motor_control.set_right_leg_target_angles(r_theta[0:6])
-                p.motor_control.set_left_leg_target_angles(l_theta[0:6])
-
-                # pitch = self.walker.soccerbot2.get_imu().orientation_euler[1]
-                # f = self.walker.soccerbot2.apply_imu_feedback(t, self.walker.soccerbot2.get_imu())
-                p.motor_control.set_motor()
-                fp.current_step_time = fp.current_step_time + fp.robot_path.step_precision
-                times.append(t)
-                # pitches.append((pitch, f))
-            p.step()
-            t = t + 0.01
-
+        tf.set_goal(Transformation([1, 0, 0], [0, 0, 0, 1]))
+        tf.walk()
         p.wait(100)
 
     def test_foot_step_planner_plane(self):
         world = PybulletWorld()
-        model = LoadModel()
-        p = PybulletEnv(model, world, real_time=True, rate=100)
-
-        p.wait(50)
-        # p.handle_urdf.set_pose.set_pose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
-        p.motor_control.set_target_angles(p.ik_actions.ready())
-        p.motor_control.set_motor()
-        p.wait(50)
-        p.step_planner.create_path_to_goal(Transformation([0.1, 0, 0], [0, 0, 0, 1]))
-
-        p.pid.reset_imus()
-        p.pid.reset_roll_feedback_parameters(p.step_planner.robot_path)
-        times = []
-        for i in range(10):
-            t = 0.0
-            p.step_planner.create_path_to_goal(Transformation([0.15, 0, 0], [0, 0, 0, 1]))
-            # TODO make a navigator class
-            while t <= p.step_planner.robot_path.duration():
-                if p.step_planner.current_step_time <= t < p.step_planner.robot_path.duration():
-                    imu = p.sensors.get_imu()
-                    t_offset = p.pid.apply_phase_difference_roll_feedback(t, imu, p.step_planner.robot_path)
-                    torso_to_right_foot, torso_to_left_foot = p.step_planner.get_next_step(t_offset)
-                    r_theta = p.ik_actions.ik.get_right_leg_angles(torso_to_right_foot)
-                    l_theta = p.ik_actions.ik.get_left_leg_angles(torso_to_left_foot)
-                    p.motor_control.set_right_leg_target_angles(r_theta[0:6])
-                    p.motor_control.set_left_leg_target_angles(l_theta[0:6])
-                    F = p.pid.apply_imu_feedback(imu)
-                    p.motor_control.set_leg_joint_3_target_angle(F)
-
-                    p.motor_control.set_motor()
-                    p.step_planner.current_step_time = (
-                        p.step_planner.current_step_time + p.step_planner.robot_path.step_precision
-                    )  # TODO needs to be 0.02 or much more unstable
-                    times.append(t)
-                p.step()
-                t = t + 0.01
-
-        p.wait(100)
-
-    def test_foot_step_planner_plane2(self):
-        world = PybulletWorld()
         kinematic_data = KinematicData()
         p = PybulletEnv(kinematic_data, world, real_time=True, rate=100)
         tf = Nav(p)
-
         p.wait(50)
         tf.ready()
         p.wait(50)
