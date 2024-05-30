@@ -43,14 +43,6 @@ class Nav:
         """
         self.env.step_planner.create_path_to_goal(goal)
 
-    def stand(self, timer: float) -> None:
-        while self.t < timer:
-            [_, pitch, roll] = self.env.sensors.get_euler_angles()
-            pb.applyExternalForce(self.env.model.body, Links.TORSO, [5, 0, 0], [0, 0, 0], pb.LINK_FRAME)
-            self.stabilize_stand(pitch, roll)
-            self.env.step()
-            self.t = self.t + 0.01
-
     def walk(self) -> bool:
         """
         The main run loop for the navigator, executes goals given through setGoal and then stops
@@ -65,9 +57,9 @@ class Nav:
         while True:
             [_, pitch, roll] = self.env.sensors.get_euler_angles()
 
-            if self.t <= self.env.step_planner.robot_path.duration():
+            if 0 <= self.t <= self.env.step_planner.robot_path.duration():
+                # TODO after add metrics for evaluating walking come back see if this is necessary
                 if self.env.step_planner.current_step_time <= self.t <= self.env.step_planner.robot_path.duration():
-
                     torso_to_right_foot, torso_to_left_foot = self.env.step_planner.get_next_step(self.t)
                     r_theta = self.env.ik_actions.get_right_leg_angles(torso_to_right_foot)
                     l_theta = self.env.ik_actions.get_left_leg_angles(torso_to_left_foot)
