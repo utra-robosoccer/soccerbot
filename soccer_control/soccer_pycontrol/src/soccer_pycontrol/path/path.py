@@ -19,7 +19,7 @@ class Path:
     Consists of a list of bezier or short path sections
     """
 
-    def __init__(self, start_transform: Transformation, end_transform: Transformation, step_precision: float = 0.01):
+    def __init__(self, start_transform: Transformation, end_transform: Transformation, step_precision: float = 0.02):
         """
         Initialization function for Path, creates a single path section, other path sections are only added when the route needs
         to change

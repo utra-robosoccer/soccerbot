@@ -61,17 +61,17 @@ class MotorControl:
         self.configuration[Links.LEFT_LEG_1 : Links.LEFT_LEG_6 + 1] = target_angles
 
     def set_leg_joint_2_target_angle(self, target: float) -> None:
-        self.configuration[Joints.LEFT_LEG_2] -= target
-        self.configuration[Joints.RIGHT_LEG_2] += target
+        self.configuration_offset[Joints.LEFT_LEG_2] -= target
+        self.configuration_offset[Joints.RIGHT_LEG_2] += target
 
     def set_leg_joint_3_target_angle(self, target: float) -> None:
-        self.configuration[Joints.LEFT_LEG_3] += target
-        self.configuration[Joints.RIGHT_LEG_3] += target
+        self.configuration_offset[Joints.LEFT_LEG_3] += target
+        self.configuration_offset[Joints.RIGHT_LEG_3] += target
 
     def set_leg_joint_5_target_angle(self, target: float) -> None:
-        self.configuration[Joints.LEFT_LEG_5] += target
-        self.configuration[Joints.RIGHT_LEG_5] += target
+        self.configuration_offset[Joints.LEFT_LEG_5] += target
+        self.configuration_offset[Joints.RIGHT_LEG_5] += target
 
     def set_leg_joint_6_target_angle(self, target: float) -> None:
-        self.configuration[Joints.LEFT_LEG_6] -= target
-        self.configuration[Joints.RIGHT_LEG_6] += target
+        self.configuration_offset[Joints.LEFT_LEG_6] -= target
+        self.configuration_offset[Joints.RIGHT_LEG_6] += target

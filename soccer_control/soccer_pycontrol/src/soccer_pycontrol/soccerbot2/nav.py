@@ -66,21 +66,24 @@ class Nav:
             [_, pitch, roll] = self.env.sensors.get_euler_angles()
 
             if self.t <= self.env.step_planner.robot_path.duration():
+                if self.env.step_planner.current_step_time <= self.t <= self.env.step_planner.robot_path.duration():
 
-                torso_to_right_foot, torso_to_left_foot = self.env.step_planner.get_next_step(self.t)
-                r_theta = self.env.ik_actions.get_right_leg_angles(torso_to_right_foot)
-                l_theta = self.env.ik_actions.get_left_leg_angles(torso_to_left_foot)
-                self.env.motor_control.set_right_leg_target_angles(r_theta[0:6])
-                self.env.motor_control.set_left_leg_target_angles(l_theta[0:6])
+                    torso_to_right_foot, torso_to_left_foot = self.env.step_planner.get_next_step(self.t)
+                    r_theta = self.env.ik_actions.get_right_leg_angles(torso_to_right_foot)
+                    l_theta = self.env.ik_actions.get_left_leg_angles(torso_to_left_foot)
+                    self.env.motor_control.set_right_leg_target_angles(r_theta[0:6])
+                    self.env.motor_control.set_left_leg_target_angles(l_theta[0:6])
 
-                F = self.env.pid.walking_pitch_pid.update(pitch)
-                self.env.motor_control.set_leg_joint_3_target_angle(F)
+                    F = self.env.pid.walking_pitch_pid.update(pitch)
+                    self.env.motor_control.set_leg_joint_3_target_angle(F)
 
-                F = self.env.pid.walking_roll_pid.update(roll)
-                self.env.motor_control.set_leg_joint_2_target_angle(F)
+                    F = self.env.pid.walking_roll_pid.update(roll)
+                    self.env.motor_control.set_leg_joint_2_target_angle(F)
 
-                self.env.motor_control.set_motor()
-
+                    self.env.motor_control.set_motor()
+                    self.env.step_planner.current_step_time = (
+                        self.env.step_planner.current_step_time + self.env.step_planner.robot_path.step_precision
+                    )
             else:
                 self.stabilize_stand(pitch, roll)
                 if abs(pitch - self.env.pid.standing_pitch_pid.setpoint) < 0.025 and abs(roll - self.env.pid.standing_roll_pid.setpoint) < 0.025:
@@ -103,10 +106,10 @@ class Nav:
 
     def stabilize_stand(self, pitch: float, roll: float) -> None:
         error_pitch = self.env.pid.standing_pitch_pid.update(pitch)
-        self.env.motor_control.set_leg_joint_3_target_angle(-error_pitch)
+        self.env.motor_control.set_leg_joint_3_target_angle(error_pitch)
         print(error_pitch)
-        # error_roll = self.env.pid.standing_roll_pid.update(roll)
-        # self.env.motor_control.set_leg_joint_2_target_angle(error_roll)
+        error_roll = self.env.pid.standing_roll_pid.update(roll)
+        self.env.motor_control.set_leg_joint_2_target_angle(error_roll)
 
         self.env.motor_control.set_motor()
 
