@@ -1,3 +1,6 @@
+import time
+
+import numpy as np
 import pybullet as pb
 import pybullet_data
 
@@ -17,12 +20,17 @@ class PybulletWorld:
         rolling_friction: float = 0.0,
         display: bool = True,
         camera_yaw: float = 90,
+        real_time: bool = False,
+        rate: int = 100,  # TODO should convert some of this to yaml
     ):
         """
         Initializes the ramp
 
 
         """
+        self.rate = rate
+        self.real_time = real_time
+
         assert pb.isConnected() == 0
         if display:
             self.client_id = pb.connect(pb.GUI)
@@ -49,3 +57,18 @@ class PybulletWorld:
         if pb.isConnected(self.client_id):
             pb.disconnect(self.client_id)
         assert pb.isConnected() == 0
+
+    def wait(self, steps: int) -> None:
+        for i in range(steps):
+            self.step()
+
+    def wait_motor(self) -> None:
+        # TODO this if for interpolation
+        for _ in np.arange(0, 1.00, 0.040):
+            self.step()
+
+    # TODO maybe put into separate part
+    def step(self) -> None:
+        if self.real_time:
+            time.sleep(1 / self.rate)
+        pb.stepSimulation()

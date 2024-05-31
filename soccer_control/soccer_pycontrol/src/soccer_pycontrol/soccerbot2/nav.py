@@ -1,6 +1,9 @@
 import pybullet as pb
 from soccer_pycontrol.links import Links
-from soccer_pycontrol.soccerbot2.pybullet.pybullet_env import PybulletEnv
+from soccer_pycontrol.soccerbot2.bez import Bez
+from soccer_pycontrol.soccerbot2.foot_step_planner import FootStepPlanner
+from soccer_pycontrol.soccerbot2.pybullet.pybullet_world import PybulletWorld
+from soccer_pycontrol.soccerbot2.stabilize import Stabilize
 
 from soccer_common.transformation import Transformation
 
@@ -14,26 +17,26 @@ class Nav:
 
     # PYBULLET_STEP = rospy.get_param("control_frequency", 0.01)
 
-    def __init__(self, env: PybulletEnv):
+    def __init__(self, world: PybulletWorld, bez: Bez):
         """
         Initialize the Navigator
 
         :param display: Whether or not to show the pybullet visualization, turned off for quick unit tests
         :param useCalibration: Whether or not to use movement calibration files located in config/robot_model.yaml, which adjusts the calibration to the movement given
         """
-        self.env = env
+
+        self.world = world
+        self.bez = bez
+
+        self.step_planner = FootStepPlanner(
+            walking_torso_height=self.bez.data.walking_torso_height, foot_center_to_floor=self.bez.data.foot_center_to_floor
+        )
+        self.pid = Stabilize()
 
         self.terminate_walk = False
         self.prepare_walk_time = 2  # rospy.get_param("prepare_walk_time", 2)
 
         self.t = 0
-
-    def ready(self) -> None:
-        """
-        Puts the robot into a ready pose to begin walking
-        """
-        self.env.motor_control.set_target_angles(self.env.ik_actions.ready())
-        self.env.motor_control.set_motor()
 
     def set_goal(self, goal: Transformation) -> None:
         """
@@ -41,7 +44,13 @@ class Nav:
 
         :param goal: The 3D location goal for the robot
         """
-        self.env.step_planner.create_path_to_goal(goal)
+        self.step_planner.create_path_to_goal(goal)
+
+    def wait(self, step: int) -> None:
+        self.world.wait(step)
+
+    def ready(self) -> None:
+        self.bez.ready()
 
     def walk(self) -> bool:
         """
@@ -52,66 +61,63 @@ class Nav:
 
         self.t = -self.prepare_walk_time
         stable_count = 20
-        self.env.pid.reset_imus()
+        self.pid.reset_imus()
 
         while True:
-            [_, pitch, roll] = self.env.sensors.get_euler_angles()
-
-            if 0 <= self.t <= self.env.step_planner.robot_path.duration():
+            [_, pitch, roll] = self.bez.sensors.get_euler_angles()
+            # TODO should we have more abstraction, because this is actually useful to know where the functions go
+            if 0 <= self.t <= self.step_planner.robot_path.duration():
                 # TODO after add metrics for evaluating walking come back see if this is necessary
-                if self.env.step_planner.current_step_time <= self.t <= self.env.step_planner.robot_path.duration():
-                    torso_to_right_foot, torso_to_left_foot = self.env.step_planner.get_next_step(self.t)
-                    r_theta = self.env.ik_actions.get_right_leg_angles(torso_to_right_foot)
-                    l_theta = self.env.ik_actions.get_left_leg_angles(torso_to_left_foot)
-                    self.env.motor_control.set_right_leg_target_angles(r_theta[0:6])
-                    self.env.motor_control.set_left_leg_target_angles(l_theta[0:6])
+                if self.step_planner.current_step_time <= self.t <= self.step_planner.robot_path.duration():
+                    torso_to_right_foot, torso_to_left_foot = self.step_planner.get_next_step(self.t)
 
-                    F = self.env.pid.walking_pitch_pid.update(pitch)
-                    self.env.motor_control.set_leg_joint_3_target_angle(F)
+                    self.bez.find_joint_angles(torso_to_right_foot, torso_to_left_foot)
 
-                    F = self.env.pid.walking_roll_pid.update(roll)
-                    self.env.motor_control.set_leg_joint_2_target_angle(F)
+                    self.stabilize_walk(pitch, roll)
 
-                    self.env.motor_control.set_motor()
-                    self.env.step_planner.current_step_time = (
-                        self.env.step_planner.current_step_time + self.env.step_planner.robot_path.step_precision
-                    )
+                    self.step_planner.current_step_time = self.step_planner.current_step_time + self.step_planner.robot_path.step_precision
             else:
                 self.stabilize_stand(pitch, roll)
-                if abs(pitch - self.env.pid.standing_pitch_pid.setpoint) < 0.025 and abs(roll - self.env.pid.standing_roll_pid.setpoint) < 0.025:
-                    stable_count -= 1
-                    if stable_count == 0:
-                        if self.t < 0:
-                            self.t = 0
-                            stable_count = 20
-                        else:
-                            break
-                else:
-                    stable_count = 5
 
-            if self.fallen(pitch):
+                stable_count = self.update_stable_count(pitch, roll, stable_count)
+                if stable_count < 0:  # TODO dont really like this format
+                    break
+
+            if self.bez.fallen(pitch):
                 return False
 
-            self.env.step()
+            self.world.step()
             self.t = self.t + 0.01
         return True
 
     def stabilize_stand(self, pitch: float, roll: float) -> None:
-        error_pitch = self.env.pid.standing_pitch_pid.update(pitch)
-        self.env.motor_control.set_leg_joint_3_target_angle(error_pitch)
+        error_pitch = self.pid.standing_pitch_pid.update(pitch)
+        self.bez.motor_control.set_leg_joint_3_target_angle(error_pitch)
         print(error_pitch)
-        error_roll = self.env.pid.standing_roll_pid.update(roll)
-        self.env.motor_control.set_leg_joint_2_target_angle(error_roll)
 
-        self.env.motor_control.set_motor()
+        error_roll = self.pid.standing_roll_pid.update(roll)
+        self.bez.motor_control.set_leg_joint_2_target_angle(error_roll)
 
-    @staticmethod
-    def fallen(pitch: float) -> bool:
-        angle_threshold = 1.25  # in radian
-        if pitch > angle_threshold:
-            print("Fallen Back")
-            return True
+        self.bez.motor_control.set_motor()
 
-        elif pitch < -angle_threshold:
-            print("Fallen Front")
-            return True
+    def stabilize_walk(self, pitch: float, roll: float) -> None:
+        error_pitch = self.pid.walking_pitch_pid.update(pitch)
+        self.bez.motor_control.set_leg_joint_3_target_angle(error_pitch)
+
+        error_roll = self.pid.walking_roll_pid.update(roll)
+        self.bez.motor_control.set_leg_joint_2_target_angle(error_roll)
+
+        self.bez.motor_control.set_motor()
+
+    def update_stable_count(self, pitch: float, roll: float, stable_count: int) -> int:
+        if abs(pitch - self.pid.standing_pitch_pid.setpoint) < 0.025 and abs(roll - self.pid.standing_roll_pid.setpoint) < 0.025:
+            stable_count -= 1
+            if stable_count == 0:
+                if self.t < 0:
+                    self.t = 0
+                    stable_count = 20
+                else:
+                    stable_count = -1
+        else:
+            stable_count = 5
+        return stable_count

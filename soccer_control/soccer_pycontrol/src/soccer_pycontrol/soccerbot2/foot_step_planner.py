@@ -72,7 +72,7 @@ class FootStepPlanner:
         # TODO add unit test
         return self.robot_path
 
-    def get_next_step(self, t: float) -> Tuple[list, list]:
+    def get_next_step(self, t: float) -> Tuple[Transformation, Transformation]:
         """
         Updates the configuration for the robot for the next position t based on the current path
 

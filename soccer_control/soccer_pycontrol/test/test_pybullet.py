@@ -4,9 +4,9 @@ import numpy as np
 import pybullet as pb
 import pytest
 from soccer_pycontrol.links import Links
+from soccer_pycontrol.soccerbot2.bez import Bez
 from soccer_pycontrol.soccerbot2.kinematic_data import KinematicData
 from soccer_pycontrol.soccerbot2.nav import Nav
-from soccer_pycontrol.soccerbot2.pybullet.pybullet_env import PybulletEnv
 from soccer_pycontrol.soccerbot2.pybullet.pybullet_world import PybulletWorld
 
 from soccer_common import Transformation
@@ -14,65 +14,60 @@ from soccer_common import Transformation
 
 class TestPybullet(unittest.TestCase):
     def test_imu(self):
-        world = PybulletWorld()
-        kinematic_data = KinematicData()
-        p = PybulletEnv(kinematic_data, world, real_time=True, rate=100)
-        p.wait(100)
-        print(p.sensors.get_imu().orientation_euler)
+        world = PybulletWorld(camera_yaw=45, real_time=True, rate=100)
+        bez = Bez()
+        world.wait(100)
+        print(bez.sensors.get_imu().orientation_euler)
         # TODO add more
 
     def test_foot_sensor(self):
-        world = PybulletWorld()
-        kinematic_data = KinematicData()
-        p = PybulletEnv(kinematic_data, world, real_time=True, rate=100)
-        p.wait(100)
-        print(p.sensors.get_foot_pressure_sensors(p.world.plane))
+        world = PybulletWorld(camera_yaw=45, real_time=True, rate=100)
+        bez = Bez()
+        world.wait(100)
+        print(bez.sensors.get_foot_pressure_sensors(world.plane))
         # TODO add more
 
     def test_foot_step_planner_fixed(self):
-        world = PybulletWorld(path="")
-        # TODO fix with torso height or start pose
+        world = PybulletWorld(path="", camera_yaw=90, real_time=True, rate=100)
+        bez = Bez(fixed_base=True)
+        tf = Nav(world, bez)
 
-        kinematic_data = KinematicData()
-        p = PybulletEnv(kinematic_data, world, fixed_base=True, real_time=True, rate=100)
-        tf = Nav(p)
-        p.wait(50)
+        # TODO fix with torso height or start pose
+        tf.wait(50)
         tf.ready()
-        p.wait(50)
+        tf.wait(50)
         tf.set_goal(Transformation([1, 0, 0], [0, 0, 0, 1]))
         tf.walk()
-        p.wait(100)
+        tf.wait(100)
 
     def test_foot_step_planner_plane(self):
-        world = PybulletWorld(camera_yaw=90)
-        kinematic_data = KinematicData()
-        p = PybulletEnv(kinematic_data, world, real_time=True, rate=100)
-        tf = Nav(p)
-        p.wait(50)
+        world = PybulletWorld(camera_yaw=90, real_time=True, rate=100)
+        bez = Bez()
+        tf = Nav(world, bez)
+        tf.wait(50)
         tf.ready()
-        p.wait(50)
+        tf.wait(50)
         tf.set_goal(Transformation([1, 0, 0], [0, 0, 0, 1]))
         tf.walk()
-        p.wait(100)
+        tf.wait(100)
 
     def test_stand_plane(self):
-        world = PybulletWorld(camera_yaw=0)
-        kinematic_data = KinematicData()
-        p = PybulletEnv(kinematic_data, world, real_time=True, rate=100)
-        tf = Nav(p)
-        p.wait(50)
-        tf.ready()
-        p.wait(50)
+        world = PybulletWorld(camera_yaw=0, real_time=True, rate=100)
+        bez = Bez()
+        tf = Nav(world, bez)
+        tf.wait(50)
+        tf.bez.ready()
+        tf.wait(50)
         while tf.t < 1000:
-            [_, pitch, roll] = p.sensors.get_euler_angles()
+            [_, pitch, roll] = tf.bez.sensors.get_euler_angles()
             # if tf.fallen(pitch):
             #     pb.applyExternalForce(p.model.body, Links.TORSO, [0, 5, 0], [0, 0, 0], pb.LINK_FRAME)
             # p.model.set_pose()
-            pb.applyExternalForce(p.model.body, Links.TORSO, [3, 0, 0], [0, 0, 0], pb.LINK_FRAME)
+            pb.applyExternalForce(tf.bez.model.body, Links.TORSO, [3, 0, 0], [0, 0, 0], pb.LINK_FRAME)
             tf.stabilize_stand(pitch, roll)
-            p.step()
+            tf.world.step()
             tf.t += +0.01
-        p.wait(100)
+        tf.world.wait(100)
 
 
 @pytest.mark.parametrize("robot_model", ["bez1"])  # , "bez2"]) # TODO problem with bez2 urdf
@@ -81,17 +76,16 @@ def test_ready(robot_model: str):
     Case 1: Standard case
     :return: None
     """
-    world = PybulletWorld()
-    kinematic_data = KinematicData(robot_model=robot_model)
-    p = PybulletEnv(kinematic_data, world, real_time=True, rate=250)
-    p.wait(100)
-    p.motor_control.set_target_angles(p.ik_actions.ready())
-    p.motor_control.set_motor()
+    world = PybulletWorld(camera_yaw=45, real_time=True, rate=250)
+    bez = Bez()
 
-    p.wait_motor()
-    p.wait(100)
+    world.wait(100)
+    bez.ready()
 
-    p.world.close()
+    world.wait_motor()
+    world.wait(100)
+
+    world.close()
     # TODO doesnt work with more then 1 robot model weird
 
 
@@ -103,28 +97,25 @@ def test_sweep(sweep_name: str, h: float, robot_model: str):
     Case 1: Standard case
     :return: None
     """
-
-    world = PybulletWorld(path="", camera_yaw=45)
-    kinematic_data = KinematicData(robot_model=robot_model)
-    p = PybulletEnv(kinematic_data, world, fixed_base=True, real_time=True, rate=1000)
-
+    world = PybulletWorld(path="", camera_yaw=45, real_time=True, rate=1000)
+    bez = Bez(fixed_base=True)
     steps = 50
     x = np.zeros(steps)
 
     def sweep(target_pose: np.ndarray, step: int) -> None:
         for i in range(step):
-            p.motor_control.set_right_leg_target_angles(target_pose[i][0:6])
-            p.motor_control.set_motor()
-            p.wait_motor()
+            bez.motor_control.set_right_leg_target_angles(target_pose[i][0:6])
+            bez.motor_control.set_motor()
+            world.wait_motor()
 
     if sweep_name == "x":
-        x, _, _ = p.ik_actions.x_sweep(h)
+        x, _, _ = bez.ik_actions.x_sweep(h)
     elif sweep_name == "y":
-        x, _, _ = p.ik_actions.y_sweep(h)
+        x, _, _ = bez.ik_actions.y_sweep(h)
     elif sweep_name == "z":
-        x, _, _ = p.ik_actions.z_sweep()
+        x, _, _ = bez.ik_actions.z_sweep()
 
     sweep(x, steps)
-    p.wait(steps)
+    world.wait(steps)
 
-    p.world.close()
+    world.close()
