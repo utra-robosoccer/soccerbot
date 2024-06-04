@@ -50,7 +50,6 @@ class bcolors:
 
 
 class ObjectDetectionNode(object):
-
     """
     Detect ball, robot
     publish bounding boxes
@@ -59,33 +58,40 @@ class ObjectDetectionNode(object):
 
     def __init__(self, model_path):
         self.SOCCER_BALL = 0
-        self.CONFIDENCE_THRESHOLD = rospy.get_param("~ball_confidence_threshold", 0.75)
+
+        # ROS, replace with default
+        # self.CONFIDENCE_THRESHOLD = rospy.get_param("~ball_confidence_threshold", 0.75)
+        self.CONFIDENCE_THRESHOLD = 0.75
 
         torch.hub._validate_not_a_forked_repo = (
             lambda a, b, c: True
         )  # https://discuss.pytorch.org/t/help-for-http-error-403-rate-limit-exceeded/125907
         self.model = torch.hub.load("ultralytics/yolov5", "custom", path=model_path)
-        if torch.cuda.is_available():
-            rospy.loginfo(f"{bcolors.OKGREEN}Using CUDA for object detection{bcolors.ENDC}")
-            self.model.cuda()
-        else:
-            rospy.logwarn("Not using CUDA")
 
+        # ROS
+        # if torch.cuda.is_available():
+        #     rospy.loginfo(f"{bcolors.OKGREEN}Using CUDA for object detection{bcolors.ENDC}")
+        #     self.model.cuda()
+        # else:
+        #     rospy.logwarn("Not using CUDA")
+        #
         self.robot_name = rospy.get_namespace()[1:-1]  # remove '/'
-        self.camera = Camera(self.robot_name)
+        # self.camera = Camera(self.robot_name)
+        self.camera = Camera()
         self.camera.reset_position()
 
         # Params
         self.br = CvBridge()
 
-        self.pub_detection = rospy.Publisher("detection_image", Image, queue_size=1, latch=True)
-        self.pub_boundingbox = rospy.Publisher("object_bounding_boxes", BoundingBoxes, queue_size=1, latch=True)
-        self.image_subscriber = rospy.Subscriber(
-            "camera/image_raw", Image, self.callback, queue_size=1, buff_size=DEFAULT_BUFF_SIZE * 64
-        )  # Large buff size (https://answers.ros.org/question/220502/image-subscriber-lag-despite-queue-1/)
-        self.robot_state_subscriber = rospy.Subscriber("state", RobotState, self.robot_state_callback)
+        # ROS
+        # self.pub_detection = rospy.Publisher("detection_image", Image, queue_size=1, latch=True)
+        # self.pub_boundingbox = rospy.Publisher("object_bounding_boxes", BoundingBoxes, queue_size=1, latch=True)
+        # self.image_subscriber = rospy.Subscriber(
+        #     "camera/image_raw", Image, self.callback, queue_size=1, buff_size=DEFAULT_BUFF_SIZE * 64
+        # )  # Large buff size (https://answers.ros.org/question/220502/image-subscriber-lag-despite-queue-1/)
+        # self.robot_state_subscriber = rospy.Subscriber("state", RobotState, self.robot_state_callback)
         self.robot_state = RobotState()
-        self.game_state_subscriber = rospy.Subscriber("gamestate", GameState, self.game_state_callback)
+        # self.game_state_subscriber = rospy.Subscriber("gamestate", GameState, self.game_state_callback)
         self.game_state = GameState()
 
     def game_state_callback(self, game_state: GameState):
@@ -94,7 +100,7 @@ class ObjectDetectionNode(object):
     def robot_state_callback(self, robot_state: RobotState):
         self.robot_state = robot_state
 
-    def callback(self, msg: Image):
+    def callback(self, image: Image):
         # webots: 480x640x4pixels
         if self.robot_state.status not in [
             RobotState.STATUS_LOCALIZING,
@@ -106,13 +112,16 @@ class ObjectDetectionNode(object):
         if self.game_state.gameState != GameState.GAMESTATE_PLAYING:
             return
 
-        rospy.loginfo_once("Object Detection Receiving image")
+        # ROS
+        # rospy.loginfo_once("Object Detection Receiving image")
         # width x height x channels (bgra8)
-        image = self.br.imgmsg_to_cv2(msg)
-        self.camera.reset_position(timestamp=msg.header.stamp)
+        # image = self.br.imgmsg_to_cv2(msg)
+        # self.camera.reset_position(timestamp=msg.header.stamp)
 
+        # ROS, replace with default value
         # cover horizon to help robot ignore things outside field
-        cover_horizon_up_threshold = rospy.get_param("cover_horizon_up_threshold", 30)
+        # cover_horizon_up_threshold = rospy.get_param("cover_horizon_up_threshold", 30)
+        cover_horizon_up_threshold = 30
         h = max(self.camera.calculateHorizonCoverArea() - cover_horizon_up_threshold, 0)
 
         if image is not None:
@@ -156,21 +165,22 @@ class ObjectDetectionNode(object):
                     bbs_msg.bounding_boxes.append(bb_msg)
                     id += 1
 
-            bbs_msg.header = msg.header
-            try:
-                if self.pub_detection.get_num_connections() > 0:
-                    detection_image = np.squeeze(results.render())
-                    detection_image = np.concatenate((np.zeros((h + 1, msg.width, 3), detection_image.dtype), detection_image))
+            # ROS
+            # bbs_msg.header = msg.header
+            # try:
+            #     if self.pub_detection.get_num_connections() > 0:
+            #         detection_image = np.squeeze(results.render())
+            # detection_image = np.concatenate((np.zeros((h + 1, msg.width, 3), detection_image.dtype), detection_image))
 
-                    detection_image = detection_image[..., ::-1]  # convert rgb to bgr
-                    self.pub_detection.publish(self.br.cv2_to_imgmsg(detection_image, encoding="bgr8"))
+            # detection_image = detection_image[..., ::-1]  # convert rgb to bgr
+            # self.pub_detection.publish(self.br.cv2_to_imgmsg(detection_image, encoding="bgr8"))
 
-                if self.pub_boundingbox.get_num_connections() > 0 and len(bbs_msg.bounding_boxes) > 0:
-                    self.pub_boundingbox.publish(bbs_msg)
+            # if self.pub_boundingbox.get_num_connections() > 0 and len(bbs_msg.bounding_boxes) > 0:
+            #     self.pub_boundingbox.publish(bbs_msg)
 
-            except ROSException as re:
-                print(re)
-                exit(0)
+            # except ROSException as re:
+            #     print(re)
+            #     exit(0)
 
 
 if __name__ == "__main__":
