@@ -29,20 +29,20 @@ uint8_t BMI088_Init(BMI088 *imu, I2C_HandleTypeDef *m_i2c_handle) {
 //  HAL_Delay(50);
 
   /* Perform accelerometer soft reset */
-  status += BMI088_WriteAccRegister(imu, BMI_ACC_SOFTRESET, 0xB6);
-  HAL_Delay(50);
+//  status += BMI088_WriteAccRegister(imu, BMI_ACC_SOFTRESET, 0xB6);
+//  HAL_Delay(50);
 
   /* Check chip ID */
-  uint8_t chipID;
+  uint8_t chipID = 0;
   status = BMI088_ReadAccRegister(imu, BMI_ACC_CHIP_ID, &chipID);
 
   if (chipID != 0x1E) {
-    while(true){
-//      generateClocks2(1, 1);
-      status = BMI088_ReadAccRegister(imu, BMI_ACC_CHIP_ID, &chipID);
-      status = BMI088_ReadGyrRegister(imu, BMI_GYR_CHIP_ID, &chipID);
-    }
-  //  return 0;
+//    while(true){
+////      generateClocks2(1, 1);
+//      status = BMI088_ReadAccRegister(imu, BMI_ACC_CHIP_ID, &chipID);
+////      status = BMI088_ReadGyrRegister(imu, BMI_GYR_CHIP_ID, &chipID);
+//    }
+    return 0;
 
   }
   HAL_Delay(10);
@@ -93,6 +93,7 @@ uint8_t BMI088_Init(BMI088 *imu, I2C_HandleTypeDef *m_i2c_handle) {
   if (chipID != 0x0F) {
 
     //return 0;
+    chipID++;
 
   }
   HAL_Delay(10);
@@ -207,7 +208,7 @@ uint8_t BMI088_ReadAccelerometer(BMI088 *imu) {
 //  imu->acc_mps2[2] = imu->accConversion * accZ;
 //
 //  return status;
-  return 0;
+//  return 0;
 
 }
 
@@ -218,7 +219,7 @@ HAL_StatusTypeDef readGyroscopeFromBMI088(I2C_HandleTypeDef *hi2c, int16_t *gyro
     uint8_t data[6]; // Data buffer to store gyroscope data
 
     // Read gyroscope data starting from register 0x0C (Gyroscope data starting register)
-    uint8_t regAddress = 0x0C;
+    uint8_t regAddress = 0x02;
     status = HAL_I2C_Mem_Read(hi2c, BMI_GYR_I2C_ADDRESS, regAddress, I2C_MEMADD_SIZE_8BIT, data, 6, HAL_MAX_DELAY);
     if (status != HAL_OK) {
         return status;

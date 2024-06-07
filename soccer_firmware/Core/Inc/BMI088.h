@@ -5,8 +5,8 @@
 #include "main.h"
 
 /* Register defines */
-#define BMI_GYR_I2C_ADDRESS 0x68
-#define BMI_ACC_I2C_ADDRESS 0x18
+#define BMI_GYR_I2C_ADDRESS (0x69 << 1)
+#define BMI_ACC_I2C_ADDRESS (0x19 << 1)
 
 #define BMI_ACC_CHIP_ID     0x00
 #define BMI_ACC_DATA      0x12
