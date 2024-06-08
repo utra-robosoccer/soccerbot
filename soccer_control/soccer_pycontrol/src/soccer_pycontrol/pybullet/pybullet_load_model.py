@@ -1,5 +1,3 @@
-from os.path import expanduser
-
 import pybullet as pb
 
 from soccer_common import Transformation

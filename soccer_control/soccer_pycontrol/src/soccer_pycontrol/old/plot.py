@@ -2,7 +2,7 @@ import math
 
 import numpy as np
 from matplotlib import pyplot as plt
-from soccer_pycontrol.joints import Joints
+from soccer_pycontrol.common.joints import Joints
 
 
 class Plotter:

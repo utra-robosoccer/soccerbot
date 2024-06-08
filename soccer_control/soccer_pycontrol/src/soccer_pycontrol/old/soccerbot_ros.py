@@ -12,8 +12,8 @@ from geometry_msgs.msg import Pose2D, PoseStamped
 from nav_msgs.msg import Odometry, Path
 from rospy import ROSException
 from sensor_msgs.msg import Imu, JointState
+from soccer_pycontrol.common.joints import Joints
 from soccer_pycontrol.exp.calibration import adjust_navigation_transform
-from soccer_pycontrol.joints import Joints
 from soccer_pycontrol.soccerbot import Soccerbot
 from std_msgs.msg import Empty
 

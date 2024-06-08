@@ -1,14 +1,14 @@
 import pybullet as pb
-from soccer_pycontrol.links import Links
-from soccer_pycontrol.soccerbot2.bez import Bez
-from soccer_pycontrol.soccerbot2.foot_step_planner import FootStepPlanner
-from soccer_pycontrol.soccerbot2.pybullet.pybullet_world import PybulletWorld
-from soccer_pycontrol.soccerbot2.stabilize import Stabilize
+from soccer_pycontrol.common.links import Links
+from soccer_pycontrol.model.bez import Bez
+from soccer_pycontrol.pybullet.pybullet_world import PybulletWorld
+from soccer_pycontrol.walk_engine.foot_step_planner import FootStepPlanner
+from soccer_pycontrol.walk_engine.stabilize import Stabilize
 
 from soccer_common.transformation import Transformation
 
 
-class Nav:
+class WalkEngine:
     """
     The 2D Navigator class, has a running loop that reads commands by the user and outputs actions to the soccerbot
     class.

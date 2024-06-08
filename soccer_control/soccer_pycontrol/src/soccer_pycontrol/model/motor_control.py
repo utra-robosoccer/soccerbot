@@ -1,7 +1,7 @@
 import numpy as np
 import pybullet as pb
-from soccer_pycontrol.joints import Joints
-from soccer_pycontrol.links import Links
+from soccer_pycontrol.common.joints import Joints
+from soccer_pycontrol.common.links import Links
 
 from soccer_common.utils import wrapToPi
 

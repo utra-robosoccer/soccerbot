@@ -3,11 +3,10 @@ import unittest
 import numpy as np
 import pybullet as pb
 import pytest
-from soccer_pycontrol.links import Links
-from soccer_pycontrol.soccerbot2.bez import Bez
-from soccer_pycontrol.soccerbot2.kinematic_data import KinematicData
-from soccer_pycontrol.soccerbot2.nav import Nav
-from soccer_pycontrol.soccerbot2.pybullet.pybullet_world import PybulletWorld
+from soccer_pycontrol.common.links import Links
+from soccer_pycontrol.model.bez import Bez
+from soccer_pycontrol.pybullet.pybullet_world import PybulletWorld
+from soccer_pycontrol.walk_engine.walk_engine import WalkEngine
 
 from soccer_common import Transformation
 
@@ -30,7 +29,7 @@ class TestPybullet(unittest.TestCase):
     def test_foot_step_planner_fixed(self):
         world = PybulletWorld(path="", camera_yaw=90, real_time=True, rate=100)
         bez = Bez(fixed_base=True)
-        tf = Nav(world, bez)
+        tf = WalkEngine(world, bez)
 
         # TODO fix with torso height or start pose
         tf.wait(50)
@@ -43,7 +42,7 @@ class TestPybullet(unittest.TestCase):
     def test_foot_step_planner_plane(self):
         world = PybulletWorld(camera_yaw=90, real_time=True, rate=100)
         bez = Bez()
-        tf = Nav(world, bez)
+        tf = WalkEngine(world, bez)
         tf.wait(50)
         tf.ready()
         tf.wait(50)
@@ -54,7 +53,7 @@ class TestPybullet(unittest.TestCase):
     def test_stand_plane(self):
         world = PybulletWorld(camera_yaw=0, real_time=True, rate=100)
         bez = Bez()
-        tf = Nav(world, bez)
+        tf = WalkEngine(world, bez)
         tf.wait(50)
         tf.bez.ready()
         tf.wait(50)
