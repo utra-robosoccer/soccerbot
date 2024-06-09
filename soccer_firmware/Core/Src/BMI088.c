@@ -9,10 +9,10 @@ uint8_t BMI088_Init(BMI088 *imu, I2C_HandleTypeDef *m_i2c_handle) {
 
   /* Store interface parameters in struct */
   imu->m_i2c_handle    = m_i2c_handle;
-//
-//  /* Clear DMA flags */
-//  imu->readingAcc = 0;
-//  imu->readingGyr = 0;
+
+  /* Clear DMA flags */
+  imu->readingAcc = 0;
+  imu->readingGyr = 0;
 
   uint8_t status = 0;
 
@@ -22,28 +22,16 @@ uint8_t BMI088_Init(BMI088 *imu, I2C_HandleTypeDef *m_i2c_handle) {
    *
    */
 
-  /* Accelerometer requires rising edge on CSB at start-up to activate SPI */
-//  HAL_GPIO_WritePin(imu->csAccPinBank, imu->csAccPin, GPIO_PIN_RESET);
-//  HAL_Delay(1);
-//  HAL_GPIO_WritePin(imu->csAccPinBank, imu->csAccPin, GPIO_PIN_SET);
-//  HAL_Delay(50);
-
   /* Perform accelerometer soft reset */
-//  status += BMI088_WriteAccRegister(imu, BMI_ACC_SOFTRESET, 0xB6);
-//  HAL_Delay(50);
+  status += BMI088_WriteAccRegister(imu, BMI_ACC_SOFTRESET, 0xB6);
+  HAL_Delay(50);
 
   /* Check chip ID */
   uint8_t chipID = 0;
   status = BMI088_ReadAccRegister(imu, BMI_ACC_CHIP_ID, &chipID);
 
   if (chipID != 0x1E) {
-//    while(true){
-////      generateClocks2(1, 1);
-//      status = BMI088_ReadAccRegister(imu, BMI_ACC_CHIP_ID, &chipID);
-////      status = BMI088_ReadGyrRegister(imu, BMI_GYR_CHIP_ID, &chipID);
-//    }
     return 0;
-
   }
   HAL_Delay(10);
 
@@ -91,10 +79,7 @@ uint8_t BMI088_Init(BMI088 *imu, I2C_HandleTypeDef *m_i2c_handle) {
   status += BMI088_ReadGyrRegister(imu, BMI_GYR_CHIP_ID, &chipID);
 
   if (chipID != 0x0F) {
-
-    //return 0;
-    chipID++;
-
+    return 0;
   }
   HAL_Delay(10);
 
@@ -187,40 +172,36 @@ uint8_t BMI088_WriteGyrRegister(BMI088 *imu, uint8_t regAddr, uint8_t data) {
  * POLLING
  *
  */
-uint8_t BMI088_ReadAccelerometer(BMI088 *imu) {
+uint8_t BMI088_ReadAccelerometer(BMI088 *imu, I2C_HandleTypeDef *hi2c, int16_t *accX, int16_t *accY, int16_t *accZ) {
+    HAL_StatusTypeDef status;
+    uint8_t data[6]; // Data buffer to store gyroscope data
 
-//  /* Read raw accelerometer data */
-//  uint8_t txBuf[8] = {(BMI_ACC_DATA | 0x80), 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}; /* Register addr, 1 byte dummy, 6 bytes data */
-//  uint8_t rxBuf[8];
-//
-//  HAL_GPIO_WritePin(imu->csAccPinBank, imu->csAccPin, GPIO_PIN_RESET);
-//  uint8_t status = (HAL_SPI_TransmitReceive(imu->spiHandle, txBuf, rxBuf, 8, HAL_MAX_DELAY) == HAL_OK);
-//  HAL_GPIO_WritePin(imu->csAccPinBank, imu->csAccPin, GPIO_PIN_SET);
-//
-//  /* Form signed 16-bit integers */
-//  int16_t accX = (int16_t) ((rxBuf[3] << 8) | rxBuf[2]);
-//  int16_t accY = (int16_t) ((rxBuf[5] << 8) | rxBuf[4]);
-//  int16_t accZ = (int16_t) ((rxBuf[7] << 8) | rxBuf[6]);
-//
-//  /* Convert to m/s^2 */
-//  imu->acc_mps2[0] = imu->accConversion * accX;
-//  imu->acc_mps2[1] = imu->accConversion * accY;
-//  imu->acc_mps2[2] = imu->accConversion * accZ;
-//
-//  return status;
-//  return 0;
+    status = HAL_I2C_Mem_Read(hi2c, BMI_ACC_I2C_ADDRESS, BMI_ACC_DATA, I2C_MEMADD_SIZE_8BIT, data, 6, HAL_MAX_DELAY);
+    if (status != HAL_OK) {
+        return status;
+    }
 
+    /* Form signed 16-bit integers */
+    *accX = (int16_t) ((data[1] << 8) | data[0]);
+    *accY = (int16_t) ((data[3] << 8) | data[2]);
+    *accZ = (int16_t) ((data[5] << 8) | data[4]);
+
+    /* Convert to m/s^2 */
+    imu->acc_mps2[0] = imu->accConversion * (*accX);
+    imu->acc_mps2[1] = imu->accConversion * (*accY);
+    imu->acc_mps2[2] = imu->accConversion * (*accZ);
+
+    return status;
 }
 
 
 // Function to read gyroscope values from BMI088 sensor
-HAL_StatusTypeDef readGyroscopeFromBMI088(I2C_HandleTypeDef *hi2c, int16_t *gyroX, int16_t *gyroY, int16_t *gyroZ) {
+HAL_StatusTypeDef BMI088_ReadGyroscope(I2C_HandleTypeDef *hi2c, int16_t *gyroX, int16_t *gyroY, int16_t *gyroZ) {
     HAL_StatusTypeDef status;
     uint8_t data[6]; // Data buffer to store gyroscope data
 
-    // Read gyroscope data starting from register 0x0C (Gyroscope data starting register)
-    uint8_t regAddress = 0x02;
-    status = HAL_I2C_Mem_Read(hi2c, BMI_GYR_I2C_ADDRESS, regAddress, I2C_MEMADD_SIZE_8BIT, data, 6, HAL_MAX_DELAY);
+    status = HAL_I2C_Mem_Read(hi2c, BMI_GYR_I2C_ADDRESS, BMI_GYR_DATA, I2C_MEMADD_SIZE_8BIT, data, 6, HAL_MAX_DELAY);
+
     if (status != HAL_OK) {
         return status;
     }
@@ -230,7 +211,9 @@ HAL_StatusTypeDef readGyroscopeFromBMI088(I2C_HandleTypeDef *hi2c, int16_t *gyro
     *gyroY = (int16_t)((data[3] << 8) | data[2]);
     *gyroZ = (int16_t)((data[5] << 8) | data[4]);
 
-    return HAL_OK;
+    // do gyro conversion here?
+
+    return status;
 }
 
 /*

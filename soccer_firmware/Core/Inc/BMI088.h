@@ -78,9 +78,8 @@ uint8_t BMI088_WriteGyrRegister(BMI088 *imu, uint8_t regAddr, uint8_t data);
  * POLLING
  *
  */
-uint8_t BMI088_ReadAccelerometer(BMI088 *imu);
-uint8_t BMI088_ReadGyroscope(BMI088 *imu);
-uint8_t readGyroscopeFromBMI088(I2C_HandleTypeDef *hi2c, int16_t *gyroX, int16_t *gyroY, int16_t *gyroZ);
+uint8_t BMI088_ReadAccelerometer(BMI088 *imu, I2C_HandleTypeDef *hi2c, int16_t *accX, int16_t *accY, int16_t *accZ);
+uint8_t BMI088_ReadGyroscope(I2C_HandleTypeDef *hi2c, int16_t *gyroX, int16_t *gyroY, int16_t *gyroZ);
 
 /*
  *

@@ -258,13 +258,31 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    int16_t gyroX = 0;
-    int16_t gyroY = 0;
-    int16_t gyroZ = 0;
-    readGyroscopeFromBMI088(&hi2c1, &gyroX, &gyroY, &gyroZ);
-    gyroZ += 0;
-//    read_temp();
+    uint8_t txBuf[6] = {0}; // 6 bytes for IMU
+
+//    int16_t gyroX = 0;
+//    int16_t gyroY = 0;
+//    int16_t gyroZ = 0;
+    int16_t accX = 0;
+    int16_t accY = 0;
+    int16_t accZ = 0;
+//    BMI088_ReadGyroscope(&hi2c1, &gyroX, &gyroY, &gyroZ);
+    BMI088_ReadAccelerometer(&imu, &hi2c1, &accX, &accY, &accZ);
+
+//    for(int i = 0; i < 6; i++)
+//      txBuf[i] = i;
+
+    txBuf[0] =accX & 0xff;
+    txBuf[1] = (accX >> 8) & 0xff;
+    txBuf[2] =accY & 0xff;
+    txBuf[3] = (accY >> 8) & 0xff;
+    txBuf[4] =accZ & 0xff;
+    txBuf[5] = (accZ >> 8) & 0xff;
+
+    CDC_Transmit_FS((uint8_t *) txBuf, sizeof(txBuf));
+
 //    update();
+
     // test Dynamixel 2.0
 //    test_led_p2(&port2, 0x6);
 //    test_motor_sweep2(&port2);
