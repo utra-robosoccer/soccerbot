@@ -77,11 +77,11 @@ class WalkEngine:
 
                     self.step_planner.current_step_time = self.step_planner.current_step_time + self.step_planner.robot_path.step_precision
             else:
-                self.stabilize_stand(pitch, roll)
-
                 stable_count = self.update_stable_count(pitch, roll, stable_count)
                 if stable_count < 0:  # TODO dont really like this format
                     break
+
+                self.stabilize_stand(pitch, roll)
 
             if self.bez.fallen(pitch):
                 return False

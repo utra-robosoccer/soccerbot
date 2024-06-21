@@ -3,8 +3,8 @@ import unittest
 
 import numpy as np
 from matplotlib import pyplot as plt
-from soccer_pycontrol.soccerbot2.ik.ik_actions import IKActions
-from soccer_pycontrol.soccerbot2.kinematic_data import KinematicData
+from soccer_pycontrol.inverse_kinematics.ik_actions import IKActions
+from soccer_pycontrol.inverse_kinematics.kinematic_data import KinematicData
 
 os.environ["ROS_NAMESPACE"] = "/robot1"
 
