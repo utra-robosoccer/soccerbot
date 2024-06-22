@@ -7,7 +7,7 @@ import pybullet_data
 
 class PybulletWorld:
     """
-    Class for interacting with pybullet world
+    Class for interacting and managing with pybullet.
     """
 
     def __init__(

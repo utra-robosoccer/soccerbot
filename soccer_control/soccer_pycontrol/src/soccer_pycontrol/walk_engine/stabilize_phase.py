@@ -8,6 +8,10 @@ from soccer_common import PID, Transformation
 
 
 class StabilizePhase:
+    """
+    Experimental for a phase roll pid thingy.
+    """
+
     def __init__(
         self,
         walking_roll_Kp: float = 0,

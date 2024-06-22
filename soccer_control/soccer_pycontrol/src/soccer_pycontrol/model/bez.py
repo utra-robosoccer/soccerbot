@@ -8,6 +8,10 @@ from soccer_common import Transformation
 
 
 class Bez:
+    """
+    High level abstraction to represent the model.
+    """
+
     def __init__(
         self,
         robot_model: str = "bez1",

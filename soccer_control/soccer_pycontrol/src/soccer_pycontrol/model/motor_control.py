@@ -8,15 +8,11 @@ from soccer_common.utils import wrapToPi
 
 class MotorControl:
     """
-    Sets up pybullet simulation for basic usage
+    Class controls access to motor information and sets motor angles in pybullet
     """
 
     # TODO update with the modified for pycontrol
     def __init__(self, body: pb.loadURDF):
-        """
-        Class for interacting with pybullet model
-
-        """
         self.body = body
 
         self.motor_names = [pb.getJointInfo(self.body, i)[1].decode("utf-8") for i in range(18)]

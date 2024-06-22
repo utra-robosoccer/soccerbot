@@ -10,6 +10,10 @@ from soccer_common import Transformation
 
 
 class FootStepPlanner:
+    """
+    Class to interface with path for robot foot steps.
+    """
+
     def __init__(
         self,
         use_calibration: bool = False,

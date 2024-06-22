@@ -10,9 +10,7 @@ from soccer_common.transformation import Transformation
 
 class WalkEngine:
     """
-    The 2D Navigator class, has a running loop that reads commands by the user and outputs actions to the soccerbot
-    class.
-    Doesn't require ROS and used for unit tests. All functions called here should be related to pybullet simulation
+    Main loop for the walk engine. Interfaces with all classes to perform walking.
     """
 
     # PYBULLET_STEP = rospy.get_param("control_frequency", 0.01)

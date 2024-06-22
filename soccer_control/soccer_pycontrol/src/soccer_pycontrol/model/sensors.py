@@ -8,6 +8,9 @@ from soccer_common import Transformation
 
 
 class Sensors:
+    """
+    Interfaces with pybullet to extract sensor data.
+    """
 
     def __init__(self, body: pb.loadURDF):
         # TODO does this need to be a class?

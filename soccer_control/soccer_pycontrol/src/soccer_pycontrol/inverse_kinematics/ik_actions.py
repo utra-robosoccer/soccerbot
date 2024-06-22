@@ -10,6 +10,10 @@ from soccer_common import Transformation
 
 
 class IKActions:
+    """
+    Class for actions robot will do using ik
+    """
+
     def __init__(self, data: KinematicData):
         self.data = data
         self.leg_length = self.data.thigh_length + self.data.tibia_length

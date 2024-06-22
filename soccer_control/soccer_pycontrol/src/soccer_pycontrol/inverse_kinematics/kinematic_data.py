@@ -7,6 +7,10 @@ from soccer_common import Transformation
 
 
 class KinematicData:
+    """
+    Class to contain all relevant information about the kinematics of model. Uses pinnoccio to load from urdf
+    """
+
     def __init__(
         self,
         robot_model: str = "bez1",

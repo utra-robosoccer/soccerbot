@@ -4,6 +4,10 @@ from soccer_common import Transformation
 
 
 class LoadModel:  # TODO Maybe rename to body
+    """
+    Interfaces with pybullet to load a pybullet model and set pose.
+    """
+
     def __init__(self, urdf_model_path: str, walking_torso_height: float, pose: Transformation, fixed_base: bool):
         self.pose = pose
 

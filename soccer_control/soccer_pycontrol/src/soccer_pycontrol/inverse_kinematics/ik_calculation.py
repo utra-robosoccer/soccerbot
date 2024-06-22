@@ -5,6 +5,10 @@ from soccer_common import Transformation
 
 
 class IKCalculation:
+    """
+    Main inverse kinematic calculations.
+    """
+
     def __init__(self, thigh_length: float = 0.089, tibia_length: float = 0.0827):
         self.thigh_length = thigh_length
         self.tibia_length = tibia_length

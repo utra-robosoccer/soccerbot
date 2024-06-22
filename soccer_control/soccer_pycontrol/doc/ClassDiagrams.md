@@ -15,12 +15,12 @@ classDiagram
         class IKAction
         class IKCalc
     }
-    namespace WalkEngine {
-        class Nav
+    namespace Walk {
+        class WalkEngine
         class FootStepPlanner
         class Path
-        class PID
-        class PIDPhase
+        class Stabilize
+        class StabilizePhase
 
     }
     namespace Pybullet {
@@ -40,17 +40,17 @@ classDiagram
 
 
 %%    Nav *--|> FootStepPlanner
-    FootStepPlanner <|--* Nav
+    FootStepPlanner <|--* WalkEngine
 %%    FootStepPlanner *--|> Path
     Path <|--* FootStepPlanner
 
-    Nav *--|> PID
-    PID *--|> PIDPhase
+    WalkEngine *--|> Stabilize
+    Stabilize *--|> StabilizePhase
 
 %%    Nav *--|> World
-    World <|--* Nav
+    World <|--* WalkEngine
 %%    Nav *--|> Bez
-    Bez <|--* Nav
+    Bez <|--* WalkEngine
 
 
 

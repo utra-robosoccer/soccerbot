@@ -2,6 +2,10 @@ from soccer_common import PID, Transformation
 
 
 class Stabilize:
+    """
+    Manages PID loops for pitch, roll while standing and walking.
+    """
+
     def __init__(
         self,  # TODO should be map read from yaml
         standing_pitch_kp: float = 0.1,
