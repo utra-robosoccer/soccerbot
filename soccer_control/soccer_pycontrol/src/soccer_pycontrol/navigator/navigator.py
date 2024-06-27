@@ -3,7 +3,7 @@ import time
 import pybullet as pb
 import pybullet_data
 import rospy
-from soccer_pycontrol.links import Links
+from soccer_pycontrol.common.links import Links
 from soccer_pycontrol.ramp import Ramp
 from soccer_pycontrol.soccerbot import Soccerbot
 

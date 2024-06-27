@@ -12,9 +12,9 @@ import scipy
 from rospy import ROSException
 from scipy.signal import butter, filtfilt, lfilter
 from sensor_msgs.msg import JointState
+from soccer_pycontrol.common.joints import Joints
+from soccer_pycontrol.common.links import Links
 from soccer_pycontrol.exp.calibration import adjust_navigation_transform
-from soccer_pycontrol.joints import Joints
-from soccer_pycontrol.links import Links
 from soccer_pycontrol.path.path_robot import PathRobot
 
 from soccer_common.pid import PID

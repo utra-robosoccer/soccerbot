@@ -50,6 +50,19 @@ class TestPybullet(unittest.TestCase):
         tf.walk()
         tf.wait(100)
 
+    def test_foot_step_planner_plane_dynamic(self):
+        world = PybulletWorld(camera_yaw=90, real_time=True, rate=100)
+        bez = Bez()
+        tf = WalkEngine(world, bez)
+        tf.wait(50)
+        tf.ready()
+        tf.wait(50)
+        for i in range(10):
+            tf.set_goal(Transformation([0.2, 0, 0], [0, 0, 0, 1]))
+            tf.walk()
+        tf.wait(100)
+        # TODO WIP need a way to figure out how to add more steps so it doesnt stop
+
     def test_stand_plane(self):
         world = PybulletWorld(camera_yaw=0, real_time=True, rate=100)
         bez = Bez()

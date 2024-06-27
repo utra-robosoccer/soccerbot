@@ -9,7 +9,7 @@ import tf
 from geometry_msgs.msg import Pose, PoseStamped, PoseWithCovarianceStamped
 from rospy import ROSInterruptException
 from soccer_pycontrol.navigator.navigator import Navigator
-from soccer_pycontrol.soccerbot.old.soccerbot_ros import SoccerbotRos
+from soccer_pycontrol.old.soccerbot_ros import SoccerbotRos
 from std_msgs.msg import Empty
 
 from soccer_common import Transformation

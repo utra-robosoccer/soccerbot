@@ -3,6 +3,7 @@ import struct
 import time
 
 from scipy.signal import butter, lfilter
+from soccer_pycontrol.navigator.navigator_ros import NavigatorRos
 
 os.environ["ROS_NAMESPACE"] = "/robot1"
 
@@ -13,8 +14,8 @@ import pybullet as pb
 import pytest
 import rospy
 from matplotlib import pyplot as plt
+from soccer_pycontrol.common.links import Links
 from soccer_pycontrol.exp.calibration import adjust_navigation_transform
-from soccer_pycontrol.links import Links
 from soccer_pycontrol.navigator.navigator import Navigator
 
 from soccer_common.transformation import Transformation
@@ -45,46 +46,46 @@ class TestWalking:
         yield c
         c.close()
 
-    # @staticmethod
-    # @pytest.fixture
-    # def walker_ros(request) -> NavigatorRos:
-    #     joint_state = MagicMock()
-    #     joint_state.position = [0.0] * 18
-    #     rospy.wait_for_message = MagicMock(return_value=joint_state)
-    #
-    #     robot_model = request.param
-    #
-    #     robot_ns = os.environ["ROS_NAMESPACE"]
-    #     os.system(
-    #         f"/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill {robot_ns}/soccer_strategy {robot_ns}/soccer_pycontrol {robot_ns}/soccer_trajectories'"
-    #     )
-    #     file_path = os.path.dirname(os.path.abspath(__file__))
-    #     config_folder_path = f"{file_path}/../../config/"
-    #     config_path = config_folder_path + f"{robot_model}_sim.yaml"
-    #     set_rosparam_from_yaml_file(param_path=config_path)
-    #
-    #     c = NavigatorRos()
-    #
-    #     yield c
-    #     del c
+    @staticmethod
+    @pytest.fixture
+    def walker_ros(request) -> NavigatorRos:
+        joint_state = MagicMock()
+        joint_state.position = [0.0] * 18
+        rospy.wait_for_message = MagicMock(return_value=joint_state)
 
-    # @staticmethod
-    # @pytest.fixture
-    # def walker_real_robot(request) -> NavigatorRos:
-    #     robot_model = request.param
-    #
-    #     robot_ns = os.environ["ROS_NAMESPACE"]
-    #     os.system(
-    #         f"/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill {robot_ns}/soccer_strategy {robot_ns}/soccer_pycontrol {robot_ns}/soccer_trajectories'"
-    #     )
-    #     file_path = os.path.dirname(os.path.abspath(__file__))
-    #     config_folder_path = f"{file_path}/../../config/"
-    #     config_path = config_folder_path + f"{robot_model}.yaml"
-    #     set_rosparam_from_yaml_file(param_path=config_path, delete_params=False, convert_logs_to_prints=False)
-    #
-    #     c = NavigatorRos()
-    #     yield c
-    #     del c
+        robot_model = request.param
+
+        robot_ns = os.environ["ROS_NAMESPACE"]
+        os.system(
+            f"/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill {robot_ns}/soccer_strategy {robot_ns}/soccer_pycontrol {robot_ns}/soccer_trajectories'"
+        )
+        file_path = os.path.dirname(os.path.abspath(__file__))
+        config_folder_path = f"{file_path}/../../config/"
+        config_path = config_folder_path + f"{robot_model}_sim.yaml"
+        set_rosparam_from_yaml_file(param_path=config_path)
+
+        c = NavigatorRos()
+
+        yield c
+        del c
+
+    @staticmethod
+    @pytest.fixture
+    def walker_real_robot(request) -> NavigatorRos:
+        robot_model = request.param
+
+        robot_ns = os.environ["ROS_NAMESPACE"]
+        os.system(
+            f"/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill {robot_ns}/soccer_strategy {robot_ns}/soccer_pycontrol {robot_ns}/soccer_trajectories'"
+        )
+        file_path = os.path.dirname(os.path.abspath(__file__))
+        config_folder_path = f"{file_path}/../../config/"
+        config_path = config_folder_path + f"{robot_model}.yaml"
+        set_rosparam_from_yaml_file(param_path=config_path, delete_params=False, convert_logs_to_prints=False)
+
+        c = NavigatorRos()
+        yield c
+        del c
 
     @pytest.mark.timeout(30)
     @pytest.mark.flaky(reruns=1)
@@ -123,18 +124,18 @@ class TestWalking:
         # assert distance_offset < 0.12
 
     # @pytest.mark.skip
-    # def test_walk_1_ros(self, walker_ros: NavigatorRos):
-    #     walker_ros.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
-    #     walker_ros.ready()
-    #     walker_ros.wait(200)
-    #     goal_position = Transformation([1, 0, 0], [0, 0, 0, 1])
-    #     walker_ros.setGoal(goal_position)
-    #     walk_success = walker_ros.run(single_trajectory=True)
-    #     assert walk_success
-    #
-    #     final_position = walker_ros.getPose()
-    #     distance_offset = np.linalg.norm((final_position - goal_position.position)[0:2])
-    #     print(f"Final distance offset {distance_offset}")
+    def test_walk_1_ros(self, walker_ros: NavigatorRos):
+        walker_ros.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
+        walker_ros.ready()
+        walker_ros.wait(200)
+        goal_position = Transformation([1, 0, 0], [0, 0, 0, 1])
+        walker_ros.setGoal(goal_position)
+        walk_success = walker_ros.run(single_trajectory=True)
+        assert walk_success
+
+        final_position = walker_ros.getPose()
+        distance_offset = np.linalg.norm((final_position - goal_position.position)[0:2])
+        print(f"Final distance offset {distance_offset}")
 
     @pytest.mark.timeout(30)
     @pytest.mark.flaky(reruns=1)
