@@ -24,6 +24,8 @@ class KinematicData:
 
         motor_offsets = self.load_urdf()
 
+        self.motor_names = list(motor_offsets.keys())[1:]
+
         self.arm_0_center = arm_0_center
         self.arm_1_center = arm_1_center
 

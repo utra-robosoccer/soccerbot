@@ -34,13 +34,13 @@ class SoccerbotRos(Soccerbot):
             "cleats_offset", -0.01634
         )  #: Additional height added by cleats and grass, consists of 1cm grass and 0.5cm cleats
         self.motor_publishers = {}
-        self.pub_all_motor = rospy.Publisher("joint_command", JointState, queue_size=1)
+        # self.pub_all_motor = rospy.Publisher("joint_command", JointState, queue_size=1)
         self.odom_publisher = rospy.Publisher("odom", Odometry, queue_size=1)
-        self.path_publisher = rospy.Publisher("path", Path, queue_size=1, latch=True)
-        self.path_odom_publisher = rospy.Publisher("path_odom", Path, queue_size=1, latch=True)
+        # self.path_publisher = rospy.Publisher("path", Path, queue_size=1, latch=True)
+        # self.path_odom_publisher = rospy.Publisher("path_odom", Path, queue_size=1, latch=True)
         self.br = tf.TransformBroadcaster()
-        self.imu_subscriber = rospy.Subscriber("imu_filtered", Imu, self.imu_callback, queue_size=1)
-        self.imu_ready = False
+        # self.imu_subscriber = rospy.Subscriber("imu_filtered", Imu, self.imu_callback, queue_size=1)
+        # self.imu_ready = False
         self.listener = tf.TransformListener()
         self.last_ball_found_timestamp = None
         self.last_ball_pose = None
@@ -71,14 +71,14 @@ class SoccerbotRos(Soccerbot):
         """
         self.robot_state = robot_state
 
-    def imu_callback(self, msg: Imu):
-        """
-        Callback function for IMU information
-
-        :param msg: IMU Message
-        """
-        self.imu_msg = msg
-        self.imu_ready = True
+    # def imu_callback(self, msg: Imu):
+    #     """
+    #     Callback function for IMU information
+    #
+    #     :param msg: IMU Message
+    #     """
+    #     self.imu_msg = msg
+    #     self.imu_ready = True
 
     def ball_pixel_callback(self, msg: Pose2D):
         """
@@ -89,95 +89,95 @@ class SoccerbotRos(Soccerbot):
 
         self.ball_pixel = msg
 
-    def updateRobotConfiguration(self) -> None:
-        """
-        Reads the joint_states message and resets all the positions of all the joints
-        """
+    # def updateRobotConfiguration(self) -> None:
+    #     """
+    #     Reads the joint_states message and resets all the positions of all the joints
+    #     """
+    #
+    #     self.configuration_offset = [0] * len(Joints)
+    #     try:
+    #         joint_state = rospy.wait_for_message("joint_states", JointState, timeout=3)
+    #         indexes = [joint_state.name.index(motor_name) for motor_name in self.motor_names]
+    #         self.configuration[0:18] = [joint_state.position[i] for i in indexes]
+    #     except (ROSException, KeyError, AttributeError) as ex:
+    #         rospy.logerr(ex)
+    #     except ValueError as ex:
+    #         print(ex)
+    #         rospy.logerr("Not all joint states are reported, cable disconnect?")
+    #         rospy.logerr("Joint States")
+    #         rospy.logerr(joint_state)
+    #         rospy.logerr("Motor Names")
+    #         print(self.motor_names)
+    #         self.configuration[0:18] = [0] * len(Joints)
 
-        self.configuration_offset = [0] * len(Joints)
-        try:
-            joint_state = rospy.wait_for_message("joint_states", JointState, timeout=3)
-            indexes = [joint_state.name.index(motor_name) for motor_name in self.motor_names]
-            self.configuration[0:18] = [joint_state.position[i] for i in indexes]
-        except (ROSException, KeyError, AttributeError) as ex:
-            rospy.logerr(ex)
-        except ValueError as ex:
-            print(ex)
-            rospy.logerr("Not all joint states are reported, cable disconnect?")
-            rospy.logerr("Joint States")
-            rospy.logerr(joint_state)
-            rospy.logerr("Motor Names")
-            print(self.motor_names)
-            self.configuration[0:18] = [0] * len(Joints)
+    # def publishAngles(self):
+    #     """
+    #     Send the robot angles based on self.configuration + self.configuration_offset to ROS
+    #     """
+    #     js = JointState()
+    #     js.name = []
+    #     js.header.stamp = rospy.Time.now()
+    #     js.position = []
+    #     js.effort = []
+    #     angles = self.get_angles()
+    #     for i, n in enumerate(self.motor_names):
+    #         js.name.append(n)
+    #         js.position.append(angles[i])
+    #     try:
+    #         rospy.loginfo_once("Started Publishing Motors")
+    #         self.pub_all_motor.publish(js)
+    #     except rospy.exceptions.ROSException as ex:
+    #         print(ex)
+    #         exit(0)
 
-    def publishAngles(self):
-        """
-        Send the robot angles based on self.configuration + self.configuration_offset to ROS
-        """
-        js = JointState()
-        js.name = []
-        js.header.stamp = rospy.Time.now()
-        js.position = []
-        js.effort = []
-        angles = self.get_angles()
-        for i, n in enumerate(self.motor_names):
-            js.name.append(n)
-            js.position.append(angles[i])
-        try:
-            rospy.loginfo_once("Started Publishing Motors")
-            self.pub_all_motor.publish(js)
-        except rospy.exceptions.ROSException as ex:
-            print(ex)
-            exit(0)
-
-    def stepPath(self, t):
-        super(SoccerbotRos, self).stepPath(t)
-
-        # Get odom from odom_path
-        self.odom_pose = (
-            self.odom_pose_start_path
-            @ self.robot_path.start_transformed_inv
-            @ self.robot_path.torsoPosition(t, invert_calibration=True)
-            @ self.torso_offset
-        )
-
-    def publishPath(self, robot_path=None):
-        """
-        Publishes the robot path to rviz for debugging and visualization
-
-        :param robot_path: The path to publish, leave empty to publish the robot's current path
-        """
-
-        if robot_path is None:
-            robot_path = self.robot_path
-
-        def createPath(robot_path, invert_calibration=False) -> Path:
-            p = Path()
-            p.header.frame_id = "world"
-            p.header.stamp = rospy.Time.now()
-            for i in range(0, robot_path.torsoStepCount(), 1):
-                step = robot_path.getTorsoStepPose(i)
-                if invert_calibration:
-                    step = adjust_navigation_transform(robot_path.start_transform, step)
-
-                position = step.position
-                orientation = step.quaternion
-                pose = PoseStamped()
-                pose.header.seq = i
-                pose.header.frame_id = "world"
-                pose.pose.position.x = position[0]
-                pose.pose.position.y = position[1]
-                pose.pose.position.z = position[2]
-
-                pose.pose.orientation.x = orientation[0]
-                pose.pose.orientation.y = orientation[1]
-                pose.pose.orientation.z = orientation[2]
-                pose.pose.orientation.w = orientation[3]
-                p.poses.append(pose)
-            return p
-
-        self.path_publisher.publish(createPath(robot_path))
-        self.path_odom_publisher.publish(createPath(robot_path, invert_calibration=True))
+    # def stepPath(self, t):
+    #     super(SoccerbotRos, self).stepPath(t)
+    #
+    #     # Get odom from odom_path
+    #     self.odom_pose = (
+    #         self.odom_pose_start_path
+    #         @ self.robot_path.start_transformed_inv
+    #         @ self.robot_path.torsoPosition(t, invert_calibration=True)
+    #         @ self.torso_offset
+    #     )
+    #
+    # def publishPath(self, robot_path=None):
+    #     """
+    #     Publishes the robot path to rviz for debugging and visualization
+    #
+    #     :param robot_path: The path to publish, leave empty to publish the robot's current path
+    #     """
+    #
+    #     if robot_path is None:
+    #         robot_path = self.robot_path
+    #
+    #     def createPath(robot_path, invert_calibration=False) -> Path:
+    #         p = Path()
+    #         p.header.frame_id = "world"
+    #         p.header.stamp = rospy.Time.now()
+    #         for i in range(0, robot_path.torsoStepCount(), 1):
+    #             step = robot_path.getTorsoStepPose(i)
+    #             if invert_calibration:
+    #                 step = adjust_navigation_transform(robot_path.start_transform, step)
+    #
+    #             position = step.position
+    #             orientation = step.quaternion
+    #             pose = PoseStamped()
+    #             pose.header.seq = i
+    #             pose.header.frame_id = "world"
+    #             pose.pose.position.x = position[0]
+    #             pose.pose.position.y = position[1]
+    #             pose.pose.position.z = position[2]
+    #
+    #             pose.pose.orientation.x = orientation[0]
+    #             pose.pose.orientation.y = orientation[1]
+    #             pose.pose.orientation.z = orientation[2]
+    #             pose.pose.orientation.w = orientation[3]
+    #             p.poses.append(pose)
+    #         return p
+    #
+    #     self.path_publisher.publish(createPath(robot_path))
+    #     self.path_odom_publisher.publish(createPath(robot_path, invert_calibration=True))
 
     def publishOdometry(self, time: rospy.Time):
         """
@@ -212,27 +212,27 @@ class SoccerbotRos(Soccerbot):
         )
         pass
 
-    def get_imu(self):
-        """
-        Gets the IMU at the IMU link location.
+    # def get_imu(self):
+    #     """
+    #     Gets the IMU at the IMU link location.
+    #
+    #     :return: calculated orientation of the center of the torso of the robot
+    #     """
+    #
+    #     assert self.imu_ready
+    #     return Transformation(
+    #         [0, 0, 0],
+    #         [
+    #             self.imu_msg.orientation.x,
+    #             self.imu_msg.orientation.y,
+    #             self.imu_msg.orientation.z,
+    #             self.imu_msg.orientation.w,
+    #         ],
+    #     )
 
-        :return: calculated orientation of the center of the torso of the robot
-        """
-
-        assert self.imu_ready
-        return Transformation(
-            [0, 0, 0],
-            [
-                self.imu_msg.orientation.x,
-                self.imu_msg.orientation.y,
-                self.imu_msg.orientation.z,
-                self.imu_msg.orientation.w,
-            ],
-        )
-
-    def get_foot_pressure_sensors(self, floor):
-        # TODO subscribe to foot pressure sensors
-        pass
+    # def get_foot_pressure_sensors(self, floor):
+    #     # TODO subscribe to foot pressure sensors
+    #     pass
 
     def apply_head_rotation(self):
         # TODO this feels overly complicated

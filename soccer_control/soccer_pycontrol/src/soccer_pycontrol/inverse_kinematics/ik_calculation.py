@@ -78,3 +78,14 @@ class IKCalculation:
         theta2 = angles[2] + np.pi / 2
         theta3 = np.pi / 2 - angles[0]
         return theta1, theta2, theta3
+
+    @staticmethod
+    def head_geometry(transformation: Transformation) -> [float, float]:
+        vec = transformation.position
+        theta1 = np.arctan2(vec[1], vec[0])
+        if abs(theta1) == np.pi / 2:
+            theta2 = np.arctan2(vec[2], vec[1] / np.sin(theta1))
+        else:
+            theta2 = np.arctan2(vec[2], vec[0] / np.cos(theta1))
+
+        return theta1, theta2

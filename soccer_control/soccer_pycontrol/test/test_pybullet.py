@@ -1,3 +1,4 @@
+import math
 import unittest
 
 import numpy as np
@@ -80,6 +81,29 @@ class TestPybullet(unittest.TestCase):
             tf.world.step()
             tf.t += +0.01
         tf.world.wait(100)
+
+
+# @pytest.mark.parametrize("sweep_name", ["x", "y", "z"])
+# @pytest.mark.parametrize("h", [0.0, 0.05, 0.1])
+@pytest.mark.parametrize("robot_model", ["bez1"])  # , "bez2"])
+def test_sweep2(robot_model: str):
+    """
+    Case 1: Standard case
+    :return: None
+    """
+    world = PybulletWorld(path="", camera_yaw=90, real_time=True, rate=1000)
+    bez = Bez(fixed_base=True)
+    steps = 100
+    x = np.zeros(steps)
+    thetas = bez.ik_actions.head_sweep()
+    for i in range(steps):
+        bez.motor_control.set_head_target_angles(thetas[i][:])
+        bez.motor_control.set_motor()
+        world.wait_motor()
+
+    world.wait(steps)
+
+    world.close()
 
 
 @pytest.mark.parametrize("robot_model", ["bez1"])  # , "bez2"]) # TODO problem with bez2 urdf
