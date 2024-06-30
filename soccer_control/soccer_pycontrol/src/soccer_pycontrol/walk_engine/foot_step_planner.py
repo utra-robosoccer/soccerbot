@@ -28,9 +28,7 @@ class FootStepPlanner:
         self.walking_torso_height = walking_torso_height
         self.foot_center_to_floor = foot_center_to_floor
         pitch_correction = Transformation([0, 0, 0], euler=[0, torso_offset_pitch, 0])
-        # Transformation([0, 0, 0], euler=[0, rospy.get_param("torso_offset_pitch", 0.0), 0])
         self.torso_offset = Transformation([torso_offset_x, 0, 0]) @ pitch_correction
-        # Transformation([rospy.get_param("torso_offset_x", 0), 0, 0]) @ pitch_correction
 
         # Odom pose at start of path, reset everytime a new path is created
         # Odom pose, always starts at (0,0) and is the odometry of the robot's movement.

@@ -48,7 +48,7 @@ class TestPybullet(unittest.TestCase):
         tf.ready()
         tf.wait(50)
         tf.set_goal(Transformation([1, 0, 0], [0, 0, 0, 1]))
-        tf.walk()
+        tf.walk()  # TODO add head rotation
         tf.wait(100)
 
     def test_foot_step_planner_plane_dynamic(self):
@@ -86,20 +86,21 @@ class TestPybullet(unittest.TestCase):
 # @pytest.mark.parametrize("sweep_name", ["x", "y", "z"])
 # @pytest.mark.parametrize("h", [0.0, 0.05, 0.1])
 @pytest.mark.parametrize("robot_model", ["bez1"])  # , "bez2"])
-def test_sweep2(robot_model: str):
+def test_head_sweep(robot_model: str):
     """
     Case 1: Standard case
     :return: None
     """
     world = PybulletWorld(path="", camera_yaw=90, real_time=True, rate=1000)
     bez = Bez(fixed_base=True)
-    steps = 100
-    x = np.zeros(steps)
+    steps = 200
     thetas = bez.ik_actions.head_sweep()
+    head_step = 0
     for i in range(steps):
         bez.motor_control.set_head_target_angles(thetas[i][:])
         bez.motor_control.set_motor()
         world.wait_motor()
+        head_step += 1
 
     world.wait(steps)
 

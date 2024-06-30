@@ -40,3 +40,5 @@ class SensorsROS(Sensors):
     def get_foot_pressure_sensors(self, floor):
         # TODO subscribe to foot pressure sensors
         pass
+
+    # TODO should add get pose

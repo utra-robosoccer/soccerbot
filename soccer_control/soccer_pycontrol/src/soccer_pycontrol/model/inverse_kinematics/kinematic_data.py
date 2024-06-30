@@ -14,11 +14,15 @@ class KinematicData:
     def __init__(
         self,
         robot_model: str = "bez1",
-        arm_0_center: float = -0.45,  # rospy.get_param("arm_0_center", -0.45)
-        arm_1_center: float = np.pi * 0.8,  # rospy.get_param("arm_0_center", np.pi * 0.8)
-        walking_torso_height: float = 0.315,  # rospy.get_param("walking_torso_height", 0.315)
+        arm_0_center: float = -0.45,
+        arm_1_center: float = np.pi * 0.8,
+        walking_torso_height: float = 0.315,
         ready_pitch_correction: Transformation = Transformation([0, 0, 0], euler=[0, 0, 0]),
-        torso_offset_x_ready: float = 0.0,  # rospy.get_param("torso_offset_x_ready", 0.0)
+        torso_offset_x_ready: float = 0.0,
+        foot_box: list = (0.09, 0.07, 0.01474),
+        right_foot_joint_center_to_collision_box_center: list = (0.00385, 0.00401, -0.00737),
+        cleats_offset: float = -0.01634,
+        #: Additional height added by cleats and grass, consists of 1cm grass and 0.5cm cleats
     ):
         self.urdf_model_path = expanduser("~") + f"/catkin_ws/src/soccerbot/soccer_description/{robot_model}" f"_description/urdf/{robot_model}.urdf"
 
@@ -41,15 +45,14 @@ class KinematicData:
         self.walking_torso_height = walking_torso_height
 
         #: Dimensions of the foot collision box #TODO get it from URDF also what do they mean
-        self.foot_box = [0.09, 0.07, 0.01474]
-        #  rospy.get_param("foot_box", [0.09, 0.07, 0.01474])
+        self.foot_box = foot_box
 
         # : Transformations from the right foots joint position to the center of the collision box of the foot
         # https://docs.google.com/presentation/d/10DKYteySkw8dYXDMqL2Klby-Kq4FlJRnc4XUZyJcKsw/edit#slide=id.g163c1c67b73_0_0
-        self.right_foot_joint_center_to_collision_box_center = [0.00385, 0.00401, -0.00737]
-        # rospy.get_param("right_foot_joint_center_to_collision_box_center", [0.00385, 0.00401, -0.00737])
+        self.right_foot_joint_center_to_collision_box_center = right_foot_joint_center_to_collision_box_center
 
         self.foot_center_to_floor = -self.right_foot_joint_center_to_collision_box_center[2] + self.foot_box[2]
+        self.cleats_offset = cleats_offset
 
         # TODO what does this do also dont like that it needs to happen as first step, clean up interface
         self.right_foot_init_position[2, 3] = -self.walking_torso_height + self.foot_center_to_floor
@@ -81,5 +84,4 @@ class KinematicData:
 
 
 if __name__ == "__main__":
-
     k = KinematicData(robot_model="bez1")

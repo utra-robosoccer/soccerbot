@@ -4,14 +4,27 @@ from nav_msgs.msg import Path
 from soccer_pycontrol.walk_engine.foot_step_planner import FootStepPlanner
 
 
-class FootStepPlannerRos(FootStepPlanner):
-    def __init__(self):
-        super(FootStepPlannerRos, self).__init__()
+class FootStepPlannerROS(FootStepPlanner):
+    def __init__(
+        self,
+        walking_torso_height: float = 0.315,
+        foot_center_to_floor: float = 0.0221,
+    ):
+
+        torso_offset_pitch = rospy.get_param("torso_offset_pitch", 0.0)
+        torso_offset_x = rospy.get_param("torso_offset_x", 0)
+
+        super(FootStepPlannerROS, self).__init__(
+            torso_offset_pitch=torso_offset_pitch,
+            torso_offset_x=torso_offset_x,
+            walking_torso_height=walking_torso_height,
+            foot_center_to_floor=foot_center_to_floor,
+        )
         self.path_publisher = rospy.Publisher("path", Path, queue_size=1, latch=True)
         self.path_odom_publisher = rospy.Publisher("path_odom", Path, queue_size=1, latch=True)
 
     def get_next_step(self, t):
-        super(FootStepPlannerRos, self).get_next_step(t)
+        super(FootStepPlannerROS, self).get_next_step(t)
 
         # Get odom from odom_path
         self.odom_pose = (

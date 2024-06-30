@@ -124,9 +124,16 @@ class IKActions:
         return np.array(thetas), np.ones_like(z) * self.data.torso_to_right_hip.position[1], z
 
     def head_sweep(self):
-        angles = np.linspace(-np.pi / 2, np.pi / 2, 100)
+        angles = np.concatenate([np.linspace(-np.pi / 2, np.pi / 2, 100), np.linspace(np.pi / 2, -np.pi / 2, 100)])
         # TODO make more legit later
-        angles2 = np.concatenate([np.linspace(np.pi / 6, np.pi / 3, 50), np.linspace(np.pi / 3, np.pi / 6, 50)])
+        angles2 = np.concatenate(
+            [
+                np.linspace(np.pi / 6, np.pi / 3, 50),
+                np.linspace(np.pi / 3, np.pi / 6, 50),
+                np.linspace(np.pi / 6, np.pi / 3, 50),
+                np.linspace(np.pi / 3, np.pi / 6, 50),
+            ]
+        )
         thetas = []
         for idx, i in enumerate(angles):
             t = Transformation(position=[np.cos(i), np.sin(i), angles2[idx]])

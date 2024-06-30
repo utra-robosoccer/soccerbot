@@ -5,7 +5,7 @@ from soccer_pycontrol.common.joints import Joints
 from soccer_pycontrol.model.motor_control import MotorControl
 
 
-class MotorControlRos(MotorControl):
+class MotorControlROS(MotorControl):
     def __init__(self, motor_names):
         self.configuration = [0.0] * len(Joints)  # : The 18x1 float array motor angle configuration for the robot's
         # 18 motors

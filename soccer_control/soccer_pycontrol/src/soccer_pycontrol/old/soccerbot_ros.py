@@ -30,15 +30,15 @@ class SoccerbotRos(Soccerbot):
 
         super().__init__(pose, useFixedBase, useCalibration)
 
-        self.cleats_offset = rospy.get_param(
-            "cleats_offset", -0.01634
-        )  #: Additional height added by cleats and grass, consists of 1cm grass and 0.5cm cleats
+        # self.cleats_offset = rospy.get_param(
+        #     "cleats_offset", -0.01634
+        # )  #: Additional height added by cleats and grass, consists of 1cm grass and 0.5cm cleats
         self.motor_publishers = {}
         # self.pub_all_motor = rospy.Publisher("joint_command", JointState, queue_size=1)
-        self.odom_publisher = rospy.Publisher("odom", Odometry, queue_size=1)
+        # self.odom_publisher = rospy.Publisher("odom", Odometry, queue_size=1)
         # self.path_publisher = rospy.Publisher("path", Path, queue_size=1, latch=True)
         # self.path_odom_publisher = rospy.Publisher("path_odom", Path, queue_size=1, latch=True)
-        self.br = tf.TransformBroadcaster()
+        # self.br = tf.TransformBroadcaster()
         # self.imu_subscriber = rospy.Subscriber("imu_filtered", Imu, self.imu_callback, queue_size=1)
         # self.imu_ready = False
         self.listener = tf.TransformListener()
@@ -179,38 +179,38 @@ class SoccerbotRos(Soccerbot):
     #     self.path_publisher.publish(createPath(robot_path))
     #     self.path_odom_publisher.publish(createPath(robot_path, invert_calibration=True))
 
-    def publishOdometry(self, time: rospy.Time):
-        """
-        Send the odometry of the robot to be used in localization by ROS
-        """
-
-        o = Odometry()
-        o.header.stamp = time
-        o.header.frame_id = os.environ["ROS_NAMESPACE"][1:] + "/odom"
-        o.child_frame_id = os.environ["ROS_NAMESPACE"][1:] + "/base_link"
-        o.pose.pose = self.odom_pose.pose
-        o.pose.pose.position.z = 0
-
-        # fmt: off
-        o.pose.covariance = [1e-4, 0, 0, 0, 0, 0,
-                             0, 1e-4, 0, 0, 0, 0,
-                             0, 0, 1e-18, 0, 0, 0,
-                             0, 0, 0, 1e-18, 0, 0,
-                             0, 0, 0, 0, 1e-18, 0,
-                             0, 0, 0, 0, 0, 1e-2]
-        # fmt: on
-        self.odom_publisher.publish(o)
-
-        # Publish the height of the center of the torso of the robot (used for camera vision calculations and odometry)
-        height = self.pose.position[2] + self.foot_box[2] / 2 + self.cleats_offset
-        self.br.sendTransform(
-            (0, 0, height),
-            (0, 0, 0, 1),
-            time,
-            os.environ["ROS_NAMESPACE"] + "/torso",
-            os.environ["ROS_NAMESPACE"] + "/base_footprint",
-        )
-        pass
+    # def publishOdometry(self, time: rospy.Time):
+    #     """
+    #     Send the odometry of the robot to be used in localization by ROS
+    #     """
+    #
+    #     o = Odometry()
+    #     o.header.stamp = time
+    #     o.header.frame_id = os.environ["ROS_NAMESPACE"][1:] + "/odom"
+    #     o.child_frame_id = os.environ["ROS_NAMESPACE"][1:] + "/base_link"
+    #     o.pose.pose = self.odom_pose.pose
+    #     o.pose.pose.position.z = 0
+    #
+    #     # fmt: off
+    #     o.pose.covariance = [1e-4, 0, 0, 0, 0, 0,
+    #                          0, 1e-4, 0, 0, 0, 0,
+    #                          0, 0, 1e-18, 0, 0, 0,
+    #                          0, 0, 0, 1e-18, 0, 0,
+    #                          0, 0, 0, 0, 1e-18, 0,
+    #                          0, 0, 0, 0, 0, 1e-2]
+    #     # fmt: on
+    #     self.odom_publisher.publish(o)
+    #
+    #     # Publish the height of the center of the torso of the robot (used for camera vision calculations and odometry)
+    #     height = self.pose.position[2] + self.foot_box[2] / 2 + self.cleats_offset
+    #     self.br.sendTransform(
+    #         (0, 0, height),
+    #         (0, 0, 0, 1),
+    #         time,
+    #         os.environ["ROS_NAMESPACE"] + "/torso",
+    #         os.environ["ROS_NAMESPACE"] + "/base_footprint",
+    #     )
+    #     pass
 
     # def get_imu(self):
     #     """

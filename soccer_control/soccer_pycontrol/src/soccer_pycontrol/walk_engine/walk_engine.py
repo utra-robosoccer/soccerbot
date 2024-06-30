@@ -33,7 +33,7 @@ class WalkEngine:
 
         self.terminate_walk = False
         self.prepare_walk_time = 2  # rospy.get_param("prepare_walk_time", 2)
-
+        # TODO should this be an input?
         self.t = 0
 
     def set_goal(self, goal: Transformation) -> None:
