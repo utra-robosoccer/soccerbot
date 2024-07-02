@@ -32,4 +32,15 @@ https://github.com/utra-robosoccer/soccerbot/wiki/Onboarding
 #### Testing Motion on Robot
 ```bash
 roslaunch soccerbot sensors.launch __ns:=robot1
+
+sudo apt install -y python3-pip libopenblas-dev
+
+python3 -m pip install --upgrade pip; python3 -m pip install numpy==’1.26.1’ python3 -m pip install --no-cache $TORCH_INSTALL
+
+
+export TORCH_INSTALL=path/to/torch-2.2.0a0+81ea7a4+nv23.12-cp38-cp38-linux_aarch64.whl
+python3 -m pip install --no-cache $TORCH_INSTALL
+
+
+pip3 install numpy torch-2.1.0a0+41361538.nv23.06-cp38-cp38-linux_aarch64.whl
 ```
