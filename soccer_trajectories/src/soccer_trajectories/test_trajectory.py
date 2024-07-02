@@ -23,8 +23,8 @@ class TestTrajectory:
         config_path = f"{file_path}/../../../{robot_model}_description/config/motor_mapping.yaml"
         set_rosparam_from_yaml_file(param_path=config_path)
         rospy.set_param("robot_model", robot_model)
-        if "DISPLAY" not in os.environ:
-            Trajectory.RATE = 10000
+        # if "DISPLAY" not in os.environ:
+        #     Trajectory.RATE = 10000
         c = TrajectoryManager()
         rospy.init_node("test")
         msg = FixedTrajectoryCommand()
