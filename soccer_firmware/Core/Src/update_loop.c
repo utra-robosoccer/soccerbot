@@ -11,8 +11,11 @@
 #include "main.h"
 #include "usbd_cdc_if.h"
 #include "MPU6050.h"
+#include "BMI088.h"
 
-#define UPDATE_PERIOD 3 // milliseconds
+#define UPDATE_PERIOD 1 // milliseconds
+
+BMI088 imu;
 
 void update()
 {
@@ -32,6 +35,7 @@ void update()
       read_imu(txBuf);
 
       CDC_Transmit_FS((uint8_t *) txBuf, sizeof(txBuf));
+      HAL_GPIO_TogglePin(GPIOA, GREEN_LED_Pin);
     }
 
     if (usb_received) // when we receive USB packet, service it right away
@@ -101,13 +105,33 @@ void read_imu(uint8_t *rxBuf) {
   uint8_t accBuff[6] = {0};
   Read_Accelerometer_IT(accBuff);
 
-  for(uint8_t i = 0; i < 6; i++) {
-    rxBuf[2 + 18 * 2 + i] = accBuff[i];
-  }
+  int16_t gyroX = 0;
+  int16_t gyroY = 0;
+  int16_t gyroZ = 0;
+  int16_t accX = 0;
+  int16_t accY = 0;
+  int16_t accZ = 0;
 
-  for(uint8_t i = 0; i < 6; i++) {
-    rxBuf[2 + 18 * 2 + 6 + i] = gyrBuff[i];
-  }
+
+  BMI088_ReadAccelerometer(&imu, &hi2c1, &accX, &accY, &accZ);
+
+  // Read gyro after accel, otherwise we get HAL_error (not sure why :/)
+  BMI088_ReadGyroscope(&hi2c1, &gyroX, &gyroY, &gyroZ);
+
+  rxBuf[2 + 18 * 2 + 0] = (accX >> 8) & 0xFF; // MSB first means big endian
+  rxBuf[2 + 18 * 2 + 1] = accX & 0xFF;
+  rxBuf[2 + 18 * 2 + 2] = (accY >> 8) & 0xFF;
+  rxBuf[2 + 18 * 2 + 3] = accY & 0xFF;
+  rxBuf[2 + 18 * 2 + 4] = (accZ >> 8) & 0xFF;
+  rxBuf[2 + 18 * 2 + 5] = accZ & 0xFF;
+
+  rxBuf[2 + 18 * 2 + 6 + 0] = (gyroX >> 8) & 0xFF;
+  rxBuf[2 + 18 * 2 + 6 + 1] = gyroX & 0xFF;
+  rxBuf[2 + 18 * 2 + 6 + 2] = (gyroY >> 8) & 0xFF;
+  rxBuf[2 + 18 * 2 + 6 + 3] = gyroY & 0xFF;
+  rxBuf[2 + 18 * 2 + 6 + 4] = (gyroZ >> 8) & 0xFF;
+  rxBuf[2 + 18 * 2 + 6 + 5] = gyroZ & 0xFF;
+
 }
 
 void read_motors(uint8_t *rxBuf) {

@@ -30,7 +30,8 @@ uint8_t BMI088_Init(BMI088 *imu, I2C_HandleTypeDef *m_i2c_handle) {
   uint8_t chipID = 0;
   status = BMI088_ReadAccRegister(imu, BMI_ACC_CHIP_ID, &chipID);
 
-  if (chipID != 0x1E) {
+  // chipID bmi085 is 0x1f, chipID bmi088 is 0x1e
+  if (chipID != 0x1F) {
     return 0;
   }
   HAL_Delay(10);
@@ -39,7 +40,7 @@ uint8_t BMI088_Init(BMI088 *imu, I2C_HandleTypeDef *m_i2c_handle) {
   status += BMI088_WriteAccRegister(imu, BMI_ACC_CONF, 0xA8); /* (no oversampling, ODR = 100 Hz, BW = 40 Hz) */
   HAL_Delay(10);
 
-  status += BMI088_WriteAccRegister(imu, BMI_ACC_RANGE, 0x00); /* +- 3g range */
+  status += BMI088_WriteAccRegister(imu, BMI_ACC_RANGE, 0x00); /* +- 3g range (for bmi085 +- 2g range)*/
   HAL_Delay(10);
 
   /* Enable accelerometer data ready interrupt */
@@ -84,7 +85,7 @@ uint8_t BMI088_Init(BMI088 *imu, I2C_HandleTypeDef *m_i2c_handle) {
   HAL_Delay(10);
 
   /* Configure gyroscope */
-  status += BMI088_WriteGyrRegister(imu, BMI_GYR_RANGE, 0x01); /* +- 1000 deg/s */
+  status += BMI088_WriteGyrRegister(imu, BMI_GYR_RANGE, 0x01); /* +- 1000 deg/s (bmi085 also +-1000deg/s)*/
   HAL_Delay(10);
 
   status += BMI088_WriteGyrRegister(imu, BMI_GYR_BANDWIDTH, 0x07); /* ODR = 100 Hz, Filter bandwidth = 32 Hz */

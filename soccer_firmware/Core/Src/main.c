@@ -91,6 +91,7 @@ static void MX_I2C1_Init(void);
 /* USER CODE BEGIN 0 */
 // test various functionalities
 void init_ports() {
+  // port1 => UART1 ==> J2 on new PCB
   port1 = (MotorPort){
     .huart          = &huart1,
     .hdma_uart_tx   = &hdma_usart1_tx,
@@ -100,10 +101,11 @@ void init_ports() {
     .dmaDoneReading = false,
     .currMotor      = 0,
     .numMotors      = 2,
-    .motorIds       = {16, 17},
-    .protocol       = {1, 1}
+    .motorIds       = {1}, //{16, 17},
+    .protocol       = {2} //{1, 1}
   };
 
+  // port2 => UART2 ==> J7 on new PCB
   port2 = (MotorPort){
       .huart          = &huart2,
       .hdma_uart_tx   = &hdma_usart2_tx,
@@ -113,7 +115,7 @@ void init_ports() {
       .dmaDoneReading = false,
       .currMotor      = 0,
       .numMotors      = 4,
-      .motorIds       = {0, 1, 2, 3},
+      .motorIds       = {1},//{0, 1, 2, 3},
       .protocol       = {2, 2, 2, 2}
     };
 
@@ -125,8 +127,8 @@ void init_ports() {
       .dirPinNum      = USART3_DIR_Pin,
       .dmaDoneReading = false,
       .numMotors      = 3,
-      .motorIds       = {13, 14, 15},
-      .protocol       = {1, 1, 1}
+      .motorIds       = {1},//{13, 14, 15},
+      .protocol       = {2}//{1, 1, 1}
     };
 
   port4 = (MotorPort){
@@ -137,8 +139,8 @@ void init_ports() {
       .dirPinNum      = USART4_DIR_Pin,
       .dmaDoneReading = false,
       .numMotors      = 3,
-      .motorIds       = {7, 8, 9},
-      .protocol       = {1, 1, 1}
+      .motorIds       = {1},//7, 8, 9},
+      .protocol       = {2} //{1, 1, 1}
     };
 
   port5 = (MotorPort){
@@ -149,10 +151,11 @@ void init_ports() {
       .dirPinNum      = USART5_DIR_Pin,
       .dmaDoneReading = false,
       .numMotors      = 3,
-      .motorIds       = {4, 5, 6},
-      .protocol       = {2, 2, 2}
+      .motorIds       = {1}, //{4, 5, 6},
+      .protocol       = {2}//{2, 2, 2}
     };
 
+  // port6 => UART6 ==> J11 on new PCB
   port6 = (MotorPort){
       .huart          = &huart6,
       .hdma_uart_tx   = &hdma_usart6_tx,
@@ -161,8 +164,8 @@ void init_ports() {
       .dirPinNum      = USART6_DIR_Pin,
       .dmaDoneReading = false,
       .numMotors      = 3,
-      .motorIds       = {10, 11, 12},
-      .protocol       = {2, 2, 2}
+      .motorIds       = {1}, //{10, 11, 12},
+      .protocol       = {2} //{2, 2, 2}
     };
 
   motorPorts[0] = &port1;
@@ -243,7 +246,7 @@ int main(void)
   MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
   // give some time for motors to power on and initialize, before we try to talk to them
-  HAL_Delay(1000);
+  HAL_Delay(5000);
 
   init_ports();
 //  MPU6050_init();
@@ -258,34 +261,15 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    uint8_t txBuf[6] = {0}; // 6 bytes for IMU
+    update();
 
-//    int16_t gyroX = 0;
-//    int16_t gyroY = 0;
-//    int16_t gyroZ = 0;
-    int16_t accX = 0;
-    int16_t accY = 0;
-    int16_t accZ = 0;
-//    BMI088_ReadGyroscope(&hi2c1, &gyroX, &gyroY, &gyroZ);
-    BMI088_ReadAccelerometer(&imu, &hi2c1, &accX, &accY, &accZ);
+//    // test Dynamixel 2.0
+//    test_led_p2(&port6, 0x1);
+//    test_motor_sweep2(&port6);
+//    HAL_Delay(9000);
 
-//    for(int i = 0; i < 6; i++)
-//      txBuf[i] = i;
-
-    txBuf[0] =accX & 0xff;
-    txBuf[1] = (accX >> 8) & 0xff;
-    txBuf[2] =accY & 0xff;
-    txBuf[3] = (accY >> 8) & 0xff;
-    txBuf[4] =accZ & 0xff;
-    txBuf[5] = (accZ >> 8) & 0xff;
-
-    CDC_Transmit_FS((uint8_t *) txBuf, sizeof(txBuf));
-
-//    update();
-
-    // test Dynamixel 2.0
-//    test_led_p2(&port2, 0x6);
-//    test_motor_sweep2(&port2);
+//    test_led_p2(&port4, 0x1);
+//    test_motor_sweep2(&port4);
 //    test_ping2(&port2);
 //    motor_torque_en_p2(&port2, 0xfe, 0);
 //    update_baud_rate_p2(&port2, 0x1, 3);
@@ -307,8 +291,8 @@ int main(void)
     // test Dynamixel 1.0
 //    test_motor_sweep1(&port2, 13);
 //    _motor_ping_p1(&port6, 13);
-	  HAL_GPIO_TogglePin(GPIOA, GREEN_LED_Pin);
-	  HAL_Delay(50);
+//	  HAL_GPIO_TogglePin(GPIOA, GREEN_LED_Pin);
+//	  HAL_Delay(50);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
