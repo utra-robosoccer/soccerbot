@@ -36,5 +36,6 @@ Pillow
 tqdm
 gitpython
 psutil==5.9.2; platform_machine == 'x86_64'
-torch==2.0.1.0+cu117; platform_machine == 'x86_64'
-torchvision==0.15.2.0+cu117; platform_machine == 'x86_64'
+#torch==2.0.1.0+cu117; platform_machine == 'x86_64'
+#torchvision==0.18.1.0+cu117; platform_machine == 'x86_64'
+# TODO why did this install torch
