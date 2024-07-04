@@ -235,7 +235,8 @@ class SoccerbotRos(Soccerbot):
     #     pass
 
     def apply_head_rotation(self):
-        # TODO this feels overly complicated
+        # TODO this feels overly complicated and should be in strategy
+        # TODO maybe make actions for the different types of traj
         if self.robot_state.status == RobotState.STATUS_PENALIZED:
             self.configuration[Joints.HEAD_1] = 0
             self.configuration[Joints.HEAD_2] = 0

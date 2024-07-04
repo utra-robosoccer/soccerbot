@@ -6,7 +6,7 @@ from soccer_common import Transformation
 
 
 class KinematicDataROS(KinematicData):
-    def __init__(self):
+    def __init__(self):  # TODO needs a better way to organize
         robot_model = rospy.get_param("robot_model", "bez1")
         arm_0_center = rospy.get_param("arm_0_center", -0.45)
         arm_1_center = rospy.get_param("arm_0_center", np.pi * 0.8)
