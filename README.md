@@ -43,18 +43,25 @@ pytest src/soccerbot/soccer_trajectories/src/soccer_trajectories/test_trajectory
 pytest src/soccerbot/soccer_pycontrol/src/soccer_pycontrol/test_walking.py::TestWalking::test_walk_1_real_robot
 
 cd ~/catkin_ws
+
+```bash
 source devel/setup.bash
 export LD_PRELOAD=/usr/lib/aarch64-linux-gnu/libgomp.so.1 # TODO look into
 pytest src/soccerbot/soccer_object_detection/src/soccer_object_detection/test_object_detection.py::TestObjectDetection::test_object_detection_node_cam
+```
 
 Torch https://forums.developer.nvidia.com/t/pytorch-for-jetson/72048
 
+```bash
 wget https://developer.download.nvidia.cn/compute/redist/jp/v512/pytorch/torch-2.1.0a0+41361538.nv23.06-cp38-cp38-linux_aarch64.whl
 sudo apt-get install python3-pip libopenblas-base libopenmpi-dev libomp-dev -y
 pip3 install 'Cython<3'
 pip3 install numpy torch-2.1.0a0+41361538.nv23.06-cp38-cp38-linux_aarch64.whl
+```
 
 Torchvision
+
+```bash
 sudo apt-get install libjpeg-dev zlib1g-dev libpython3-dev libopenblas-dev libavcodec-dev libavformat-dev libswscale-dev -y
 git clone --branch v0.16.1 https://github.com/pytorch/vision torchvision
 cd torchvision
@@ -62,14 +69,16 @@ export BUILD_VERSION=0.16.1
 python3 setup.py install --user
 cd ../
 pip install 'pillow<7'
+```
 
 Verify in python console
 
+```bash
 import torch
-print(torch.**version**)
-print('CUDA available: ' + str(torch.cuda.is*available()))
+print(torch.__version__)
+print('CUDA available: ' + str(torch.cuda.is_available()))
 print('cuDNN version: ' + str(torch.backends.cudnn.version()))
-a = torch.cuda.FloatTensor(2).zero*()
+a = torch.cuda.FloatTensor(2).zero_()
 print('Tensor a = ' + str(a))
 b = torch.randn(2).cuda()
 print('Tensor b = ' + str(b))
@@ -77,4 +86,5 @@ c = a + b
 print('Tensor c = ' + str(c))
 
 import torchvision
-print(torchvision.**version**)
+print(torchvision.__version__)
+```
