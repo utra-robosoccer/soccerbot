@@ -31,7 +31,7 @@ uint8_t BMI088_Init(BMI088 *imu, I2C_HandleTypeDef *m_i2c_handle) {
   status = BMI088_ReadAccRegister(imu, BMI_ACC_CHIP_ID, &chipID);
 
   // chipID bmi085 is 0x1f, chipID bmi088 is 0x1e
-  if (chipID != 0x1F) {
+  if (chipID != 0x1e) {
     return 0;
   }
   HAL_Delay(10);
@@ -79,6 +79,7 @@ uint8_t BMI088_Init(BMI088 *imu, I2C_HandleTypeDef *m_i2c_handle) {
   /* Check chip ID */
   status += BMI088_ReadGyrRegister(imu, BMI_GYR_CHIP_ID, &chipID);
 
+  // chip ID is 0x0F for both BMI088/085
   if (chipID != 0x0F) {
     return 0;
   }
