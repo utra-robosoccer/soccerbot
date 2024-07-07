@@ -3,8 +3,8 @@ from typing import Tuple
 import numpy as np
 from soccer_pycontrol.common.joints import Joints
 from soccer_pycontrol.common.links import Links
-from soccer_pycontrol.inverse_kinematics.ik_calculation import IKCalculation
-from soccer_pycontrol.inverse_kinematics.kinematic_data import KinematicData
+from soccer_pycontrol.model.inverse_kinematics.ik_calculation import IKCalculation
+from soccer_pycontrol.model.inverse_kinematics.kinematic_data import KinematicData
 
 from soccer_common import Transformation
 
@@ -123,7 +123,7 @@ class IKActions:
 
         return np.array(thetas), np.ones_like(z) * self.data.torso_to_right_hip.position[1], z
 
-    def head_sweep(self):
+    def head_localizing_sweep(self):  # TODO will have to be split into a strategy pattern later
         angles = np.concatenate([np.linspace(-np.pi / 2, np.pi / 2, 100), np.linspace(np.pi / 2, -np.pi / 2, 100)])
         # TODO make more legit later
         angles2 = np.concatenate(
@@ -140,3 +140,21 @@ class IKActions:
             thetas.append(self.ik.head_geometry(t))
 
         return np.array(thetas)
+
+    # def head_localizing_sweep(self): # TODO will have to be split into a strategy pattern later
+    #     angles = np.concatenate([np.linspace(-np.pi / 2, np.pi / 2, 100), np.linspace(np.pi / 2, -np.pi / 2, 100)])
+    #     # TODO make more legit later
+    #     angles2 = np.concatenate(
+    #         [
+    #             np.linspace(np.pi / 6, np.pi / 3, 50),
+    #             np.linspace(np.pi / 3, np.pi / 6, 50),
+    #             np.linspace(np.pi / 6, np.pi / 3, 50),
+    #             np.linspace(np.pi / 3, np.pi / 6, 50),
+    #         ]
+    #     )
+    #     thetas = []
+    #     for idx, i in enumerate(angles):
+    #         t = Transformation(position=[np.cos(i), np.sin(i), angles2[idx]])
+    #         thetas.append(self.ik.head_geometry(t))
+    #
+    #     return np.array(thetas)

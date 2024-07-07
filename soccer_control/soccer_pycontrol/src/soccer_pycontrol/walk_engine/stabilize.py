@@ -31,43 +31,43 @@ class Stabilize:
     ):
         #: PID values to adjust the torso's front and back movement while standing, getting ready to walk, and post walk
         self.standing_pitch_pid = PID(
-            Kp=standing_pitch_kp,  # rospy.get_param("standing_pitch_kp", 0.8),
-            Kd=standing_pitch_kd,  # rospy.get_param("standing_pitch_kd", 0.0),
-            Ki=standing_pitch_ki,  # rospy.get_param("standing_pitch_ki", 0.0005),
-            setpoint=standing_pitch_setpoint,  # rospy.get_param("standing_pitch_setpoint", -0.01),
+            Kp=standing_pitch_kp,
+            Kd=standing_pitch_kd,
+            Ki=standing_pitch_ki,
+            setpoint=standing_pitch_setpoint,
             output_limits=(-1.57, 1.57),  # TODO offsets are wrong can fix when apply to motor? or here
         )
-        self.standing_pitch_offset = standing_pitch_offset  # rospy.get_param("walking_pitch_offset", 0.0)
+        self.standing_pitch_offset = standing_pitch_offset
 
         #: PID values to adjust the torso's left and right movement while standing, getting ready to walk, and post walk
         self.standing_roll_pid = PID(
-            Kp=standing_roll_kp,  # rospy.get_param("standing_roll_kp", 0.15),
-            Kd=standing_roll_kd,  # rospy.get_param("standing_roll_kd", 0.0),
-            Ki=standing_roll_ki,  # rospy.get_param("standing_roll_ki", 0.001),
-            setpoint=standing_roll_setpoint,  # rospy.get_param("standing_roll_setpoint", -0.01),
+            Kp=standing_roll_kp,
+            Kd=standing_roll_kd,
+            Ki=standing_roll_ki,
+            setpoint=standing_roll_setpoint,
             output_limits=(-1.57, 1.57),
         )
-        self.standing_roll_offset = standing_roll_offset  # rospy.get_param("standing_roll_offset", 0.0)
+        self.standing_roll_offset = standing_roll_offset
 
         #: PID values to adjust the torso's front and back movement while walking
         self.walking_pitch_pid = PID(
-            Kp=walking_pitch_kp,  # rospy.get_param("walking_pitch_kp", 0.8),
-            Kd=walking_pitch_kd,  # rospy.get_param("walking_pitch_kd", 0.0),
-            Ki=walking_pitch_ki,  # rospy.get_param("walking_pitch_ki", 0.0005),
-            setpoint=walking_pitch_setpoint,  # rospy.get_param("walking_pitch_setpoint", -0.01),
+            Kp=walking_pitch_kp,
+            Kd=walking_pitch_kd,
+            Ki=walking_pitch_ki,
+            setpoint=walking_pitch_setpoint,
             output_limits=(-1.57, 1.57),
         )
-        self.walking_pitch_offset = walking_pitch_offset  # rospy.get_param("walking_pitch_offset", 0.0)
+        self.walking_pitch_offset = walking_pitch_offset
 
         #: PID values to adjust the torso's left and right movement while walking
         self.walking_roll_pid = PID(
-            Kp=walking_roll_kp,  # rospy.get_param("walking_roll_kp", 0.15),
-            Kd=walking_roll_kd,  # rospy.get_param("walking_roll_kd", 0.0),
-            Ki=walking_roll_ki,  # rospy.get_param("walking_roll_ki", 0.001),
-            setpoint=walking_roll_setpoint,  # rospy.get_param("walking_roll_setpoint", -0.01),
+            Kp=walking_roll_kp,
+            Kd=walking_roll_kd,
+            Ki=walking_roll_ki,
+            setpoint=walking_roll_setpoint,
             output_limits=(-1.57, 1.57),
         )
-        self.walking_roll_offset = walking_roll_offset  # rospy.get_param("walking_roll_offset", 0.0)
+        self.walking_roll_offset = walking_roll_offset
 
     def reset_imus(self):
         """

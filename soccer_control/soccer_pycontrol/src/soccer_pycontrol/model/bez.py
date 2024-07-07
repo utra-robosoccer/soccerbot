@@ -1,5 +1,5 @@
-from soccer_pycontrol.inverse_kinematics.ik_actions import IKActions
-from soccer_pycontrol.inverse_kinematics.kinematic_data import KinematicData
+from soccer_pycontrol.model.inverse_kinematics.ik_actions import IKActions
+from soccer_pycontrol.model.inverse_kinematics.kinematic_data import KinematicData
 from soccer_pycontrol.model.motor_control import MotorControl
 from soccer_pycontrol.model.sensors import Sensors
 from soccer_pycontrol.pybullet.pybullet_load_model import LoadModel

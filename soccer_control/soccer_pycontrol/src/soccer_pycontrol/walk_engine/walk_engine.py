@@ -13,7 +13,7 @@ class WalkEngine:
     Main loop for the walk engine. Interfaces with all classes to perform walking.
     """
 
-    # PYBULLET_STEP = rospy.get_param("control_frequency", 0.01)
+    #
 
     def __init__(self, world: PybulletWorld, bez: Bez):
         """
@@ -25,6 +25,7 @@ class WalkEngine:
 
         self.world = world
         self.bez = bez
+        self.PYBULLET_STEP = 0.01
 
         self.step_planner = FootStepPlanner(
             walking_torso_height=self.bez.data.walking_torso_height, foot_center_to_floor=self.bez.data.foot_center_to_floor
@@ -85,7 +86,7 @@ class WalkEngine:
                 return False
 
             self.world.step()
-            self.t = self.t + 0.01
+            self.t = self.t + self.PYBULLET_STEP
         return True
 
     def stabilize_stand(self, pitch: float, roll: float) -> None:

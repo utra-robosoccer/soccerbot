@@ -14,9 +14,9 @@ class StabilizePhase:
 
     def __init__(
         self,
-        walking_roll_Kp: float = 0,
-        walking_roll_Kd: float = 0.0,
-        walking_roll_Ki: float = 0.05,
+        walking_roll_kp: float = 0,
+        walking_roll_kd: float = 0.0,
+        walking_roll_ki: float = 0.05,
         walking_roll_setpoint: float = 0.0,
     ):
 
@@ -27,10 +27,10 @@ class StabilizePhase:
         self.roll_feedback_x = queue.Queue(maxsize=self.roll_feedback_low_pass_filter_order + 1)
         self.roll_feedback_y = queue.Queue(maxsize=self.roll_feedback_low_pass_filter_order + 1)
         self.walking_pid_roll = PID(
-            Kp=walking_roll_Kp,  # rospy.get_param("walking_roll_Kp", 0),
-            Kd=walking_roll_Kd,  # rospy.get_param("walking_roll_Kd", 0),
-            Ki=walking_roll_Ki,  # rospy.get_param("walking_roll_Ki", 0.05),
-            setpoint=walking_roll_setpoint,  # rospy.get_param("walking_roll_setpoint", 0.0),
+            Kp=walking_roll_kp,
+            Kd=walking_roll_kd,
+            Ki=walking_roll_ki,
+            setpoint=walking_roll_setpoint,
             output_limits=(-0.1, 0.1),
         )
 

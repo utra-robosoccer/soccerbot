@@ -86,7 +86,7 @@ class TestPybullet(unittest.TestCase):
 # @pytest.mark.parametrize("sweep_name", ["x", "y", "z"])
 # @pytest.mark.parametrize("h", [0.0, 0.05, 0.1])
 @pytest.mark.parametrize("robot_model", ["bez1"])  # , "bez2"])
-def test_head_sweep(robot_model: str):
+def test_head_localizing_sweep(robot_model: str):
     """
     Case 1: Standard case
     :return: None
@@ -94,7 +94,7 @@ def test_head_sweep(robot_model: str):
     world = PybulletWorld(path="", camera_yaw=90, real_time=True, rate=1000)
     bez = Bez(fixed_base=True)
     steps = 200
-    thetas = bez.ik_actions.head_sweep()
+    thetas = bez.ik_actions.head_localizing_sweep()
     head_step = 0
     for i in range(steps):
         bez.motor_control.set_head_target_angles(thetas[i][:])

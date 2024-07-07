@@ -142,6 +142,96 @@ class TestObjectLocalization(TestCase):
                 cv2.waitKey(0)
         cv2.destroyAllWindows()
 
+    def test_fieldline_detection_cam(self):
+        rospy.init_node("test")
+
+        Camera.reset_position = MagicMock()
+        Camera.ready = MagicMock()
+        d = DetectorFieldline()
+        d.robot_state.status = RobotState.STATUS_READY
+        d.image_publisher.get_num_connections = MagicMock(return_value=1)
+        # d.publish_point_cloud = True
+        # d.point_cloud_publisher.get_num_connections = MagicMock(return_value=1)
+
+        cap = cv2.VideoCapture(4)
+        if not cap.isOpened():
+            print("Cannot open camera")
+            exit()
+        cvbridge = CvBridge()
+        while True:
+            ret, frame = cap.read()
+            if not ret:
+                print("Can't receive frame (stream end?). Exiting ...")
+                break
+            img = cv2.resize(frame, dsize=(640, 480))
+
+            c = CameraInfo()
+            c.height = img.shape[0]
+            c.width = img.shape[1]
+            d.camera.camera_info = c
+
+            img_msg: Image = cvbridge.cv2_to_imgmsg(img, encoding="rgb8")
+            d.image_publisher.publish = MagicMock()
+            d.image_callback(img_msg, debug=False)
+
+            if "DISPLAY" in os.environ:
+                cv2.imshow("Before", img)
+                # cv2.imwrite("/tmp/before.png", img)
+
+                if d.image_publisher.publish.call_count != 0:
+                    img_out = cvbridge.imgmsg_to_cv2(d.image_publisher.publish.call_args[0][0])
+                    cv2.imshow("After", img_out)
+                    # cv2.imwrite("/tmp/after.png", img_out)
+
+                cv2.waitKey(1)
+        cv2.destroyAllWindows()
+
+    def test_fieldline_detection_vid(self):
+        rospy.init_node("test")
+
+        src_path = os.path.dirname(os.path.realpath(__file__))
+
+        Camera.reset_position = MagicMock()
+        Camera.ready = MagicMock()
+        d = DetectorFieldline()
+        d.robot_state.status = RobotState.STATUS_READY
+        d.image_publisher.get_num_connections = MagicMock(return_value=1)
+        # d.publish_point_cloud = True
+        # d.point_cloud_publisher.get_num_connections = MagicMock(return_value=1)
+
+        cap = cv2.VideoCapture(src_path + "/../../../soccer_object_detection/videos/2023-07-08-124521.webm")
+        if not cap.isOpened():
+            print("Cannot open camera")
+            exit()
+        cvbridge = CvBridge()
+        while True:
+            ret, frame = cap.read()
+            if not ret:
+                print("Can't receive frame (stream end?). Exiting ...")
+                break
+            img = cv2.resize(frame, dsize=(640, 480))
+
+            c = CameraInfo()
+            c.height = img.shape[0]
+            c.width = img.shape[1]
+            d.camera.camera_info = c
+
+            img_msg: Image = cvbridge.cv2_to_imgmsg(img, encoding="rgb8")
+            d.image_publisher.publish = MagicMock()
+            d.image_callback(img_msg, debug=False)
+
+            if "DISPLAY" in os.environ:
+                cv2.imshow("Before", img)
+                # cv2.imwrite("/tmp/before.png", img)
+
+                if d.image_publisher.publish.call_count != 0:
+                    img_out = cvbridge.imgmsg_to_cv2(d.image_publisher.publish.call_args[0][0])
+                    cv2.imshow("After", img_out)
+                    # cv2.imwrite("/tmp/after.png", img_out)
+
+                cv2.waitKey(1)
+        cv2.destroyAllWindows()
+
     def test_fieldline_detection_freehicle(self):
         rospy.init_node("test")
         rospy.set_param("point_cloud_max_distance", 20)
