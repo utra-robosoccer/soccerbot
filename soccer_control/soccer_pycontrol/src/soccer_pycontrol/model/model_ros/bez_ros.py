@@ -92,7 +92,7 @@ class BezROS(Bez):
         # TODO maybe make actions for the different types of traj
         if self.robot_state.status == RobotState.STATUS_PENALIZED:
             self.motor_control.set_head_target_angles(np.array([0, 0]))
-            self.motor_control.publishAngles()  # TODO should this be here ?
+            self.motor_control.set_motor()  # TODO should this be here ?
             self.head_step = 0
         elif self.robot_state.status == RobotState.STATUS_DETERMINING_SIDE:
             angle1 = math.cos(self.head_step * self.head_pitch_freq_relocalizing) * (math.pi / 4)
@@ -109,6 +109,7 @@ class BezROS(Bez):
 
         elif self.robot_state.status == self.robot_state.STATUS_READY:
             try:
+                # todo this only is correct if it finds a new ball
                 ball_found_timestamp = self.listener.getLatestCommonTime(
                     os.environ["ROS_NAMESPACE"] + "/camera", os.environ["ROS_NAMESPACE"] + "/ball"
                 )

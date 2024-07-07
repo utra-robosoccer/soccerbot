@@ -166,6 +166,7 @@ class WalkEngineROS(WalkEngine):
 
         if single_trajectory:
             self.bez.robot_state.status = RobotState.STATUS_WALKING
+
         # wait
         while self.bez.robot_state.status == RobotState.STATUS_DISCONNECTED:
             try:
@@ -187,6 +188,7 @@ class WalkEngineROS(WalkEngine):
             # Always apply head rotation
             self.bez.apply_head_rotation()
 
+            # Check if not in a walking state
             if self.bez.robot_state.status in [
                 RobotState.STATUS_DISCONNECTED,
                 RobotState.STATUS_FALLEN_FRONT,
@@ -202,7 +204,7 @@ class WalkEngineROS(WalkEngine):
                 self.bez.motor_control.updateRobotConfiguration()
                 r.sleep()
                 continue
-
+            # CHeck if walk terminated
             if self.bez.robot_state.status in [RobotState.STATUS_TERMINATING_WALK]:
                 if not self.terminated:
                     rospy.loginfo("Terminating Walk at time " + str(self.t))
@@ -261,6 +263,7 @@ class WalkEngineROS(WalkEngine):
                 self.goal = self.new_goal
                 self.step_planner.robot_path = self.new_path
 
+            # path in progress
             if self.step_planner.robot_path is not None and 0 <= self.t <= self.step_planner.robot_path.duration():
 
                 # IMU feedback while walking (Average Time: 0.00017305118281667)
@@ -286,10 +289,12 @@ class WalkEngineROS(WalkEngine):
                 e = Empty()
                 self.completed_walk_publisher.publish(e)
 
+            # update path if completed TODO why here
             if self.step_planner.robot_path is None or self.t > self.step_planner.robot_path.duration():
                 self.step_planner.robot_path = None
                 pass
 
+            # Stabilize
             if self.t < 0:
                 if self.soccerbot.imu_ready:
                     pitch = self.soccerbot.apply_imu_feedback_standing(self.bez.sensors.get_imu())
@@ -323,7 +328,7 @@ class WalkEngineROS(WalkEngine):
                         return False
             # Publishes angles to robot (Average Time: 0.00041992547082119)
             # self.soccerbot.robot_path.show()
-            self.bez.motor_control.publishAngles()
+            self.bez.motor_control.set_motor()
 
             time_end = time.time()
             if time_end - time_start > self.PYBULLET_STEP * 1.2:

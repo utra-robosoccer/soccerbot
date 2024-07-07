@@ -37,7 +37,7 @@ class MotorControlROS(MotorControl):
             print(self.motor_names)
             self.configuration[0:18] = [0] * len(Joints)
 
-    def publishAngles(self):
+    def set_motor(self):
         """
         Send the robot angles based on self.configuration + self.configuration_offset to ROS
         """
