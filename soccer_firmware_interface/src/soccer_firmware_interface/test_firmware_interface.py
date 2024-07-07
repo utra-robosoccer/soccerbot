@@ -27,12 +27,22 @@ def test_send_command():
         angle %= 0x3FF
         angle_lo = angle & 0xFF
         angle_hi = (angle >> 8) & 0xFF
-        # print('angle:', angle)
-        s.write([0xFF, 0xFF, angle_lo, angle_hi, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18])
+        print("angle:", angle)
+        goalPositionsAllMotors = []
+        goalPositionsAllMotors = [0xFF, 0xFF]
+        for motorID in range(30):
+            goalPositionsAllMotors.append(angle_lo)
+            goalPositionsAllMotors.append(angle_hi)
 
-        for i in range(20):
-            res = s.read()
-            print((res))
+        # 2 header + 18 in the array below
+        #      header   header   motorID#0   motorID#1   motorID#2   motorID#3    motorID#4    motorID#5    motorID#6     motorID#7
+        # Index: [0]     [1]     [2] [3]     [4] [5]     [6] [7]      [8] [9]     [10] [11]    [12] [13]    [14] [15]     [16] [17]
+        # s.write([0xFF, 0xFF, angle_lo, angle_hi, angle_lo, angle_hi, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18])
+        result = s.write(goalPositionsAllMotors)
+        time.sleep(0.01)
+        # for i in range(20):
+        #     res = s.read()
+        #     print((res))
 
         count_loop += 1
         print(count_loop / (time.time() - t_start))

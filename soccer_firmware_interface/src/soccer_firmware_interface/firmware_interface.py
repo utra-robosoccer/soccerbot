@@ -113,8 +113,10 @@ class FirmwareInterface:
                 imu_data = data[2 + 2 * 18 : 2 + 2 * 18 + 12]
 
                 # https://www.mouser.com/datasheet/2/783/BST_BMI088_DS001-1509549.pdf
-                ACC_RANGE = 32768.0 / 2.0  # page 22 datasheet bmi085
-                IMU_GY_RANGE = 32767.0 / 1000.0  # page 27 datasheet bmi085
+                ACC_RANGE = 32768.0 / 2.0 / 1.5  # page 27 datasheet bmi088
+                IMU_GY_RANGE = 32768.0 / 1000.0  # page 39 datasheet bmi088
+                # ACC_RANGE = 32768.0 / 2.0  # page 22 datasheet bmi085
+                # IMU_GY_RANGE = 32768.0 / 1000.0  # page 27 datasheet bmi085
                 G = 9.81
 
                 ax = int.from_bytes(imu_data[0:2], byteorder="big", signed=True) / ACC_RANGE * G

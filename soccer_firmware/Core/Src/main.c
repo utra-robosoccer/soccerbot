@@ -100,9 +100,9 @@ void init_ports() {
     .dirPinNum      = USART1_DIR_Pin,
     .dmaDoneReading = false,
     .currMotor      = 0,
-    .numMotors      = 2,
-    .motorIds       = {1}, //{16, 17},
-    .protocol       = {2} //{1, 1}
+    .numMotors      = 6,
+    .motorIds       = {23, 24, 28, 29, 34, 33}, //{16, 17},
+    .protocol       = {2, 2, 2, 2, 2, 2} //{1, 1}
   };
 
   // port2 => UART2 ==> J7 on new PCB
@@ -114,11 +114,12 @@ void init_ports() {
       .dirPinNum      = USART2_DIR_Pin,
       .dmaDoneReading = false,
       .currMotor      = 0,
-      .numMotors      = 4,
-      .motorIds       = {1},//{0, 1, 2, 3},
-      .protocol       = {2, 2, 2, 2}
+      .numMotors      = 3,
+      .motorIds       = {26, 31, 30},//{0, 1, 2, 3},
+      .protocol       = {2, 2, 2}
     };
 
+  // port3 => UART3 ==> J12 on new PCB
   port3 = (MotorPort){
       .huart          = &huart3,
       .hdma_uart_tx   = &hdma_usart3_tx,
@@ -127,10 +128,11 @@ void init_ports() {
       .dirPinNum      = USART3_DIR_Pin,
       .dmaDoneReading = false,
       .numMotors      = 3,
-      .motorIds       = {1},//{13, 14, 15},
-      .protocol       = {2}//{1, 1, 1}
+      .motorIds       = {1, 22, 21},//{13, 14, 15},
+      .protocol       = {2, 2, 2}//{1, 1, 1}
     };
 
+  // port4 => UART4 ==> J3 on new PCB
   port4 = (MotorPort){
       .huart          = &huart4,
       .hdma_uart_tx   = &hdma_uart4_tx,
@@ -139,10 +141,11 @@ void init_ports() {
       .dirPinNum      = USART4_DIR_Pin,
       .dmaDoneReading = false,
       .numMotors      = 3,
-      .motorIds       = {1},//7, 8, 9},
-      .protocol       = {2} //{1, 1, 1}
+      .motorIds       = {3, 4, 10},//7, 8, 9},
+      .protocol       = {2, 2, 2} //{1, 1, 1}
     };
 
+  // port5 => UART5 ==> J6 on new PCB
   port5 = (MotorPort){
       .huart          = &huart5,
       .hdma_uart_tx   = &hdma_uart5_tx,
@@ -151,8 +154,8 @@ void init_ports() {
       .dirPinNum      = USART5_DIR_Pin,
       .dmaDoneReading = false,
       .numMotors      = 3,
-      .motorIds       = {1}, //{4, 5, 6},
-      .protocol       = {2}//{2, 2, 2}
+      .motorIds       = {1, 32, 27}, //{4, 5, 6},
+      .protocol       = {2,2,2}//{2, 2, 2}
     };
 
   // port6 => UART6 ==> J11 on new PCB
@@ -255,13 +258,47 @@ int main(void)
   BMI088 imu;
   BMI088_Init(&imu, &hi2c1);
 
+//  uint16_t angle = 0;
+//  uint16_t angle_lo = 0;
+//  uint16_t angle_hi = 0;
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    update();
+
+      update();
+
+//    angle += 1;
+//    angle %= 0x3FF;
+//    angle_lo = angle & 0xFF;
+//    angle_hi = (angle >> 8) & 0xFF;
+//
+//    write_goal_position_p2(motorPorts[4], 1, angle);
+//    write_goal_position_p2(motorPorts[4], 32, angle);
+//    write_goal_position_p2(motorPorts[4], 27, angle);
+//
+//    write_goal_position_p2(motorPorts[3], 3, angle);
+//    write_goal_position_p2(motorPorts[3], 4, angle); // range 212 - 122
+//    write_goal_position_p2(motorPorts[3], 10, angle);
+//
+//    write_goal_position_p2(motorPorts[2], 1, angle);
+//    write_goal_position_p2(motorPorts[2], 22, angle);
+//    write_goal_position_p2(motorPorts[2], 21, angle);
+//
+//    write_goal_position_p2(motorPorts[1], 26, angle);
+//    write_goal_position_p2(motorPorts[1], 31, angle);
+//    write_goal_position_p2(motorPorts[1], 30, angle);
+//
+//    write_goal_position_p2(motorPorts[0], 23, angle);
+//    write_goal_position_p2(motorPorts[0], 24, angle);
+//    write_goal_position_p2(motorPorts[0], 28, angle);
+//    write_goal_position_p2(motorPorts[0], 29, angle);
+//    write_goal_position_p2(motorPorts[0], 34, angle);
+//    write_goal_position_p2(motorPorts[0], 33, angle);
+
 
 //    // test Dynamixel 2.0
 //    test_led_p2(&port6, 0x1);

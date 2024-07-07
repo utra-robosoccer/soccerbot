@@ -79,7 +79,8 @@ void command_motors() {
         doneWithAllMotors = false;
       }
 
-      // angle format depends on how Python script
+
+      // angle format depends on how Python script. Bit wise OR
       uint16_t angle = usbRxBuffer[2 + motorId * 2] | (usbRxBuffer[2 + motorId * 2 + 1] << 8);
 
       if(protocol == 1) {
