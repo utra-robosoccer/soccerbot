@@ -1,7 +1,7 @@
 import pybullet as pb
 from soccer_pycontrol.common.links import Links
 from soccer_pycontrol.model.bez import Bez
-from soccer_pycontrol.pybullet.pybullet_world import PybulletWorld
+from soccer_pycontrol.pybullet_usage.pybullet_world import PybulletWorld
 from soccer_pycontrol.walk_engine.foot_step_planner import FootStepPlanner
 from soccer_pycontrol.walk_engine.stabilize import Stabilize
 
@@ -74,11 +74,12 @@ class WalkEngine:
 
                     self.stabilize_walk(pitch, roll)
 
+                    self.bez.motor_control.set_motor()
                     self.step_planner.current_step_time = self.step_planner.current_step_time + self.step_planner.robot_path.step_precision
             else:
                 stable_count = self.update_stable_count(pitch, roll, stable_count)
                 if stable_count < 0:  # TODO dont really like this format
-                    break
+                    break  # TODO this is bad
 
                 self.stabilize_stand(pitch, roll)
 
@@ -91,22 +92,22 @@ class WalkEngine:
 
     def stabilize_stand(self, pitch: float, roll: float) -> None:
         error_pitch = self.pid.standing_pitch_pid.update(pitch)
-        self.bez.motor_control.set_leg_joint_3_target_angle(error_pitch)
-        print(error_pitch)
+        # self.bez.motor_control.set_leg_joint_3_target_angle(error_pitch)
+        self.bez.motor_control.set_leg_joint_5_target_angle(error_pitch)
 
-        error_roll = self.pid.standing_roll_pid.update(roll)
-        self.bez.motor_control.set_leg_joint_2_target_angle(error_roll)
+        # error_roll = self.pid.standing_roll_pid.update(roll)
+        # self.bez.motor_control.set_leg_joint_2_target_angle(error_roll)
 
-        self.bez.motor_control.set_motor()
+        # self.bez.motor_control.set_motor()
 
     def stabilize_walk(self, pitch: float, roll: float) -> None:
         error_pitch = self.pid.walking_pitch_pid.update(pitch)
         self.bez.motor_control.set_leg_joint_3_target_angle(error_pitch)
 
-        error_roll = self.pid.walking_roll_pid.update(roll)
-        self.bez.motor_control.set_leg_joint_2_target_angle(error_roll)
+        # error_roll = self.pid.walking_roll_pid.update(roll)
+        # self.bez.motor_control.set_leg_joint_2_target_angle(error_roll)
 
-        self.bez.motor_control.set_motor()
+        # self.bez.motor_control.set_motor()
 
     def update_stable_count(self, pitch: float, roll: float, stable_count: int) -> int:
         if abs(pitch - self.pid.standing_pitch_pid.setpoint) < 0.025 and abs(roll - self.pid.standing_roll_pid.setpoint) < 0.025:

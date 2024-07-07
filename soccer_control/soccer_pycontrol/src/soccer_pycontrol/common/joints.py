@@ -24,3 +24,6 @@ class Joints(enum.IntEnum):
     RIGHT_LEG_6 = 15
     HEAD_1 = 16  # Left Right (Yaw)
     HEAD_2 = 17  # Up Down (Pitch)
+
+
+print([e.name for e in Joints])

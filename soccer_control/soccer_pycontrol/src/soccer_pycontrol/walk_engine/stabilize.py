@@ -8,19 +8,19 @@ class Stabilize:
 
     def __init__(
         self,  # TODO should be map read from yaml
-        standing_pitch_kp: float = 0.1,
+        standing_pitch_kp: float = 0.15,
         standing_pitch_kd: float = 0,
-        standing_pitch_ki: float = 0.0000,
-        standing_pitch_setpoint: float = -0.0,
+        standing_pitch_ki: float = 0.001,
+        standing_pitch_setpoint: float = -0.01,
         standing_pitch_offset: float = 0.0,
         standing_roll_kp: float = 0.1,
         standing_roll_kd: float = 0,
         standing_roll_ki: float = 0.00,
         standing_roll_setpoint: float = -0.0,
         standing_roll_offset: float = 0.0,
-        walking_pitch_kp: float = 2.3,
-        walking_pitch_kd: float = 1,
-        walking_pitch_ki: float = 0.0000,
+        walking_pitch_kp: float = 0.8,
+        walking_pitch_kd: float = 0.0,
+        walking_pitch_ki: float = 0.0005,
         walking_pitch_setpoint: float = -0.01,
         walking_pitch_offset: float = 0.0,
         walking_roll_kp: float = 1.5,  # TODO remember to change config

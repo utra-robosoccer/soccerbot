@@ -6,7 +6,7 @@ import pybullet as pb
 import pytest
 from soccer_pycontrol.common.links import Links
 from soccer_pycontrol.model.bez import Bez
-from soccer_pycontrol.pybullet.pybullet_world import PybulletWorld
+from soccer_pycontrol.pybullet_usage.pybullet_world import PybulletWorld
 from soccer_pycontrol.walk_engine.walk_engine import WalkEngine
 
 from soccer_common import Transformation

@@ -43,11 +43,30 @@ class WalkEngineROS(WalkEngine):
         self.new_goal = self.goal
         self.terminated = None
 
+    def setPose(self, pose: Transformation):  # TODO should link up with the pybullet version
+        [r, p, y] = pose.orientation_euler
+        pose.orientation_euler = [r, 0, 0]
+
+        resetPublisher = rospy.Publisher("/robot1/reset_robot", PoseStamped, queue_size=1, latch=True)
+        initialPosePublisher = rospy.Publisher("initialpose", PoseWithCovarianceStamped, queue_size=1, latch=True)
+        pose_stamped = pose.pose_stamped
+        resetPublisher.publish(pose_stamped)
+        self.robot_pose = pose_stamped
+
+        rospy.sleep(0.2)
+
+        p = PoseWithCovarianceStamped()
+        p.header.frame_id = "world"
+        p.header.stamp = rospy.Time.now()
+        p.pose.pose = pose_stamped.pose
+        initialPosePublisher.publish(p)
+
+        rospy.sleep(0.2)
+
     def publishOdometry(self, time: rospy.Time):
         """
         Send the odometry of the robot to be used in localization by ROS
         """
-
         o = Odometry()
         o.header.stamp = time
         o.header.frame_id = os.environ["ROS_NAMESPACE"][1:] + "/odom"
@@ -128,8 +147,9 @@ class WalkEngineROS(WalkEngine):
                 exit(0)
 
         self.bez.ready()
+        self.bez.motor_control.set_motor()
         self.pid.reset_imus()
-        self.bez.motor_control.updateRobotConfiguration()
+        # self.bez.motor_control.updateRobotConfiguration() TODO why here
         time_now = 0
 
         while not rospy.is_shutdown():
@@ -193,6 +213,7 @@ class WalkEngineROS(WalkEngine):
                 self.goal = self.new_goal
                 self.pid.reset_imus()
                 self.bez.ready()
+
                 self.bez.setPose(Transformation(pose=self.bez.robot_pose.pose))
 
                 def print_pose(name: str, pose: Pose):
@@ -224,11 +245,12 @@ class WalkEngineROS(WalkEngine):
                 t_adj = self.t
                 if self.bez.sensors.imu_ready:
                     # TODO needs to be fixed
+
                     self.stabilize_walk(pitch, roll)
                     # t_adj = self.soccerbot.apply_phase_difference_roll_feedback(self.t, imu_pose)
 
-                self.step_planner.get_next_step(t_adj)
-
+                torso_to_right_foot, torso_to_left_foot = self.step_planner.get_next_step(t_adj)
+                self.bez.find_joint_angles(torso_to_right_foot, torso_to_left_foot)
                 self.step_planner.current_step_time = self.t
 
             # Walk completed
@@ -254,8 +276,8 @@ class WalkEngineROS(WalkEngine):
             ):
                 if self.bez.sensors.imu_ready:
                     stable_count = self.update_stable_count(pitch, roll, stable_count)
-                    if stable_count < 0:  # TODO dont really like this format
-                        break
+                    if stable_count == 0:  # TODO dont really like this format
+                        t = 0  # TODO need to fix later
                     self.stabilize_stand(pitch, roll)
 
             if single_trajectory:

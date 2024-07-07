@@ -24,7 +24,7 @@ class FootStepPlannerROS(FootStepPlanner):
         self.path_odom_publisher = rospy.Publisher("path_odom", Path, queue_size=1, latch=True)
 
     def get_next_step(self, t):
-        super(FootStepPlannerROS, self).get_next_step(t)
+        torso_to_right_foot, torso_to_left_foot = super(FootStepPlannerROS, self).get_next_step(t)
 
         # Get odom from odom_path
         self.odom_pose = (
@@ -33,6 +33,7 @@ class FootStepPlannerROS(FootStepPlanner):
             @ self.robot_path.torsoPosition(t, invert_calibration=True)
             @ self.torso_offset
         )
+        return torso_to_right_foot, torso_to_left_foot
 
     def publishPath(self, robot_path=None):
         """

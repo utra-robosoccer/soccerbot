@@ -175,7 +175,6 @@ class SoccerbotRos(Soccerbot):
         """
         Send the odometry of the robot to be used in localization by ROS
         """
-
         o = Odometry()
         o.header.stamp = time
         o.header.frame_id = os.environ["ROS_NAMESPACE"][1:] + "/odom"

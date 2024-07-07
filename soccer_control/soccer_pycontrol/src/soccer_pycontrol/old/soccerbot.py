@@ -416,7 +416,7 @@ class Soccerbot:
         thetas = self.inverseKinematicsLeftFoot(torso_to_left_foot)
         self.configuration[Links.LEFT_LEG_1 : Links.LEFT_LEG_6 + 1] = thetas[0:6]
 
-        self.pose = torso_position
+        # self.pose = torso_position
 
     def plot_angles(self):
         """

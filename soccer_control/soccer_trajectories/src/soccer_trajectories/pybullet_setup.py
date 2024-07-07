@@ -2,7 +2,7 @@ import time
 from os.path import expanduser
 
 import pybullet as pb
-from soccer_pycontrol.soccerbot2.pybullet.pybullet_world import PybulletWorld
+from soccer_pycontrol.pybullet_usage.pybullet_world import PybulletWorld
 
 from soccer_common import Transformation
 

@@ -8,7 +8,7 @@ import scipy
 import tf
 import tf2_py
 import torch
-from geometry_msgs.msg import PoseStamped, PoseWithCovarianceStamped
+from geometry_msgs.msg import Pose2D, PoseStamped, PoseWithCovarianceStamped
 from nav_msgs.msg import Odometry
 from soccer_pycontrol.common.joints import Joints
 from soccer_pycontrol.model.bez import Bez
@@ -20,7 +20,6 @@ from std_msgs.msg import Empty
 
 from soccer_common import Transformation
 from soccer_msgs.msg import RobotState
-from soccer_strategy.communication.robot_state_pb2 import Pose2D
 
 
 class BezROS(Bez):
@@ -59,6 +58,7 @@ class BezROS(Bez):
 
         self.head_rotation_yaw_center = rospy.get_param("head_rotation_yaw_center", 0.175)
         self.head_rotation_yaw_range = rospy.get_param("head_rotation_yaw_range", 0.15)
+        self.head_step = 0
 
     def state_callback(self, robot_state: RobotState):
         """
@@ -84,9 +84,12 @@ class BezROS(Bez):
         https://docs.google.com/presentation/d/10DKYteySkw8dYXDMqL2Klby-Kq4FlJRnc4XUZyJcKsw/edit#slide=id.g163c1c67b73_0_0
         """
         # if pose.position[2] < self.walking_torso_height:
-        pose.position = (pose.position[0], pose.position[1], self.data.walking_torso_height)
-
-        return pose
+        # pose.position = (pose.position[0], pose.position[1], self.data.walking_torso_height)
+        p = pose
+        position = p.position
+        position[2] = self.data.walking_torso_height
+        p.position = position
+        return p
 
     def update_robot_pose(self, footprint_name="/base_footprint") -> bool:
         """
@@ -105,25 +108,20 @@ class BezROS(Bez):
         self.robot_pose = Transformation(position=trans, quaternion=rot).pose_stamped
         return True
 
-    def setPose(self, pose: Transformation):  # TODO should link up with the pybullet version
-        [r, p, y] = pose.orientation_euler
-        pose.orientation_euler = [r, 0, 0]
+    def setPose(self, pose: Transformation = Transformation()) -> None:
+        """
+        Teleports the robot to the desired pose
 
-        resetPublisher = rospy.Publisher("/robot1/reset_robot", PoseStamped, queue_size=1, latch=True)
-        initialPosePublisher = rospy.Publisher("initialpose", PoseWithCovarianceStamped, queue_size=1, latch=True)
-        pose_stamped = pose.pose_stamped
-        resetPublisher.publish(pose_stamped)
-        self.robot_pose = pose_stamped
+        :param pose: 3D position in pybullet
+        """
+        self.pose = self.set_walking_torso_height(pose)
 
-        rospy.sleep(0.2)
+        [y, _, _] = pose.orientation_euler
+        self.pose.orientation_euler = [y, 0, 0]
+        self.robot_pose = self.pose  # TODO this is really weird
 
-        p = PoseWithCovarianceStamped()
-        p.header.frame_id = "world"
-        p.header.stamp = rospy.Time.now()
-        p.pose.pose = pose_stamped.pose
-        initialPosePublisher.publish(p)
-
-        rospy.sleep(0.2)
+    # def ready(self) -> None:
+    #     super(BezROS, self).ready()
 
     def apply_head_rotation(self):
         # TODO this feels overly complicated and should be in strategy
@@ -168,22 +166,22 @@ class BezROS(Bez):
                 pass
 
             # So that the arms don't block the vision TODO this is really weird
-            anglel1 = (-0.3 - self.motor_control.configuration[Joints.LEFT_ARM_1]) * 0.05 + self.motor_control.configuration[Joints.LEFT_ARM_1]
-            anglel2 = (
-                (0.8 - self.motor_control.configuration[Joints.LEFT_ARM_2]) * 0.05
-                + self.motor_control.configuration[Joints.LEFT_ARM_2](0.8 - self.motor_control.configuration[Joints.LEFT_ARM_2]) * 0.05
-                + self.motor_control.configuration[Joints.LEFT_ARM_2]
-            )
+            # anglel1 = (-0.3 - self.motor_control.configuration[Joints.LEFT_ARM_1]) * 0.05 + self.motor_control.configuration[Joints.LEFT_ARM_1]
+            # anglel2 = (
+            #     (0.8 - self.motor_control.configuration[Joints.LEFT_ARM_2]) * 0.05
+            #     + self.motor_control.configuration[Joints.LEFT_ARM_2](0.8 - self.motor_control.configuration[Joints.LEFT_ARM_2]) * 0.05
+            #     + self.motor_control.configuration[Joints.LEFT_ARM_2]
+            # )
+            #
+            # angler1 = (-0.3 - self.motor_control.configuration[Joints.RIGHT_ARM_1]) * 0.05 + self.motor_control.configuration[Joints.RIGHT_ARM_1]
+            # angler2 = (
+            #     (0.8 - self.motor_control.configuration[Joints.RIGHT_ARM_2]) * 0.05
+            #     + self.motor_control.configuration[Joints.RIGHT_ARM_2](0.8 - self.motor_control.configuration[Joints.RIGHT_ARM_2]) * 0.05
+            #     + self.motor_control.configuration[Joints.RIGHT_ARM_2]
+            # )
 
-            angler1 = (-0.3 - self.motor_control.configuration[Joints.RIGHT_ARM_1]) * 0.05 + self.motor_control.configuration[Joints.RIGHT_ARM_1]
-            angler2 = (
-                (0.8 - self.motor_control.configuration[Joints.RIGHT_ARM_2]) * 0.05
-                + self.motor_control.configuration[Joints.RIGHT_ARM_2](0.8 - self.motor_control.configuration[Joints.RIGHT_ARM_2]) * 0.05
-                + self.motor_control.configuration[Joints.RIGHT_ARM_2]
-            )
-
-            self.motor_control.set_left_arm_target_angles(np.array([anglel1, anglel2]))
-            self.motor_control.set_right_arm_target_angles(np.array([angler1, angler2]))
+            # self.motor_control.set_left_arm_target_angles(np.array([anglel1, anglel2]))
+            # self.motor_control.set_right_arm_target_angles(np.array([angler1, angler2]))
 
             # If the last time it saw the ball was 2 seconds ago
             if self.last_ball_found_timestamp is not None and (rospy.Time.now() - self.last_ball_found_timestamp) < rospy.Duration(3):

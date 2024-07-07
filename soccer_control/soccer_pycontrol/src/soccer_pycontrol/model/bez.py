@@ -2,7 +2,7 @@ from soccer_pycontrol.model.inverse_kinematics.ik_actions import IKActions
 from soccer_pycontrol.model.inverse_kinematics.kinematic_data import KinematicData
 from soccer_pycontrol.model.motor_control import MotorControl
 from soccer_pycontrol.model.sensors import Sensors
-from soccer_pycontrol.pybullet.pybullet_load_model import LoadModel
+from soccer_pycontrol.pybullet_usage.pybullet_load_model import LoadModel
 
 from soccer_common import Transformation
 
@@ -32,8 +32,9 @@ class Bez:
         Puts the robot into a ready pose to begin walking
         """
         self.motor_control.set_target_angles(self.ik_actions.ready())
+        print("here: ", self.motor_control.configuration)
         # TODO maybe change name to action or make it more clear
-        self.motor_control.set_motor()
+        # self.motor_control.set_motor()
 
     def find_joint_angles(self, torso_to_right_foot: Transformation, torso_to_left_foot: Transformation):
         r_theta = self.ik_actions.get_right_leg_angles(torso_to_right_foot)

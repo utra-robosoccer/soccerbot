@@ -48,7 +48,7 @@
     </node>
 
     <!-- UKF localization -->
-    <node pkg="soccer_localization" type="main.py" name="soccer_ukf" respawn="$(optenv COMPETITION false)" output="screen" />
+    <node pkg="soccer_localization" type="main.py" name="soccer_ukf" respawn="$(optenv COMPETITION false)" output="log" />
 
     <!-- AMCL Localization -->
     <!--    <node pkg="amcl" type="amcl" name="amcl" output="log">-->
