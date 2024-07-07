@@ -40,7 +40,6 @@ class WalkEngineROS(WalkEngine):
         self.completed_walk_publisher = rospy.Publisher("action_complete", Empty, queue_size=1)
         self.position_subscriber = rospy.Subscriber("goal", PoseStamped, self.goal_callback)
         self.goal = PoseStamped()
-        self.robot_pose: PoseStamped = None
         self.new_goal = self.goal
         self.terminated = None
 
@@ -78,52 +77,6 @@ class WalkEngineROS(WalkEngine):
         )
         pass
 
-    def update_robot_pose(self, footprint_name="/base_footprint") -> bool:
-        """
-        Function to update the location of the robot based on odometry. Called before movement to make sure the starting
-        position is correct
-
-        :param footprint_name:
-        :return: True if the position is updated, otherwise False
-        """
-        try:
-            (trans, rot) = self.tf_listener.lookupTransform("world", os.environ["ROS_NAMESPACE"] + footprint_name, rospy.Time(0))
-        except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException) as e:
-            print(e)
-            return False
-
-        self.robot_pose = Transformation(position=trans, quaternion=rot).pose_stamped
-        return True
-
-    def setPose(self, pose: Transformation):  # TODO should link up with the pybullet version
-        [r, p, y] = pose.orientation_euler
-        pose.orientation_euler = [r, 0, 0]
-
-        resetPublisher = rospy.Publisher("/robot1/reset_robot", PoseStamped, queue_size=1, latch=True)
-        initialPosePublisher = rospy.Publisher("initialpose", PoseWithCovarianceStamped, queue_size=1, latch=True)
-        pose_stamped = pose.pose_stamped
-        resetPublisher.publish(pose_stamped)
-        self.robot_pose = pose_stamped
-
-        rospy.sleep(0.2)
-
-        p = PoseWithCovarianceStamped()
-        p.header.frame_id = "world"
-        p.header.stamp = rospy.Time.now()
-        p.pose.pose = pose_stamped.pose
-        initialPosePublisher.publish(p)
-
-        rospy.sleep(0.2)
-
-    def getPose(self, footprint_name="/base_footprint_gt"):
-        try:
-            (trans, rot) = self.tf_listener.lookupTransform("world", os.environ["ROS_NAMESPACE"] + footprint_name, rospy.Time(0))
-        except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException) as e:
-            print(e)
-            return False
-
-        return Transformation(position=trans, quaternion=rot).pos_theta
-
     def setGoal(self, goal: Transformation):
         self.goal_callback(goal.pose_stamped)
 
@@ -135,7 +88,7 @@ class WalkEngineROS(WalkEngine):
 
         :param pose: The pose sent by the strategy for the robot to go to
         """
-
+        # TODO should be in footstepplanner
         # Update existing path
         #
         if self.step_planner.robot_path is not None:
@@ -221,7 +174,7 @@ class WalkEngineROS(WalkEngine):
             # New goal added
             if self.new_goal != self.goal and self.step_planner.robot_path is None:
                 if not single_trajectory:
-                    pose_updated = self.update_robot_pose()
+                    pose_updated = self.bez.update_robot_pose()
                     if not pose_updated:
                         rospy.loginfo_throttle(1, "Unable to get Robot Pose")
                         r.sleep()
@@ -231,23 +184,23 @@ class WalkEngineROS(WalkEngine):
                 time_now = rospy.Time.now()
 
                 # Minimum goal movement tolerance check
-                if (self.new_goal.pose.position.x - self.robot_pose.pose.position.x) ** 2 + (
-                    self.new_goal.pose.position.y - self.robot_pose.pose.position.y
+                if (self.new_goal.pose.position.x - self.bez.robot_pose.pose.position.x) ** 2 + (
+                    self.new_goal.pose.position.y - self.bez.robot_pose.pose.position.y
                 ) ** 2 < 0.03**2:
-                    self.new_goal.pose.position.x = self.robot_pose.pose.position.x
-                    self.new_goal.pose.position.y = self.robot_pose.pose.position.y
+                    self.new_goal.pose.position.x = self.bez.robot_pose.pose.position.x
+                    self.new_goal.pose.position.y = self.bez.robot_pose.pose.position.y
 
                 self.goal = self.new_goal
                 self.pid.reset_imus()
                 self.bez.ready()
-                self.setPose(Transformation(pose=self.robot_pose.pose))
+                self.bez.setPose(Transformation(pose=self.bez.robot_pose.pose))
 
                 def print_pose(name: str, pose: Pose):
                     print(
                         f"\033[92m{name}: Position (xyz) [{pose.position.x:.3f} {pose.position.y:.3f} {pose.position.z:.3f}], Orientation (xyzw) [{pose.orientation.x:.3f} {pose.orientation.y:.3f} {pose.orientation.z:.3f} {pose.orientation.w:.3f}]\033[0m"
                     )
 
-                print_pose("Start Pose", self.robot_pose.pose)
+                print_pose("Start Pose", self.bez.robot_pose.pose)
                 print_pose("End Pose", self.goal.pose)
                 self.step_planner.create_path_to_goal(Transformation(pose=self.goal.pose))
                 # self.pid_stab.reset_roll_feedback_parameters()
@@ -263,16 +216,16 @@ class WalkEngineROS(WalkEngine):
                 self.goal = self.new_goal
                 self.step_planner.robot_path = self.new_path
 
+            [_, pitch, roll] = self.bez.sensors.get_euler_angles()
             # path in progress
             if self.step_planner.robot_path is not None and 0 <= self.t <= self.step_planner.robot_path.duration():
 
                 # IMU feedback while walking (Average Time: 0.00017305118281667)
                 t_adj = self.t
                 if self.bez.sensors.imu_ready:
-                    imu_pose = self.bez.sensors.get_imu()
                     # TODO needs to be fixed
-                    self.bez.apply_imu_feedback(imu_pose)
-                    t_adj = self.soccerbot.apply_phase_difference_roll_feedback(self.t, imu_pose)
+                    self.stabilize_walk(pitch, roll)
+                    # t_adj = self.soccerbot.apply_phase_difference_roll_feedback(self.t, imu_pose)
 
                 self.step_planner.get_next_step(t_adj)
 
@@ -295,35 +248,21 @@ class WalkEngineROS(WalkEngine):
                 pass
 
             # Stabilize
-            if self.t < 0:
-                if self.soccerbot.imu_ready:
-                    pitch = self.soccerbot.apply_imu_feedback_standing(self.bez.sensors.get_imu())
-                    rospy.loginfo_throttle(
-                        0.3,
-                        "Performing prewalk stabilization, distance to desired pitch: " + str(pitch - self.pid.standing_pid.setpoint),
-                    )
-                    if abs(pitch - self.soccerbot.standing_pid.setpoint) < 0.025:
-                        stable_count = stable_count - 1
-                        if stable_count == 0:
-                            t = 0
-                    else:
-                        stable_count = 5
-            elif self.bez.robot_state.status == RobotState.STATUS_WALKING and (
-                self.step_planner.robot_path is None or self.t > self.step_planner.robot_path.duration()
+            if self.t < 0 or (
+                self.bez.robot_state.status == RobotState.STATUS_WALKING
+                and (self.step_planner.robot_path is None or self.t > self.step_planner.robot_path.duration())
             ):
-                rospy.loginfo_throttle_identical(1, "Performing post stabilization")
                 if self.bez.sensors.imu_ready:
-                    self.soccerbot.apply_imu_feedback_standing(self.bez.sensors.get_imu())
-                    pass
+                    stable_count = self.update_stable_count(pitch, roll, stable_count)
+                    if stable_count < 0:  # TODO dont really like this format
+                        break
+                    self.stabilize_stand(pitch, roll)
 
             if single_trajectory:
                 if self.step_planner.robot_path is None:
                     return True
 
                 if self.bez.sensors.imu_ready:
-                    q = self.bez.sensors.imu_msg.orientation
-                    angle_threshold = 1.25  # in radian
-                    [roll, pitch, yaw] = Transformation.get_euler_from_quaternion([q.w, q.x, q.y, q.z])
                     if self.bez.fallen(pitch):
                         return False
             # Publishes angles to robot (Average Time: 0.00041992547082119)

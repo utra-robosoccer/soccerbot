@@ -19,7 +19,7 @@ class Navigator:
 
     PYBULLET_STEP = rospy.get_param("control_frequency", 0.01)
 
-    def __init__(self, real_time=False, display=True, useCalibration=False):
+    def __init__(self, real_time=False, display=True, useCalibration=True):
         """
         Initialize the Navigator
 

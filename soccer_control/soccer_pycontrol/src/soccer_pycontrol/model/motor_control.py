@@ -12,7 +12,7 @@ class MotorControl:
     """
 
     # TODO update with the modified for pycontrol
-    def __init__(self, body: pb.loadURDF):
+    def __init__(self, body):  #: pb.loadURDF):
         self.body = body
 
         self.motor_names = [pb.getJointInfo(self.body, i)[1].decode("utf-8") for i in range(18)]

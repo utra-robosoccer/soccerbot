@@ -2,8 +2,9 @@ import os
 import struct
 import time
 
+import pybullet_data
 from scipy.signal import butter, lfilter
-from soccer_pycontrol.navigator.navigator_ros import NavigatorRos
+from soccer_pycontrol.navigator_ros import NavigatorRos
 
 os.environ["ROS_NAMESPACE"] = "/robot1"
 
@@ -16,7 +17,7 @@ import rospy
 from matplotlib import pyplot as plt
 from soccer_pycontrol.common.links import Links
 from soccer_pycontrol.exp.calibration import adjust_navigation_transform
-from soccer_pycontrol.navigator.navigator import Navigator
+from soccer_pycontrol.navigator import Navigator
 
 from soccer_common.transformation import Transformation
 from soccer_common.utils_rosparam import set_rosparam_from_yaml_file
@@ -124,6 +125,7 @@ class TestWalking:
         # assert distance_offset < 0.12
 
     # @pytest.mark.skip
+    @pytest.mark.parametrize("walker_ros", ["bez1"], indirect=True)
     def test_walk_1_ros(self, walker_ros: NavigatorRos):
         walker_ros.setPose(Transformation([0.0, 0, 0], [0, 0, 0, 1]))
         walker_ros.ready()

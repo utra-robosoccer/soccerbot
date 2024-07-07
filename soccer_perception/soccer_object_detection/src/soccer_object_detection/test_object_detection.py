@@ -263,7 +263,7 @@ class TestObjectDetection(TestCase):
 
         n.robot_state.status = RobotState.STATUS_READY
         n.game_state.gameState = GameState.GAMESTATE_PLAYING
-        cap = cv2.VideoCapture(src_path + "/../../videos/2023-07-08-124113.webm")
+        cap = cv2.VideoCapture(src_path + "/../../videos/2023-07-08-124050.webm")
         if not cap.isOpened():
             print("Cannot open camera")
             exit()

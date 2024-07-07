@@ -17,7 +17,7 @@ class LoadModel:  # TODO Maybe rename to body
         if not fixed_base:  # TODO need way to have custom height
             self.set_pose(pose)
 
-    def load_urdf_pybullet(self, urdf_model_path: str, fixed_base: bool) -> pb.loadURDF:
+    def load_urdf_pybullet(self, urdf_model_path: str, fixed_base: bool):  # -> pb.loadURDF:
         # TODO read from yaml? Also maybe put in world
         body = pb.loadURDF(
             urdf_model_path,

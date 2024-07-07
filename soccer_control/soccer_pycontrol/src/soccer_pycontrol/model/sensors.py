@@ -12,7 +12,7 @@ class Sensors:
     Interfaces with pybullet to extract sensor data.
     """
 
-    def __init__(self, body: pb.loadURDF):
+    def __init__(self, body):  #: pb.loadURDF):
         # TODO does this need to be a class?
         self.body = body
 
@@ -47,7 +47,7 @@ class Sensors:
 
         return imu.orientation_euler
 
-    def get_foot_pressure_sensors(self, floor: pb.loadURDF) -> List[bool]:
+    def get_foot_pressure_sensors(self, floor) -> List[bool]:  #: pb.loadURDF
         """
         Checks if 4 corners of the each feet are in contact with ground #
         TODO fix docstring

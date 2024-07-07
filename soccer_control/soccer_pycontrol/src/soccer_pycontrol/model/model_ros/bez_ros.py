@@ -8,6 +8,7 @@ import scipy
 import tf
 import tf2_py
 import torch
+from geometry_msgs.msg import PoseStamped, PoseWithCovarianceStamped
 from nav_msgs.msg import Odometry
 from soccer_pycontrol.common.joints import Joints
 from soccer_pycontrol.model.bez import Bez
@@ -33,7 +34,7 @@ class BezROS(Bez):
         self.ik_actions = IKActions(self.data)
 
         self.pose = Transformation()  # TODO need a better way
-
+        self.robot_pose: PoseStamped = None
         self.listener = tf.TransformListener()
         self.last_ball_found_timestamp = None
         self.last_ball_pose = None
@@ -86,6 +87,43 @@ class BezROS(Bez):
         pose.position = (pose.position[0], pose.position[1], self.data.walking_torso_height)
 
         return pose
+
+    def update_robot_pose(self, footprint_name="/base_footprint") -> bool:
+        """
+        Function to update the location of the robot based on odometry. Called before movement to make sure the starting
+        position is correct
+
+        :param footprint_name:
+        :return: True if the position is updated, otherwise False
+        """
+        try:
+            (trans, rot) = self.sensors.tf_listener.lookupTransform("world", os.environ["ROS_NAMESPACE"] + footprint_name, rospy.Time(0))
+        except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException) as e:
+            print(e)
+            return False
+
+        self.robot_pose = Transformation(position=trans, quaternion=rot).pose_stamped
+        return True
+
+    def setPose(self, pose: Transformation):  # TODO should link up with the pybullet version
+        [r, p, y] = pose.orientation_euler
+        pose.orientation_euler = [r, 0, 0]
+
+        resetPublisher = rospy.Publisher("/robot1/reset_robot", PoseStamped, queue_size=1, latch=True)
+        initialPosePublisher = rospy.Publisher("initialpose", PoseWithCovarianceStamped, queue_size=1, latch=True)
+        pose_stamped = pose.pose_stamped
+        resetPublisher.publish(pose_stamped)
+        self.robot_pose = pose_stamped
+
+        rospy.sleep(0.2)
+
+        p = PoseWithCovarianceStamped()
+        p.header.frame_id = "world"
+        p.header.stamp = rospy.Time.now()
+        p.pose.pose = pose_stamped.pose
+        initialPosePublisher.publish(p)
+
+        rospy.sleep(0.2)
 
     def apply_head_rotation(self):
         # TODO this feels overly complicated and should be in strategy
