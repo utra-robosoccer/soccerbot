@@ -6,7 +6,7 @@ find_package(
     REQUIRED
     soccer_common
     soccer_msgs
-    # soccer_webots
+    soccer_webots
     soccer_trajectories
     soccer_object_detection
     bez1_description

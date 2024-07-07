@@ -43,6 +43,14 @@
           </excludedPaths>
         </serverdata>
       </paths>
+      <paths name="fewf">
+        <serverdata>
+          <mappings>
+            <mapping local="$PROJECT_DIR$" web="/" />
+            <mapping local="/opt/ros/noetic/lib/python3/dist-packages" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
     </serverData>
     <option name="myAutoUpload" value="ALWAYS" />
   </component>

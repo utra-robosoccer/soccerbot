@@ -7,7 +7,7 @@ import torch
 from geometry_msgs.msg import Pose2D, PoseStamped
 from nav_msgs.msg import Odometry, Path
 from sensor_msgs.msg import Imu
-from soccer_pycontrol.soccerbot import *
+from soccer_pycontrol.old.soccerbot import *
 from std_msgs.msg import Empty, Float64
 
 from soccer_msgs.msg import RobotState

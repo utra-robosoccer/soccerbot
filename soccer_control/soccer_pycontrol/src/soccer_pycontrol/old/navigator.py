@@ -4,8 +4,8 @@ import pybullet as pb
 import pybullet_data
 import rospy
 from soccer_pycontrol.common.links import Links
-from soccer_pycontrol.ramp import Ramp
-from soccer_pycontrol.soccerbot import Soccerbot
+from soccer_pycontrol.old.ramp import Ramp
+from soccer_pycontrol.old.soccerbot import Soccerbot
 
 from soccer_common.transformation import Transformation
 

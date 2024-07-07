@@ -13,7 +13,7 @@ class FootStepPlannerROS(FootStepPlanner):
 
         torso_offset_pitch = rospy.get_param("torso_offset_pitch", 0.0)
         torso_offset_x = rospy.get_param("torso_offset_x", 0)
-
+        # TODO create path ros
         super(FootStepPlannerROS, self).__init__(
             torso_offset_pitch=torso_offset_pitch,
             torso_offset_x=torso_offset_x,

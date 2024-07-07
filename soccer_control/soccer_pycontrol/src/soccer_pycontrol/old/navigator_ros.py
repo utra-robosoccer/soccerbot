@@ -5,9 +5,9 @@ import rospy
 import tf
 from geometry_msgs.msg import Pose, PoseStamped, PoseWithCovarianceStamped
 from rospy import ROSInterruptException
-from soccer_pycontrol.navigator import *
+from soccer_pycontrol.old.navigator import *
+from soccer_pycontrol.old.soccerbot_ros import SoccerbotRos
 from soccer_pycontrol.path.path_section import PathSection
-from soccer_pycontrol.soccerbot_ros import SoccerbotRos
 from std_msgs.msg import Bool, Empty
 
 from soccer_msgs.msg import RobotState

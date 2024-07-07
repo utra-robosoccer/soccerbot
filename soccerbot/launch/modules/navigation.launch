@@ -5,7 +5,7 @@
     <arg name="param_file_name" value="$(arg robot_model)_sim" if="$(arg simulation)" />
     <arg name="param_file_name" value="$(arg robot_model)" unless="$(arg simulation)" />
 
-    <node pkg="soccer_trajectories" type="soccer_trajectories.py" name="soccer_trajectories" output="screen">
+    <node pkg="soccer_trajectories" type="trajectory_manager_ros.py" name="soccer_trajectories" output="screen">
         <param name="trajectory_path" value="$(find soccer_trajectories)/trajectories/$(arg param_file_name)" />
     </node>
 
