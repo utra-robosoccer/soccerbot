@@ -43,7 +43,7 @@ class WalkEngine:
 
         :param goal: The 3D location goal for the robot
         """
-        self.step_planner.create_path_to_goal(goal)
+        self.step_planner.create_path_to_goal(self.bez.sensors.get_pose(), goal)
 
     def wait(self, step: int) -> None:
         self.world.wait(step)

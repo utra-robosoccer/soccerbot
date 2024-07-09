@@ -19,7 +19,7 @@ class NavigatorRos(Navigator):
     common to both ROS and pybullet simulation, see :class:`Navigator`
     """
 
-    def __init__(self, useCalibration=True):
+    def __init__(self, useCalibration=False):
         """
         Initializes The NavigatorRos class
 
@@ -215,48 +215,48 @@ class NavigatorRos(Navigator):
                     self.r.sleep()
                     continue
 
-            # self.update_goal()
+            self.update_goal()
 
-            # self.walk_loop()
-            #
-            # self.walk_completed()
+            self.walk_loop()
 
-            # if self.soccerbot.robot_path is None or self.t > self.soccerbot.robot_path.duration():
-            #     self.soccerbot.robot_path = None
-            #     pass
-            #
-            # if self.t < 0:
-            #     if self.soccerbot.imu_ready:
-            #         pitch = self.soccerbot.apply_imu_feedback_standing(self.soccerbot.get_imu())
-            #         rospy.loginfo_throttle(
-            #             0.3,
-            #             "Performing prewalk stabilization, distance to desired pitch: " + str(pitch - self.soccerbot.standing_pid.setpoint),
-            #         )
-            #         if abs(pitch - self.soccerbot.standing_pid.setpoint) < 0.025:
-            #             stable_count = stable_count - 1
-            #             if stable_count == 0:
-            #                 t = 0
-            #         else:
-            #             stable_count = 5
-            # elif self.soccerbot.robot_state.status == RobotState.STATUS_WALKING and (
-            #     self.soccerbot.robot_path is None or self.t > self.soccerbot.robot_path.duration()
-            # ):
-            #     rospy.loginfo_throttle_identical(1, "Performing post stabilization")
-            #     if self.soccerbot.imu_ready:
-            #         self.soccerbot.apply_imu_feedback_standing(self.soccerbot.get_imu())
-            #         pass
-            #
-            # if single_trajectory:
-            #     if self.soccerbot.robot_path is None:
-            #         return True
-            #
-            #     if self.soccerbot.imu_ready:
-            #         q = self.soccerbot.imu_msg.orientation
-            #         [roll, pitch, yaw] = Transformation.get_euler_from_quaternion([q.w, q.x, q.y, q.z])
-            #         self.fallen(pitch)
-            #
-            # # Publishes angles to robot (Average Time: 0.00041992547082119)
-            # self.soccerbot.publishAngles()
+            self.walk_completed()
+
+            if self.soccerbot.robot_path is None or self.t > self.soccerbot.robot_path.duration():
+                self.soccerbot.robot_path = None
+                pass
+
+            if self.t < 0:
+                if self.soccerbot.imu_ready:
+                    pitch = self.soccerbot.apply_imu_feedback_standing(self.soccerbot.get_imu())
+                    rospy.loginfo_throttle(
+                        0.3,
+                        "Performing prewalk stabilization, distance to desired pitch: " + str(pitch - self.soccerbot.standing_pid.setpoint),
+                    )
+                    if abs(pitch - self.soccerbot.standing_pid.setpoint) < 0.025:
+                        stable_count = stable_count - 1
+                        if stable_count == 0:
+                            t = 0
+                    else:
+                        stable_count = 5
+            elif self.soccerbot.robot_state.status == RobotState.STATUS_WALKING and (
+                self.soccerbot.robot_path is None or self.t > self.soccerbot.robot_path.duration()
+            ):
+                rospy.loginfo_throttle_identical(1, "Performing post stabilization")
+                if self.soccerbot.imu_ready:
+                    self.soccerbot.apply_imu_feedback_standing(self.soccerbot.get_imu())
+                    pass
+
+            if single_trajectory:
+                if self.soccerbot.robot_path is None:
+                    return True
+
+                if self.soccerbot.imu_ready:
+                    q = self.soccerbot.imu_msg.orientation
+                    [roll, pitch, yaw] = Transformation.get_euler_from_quaternion([q.w, q.x, q.y, q.z])
+                    self.fallen(pitch)
+
+            # Publishes angles to robot (Average Time: 0.00041992547082119)
+            self.soccerbot.publishAngles()
 
             time_end = time.time()
             if time_end - time_start > Navigator.PYBULLET_STEP * 1.2:

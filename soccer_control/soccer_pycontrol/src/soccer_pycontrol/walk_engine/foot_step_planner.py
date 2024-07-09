@@ -38,7 +38,7 @@ class FootStepPlanner:
 
         self.current_step_time = 0
 
-    def create_path_to_goal(self, end_pose: Transformation) -> PathRobot:
+    def create_path_to_goal(self, start_pose: Transformation, end_pose: Transformation) -> PathRobot:
         """
         Creates a path from the robot's current location to the goal location
 
@@ -46,7 +46,7 @@ class FootStepPlanner:
         :return: Robot path
         """
         # TODO is this the best place for it?
-        start_pose = Transformation(position=[0, 0, self.walking_torso_height])
+        start_pose = Transformation(position=[start_pose.position[0], start_pose.position[1], self.walking_torso_height])
         end_pose.position = [end_pose.position[0], end_pose.position[1], self.walking_torso_height]
 
         # Remove the roll and pitch from the designated position

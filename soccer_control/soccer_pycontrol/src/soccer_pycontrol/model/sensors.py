@@ -23,7 +23,7 @@ class Sensors:
         :return: The 3D pose of the robot
         """
         [position, quaternion] = pb.getLinkState(self.body, linkIndex=Links.LEFT_LEG_6)[4:6]
-        return Transformation(position=position, quaternion=quaternion).pos_theta
+        return Transformation(position=position, quaternion=quaternion)
 
     def get_imu(self) -> Transformation:
         """

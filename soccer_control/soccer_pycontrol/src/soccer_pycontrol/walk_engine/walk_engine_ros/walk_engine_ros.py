@@ -149,7 +149,7 @@ class WalkEngineROS(WalkEngine):
         self.bez.ready()
         self.bez.motor_control.set_motor()
         self.pid.reset_imus()
-        # self.bez.motor_control.updateRobotConfiguration() TODO why here
+        self.bez.motor_control.updateRobotConfiguration()  # TODO why here
         time_now = 0
 
         while not rospy.is_shutdown():
@@ -223,7 +223,7 @@ class WalkEngineROS(WalkEngine):
 
                 print_pose("Start Pose", self.bez.robot_pose.pose)
                 print_pose("End Pose", self.goal.pose)
-                self.step_planner.create_path_to_goal(Transformation(pose=self.goal.pose))
+                self.step_planner.create_path_to_goal(Transformation(pose=self.bez.robot_pose.pose), Transformation(pose=self.goal.pose))
                 # self.pid_stab.reset_roll_feedback_parameters()
                 self.t = -self.prepare_walk_time
 

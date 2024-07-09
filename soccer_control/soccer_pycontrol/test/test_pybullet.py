@@ -48,6 +48,18 @@ class TestPybullet(unittest.TestCase):
         tf.ready()
         tf.wait(50)
         tf.set_goal(Transformation([1, 0, 0], [0, 0, 0, 1]))
+        tf.walk()
+        tf.wait(100)
+
+    def test_walk_backward(self):
+        world = PybulletWorld(camera_yaw=90, real_time=True, rate=100)
+        bez = Bez()
+        tf = WalkEngine(world, bez)
+        tf.bez.model.set_pose(Transformation([1, 0, 0], [0, 0, 0, 1]))
+        tf.wait(50)
+        tf.ready()
+        tf.wait(50)
+        tf.set_goal(Transformation([0.5, 0, 0], [0, 0, 0, 1]))
         tf.walk()  # TODO add head rotation
         tf.wait(100)
 
