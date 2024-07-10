@@ -31,7 +31,7 @@ PROTO Bez2 ["""
           metalness 0
         }
         geometry DEF base_link Mesh {
-          url "/home/manx52/catkin_ws/src/soccerbot/bez2_description/meshes/base_link.stl"
+          url "/home/manx52/catkin_ws/src/soccerbot/bez2_description/meshes/torso.stl"
         }
       }"""
 
@@ -85,7 +85,7 @@ PROTO Bez2 ["""
               metalness 0
             }
             geometry DEF base_link Mesh {
-              url "base_link.stl"
+              url "torso.stl"
             }
           }
             """

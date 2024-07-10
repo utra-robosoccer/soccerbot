@@ -32,7 +32,7 @@ for filename in os.listdir(directory):
             if (
                 os.path.basename(f) == "biceps_v3_1.stl"
                 or os.path.basename(f) == "biceps_v3_2.stl"
-                or os.path.basename(f) == "base_link.stl"
+                or os.path.basename(f) == "torso.stl"
                 or os.path.basename(f) == "head_v4_1.stl"
             ):
                 target_triangles = 21000

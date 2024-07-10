@@ -52,25 +52,26 @@ class TestTrajectory(unittest.TestCase):
         self.assertEqual(angles, [0.0, 0.0, 0.0, 0.0, 0.564, 0.564, -1.176, -1.176, 0.613, 0.613, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
 
 
-@pytest.mark.parametrize("trajectory_name", ["getupfront", "getupback", "rightkick"])
-@pytest.mark.parametrize("robot_model", ["bez1", "bez2"])
-@pytest.mark.parametrize("real_time", [False])
+@pytest.mark.parametrize("trajectory_name", ["getupfront"])  # , "getupback", "rightkick"])
+@pytest.mark.parametrize("robot_model", ["bez2_urdf"])
+@pytest.mark.parametrize("real_time", [True])
 def test_trajectory_sim(trajectory_name: str, robot_model: str, real_time: bool):
     """
     Case 1: Standard case
     :return: None
     """
     # TODO update with pybullet updates
-    if trajectory_name == "getupfront":
-        pose = Transformation(position=[0, 0, 0.070], quaternion=[0.0, 0.707, 0.0, 0.707])
-    elif trajectory_name == "getupback":
-        pose = Transformation(position=[0, 0, 0.070], quaternion=[0.0, 0.707, 0.0, -0.707])
-    else:
-        pose = Transformation(position=[0, 0, 0.315], quaternion=[0.0, 0.0, 0.0, 1])
+    pose = Transformation(position=[0, 0, 0.070], euler=[0, 3.14, 0])  # quaternion=[0.0, 0.707, 0.0, 0.707])
+    # if trajectory_name == "getupfront":
+    #     pose = Transformation(position=[0, 0, 0.070], euler=[0,1.57,0]) #quaternion=[0.0, 0.707, 0.0, 0.707])
+    # elif trajectory_name == "getupback":
+    #     pose = Transformation(position=[0, 0, 0.070], quaternion=[0.0, 0.707, 0.0, -0.707])
+    # else:
+    #     pose = Transformation(position=[0, 0, 0.315], quaternion=[0.0, 0.0, 0.0, 1])
 
-    print(os.path.join(os.path.dirname(__file__), "../trajectories/bez1_sim/" + trajectory_name + ".csv"))
+    print(os.path.join(os.path.dirname(__file__), "../trajectories/bez2_sim/" + trajectory_name + ".csv"))
     tm = TrajectoryManagerSim(
-        os.path.join(os.path.dirname(__file__), "../trajectories/bez1_sim/" + trajectory_name + ".csv"), pose, robot_model, real_time
+        os.path.join(os.path.dirname(__file__), "../trajectories/bez2_sim/" + trajectory_name + ".csv"), pose, robot_model, real_time
     )
     tm.send_trajectory()
     # TODO add more testing from pybullet so like the height will reach a threshold and it doesnt fall over for

@@ -13,7 +13,7 @@ class PybulletSetup:
     """
 
     # TODO update with the modified for pycontrol
-    def __init__(self, pose: Transformation = Transformation(), robot_model: str = "bez1", real_time=False, rate: int = 100, display=True):
+    def __init__(self, pose: Transformation = Transformation(), robot_model: str = "bez1", real_time=False, rate: int = 75, display=True):
         """
         Initialize the Navigator
 
@@ -34,7 +34,7 @@ class PybulletSetup:
             baseOrientation=pose.quaternion,
         )
 
-        self.motor_names = [pb.getJointInfo(self.body, i)[1].decode("utf-8") for i in range(18)]
+        self.motor_names = [pb.getJointInfo(self.body, i)[1].decode("utf-8") for i in range(20)]
 
     def wait(self, steps) -> None:
         """
@@ -54,7 +54,7 @@ class PybulletSetup:
         pb.setJointMotorControlArray(
             bodyIndex=self.body,
             controlMode=pb.POSITION_CONTROL,
-            jointIndices=list(range(0, 18, 1)),
+            jointIndices=list(range(0, 20, 1)),
             targetPositions=target,
         )
 

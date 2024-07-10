@@ -13,6 +13,30 @@ from soccer_common import Transformation
 
 
 class TestPybullet(unittest.TestCase):
+
+    def test_bez2(self):
+        world = PybulletWorld(path="", camera_yaw=90, real_time=True, rate=300)
+        bez = Bez(robot_model="bez2_urdf", fixed_base=True, pose=Transformation([0, 0, 0], euler=[np.pi / 2, 0, np.pi / 2]))
+        world.wait(50)
+        angles = np.linspace(-np.pi, np.pi)
+        # for i in range(20):
+
+        # for j in angles:
+        #     x = [0.0] * 20
+        #     x[bez.data.motor_names.index('left_arm_motor_2')] = j
+        #     print(j)
+        #     pb.setJointMotorControlArray(
+        #         bodyIndex=bez.model.body,
+        #         controlMode=pb.POSITION_CONTROL,
+        #         jointIndices=list(range(0, 20, 1)),
+        #         targetPositions=x,
+        #     )
+        #     world.wait_motor()
+
+        world.wait(1000)
+        print(bez.sensors.get_imu().orientation_euler)
+        # TODO add more
+
     def test_imu(self):
         world = PybulletWorld(camera_yaw=45, real_time=True, rate=100)
         bez = Bez()
@@ -26,6 +50,19 @@ class TestPybullet(unittest.TestCase):
         world.wait(100)
         print(bez.sensors.get_foot_pressure_sensors(world.plane))
         # TODO add more
+
+    def test_foot_step_planner_fixed_bez2(self):
+        world = PybulletWorld(path="", camera_yaw=90, real_time=True, rate=100)
+        bez = Bez(robot_model="bez2_urdf", fixed_base=True)
+        tf = WalkEngine(world, bez)
+
+        # TODO fix with torso height or start pose
+        tf.wait(50)
+        tf.ready()
+        tf.wait(50)
+        tf.set_goal(Transformation([1, 0, 0], [0, 0, 0, 1]))
+        tf.walk()
+        tf.wait(100)
 
     def test_foot_step_planner_fixed(self):
         world = PybulletWorld(path="", camera_yaw=90, real_time=True, rate=100)
