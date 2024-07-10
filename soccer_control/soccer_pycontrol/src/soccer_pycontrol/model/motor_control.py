@@ -15,16 +15,16 @@ class MotorControl:
     def __init__(self, body: pb.loadURDF):
         self.body = body
 
-        self.motor_names = [pb.getJointInfo(self.body, i)[1].decode("utf-8") for i in range(18)]
+        self.motor_names = [pb.getJointInfo(self.body, i)[1].decode("utf-8") for i in range(20)]
 
         # Todo make it numpy and add getter and setters
-        self.configuration = [0.0] * len(Joints)  # : The 18x1 float array motor angle configuration for the robot's
+        self.configuration = [0.0] * 20  # : The 18x1 float array motor angle configuration for the robot's
         # 18 motors
-        self.configuration_offset = [0.0] * len(Joints)  #: The offset for the 18x1 motor angle configurations
+        self.configuration_offset = [0.0] * 20  #: The offset for the 18x1 motor angle configurations
 
         self.max_forces = []
 
-        for i in range(0, 18):
+        for i in range(0, 20):
             self.max_forces.append(pb.getJointInfo(self.body, i)[10] or 6)  # rospy.get_param("max_force", 6))
 
         self.set_motor()
@@ -42,7 +42,7 @@ class MotorControl:
         pb.setJointMotorControlArray(
             bodyIndex=self.body,
             controlMode=pb.POSITION_CONTROL,
-            jointIndices=list(range(0, 18, 1)),
+            jointIndices=list(range(0, 20, 1)),
             targetPositions=self.get_angles(),
             forces=self.max_forces,
         )
@@ -60,7 +60,7 @@ class MotorControl:
         self.configuration[Links.LEFT_ARM_1 : Links.LEFT_ARM_2 + 1] = target_angles
 
     def set_right_leg_target_angles(self, target_angles: np.ndarray) -> None:
-        self.configuration[Links.RIGHT_LEG_1 : Links.RIGHT_LEG_6 + 1] = target_angles
+        self.configuration[14:] = target_angles  # TODO find new links number
 
     def set_left_leg_target_angles(self, target_angles: np.ndarray) -> None:
         self.configuration[Links.LEFT_LEG_1 : Links.LEFT_LEG_6 + 1] = target_angles

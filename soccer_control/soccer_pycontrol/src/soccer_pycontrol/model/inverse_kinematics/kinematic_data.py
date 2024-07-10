@@ -33,8 +33,8 @@ class KinematicData:
         self.arm_0_center = arm_0_center
         self.arm_1_center = arm_1_center
 
-        self.thigh_length = (motor_offsets["right_leg_motor_2"] - motor_offsets["right_leg_motor_3"])[2]
-        self.tibia_length = (motor_offsets["right_leg_motor_3"] - motor_offsets["right_leg_motor_4"])[2]
+        self.thigh_length = np.linalg.norm(motor_offsets["right_leg_motor_2"] - motor_offsets["right_leg_motor_3"])
+        self.tibia_length = np.linalg.norm(motor_offsets["right_leg_motor_3"] - motor_offsets["right_leg_motor_4"])
         self.torso_to_right_hip = Transformation(position=motor_offsets["right_leg_motor_0"])
         self.right_hip_to_left_hip = Transformation(position=(motor_offsets["right_leg_motor_0"] - motor_offsets["left_leg_motor_0"]))
 

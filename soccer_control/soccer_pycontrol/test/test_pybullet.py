@@ -21,17 +21,17 @@ class TestPybullet(unittest.TestCase):
         angles = np.linspace(-np.pi, np.pi)
         # for i in range(20):
 
-        # for j in angles:
-        #     x = [0.0] * 20
-        #     x[bez.data.motor_names.index('left_arm_motor_2')] = j
-        #     print(j)
-        #     pb.setJointMotorControlArray(
-        #         bodyIndex=bez.model.body,
-        #         controlMode=pb.POSITION_CONTROL,
-        #         jointIndices=list(range(0, 20, 1)),
-        #         targetPositions=x,
-        #     )
-        #     world.wait_motor()
+        for j in angles:
+            x = [0.0] * 20
+            x[bez.data.motor_names.index("right_leg_motor_4")] = 1.5
+            print(j)
+            pb.setJointMotorControlArray(
+                bodyIndex=bez.model.body,
+                controlMode=pb.POSITION_CONTROL,
+                jointIndices=list(range(0, 20, 1)),
+                targetPositions=x,
+            )
+            world.wait_motor()
 
         world.wait(1000)
         print(bez.sensors.get_imu().orientation_euler)
@@ -200,6 +200,27 @@ def test_sweep(sweep_name: str, h: float, robot_model: str):
         x, _, _ = bez.ik_actions.y_sweep(h)
     elif sweep_name == "z":
         x, _, _ = bez.ik_actions.z_sweep()
+
+    sweep(x, steps)
+    world.wait(steps)
+
+    world.close()
+
+
+def test_foot_step_planner_fixed_bez2():
+    world = PybulletWorld(path="", camera_yaw=90, real_time=True, rate=100)
+    bez = Bez(robot_model="bez2_urdf", fixed_base=True)
+
+    steps = 50
+    x = np.zeros(steps)
+
+    def sweep(target_pose: np.ndarray, step: int) -> None:
+        for i in range(step):
+            bez.motor_control.set_right_leg_target_angles(target_pose[i][0:6])
+            bez.motor_control.set_motor()
+            world.wait_motor()
+
+    x, _, _ = bez.ik_actions.z_sweep()
 
     sweep(x, steps)
     world.wait(steps)
