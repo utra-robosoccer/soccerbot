@@ -146,19 +146,18 @@ class FirmwareInterface:
 
     def joint_command_callback(self, joint_state: JointState):
         try:
-
-            if self.last_motor_publish_time is not None:
-                time_diff_message_in = joint_state.header.stamp - self.last_motor_publish_time
-                time_diff_real = rospy.Time.now() - self.last_motor_publish_time_real
-
-                time_lag = rospy.Time.now() - joint_state.header.stamp
-                if time_lag > time_diff_message_in:
-                    print(f"Message Skipped Time Lag {time_lag}")
-                    self.last_motor_publish_time = joint_state.header.stamp
-                    return
-
-                if time_diff_real < time_diff_message_in:
-                    rospy.sleep(time_diff_message_in - time_diff_real)
+            # if self.last_motor_publish_time is not None:
+            #     time_diff_message_in = joint_state.header.stamp - self.last_motor_publish_time
+            #     time_diff_real = rospy.Time.now() - self.last_motor_publish_time_real
+            #
+            #     time_lag = rospy.Time.now() - joint_state.header.stamp
+            #     if time_lag > time_diff_message_in:
+            #         print(f"Message Skipped Time Lag {time_lag}")
+            #         self.last_motor_publish_time = joint_state.header.stamp
+            #         return
+            #
+            #     if time_diff_real < time_diff_message_in:
+            #         rospy.sleep(time_diff_message_in - time_diff_real)
 
             t1 = time.time()
 

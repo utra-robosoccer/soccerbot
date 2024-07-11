@@ -49,7 +49,7 @@ void update()
       command_motors();
       usb_received = false;
 
-      HAL_GPIO_TogglePin(GPIOA, GREEN_LED_Pin);
+//      HAL_GPIO_TogglePin(GPIOA, GREEN_LED_Pin);
     }
 
   }

@@ -100,9 +100,9 @@ void init_ports() {
     .dirPinNum      = USART1_DIR_Pin,
     .dmaDoneReading = false,
     .currMotor      = 0,
-    .numMotors      = 6,
-    .motorIds       = {23, 24, 28, 29, 34, 33}, //{16, 17},
-    .protocol       = {2, 2, 2, 2, 2, 2} //{1, 1}
+    .numMotors      = 3,
+    .motorIds       = {10, 11, 12}, //{16, 17},
+    .protocol       = {2, 2, 2} //{1, 1}
   };
 
   // port2 => UART2 ==> J7 on new PCB
@@ -115,7 +115,7 @@ void init_ports() {
       .dmaDoneReading = false,
       .currMotor      = 0,
       .numMotors      = 3,
-      .motorIds       = {26, 31, 30},//{0, 1, 2, 3},
+      .motorIds       = {10, 11, 12},//{0, 1, 2, 3},
       .protocol       = {2, 2, 2}
     };
 
@@ -128,7 +128,7 @@ void init_ports() {
       .dirPinNum      = USART3_DIR_Pin,
       .dmaDoneReading = false,
       .numMotors      = 3,
-      .motorIds       = {1, 22, 21},//{13, 14, 15},
+      .motorIds       = {10, 11, 12},//{13, 14, 15},
       .protocol       = {2, 2, 2}//{1, 1, 1}
     };
 
@@ -141,7 +141,7 @@ void init_ports() {
       .dirPinNum      = USART4_DIR_Pin,
       .dmaDoneReading = false,
       .numMotors      = 3,
-      .motorIds       = {3, 4, 10},//7, 8, 9},
+      .motorIds       = {10, 11, 12},//7, 8, 9},
       .protocol       = {2, 2, 2} //{1, 1, 1}
     };
 
@@ -154,7 +154,7 @@ void init_ports() {
       .dirPinNum      = USART5_DIR_Pin,
       .dmaDoneReading = false,
       .numMotors      = 3,
-      .motorIds       = {1, 32, 27}, //{4, 5, 6},
+      .motorIds       = {10, 11, 12}, //{4, 5, 6},
       .protocol       = {2,2,2}//{2, 2, 2}
     };
 
@@ -167,8 +167,8 @@ void init_ports() {
       .dirPinNum      = USART6_DIR_Pin,
       .dmaDoneReading = false,
       .numMotors      = 3,
-      .motorIds       = {1}, //{10, 11, 12},
-      .protocol       = {2} //{2, 2, 2}
+      .motorIds       = {10, 11, 12}, //{10, 11, 12},
+      .protocol       = {2, 2, 2} //{2, 2, 2}
     };
 
   motorPorts[0] = &port1;
