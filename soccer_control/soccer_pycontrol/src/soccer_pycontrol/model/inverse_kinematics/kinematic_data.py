@@ -76,12 +76,12 @@ class KinematicData:
 
         pinocchio.ccrba(model, data, q, v)
         # print(time.time() - s)
-        # for name, oMi in zip(model.names, data.oMi):
-        #     print(("{:<24} : {: .2f} {: .2f} {: .2f}"
-        #            .format(name, *oMi.translation.T.flat)))
+        for name, oMi in zip(model.names, data.oMi):
+            print(("{:<24} : {: .2f} {: .2f} {: .2f}".format(name, *oMi.translation.T.flat)))
         # TODO should make a unit test to make sure the data is correct and maybe use pybullet toverify
         return {model.names[i]: data.oMi[i].translation.T for i in range(len(model.names))}
 
 
 if __name__ == "__main__":
-    k = KinematicData(robot_model="bez1")
+    # k = KinematicData(robot_model="bez1")
+    k = KinematicData(robot_model="bez2_urdf")

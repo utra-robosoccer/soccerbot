@@ -61,7 +61,7 @@ def test_trajectory_sim(trajectory_name: str, robot_model: str, real_time: bool)
     :return: None
     """
     # TODO update with pybullet updates
-    pose = Transformation(position=[0, 0, 0.070], euler=[0, 3.14, 0])  # quaternion=[0.0, 0.707, 0.0, 0.707])
+    pose = Transformation(position=[0, 0, 0.070], euler=[0, 1.57, 0])  # quaternion=[0.0, 0.707, 0.0, 0.707])
     # if trajectory_name == "getupfront":
     #     pose = Transformation(position=[0, 0, 0.070], euler=[0,1.57,0]) #quaternion=[0.0, 0.707, 0.0, 0.707])
     # elif trajectory_name == "getupback":

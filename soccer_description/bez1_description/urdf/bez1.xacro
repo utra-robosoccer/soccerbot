@@ -39,14 +39,14 @@
             <material name="black" />
         </visual>
     </link>
-
-    <xacro:arm name="left" origin="$(arg tf_prefix)/torso" direction="1" />
-    <xacro:arm name="right" origin="$(arg tf_prefix)/torso" direction="-1" />
-    <xacro:leg name="left" origin="$(arg tf_prefix)/torso" direction="1" />
-    <xacro:leg name="right" origin="$(arg tf_prefix)/torso" direction="-1" />
     <xacro:head origin="$(arg tf_prefix)/torso" />
+    <xacro:arm name="left" origin="$(arg tf_prefix)/torso" direction="1" />
+    <xacro:leg name="left" origin="$(arg tf_prefix)/torso" direction="1" />
+    <xacro:arm name="right" origin="$(arg tf_prefix)/torso" direction="-1" />
+    <xacro:leg name="right" origin="$(arg tf_prefix)/torso" direction="-1" />
+
     <xacro:imu origin="$(arg tf_prefix)/torso" />
-    <xacro:front_camera origin="$(arg tf_prefix)/head" />
+<!--    <xacro:front_camera origin="$(arg tf_prefix)/head" />-->
 
     <xacro:if value="$(arg has_base_footprint)">
         <link name="$(arg tf_prefix)/base_footprint" />

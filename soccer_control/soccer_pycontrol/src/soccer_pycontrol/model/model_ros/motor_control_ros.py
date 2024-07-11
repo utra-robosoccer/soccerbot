@@ -7,10 +7,11 @@ from soccer_pycontrol.model.motor_control import MotorControl
 
 class MotorControlROS(MotorControl):
     def __init__(self, motor_names):
-        self.configuration = [0.0] * len(Joints)  # : The 18x1 float array motor angle configuration for the robot's
-        # 18 motors
-        self.configuration_offset = [0.0] * len(Joints)  #: The offset for the 18x1 motor angle configurations
-
+        self.motor_names = motor_names
+        self.numb_of_motors = len(self.motor_names)
+        # Todo make it numpy and add getter and setters
+        self.configuration = [0.0] * self.numb_of_motors
+        self.configuration_offset = [0.0] * self.numb_of_motors
         # TODO should separate config to current and target
         self.motor_names = motor_names
 
@@ -21,11 +22,11 @@ class MotorControlROS(MotorControl):
         Reads the joint_states message and resets all the positions of all the joints
         """
 
-        self.configuration_offset = [0] * len(Joints)
+        self.configuration_offset = [0] * self.numb_of_motors
         try:
             joint_state = rospy.wait_for_message("joint_states", JointState, timeout=3)
             indexes = [joint_state.name.index(motor_name) for motor_name in self.motor_names]
-            self.configuration[0:18] = [joint_state.position[i] for i in indexes]
+            self.configuration[0 : self.numb_of_motors] = [joint_state.position[i] for i in indexes]
         except (ROSException, KeyError, AttributeError) as ex:
             rospy.logerr(ex)
         except ValueError as ex:
@@ -35,7 +36,7 @@ class MotorControlROS(MotorControl):
             rospy.logerr(joint_state)
             rospy.logerr("Motor Names")
             print(self.motor_names)
-            self.configuration[0:18] = [0] * len(Joints)
+            self.configuration[0 : self.numb_of_motors] = [0] * self.numb_of_motors
 
     def set_motor(self) -> None:
         """

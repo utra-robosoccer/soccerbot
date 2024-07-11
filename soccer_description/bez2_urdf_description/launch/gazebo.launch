@@ -1,8 +1,6 @@
 <launch>
   <param name="robot_description" command="$(find xacro)/xacro $(find bez2_urdf_description)/urdf/bez2_urdf.xacro"/>
   <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-param robot_description -urdf -model bez2_urdf"/>
-<!--  <param name="robot_description" command="$(find xacro)/xacro $(find bez2_urdf_description)/urdf/bez2.xacro"/>-->
-<!--  <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-param robot_description -urdf -model bez2"/>-->
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
     <arg name="paused" value="true"/>
     <arg name="use_sim_time" value="true"/>
@@ -10,10 +8,4 @@
     <arg name="headless" value="false"/>
     <arg name="debug" value="false"/>
   </include>
-
-  <rosparam file="$(find bez2_urdf_description)/launch/controller.yaml" command="load"/>
-<node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" ns="bez2_urdf" args="right_leg_motor_0_position_controller left_leg_motor_0_position_controller left_leg_motor_1_position_controller right_leg_motor_1_position_controller left_leg_motor_2_position_controller right_leg_motor_2_position_controller left_leg_motor_3_position_controller right_leg_motor_3_position_controller left_leg_motor_4_position_controller right_leg_motor_4_position_controller right_leg_motor_5_position_controller left_leg_motor_5_position_controller head_motor_0_position_controller head_motor_1_position_controller right_arm_motor_0_position_controller left_arm_motor_0_position_controller left_arm_motor_1_position_controller right_arm_motor_1_position_controller left_arm_motor_2_position_controller right_arm_motor_2_position_controller joint_state_controller "/>
-<node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen">
-  <remap from="/joint_states" to="/bez2_urdf/joint_states"/>
-</node>
 </launch>

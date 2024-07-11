@@ -22,7 +22,7 @@ class Bez:
 
         self.model = LoadModel(self.data.urdf_model_path, self.data.walking_torso_height, pose, fixed_base)
 
-        self.motor_control = MotorControl(self.model.body)
+        self.motor_control = MotorControl(self.model.body, self.data.motor_names)
         self.sensors = Sensors(self.model.body)
 
         self.ik_actions = IKActions(self.data)
@@ -31,10 +31,11 @@ class Bez:
         """
         Puts the robot into a ready pose to begin walking
         """
-        self.motor_control.set_target_angles(self.ik_actions.ready())
-        print("here: ", self.motor_control.configuration)
+        self.motor_control.configuration[self.data.motor_names.index("left_arm_motor_2")] = 1.5
+        # self.motor_control.set_target_angles(self.ik_actions.ready())
+        # print("here: ", self.motor_control.configuration)
         # TODO maybe change name to action or make it more clear
-        # self.motor_control.set_motor()
+        self.motor_control.set_motor()
 
     def find_joint_angles(self, torso_to_right_foot: Transformation, torso_to_left_foot: Transformation):
         r_theta = self.ik_actions.get_right_leg_angles(torso_to_right_foot)

@@ -20,8 +20,8 @@ VISUALIZER = MeshcatVisualizer
 # Load the URDF model with RobotWrapper
 # Conversion with str seems to be necessary when executing this file with ipython
 
-urdf_model_path = expanduser("~") + "/catkin_ws/src/soccerbot/soccer_description/bez1_description/urdf/bez1.urdf"
-mesh_dir = expanduser("~") + "/catkin_ws/src/soccerbot/soccer_description/bez1_description"
+urdf_model_path = expanduser("~") + "/catkin_ws/src/soccerbot/soccer_description/bez2_urdf_description/urdf/bez2_urdf_2.urdf"
+mesh_dir = expanduser("~") + "/catkin_ws/src/soccerbot/soccer_description/bez2_urdf_description"
 
 robot = RobotWrapper.BuildFromURDF(urdf_model_path, mesh_dir)
 # alias
@@ -30,7 +30,7 @@ data = robot.data
 
 
 def fwd_kinematics() -> np.ndarray:
-    q = [0] * 18  # pinocchio.randomConfiguration(model)
+    q = [0] * 20  # pinocchio.randomConfiguration(model)
     # q = pinocchio.randomConfiguration(model)
     # for i in model.names:
     #     print(i, model.getJointId(i))
@@ -101,14 +101,13 @@ if VISUALIZER:
     robot.loadViewerModel("pinocchio")
     import time
 
-    for i in range(10):
-        s = time.time()
+    s = time.time()
 
-        q = fwd_kinematics()
-        v = pinocchio.utils.zero(model.nv)
-        pinocchio.ccrba(model, data, q, v)
-        # print(data.Ig)
-        print(pinocchio.centerOfMass(model, data, q))
-        print(time.time() - s)
+    q = fwd_kinematics()
+    # v = pinocchio.utils.zero(model.nv)
+    # pinocchio.ccrba(model, data, q, v)
+    # # print(data.Ig)
+    # print(pinocchio.centerOfMass(model, data, q))
+    # print(time.time() - s)
     # q = inverse_kinematics()
     robot.display(q)

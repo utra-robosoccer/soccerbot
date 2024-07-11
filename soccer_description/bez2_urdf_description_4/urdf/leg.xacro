@@ -7,16 +7,16 @@
             <inertia ixx="8e-06" iyy="7e-06" izz="3e-06" ixy="-0.0" iyz="0.0" ixz="-0.0"/>
           </inertial>
           <visual>
-            <origin xyz="${(direction * 0.0652) + 0.216834} 0.224201 -0.015289" rpy="0 0 0"/>
+            <origin xyz="${(direction * -0.0652) + 0.216834} 0.224201 -0.015289" rpy="0 0 0"/>
             <geometry>
-              <mesh filename="package://bez2_urdf_description/meshes/${name}_hip_side.${MODEL_TYPE}" scale="0.001 0.001 0.001"/>
+              <mesh filename="package://bez2_urdf_description_4/meshes/${name}_hip_side.${MODEL_TYPE}" scale="0.001 0.001 0.001"/>
             </geometry>
             <material name="steel_satin"/>
           </visual>
           <collision>
-            <origin xyz="${(direction * 0.0652) + 0.216834} 0.224201 -0.015289" rpy="0 0 0"/>
+            <origin xyz="${(direction * -0.0652) + 0.216834} 0.224201 -0.015289" rpy="0 0 0"/>
             <geometry>
-              <mesh filename="package://bez2_urdf_description/meshes/${name}_hip_side.${MODEL_TYPE}" scale="0.001 0.001 0.001"/>
+              <mesh filename="package://bez2_urdf_description_4/meshes/${name}_hip_side.${MODEL_TYPE}" scale="0.001 0.001 0.001"/>
             </geometry>
           </collision>
         </link>
@@ -27,16 +27,16 @@
             <inertia ixx="0.000458" iyy="0.000394" izz="0.000195" ixy="-1e-06" iyz="-2e-06" ixz="-8e-06"/>
           </inertial>
           <visual>
-            <origin xyz="${(direction * 0.0652) + 0.216834} 0.252201 0.005211" rpy="0 0 0"/>
+            <origin xyz="${(direction * -0.0652) + 0.216834} 0.252201 0.005211" rpy="0 0 0"/>
             <geometry>
-              <mesh filename="package://bez2_urdf_description/meshes/${name}_hip_front.${MODEL_TYPE}" scale="0.001 0.001 0.001"/>
+              <mesh filename="package://bez2_urdf_description_4/meshes/${name}_hip_front.${MODEL_TYPE}" scale="0.001 0.001 0.001"/>
             </geometry>
             <material name="steel_satin"/>
           </visual>
           <collision>
-            <origin xyz="${(direction * 0.0652) + 0.216834} 0.252201 0.005211" rpy="0 0 0"/>
+            <origin xyz="${(direction * -0.0652) + 0.216834} 0.252201 0.005211" rpy="0 0 0"/>
             <geometry>
-              <mesh filename="package://bez2_urdf_description/meshes/${name}_hip_front.${MODEL_TYPE}" scale="0.001 0.001 0.001"/>
+              <mesh filename="package://bez2_urdf_description_4/meshes/${name}_hip_front.${MODEL_TYPE}" scale="0.001 0.001 0.001"/>
             </geometry>
           </collision>
 
@@ -48,16 +48,16 @@
             <inertia ixx="0.000121" iyy="6.9e-05" izz="0.000159" ixy="1e-06" iyz="0.0" ixz="-0.0"/>
           </inertial>
           <visual>
-            <origin xyz="${(direction * 0.0652) + 0.196534} 0.252201 -0.01556" rpy="0 0 0"/>
+            <origin xyz="${(direction * -0.0652) + 0.196534} 0.252201 -0.01556" rpy="0 0 0"/>
             <geometry>
-              <mesh filename="package://bez2_urdf_description/meshes/${name}_thigh.${MODEL_TYPE}" scale="0.001 0.001 0.001"/>
+              <mesh filename="package://bez2_urdf_description_4/meshes/${name}_thigh.${MODEL_TYPE}" scale="0.001 0.001 0.001"/>
             </geometry>
             <material name="steel_satin"/>
           </visual>
           <collision>
-            <origin xyz="${(direction * 0.0652) + 0.196534} 0.252201 -0.01556" rpy="0 0 0"/>
+            <origin xyz="${(direction * -0.0652) + 0.196534} 0.252201 -0.01556" rpy="0 0 0"/>
             <geometry>
-              <mesh filename="package://bez2_urdf_description/meshes/${name}_thigh.${MODEL_TYPE}" scale="0.001 0.001 0.001"/>
+              <mesh filename="package://bez2_urdf_description_4/meshes/${name}_thigh.${MODEL_TYPE}" scale="0.001 0.001 0.001"/>
             </geometry>
           </collision>
 
@@ -69,16 +69,16 @@
             <inertia ixx="0.00015" iyy="6.2e-05" izz="0.000176" ixy="-2e-06" iyz="2e-06" ixz="0.0"/>
           </inertial>
           <visual>
-            <origin xyz="${(direction * 0.0652) + 0.191266} 0.368201 -0.01556" rpy="0 0 0"/>
+            <origin xyz="${(direction * -0.0652) + 0.191266} 0.368201 -0.01556" rpy="0 0 0"/>
             <geometry>
-              <mesh filename="package://bez2_urdf_description/meshes/${name}_calve.${MODEL_TYPE}" scale="0.001 0.001 0.001"/>
+              <mesh filename="package://bez2_urdf_description_4/meshes/${name}_calve.${MODEL_TYPE}" scale="0.001 0.001 0.001"/>
             </geometry>
             <material name="steel_satin"/>
           </visual>
           <collision>
-            <origin xyz="${(direction * 0.0652) + 0.191266} 0.368201 -0.01556" rpy="0 0 0"/>
+            <origin xyz="${(direction * -0.0652) + 0.191266} 0.368201 -0.01556" rpy="0 0 0"/>
             <geometry>
-              <mesh filename="package://bez2_urdf_description/meshes/${name}_calve.${MODEL_TYPE}" scale="0.001 0.001 0.001"/>
+              <mesh filename="package://bez2_urdf_description_4/meshes/${name}_calve.${MODEL_TYPE}" scale="0.001 0.001 0.001"/>
             </geometry>
           </collision>
         </link>
@@ -89,36 +89,36 @@
             <inertia ixx="0.000212" iyy="0.000173" izz="0.000102" ixy="-2e-06" iyz="-1.7e-05" ixz="-1e-06"/>
           </inertial>
           <visual>
-            <origin xyz="${(direction * 0.0652) + 0.191266} 0.456201 -0.01686" rpy="0 0 0"/>
+            <origin xyz="${(direction * -0.0652) + 0.191266} 0.456201 -0.01686" rpy="0 0 0"/>
             <geometry>
-              <mesh filename="package://bez2_urdf_description/meshes/${name}_ankle.${MODEL_TYPE}" scale="0.001 0.001 0.001"/>
+              <mesh filename="package://bez2_urdf_description_4/meshes/${name}_ankle.${MODEL_TYPE}" scale="0.001 0.001 0.001"/>
             </geometry>
             <material name="steel_satin"/>
           </visual>
           <collision>
-            <origin xyz="${(direction * 0.0652) + 0.191266} 0.456201 -0.01686" rpy="0 0 0"/>
+            <origin xyz="${(direction * -0.0652) + 0.191266} 0.456201 -0.01686" rpy="0 0 0"/>
             <geometry>
-              <mesh filename="package://bez2_urdf_description/meshes/${name}_ankle.${MODEL_TYPE}" scale="0.001 0.001 0.001"/>
+              <mesh filename="package://bez2_urdf_description_4/meshes/${name}_ankle.${MODEL_TYPE}" scale="0.001 0.001 0.001"/>
             </geometry>
           </collision>
         </link>
         <link name="$(arg tf_prefix)/${name}_foot">
             <inertial>
-            <origin xyz="${direction * -0.01810728287499444} -0.01978149677877339 0.0476420980971338" rpy="0 0 0"/>
+            <origin xyz="${direction * 0.01810728287499444} -0.01978149677877339 0.0476420980971338" rpy="0 0 0"/>
             <mass value="0.37785469138016164"/>
-            <inertia ixx="0.000905" iyy="0.001142" izz="0.000247" ixy="${direction * -5e-06}" iyz="1.4e-05" ixz="${direction * 2.6e-05}"/>
+            <inertia ixx="0.000905" iyy="0.001142" izz="0.000247" ixy="${direction * 5e-06}" iyz="1.4e-05" ixz="${direction * -2.6e-05}"/>
           </inertial>
           <visual>
-            <origin xyz="${(direction * 0.0652) + 0.214766} 0.492201 0.04764" rpy="0 0 0"/>
+            <origin xyz="${(direction * -0.0652) + 0.214766} 0.492201 0.04764" rpy="0 0 0"/>
             <geometry>
-              <mesh filename="package://bez2_urdf_description/meshes/${name}_foot.${MODEL_TYPE}" scale="0.001 0.001 0.001"/>
+              <mesh filename="package://bez2_urdf_description_4/meshes/${name}_foot.${MODEL_TYPE}" scale="0.001 0.001 0.001"/>
             </geometry>
             <material name="steel_satin"/>
           </visual>
           <collision>
-            <origin xyz="${(direction * 0.0652) + 0.214766} 0.492201 0.04764" rpy="0 0 0"/>
+            <origin xyz="${(direction * -0.0652) + 0.214766} 0.492201 0.04764" rpy="0 0 0"/>
             <geometry>
-              <mesh filename="package://bez2_urdf_description/meshes/${name}_foot.${MODEL_TYPE}" scale="0.001 0.001 0.001"/>
+              <mesh filename="package://bez2_urdf_description_4/meshes/${name}_foot.${MODEL_TYPE}" scale="0.001 0.001 0.001"/>
             </geometry>
           </collision>
         </link>
@@ -126,7 +126,7 @@
         <joint name="${name}_leg_motor_0" type="revolute">
             <parent link="$(arg tf_prefix)/torso"/>
             <child link="$(arg tf_prefix)/${name}_hip_side"/>
-            <origin xyz="${-(direction * 0.0652) - 0.216834}  -0.224201 0.015289" rpy="0 0 0"/>
+            <origin xyz="${(direction * 0.0652) - 0.216834}  -0.224201 0.015289" rpy="0 0 0"/>
             <axis xyz="0 ${direction * -1} 0"/>
             <dynamics damping="${XM430_DAMPING}" friction="${XM430_FRICTION}" />
             <limit effort="${XM430_TORQUE}" lower="-1.309" upper="0.524" velocity="${XM430_VELOCITY}"/>
@@ -135,7 +135,7 @@
             <parent link="$(arg tf_prefix)/${name}_hip_side"/>
             <child link="$(arg tf_prefix)/${name}_hip_front"/>
             <origin xyz="0.0 -0.028 -0.0205" rpy="0 0 0"/>
-            <axis xyz=" 0 0 1"/>
+            <axis xyz=" 0 0 ${direction * 1}"/>
             <dynamics damping="${XM430_DAMPING}" friction="${XM430_FRICTION}" />
             <limit effort="${XM430_TORQUE}" lower="-${PI/4}" upper="${PI/2}" velocity="${XM430_VELOCITY}"/>
         </joint>
@@ -143,7 +143,7 @@
             <parent link="$(arg tf_prefix)/${name}_hip_front"/>
             <child link="$(arg tf_prefix)/${name}_thigh"/>
             <origin xyz="0.0203 0.0 0.020771" rpy="0 0 0"/>
-            <axis xyz="1.0 -0.0 -0.0"/>
+            <axis xyz="-1.0 -0.0 -0.0"/>
             <dynamics damping="${XM430_DAMPING}" friction="${XM430_FRICTION}" />
             <limit effort="${XM430_TORQUE}" lower="-${PI/4}" upper="${PI*3/4}" velocity="${XM430_VELOCITY}"/>
         </joint>
@@ -151,7 +151,7 @@
             <parent link="$(arg tf_prefix)/${name}_thigh"/>
             <child link="$(arg tf_prefix)/${name}_calve"/>
             <origin xyz="0.005268 -0.116 0.0" rpy="0 0 0"/>
-            <axis xyz="1.0 -0.0 -0.0"/>
+            <axis xyz="-1.0 -0.0 -0.0"/>
             <dynamics damping="${MX64_DAMPING}" friction="${MX64_FRICTION}" />
             <limit effort="${MX64_TORQUE}" lower="-2.793" upper="0" velocity="${MX64_VELOCITY}"/>
         </joint>
@@ -159,7 +159,7 @@
             <parent link="$(arg tf_prefix)/${name}_calve"/>
             <child link="$(arg tf_prefix)/${name}_ankle"/>
             <origin xyz="0.0 -0.088 0.0013" rpy="0 0 0"/>
-            <axis xyz="1.0 -0.0 -0.0"/>
+            <axis xyz="-1.0 -0.0 -0.0"/>
             <dynamics damping="${MX64_DAMPING}" friction="${MX64_FRICTION}" />
             <limit effort="${MX64_TORQUE}" lower="-${PI/4}" upper="${PI/2}" velocity="${MX64_VELOCITY}"/>
         </joint>
@@ -167,7 +167,7 @@
             <parent link="$(arg tf_prefix)/${name}_ankle"/>
             <child link="$(arg tf_prefix)/${name}_foot"/>
              <origin xyz="-0.0235 -0.036 -0.0645" rpy="0 0 0"/>
-            <axis xyz="0.0 0.0 1.0"/>
+            <axis xyz="0.0 0.0 ${direction * -1}"/>
             <dynamics damping="${MX64_DAMPING}" friction="${MX64_FRICTION}" />
             <limit effort="${MX64_TORQUE}" lower="-${PI/4}" upper="${PI/4}" velocity="${MX64_VELOCITY}"/>
         </joint>

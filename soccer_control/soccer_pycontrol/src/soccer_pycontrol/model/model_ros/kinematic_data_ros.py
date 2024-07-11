@@ -32,23 +32,3 @@ class KinematicDataROS(KinematicData):
             right_foot_joint_center_to_collision_box_center=right_foot_joint_center_to_collision_box_center,
             cleats_offset=cleats_offset,
         )
-        self.motor_names = self.motor_names = [
-            "left_arm_motor_0",
-            "left_arm_motor_1",
-            "right_arm_motor_0",
-            "right_arm_motor_1",
-            "right_leg_motor_0",
-            "right_leg_motor_1",
-            "right_leg_motor_2",
-            "right_leg_motor_3",
-            "right_leg_motor_4",
-            "right_leg_motor_5",
-            "left_leg_motor_0",
-            "left_leg_motor_1",
-            "left_leg_motor_2",
-            "left_leg_motor_3",
-            "left_leg_motor_4",
-            "left_leg_motor_5",
-            "head_motor_0",
-            "head_motor_1",
-        ]  # TODO fix later

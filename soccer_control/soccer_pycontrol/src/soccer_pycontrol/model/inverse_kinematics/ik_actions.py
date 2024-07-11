@@ -51,25 +51,31 @@ class IKActions:
         """
         Sets the robot's joint angles for the robot to standing pose.
         """
-
+        # TODO dont like this
         # hands
-        configuration = [0.0] * len(Joints)
-        configuration[Joints.RIGHT_ARM_1] = self.data.arm_0_center
-        configuration[Joints.LEFT_ARM_1] = self.data.arm_0_center
-        configuration[Joints.RIGHT_ARM_2] = self.data.arm_1_center
-        configuration[Joints.LEFT_ARM_2] = self.data.arm_1_center
+        configuration = [0.0] * len(self.data.motor_names)
+        # if len(self.data.motor_names) == 18:
+        #     elbow_number = '_1'
+        # else:
+        #     elbow_number = '_2'
+
+        # configuration[self.data.motor_names.index('right_arm_motor_0')] = self.data.arm_0_center
+        # configuration[self.data.motor_names.index('left_arm_motor_0')] = self.data.arm_0_center
+        # configuration[self.data.motor_names.index('right_arm_motor_2')] = 1.5
+        configuration[self.data.motor_names.index("left_arm_motor_2")] = 1.5
 
         # right leg
         # TODO revisit naming
-        thetas = self.get_right_leg_angles(np.copy(self.data.right_foot_init_position))
+        # thetas = self.get_right_leg_angles(np.copy(self.data.right_foot_init_position))
 
-        # thetas = self.inverseKinematicsRightFoot(Transformation(position=[ -0.085, -0.035, -0.29289]))
-        configuration[Links.RIGHT_LEG_1 : Links.RIGHT_LEG_6 + 1] = thetas[0:6]
-
-        # left leg
-        thetas = self.get_left_leg_angles(np.copy(self.data.left_foot_init_position))
-        configuration[Links.LEFT_LEG_1 : Links.LEFT_LEG_6 + 1] = thetas[0:6]
-
+        # # thetas = self.inverseKinematicsRightFoot(Transformation(position=[ -0.085, -0.035, -0.29289]))
+        # configuration[self.data.motor_names.index('right_leg_motor_0'):self.data.motor_names.index(
+        #     'right_leg_motor_5') + 1] = thetas[0:6]
+        #
+        # # left leg
+        # thetas = self.get_left_leg_angles(np.copy(self.data.left_foot_init_position))
+        # configuration[self.data.motor_names.index('left_leg_motor_0'):self.data.motor_names.index(
+        #     'left_leg_motor_5') + 1] = thetas[0:6]
         return np.array(configuration)
 
     # TODO Should be in separate file ?

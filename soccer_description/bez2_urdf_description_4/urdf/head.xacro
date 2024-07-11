@@ -9,14 +9,14 @@
             <visual>
                 <origin xyz="0.216834 -0.013799 -0.005989" rpy="0 0 0"/>
                 <geometry>
-                  <mesh filename="package://bez2_urdf_description/meshes/neck.${MODEL_TYPE}" scale="0.001 0.001 0.001"/>
+                  <mesh filename="package://bez2_urdf_description_4/meshes/neck.${MODEL_TYPE}" scale="0.001 0.001 0.001"/>
                 </geometry>
                 <material name="plastic_matte_yellow"/>
           </visual>
           <collision>
             <origin xyz="0.216834 -0.013799 -0.005989" rpy="0 0 0"/>
             <geometry>
-              <mesh filename="package://bez2_urdf_description/meshes/neck.${MODEL_TYPE}" scale="0.001 0.001 0.001"/>
+              <mesh filename="package://bez2_urdf_description_4/meshes/neck.${MODEL_TYPE}" scale="0.001 0.001 0.001"/>
             </geometry>
           </collision>
         </link>
@@ -29,14 +29,14 @@
             <visual>
             <origin xyz="0.236334 -0.038799 -0.005989" rpy="0 0 0"/>
             <geometry>
-              <mesh filename="package://bez2_urdf_description/meshes/head.${MODEL_TYPE}" scale="0.001 0.001 0.001"/>
+              <mesh filename="package://bez2_urdf_description_4/meshes/head.${MODEL_TYPE}" scale="0.001 0.001 0.001"/>
             </geometry>
             <material name="plastic_matte_yellow"/>
           </visual>
           <collision>
             <origin xyz="0.236334 -0.038799 -0.005989" rpy="0 0 0"/>
             <geometry>
-              <mesh filename="package://bez2_urdf_description/meshes/head.${MODEL_TYPE}" scale="0.001 0.001 0.001"/>
+              <mesh filename="package://bez2_urdf_description_4/meshes/head.${MODEL_TYPE}" scale="0.001 0.001 0.001"/>
             </geometry>
           </collision>
         </link>
