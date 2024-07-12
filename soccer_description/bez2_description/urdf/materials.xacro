@@ -4,17 +4,11 @@
 <material name="silver_default">
   <color rgba="0.700 0.700 0.700 1.000"/>
 </material>
-<material name="polymide_kapton">
-  <color rgba="0.7843137254901961 0.5568627450980392 0.027450980392156862 1.0"/>
-</material>
-<material name="plastic_glossy_black">
-  <color rgba="0.09803921568627451 0.09803921568627451 0.09803921568627451 1.0"/>
-</material>
-<material name="abs_white">
-  <color rgba="0.9647058823529412 0.9647058823529412 0.9529411764705882 1.0"/>
-</material>
 <material name="steel_satin">
   <color rgba="0.6274509803921569 0.6274509803921569 0.6274509803921569 1.0"/>
+</material>
+<material name="plastic_matte_yellow">
+  <color rgba="0.9098039215686274 0.6784313725490196 0.13725490196078433 1.0"/>
 </material>
 
 </robot>

@@ -61,8 +61,8 @@ class IKActions:
 
         configuration[self.data.motor_names.index("right_arm_motor_0")] = self.data.arm_0_center
         configuration[self.data.motor_names.index("left_arm_motor_0")] = self.data.arm_0_center
-        configuration[self.data.motor_names.index("right_arm_motor" + elbow_number)] = 1.5
-        configuration[self.data.motor_names.index("left_arm_motor" + elbow_number)] = 1.5
+        configuration[self.data.motor_names.index("right_arm_motor" + elbow_number)] = self.data.arm_1_center
+        configuration[self.data.motor_names.index("left_arm_motor" + elbow_number)] = self.data.arm_1_center
 
         # right leg
         # TODO revisit naming

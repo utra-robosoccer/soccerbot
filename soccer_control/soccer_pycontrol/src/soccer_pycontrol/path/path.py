@@ -19,6 +19,12 @@ class Path:
     Consists of a list of bezier or short path sections
     """
 
+    # with open(root_dir + "/config/topics.yaml", "r") as file:
+    #     configuration = yaml.safe_load(file)
+    #     topics = list(configuration["topics"].values())
+    #     command = f"rosbag record -O {name} "
+    #     command += " ".join(topics)
+
     def __init__(self, start_transform: Transformation, end_transform: Transformation, step_precision: float = 0.02):
         """
         Initialization function for Path, creates a single path section, other path sections are only added when the route needs

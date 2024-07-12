@@ -53,7 +53,7 @@ class TestTrajectory(unittest.TestCase):
 
 
 @pytest.mark.parametrize("trajectory_name", ["getupfront"])  # , "getupback", "rightkick"])
-@pytest.mark.parametrize("robot_model", ["bez2_urdf"])
+@pytest.mark.parametrize("robot_model", ["bez2"])
 @pytest.mark.parametrize("real_time", [True])
 def test_trajectory_sim(trajectory_name: str, robot_model: str, real_time: bool):
     """
@@ -61,11 +61,10 @@ def test_trajectory_sim(trajectory_name: str, robot_model: str, real_time: bool)
     :return: None
     """
     # TODO update with pybullet updates
-    pose = Transformation(position=[0, 0, 0.070], euler=[0, 1.57, 0])  # quaternion=[0.0, 0.707, 0.0, 0.707])
-    # if trajectory_name == "getupfront":
-    #     pose = Transformation(position=[0, 0, 0.070], euler=[0,1.57,0]) #quaternion=[0.0, 0.707, 0.0, 0.707])
-    # elif trajectory_name == "getupback":
-    #     pose = Transformation(position=[0, 0, 0.070], quaternion=[0.0, 0.707, 0.0, -0.707])
+    if trajectory_name == "getupfront":
+        pose = Transformation(position=[0, 0, 0.070], euler=[0, 1.57, 0])
+    elif trajectory_name == "getupback":
+        pose = Transformation(position=[0, 0, 0.070], euler=[0, -1.57, 0])
     # else:
     #     pose = Transformation(position=[0, 0, 0.315], quaternion=[0.0, 0.0, 0.0, 1])
 

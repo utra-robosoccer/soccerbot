@@ -16,7 +16,7 @@ class TestPybullet(unittest.TestCase):
 
     def test_bez2(self):
         world = PybulletWorld(path="", camera_yaw=90, real_time=True, rate=300)
-        bez = Bez(robot_model="bez2_urdf", fixed_base=True)
+        bez = Bez(robot_model="bez2", fixed_base=True)
         world.wait(50)
         angles = np.linspace(-np.pi, np.pi)
         # for i in range(20):
@@ -55,7 +55,7 @@ class TestPybullet(unittest.TestCase):
 
     def test_foot_step_planner_fixed_bez2(self):
         world = PybulletWorld(path="", camera_yaw=90, real_time=True, rate=100)
-        bez = Bez(robot_model="bez2_urdf", fixed_base=True)
+        bez = Bez(robot_model="bez2", fixed_base=True)
         tf = WalkEngine(world, bez)
 
         # TODO fix with torso height or start pose
@@ -70,7 +70,7 @@ class TestPybullet(unittest.TestCase):
 
     def test_foot_step_planner_fixed(self):
         world = PybulletWorld(path="", camera_yaw=0, real_time=True, rate=100)
-        bez = Bez(fixed_base=True, robot_model="bez2_urdf")  # bez2_urdf  bez1
+        bez = Bez(fixed_base=True, robot_model="bez2")  # bez2  bez1
         tf = WalkEngine(world, bez)
 
         # TODO fix with torso height or start pose
@@ -85,7 +85,7 @@ class TestPybullet(unittest.TestCase):
 
     def test_foot_step_planner_plane(self):
         world = PybulletWorld(camera_yaw=90, real_time=True, rate=100)
-        bez = Bez(robot_model="bez2_urdf")  # , pose=Transformation(euler=[0,0,-1.57/2.0]))
+        bez = Bez(robot_model="bez2")  # , pose=Transformation(euler=[0,0,-1.57/2.0])) bez1  bez2
         tf = WalkEngine(world, bez)
         tf.wait(50)
         tf.ready()
@@ -217,7 +217,7 @@ def test_sweep(sweep_name: str, h: float, robot_model: str):
 
 def test_foot_step_planner_fixed_bez2():
     world = PybulletWorld(path="", camera_yaw=0, real_time=True, rate=100)
-    bez = Bez(robot_model="bez2_urdf", fixed_base=True)  # bez1  bez2_urdf
+    bez = Bez(robot_model="bez2", fixed_base=True)  # bez1  bez2
 
     steps = 50
     x = np.zeros(steps)

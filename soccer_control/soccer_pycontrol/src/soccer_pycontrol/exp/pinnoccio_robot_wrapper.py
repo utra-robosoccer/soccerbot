@@ -20,8 +20,8 @@ VISUALIZER = MeshcatVisualizer
 # Load the URDF model with RobotWrapper
 # Conversion with str seems to be necessary when executing this file with ipython
 
-urdf_model_path = expanduser("~") + "/catkin_ws/src/soccerbot/soccer_description/bez2_urdf_description/urdf/bez2_urdf_2.urdf"
-mesh_dir = expanduser("~") + "/catkin_ws/src/soccerbot/soccer_description/bez2_urdf_description"
+urdf_model_path = expanduser("~") + "/catkin_ws/src/soccerbot/soccer_description/bez2_description/urdf/bez2_2.urdf"
+mesh_dir = expanduser("~") + "/catkin_ws/src/soccerbot/soccer_description/bez2_description"
 
 robot = RobotWrapper.BuildFromURDF(urdf_model_path, mesh_dir)
 # alias

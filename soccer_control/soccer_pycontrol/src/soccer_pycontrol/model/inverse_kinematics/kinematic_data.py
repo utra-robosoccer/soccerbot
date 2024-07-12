@@ -87,4 +87,4 @@ class KinematicData:
 
 if __name__ == "__main__":
     # k = KinematicData(robot_model="bez1")
-    k = KinematicData(robot_model="bez2_urdf")
+    k = KinematicData(robot_model="bez2")
