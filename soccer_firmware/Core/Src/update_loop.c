@@ -55,6 +55,51 @@ void update()
   }
 }
 
+void set_robot_motor_limits() {
+	// position limits 0 - 4095 (1 rotation)
+	// min position address => 48
+	// max position address => 52
+
+	// use index as motorID!!
+	//                     0	   1     2	 3	 4	   5	 6	   7	 8	   9	 10	   11	 12	   13	 14	   15	 16	 17	 18	 19
+	uint32_t minLimits[20] = {1510, 1050, 0,  0,  1213, 1536, 655,  760,  1610, 1825, 1100, 1550, 1720, 2057, 920,  1870, 0,  0,  0,  0};
+	uint32_t maxLimits[20] = {0,    3100, 0,  0,  3155, 2569, 2373, 2070, 3160, 2260, 3060, 2550, 3560, 3300, 2580, 2245, 0,  0,  0,  0};
+
+	for (uint16_t i = 0; i < 6; i++) {// reset variables
+	    motorPorts[i]->currMotor = 0;
+	  }
+
+	while(1)
+	  {
+	    bool doneWithAllMotors = true;
+	    for (uint16_t i = 0; i < 6; i++)
+	    {
+	      uint8_t idx = motorPorts[i]->currMotor;
+	      uint8_t motorId = motorPorts[i]->motorIds[idx];
+//	      uint8_t protocol = motorPorts[i]->protocol[idx];
+
+	      if (idx >= motorPorts[i]->numMotors){ // skip port if all motors already serviced
+	        continue;
+	      } else {
+	        doneWithAllMotors = false;
+	      }
+
+	      // angle format depends on how Python script. Bit wise OR
+//	      uint16_t angle = usbRxBuffer[2 + motorId * 2] | (usbRxBuffer[2 + motorId * 2 + 1] << 8);
+
+	      write_min_position_limit_p2(motorPorts[i], motorId, minLimits[motorId]);
+	      write_max_position_limit_p2(motorPorts[i], motorId, maxLimits[motorId]);
+
+	      motorPorts[i]->currMotor = idx + 1;
+	    }
+
+	    HAL_Delay(1); // delay enough for motors to have time to respond
+
+	    if(doneWithAllMotors) return; // all motors serviced, peace out
+	  }
+
+}
+
 /*
  * Send commands in parallel on all ports to reduce latency
  * Keep sending angles until all motors have been commanded
