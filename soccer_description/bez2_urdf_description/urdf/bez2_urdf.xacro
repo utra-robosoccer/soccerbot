@@ -17,11 +17,11 @@
     </geometry>
     <material name="steel_satin"/>
   </visual>
-  <collision>
-    <origin xyz="0 0 0" rpy="0 0 0"/>
-    <geometry>
-      <mesh filename="package://bez2_urdf_description/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
-    </geometry>
+  <collision name="collision">
+      <origin rpy="0.00000 0.00000 0.00000" xyz="0.00154 0.00254 -0.07057"/>
+      <geometry>
+        <box size="0.14440 0.20843 0.19912"/>
+      </geometry>
   </collision>
 </link>
 <link name="neck">
@@ -38,10 +38,10 @@
     <material name="plastic_matte_yellow"/>
   </visual>
   <collision>
-    <origin xyz="-0.009539 -0.002537 -0.03138" rpy="0 0 0"/>
-    <geometry>
-      <mesh filename="package://bez2_urdf_description/meshes/Head_Yaw_Assembly_v1_1.stl" scale="0.001 0.001 0.001"/>
-    </geometry>
+    <origin rpy="0.00000 0.00000 0.00000" xyz="0.00000 0.00000 0.01900"/>
+      <geometry>
+        <box size="0.02200 0.05100 0.03800"/>
+      </geometry>
   </collision>
 </link>
 <link name="head">
@@ -58,10 +58,10 @@
     <material name="plastic_matte_yellow"/>
   </visual>
   <collision>
-    <origin xyz="-0.009539 0.016963 -0.05638" rpy="0 0 0"/>
-    <geometry>
-      <mesh filename="package://bez2_urdf_description/meshes/Head_Pitch_Assembly_v4_1.stl" scale="0.001 0.001 0.001"/>
-    </geometry>
+    <origin rpy="0.00000 0.00000 0.00000" xyz="-0.00950 0.01920 0.02340"/>
+      <geometry>
+        <box size="0.07120 0.09400 0.07530"/>
+      </geometry>
   </collision>
 </link>
 <link name="left_shoulder">
@@ -78,10 +78,10 @@
     <material name="steel_satin"/>
   </visual>
   <collision>
-    <origin xyz="-0.006539 -0.112237 0.00062" rpy="0 0 0"/>
-    <geometry>
-      <mesh filename="package://bez2_urdf_description/meshes/left_shoulder_v1_1.stl" scale="0.001 0.001 0.001"/>
-    </geometry>
+    <origin rpy="0.00000 0.00000 0.00000" xyz="0.00155 0.02365 -0.00750"/>
+      <geometry>
+        <box size="0.04360 0.04730 0.05100"/>
+      </geometry>
   </collision>
 </link>
 <link name="left_bicep">
@@ -98,10 +98,10 @@
     <material name="steel_satin"/>
   </visual>
   <collision>
-    <origin xyz="-0.027039 -0.141737 0.02162" rpy="0 0 0"/>
-    <geometry>
-      <mesh filename="package://bez2_urdf_description/meshes/bicep_v1_1.stl" scale="0.001 0.001 0.001"/>
-    </geometry>
+    <origin rpy="0.00000 0.00000 0.00000" xyz="-0.02000 0.00127 -0.04274"/>
+      <geometry>
+        <box size="0.05000 0.04703 0.11202"/>
+      </geometry>
   </collision>
 </link>
 <link name="left_forearm">
@@ -118,10 +118,10 @@
     <material name="plastic_matte_yellow"/>
   </visual>
   <collision>
-    <origin xyz="-0.008351 -0.163675 0.10837" rpy="0 0 0"/>
-    <geometry>
-      <mesh filename="package://bez2_urdf_description/meshes/Bez1_forearm_v7_1.stl" scale="0.001 0.001 0.001"/>
-    </geometry>
+    <origin rpy="0.00000 0.00000 0.00000" xyz="-0.01200 -0.02050 -0.08119"/>
+      <geometry>
+        <box size="0.04800 0.05300 0.18838"/>
+      </geometry>
   </collision>
 </link>
 
@@ -139,10 +139,10 @@
     <material name="steel_satin"/>
   </visual>
   <collision>
-    <origin xyz="-0.018839 -0.067737 0.20662" rpy="0 0 0"/>
-    <geometry>
-      <mesh filename="package://bez2_urdf_description/meshes/fr12_h101_v1_2.stl" scale="0.001 0.001 0.001"/>
-    </geometry>
+    <origin rpy="0.00000 0.00000 0.00000" xyz="0.00000 0.00000 -0.01525"/>
+      <geometry>
+        <box size="0.04100 0.02400 0.03050"/>
+      </geometry>
   </collision>
 </link>
 <link name="left_hip_front">
@@ -159,10 +159,10 @@
   <material name="steel_satin"/>
 </visual>
 <collision>
-  <origin xyz="0.001661 -0.067737 0.23462" rpy="0 0 0"/>
-  <geometry>
-    <mesh filename="package://bez2_urdf_description/meshes/hip_v1_1.stl" scale="0.001 0.001 0.001"/>
-  </geometry>
+  <origin rpy="0.00000 0.00000 0.00000" xyz="-0.00199 0.00180 -0.01200"/>
+      <geometry>
+        <box size="0.07402 0.04100 0.04650"/>
+      </geometry>
 </collision>
 </link>
 <link name="left_thigh">
@@ -179,10 +179,10 @@
     <material name="steel_satin"/>
   </visual>
   <collision>
-    <origin xyz="-0.01911 -0.088037 0.23462" rpy="0 0 0"/>
-    <geometry>
-      <mesh filename="package://bez2_urdf_description/meshes/thigh_v1_1.stl" scale="0.001 0.001 0.001"/>
-    </geometry>
+    <origin rpy="0.00000 0.00000 0.00000" xyz="0.00000 -0.01823 -0.05825"/>
+      <geometry>
+        <box size="0.03300 0.05100 0.12150"/>
+      </geometry>
   </collision>
 </link>
 <link name="left_calve">
@@ -199,10 +199,10 @@
     <material name="steel_satin"/>
   </visual>
   <collision>
-    <origin xyz="-0.01911 -0.093306 0.35062" rpy="0 0 0"/>
-    <geometry>
-      <mesh filename="package://bez2_urdf_description/meshes/calf_v1_1.stl" scale="0.001 0.001 0.001"/>
-    </geometry>
+    <origin rpy="0.00000 0.00000 0.00000" xyz="-0.00005 -0.02225 -0.03850"/>
+      <geometry>
+        <box size="0.04030 0.05350 0.10500"/>
+      </geometry>
   </collision>
 </link>
 <link name="left_ankle">
@@ -219,10 +219,10 @@
     <material name="steel_satin"/>
   </visual>
   <collision>
-    <origin xyz="-0.02041 -0.093306 0.43862" rpy="0 0 0"/>
-    <geometry>
-      <mesh filename="package://bez2_urdf_description/meshes/ankle_v2_1.stl" scale="0.001 0.001 0.001"/>
-    </geometry>
+    <origin rpy="0.00000 0.00000 0.00000" xyz="-0.02445 -0.02050 -0.01800"/>
+      <geometry>
+        <box size="0.08910 0.05000 0.06398"/>
+      </geometry>
   </collision>
 </link>
 <link name="left_foot">
@@ -239,10 +239,10 @@
     <material name="steel_satin"/>
   </visual>
   <collision>
-    <origin xyz="0.04409 -0.069806 0.47462" rpy="0 0 0"/>
-    <geometry>
-      <mesh filename="package://bez2_urdf_description/meshes/left_foot_v2_1.stl" scale="0.001 0.001 0.001"/>
-    </geometry>
+    <origin rpy="0.00000 0.00000 0.00000" xyz="0.05150 0.01936 -0.00550"/>
+      <geometry>
+        <box size="0.17000 0.09000 0.03300"/>
+      </geometry>
   </collision>
 </link>
 
@@ -260,10 +260,10 @@
     <material name="steel_satin"/>
   </visual>
   <collision>
-    <origin xyz="-0.018839 0.062663 0.20662" rpy="0 0 0"/>
-    <geometry>
-      <mesh filename="package://bez2_urdf_description/meshes/fr12_h101_v1_1.stl" scale="0.001 0.001 0.001"/>
-    </geometry>
+    <origin rpy="0.00000 0.00000 0.00000" xyz="0.00000 0.00000 -0.01525"/>
+      <geometry>
+        <box size="0.04100 0.02400 0.03050"/>
+      </geometry>
   </collision>
 </link>
 <link name="right_hip_front">
@@ -280,10 +280,10 @@
     <material name="steel_satin"/>
   </visual>
   <collision>
-    <origin xyz="0.001661 0.062663 0.23462" rpy="0 0 0"/>
-    <geometry>
-      <mesh filename="package://bez2_urdf_description/meshes/hip_v1_2.stl" scale="0.001 0.001 0.001"/>
-    </geometry>
+    <origin rpy="0.00000 0.00000 0.00000" xyz="-0.00199 0.00180 -0.01200"/>
+      <geometry>
+        <box size="0.07402 0.04100 0.04650"/>
+      </geometry>
   </collision>
 </link>
 <link name="right_thigh">
@@ -300,10 +300,10 @@
     <material name="steel_satin"/>
   </visual>
   <collision>
-    <origin xyz="-0.01911 0.042363 0.23462" rpy="0 0 0"/>
-    <geometry>
-      <mesh filename="package://bez2_urdf_description/meshes/thigh_v1_2.stl" scale="0.001 0.001 0.001"/>
-    </geometry>
+    <origin rpy="0.00000 0.00000 0.00000" xyz="0.00000 -0.01823 -0.05825"/>
+      <geometry>
+        <box size="0.03300 0.05100 0.12150"/>
+      </geometry>
   </collision>
 </link>
 <link name="right_calve">
@@ -320,10 +320,10 @@
     <material name="steel_satin"/>
   </visual>
   <collision>
-    <origin xyz="-0.01911 0.037094 0.35062" rpy="0 0 0"/>
-    <geometry>
-      <mesh filename="package://bez2_urdf_description/meshes/calf_v1_2.stl" scale="0.001 0.001 0.001"/>
-    </geometry>
+    <origin rpy="0.00000 0.00000 0.00000" xyz="-0.00005 -0.02225 -0.03850"/>
+      <geometry>
+        <box size="0.04030 0.05350 0.10500"/>
+      </geometry>
   </collision>
 </link>
 <link name="right_ankle">
@@ -340,10 +340,10 @@
     <material name="steel_satin"/>
   </visual>
   <collision>
-    <origin xyz="-0.02041 0.037094 0.43862" rpy="0 0 0"/>
-    <geometry>
-      <mesh filename="package://bez2_urdf_description/meshes/ankle_v2_2.stl" scale="0.001 0.001 0.001"/>
-    </geometry>
+    <origin rpy="0.00000 0.00000 0.00000" xyz="-0.02445 -0.02050 -0.01800"/>
+      <geometry>
+        <box size="0.08910 0.05000 0.06398"/>
+      </geometry>
   </collision>
 </link>
 <link name="right_foot">
@@ -360,10 +360,10 @@
     <material name="steel_satin"/>
   </visual>
   <collision>
-    <origin xyz="0.04409 0.060594 0.47462" rpy="0 0 0"/>
-    <geometry>
-      <mesh filename="package://bez2_urdf_description/meshes/right_foot_v2_1.stl" scale="0.001 0.001 0.001"/>
-    </geometry>
+    <origin rpy="0.00000 0.00000 0.00000" xyz="0.05150 -0.01936 -0.00550"/>
+      <geometry>
+        <box size="0.17000 0.09000 0.03300"/>
+      </geometry>
   </collision>
 </link>
 
@@ -381,10 +381,10 @@
     <material name="steel_satin"/>
   </visual>
   <collision>
-    <origin xyz="-0.006539 0.107163 0.00062" rpy="0 0 0"/>
-    <geometry>
-      <mesh filename="package://bez2_urdf_description/meshes/right_shoulder_v2_1.stl" scale="0.001 0.001 0.001"/>
-    </geometry>
+    <origin rpy="0.00000 0.00000 0.00000" xyz="0.00168 -0.02365 -0.00750"/>
+      <geometry>
+        <box size="0.04435 0.04730 0.05100"/>
+      </geometry>
   </collision>
 </link>
 <link name="right_bicep">
@@ -401,10 +401,10 @@
     <material name="steel_satin"/>
   </visual>
   <collision>
-    <origin xyz="-0.027539 0.136663 0.02162" rpy="0 0 0"/>
-    <geometry>
-      <mesh filename="package://bez2_urdf_description/meshes/bicep_v1_2.stl" scale="0.001 0.001 0.001"/>
-    </geometry>
+    <origin rpy="0.00000 0.00000 0.00000" xyz="-0.02000 -0.00127 -0.04274"/>
+      <geometry>
+        <box size="0.05000 0.04703 0.11202"/>
+      </geometry>
   </collision>
 </link>
 <link name="right_forearm">
@@ -421,10 +421,10 @@
     <material name="plastic_matte_yellow"/>
   </visual>
   <collision>
-    <origin xyz="-0.006227 0.1586 0.10837" rpy="0 0 0"/>
-    <geometry>
-      <mesh filename="package://bez2_urdf_description/meshes/Bez1_forearm_v7_2.stl" scale="0.001 0.001 0.001"/>
-    </geometry>
+    <origin rpy="0.00000 0.00000 0.00000" xyz="-0.01200 0.02050 -0.08119"/>
+      <geometry>
+        <box size="0.04800 0.05300 0.18838"/>
+      </geometry>
   </collision>
 </link>
 

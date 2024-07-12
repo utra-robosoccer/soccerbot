@@ -72,7 +72,7 @@ class WalkEngine:
 
                     self.bez.find_joint_angles(torso_to_right_foot, torso_to_left_foot)
 
-                    self.stabilize_walk(pitch, roll)
+                    # self.stabilize_walk(pitch, roll)
 
                     self.bez.motor_control.set_motor()
                     self.step_planner.current_step_time = self.step_planner.current_step_time + self.step_planner.robot_path.step_precision

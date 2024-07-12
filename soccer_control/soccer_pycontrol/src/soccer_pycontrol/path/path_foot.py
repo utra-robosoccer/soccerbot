@@ -41,7 +41,7 @@ class PathFoot(Path):
         half_to_full_step_time_ratio: float = 0.7,
         pre_footstep_ratio: float = 0.15,
         post_footstep_ratio: float = 0.25,
-        foot_separation: float = 0.044,
+        foot_separation: float = 0.064,
         step_height: float = 0.065,
         step_outwardness: float = 0.015,
         step_rotation: float = 0.05,

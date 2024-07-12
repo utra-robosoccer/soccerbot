@@ -88,3 +88,7 @@ print('Tensor c = ' + str(c))
 import torchvision
 print(torchvision.__version__)
 ```
+
+sudo snap install blender --channel=3.3lts/stable --classic
+https://github.com/dfki-ric/phobos/releases/tag/2.0.0
+https://github.com/dfki-ric/phobos/commit/757d7b58b41240ea4aa54e20ddd1665072e6da21

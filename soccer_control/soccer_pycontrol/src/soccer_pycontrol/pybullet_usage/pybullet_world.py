@@ -38,7 +38,7 @@ class PybulletWorld:
             self.client_id = pb.connect(pb.DIRECT)
 
         pb.setAdditionalSearchPath(pybullet_data.getDataPath())  # optionally
-        pb.resetDebugVisualizerCamera(cameraDistance=1.0, cameraYaw=camera_yaw, cameraPitch=0, cameraTargetPosition=[0, 0, 0.25])
+        pb.resetDebugVisualizerCamera(cameraDistance=1.0, cameraYaw=camera_yaw, cameraPitch=0, cameraTargetPosition=[0, 0, 0.45])
         pb.setGravity(0, 0, -9.81)
         pb.configureDebugVisualizer(pb.COV_ENABLE_GUI, 0)
 

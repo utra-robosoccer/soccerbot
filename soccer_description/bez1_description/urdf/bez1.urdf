@@ -46,7 +46,7 @@
     <visual name="visual">
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="../bez1_description/meshes/torso.dae" scale="1 1 1"/>
+        <mesh filename="package://bez1_description/meshes/torso.dae" scale="1 1 1"/>
       </geometry>
       <material name="black"/>
     </visual>
@@ -66,7 +66,7 @@
     <visual name="visual">
       <origin rpy="0  0  0" xyz="0  0  0"/>
       <geometry>
-        <mesh filename="../bez1_description/meshes/neck.dae" scale="1 1 1"/>
+        <mesh filename="package://bez1_description/meshes/neck.dae" scale="1 1 1"/>
       </geometry>
       <material name="silver"/>
     </visual>
@@ -86,7 +86,7 @@
     <visual name="visual">
       <origin rpy="0  0  0" xyz="0  0  0"/>
       <geometry>
-        <mesh filename="../bez1_description/meshes/head.dae" scale="1 1 1"/>
+        <mesh filename="package://bez1_description/meshes/head.dae" scale="1 1 1"/>
       </geometry>
       <material name="silver"/>
     </visual>
@@ -154,7 +154,7 @@
     <visual name="visual">
       <origin rpy="0  0  0" xyz="0  0  0"/>
       <geometry>
-        <mesh filename="../bez1_description/meshes/left_bicep.dae" scale="1 1 1"/>
+        <mesh filename="package://bez1_description/meshes/left_bicep.dae" scale="1 1 1"/>
       </geometry>
       <material name="white"/>
     </visual>
@@ -174,7 +174,7 @@
     <visual name="visual">
       <origin rpy="0  0  0" xyz="0  0  0"/>
       <geometry>
-        <mesh filename="../bez1_description/meshes/left_forearm.dae" scale="1 1 1"/>
+        <mesh filename="package://bez1_description/meshes/left_forearm.dae" scale="1 1 1"/>
       </geometry>
       <material name="purple"/>
     </visual>
@@ -246,7 +246,7 @@
     <visual name="visual">
       <origin rpy="0  0  0" xyz="0  0  0"/>
       <geometry>
-        <mesh filename="../bez1_description/meshes/left_hip_side.dae" scale="1 1 1"/>
+        <mesh filename="package://bez1_description/meshes/left_hip_side.dae" scale="1 1 1"/>
       </geometry>
       <material name="cyan"/>
     </visual>
@@ -266,7 +266,7 @@
     <visual name="visual">
       <origin rpy="0  0  0" xyz="0  0  0"/>
       <geometry>
-        <mesh filename="../bez1_description/meshes/left_hip_front.dae" scale="1 1 1"/>
+        <mesh filename="package://bez1_description/meshes/left_hip_front.dae" scale="1 1 1"/>
       </geometry>
       <material name="blue"/>
     </visual>
@@ -286,7 +286,7 @@
     <visual name="visual">
       <origin rpy="0  0  0" xyz="0  0  0"/>
       <geometry>
-        <mesh filename="../bez1_description/meshes/left_thigh.dae" scale="1 1 1"/>
+        <mesh filename="package://bez1_description/meshes/left_thigh.dae" scale="1 1 1"/>
       </geometry>
       <material name="red"/>
     </visual>
@@ -306,7 +306,7 @@
     <visual name="visual">
       <origin rpy="0 0 0" xyz="0 0 -0.0827"/>
       <geometry>
-        <mesh filename="../bez1_description/meshes/left_calve.dae" scale="1 1 1"/>
+        <mesh filename="package://bez1_description/meshes/left_calve.dae" scale="1 1 1"/>
       </geometry>
       <material name="yellow"/>
     </visual>
@@ -326,7 +326,7 @@
     <visual name="visual">
       <origin rpy="0 0 0" xyz="0  0  0"/>
       <geometry>
-        <mesh filename="../bez1_description/meshes/left_ankle.dae" scale="1 1 1"/>
+        <mesh filename="package://bez1_description/meshes/left_ankle.dae" scale="1 1 1"/>
       </geometry>
       <material name="purple"/>
     </visual>
@@ -347,7 +347,7 @@
     <visual name="visual">
       <origin rpy="0  0  0" xyz="0  0  0"/>
       <geometry>
-        <mesh filename="../bez1_description/meshes/left_foot.dae" scale="1 1 1"/>
+        <mesh filename="package://bez1_description/meshes/left_foot.dae" scale="1 1 1"/>
       </geometry>
       <material name="green"/>
     </visual>
@@ -509,7 +509,7 @@
     <visual name="visual">
       <origin rpy="0  0  0" xyz="0  0  0"/>
       <geometry>
-        <mesh filename="../bez1_description/meshes/right_bicep.dae" scale="1 1 1"/>
+        <mesh filename="package://bez1_description/meshes/right_bicep.dae" scale="1 1 1"/>
       </geometry>
       <material name="white"/>
     </visual>
@@ -529,7 +529,7 @@
     <visual name="visual">
       <origin rpy="0  0  0" xyz="0  0  0"/>
       <geometry>
-        <mesh filename="../bez1_description/meshes/right_forearm.dae" scale="1 1 1"/>
+        <mesh filename="package://bez1_description/meshes/right_forearm.dae" scale="1 1 1"/>
       </geometry>
       <material name="purple"/>
     </visual>
@@ -601,7 +601,7 @@
     <visual name="visual">
       <origin rpy="0  0  0" xyz="0  0  0"/>
       <geometry>
-        <mesh filename="../bez1_description/meshes/right_hip_side.dae" scale="1 1 1"/>
+        <mesh filename="package://bez1_description/meshes/right_hip_side.dae" scale="1 1 1"/>
       </geometry>
       <material name="cyan"/>
     </visual>
@@ -621,7 +621,7 @@
     <visual name="visual">
       <origin rpy="0  0  0" xyz="0  0  0"/>
       <geometry>
-        <mesh filename="../bez1_description/meshes/right_hip_front.dae" scale="1 1 1"/>
+        <mesh filename="package://bez1_description/meshes/right_hip_front.dae" scale="1 1 1"/>
       </geometry>
       <material name="blue"/>
     </visual>
@@ -641,7 +641,7 @@
     <visual name="visual">
       <origin rpy="0  0  0" xyz="0  0  0"/>
       <geometry>
-        <mesh filename="../bez1_description/meshes/right_thigh.dae" scale="1 1 1"/>
+        <mesh filename="package://bez1_description/meshes/right_thigh.dae" scale="1 1 1"/>
       </geometry>
       <material name="red"/>
     </visual>
@@ -661,7 +661,7 @@
     <visual name="visual">
       <origin rpy="0 0 0" xyz="0 0 -0.0827"/>
       <geometry>
-        <mesh filename="../bez1_description/meshes/right_calve.dae" scale="1 1 1"/>
+        <mesh filename="package://bez1_description/meshes/right_calve.dae" scale="1 1 1"/>
       </geometry>
       <material name="yellow"/>
     </visual>
@@ -681,7 +681,7 @@
     <visual name="visual">
       <origin rpy="0 0 0" xyz="0  0  0"/>
       <geometry>
-        <mesh filename="../bez1_description/meshes/right_ankle.dae" scale="1 1 1"/>
+        <mesh filename="package://bez1_description/meshes/right_ankle.dae" scale="1 1 1"/>
       </geometry>
       <material name="purple"/>
     </visual>
@@ -702,7 +702,7 @@
     <visual name="visual">
       <origin rpy="0  0  0" xyz="0  0  0"/>
       <geometry>
-        <mesh filename="../bez1_description/meshes/right_foot.dae" scale="1 1 1"/>
+        <mesh filename="package://bez1_description/meshes/right_foot.dae" scale="1 1 1"/>
       </geometry>
       <material name="green"/>
     </visual>

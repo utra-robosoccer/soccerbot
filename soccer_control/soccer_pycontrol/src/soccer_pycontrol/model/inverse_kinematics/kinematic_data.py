@@ -38,11 +38,11 @@ class KinematicData:
             x_offset = 0.0
         self.thigh_length = np.linalg.norm(motor_offsets["right_leg_motor_2"] - motor_offsets["right_leg_motor_3"])
         self.tibia_length = np.linalg.norm(motor_offsets["right_leg_motor_3"] - motor_offsets["right_leg_motor_4"])
-        self.torso_to_right_hip = Transformation(position=(motor_offsets["right_leg_motor_0"] + [x_offset, 0, 0]), euler=[0, 0, 0])
+        self.torso_to_right_hip = Transformation(position=(motor_offsets["right_leg_motor_0"] + [x_offset / 4, 0, 0]), euler=[0, 0, 0])
         self.right_hip_to_left_hip = Transformation(position=(motor_offsets["right_leg_motor_0"] - motor_offsets["left_leg_motor_0"]))
 
-        self.right_foot_init_position = Transformation(position=(motor_offsets["right_leg_motor_5"]))
-        self.left_foot_init_position = Transformation(position=(motor_offsets["left_leg_motor_5"]))
+        self.right_foot_init_position = Transformation(position=(motor_offsets["right_leg_motor_5"] - [x_offset, 0, 0]))
+        self.left_foot_init_position = Transformation(position=(motor_offsets["left_leg_motor_5"] - [x_offset, 0, 0]))
 
         #: Height of the robot's torso (center between two arms) while walking
         self.walking_torso_height = walking_torso_height

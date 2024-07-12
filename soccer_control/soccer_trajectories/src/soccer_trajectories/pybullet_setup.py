@@ -24,7 +24,7 @@ class PybulletSetup:
         self.display = display
         self.real_time = real_time
 
-        self.ramp = PybulletWorld("plane.urdf", (0, 0, 0), (0, 0, 0), lateral_friction=0.9, spinning_friction=0.9, rolling_friction=0.0)
+        self.ramp = PybulletWorld("plane.urdf", (0, 0, 0), (0, 0, 0), lateral_friction=0.9, spinning_friction=0.9, rolling_friction=0.0, camera_yaw=0)
         home = expanduser("~")
         self.body = pb.loadURDF(
             home + f"/catkin_ws/src/soccerbot/soccer_description/{robot_model}_description/urdf/{robot_model}.urdf",
@@ -35,6 +35,10 @@ class PybulletSetup:
         )
 
         self.motor_names = [pb.getJointInfo(self.body, i)[1].decode("utf-8") for i in range(20)]
+        self.max_forces = []
+
+        for i in range(0, 20):
+            self.max_forces.append(pb.getJointInfo(self.body, i)[10] or 6)  # TODO why is this acting so weird
 
     def wait(self, steps) -> None:
         """
@@ -56,6 +60,7 @@ class PybulletSetup:
             controlMode=pb.POSITION_CONTROL,
             jointIndices=list(range(0, 20, 1)),
             targetPositions=target,
+            forces=self.max_forces,
         )
 
 

@@ -47,8 +47,9 @@ class LoadModel:  # TODO Maybe rename to body
         :param pose: 3D position in pybullet
         """
         self.pose = self.set_walking_torso_height(pose)
+        self.pose.position = (self.pose.position[0], self.pose.position[1], self.walking_torso_height + 0.03)
 
         [y, _, _] = pose.orientation_euler
-        self.pose.orientation_euler = [y, 0, 0]
+        self.pose.orientation_euler = [y, 0, -0.64]  # TODO need to fix this
         if pb.isConnected():
             pb.resetBasePositionAndOrientation(self.body, self.pose.position, self.pose.quaternion)

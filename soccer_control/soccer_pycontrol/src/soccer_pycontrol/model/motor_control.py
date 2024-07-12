@@ -21,7 +21,7 @@ class MotorControl:
         self.max_forces = []
 
         for i in range(0, self.numb_of_motors):
-            self.max_forces.append(6)  # pb.getJointInfo(self.body, i)[10] or 6) # TODO why is this acting so weird
+            self.max_forces.append(pb.getJointInfo(self.body, i)[10] or 6)  # TODO why is this acting so weird
 
         self.set_motor()
 
@@ -40,7 +40,7 @@ class MotorControl:
             controlMode=pb.POSITION_CONTROL,
             jointIndices=list(range(0, self.numb_of_motors, 1)),
             targetPositions=self.get_angles(),
-            # forces=self.max_forces,
+            forces=self.max_forces,
         )
 
     def set_target_angles(self, target_angles: np.ndarray) -> None:
