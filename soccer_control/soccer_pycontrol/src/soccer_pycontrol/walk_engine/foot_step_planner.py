@@ -19,7 +19,7 @@ class FootStepPlanner:
         use_calibration: bool = False,
         torso_offset_pitch: float = 0.0,
         torso_offset_x: float = 0.0,
-        walking_torso_height: float = 0.315,
+        walking_torso_height: float = 0.40,
         foot_center_to_floor: float = 0.0221,
     ):
         self.robot_path: Union[PathRobot, None] = None

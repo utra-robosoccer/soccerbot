@@ -23,6 +23,7 @@ class TestPybullet(unittest.TestCase):
 
         for j in angles:
             x = [0.0] * 20
+
             x[bez.data.motor_names.index("left_arm_motor_2")] = j
             x[bez.data.motor_names.index("right_arm_motor_2")] = j
             print(j)
@@ -66,27 +67,31 @@ class TestPybullet(unittest.TestCase):
         tf.wait(100)
 
     def test_foot_step_planner_fixed(self):
-        world = PybulletWorld(path="", camera_yaw=90, real_time=True, rate=100)
-        bez = Bez(fixed_base=True)
+        world = PybulletWorld(path="", camera_yaw=0, real_time=True, rate=100)
+        bez = Bez(fixed_base=True, robot_model="bez2_urdf")  # bez2_urdf  bez1
         tf = WalkEngine(world, bez)
 
         # TODO fix with torso height or start pose
         tf.wait(50)
         tf.ready()
+        bez.motor_control.set_motor()
+        world.wait_motor()
         tf.wait(50)
         tf.set_goal(Transformation([1, 0, 0], [0, 0, 0, 1]))
         tf.walk()
-        tf.wait(100)
+        tf.wait(1000)
 
     def test_foot_step_planner_plane(self):
         world = PybulletWorld(camera_yaw=90, real_time=True, rate=100)
-        bez = Bez()
+        bez = Bez(robot_model="bez2_urdf")
         tf = WalkEngine(world, bez)
         tf.wait(50)
         tf.ready()
+        bez.motor_control.set_motor()
+        world.wait_motor()
         tf.wait(50)
-        tf.set_goal(Transformation([1, 0, 0], [0, 0, 0, 1]))
-        tf.walk()
+        # tf.set_goal(Transformation([1, 0, 0], [0, 0, 0, 1]))
+        # tf.walk()
         tf.wait(100)
 
     def test_walk_backward(self):
@@ -209,22 +214,23 @@ def test_sweep(sweep_name: str, h: float, robot_model: str):
 
 
 def test_foot_step_planner_fixed_bez2():
-    world = PybulletWorld(path="", camera_yaw=90, real_time=True, rate=100)
+    world = PybulletWorld(path="", camera_yaw=0, real_time=True, rate=100)
     bez = Bez(robot_model="bez2_urdf", fixed_base=True)  # bez1  bez2_urdf
 
     steps = 50
     x = np.zeros(steps)
-    world.wait(100)
+    world.wait(50)
     bez.ready()
-    # bez.motor_control.set_motor()
+    bez.motor_control.set_motor()
     world.wait_motor()
-    # def sweep(target_pose: np.ndarray, step: int) -> None:
-    #     for i in range(step):
-    #         bez.motor_control.set_right_leg_target_angles(target_pose[i][0:6])
-    #         bez.motor_control.set_motor()
-    #         world.wait_motor()
-    #
-    # x, _, _ = bez.ik_actions.z_sweep()
+
+    def sweep(target_pose: np.ndarray, step: int) -> None:
+        for i in range(step):
+            bez.motor_control.set_right_leg_target_angles(target_pose[i][0:6])
+            bez.motor_control.set_motor()
+            world.wait_motor()
+
+    x, _, _ = bez.ik_actions.z_sweep()
     #
     # sweep(x, steps)
     world.wait(1000)

@@ -22,7 +22,7 @@ class Sensors:
 
         :return: The 3D pose of the robot
         """
-        [position, quaternion] = pb.getLinkState(self.body, linkIndex=Links.LEFT_LEG_6)[4:6]
+        [position, quaternion] = pb.getLinkState(self.body, linkIndex=Links.LEFT_LEG_6)[4:6]  # TODO double check
         return Transformation(position=position, quaternion=quaternion)
 
     def get_imu(self) -> Transformation:
@@ -35,7 +35,7 @@ class Sensors:
         # TODO add unit test with rotation
 
         # 6:8 for linear and angular velocity this gets the imu link position and orientation
-        [pos, orientation] = pb.getLinkState(self.body, linkIndex=Links.IMU, computeLinkVelocity=1)[4:6]
+        [pos, orientation] = pb.getLinkState(self.body, linkIndex=18, computeLinkVelocity=1)[4:6]  # TODO double check
 
         return Transformation(pos, orientation)
 

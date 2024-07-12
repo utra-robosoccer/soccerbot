@@ -16,7 +16,7 @@ class KinematicData:
         robot_model: str = "bez1",
         arm_0_center: float = -0.45,
         arm_1_center: float = np.pi * 0.8,
-        walking_torso_height: float = 0.315,
+        walking_torso_height: float = 0.40,
         ready_pitch_correction: Transformation = Transformation([0, 0, 0], euler=[0, 0, 0]),
         torso_offset_x_ready: float = 0.0,
         foot_box: list = (0.09, 0.07, 0.01474),
@@ -32,14 +32,17 @@ class KinematicData:
 
         self.arm_0_center = arm_0_center
         self.arm_1_center = arm_1_center
-
+        if len(self.motor_names) == 20:
+            x_offset = -0.06409
+        else:
+            x_offset = 0.0
         self.thigh_length = np.linalg.norm(motor_offsets["right_leg_motor_2"] - motor_offsets["right_leg_motor_3"])
         self.tibia_length = np.linalg.norm(motor_offsets["right_leg_motor_3"] - motor_offsets["right_leg_motor_4"])
-        self.torso_to_right_hip = Transformation(position=motor_offsets["right_leg_motor_0"])
+        self.torso_to_right_hip = Transformation(position=(motor_offsets["right_leg_motor_0"] + [x_offset, 0, 0]), euler=[0, 0, 0])
         self.right_hip_to_left_hip = Transformation(position=(motor_offsets["right_leg_motor_0"] - motor_offsets["left_leg_motor_0"]))
 
-        self.right_foot_init_position = Transformation(position=motor_offsets["right_leg_motor_5"])
-        self.left_foot_init_position = Transformation(position=motor_offsets["left_leg_motor_5"])
+        self.right_foot_init_position = Transformation(position=(motor_offsets["right_leg_motor_5"]))
+        self.left_foot_init_position = Transformation(position=(motor_offsets["left_leg_motor_5"]))
 
         #: Height of the robot's torso (center between two arms) while walking
         self.walking_torso_height = walking_torso_height
