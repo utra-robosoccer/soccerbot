@@ -10,6 +10,8 @@ from rosgraph_msgs.msg import Clock
 from sensor_msgs.msg import CameraInfo, Image, Imu, JointState
 from std_msgs.msg import Bool
 
+# if "ROS_NAMESPACE" not in os.environ:
+#     os.environ["ROS_NAMESPACE"] = "/robot1"
 from soccer_webots import messages_pb2
 
 

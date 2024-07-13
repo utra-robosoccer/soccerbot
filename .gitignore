@@ -27,7 +27,9 @@ venv/
 /docs/_build/
 /docs/generated/
 *.bag
-/soccer_object_localization/images/
-/soccer_object_detection/images/*
+/soccer_perception/soccer_object_localization/images/
+/soccer_perception/soccer_object_detection/images/*
 /soccer_strategy/src/soccer_strategy/log.txt
+.mypy_cache/
 cuda-ubuntu2004.pin.1
+*.webm

@@ -32,15 +32,65 @@ https://github.com/utra-robosoccer/soccerbot/wiki/Onboarding
 
 ```bash
 roslaunch soccerbot sensors.launch __ns:=robot1
+```
 
-sudo apt install -y python3-pip libopenblas-dev
+cd ~/catkin_ws
+source devel/setup.bash
+pytest src/soccerbot/soccer_trajectories/src/soccer_trajectories/test_trajectory.py::TestTrajectory::test_fixed_angles_trajectories
 
-python3 -m pip install --upgrade pip; python3 -m pip install numpy==’1.26.1’ python3 -m pip install --no-cache $TORCH_INSTALL
+pytest src/soccerbot/soccer_trajectories/src/soccer_trajectories/test_trajectory.py::TestTrajectory::test_getupfront_trajectories
 
+pytest src/soccerbot/soccer_pycontrol/src/soccer_pycontrol/test_walking.py::TestWalking::test_walk_1_real_robot
 
-export TORCH_INSTALL=path/to/torch-2.2.0a0+81ea7a4+nv23.12-cp38-cp38-linux_aarch64.whl
-python3 -m pip install --no-cache $TORCH_INSTALL
+cd ~/catkin_ws
 
+```bash
+source devel/setup.bash
+export LD_PRELOAD=/usr/lib/aarch64-linux-gnu/libgomp.so.1 # TODO look into
+pytest src/soccerbot/soccer_object_detection/src/soccer_object_detection/test_object_detection.py::TestObjectDetection::test_object_detection_node_cam
+```
 
+Torch https://forums.developer.nvidia.com/t/pytorch-for-jetson/72048
+
+```bash
+wget https://developer.download.nvidia.cn/compute/redist/jp/v512/pytorch/torch-2.1.0a0+41361538.nv23.06-cp38-cp38-linux_aarch64.whl
+sudo apt-get install python3-pip libopenblas-base libopenmpi-dev libomp-dev -y
+pip3 install 'Cython<3'
 pip3 install numpy torch-2.1.0a0+41361538.nv23.06-cp38-cp38-linux_aarch64.whl
 ```
+
+Torchvision
+
+```bash
+sudo apt-get install libjpeg-dev zlib1g-dev libpython3-dev libopenblas-dev libavcodec-dev libavformat-dev libswscale-dev -y
+git clone --branch v0.16.1 https://github.com/pytorch/vision torchvision
+cd torchvision
+export BUILD_VERSION=0.16.1
+python3 setup.py install --user
+cd ../
+pip install 'pillow<7'
+```
+
+Verify in python console
+
+```bash
+import torch
+print(torch.__version__)
+print('CUDA available: ' + str(torch.cuda.is_available()))
+print('cuDNN version: ' + str(torch.backends.cudnn.version()))
+a = torch.cuda.FloatTensor(2).zero_()
+print('Tensor a = ' + str(a))
+b = torch.randn(2).cuda()
+print('Tensor b = ' + str(b))
+c = a + b
+print('Tensor c = ' + str(c))
+
+import torchvision
+print(torchvision.__version__)
+```
+
+sudo snap install blender --channel=3.3lts/stable --classic
+https://github.com/dfki-ric/phobos/releases/tag/2.0.0
+https://github.com/dfki-ric/phobos/commit/757d7b58b41240ea4aa54e20ddd1665072e6da21
+
+rosrun xacro xacro -o bez2.urdf bez2.xacro

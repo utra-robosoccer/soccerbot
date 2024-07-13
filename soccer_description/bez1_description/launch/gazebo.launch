@@ -1,0 +1,54 @@
+<launch>
+    <arg name="robot_name" default="robot1" />
+    <arg name="pose_name" default="standing"/>
+    <arg name="x_pos" default="0.0" />
+    <arg name="y_pos" default="0.0" />
+
+    <rosparam file="$(find bez1_description)/config/$(arg pose_name).yaml" command="load" ns="initial_state" />
+
+
+    <param name="robot_description" command="xacro '$(find bez1_description)/urdf/bez1.xacro'
+        robot_name:=$(arg robot_name)
+        model_type:=dae
+        file_path:=package://bez1_description
+        has_base_footprint:=false
+        tf_prefix:=$(arg robot_name)
+        "
+    />
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+    <node pkg="bez1_description" type="spawn_model.sh" name="spawn_soccerbot" args="$(arg robot_name) $(arg x_pos) $(arg y_pos)" />
+
+<!--    <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-param robot_description -urdf -model bez1" />-->
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+        <arg name="paused" value="true" />
+        <arg name="use_sim_time" value="true" />
+        <arg name="gui" value="true" />
+        <arg name="headless" value="false" />
+        <arg name="debug" value="false" />
+    </include>
+
+
+     <rosparam file="$(find bez1_description)/config/soccerbot_control.yaml" command="load" ns="$(arg robot_name)"/>
+    <node name="controller_spawner" pkg="controller_manager" type="spawner" output="screen"
+          args="--namespace=/$(arg robot_name)
+            joint_state_controller
+            right_leg_motor_0
+            right_leg_motor_1
+            right_leg_motor_2
+            right_leg_motor_3
+            right_leg_motor_4
+            right_leg_motor_5
+            left_leg_motor_0
+            left_leg_motor_1
+            left_leg_motor_2
+            left_leg_motor_3
+            left_leg_motor_4
+            left_leg_motor_5
+            head_motor_0
+            head_motor_1
+            left_arm_motor_0
+            left_arm_motor_1
+            right_arm_motor_0
+            right_arm_motor_1
+            "/>
+</launch>

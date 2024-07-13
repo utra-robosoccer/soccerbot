@@ -9,7 +9,7 @@ pyserial>=3.5
 transforms3d
 construct==2.10.67
 opencv-python>=4.5.5.62
-setuptools==67.4.0
+setuptools
 shapely
 vispy
 pytest
@@ -32,9 +32,10 @@ requests==2.31.0
 ipython==8.10.0
 seaborn
 tensorboard
-Pillow==9.3.0
+Pillow
 tqdm
 gitpython
 psutil==5.9.2; platform_machine == 'x86_64'
-torch==2.0.1.0+cu117; platform_machine == 'x86_64'
-torchvision==0.15.2.0+cu117; platform_machine == 'x86_64'
+#torch==2.0.1.0+cu117; platform_machine == 'x86_64'
+#torchvision==0.18.1.0+cu117; platform_machine == 'x86_64'
+# TODO why did this install torch

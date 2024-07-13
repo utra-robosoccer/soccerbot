@@ -1,5 +1,0 @@
-<map id="AX12A_SetCCWComplianceMargin" name="AX12A_SetCCWComplianceMargin">
-<area shape="rect" id="node2" href="$d3/d8e/group___dynamixel_protocol_v1___i_o___header.html#gaabac5f22c65d45c6e62aec697ac597bf" title="Sends an array of data to a motor as per its configuration details. " alt="" coords="280,31,432,57"/>
-<area shape="rect" id="node3" href="$d6/db4/group___dynamixel_protocol_v1___i_o___private___functions.html#ga3c6dca1a4013633e13288bd7f1191fe0" title="Compute the checksum for data passes in, according to a modular checksum algorithm employed by the Dy..." alt="" coords="480,5,684,32"/>
-<area shape="rect" id="node4" href="$d6/db4/group___dynamixel_protocol_v1___i_o___private___functions.html#ga0f95e7eccf85e619ab94db363a625e2d" title="Generic function for transmitting data. Supports all IO modes. " alt="" coords="489,56,675,83"/>
-</map>

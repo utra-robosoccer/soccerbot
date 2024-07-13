@@ -1,0 +1,653 @@
+<?xml version="1.0" ?>
+<robot name="bez2" xmlns:xacro="http://www.ros.org/wiki/xacro">
+<xacro:include filename="$(find bez2_description)/urdf/parameters.xacro" />
+<xacro:include filename="$(find bez2_description)/urdf/materials.xacro" />
+<xacro:include filename="$(find bez2_description)/urdf/bez2.trans" />
+<xacro:include filename="$(find bez2_description)/urdf/bez2.gazebo" />
+<link name="torso">
+  <inertial>
+    <origin xyz="-2.6182166493521018e-05 0.0037391632790891283 -0.07310917852477573" rpy="0 0 0"/>
+    <mass value="1.621911019034044"/>
+    <inertia ixx="0.17522" iyy="0.126523" izz="0.127074" ixy="0.000499" iyz="0.000833" ixz="0.001818"/>
+  </inertial>
+  <visual>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://bez2_description/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="steel_satin"/>
+  </visual>
+  <collision name="collision">
+      <origin rpy="0.00000 0.00000 0.00000" xyz="0.00154 0.00254 -0.07057"/>
+      <geometry>
+        <box size="0.14440 0.20843 0.19912"/>
+      </geometry>
+  </collision>
+</link>
+<link name="neck">
+  <inertial>
+    <origin xyz="2.1597541578072255e-08 -0.005416430173761932 0.014254502404740514" rpy="0 0 0"/>
+    <mass value="0.015549664333897642"/>
+    <inertia ixx="8e-06" iyy="3e-06" izz="6e-06" ixy="0.0" iyz="1e-06" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.009539 -0.002537 -0.03138" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://bez2_description/meshes/Head_Yaw_Assembly_v1_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="plastic_matte_yellow"/>
+  </visual>
+  <collision>
+    <origin rpy="0.00000 0.00000 0.00000" xyz="0.00000 0.00000 0.01900"/>
+      <geometry>
+        <box size="0.02200 0.05100 0.03800"/>
+      </geometry>
+  </collision>
+</link>
+<link name="head">
+  <inertial>
+    <origin xyz="-0.006768609392929565 0.018593066407664022 0.012723039586287177" rpy="0 0 0"/>
+    <mass value="0.5407373847724953"/>
+    <inertia ixx="0.000349" iyy="0.000378" izz="0.000259" ixy="-0.0" iyz="-4e-06" ixz="-8.1e-05"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.009539 0.016963 -0.05638" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://bez2_description/meshes/Head_Pitch_Assembly_v4_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="plastic_matte_yellow"/>
+  </visual>
+  <collision>
+    <origin rpy="0.00000 0.00000 0.00000" xyz="-0.00950 0.01920 0.02340"/>
+      <geometry>
+        <box size="0.07120 0.09400 0.07530"/>
+      </geometry>
+  </collision>
+</link>
+<link name="left_shoulder">
+  <inertial>
+    <origin xyz="9.49688693072442e-05 0.025391120875814188 -0.00710009103373208" rpy="0 0 0"/>
+    <mass value="0.42869731083494267"/>
+    <inertia ixx="0.000136" iyy="0.000137" izz="0.000116" ixy="0.0" iyz="1.8e-05" ixz="3e-06"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.006539 -0.112237 0.00062" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://bez2_description/meshes/left_shoulder_v1_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="steel_satin"/>
+  </visual>
+  <collision>
+    <origin rpy="0.00000 0.00000 0.00000" xyz="0.00155 0.02365 -0.00750"/>
+      <geometry>
+        <box size="0.04360 0.04730 0.05100"/>
+      </geometry>
+  </collision>
+</link>
+<link name="left_bicep">
+  <inertial>
+    <origin xyz="-0.01931620093381984 0.0008375708488899958 -0.05229697639295136" rpy="0 0 0"/>
+    <mass value="0.7365391814909177"/>
+    <inertia ixx="0.000601" iyy="0.000616" izz="0.000236" ixy="-0.0" iyz="1.3e-05" ixz="9e-06"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.027039 -0.141737 0.02162" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://bez2_description/meshes/bicep_v1_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="steel_satin"/>
+  </visual>
+  <collision>
+    <origin rpy="0.00000 0.00000 0.00000" xyz="-0.02000 0.00127 -0.04274"/>
+      <geometry>
+        <box size="0.05000 0.04703 0.11202"/>
+      </geometry>
+  </collision>
+</link>
+<link name="left_forearm">
+  <inertial>
+    <origin xyz="-0.02629981291315407 -0.02054181327377705 -0.07127075071519198" rpy="0 0 0"/>
+    <mass value="0.06415483406403591"/>
+    <inertia ixx="0.000265" iyy="0.00026" izz="2e-05" ixy="-0.0" iyz="-0.0" ixz="-7e-06"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.008351 -0.163675 0.10837" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://bez2_description/meshes/Bez1_forearm_v7_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="plastic_matte_yellow"/>
+  </visual>
+  <collision>
+    <origin rpy="0.00000 0.00000 0.00000" xyz="-0.01200 -0.02050 -0.08119"/>
+      <geometry>
+        <box size="0.04800 0.05300 0.18838"/>
+      </geometry>
+  </collision>
+</link>
+
+<link name="left_hip_side">
+  <inertial>
+    <origin xyz="2.104631423652248e-08 3.399354384647779e-07 -0.0077462434278427195" rpy="0 0 0"/>
+    <mass value="0.023116469719045966"/>
+    <inertia ixx="3e-06" iyy="8e-06" izz="7e-06" ixy="-0.0" iyz="-0.0" ixz="0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.018839 -0.067737 0.20662" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://bez2_description/meshes/fr12_h101_v1_2.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="steel_satin"/>
+  </visual>
+  <collision>
+    <origin rpy="0.00000 0.00000 0.00000" xyz="0.00000 0.00000 -0.01525"/>
+      <geometry>
+        <box size="0.04100 0.02400 0.03050"/>
+      </geometry>
+  </collision>
+</link>
+<link name="left_hip_front">
+<inertial>
+  <origin xyz="0.0004996292549223533 0.0005421424160892835 -0.012131129108951588" rpy="0 0 0"/>
+  <mass value="0.7328385746044006"/>
+  <inertia ixx="0.000195" iyy="0.000458" izz="0.000394" ixy="-8e-06" iyz="-1e-06" ixz="-2e-06"/>
+</inertial>
+<visual>
+  <origin xyz="0.001661 -0.067737 0.23462" rpy="0 0 0"/>
+  <geometry>
+    <mesh filename="package://bez2_description/meshes/hip_v1_1.stl" scale="0.001 0.001 0.001"/>
+  </geometry>
+  <material name="steel_satin"/>
+</visual>
+<collision>
+  <origin rpy="0.00000 0.00000 0.00000" xyz="-0.00199 0.00180 -0.01200"/>
+      <geometry>
+        <box size="0.07402 0.04100 0.04650"/>
+      </geometry>
+</collision>
+</link>
+<link name="left_thigh">
+  <inertial>
+    <origin xyz="2.1046150922715556e-08 -0.018793706652435974 -0.06540894904468947" rpy="0 0 0"/>
+    <mass value="0.191955361852033"/>
+    <inertia ixx="0.000159" iyy="0.000121" izz="6.9e-05" ixy="-0.0" iyz="1e-06" ixz="0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.01911 -0.088037 0.23462" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://bez2_description/meshes/thigh_v1_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="steel_satin"/>
+  </visual>
+  <collision>
+    <origin rpy="0.00000 0.00000 0.00000" xyz="0.00000 -0.01823 -0.05825"/>
+      <geometry>
+        <box size="0.03300 0.05100 0.12150"/>
+      </geometry>
+  </collision>
+</link>
+<link name="left_calve">
+  <inertial>
+    <origin xyz="0.00034959081321023905 -0.023268493362085793 -0.030853501915197812" rpy="0 0 0"/>
+    <mass value="0.20304073544640247"/>
+    <inertia ixx="0.000176" iyy="0.00015" izz="6.2e-05" ixy="0.0" iyz="-2e-06" ixz="2e-06"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.01911 -0.093306 0.35062" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://bez2_description/meshes/calf_v1_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="steel_satin"/>
+  </visual>
+  <collision>
+    <origin rpy="0.00000 0.00000 0.00000" xyz="-0.00005 -0.02225 -0.03850"/>
+      <geometry>
+        <box size="0.04030 0.05350 0.10500"/>
+      </geometry>
+  </collision>
+</link>
+<link name="left_ankle">
+  <inertial>
+    <origin xyz="-0.02065513049536576 -0.023057637545577894 -0.017838420955393897" rpy="0 0 0"/>
+    <mass value="0.26345509510176346"/>
+    <inertia ixx="0.000102" iyy="0.000212" izz="0.000173" ixy="-1e-06" iyz="-2e-06" ixz="-1.7e-05"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.02041 -0.093306 0.43862" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://bez2_description/meshes/ankle_v2_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="steel_satin"/>
+  </visual>
+  <collision>
+    <origin rpy="0.00000 0.00000 0.00000" xyz="-0.02445 -0.02050 -0.01800"/>
+      <geometry>
+        <box size="0.08910 0.05000 0.06398"/>
+      </geometry>
+  </collision>
+</link>
+<link name="left_foot">
+  <inertial>
+    <origin xyz="0.0476419808535605 0.018106431082562213 -0.01978200152059173" rpy="0 0 0"/>
+    <mass value="0.37785469138016164"/>
+    <inertia ixx="0.000247" iyy="0.000905" izz="0.001142" ixy="-2.6e-05" iyz="5e-06" ixz="1.4e-05"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.04409 -0.069806 0.47462" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://bez2_description/meshes/left_foot_v2_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="steel_satin"/>
+  </visual>
+  <collision>
+    <origin rpy="0.00000 0.00000 0.00000" xyz="0.05150 0.01936 -0.00550"/>
+      <geometry>
+        <box size="0.17000 0.09000 0.03300"/>
+      </geometry>
+  </collision>
+</link>
+
+<link name="right_hip_side">
+  <inertial>
+    <origin xyz="2.1046314309380865e-08 3.3993543878396704e-07 -0.007746243427843552" rpy="0 0 0"/>
+    <mass value="0.023116469719045966"/>
+    <inertia ixx="3e-06" iyy="8e-06" izz="7e-06" ixy="-0.0" iyz="-0.0" ixz="0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.018839 0.062663 0.20662" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://bez2_description/meshes/fr12_h101_v1_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="steel_satin"/>
+  </visual>
+  <collision>
+    <origin rpy="0.00000 0.00000 0.00000" xyz="0.00000 0.00000 -0.01525"/>
+      <geometry>
+        <box size="0.04100 0.02400 0.03050"/>
+      </geometry>
+  </collision>
+</link>
+<link name="right_hip_front">
+  <inertial>
+    <origin xyz="0.0004996292549223817 0.0005421424160894084 -0.01213112910895231" rpy="0 0 0"/>
+    <mass value="0.7328385746044006"/>
+    <inertia ixx="0.000195" iyy="0.000458" izz="0.000394" ixy="-8e-06" iyz="-1e-06" ixz="-2e-06"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.001661 0.062663 0.23462" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://bez2_description/meshes/hip_v1_2.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="steel_satin"/>
+  </visual>
+  <collision>
+    <origin rpy="0.00000 0.00000 0.00000" xyz="-0.00199 0.00180 -0.01200"/>
+      <geometry>
+        <box size="0.07402 0.04100 0.04650"/>
+      </geometry>
+  </collision>
+</link>
+<link name="right_thigh">
+  <inertial>
+    <origin xyz="2.1046151002512836e-08 -0.018793706652437202 -0.0654089490446903" rpy="0 0 0"/>
+    <mass value="0.191955361852033"/>
+    <inertia ixx="0.000159" iyy="0.000121" izz="6.9e-05" ixy="-0.0" iyz="1e-06" ixz="0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.01911 0.042363 0.23462" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://bez2_description/meshes/thigh_v1_2.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="steel_satin"/>
+  </visual>
+  <collision>
+    <origin rpy="0.00000 0.00000 0.00000" xyz="0.00000 -0.01823 -0.05825"/>
+      <geometry>
+        <box size="0.03300 0.05100 0.12150"/>
+      </geometry>
+  </collision>
+</link>
+<link name="right_calve">
+  <inertial>
+    <origin xyz="0.0003495908132103466 -0.023268493362087077 -0.030853501915198367" rpy="0 0 0"/>
+    <mass value="0.20304073544640247"/>
+    <inertia ixx="0.000176" iyy="0.00015" izz="6.2e-05" ixy="0.0" iyz="-2e-06" ixz="2e-06"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.01911 0.037094 0.35062" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://bez2_description/meshes/calf_v1_2.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="steel_satin"/>
+  </visual>
+  <collision>
+    <origin rpy="0.00000 0.00000 0.00000" xyz="-0.00005 -0.02225 -0.03850"/>
+      <geometry>
+        <box size="0.04030 0.05350 0.10500"/>
+      </geometry>
+  </collision>
+</link>
+<link name="right_ankle">
+  <inertial>
+    <origin xyz="-0.020655130495365704 -0.023057637545579254 -0.017838420955394507" rpy="0 0 0"/>
+    <mass value="0.26345509510176346"/>
+    <inertia ixx="0.000102" iyy="0.000212" izz="0.000173" ixy="-1e-06" iyz="-2e-06" ixz="-1.7e-05"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.02041 0.037094 0.43862" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://bez2_description/meshes/ankle_v2_2.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="steel_satin"/>
+  </visual>
+  <collision>
+    <origin rpy="0.00000 0.00000 0.00000" xyz="-0.02445 -0.02050 -0.01800"/>
+      <geometry>
+        <box size="0.08910 0.05000 0.06398"/>
+      </geometry>
+  </collision>
+</link>
+<link name="right_foot">
+  <inertial>
+    <origin xyz="0.047641980853560625 -0.018107232571891542 -0.019782001520592507" rpy="0 0 0"/>
+    <mass value="0.37785469138016164"/>
+    <inertia ixx="0.000247" iyy="0.000905" izz="0.001142" ixy="2.6e-05" iyz="-5e-06" ixz="1.4e-05"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.04409 0.060594 0.47462" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://bez2_description/meshes/right_foot_v2_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="steel_satin"/>
+  </visual>
+  <collision>
+    <origin rpy="0.00000 0.00000 0.00000" xyz="0.05150 -0.01936 -0.00550"/>
+      <geometry>
+        <box size="0.17000 0.09000 0.03300"/>
+      </geometry>
+  </collision>
+</link>
+
+<link name="right_shoulder">
+  <inertial>
+    <origin xyz="0.00042714569282304837 -0.025390436050570106 -0.007100091033732914" rpy="0 0 0"/>
+    <mass value="0.42869731083494267"/>
+    <inertia ixx="0.000136" iyy="0.000137" izz="0.000116" ixy="1e-06" iyz="-1.8e-05" ixz="4e-06"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.006539 0.107163 0.00062" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://bez2_description/meshes/right_shoulder_v2_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="steel_satin"/>
+  </visual>
+  <collision>
+    <origin rpy="0.00000 0.00000 0.00000" xyz="0.00168 -0.02365 -0.00750"/>
+      <geometry>
+        <box size="0.04435 0.04730 0.05100"/>
+      </geometry>
+  </collision>
+</link>
+<link name="right_bicep">
+  <inertial>
+    <origin xyz="-0.02068375587119517 -0.0008368909778958267 -0.05229697639295197" rpy="0 0 0"/>
+    <mass value="0.7365391814909177"/>
+    <inertia ixx="0.000601" iyy="0.000616" izz="0.000236" ixy="-0.0" iyz="-1.3e-05" ixz="-9e-06"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.027539 0.136663 0.02162" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://bez2_description/meshes/bicep_v1_2.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="steel_satin"/>
+  </visual>
+  <collision>
+    <origin rpy="0.00000 0.00000 0.00000" xyz="-0.02000 -0.00127 -0.04274"/>
+      <geometry>
+        <box size="0.05000 0.04703 0.11202"/>
+      </geometry>
+  </collision>
+</link>
+<link name="right_forearm">
+  <inertial>
+    <origin xyz="-0.026300599945598205 0.02045796215352269 -0.07127075071519248" rpy="0 0 0"/>
+    <mass value="0.06415483406403591"/>
+    <inertia ixx="0.000265" iyy="0.00026" izz="2e-05" ixy="-0.0" iyz="-0.0" ixz="-7e-06"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.006227 0.1586 0.10837" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://bez2_description/meshes/Bez1_forearm_v7_2.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="plastic_matte_yellow"/>
+  </visual>
+  <collision>
+    <origin rpy="0.00000 0.00000 0.00000" xyz="-0.01200 0.02050 -0.08119"/>
+      <geometry>
+        <box size="0.04800 0.05300 0.18838"/>
+      </geometry>
+  </collision>
+</link>
+
+<joint name="head_motor_0" type="revolute">
+  <origin xyz="0.009539 0.002537 0.03138" rpy="0 0 0"/>
+  <parent link="torso"/>
+  <child link="neck"/>
+  <axis xyz="0.0 0.0 -1.0"/>
+  <dynamics damping="${XL430_DAMPING}" friction="${XL430_FRICTION}" />
+          <limit effort="${XL430_TORQUE}" lower="-${PI/2}" upper="${PI/2}" velocity="${XL430_VELOCITY}"/>
+</joint>
+<joint name="head_motor_1" type="revolute">
+  <origin xyz="0.0 -0.0195 0.025" rpy="0 0 0"/>
+  <parent link="neck"/>
+  <child link="head"/>
+  <axis xyz="0.0 1.0 0.0"/>
+  <dynamics damping="${XL430_DAMPING}" friction="${XL430_FRICTION}" />
+            <limit effort="${XL430_TORQUE}" lower="0" upper="${PI*2/4}" velocity="${XL430_VELOCITY}"/>
+</joint>
+
+<joint name="left_arm_motor_0" type="revolute">
+  <origin xyz="0.006539 0.112237 -0.00062" rpy="0 0 0"/>
+  <parent link="torso"/>
+  <child link="left_shoulder"/>
+  <axis xyz="-0.0 -1.0 0.0"/>
+  <dynamics damping="${MX28_DAMPING}" friction="${MX28_FRICTION}" />
+<limit effort="${MX28_TORQUE}" lower="-${PI/2}" upper="${PI*5/4}" velocity="${MX28_VELOCITY}"/>
+</joint>
+<joint name="left_arm_motor_1" type="revolute">
+  <origin xyz="0.0205 0.0295 -0.021" rpy="0 0 0"/>
+  <parent link="left_shoulder"/>
+  <child link="left_bicep"/>
+  <axis xyz="1.0 -0.0 0.0"/>
+    <dynamics damping="${MX28_DAMPING}" friction="${MX28_FRICTION}" />
+                <limit effort="${MX28_TORQUE}" lower="0" upper="${PI/2}" velocity="${MX28_VELOCITY}"/>
+
+</joint>
+<joint name="left_arm_motor_2" type="revolute">
+<origin xyz="-0.018688 0.021938 -0.08675" rpy="0 0 0"/>
+<parent link="left_bicep"/>
+<child link="left_forearm"/>
+<axis xyz="-0.0 -1.0 -0.0"/>
+  <dynamics damping="${MX28_DAMPING}" friction="${MX28_FRICTION}" />
+              <limit effort="${MX28_TORQUE}" lower="0" upper="${PI}" velocity="${MX28_VELOCITY}"/>
+
+</joint>
+
+<joint name="left_leg_motor_0" type="revolute">
+<origin xyz="0.018839 0.067737 -0.20662" rpy="0 0 0"/>
+<parent link="torso"/>
+<child link="left_hip_side"/>
+<axis xyz="0.0 0.0 1.0"/>
+  <dynamics damping="${XM430_DAMPING}" friction="${XM430_FRICTION}" />
+<limit effort="${XM430_TORQUE}" lower="-1.309" upper="0.524" velocity="${XM430_VELOCITY}"/>
+</joint>
+<joint name="left_leg_motor_1" type="revolute">
+<origin xyz="-0.0205 0.0 -0.028" rpy="0 0 0"/>
+<parent link="left_hip_side"/>
+<child link="left_hip_front"/>
+<axis xyz="1.0 0.0 0.0"/>
+  <dynamics damping="${XM430_DAMPING}" friction="${XM430_FRICTION}" />
+          <limit effort="${XM430_TORQUE}" lower="-${PI/4}" upper="${PI/2}" velocity="${XM430_VELOCITY}"/>
+
+</joint>
+<joint name="left_leg_motor_2" type="revolute">
+<origin xyz="0.020771 0.0203 0.0" rpy="0 0 0"/>
+<parent link="left_hip_front"/>
+<child link="left_thigh"/>
+<axis xyz="-0.0 -1.0 0.0"/>
+    <dynamics damping="${XM430_DAMPING}" friction="${XM430_FRICTION}" />
+            <limit effort="${XM430_TORQUE}" lower="-${PI/4}" upper="${PI*3/4}" velocity="${XM430_VELOCITY}"/>
+
+</joint>
+<joint name="left_leg_motor_3" type="revolute">
+  <origin xyz="0.0 0.005269 -0.116" rpy="0 0 0"/>
+  <parent link="left_thigh"/>
+  <child link="left_calve"/>
+  <axis xyz="-0.0 -1.0 0.0"/>
+    <dynamics damping="${MX64_DAMPING}" friction="${MX64_FRICTION}" />
+            <limit effort="${MX64_TORQUE}" lower="-2.793" upper="0" velocity="${MX64_VELOCITY}"/>
+
+</joint>
+<joint name="left_leg_motor_4" type="revolute">
+  <origin xyz="0.0013 0.0 -0.088" rpy="0 0 0"/>
+  <parent link="left_calve"/>
+  <child link="left_ankle"/>
+  <axis xyz="-0.0 -1.0 0.0"/>
+    <dynamics damping="${MX64_DAMPING}" friction="${MX64_FRICTION}" />
+            <limit effort="${MX64_TORQUE}" lower="-${PI/4}" upper="${PI/2}" velocity="${MX64_VELOCITY}"/>
+
+</joint>
+<joint name="left_leg_motor_5" type="revolute">
+<origin xyz="-0.0645 -0.0235 -0.036" rpy="0 0 0"/>
+<parent link="left_ankle"/>
+<child link="left_foot"/>
+<axis xyz="1.0 0.0 0.0"/>
+    <dynamics damping="${MX64_DAMPING}" friction="${MX64_FRICTION}" />
+            <limit effort="${MX64_TORQUE}" lower="-${PI/4}" upper="${PI/4}" velocity="${MX64_VELOCITY}"/>
+
+</joint>
+
+<joint name="right_arm_motor_0" type="revolute">
+  <origin xyz="0.006539 -0.107163 -0.00062" rpy="0 0 0"/>
+  <parent link="torso"/>
+  <child link="right_shoulder"/>
+  <axis xyz="0.0 -1.0 -0.0"/>
+    <dynamics damping="${MX28_DAMPING}" friction="${MX28_FRICTION}" />
+              <limit effort="${MX28_TORQUE}" lower="-${PI/2}" upper="${PI*5/4}" velocity="${MX28_VELOCITY}"/>
+
+</joint>
+<joint name="right_arm_motor_1" type="revolute">
+  <origin xyz="0.021 -0.0295 -0.021" rpy="0 0 0"/>
+  <parent link="right_shoulder"/>
+  <child link="right_bicep"/>
+  <axis xyz="-1.0 0.0 0.0"/>
+    <dynamics damping="${MX28_DAMPING}" friction="${MX28_FRICTION}" />
+                <limit effort="${MX28_TORQUE}" lower="0" upper="${PI/2}" velocity="${MX28_VELOCITY}"/>
+
+</joint>
+<joint name="right_arm_motor_2" type="revolute">
+  <origin xyz="-0.021312 -0.021937 -0.08675" rpy="0 0 0"/>
+  <parent link="right_bicep"/>
+  <child link="right_forearm"/>
+  <axis xyz="0.0 -1.0 0.0"/>
+    <dynamics damping="${MX28_DAMPING}" friction="${MX28_FRICTION}" />
+                <limit effort="${MX28_TORQUE}" lower="0" upper="${PI}" velocity="${MX28_VELOCITY}"/>
+
+</joint>
+
+<joint name="right_leg_motor_0" type="revolute">
+  <origin xyz="0.018839 -0.062663 -0.20662" rpy="0 0 0"/>
+  <parent link="torso"/>
+  <child link="right_hip_side"/>
+  <axis xyz="-0.0 -0.0 -1.0"/>
+    <dynamics damping="${XM430_DAMPING}" friction="${XM430_FRICTION}" />
+  <limit effort="${XM430_TORQUE}" lower="-1.309" upper="0.524" velocity="${XM430_VELOCITY}"/>
+
+</joint>
+<joint name="right_leg_motor_1" type="revolute">
+  <origin xyz="-0.0205 0.0 -0.028" rpy="0 0 0"/>
+  <parent link="right_hip_side"/>
+  <child link="right_hip_front"/>
+  <axis xyz="-1.0 0.0 0.0"/>
+    <dynamics damping="${XM430_DAMPING}" friction="${XM430_FRICTION}" />
+            <limit effort="${XM430_TORQUE}" lower="-${PI/4}" upper="${PI/2}" velocity="${XM430_VELOCITY}"/>
+
+</joint>
+<joint name="right_leg_motor_2" type="revolute">
+  <origin xyz="0.020771 0.0203 0.0" rpy="0 0 0"/>
+  <parent link="right_hip_front"/>
+  <child link="right_thigh"/>
+  <axis xyz="-0.0 -1.0 0.0"/>
+    <dynamics damping="${XM430_DAMPING}" friction="${XM430_FRICTION}" />
+            <limit effort="${XM430_TORQUE}" lower="-${PI/4}" upper="${PI*3/4}" velocity="${XM430_VELOCITY}"/>
+
+</joint>
+<joint name="right_leg_motor_3" type="revolute">
+  <origin xyz="0.0 0.005269 -0.116" rpy="0 0 0"/>
+  <parent link="right_thigh"/>
+  <child link="right_calve"/>
+  <axis xyz="-0.0 -1.0 0.0"/>
+    <dynamics damping="${MX64_DAMPING}" friction="${MX64_FRICTION}" />
+            <limit effort="${MX64_TORQUE}" lower="-2.793" upper="0" velocity="${MX64_VELOCITY}"/>
+
+</joint>
+<joint name="right_leg_motor_4" type="revolute">
+  <origin xyz="0.0013 0.0 -0.088" rpy="0 0 0"/>
+  <parent link="right_calve"/>
+  <child link="right_ankle"/>
+  <axis xyz="-0.0 -1.0 0.0"/>
+    <dynamics damping="${MX64_DAMPING}" friction="${MX64_FRICTION}" />
+            <limit effort="${MX64_TORQUE}" lower="-${PI/4}" upper="${PI/2}" velocity="${MX64_VELOCITY}"/>
+
+</joint>
+<joint name="right_leg_motor_5" type="revolute">
+  <origin xyz="-0.0645 -0.0235 -0.036" rpy="0 0 0"/>
+  <parent link="right_ankle"/>
+  <child link="right_foot"/>
+  <axis xyz="-1.0 0.0 0.0"/>
+    <dynamics damping="${MX64_DAMPING}" friction="${MX64_FRICTION}" />
+            <limit effort="${MX64_TORQUE}" lower="-${PI/4}" upper="${PI/4}" velocity="${MX64_VELOCITY}"/>
+
+</joint>
+
+
+ <link name="imu_link">
+    <inertial>
+      <mass value="0.01"/>
+      <origin rpy="0  0  0" xyz="0 0 0"/>
+      <inertia ixx="1e-9" ixy="0" ixz="0" iyy="1e-9" iyz="0" izz="1e-9"/>
+    </inertial>
+  </link>
+  <joint name="torso_imu" type="fixed">
+    <parent link="torso"/>
+    <child link="imu_link"/>
+    <origin rpy="0 0 0" xyz="0.0 0 0.000"/>
+    <axis xyz="0 0 0"/>
+  </joint>
+  <gazebo reference="imu_link">
+    <gravity>true</gravity>
+    <sensor name="imu_sensor" type="imu">
+      <always_on>true</always_on>
+      <update_rate>100</update_rate>
+      <visualize>true</visualize>
+      <topic>__default_topic__</topic>
+      <plugin filename="libgazebo_ros_imu_sensor.so" name="imu_plugin">
+        <topicName>imu_raw</topicName>
+        <bodyName>imu_link</bodyName>
+        <updateRateHZ>50.0</updateRateHZ>
+        <gaussianNoise>0.0</gaussianNoise>
+        <xyzOffset>0 0 0</xyzOffset>
+        <rpyOffset>0 0 0</rpyOffset>
+        <frameName>imu_link</frameName>
+      </plugin>
+      <pose>0 0 0 0 0 0</pose>
+    </sensor>
+  </gazebo>
+  <gazebo reference="imu_link">
+    <kp>1000000000000000.0</kp>
+    <kd>10000000000000.0</kd>
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+  </gazebo>
+
+
+</robot>
