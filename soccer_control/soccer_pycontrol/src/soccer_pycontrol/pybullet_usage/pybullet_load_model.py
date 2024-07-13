@@ -50,6 +50,9 @@ class LoadModel:  # TODO Maybe rename to body
         self.pose.position = (self.pose.position[0], self.pose.position[1], self.walking_torso_height + 0.03)
 
         [y, _, _] = pose.orientation_euler
-        self.pose.orientation_euler = [y, 0, -0.64]  # TODO need to fix this
+        r = 0
+        if self.walking_torso_height == 0.4:
+            r = -0.64
+        self.pose.orientation_euler = [y, 0, r]  # TODO need to fix this
         if pb.isConnected():
             pb.resetBasePositionAndOrientation(self.body, self.pose.position, self.pose.quaternion)

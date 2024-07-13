@@ -15,9 +15,7 @@ class PathSection(ABC):
     Base class for a Path Section
     """
 
-    def __init__(
-        self, start_transform: Transformation, end_transform: Transformation, torso_step_length: float = 0.04, steps_per_second_default: float = 2.5
-    ):
+    def __init__(self, start_transform: Transformation, end_transform: Transformation, torso_step_length: float, steps_per_second_default: float):
         """
         Initializes the Path Section
 

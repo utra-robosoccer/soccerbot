@@ -18,6 +18,7 @@ class Bez:
         pose: Transformation = Transformation(),
         fixed_base: bool = False,
     ):
+        self.robot_model = robot_model
         self.data = KinematicData(robot_model=robot_model)
 
         self.model = LoadModel(self.data.urdf_model_path, self.data.walking_torso_height, pose, fixed_base)

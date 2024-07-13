@@ -4,9 +4,9 @@ from soccer_pycontrol.walk_engine.stabilize_phase import StabilizePhase
 
 class StabilizePhaseROS(StabilizePhase):
     def __init__(self):
-        super(StabilizePhaseROS, self).__init__(
-            walking_roll_kp=rospy.get_param("walking_roll_kp", 0),
-            walking_roll_kd=rospy.get_param("walking_roll_kd", 0.0),
-            walking_roll_ki=rospy.get_param("walking_roll_ki", 0.05),
-            walking_roll_setpoint=rospy.get_param("walking_roll_setpoint", -0.0),
-        )
+        robot_model = rospy.get_param("robot_model", "bez1")
+        if rospy.get_param("/use_sim_time", True):
+            sim = "_sim"
+        else:
+            sim = ""
+        super(StabilizePhaseROS, self).__init__(robot_model=robot_model, sim=sim)

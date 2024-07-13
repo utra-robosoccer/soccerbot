@@ -1,8 +1,10 @@
 import math
+from os.path import expanduser
 
 import numpy as np
 import rospy
 import scipy
+from pre_commit import yaml
 from soccer_pycontrol.exp.calibration import adjust_navigation_transform
 from soccer_pycontrol.path.path_foot import PathFoot
 
@@ -10,25 +12,17 @@ from soccer_common.transformation import Transformation
 
 
 class PathTorso(PathFoot):
-    def __init__(
-        self,
-        start_transform,
-        end_transform,
-        foot_center_to_floor,
-        torso_zdiff_sway: float = 0.0,
-        torso_sidediff_sway: float = -0.025,
-        torso_thetadiff_sway: list = (0.0, 0.0, 0.0),
-    ):
-        super().__init__(start_transform, end_transform, foot_center_to_floor)
+    def __init__(self, start_transform, end_transform, sim: str = "_sim", robot_model: str = "bez1"):
+        super().__init__(start_transform, end_transform, sim=sim, robot_model=robot_model)
 
         #: How much the torso bounces up and down while following the torso trajectory (m)
-        self.torso_zdiff_sway = torso_zdiff_sway  # rospy.get_param("torso_zdiff_sway", 0.00)
+        self.torso_zdiff_sway = self.parameters["torso_zdiff_sway"]
 
         #: How much the torso sways left and right while following the torso trajectory  (m)
-        self.torso_sidediff_sway = torso_sidediff_sway  # rospy.get_param("torso_sidediff_sway", -0.025)
+        self.torso_sidediff_sway = self.parameters["torso_sidediff_sway"]
 
         #: How much the torso rotates while following the torso trajectory (yaw, pitch, roll)
-        self.torso_thetadiff_sway = torso_thetadiff_sway  # rospy.get_param("torso_thetadiff_sway", [0.0, 0.0, 0.0])
+        self.torso_thetadiff_sway = self.parameters["torso_thetadiff_sway"]
 
         # Calculate the foot for the first step (based on destination)
         axang_angle, axang_vector = Transformation.get_axis_angle_from_quaternion(self.start_transform.quaternion)

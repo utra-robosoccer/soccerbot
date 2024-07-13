@@ -19,9 +19,10 @@ class PathRobot(PathTorso):
         self,
         start_transform: Transformation = Transformation(),
         end_transform: Transformation = Transformation([0.5, 0, 0], [0, 0, 0, 1]),
-        foot_center_to_floor: float = 0.0221,
+        sim: str = "_sim",
+        robot_model: str = "bez1",
     ):
-        super().__init__(start_transform, end_transform, foot_center_to_floor)
+        super().__init__(start_transform, end_transform, sim=sim, robot_model=robot_model)
 
     def show(self):
         fig = plt.figure(tight_layout=True, figsize=(10, 10))

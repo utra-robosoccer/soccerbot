@@ -17,25 +17,26 @@ class PathSectionBezier(PathSection):
         self,
         start_transform: Transformation,
         end_transform: Transformation,
-        turn_duration: float = 3,
-        backwards_torso_step_length_ratio: float = 0.5,
-        torso_step_length: float = 0.04,
+        turn_duration: float,
+        backwards_torso_step_length_ratio: float,
+        torso_step_length: float,
+        steps_per_second_default: float,
     ):
         self.start_transform: Transformation = start_transform
         self.end_transform: Transformation = end_transform
 
         #: The amount of torso steps it takes to make the starting and final turn
-        self.turn_duration = turn_duration  # rospy.get_param("turn_duration", 3)
+        self.turn_duration = turn_duration
 
         #: How much smaller the body step is for backwards movement
-        self.backwards_torso_step_length_ratio = backwards_torso_step_length_ratio  # rospy.get_param("backwards_torso_step_length_ratio", 0.5)
+        self.backwards_torso_step_length_ratio = backwards_torso_step_length_ratio
 
         #: How much distance is a torso step (equivalent to a half step)
-        torso_step_length = torso_step_length  # rospy.get_param("torso_step_length", 0.04)
+        torso_step_length = torso_step_length
         if self.isWalkingBackwards():
             torso_step_length = torso_step_length * self.backwards_torso_step_length_ratio
 
-        super().__init__(start_transform, end_transform, torso_step_length)
+        super().__init__(start_transform, end_transform, torso_step_length, steps_per_second_default)
 
     def poseAtRatio(self, r):
         pose = self.bezierPositionAtRatio(self.start_transform, self.end_transform, r)

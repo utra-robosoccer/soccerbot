@@ -17,11 +17,16 @@ class FootStepPlanner:
     def __init__(
         self,
         use_calibration: bool = False,
+        sim: str = "_sim",
+        robot_model: str = "bez1",
         torso_offset_pitch: float = 0.0,
         torso_offset_x: float = 0.0,
         walking_torso_height: float = 0.40,
         foot_center_to_floor: float = 0.0221,
     ):
+        self.robot_model = robot_model
+        self.sim = sim
+
         self.robot_path: Union[PathRobot, None] = None
         self.use_calibration = use_calibration
 
@@ -65,7 +70,7 @@ class FootStepPlanner:
         # end_pose_calibrated.quaternion[0]:.3f} {end_pose_calibrated.quaternion[1]:.3f} {end_pose_calibrated.quaternion[
         # 2]:.3f} {end_pose_calibrated.quaternion[3]:.3f}]\033[0m" )
 
-        self.robot_path = PathRobot(start_pose, end_pose_calibrated, self.foot_center_to_floor)
+        # self.robot_path = PathRobot(start_pose, end_pose_calibrated, sim=self.sim, robot_model=self.robot_model,foot_center_to_floor )
 
         # TODO this edits the rate for the controller need to figure out how to use it
         self.current_step_time = 0

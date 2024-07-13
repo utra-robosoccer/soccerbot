@@ -1,3 +1,7 @@
+from os.path import expanduser
+
+import yaml
+
 from soccer_common import PID, Transformation
 
 
@@ -8,66 +12,54 @@ class Stabilize:
 
     def __init__(
         self,  # TODO should be map read from yaml
-        standing_pitch_kp: float = 0.15,
-        standing_pitch_kd: float = 0,
-        standing_pitch_ki: float = 0.001,
-        standing_pitch_setpoint: float = -0.01,
-        standing_pitch_offset: float = 0.0,
-        standing_roll_kp: float = 0.1,
-        standing_roll_kd: float = 0,
-        standing_roll_ki: float = 0.00,
-        standing_roll_setpoint: float = -0.0,
-        standing_roll_offset: float = 0.0,
-        walking_pitch_kp: float = 0.8,
-        walking_pitch_kd: float = 0.0,
-        walking_pitch_ki: float = 0.0005,
-        walking_pitch_setpoint: float = -0.01,
-        walking_pitch_offset: float = 0.0,
-        walking_roll_kp: float = 1.5,  # TODO remember to change config
-        walking_roll_kd: float = 0.5,
-        walking_roll_ki: float = 0.00,
-        walking_roll_setpoint: float = -0.0,
-        walking_roll_offset: float = 0.0,
+        sim: str = "_sim",
+        robot_model: str = "bez1",
     ):
+        with open(
+            expanduser("~") + f"/catkin_ws/src/soccerbot/soccer_control/soccer_pycontrol/config/{robot_model}/{robot_model}{sim}.yaml", "r"
+        ) as file:
+            parameters = yaml.safe_load(file)
+            file.close()
+
         #: PID values to adjust the torso's front and back movement while standing, getting ready to walk, and post walk
         self.standing_pitch_pid = PID(
-            Kp=standing_pitch_kp,
-            Kd=standing_pitch_kd,
-            Ki=standing_pitch_ki,
-            setpoint=standing_pitch_setpoint,
+            Kp=parameters["standing_pitch_kp"],
+            Kd=parameters["standing_pitch_kd"],
+            Ki=parameters["standing_pitch_ki"],
+            setpoint=parameters["standing_pitch_setpoint"],
             output_limits=(-1.57, 1.57),  # TODO offsets are wrong can fix when apply to motor? or here
         )
-        self.standing_pitch_offset = standing_pitch_offset
+        self.standing_pitch_offset = parameters["standing_pitch_offset"]
 
         #: PID values to adjust the torso's left and right movement while standing, getting ready to walk, and post walk
         self.standing_roll_pid = PID(
-            Kp=standing_roll_kp,
-            Kd=standing_roll_kd,
-            Ki=standing_roll_ki,
-            setpoint=standing_roll_setpoint,
+            Kp=parameters["standing_roll_kp"],
+            Kd=parameters["standing_roll_kd"],
+            Ki=parameters["standing_roll_ki"],
+            setpoint=parameters["standing_roll_setpoint"],
             output_limits=(-1.57, 1.57),
         )
-        self.standing_roll_offset = standing_roll_offset
+        self.standing_roll_offset = parameters["standing_roll_offset"]
 
         #: PID values to adjust the torso's front and back movement while walking
         self.walking_pitch_pid = PID(
-            Kp=walking_pitch_kp,
-            Kd=walking_pitch_kd,
-            Ki=walking_pitch_ki,
-            setpoint=walking_pitch_setpoint,
+            Kp=parameters["walking_pitch_kp"],
+            Kd=parameters["walking_pitch_kd"],
+            Ki=parameters["walking_pitch_ki"],
+            setpoint=parameters["walking_pitch_setpoint"],
             output_limits=(-1.57, 1.57),
         )
-        self.walking_pitch_offset = walking_pitch_offset
+        self.walking_pitch_offset = parameters["walking_pitch_offset"]
 
         #: PID values to adjust the torso's left and right movement while walking
         self.walking_roll_pid = PID(
-            Kp=walking_roll_kp,
-            Kd=walking_roll_kd,
-            Ki=walking_roll_ki,
-            setpoint=walking_roll_setpoint,
+            Kp=parameters["walking_roll_kp"],
+            Kd=parameters["walking_roll_kd"],
+            Ki=parameters["walking_roll_ki"],
+            setpoint=parameters["walking_roll_setpoint"],
             output_limits=(-1.57, 1.57),
         )
-        self.walking_roll_offset = walking_roll_offset
+        self.walking_roll_offset = parameters["walking_roll_offset"]
 
     def reset_imus(self):
         """

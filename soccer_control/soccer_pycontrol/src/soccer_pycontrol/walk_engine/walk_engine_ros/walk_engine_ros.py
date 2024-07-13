@@ -24,7 +24,10 @@ class WalkEngineROS(WalkEngine):
         self.PYBULLET_STEP = rospy.get_param("control_frequency", 0.01)
         self.bez = bez
         self.step_planner = FootStepPlannerROS(
-            walking_torso_height=self.bez.data.walking_torso_height, foot_center_to_floor=self.bez.data.foot_center_to_floor
+            walking_torso_height=self.bez.data.walking_torso_height,
+            foot_center_to_floor=self.bez.data.foot_center_to_floor,
+            torso_offset_pitch=self.bez.data.torso_offset_pitch,
+            torso_offset_x=self.bez.data.torso_offset_x,
         )  # TODO should this be past or should it get through rosparam
 
         self.pid = StabilizeROS()

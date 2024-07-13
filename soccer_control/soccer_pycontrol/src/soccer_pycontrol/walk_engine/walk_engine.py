@@ -28,12 +28,17 @@ class WalkEngine:
         self.PYBULLET_STEP = 0.01
 
         self.step_planner = FootStepPlanner(
-            walking_torso_height=self.bez.data.walking_torso_height, foot_center_to_floor=self.bez.data.foot_center_to_floor
+            sim="_sim",
+            robot_model=self.bez.robot_model,
+            walking_torso_height=self.bez.data.walking_torso_height,
+            foot_center_to_floor=self.bez.data.foot_center_to_floor,
+            torso_offset_pitch=self.bez.data.torso_offset_pitch,
+            torso_offset_x=self.bez.data.torso_offset_x,
         )
         self.pid = Stabilize()
 
         self.terminate_walk = False
-        self.prepare_walk_time = 2  # rospy.get_param("prepare_walk_time", 2)
+        self.prepare_walk_time = 2
         # TODO should this be an input?
         self.t = 0
 

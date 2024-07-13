@@ -70,7 +70,7 @@ class TestPybullet(unittest.TestCase):
 
     def test_foot_step_planner_fixed(self):
         world = PybulletWorld(path="", camera_yaw=0, real_time=True, rate=100)
-        bez = Bez(fixed_base=True, robot_model="bez2")  # bez2  bez1
+        bez = Bez(fixed_base=True, robot_model="bez1")  # bez2  bez1
         tf = WalkEngine(world, bez)
 
         # TODO fix with torso height or start pose
@@ -79,13 +79,13 @@ class TestPybullet(unittest.TestCase):
         bez.motor_control.set_motor()
         world.wait_motor()
         tf.wait(50)
-        # tf.set_goal(Transformation([1, 0, 0], [0, 0, 0, 1]))
-        # tf.walk()
+        tf.set_goal(Transformation([1, 0, 0], [0, 0, 0, 1]))
+        tf.walk()
         tf.wait(1000)
 
     def test_foot_step_planner_plane(self):
         world = PybulletWorld(camera_yaw=90, real_time=True, rate=100)
-        bez = Bez(robot_model="bez2")  # , pose=Transformation(euler=[0,0,-1.57/2.0])) bez1  bez2
+        bez = Bez(robot_model="bez1")  # , pose=Transformation(euler=[0,0,-1.57/2.0])) bez1  bez2
         tf = WalkEngine(world, bez)
         tf.wait(50)
         tf.ready()

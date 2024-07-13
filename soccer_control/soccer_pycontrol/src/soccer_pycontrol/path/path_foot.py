@@ -2,10 +2,12 @@ import enum
 import functools
 import math
 from copy import deepcopy
+from os.path import expanduser
 
 import matplotlib.pyplot as plt
 import numpy as np
 import rospy
+import yaml
 from soccer_pycontrol.path.path import Path
 
 from soccer_common.transformation import Transformation
@@ -33,48 +35,37 @@ class PathFoot(Path):
     Adds the path of the 2 feet on the left and right of the Path
     """
 
-    def __init__(
-        self,
-        start_transform,
-        end_transform,
-        foot_center_to_floor,
-        half_to_full_step_time_ratio: float = 0.7,
-        pre_footstep_ratio: float = 0.15,
-        post_footstep_ratio: float = 0.25,
-        foot_separation: float = 0.064,
-        step_height: float = 0.065,
-        step_outwardness: float = 0.015,
-        step_rotation: float = 0.05,
-    ):
+    def __init__(self, start_transform, end_transform, sim: str = "_sim", robot_model: str = "bez1"):
+        super().__init__(start_transform, end_transform, sim=sim, robot_model=robot_model)
+
         # : A half step is taken on the first and the last step to get the robot moving, this parameter indicates the
         # time ratio between the half step and the full step
-        self.half_to_full_step_time_ratio = half_to_full_step_time_ratio  # rospy.get_param("half_to_full_step_time_ratio", 0.7)
+        self.half_to_full_step_time_ratio = self.parameters["half_to_full_step_time_ratio"]
 
         # : Time ratio of a single step in range [0, 1], the ratio of time keeping the feet on the ground before
         # lifting it
-        self.pre_footstep_ratio = pre_footstep_ratio  # rospy.get_param("pre_footstep_ratio", 0.15)
+        self.pre_footstep_ratio = self.parameters["pre_footstep_ratio"]
 
         # : Time ratio of a single step in range  [0, 1], the ratio of time after making the step with the foot on
         # the ground
-        self.post_footstep_ratio = post_footstep_ratio  # rospy.get_param("post_footstep_ratio", 0.25)
+        self.post_footstep_ratio = self.parameters["post_footstep_ratio"]
 
         #: The seperation of the feet while walking
-        self.foot_separation = foot_separation  # rospy.get_param("foot_separation", 0.044)
+        self.foot_separation = self.parameters["foot_separation"]
 
         #: The height of the step from the ground
-        self.step_height = step_height  # rospy.get_param("step_height", 0.065)
+        self.step_height = self.parameters["step_height"]
 
         #: The distance to the outwards direction when the robot takes a step, positive means away from the Path
-        self.step_outwardness = step_outwardness  # rospy.get_param("step_outwardness", 0.015)
+        self.step_outwardness = self.parameters["step_outwardness"]
 
         #: The amount of rotation of the footstep, positive means the feet turns outwards to the side
-        self.step_rotation = step_rotation  # rospy.get_param("step_rotation", 0.05)
+        self.step_rotation = self.parameters["step_rotation"]
 
         #: Whether the first step is the left foot
         self.first_step_left = False
 
-        super().__init__(start_transform, end_transform)
-        self.foot_center_to_floor = foot_center_to_floor
+        self.foot_center_to_floor = self.parameters["foot_center_to_floor"]
 
     @functools.lru_cache
     def half_step_time(self):
