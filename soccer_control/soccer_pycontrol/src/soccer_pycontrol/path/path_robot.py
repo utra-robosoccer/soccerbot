@@ -17,12 +17,13 @@ class PathRobot(PathTorso):
 
     def __init__(
         self,
-        start_transform: Transformation = Transformation(),
-        end_transform: Transformation = Transformation([0.5, 0, 0], [0, 0, 0, 1]),
+        start_transform: Transformation,
+        end_transform: Transformation,
+        foot_center_to_floor: float,
         sim: str = "_sim",
         robot_model: str = "bez1",
     ):
-        super().__init__(start_transform, end_transform, sim=sim, robot_model=robot_model)
+        super().__init__(start_transform, end_transform, foot_center_to_floor=foot_center_to_floor, sim=sim, robot_model=robot_model)
 
     def show(self):
         fig = plt.figure(tight_layout=True, figsize=(10, 10))

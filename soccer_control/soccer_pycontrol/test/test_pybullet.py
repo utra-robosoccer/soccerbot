@@ -85,7 +85,7 @@ class TestPybullet(unittest.TestCase):
 
     def test_foot_step_planner_plane(self):
         world = PybulletWorld(camera_yaw=90, real_time=True, rate=100)
-        bez = Bez(robot_model="bez1")  # , pose=Transformation(euler=[0,0,-1.57/2.0])) bez1  bez2
+        bez = Bez(robot_model="bez2")  # , pose=Transformation(euler=[0,0,-1.57/2.0])) bez1  bez2
         tf = WalkEngine(world, bez)
         tf.wait(50)
         tf.ready()

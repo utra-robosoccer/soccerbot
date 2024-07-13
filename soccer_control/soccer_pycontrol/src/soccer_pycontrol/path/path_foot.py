@@ -35,7 +35,7 @@ class PathFoot(Path):
     Adds the path of the 2 feet on the left and right of the Path
     """
 
-    def __init__(self, start_transform, end_transform, sim: str = "_sim", robot_model: str = "bez1"):
+    def __init__(self, start_transform, end_transform, foot_center_to_floor: float, sim: str = "_sim", robot_model: str = "bez1"):
         super().__init__(start_transform, end_transform, sim=sim, robot_model=robot_model)
 
         # : A half step is taken on the first and the last step to get the robot moving, this parameter indicates the
@@ -65,7 +65,7 @@ class PathFoot(Path):
         #: Whether the first step is the left foot
         self.first_step_left = False
 
-        self.foot_center_to_floor = self.parameters["foot_center_to_floor"]
+        self.foot_center_to_floor = foot_center_to_floor
 
     @functools.lru_cache
     def half_step_time(self):

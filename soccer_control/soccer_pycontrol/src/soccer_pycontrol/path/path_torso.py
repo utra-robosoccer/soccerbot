@@ -4,7 +4,6 @@ from os.path import expanduser
 import numpy as np
 import rospy
 import scipy
-from pre_commit import yaml
 from soccer_pycontrol.exp.calibration import adjust_navigation_transform
 from soccer_pycontrol.path.path_foot import PathFoot
 
@@ -12,8 +11,8 @@ from soccer_common.transformation import Transformation
 
 
 class PathTorso(PathFoot):
-    def __init__(self, start_transform, end_transform, sim: str = "_sim", robot_model: str = "bez1"):
-        super().__init__(start_transform, end_transform, sim=sim, robot_model=robot_model)
+    def __init__(self, start_transform, end_transform, foot_center_to_floor, sim: str = "_sim", robot_model: str = "bez1"):
+        super().__init__(start_transform, end_transform, foot_center_to_floor=foot_center_to_floor, sim=sim, robot_model=robot_model)
 
         #: How much the torso bounces up and down while following the torso trajectory (m)
         self.torso_zdiff_sway = self.parameters["torso_zdiff_sway"]

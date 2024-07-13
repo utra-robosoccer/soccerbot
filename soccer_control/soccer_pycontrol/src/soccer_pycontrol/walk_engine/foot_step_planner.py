@@ -70,7 +70,9 @@ class FootStepPlanner:
         # end_pose_calibrated.quaternion[0]:.3f} {end_pose_calibrated.quaternion[1]:.3f} {end_pose_calibrated.quaternion[
         # 2]:.3f} {end_pose_calibrated.quaternion[3]:.3f}]\033[0m" )
 
-        # self.robot_path = PathRobot(start_pose, end_pose_calibrated, sim=self.sim, robot_model=self.robot_model,foot_center_to_floor )
+        self.robot_path = PathRobot(
+            start_pose, end_pose_calibrated, foot_center_to_floor=self.foot_center_to_floor, sim=self.sim, robot_model=self.robot_model
+        )
 
         # TODO this edits the rate for the controller need to figure out how to use it
         self.current_step_time = 0
