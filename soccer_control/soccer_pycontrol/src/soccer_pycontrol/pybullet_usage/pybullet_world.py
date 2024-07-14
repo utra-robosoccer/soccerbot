@@ -20,6 +20,7 @@ class PybulletWorld:
         rolling_friction: float = 0.0,
         display: bool = True,
         camera_yaw: float = 90,
+        cameraTargetPosition: list = (0, 0, 0.45),
         real_time: bool = False,
         rate: int = 100,  # TODO should convert some of this to yaml
     ):
@@ -38,7 +39,7 @@ class PybulletWorld:
             self.client_id = pb.connect(pb.DIRECT)
 
         pb.setAdditionalSearchPath(pybullet_data.getDataPath())  # optionally
-        pb.resetDebugVisualizerCamera(cameraDistance=1.0, cameraYaw=camera_yaw, cameraPitch=0, cameraTargetPosition=[0, 0, 0.45])
+        pb.resetDebugVisualizerCamera(cameraDistance=1.0, cameraYaw=camera_yaw, cameraPitch=0, cameraTargetPosition=cameraTargetPosition)
         pb.setGravity(0, 0, -9.81)
         pb.configureDebugVisualizer(pb.COV_ENABLE_GUI, 0)
 

@@ -188,6 +188,7 @@ class TestObjectLocalization(TestCase):
 
     def test_fieldline_detection_vid(self):
         rospy.init_node("test")
+        os.environ["LD_LIBRARY_PATH"] = "$LD_LIBRARY_PATH:/opt/ros/noetic/lib/"
 
         src_path = os.path.dirname(os.path.realpath(__file__))
 
@@ -436,7 +437,7 @@ class TestObjectLocalization(TestCase):
 
                 cv2.waitKey(0)
 
-    @pytest.mark.skip
+    # @pytest.mark.skip
     def test_goalpost_detection_tune(self):
         """
         Used for tuning vertical line detection parameters using sliders.

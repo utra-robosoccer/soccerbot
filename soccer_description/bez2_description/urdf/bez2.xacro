@@ -476,7 +476,7 @@
 <origin xyz="0.018839 0.067737 -0.20662" rpy="0 0 0"/>
 <parent link="torso"/>
 <child link="left_hip_side"/>
-<axis xyz="0.0 0.0 1.0"/>
+<axis xyz="0.0 0.0 -1.0"/>
   <dynamics damping="${XM430_DAMPING}" friction="${XM430_FRICTION}" />
 <limit effort="${XM430_TORQUE}" lower="-1.309" upper="0.524" velocity="${XM430_VELOCITY}"/>
 </joint>
@@ -558,7 +558,7 @@
   <origin xyz="0.018839 -0.062663 -0.20662" rpy="0 0 0"/>
   <parent link="torso"/>
   <child link="right_hip_side"/>
-  <axis xyz="-0.0 -0.0 -1.0"/>
+  <axis xyz="-0.0 -0.0 1.0"/>
     <dynamics damping="${XM430_DAMPING}" friction="${XM430_FRICTION}" />
   <limit effort="${XM430_TORQUE}" lower="-1.309" upper="0.524" velocity="${XM430_VELOCITY}"/>
 
