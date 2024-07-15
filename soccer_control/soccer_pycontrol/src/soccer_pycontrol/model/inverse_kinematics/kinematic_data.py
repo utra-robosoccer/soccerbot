@@ -35,9 +35,7 @@ class KinematicData:
 
         self.thigh_length = np.linalg.norm(motor_offsets["right_leg_motor_2"] - motor_offsets["right_leg_motor_3"])
         self.tibia_length = np.linalg.norm(motor_offsets["right_leg_motor_3"] - motor_offsets["right_leg_motor_4"])
-        self.torso_to_right_hip = Transformation(
-            position=(motor_offsets["right_leg_motor_0"] + [parameters["weird_x_offset"] / 4, 0, 0]), euler=[0, 0, 0]
-        )
+        self.torso_to_right_hip = Transformation(position=(motor_offsets["right_leg_motor_0"] + [0, 0, 0]), euler=[0, 0, 0])
         self.right_hip_to_left_hip = Transformation(position=(motor_offsets["right_leg_motor_0"] - motor_offsets["left_leg_motor_0"]))
 
         self.right_foot_init_position = Transformation(position=(motor_offsets["right_leg_motor_5"] - [parameters["weird_x_offset"], 0, 0]))
@@ -82,9 +80,8 @@ class KinematicData:
         v = pinocchio.utils.zero(model.nv)
 
         pinocchio.ccrba(model, data, q, v)
-        # print(time.time() - s)
-        for name, oMi in zip(model.names, data.oMi):
-            print(("{:<24} : {: .2f} {: .2f} {: .2f}".format(name, *oMi.translation.T.flat)))
+        # for name, oMi in zip(model.names, data.oMi):
+        #     print(("{:<24} : {: .2f} {: .2f} {: .2f}".format(name, *oMi.translation.T.flat)))
         # TODO should make a unit test to make sure the data is correct and maybe use pybullet toverify
         return {model.names[i]: data.oMi[i].translation.T for i in range(len(model.names))}
 

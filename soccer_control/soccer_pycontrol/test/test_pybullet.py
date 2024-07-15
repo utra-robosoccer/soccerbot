@@ -15,9 +15,11 @@ class TestPybullet(unittest.TestCase):
 
     def test_imu(self):
         world = PybulletWorld(camera_yaw=45, real_time=True, rate=100)
-        bez = Bez()
+        bez = Bez(robot_model="bez2")
         world.wait(100)
-        print(bez.sensors.get_imu().orientation_euler)
+        for i in range(100):
+            print(bez.sensors.get_imu().orientation_euler)
+            world.step()
         # TODO add more
 
     def test_foot_sensor(self):

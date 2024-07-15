@@ -51,7 +51,7 @@ class LoadModel:  # TODO Maybe rename to body
 
         [y, _, _] = pose.orientation_euler
         r = 0
-        if self.walking_torso_height == 0.4:
+        if pb.getNumJoints(self.body) > 20:
             r = -0.64
         self.pose.orientation_euler = [y, 0, r]  # TODO need to fix this
         if pb.isConnected():

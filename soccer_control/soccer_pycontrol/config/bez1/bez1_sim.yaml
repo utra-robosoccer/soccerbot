@@ -36,21 +36,21 @@ head_rotation_yaw_center: 0.175
 head_rotation_yaw_range: 0.15
 
 # STABILIZE
-standing_pitch_kp: 0.15
+standing_pitch_kp: 0.1
 standing_pitch_kd: 0.0
-standing_pitch_ki: 0.001
-standing_pitch_setpoint: -0.01
+standing_pitch_ki: 0.00
+standing_pitch_setpoint: -0.0
 standing_pitch_offset: 0.0
 
 standing_roll_kp: 0.1
 standing_roll_kd: 0.0
-standing_roll_ki: 0.001
+standing_roll_ki: 0.00
 standing_roll_setpoint: 0.0
 standing_roll_offset: 0.0
 
-walking_pitch_kp: 0.8
-walking_pitch_kd: 0.0
-walking_pitch_ki: 0.0005
+walking_pitch_kp: 2.3
+walking_pitch_kd: 1
+walking_pitch_ki: 0.000
 walking_pitch_setpoint: -0.01
 walking_pitch_offset: 0.0
 

@@ -3,7 +3,7 @@ robot_model: bez2
 
 # KINEMATIC DATA
 #: Height of the robot's torso (center between two arms) while walking
-walking_torso_height: 0.4
+walking_torso_height: 0.375
 arm_0_center: -0.45
 arm_1_center: 2.512
 weird_x_offset: -0.06409
@@ -30,32 +30,32 @@ head_rotation_yaw_range: 0.15
 
 # STEP PLANNER
 #: How much the torso is rotated in the x axis
-torso_offset_pitch: 0.0
+torso_offset_pitch: 0.05
 
 #: How much the torso is forward in the x axis
 torso_offset_x: 0.0 # positive is forward
 
 # STABILIZE
-standing_pitch_kp: 0.15
+standing_pitch_kp: 0.
 standing_pitch_kd: 0.0
-standing_pitch_ki: 0.001
-standing_pitch_setpoint: -0.01
+standing_pitch_ki: 0.00
+standing_pitch_setpoint: -0.0
 standing_pitch_offset: 0.0
 
-standing_roll_kp: 0.1
+standing_roll_kp: 0.
 standing_roll_kd: 0.0
-standing_roll_ki: 0.001
+standing_roll_ki: 0.00
 standing_roll_setpoint: 0.0
 standing_roll_offset: 0.0
 
-walking_pitch_kp: 0.8
-walking_pitch_kd: 0.0
-walking_pitch_ki: 0.0005
+walking_pitch_kp: 0 #1
+walking_pitch_kd: 0
+walking_pitch_ki: 0.000
 walking_pitch_setpoint: -0.01
 walking_pitch_offset: 0.0
 
-walking_roll_kp: 1.5
-walking_roll_kd: 0.5
+walking_roll_kp: 0 #1.5
+walking_roll_kd: 0.0 # 00.5
 walking_roll_ki: 0.0
 walking_roll_setpoint: 0.0
 walking_roll_offset: 0.0
@@ -110,12 +110,12 @@ torso_thetadiff_sway: [0, 0, 0]
 
 # PATH SECTION
 #: How much distance is a torso step (equivalent to a half step)
-torso_step_length: 0.04
+torso_step_length: 0.06
 torso_step_length_short_backwards: 0.025
 torso_step_length_short_forwards: 0.035
 scale_yaw: 1.0 # Increase the rotation by angle
 #: How many torso steps per second, approximately equivalent to foot steps per second
-steps_per_second_default: 3.0
+steps_per_second_default: 3
 
 # PATH SECTION BEZIER
 turn_duration: 3

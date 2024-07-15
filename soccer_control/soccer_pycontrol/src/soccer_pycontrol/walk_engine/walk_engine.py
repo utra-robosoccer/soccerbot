@@ -37,7 +37,10 @@ class WalkEngine:
             torso_offset_pitch=self.bez.data.torso_offset_pitch,
             torso_offset_x=self.bez.data.torso_offset_x,
         )
-        self.pid = Stabilize()
+        self.pid = Stabilize(
+            sim="_sim",
+            robot_model=self.bez.robot_model,
+        )
 
         self.terminate_walk = False
         self.prepare_walk_time = 2
@@ -55,8 +58,11 @@ class WalkEngine:
 
         self.step_planner.create_path_to_goal(goal)
 
-    def transform_global_local(self, goal: Transformation) -> Transformation:
-        current_pose = self.bez.sensors.get_pose()
+    def transform_global_local(self, goal: Transformation, start: Transformation = None) -> Transformation:
+        current_pose = start
+        if start is None:
+            current_pose = self.bez.sensors.get_pose()
+
         goal.rotation_matrix = np.matmul(goal.rotation_matrix, scipy.linalg.inv(current_pose.rotation_matrix))
         goal.position = current_pose.rotation_matrix.T @ goal.position - current_pose.rotation_matrix.T @ current_pose.position
         return goal
@@ -109,11 +115,11 @@ class WalkEngine:
 
     def stabilize_stand(self, pitch: float, roll: float) -> None:
         error_pitch = self.pid.standing_pitch_pid.update(pitch)
-        # self.bez.motor_control.set_leg_joint_3_target_angle(error_pitch)
-        self.bez.motor_control.set_leg_joint_5_target_angle(error_pitch)
+        self.bez.motor_control.set_leg_joint_3_target_angle(error_pitch)
+        # self.bez.motor_control.set_leg_joint_5_target_angle(error_pitch)
 
-        # error_roll = self.pid.standing_roll_pid.update(roll)
-        # self.bez.motor_control.set_leg_joint_2_target_angle(error_roll)
+        error_roll = self.pid.standing_roll_pid.update(roll)
+        self.bez.motor_control.set_leg_joint_2_target_angle(error_roll)
 
         # self.bez.motor_control.set_motor()
 
@@ -121,9 +127,9 @@ class WalkEngine:
         error_pitch = self.pid.walking_pitch_pid.update(pitch)
         self.bez.motor_control.set_leg_joint_3_target_angle(error_pitch)
 
-        # error_roll = self.pid.walking_roll_pid.update(roll)
-        # self.bez.motor_control.set_leg_joint_2_target_angle(error_roll)
-
+        error_roll = self.pid.walking_roll_pid.update(roll)
+        self.bez.motor_control.set_leg_joint_2_target_angle(error_roll)
+        # print(pitch, roll, error_roll)
         # self.bez.motor_control.set_motor()
 
     def update_stable_count(self, pitch: float, roll: float, stable_count: int) -> int:

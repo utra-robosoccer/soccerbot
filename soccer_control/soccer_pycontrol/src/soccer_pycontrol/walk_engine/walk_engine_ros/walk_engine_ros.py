@@ -226,7 +226,8 @@ class WalkEngineROS(WalkEngine):
 
                 print_pose("Start Pose", self.bez.robot_pose.pose)
                 print_pose("End Pose", self.goal.pose)
-                self.step_planner.create_path_to_goal(Transformation(pose=self.bez.robot_pose.pose), Transformation(pose=self.goal.pose))
+                goal = self.transform_global_local(Transformation(pose=self.bez.robot_pose.pose), Transformation(pose=self.bez.robot_pose.pose))
+                self.step_planner.create_path_to_goal(goal)
                 # self.pid_stab.reset_roll_feedback_parameters()
                 self.t = -self.prepare_walk_time
 

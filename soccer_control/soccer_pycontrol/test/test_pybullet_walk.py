@@ -52,6 +52,7 @@ class TestPybullet(unittest.TestCase):
         tf.wait(50)
         tf.set_goal(Transformation([1, 0, 0], [0, 0, 0, 1]))
         tf.walk()
+        print(tf.t)
         tf.wait(100)
 
     def test_walk_2(self):
