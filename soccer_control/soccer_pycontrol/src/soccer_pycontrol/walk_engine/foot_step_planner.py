@@ -51,7 +51,7 @@ class FootStepPlanner:
         :return: Robot path
         """
         # TODO is this the best place for it?
-        start_pose = Transformation(position=[start_pose.position[0], start_pose.position[1], self.walking_torso_height])
+        start_pose.position = [start_pose.position[0], start_pose.position[1], self.walking_torso_height]
         end_pose.position = [end_pose.position[0], end_pose.position[1], self.walking_torso_height]
 
         # Remove the roll and pitch from the designated position

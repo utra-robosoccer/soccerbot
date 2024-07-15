@@ -13,9 +13,9 @@ from soccer_common import Transformation
 
 class TestPybullet(unittest.TestCase):
 
-    def custom_walk(self, cameraTargetPosition: list, start_pose: Transformation, goal_pose: Transformation):
+    def custom_walk(self, cameraTargetPosition: list, start_pose: Transformation, goal_pose: Transformation, robot_model: str = "bez1"):
         world = PybulletWorld(camera_yaw=90, real_time=True, rate=100, cameraTargetPosition=cameraTargetPosition)
-        bez = Bez(robot_model="bez1")
+        bez = Bez(robot_model=robot_model)
         tf = WalkEngine(world, bez)
         tf.bez.model.set_pose(start_pose)
         tf.wait(50)
@@ -53,11 +53,6 @@ class TestPybullet(unittest.TestCase):
         tf.walk()
         tf.wait(100)
 
-    def test_walk_backward(self):
-        self.custom_walk(
-            cameraTargetPosition=[1, 0, 0.45], start_pose=Transformation([1, 0, 0], [0, 0, 0, 1]), goal_pose=Transformation([0.5, 0, 0], [0, 0, 0, 1])
-        )
-
     def test_walk_2(self):
         self.custom_walk(
             cameraTargetPosition=[0, 0, 0.25],
@@ -66,7 +61,6 @@ class TestPybullet(unittest.TestCase):
         )
 
     def test_walk_3(self):
-        # TODO currently wrong
         self.custom_walk(
             cameraTargetPosition=[-2, -1, 0.25],
             start_pose=Transformation([-2.404, -1.0135, 0], [0, 0, -0.9979391070307153, 0.064168050139]),
@@ -74,19 +68,120 @@ class TestPybullet(unittest.TestCase):
         )
 
     def test_walk_4(self):
-        # TODO currently wrong
         self.custom_walk(
             cameraTargetPosition=[0, 0, 0.25],
             start_pose=Transformation([0.3275415, 0.2841, 0.321], [0.04060593, 0.0120126, 0.86708929, -0.4963497]),
             goal_pose=Transformation([-0.12015226, -0.19813691, 0.321], [0, 0, 0.95993011, -0.28023953]),
         )
+        # self.custom_walk(
+        #     cameraTargetPosition=[0, 0, 0.25],
+        #     start_pose=Transformation([0,0,0], euler=(1.57, 0, 0)),
+        #     goal_pose=Transformation([1, 0, 0], euler=(-1.57, 0, 0)),
+        # )
 
     def test_walk_5(self):
-        # TODO currently wrong
         self.custom_walk(
             cameraTargetPosition=[0, 0, 0.25],
             start_pose=Transformation([0.716, -0.4188, 0.0], [0.0149, -0.085, 0.9685, 0.2483]),
             goal_pose=Transformation([0.0859, -0.016, 0.0], [0, 0, 0.998, 0.0176]),
+        )
+
+    def test_walk_side(self):
+        self.custom_walk(
+            cameraTargetPosition=[0, 0, 0.25],
+            start_pose=Transformation([0, 0, 0], [0.00000, 0, 0, 1]),
+            goal_pose=Transformation([0, -0.5, 0], [0.00000, 0, 0, 1]),
+        )
+
+    def test_walk_backward(self):
+        # TODO stabilize doesnt work
+        self.custom_walk(
+            cameraTargetPosition=[0, 0, 0.45],
+            start_pose=Transformation([0, 0, 0], [0.00000, 0, 0, 1]),
+            goal_pose=Transformation([-1, 0.3, 0], [0.00000, 0, 0, 1]),
+        )
+
+    def test_turn_in_place(self):
+        self.custom_walk(
+            cameraTargetPosition=[0, 0, 0.45], start_pose=Transformation([0, 0, 0], [0.00000, 0, 0, 1]), goal_pose=Transformation(euler=[np.pi, 0, 0])
+        )
+
+    def test_small_movement_0(self):
+        self.custom_walk(
+            cameraTargetPosition=[0, 0, 0.45],
+            start_pose=Transformation([0, 0, 0], [0.00000, 0, 0, 1]),
+            goal_pose=Transformation(position=[0.05, 0.05, 0], euler=[np.pi / 5, 0, 0]),
+        )
+
+    def test_small_movement_1(self):
+        self.custom_walk(
+            cameraTargetPosition=[0, 0, 0.45],
+            start_pose=Transformation([0, 0, 0], [0.00000, 0, 0, 1]),
+            goal_pose=Transformation(position=[0.15, 0.05, 0], euler=[np.pi, 0, 0]),
+        )
+
+    def test_small_movement_2(self):
+        self.custom_walk(
+            cameraTargetPosition=[0, 0, 0.45],
+            start_pose=Transformation([0, 0, 0], [0.00000, 0, 0, 1]),
+            goal_pose=Transformation(position=[-0.3, 0, 0], euler=[np.pi, 0, 0]),
+        )
+
+    def test_small_movement_3(self):
+        self.custom_walk(
+            cameraTargetPosition=[0, 0, 0.45],
+            start_pose=Transformation([0, 0, 0], [0.00000, 0, 0, 1]),
+            goal_pose=Transformation(position=[-0.2, -0.2, 0], euler=[-np.pi / 2, 0, 0]),
+        )
+
+    def test_small_movement_4(self):
+        self.custom_walk(
+            cameraTargetPosition=[0, 0, 0.45],
+            start_pose=Transformation([0.2489, -0.163, 0.0], [0.0284, -0.003, 0.9939, 0.01986]),
+            goal_pose=Transformation([0.0503, 0.06323, 0], [0, 0, 1, 0]),
+        )
+
+    def test_small_movement_5(self):
+        self.custom_walk(
+            cameraTargetPosition=[0, 0, 0.45],
+            start_pose=Transformation(
+                [0.3096807057334623, 0.09374110438873018, 0.0], [0.03189331238935847, -0.0065516868290173, 0.9990119776602083, 0.03024831426656374]
+            ),
+            goal_pose=Transformation([0.14076394628045208, -0.034574636811865296, 0], [0, 0, -0.9999956132297835, -0.002962013029887055]),
+        )
+
+    def test_do_nothing(self):
+        self.custom_walk(
+            cameraTargetPosition=[0, 0, 0.45], start_pose=Transformation([0, 0, 0], [0.00000, 0, 0, 1]), goal_pose=Transformation(euler=[0, 0, 0])
+        )
+
+    def test_walk_tiny_1(self):
+        self.custom_walk(
+            cameraTargetPosition=[0, 0, 0.45],
+            start_pose=Transformation([0.0, 0, 0], [0, 0, 0, 1]),
+            goal_pose=Transformation([0.01, 0, 0], [0, 0, 0, 1]),
+        )
+
+    def test_walk_tiny_2(self):
+        self.custom_walk(
+            cameraTargetPosition=[0, 0, 0.45],
+            start_pose=Transformation([0.0, 0, 0], [0, 0, 0, 1]),
+            goal_pose=Transformation([-0.01, 0, 0], [0, 0, 0, 1]),
+        )
+
+    def test_walk_tiny_3(self):
+        self.custom_walk(
+            cameraTargetPosition=[0, 0, 0.45],
+            start_pose=Transformation([0.0, 0, 0], [0, 0, 0, 1]),
+            goal_pose=Transformation([0.01, 0.01, 0], [0, 0, 0, 1]),
+        )
+
+    def test_walk_tiny_4(self):
+        # TODO should be fine
+        self.custom_walk(
+            cameraTargetPosition=[0, 0, 0.45],
+            start_pose=Transformation([0.0, 0, 0], [0, 0, 0, 1]),
+            goal_pose=Transformation([0, 0, 0], euler=[0.1, 0, 0]),
         )
 
     def test_foot_step_planner_plane_dynamic(self):

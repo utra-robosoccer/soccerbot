@@ -82,6 +82,7 @@ class WalkEngine:
                     self.bez.motor_control.set_motor()
                     self.step_planner.current_step_time = self.step_planner.current_step_time + self.step_planner.robot_path.step_precision
             else:
+                # print(stable_count)
                 stable_count = self.update_stable_count(pitch, roll, stable_count)
                 if stable_count < 0:  # TODO dont really like this format
                     break  # TODO this is bad
@@ -115,7 +116,8 @@ class WalkEngine:
         # self.bez.motor_control.set_motor()
 
     def update_stable_count(self, pitch: float, roll: float, stable_count: int) -> int:
-        if abs(pitch - self.pid.standing_pitch_pid.setpoint) < 0.025 and abs(roll - self.pid.standing_roll_pid.setpoint) < 0.025:
+        # TODO tune threshhold
+        if abs(pitch - self.pid.standing_pitch_pid.setpoint) < 0.06 and abs(roll - self.pid.standing_roll_pid.setpoint) < 0.06:
             stable_count -= 1
             if stable_count == 0:
                 if self.t < 0:
