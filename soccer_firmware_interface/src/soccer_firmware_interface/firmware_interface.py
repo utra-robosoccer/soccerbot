@@ -47,7 +47,7 @@ class FirmwareInterface:
         if self.serial is None:
             # todo: loop through ACMs see which one connects
             # for debug assume ACM0 is STLINK and ACM1 is our PCB
-            for i in range(1, 10):
+            for i in range(0, 10):
                 rospy.loginfo_throttle(10, f"Trying connection to /dev/ttyACM{i}")
                 if os.path.exists(f"/dev/ttyACM{i}"):
                     self.serial = serial.Serial(f"/dev/ttyACM{i}")
