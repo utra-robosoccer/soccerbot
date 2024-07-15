@@ -249,7 +249,7 @@ int main(void)
   MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
   // give some time for motors to power on and initialize, before we try to talk to them
-  HAL_Delay(5000);
+  HAL_Delay(1000);
 
   init_ports();
 //  MPU6050_init();
