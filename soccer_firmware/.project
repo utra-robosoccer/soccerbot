@@ -22,7 +22,6 @@
 		<nature>com.st.stm32cube.ide.mcu.MCUProjectNature</nature>
 		<nature>com.st.stm32cube.ide.mcu.MCUCubeProjectNature</nature>
 		<nature>org.eclipse.cdt.core.cnature</nature>
-		<nature>org.eclipse.cdt.core.ccnature</nature>
 		<nature>com.st.stm32cube.ide.mcu.MCUCubeIdeServicesRevAev2ProjectNature</nature>
 		<nature>com.st.stm32cube.ide.mcu.MCUAdvancedStructureProjectNature</nature>
 		<nature>com.st.stm32cube.ide.mcu.MCUSingleCpuProjectNature</nature>

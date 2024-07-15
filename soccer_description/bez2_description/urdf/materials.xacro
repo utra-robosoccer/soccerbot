@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+<robot name="bez2" xmlns:xacro="http://www.ros.org/wiki/xacro" >
+
+<material name="silver_default">
+  <color rgba="0.700 0.700 0.700 1.000"/>
+</material>
+<material name="steel_satin">
+  <color rgba="0.6274509803921569 0.6274509803921569 0.6274509803921569 1.0"/>
+</material>
+<material name="plastic_matte_yellow">
+  <color rgba="0.9098039215686274 0.6784313725490196 0.13725490196078433 1.0"/>
+</material>
+
+</robot>

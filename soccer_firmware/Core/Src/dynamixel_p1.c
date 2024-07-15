@@ -5,6 +5,7 @@
  */
 
 #include "dynamixel_p1.h"
+#include "main.h"
 
 /*
  * Dynamixel 1.0

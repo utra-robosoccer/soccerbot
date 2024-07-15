@@ -1,0 +1,95 @@
+control_frequency: 0.02
+
+# Path parameters
+robot_model: bez2
+
+#: Height of the robot's torso (center between two arms) while walking
+walking_torso_height: 0.37
+
+#: How many torso steps per second, approximately equivalent to foot steps per second
+steps_per_second_default: 2.6
+
+#: How much distance is a torso step (equivalent to a half step)
+torso_step_length: 0.02
+torso_step_length_short_backwards: 0.01
+torso_step_length_short_forwards: 0.025
+
+#: The seperation of the feet while walking
+# How much space between the feet along the path
+foot_separation: 0.047
+
+#: The height of the step from the ground
+step_height: 0.02
+
+#: The distance to the outwards direction when the robot takes a step
+# How much does the foot step outside from the center of the path like a side step
+step_outwardness: 0.01 # positive means away from the Path
+
+#: The amount of rotation of the footstep
+# Only when it takes a step ?
+step_rotation: 0.05 # positive means the feet turns outwards to the side
+
+#: How much the torso is forward in the x axis
+torso_offset_x_ready: -0.06 # positive is forward
+torso_offset_x: 0.02
+
+#: How much the torso is rotated in the x axis
+torso_offset_pitch_ready: -0.12
+torso_offset_pitch: 0.10
+
+# Rate for it to get into the ready state
+get_ready_rate: 0.03
+
+# : Time ratio of a single step in range [0, 1], the ratio of time keeping the feet on the ground before
+# lifting it
+#pre_footstep_ratio: 0.05
+
+# : Time ratio of a single step in range  [0, 1], the ratio of time after making the step with the foot on
+# the ground
+#post_footstep_ratio: 0.2
+
+# Time before Walk
+prepare_walk_time: 1
+
+# TODO Needs description
+merge_fixed_links: true
+
+#: Dimensions of the foot collision box #TODO get it from URDF
+foot_box: [0.09, 0.07, 0.05] # TODO: update this!
+
+#: Transformations from the right foots joint position to the center of the collision box of the foot
+# (https://docs.google.com/presentation/d/10DKYteySkw8dYXDMqL2Klby-Kq4FlJRnc4XUZyJcKsw/edit#slide=id.g163c1c67b73_0_0)
+right_foot_joint_center_to_collision_box_center: [0.00385, 0.00401, -0.00737] # TODO: update this!
+
+#: How much the torso sways left and right while following the torso trajectory  (m)
+torso_sidediff_sway: -0.01
+
+# TODO Needs description
+walking_Kp: 0
+walking_Ki: 0.0000
+walking_Kd: 0
+walking_setpoint: 0.02
+
+# TODO Needs description
+standing_Kp: 0
+standing_Ki: 0
+standing_Kd: 0.0
+standing_setpoint: 0.0
+
+# TODO Needs description
+walking_roll_Kp: 0.0
+walking_roll_Ki: 0.0
+walking_roll_Kd: 0.0
+walking_roll_setpoint: 0.0
+
+# Head rotation parameters
+head_rotation_yaw_center: 0.205
+head_rotation_yaw_range: 0.15
+head_pitch_freq: 0.01
+head_yaw_freq: 0.01
+
+# TODO Needs description
+calibration_trans_a: -0.020357517843533346
+calibration_trans_b: 0.6492919423070727
+calibration_trans_a2: 0.8427201135750022
+calibration_rot_a: 0.7052919512780853

@@ -5,11 +5,11 @@
     <arg name="param_file_name" value="$(arg robot_model)_sim" if="$(arg simulation)" />
     <arg name="param_file_name" value="$(arg robot_model)" unless="$(arg simulation)" />
 
-    <node pkg="soccer_trajectories" type="soccer_trajectories.py" name="soccer_trajectories" output="screen">
+    <node pkg="soccer_trajectories" type="trajectory_manager_ros.py" name="soccer_trajectories" output="screen">
         <param name="trajectory_path" value="$(find soccer_trajectories)/trajectories/$(arg param_file_name)" />
     </node>
 
-    <rosparam command="load" file="$(find soccer_pycontrol)/config/$(arg param_file_name).yaml" />
+    <rosparam command="load" file="$(find soccer_pycontrol)/config/$(arg robot_model)/$(arg param_file_name).yaml" />
     <node pkg="soccer_pycontrol" type="main.py" name="soccer_pycontrol" output="screen">
         <param name="robot_model" value="$(arg robot_model)" />
     </node>
