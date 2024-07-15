@@ -14,7 +14,7 @@ from soccer_common import Transformation
 
 class TestPybullet(unittest.TestCase):
 
-    def custom_walk(self, cameraTargetPosition: list, start_pose: Transformation, goal_pose: Transformation, robot_model: str = "bez1"):
+    def custom_walk(self, cameraTargetPosition: list, start_pose: Transformation, goal_pose: Transformation, robot_model: str = "bez2"):
         world = PybulletWorld(camera_yaw=90, real_time=True, rate=100, cameraTargetPosition=cameraTargetPosition)
         bez = Bez(robot_model=robot_model)
         tf = WalkEngine(world, bez)
@@ -200,7 +200,7 @@ class TestPybullet(unittest.TestCase):
         tf.ready()
         tf.wait(50)
         for i in range(10):
-            tf.set_goal(Transformation([0.2, 0, 0], [0, 0, 0, 1]), transform_global=False)
+            tf.set_goal(Transformation([0.5, 0, 0], [0, 0, 0, 1]), transform_global=False)
             tf.walk()
         tf.wait(100)
         # TODO WIP need a way to figure out how to add more steps so it doesnt stop
