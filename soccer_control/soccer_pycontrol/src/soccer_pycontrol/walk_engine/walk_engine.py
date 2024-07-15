@@ -1,4 +1,6 @@
+import numpy as np
 import pybullet as pb
+import scipy
 from soccer_pycontrol.common.links import Links
 from soccer_pycontrol.model.bez import Bez
 from soccer_pycontrol.pybullet_usage.pybullet_world import PybulletWorld
@@ -42,13 +44,22 @@ class WalkEngine:
         # TODO should this be an input?
         self.t = 0
 
-    def set_goal(self, goal: Transformation) -> None:
+    def set_goal(self, goal: Transformation, transform_global: bool = True) -> None:
         """
         Set the goal of the robot, will create the path to the goal that will be executed in the run() loop
 
         :param goal: The 3D location goal for the robot
         """
-        self.step_planner.create_path_to_goal(self.bez.sensors.get_pose(), goal)
+        if transform_global:
+            goal = self.transform_global_local(goal)
+
+        self.step_planner.create_path_to_goal(goal)
+
+    def transform_global_local(self, goal: Transformation) -> Transformation:
+        current_pose = self.bez.sensors.get_pose()
+        goal.rotation_matrix = np.matmul(goal.rotation_matrix, scipy.linalg.inv(current_pose.rotation_matrix))
+        goal.position = current_pose.rotation_matrix.T @ goal.position - current_pose.rotation_matrix.T @ current_pose.position
+        return goal
 
     def wait(self, step: int) -> None:
         self.world.wait(step)

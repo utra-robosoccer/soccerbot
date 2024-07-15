@@ -43,15 +43,17 @@ class FootStepPlanner:
 
         self.current_step_time = 0
 
-    def create_path_to_goal(self, start_pose: Transformation, end_pose: Transformation) -> PathRobot:
+    def create_path_to_goal(self, end_pose: Transformation) -> PathRobot:
         """
         Creates a path from the robot's current location to the goal location
 
         :param end_pose: 3D transformation
         :return: Robot path
         """
+        # TODO make all end goals relative
         # TODO is this the best place for it?
-        start_pose.position = [start_pose.position[0], start_pose.position[1], self.walking_torso_height]
+        # start_pose.position = [start_pose.position[0], start_pose.position[1], self.walking_torso_height]
+
         end_pose.position = [end_pose.position[0], end_pose.position[1], self.walking_torso_height]
 
         # Remove the roll and pitch from the designated position
@@ -71,7 +73,11 @@ class FootStepPlanner:
         # 2]:.3f} {end_pose_calibrated.quaternion[3]:.3f}]\033[0m" )
 
         self.robot_path = PathRobot(
-            start_pose, end_pose_calibrated, foot_center_to_floor=self.foot_center_to_floor, sim=self.sim, robot_model=self.robot_model
+            Transformation([0, 0, self.walking_torso_height], [0, 0, 0, 1]),
+            end_pose_calibrated,
+            foot_center_to_floor=self.foot_center_to_floor,
+            sim=self.sim,
+            robot_model=self.robot_model,
         )
 
         # TODO this edits the rate for the controller need to figure out how to use it

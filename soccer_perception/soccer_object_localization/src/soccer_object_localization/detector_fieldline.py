@@ -75,7 +75,7 @@ class DetectorFieldline(Detector):
             return
         image_crop = image[h + 1 :, :, :]
         # image_crop_blurred = cv2.GaussianBlur(image_crop, (3, 3), 0)
-        image_crop_blurred = cv2.bilateralFilter(image_crop, 9, 75, 75)
+        image_crop_blurred = cv2.bilateralFilter(image, 9, 75, 75)
 
         hsv = cv2.cvtColor(src=image_crop_blurred, code=cv2.COLOR_BGR2HSV)
 
