@@ -59,6 +59,7 @@ class FirmwareInterface:
         while not rospy.is_shutdown():
             try:
                 self.reconnect_serial_port()
+
                 # data format
                 # FF
                 # (Raw data motor 0)            2 bytes

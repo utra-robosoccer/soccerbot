@@ -144,20 +144,12 @@ void command_motors() {
 }
 
 void read_imu(uint8_t *rxBuf) {
-  uint8_t gyrBuff[6] = {0};
-  Read_Gyroscope(gyrBuff);
-  HAL_Delay(1); // wait some time before sending next request
-
-  uint8_t accBuff[6] = {0};
-  Read_Accelerometer_IT(accBuff);
-
   int16_t gyroX = 0;
   int16_t gyroY = 0;
   int16_t gyroZ = 0;
   int16_t accX = 0;
   int16_t accY = 0;
   int16_t accZ = 0;
-
 
   BMI088_ReadAccelerometer(&imu, &hi2c1, &accX, &accY, &accZ);
 
