@@ -2,6 +2,8 @@ import copy
 import os
 import time
 
+os.environ["ROS_NAMESPACE"] = "/robot1"
+
 import rospy
 import tf
 from geometry_msgs.msg import Pose, PoseStamped, PoseWithCovarianceStamped
@@ -45,6 +47,10 @@ class WalkEngineROS(WalkEngine):
         self.goal = PoseStamped()
         self.new_goal = self.goal
         self.terminated = None
+
+    def wait(self, steps: int):
+        for i in range(steps):
+            rospy.sleep(self.PYBULLET_STEP)
 
     def setPose(self, pose: Transformation):  # TODO should link up with the pybullet version
         [r, p, y] = pose.orientation_euler
@@ -180,6 +186,7 @@ class WalkEngineROS(WalkEngine):
                 self.bez.motor_control.updateRobotConfiguration()
                 r.sleep()
                 continue
+
             # CHeck if walk terminated
             if self.bez.robot_state.status in [RobotState.STATUS_TERMINATING_WALK]:
                 if not self.terminated:
@@ -226,7 +233,7 @@ class WalkEngineROS(WalkEngine):
 
                 print_pose("Start Pose", self.bez.robot_pose.pose)
                 print_pose("End Pose", self.goal.pose)
-                goal = self.transform_global_local(Transformation(pose=self.bez.robot_pose.pose), Transformation(pose=self.bez.robot_pose.pose))
+                goal = self.transform_global_local(Transformation(pose=self.goal.pose), Transformation(pose=self.bez.robot_pose.pose))
                 self.step_planner.create_path_to_goal(goal)
                 # self.pid_stab.reset_roll_feedback_parameters()
                 self.t = -self.prepare_walk_time
@@ -244,7 +251,6 @@ class WalkEngineROS(WalkEngine):
             [_, pitch, roll] = self.bez.sensors.get_euler_angles()
             # path in progress
             if self.step_planner.robot_path is not None and 0 <= self.t <= self.step_planner.robot_path.duration():
-
                 # IMU feedback while walking (Average Time: 0.00017305118281667)
                 t_adj = self.t
                 if self.bez.sensors.imu_ready:
@@ -291,6 +297,7 @@ class WalkEngineROS(WalkEngine):
                 if self.bez.sensors.imu_ready:
                     if self.bez.fallen(pitch):
                         return False
+
             # Publishes angles to robot (Average Time: 0.00041992547082119)
             # self.soccerbot.robot_path.show()
             self.bez.motor_control.set_motor()
