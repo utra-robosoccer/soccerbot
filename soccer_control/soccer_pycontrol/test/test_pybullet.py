@@ -58,8 +58,8 @@ class TestPybullet(unittest.TestCase):
 
         for j in angles:
             x = [0.0] * bez.motor_control.numb_of_motors
-            x[bez.data.motor_names.index("left_leg_motor_0")] = j
-            x[bez.data.motor_names.index("right_leg_motor_0")] = j
+            x[bez.data.motor_names.index("left_leg_motor_5")] = j
+            x[bez.data.motor_names.index("right_leg_motor_5")] = j
 
             pb.setJointMotorControlArray(
                 bodyIndex=bez.model.body,

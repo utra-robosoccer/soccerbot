@@ -19,7 +19,7 @@ BMI088 imu;
 
 void update()
 {
-  uint8_t txBuf[2 + 18 * 2 + 6 + 6] = {0}; // 18 motors * 2 bytes each + 6 bytes for IMU
+  uint8_t txBuf[2 + 20 * 2 + 6 + 6] = {0}; // 20 motors * 2 bytes each + 6 bytes for IMU
   txBuf[0] = txBuf[1] = 0xfe;
   uint32_t lastTime = HAL_GetTick();
   while(1)
@@ -62,8 +62,8 @@ void set_robot_motor_limits() {
 
 	// use index as motorID!!
 	//                        0	    1     2	     3	    4	  5	    6	  7	    8	  9	    10	  11    12	  13	14	  15	16	17	18	  19
-	uint32_t minLimits[20] = {1510, 1050, 2000,  2000,  1213, 1536, 655,  760,  1610, 1825, 1100, 1550, 1720, 2057, 920,  1870, 0,  0,  0,    1060};
-	uint32_t maxLimits[20] = {2400, 3100, 2945,  4096,  3155, 2569, 2373, 2070, 3160, 2260, 3060, 2550, 3560, 3300, 2580, 2245, 0,  0,  3000, 4096};
+	uint32_t minLimits[20] = {1510, 1050, 2000,  2000,  1213, 1536, 1650,  760,  1610, 1825, 1100, 1550, 1720, 2057, 920,  1870, 0,  0,  0,    1060};
+	uint32_t maxLimits[20] = {2400, 3100, 2945,  4096,  3155, 2569, 3230, 2070, 3160, 2260, 3060, 2550, 3560, 3300, 2580, 2245, 0,  0,  3000, 4096};
 
 	for (uint16_t i = 0; i < 6; i++) {// reset variables
 	    motorPorts[i]->currMotor = 0;
@@ -156,19 +156,19 @@ void read_imu(uint8_t *rxBuf) {
   // Read gyro after accel, otherwise we get HAL_error (not sure why :/)
   BMI088_ReadGyroscope(&hi2c1, &gyroX, &gyroY, &gyroZ);
 
-  rxBuf[2 + 18 * 2 + 0] = (accX >> 8) & 0xFF; // MSB first means big endian
-  rxBuf[2 + 18 * 2 + 1] = accX & 0xFF;
-  rxBuf[2 + 18 * 2 + 2] = (accY >> 8) & 0xFF;
-  rxBuf[2 + 18 * 2 + 3] = accY & 0xFF;
-  rxBuf[2 + 18 * 2 + 4] = (accZ >> 8) & 0xFF;
-  rxBuf[2 + 18 * 2 + 5] = accZ & 0xFF;
+  rxBuf[2 + 20 * 2 + 0] = (accX >> 8) & 0xFF; // MSB first means big endian
+  rxBuf[2 + 20 * 2 + 1] = accX & 0xFF;
+  rxBuf[2 + 20 * 2 + 2] = (accY >> 8) & 0xFF;
+  rxBuf[2 + 20 * 2 + 3] = accY & 0xFF;
+  rxBuf[2 + 20 * 2 + 4] = (accZ >> 8) & 0xFF;
+  rxBuf[2 + 20 * 2 + 5] = accZ & 0xFF;
 
-  rxBuf[2 + 18 * 2 + 6 + 0] = (gyroX >> 8) & 0xFF;
-  rxBuf[2 + 18 * 2 + 6 + 1] = gyroX & 0xFF;
-  rxBuf[2 + 18 * 2 + 6 + 2] = (gyroY >> 8) & 0xFF;
-  rxBuf[2 + 18 * 2 + 6 + 3] = gyroY & 0xFF;
-  rxBuf[2 + 18 * 2 + 6 + 4] = (gyroZ >> 8) & 0xFF;
-  rxBuf[2 + 18 * 2 + 6 + 5] = gyroZ & 0xFF;
+  rxBuf[2 + 20 * 2 + 6 + 0] = (gyroX >> 8) & 0xFF;
+  rxBuf[2 + 20 * 2 + 6 + 1] = gyroX & 0xFF;
+  rxBuf[2 + 20 * 2 + 6 + 2] = (gyroY >> 8) & 0xFF;
+  rxBuf[2 + 20 * 2 + 6 + 3] = gyroY & 0xFF;
+  rxBuf[2 + 20 * 2 + 6 + 4] = (gyroZ >> 8) & 0xFF;
+  rxBuf[2 + 20 * 2 + 6 + 5] = gyroZ & 0xFF;
 
 }
 
