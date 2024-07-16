@@ -79,12 +79,12 @@ class FirmwareInterface:
                 # data_h = self.serial.read()
                 # angle = data_l[0] | (data_h[0] << 8)
                 # print(data_h[0], data_l[0], angle)
-                data = self.serial.read(size=2 + 2 * 18 + 12)
+                data = self.serial.read(size=2 + 2 * 20 + 12)
 
                 # Publish the Joint State
                 j = JointState()
                 j.header.stamp = rospy.Time.now()
-                for i in range(18):
+                for i in range(20):
                     val = data[i * 2 + 2] | data[i * 2 + 3] << 8
 
                     motor_name = self.motor_id_to_name_dict[i]
@@ -111,7 +111,7 @@ class FirmwareInterface:
                 imu = Imu()
                 imu.header.stamp = rospy.Time.now()
 
-                imu_data = data[2 + 2 * 18 : 2 + 2 * 18 + 12]
+                imu_data = data[2 + 2 * 20 : 2 + 2 * 20 + 12]
 
                 # https://www.mouser.com/datasheet/2/783/BST_BMI088_DS001-1509549.pdf
                 ACC_RANGE = 32768.0 / 2.0 / 1.5  # page 27 datasheet bmi088
@@ -165,7 +165,7 @@ class FirmwareInterface:
             self.reconnect_serial_port()
 
             # [0xff, 0xff, angle1_lo, angle1_hi, angle2_lo ..., crc_lo, crc_hi]
-            bytes_to_write = [0x0] * (2 + 18 * 2)
+            bytes_to_write = [0x0] * (2 + 20 * 2)
             bytes_to_write[0] = 0xFF
             bytes_to_write[1] = 0xFF
 
@@ -175,6 +175,7 @@ class FirmwareInterface:
                 angle_zero = self.motor_mapping[name]["angle_zero"] / 180 * math.pi
                 angle_max = self.motor_mapping[name]["angle_max"] / 180 * math.pi
                 angle_min = self.motor_mapping[name]["angle_min"] / 180 * math.pi
+                ang_zero_deg = self.motor_mapping[name]["angle_zero"]
 
                 flipped = "flipped" in self.motor_mapping[name] and self.motor_mapping[name]["flipped"] == "true"
                 if flipped:
@@ -191,7 +192,7 @@ class FirmwareInterface:
                 angle_final_bytes_1 = angle_final_bytes & 0xFF
                 angle_final_bytes_2 = (angle_final_bytes >> 8) & 0xFF
 
-                assert id < 18
+                assert id < 20
                 bytes_to_write[2 + id * 2] = angle_final_bytes_1
                 bytes_to_write[2 + id * 2 + 1] = angle_final_bytes_2
                 pass

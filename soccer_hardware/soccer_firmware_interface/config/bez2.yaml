@@ -24,7 +24,7 @@ left_leg_motor_2:
 left_leg_motor_3:
   id: 7
   type: "mx64"
-  angle_zero: 180
+  angle_zero: 270
   angle_max: 360
   angle_min: 0
 
@@ -68,7 +68,7 @@ right_leg_motor_2:
 right_leg_motor_3:
   id: 13
   type: "mx64"
-  angle_zero: 180
+  angle_zero: 90
   angle_max: 360
   angle_min: 0
   flipped: "true"
@@ -89,7 +89,7 @@ right_leg_motor_5:
   angle_min: 0
 
 left_arm_motor_0:
-  id: 0
+  id: 18
   type: "mx28"
   angle_zero: 180
   angle_max: 360
@@ -97,18 +97,19 @@ left_arm_motor_0:
   flipped: "true"
 
 left_arm_motor_1:
-  id: 1
+  id: 0
   type: "mx28"
   angle_zero: 180
   angle_max: 360
   angle_min: 0
 
 left_arm_motor_2:
-  id: 18
+  id: 1
   type: "mx28"
   angle_zero: 180
   angle_max: 360
   angle_min: 0
+  flipped: "true"
 
 right_arm_motor_0: # Checked
   id: 19
@@ -131,7 +132,6 @@ right_arm_motor_2:
   angle_zero: 180
   angle_max: 360
   angle_min: 0
-  flipped: "true"
 
 head_motor_0:
   id: 16
