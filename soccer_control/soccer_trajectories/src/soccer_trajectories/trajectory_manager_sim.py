@@ -42,6 +42,8 @@ class TrajectoryManagerSim(TrajectoryManager):
                 exit(0)
             t += 1 / self.sim.rate
 
+            print(t)
+
             self.sim.step()
 
         # self.sim.ramp.close()

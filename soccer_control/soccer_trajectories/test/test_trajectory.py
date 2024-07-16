@@ -52,7 +52,7 @@ class TestTrajectory(unittest.TestCase):
         self.assertEqual(angles, [0.0, 0.0, 0.0, 0.0, 0.564, 0.564, -1.176, -1.176, 0.613, 0.613, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
 
 
-@pytest.mark.parametrize("trajectory_name", ["getupfront"])  # , "getupback", "rightkick"])
+@pytest.mark.parametrize("trajectory_name", ["getupfront"])  # , "getupback", "rightkick", "getupfront"])
 @pytest.mark.parametrize("robot_model", ["bez2"])
 @pytest.mark.parametrize("real_time", [True])
 def test_trajectory_sim(trajectory_name: str, robot_model: str, real_time: bool):
@@ -62,7 +62,7 @@ def test_trajectory_sim(trajectory_name: str, robot_model: str, real_time: bool)
     """
     # TODO update with pybullet updates
     if trajectory_name == "getupfront":
-        pose = Transformation(position=[0, 0, 0.070], euler=[0, 1.57, 1.57])
+        pose = Transformation(position=[0, -0.5, 0.070], euler=[0, 1.57, 1.57])
     elif trajectory_name == "getupback":
         pose = Transformation(position=[0, 0, 0.070], euler=[0, -1.57, 0])
     # else:
