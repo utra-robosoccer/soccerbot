@@ -46,6 +46,10 @@ class WalkEngineROS(WalkEngine):
         self.new_goal = self.goal
         self.terminated = None
 
+    def wait(self, steps: int):
+        for i in range(steps):
+            rospy.sleep(self.PYBULLET_STEP)
+
     def setPose(self, pose: Transformation):  # TODO should link up with the pybullet version
         [r, p, y] = pose.orientation_euler
         pose.orientation_euler = [r, 0, 0]
@@ -139,15 +143,15 @@ class WalkEngineROS(WalkEngine):
         r = rospy.Rate(1 / self.PYBULLET_STEP)
         stable_count = 5
 
-        if single_trajectory:
-            self.bez.robot_state.status = RobotState.STATUS_WALKING
-
-        # wait
-        while self.bez.robot_state.status == RobotState.STATUS_DISCONNECTED:
-            try:
-                r.sleep()
-            except ROSInterruptException:
-                exit(0)
+        # if single_trajectory:
+        #     self.bez.robot_state.status = RobotState.STATUS_WALKING
+        #
+        # # wait
+        # while self.bez.robot_state.status == RobotState.STATUS_DISCONNECTED:
+        #     try:
+        #         r.sleep()
+        #     except ROSInterruptException:
+        #         exit(0)
 
         self.bez.ready()
         self.bez.motor_control.set_motor()
@@ -160,39 +164,38 @@ class WalkEngineROS(WalkEngine):
 
             # Always publish odometry no matter what state
             self.publishOdometry(r.last_time)
-
             # Always apply head rotation
-            self.bez.apply_head_rotation()
+            # self.bez.apply_head_rotation()
 
             # Check if not in a walking state
-            if self.bez.robot_state.status in [
-                RobotState.STATUS_DISCONNECTED,
-                RobotState.STATUS_FALLEN_FRONT,
-                RobotState.STATUS_FALLEN_BACK,
-                RobotState.STATUS_FALLEN_SIDE,
-                RobotState.STATUS_GETTING_BACK_UP,
-                RobotState.STATUS_KICKING,
-                RobotState.STATUS_PENALIZED,
-            ]:
-                self.step_planner.robot_path = None
-                self.goal = self.new_goal
-                self.pid.reset_imus()
-                self.bez.motor_control.updateRobotConfiguration()
-                r.sleep()
-                continue
+            # if self.bez.robot_state.status in [
+            #     RobotState.STATUS_DISCONNECTED,
+            #     RobotState.STATUS_FALLEN_FRONT,
+            #     RobotState.STATUS_FALLEN_BACK,
+            #     RobotState.STATUS_FALLEN_SIDE,
+            #     RobotState.STATUS_GETTING_BACK_UP,
+            #     RobotState.STATUS_KICKING,
+            #     RobotState.STATUS_PENALIZED,
+            # ]:
+            #     self.step_planner.robot_path = None
+            #     self.goal = self.new_goal
+            #     self.pid.reset_imus()
+            #     self.bez.motor_control.updateRobotConfiguration()
+            #     r.sleep()
+            #     continue
             # CHeck if walk terminated
-            if self.bez.robot_state.status in [RobotState.STATUS_TERMINATING_WALK]:
-                if not self.terminated:
-                    rospy.loginfo("Terminating Walk at time " + str(self.t))
-                    if self.step_planner.robot_path is not None:
-                        self.step_planner.robot_path.terminateWalk(self.t)
-                    self.terminated = True
-
-                self.goal = self.new_goal
-                self.pid.reset_imus()
-                self.bez.motor_control.updateRobotConfiguration()
-                r.sleep()
-                continue
+            # if self.bez.robot_state.status in [RobotState.STATUS_TERMINATING_WALK]:
+            #     if not self.terminated:
+            #         rospy.loginfo("Terminating Walk at time " + str(self.t))
+            #         if self.step_planner.robot_path is not None:
+            #             self.step_planner.robot_path.terminateWalk(self.t)
+            #         self.terminated = True
+            #
+            #     self.goal = self.new_goal
+            #     self.pid.reset_imus()
+            #     self.bez.motor_control.updateRobotConfiguration()
+            #     r.sleep()
+            #     continue
 
             # New goal added
             if self.new_goal != self.goal and self.step_planner.robot_path is None:
@@ -226,7 +229,7 @@ class WalkEngineROS(WalkEngine):
 
                 print_pose("Start Pose", self.bez.robot_pose.pose)
                 print_pose("End Pose", self.goal.pose)
-                goal = self.transform_global_local(Transformation(pose=self.bez.robot_pose.pose), Transformation(pose=self.bez.robot_pose.pose))
+                goal = self.transform_global_local(Transformation(pose=self.goal.pose), Transformation(pose=self.bez.robot_pose.pose))
                 self.step_planner.create_path_to_goal(goal)
                 # self.pid_stab.reset_roll_feedback_parameters()
                 self.t = -self.prepare_walk_time
@@ -241,7 +244,7 @@ class WalkEngineROS(WalkEngine):
                 self.goal = self.new_goal
                 self.step_planner.robot_path = self.new_path
 
-            [_, pitch, roll] = self.bez.sensors.get_euler_angles()
+            # [_, pitch, roll] = self.bez.sensors.get_euler_angles()
             # path in progress
             if self.step_planner.robot_path is not None and 0 <= self.t <= self.step_planner.robot_path.duration():
 
@@ -249,8 +252,8 @@ class WalkEngineROS(WalkEngine):
                 t_adj = self.t
                 if self.bez.sensors.imu_ready:
                     # TODO needs to be fixed
-
-                    self.stabilize_walk(pitch, roll)
+                    pass
+                    # self.stabilize_walk(pitch, roll)
                     # t_adj = self.soccerbot.apply_phase_difference_roll_feedback(self.t, imu_pose)
 
                 torso_to_right_foot, torso_to_left_foot = self.step_planner.get_next_step(t_adj)
@@ -258,39 +261,39 @@ class WalkEngineROS(WalkEngine):
                 self.step_planner.current_step_time = self.t
 
             # Walk completed
-            if (
-                self.step_planner.robot_path is not None
-                and self.t <= self.step_planner.robot_path.duration() < self.t + self.PYBULLET_STEP
-                and not self.terminated
-            ):
-                walk_time = rospy.Time.now().secs + (rospy.Time.now().nsecs / 100000000) - (time_now.secs + (time_now.nsecs / 100000000))
-                rospy.loginfo(f"\033[92mCompleted Walk, Took: {walk_time} \033[0m")
-                e = Empty()
-                self.completed_walk_publisher.publish(e)
+            # if (
+            #     self.step_planner.robot_path is not None
+            #     and self.t <= self.step_planner.robot_path.duration() < self.t + self.PYBULLET_STEP
+            #     and not self.terminated
+            # ):
+            #     walk_time = rospy.Time.now().secs + (rospy.Time.now().nsecs / 100000000) - (time_now.secs + (time_now.nsecs / 100000000))
+            #     rospy.loginfo(f"\033[92mCompleted Walk, Took: {walk_time} \033[0m")
+            #     e = Empty()
+            #     self.completed_walk_publisher.publish(e)
 
             # update path if completed TODO why here
-            if self.step_planner.robot_path is None or self.t > self.step_planner.robot_path.duration():
-                self.step_planner.robot_path = None
-                pass
+            # if self.step_planner.robot_path is None or self.t > self.step_planner.robot_path.duration():
+            #     self.step_planner.robot_path = None
+            #     pass
 
             # Stabilize
-            if self.t < 0 or (
-                self.bez.robot_state.status == RobotState.STATUS_WALKING
-                and (self.step_planner.robot_path is None or self.t > self.step_planner.robot_path.duration())
-            ):
-                if self.bez.sensors.imu_ready:
-                    stable_count = self.update_stable_count(pitch, roll, stable_count)
-                    if stable_count == 0:  # TODO dont really like this format
-                        t = 0  # TODO need to fix later
-                    self.stabilize_stand(pitch, roll)
+            # if self.t < 0 or (
+            #     self.bez.robot_state.status == RobotState.STATUS_WALKING
+            #     and (self.step_planner.robot_path is None or self.t > self.step_planner.robot_path.duration())
+            # ):
+            #     if self.bez.sensors.imu_ready:
+            #         stable_count = self.update_stable_count(pitch, roll, stable_count)
+            #         if stable_count == 0:  # TODO dont really like this format
+            #             t = 0  # TODO need to fix later
+            #         self.stabilize_stand(pitch, roll)
 
-            if single_trajectory:
-                if self.step_planner.robot_path is None:
-                    return True
-
-                if self.bez.sensors.imu_ready:
-                    if self.bez.fallen(pitch):
-                        return False
+            # if single_trajectory:
+            #     if self.step_planner.robot_path is None:
+            #         return True
+            #
+            #     if self.bez.sensors.imu_ready:
+            #         if self.bez.fallen(pitch):
+            #             return False
             # Publishes angles to robot (Average Time: 0.00041992547082119)
             # self.soccerbot.robot_path.show()
             self.bez.motor_control.set_motor()
