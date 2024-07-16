@@ -63,14 +63,17 @@ def test_trajectory_sim(trajectory_name: str, robot_model: str, real_time: bool)
     # TODO update with pybullet updates
     if trajectory_name == "getupfront":
         pose = Transformation(position=[0, -0.5, 0.070], euler=[0, 1.57, 1.57])
+        camera = 90
     elif trajectory_name == "getupback":
         pose = Transformation(position=[0, 0, 0.070], euler=[0, -1.57, 0])
+        camera = 0
     # else:
     #     pose = Transformation(position=[0, 0, 0.315], quaternion=[0.0, 0.0, 0.0, 1])
 
     print(os.path.join(os.path.dirname(__file__), "../trajectories/bez2/" + trajectory_name + ".csv"))
     tm = TrajectoryManagerSim(
-        os.path.join(os.path.dirname(__file__), "../trajectories/bez2/" + trajectory_name + ".csv"), pose, robot_model, real_time
+        os.path.join(os.path.dirname(__file__), "../trajectories/bez2/" + trajectory_name + ".csv"), pose,
+        robot_model, real_time, camera_yaw=camera
     )
     tm.send_trajectory()
     tm.sim.wait(1000)

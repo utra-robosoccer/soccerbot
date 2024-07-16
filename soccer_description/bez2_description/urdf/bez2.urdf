@@ -812,7 +812,7 @@
     <child link="left_shoulder"/>
     <axis xyz="-0.0 -1.0 0.0"/>
     <dynamics damping="0.01" friction="0.1"/>
-    <limit effort="2.5" lower="-3.14" upper="3.9269908169872414" velocity="5.76"/>
+    <limit effort="4.1" lower="-3.141592653589793" upper="3.9269908169872414" velocity="4.82"/>
   </joint>
   <joint name="left_arm_motor_1" type="revolute">
     <origin rpy="0 0 0" xyz="0.0205 0.0295 -0.021"/>
@@ -884,7 +884,7 @@
     <child link="right_shoulder"/>
     <axis xyz="0.0 -1.0 -0.0"/>
     <dynamics damping="0.01" friction="0.1"/>
-    <limit effort="2.5" lower="-3.14" upper="3.9269908169872414" velocity="5.76"/>
+    <limit effort="4.1" lower="-3.141592653589793" upper="3.9269908169872414" velocity="4.82"/>
   </joint>
   <joint name="right_arm_motor_1" type="revolute">
     <origin rpy="0 0 0" xyz="0.021 -0.0295 -0.021"/>

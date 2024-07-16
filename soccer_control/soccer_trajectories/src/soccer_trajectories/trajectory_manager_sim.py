@@ -13,11 +13,11 @@ class TrajectoryManagerSim(TrajectoryManager):
     """
 
     def __init__(
-        self, trajectory_path: str, pose: Transformation = Transformation(), robot_model: str = "bez1", real_time=False, mirror: bool = False
+        self, trajectory_path: str, pose: Transformation = Transformation(), robot_model: str = "bez1", real_time=False, mirror: bool = False, camera_yaw = 90
     ):
         super(TrajectoryManagerSim, self).__init__(trajectory_path, mirror)
 
-        self.sim = PybulletSetup(robot_model=robot_model, real_time=real_time, pose=pose)
+        self.sim = PybulletSetup(robot_model=robot_model, real_time=real_time, pose=pose, camera_yaw=camera_yaw)
 
     def read_joint_state(self) -> JointState:
         return JointState(name=self.sim.motor_names, position=[0.0] * 20)

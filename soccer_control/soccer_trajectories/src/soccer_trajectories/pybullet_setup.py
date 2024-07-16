@@ -13,7 +13,7 @@ class PybulletSetup:
     """
 
     # TODO update with the modified for pycontrol
-    def __init__(self, pose: Transformation = Transformation(), robot_model: str = "bez1", real_time=False, rate: int = 75, display=True):
+    def __init__(self, pose: Transformation = Transformation(), robot_model: str = "bez1", real_time=False, rate: int = 75, display=True, camera_yaw = 90):
         """
         Initialize the Navigator
 
@@ -24,7 +24,7 @@ class PybulletSetup:
         self.display = display
         self.real_time = real_time
 
-        self.ramp = PybulletWorld("plane.urdf", (0, 0, 0), (0, 0, 0), lateral_friction=0.9, spinning_friction=0.9, rolling_friction=0.0, camera_yaw=0)
+        self.ramp = PybulletWorld("plane.urdf", (0, 0, 0), (0, 0, 0), lateral_friction=0.9, spinning_friction=0.9, rolling_friction=0.0, camera_yaw=camera_yaw)
         home = expanduser("~")
         self.body = pb.loadURDF(
             home + f"/catkin_ws/src/soccerbot/soccer_description/{robot_model}_description/urdf/{robot_model}.urdf",

@@ -451,7 +451,7 @@
   <child link="left_shoulder"/>
   <axis xyz="-0.0 -1.0 0.0"/>
   <dynamics damping="${MX28_DAMPING}" friction="${MX28_FRICTION}" />
-<limit effort="${MX28_TORQUE}" lower="-${PI/2}" upper="${PI*5/4}" velocity="${MX28_VELOCITY}"/>
+<limit effort="${XM430_TORQUE}" lower="-${PI}" upper="${PI*5/4}" velocity="${XM430_VELOCITY}"/>
 </joint>
 <joint name="left_arm_motor_1" type="revolute">
   <origin xyz="0.0205 0.0295 -0.021" rpy="0 0 0"/>
@@ -532,7 +532,7 @@
   <child link="right_shoulder"/>
   <axis xyz="0.0 -1.0 -0.0"/>
     <dynamics damping="${MX28_DAMPING}" friction="${MX28_FRICTION}" />
-              <limit effort="${MX28_TORQUE}" lower="-${PI/2}" upper="${PI*5/4}" velocity="${MX28_VELOCITY}"/>
+              <limit effort="${XM430_TORQUE}" lower="-${PI}" upper="${PI*5/4}" velocity="${XM430_VELOCITY}"/>
 
 </joint>
 <joint name="right_arm_motor_1" type="revolute">
