@@ -24,9 +24,7 @@ class PybulletSetup:
         self.display = display
         self.real_time = real_time
 
-        self.ramp = PybulletWorld(
-            "plane.urdf", (0, 0, 0), (0, 0, 0), lateral_friction=0.9, spinning_friction=0.9, rolling_friction=0.0, camera_yaw=90
-        )
+        self.ramp = PybulletWorld("plane.urdf", (0, 0, 0), (0, 0, 0), lateral_friction=0.9, spinning_friction=0.9, rolling_friction=0.0, camera_yaw=0)
         home = expanduser("~")
         self.body = pb.loadURDF(
             home + f"/catkin_ws/src/soccerbot/soccer_description/{robot_model}_description/urdf/{robot_model}.urdf",
