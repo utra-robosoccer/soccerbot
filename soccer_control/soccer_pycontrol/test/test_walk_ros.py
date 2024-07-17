@@ -25,7 +25,7 @@ class TestPybullet(unittest.TestCase):
         walker.wait(50)
         walker.ready()
         bez.motor_control.set_motor()
-        walker.wait(50)
+        # walker.wait(50)
         walker.set_goal(Transformation([1, 0, 0], [0, 0, 0, 1]), False)
         walker.run()
         print(walker.t)

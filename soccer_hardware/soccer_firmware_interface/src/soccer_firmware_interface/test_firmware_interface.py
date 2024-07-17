@@ -80,8 +80,10 @@ def test_firmware_interface():
         ]
         # j.position = [math.sin(i / 180 * math.pi) * 0.1, math.cos(i / 180 * math.pi) * 0.1]
 
-        ang = 0.0
-        ang = abs(math.sin(i / 180 * math.pi) * 0.3)
+        if False:  # test
+            ang = 0.0
+        else:
+            ang = abs(math.sin(i / 180 * math.pi) * 0.2)
         j.position = [ang] * 20
 
         # j.position[0] = ang

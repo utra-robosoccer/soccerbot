@@ -21,8 +21,6 @@ from std_msgs.msg import Empty
 from soccer_common import Transformation
 from soccer_msgs.msg import RobotState
 
-# os.environ["ROS_NAMESPACE"] = "/robot1"
-
 
 class BezROS(Bez):
     def __init__(self):

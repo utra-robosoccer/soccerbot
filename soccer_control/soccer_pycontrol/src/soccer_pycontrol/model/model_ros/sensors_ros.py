@@ -20,7 +20,6 @@ class SensorsROS(Sensors):
 
         :param msg: IMU Message
         """
-        # print("IMU callback")
         self.imu_msg = msg
         self.imu_ready = True
 

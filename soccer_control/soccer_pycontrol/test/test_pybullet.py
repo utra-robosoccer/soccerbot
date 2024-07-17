@@ -54,7 +54,7 @@ class TestPybullet(unittest.TestCase):
         world = PybulletWorld(path="", camera_yaw=90, real_time=True, rate=500)
         bez = Bez(robot_model="bez1", fixed_base=True)
         world.wait(50)
-        angles = np.linspace(0, np.pi)
+        angles = np.linspace(-np.pi, np.pi)
 
         for j in angles:
             x = [0.0] * bez.motor_control.numb_of_motors
