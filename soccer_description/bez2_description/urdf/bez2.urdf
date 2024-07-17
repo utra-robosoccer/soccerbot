@@ -373,7 +373,7 @@
   <link name="torso">
     <inertial>
       <origin rpy="0 0 0" xyz="-2.6182166493521018e-05 0.0037391632790891283 -0.07310917852477573"/>
-      <mass value="1.621911019034044"/>
+      <mass value="1.62191101903404"/>
       <inertia ixx="0.17522" ixy="0.000499" ixz="0.001818" iyy="0.126523" iyz="0.000833" izz="0.127074"/>
     </inertial>
     <visual>
@@ -433,7 +433,7 @@
   <link name="left_shoulder">
     <inertial>
       <origin rpy="0 0 0" xyz="9.49688693072442e-05 0.025391120875814188 -0.00710009103373208"/>
-      <mass value="0.42869731083494267"/>
+      <mass value="0.172653501389095"/>
       <inertia ixx="0.000136" ixy="0.0" ixz="3e-06" iyy="0.000137" iyz="1.8e-05" izz="0.000116"/>
     </inertial>
     <visual>
@@ -453,7 +453,7 @@
   <link name="left_bicep">
     <inertial>
       <origin rpy="0 0 0" xyz="-0.01931620093381984 0.0008375708488899958 -0.05229697639295136"/>
-      <mass value="0.7365391814909177"/>
+      <mass value="0.212120407883451"/>
       <inertia ixx="0.000601" ixy="-0.0" ixz="9e-06" iyy="0.000616" iyz="1.3e-05" izz="0.000236"/>
     </inertial>
     <visual>
@@ -493,7 +493,7 @@
   <link name="left_hip_side">
     <inertial>
       <origin rpy="0 0 0" xyz="2.104631423652248e-08 3.399354384647779e-07 -0.0077462434278427195"/>
-      <mass value="0.023116469719045966"/>
+      <mass value="0.120655957656288"/>
       <inertia ixx="3e-06" ixy="-0.0" ixz="0.0" iyy="8e-06" iyz="-0.0" izz="7e-06"/>
     </inertial>
     <visual>
@@ -513,7 +513,7 @@
   <link name="left_hip_front">
     <inertial>
       <origin rpy="0 0 0" xyz="0.0004996292549223533 0.0005421424160892835 -0.012131129108951588"/>
-      <mass value="0.7328385746044006"/>
+      <mass value="0.211645971103128"/>
       <inertia ixx="0.000195" ixy="-8e-06" ixz="-2e-06" iyy="0.000458" iyz="-1e-06" izz="0.000394"/>
     </inertial>
     <visual>
@@ -533,7 +533,7 @@
   <link name="left_thigh">
     <inertial>
       <origin rpy="0 0 0" xyz="2.1046150922715556e-08 -0.018793706652435974 -0.06540894904468947"/>
-      <mass value="0.191955361852033"/>
+      <mass value="0.142301969468209"/>
       <inertia ixx="0.000159" ixy="-0.0" ixz="0.0" iyy="0.000121" iyz="1e-06" izz="6.9e-05"/>
     </inertial>
     <visual>
@@ -553,7 +553,7 @@
   <link name="left_calve">
     <inertial>
       <origin rpy="0 0 0" xyz="0.00034959081321023905 -0.023268493362085793 -0.030853501915197812"/>
-      <mass value="0.20304073544640247"/>
+      <mass value="0.143723171211077"/>
       <inertia ixx="0.000176" ixy="0.0" ixz="2e-06" iyy="0.00015" iyz="-2e-06" izz="6.2e-05"/>
     </inertial>
     <visual>
@@ -573,7 +573,7 @@
   <link name="left_ankle">
     <inertial>
       <origin rpy="0 0 0" xyz="-0.02065513049536576 -0.023057637545577894 -0.017838420955393897"/>
-      <mass value="0.26345509510176346"/>
+      <mass value="0.151468601936124"/>
       <inertia ixx="0.000102" ixy="-1e-06" ixz="-1.7e-05" iyy="0.000212" iyz="-2e-06" izz="0.000173"/>
     </inertial>
     <visual>
@@ -593,7 +593,7 @@
   <link name="left_foot">
     <inertial>
       <origin rpy="0 0 0" xyz="0.0476419808535605 0.018106431082562213 -0.01978200152059173"/>
-      <mass value="0.37785469138016164"/>
+      <mass value="0.16613521684361"/>
       <inertia ixx="0.000247" ixy="-2.6e-05" ixz="1.4e-05" iyy="0.000905" iyz="5e-06" izz="0.001142"/>
     </inertial>
     <visual>
@@ -613,7 +613,7 @@
   <link name="right_hip_side">
     <inertial>
       <origin rpy="0 0 0" xyz="2.1046314309380865e-08 3.3993543878396704e-07 -0.007746243427843552"/>
-      <mass value="0.023116469719045966"/>
+      <mass value="0.120655957656288"/>
       <inertia ixx="3e-06" ixy="-0.0" ixz="0.0" iyy="8e-06" iyz="-0.0" izz="7e-06"/>
     </inertial>
     <visual>
@@ -633,7 +633,7 @@
   <link name="right_hip_front">
     <inertial>
       <origin rpy="0 0 0" xyz="0.0004996292549223817 0.0005421424160894084 -0.01213112910895231"/>
-      <mass value="0.7328385746044006"/>
+      <mass value="0.211645971103128"/>
       <inertia ixx="0.000195" ixy="-8e-06" ixz="-2e-06" iyy="0.000458" iyz="-1e-06" izz="0.000394"/>
     </inertial>
     <visual>
@@ -653,7 +653,7 @@
   <link name="right_thigh">
     <inertial>
       <origin rpy="0 0 0" xyz="2.1046151002512836e-08 -0.018793706652437202 -0.0654089490446903"/>
-      <mass value="0.191955361852033"/>
+      <mass value="0.142301969468209"/>
       <inertia ixx="0.000159" ixy="-0.0" ixz="0.0" iyy="0.000121" iyz="1e-06" izz="6.9e-05"/>
     </inertial>
     <visual>
@@ -673,7 +673,7 @@
   <link name="right_calve">
     <inertial>
       <origin rpy="0 0 0" xyz="0.0003495908132103466 -0.023268493362087077 -0.030853501915198367"/>
-      <mass value="0.20304073544640247"/>
+      <mass value="0.143723171211077"/>
       <inertia ixx="0.000176" ixy="0.0" ixz="2e-06" iyy="0.00015" iyz="-2e-06" izz="6.2e-05"/>
     </inertial>
     <visual>
@@ -693,7 +693,7 @@
   <link name="right_ankle">
     <inertial>
       <origin rpy="0 0 0" xyz="-0.020655130495365704 -0.023057637545579254 -0.017838420955394507"/>
-      <mass value="0.26345509510176346"/>
+      <mass value="0.151468601936124"/>
       <inertia ixx="0.000102" ixy="-1e-06" ixz="-1.7e-05" iyy="0.000212" iyz="-2e-06" izz="0.000173"/>
     </inertial>
     <visual>
@@ -713,7 +713,7 @@
   <link name="right_foot">
     <inertial>
       <origin rpy="0 0 0" xyz="0.047641980853560625 -0.018107232571891542 -0.019782001520592507"/>
-      <mass value="0.37785469138016164"/>
+      <mass value="0.16613521684361"/>
       <inertia ixx="0.000247" ixy="2.6e-05" ixz="1.4e-05" iyy="0.000905" iyz="-5e-06" izz="0.001142"/>
     </inertial>
     <visual>
@@ -733,7 +733,7 @@
   <link name="right_shoulder">
     <inertial>
       <origin rpy="0 0 0" xyz="0.00042714569282304837 -0.025390436050570106 -0.007100091033732914"/>
-      <mass value="0.42869731083494267"/>
+      <mass value="0.172653501389095"/>
       <inertia ixx="0.000136" ixy="1e-06" ixz="4e-06" iyy="0.000137" iyz="-1.8e-05" izz="0.000116"/>
     </inertial>
     <visual>
@@ -753,7 +753,7 @@
   <link name="right_bicep">
     <inertial>
       <origin rpy="0 0 0" xyz="-0.02068375587119517 -0.0008368909778958267 -0.05229697639295197"/>
-      <mass value="0.7365391814909177"/>
+      <mass value="0.212120407883451"/>
       <inertia ixx="0.000601" ixy="-0.0" ixz="-9e-06" iyy="0.000616" iyz="-1.3e-05" izz="0.000236"/>
     </inertial>
     <visual>
@@ -795,7 +795,7 @@
     <parent link="torso"/>
     <child link="neck"/>
     <axis xyz="0.0 0.0 -1.0"/>
-    <dynamics damping="0.01" friction="0.1"/>
+    <dynamics damping="0.16" friction="0.6"/>
     <limit effort="1.5" lower="-1.5707963267948966" upper="1.5707963267948966" velocity="6.39"/>
   </joint>
   <joint name="head_motor_1" type="revolute">
@@ -803,7 +803,7 @@
     <parent link="neck"/>
     <child link="head"/>
     <axis xyz="0.0 1.0 0.0"/>
-    <dynamics damping="0.01" friction="0.1"/>
+    <dynamics damping="0.16" friction="0.6"/>
     <limit effort="1.5" lower="0" upper="1.5707963267948966" velocity="6.39"/>
   </joint>
   <joint name="left_arm_motor_0" type="revolute">
@@ -811,7 +811,7 @@
     <parent link="torso"/>
     <child link="left_shoulder"/>
     <axis xyz="-0.0 -1.0 0.0"/>
-    <dynamics damping="0.01" friction="0.1"/>
+    <dynamics damping="0.3" friction="0.83"/>
     <limit effort="4.1" lower="-3.141592653589793" upper="3.9269908169872414" velocity="4.82"/>
   </joint>
   <joint name="left_arm_motor_1" type="revolute">
@@ -819,7 +819,7 @@
     <parent link="left_shoulder"/>
     <child link="left_bicep"/>
     <axis xyz="1.0 -0.0 0.0"/>
-    <dynamics damping="0.01" friction="0.1"/>
+    <dynamics damping="0.3" friction="0.83"/>
     <limit effort="2.5" lower="0" upper="1.5707963267948966" velocity="5.76"/>
   </joint>
   <joint name="left_arm_motor_2" type="revolute">
@@ -827,7 +827,7 @@
     <parent link="left_bicep"/>
     <child link="left_forearm"/>
     <axis xyz="-0.0 -1.0 -0.0"/>
-    <dynamics damping="0.01" friction="0.1"/>
+    <dynamics damping="0.3" friction="0.83"/>
     <limit effort="2.5" lower="0" upper="3.141592653589793" velocity="5.76"/>
   </joint>
   <joint name="left_leg_motor_0" type="revolute">
@@ -835,7 +835,7 @@
     <parent link="torso"/>
     <child link="left_hip_side"/>
     <axis xyz="0.0 0.0 -1.0"/>
-    <dynamics damping="0.01" friction="0.1"/>
+    <dynamics damping="0.72" friction="0.72"/>
     <limit effort="4.1" lower="-1.309" upper="0.524" velocity="4.82"/>
   </joint>
   <joint name="left_leg_motor_1" type="revolute">
@@ -843,7 +843,7 @@
     <parent link="left_hip_side"/>
     <child link="left_hip_front"/>
     <axis xyz="1.0 0.0 0.0"/>
-    <dynamics damping="0.01" friction="0.1"/>
+    <dynamics damping="0.72" friction="0.72"/>
     <limit effort="4.1" lower="-0.7853981633974483" upper="1.5707963267948966" velocity="4.82"/>
   </joint>
   <joint name="left_leg_motor_2" type="revolute">
@@ -851,7 +851,7 @@
     <parent link="left_hip_front"/>
     <child link="left_thigh"/>
     <axis xyz="-0.0 -1.0 0.0"/>
-    <dynamics damping="0.01" friction="0.1"/>
+    <dynamics damping="0.72" friction="0.72"/>
     <limit effort="4.1" lower="-0.7853981633974483" upper="2.356194490192345" velocity="4.82"/>
   </joint>
   <joint name="left_leg_motor_3" type="revolute">
@@ -859,7 +859,7 @@
     <parent link="left_thigh"/>
     <child link="left_calve"/>
     <axis xyz="-0.0 -1.0 0.0"/>
-    <dynamics damping="0.01" friction="0.1"/>
+    <dynamics damping="0.66" friction="1.42"/>
     <limit effort="6.0" lower="-2.793" upper="0" velocity="6.6"/>
   </joint>
   <joint name="left_leg_motor_4" type="revolute">
@@ -867,7 +867,7 @@
     <parent link="left_calve"/>
     <child link="left_ankle"/>
     <axis xyz="-0.0 -1.0 0.0"/>
-    <dynamics damping="0.01" friction="0.1"/>
+    <dynamics damping="0.66" friction="1.42"/>
     <limit effort="6.0" lower="-0.7853981633974483" upper="1.5707963267948966" velocity="6.6"/>
   </joint>
   <joint name="left_leg_motor_5" type="revolute">
@@ -875,7 +875,7 @@
     <parent link="left_ankle"/>
     <child link="left_foot"/>
     <axis xyz="1.0 0.0 0.0"/>
-    <dynamics damping="0.01" friction="0.1"/>
+    <dynamics damping="0.66" friction="1.42"/>
     <limit effort="6.0" lower="-0.7853981633974483" upper="0.7853981633974483" velocity="6.6"/>
   </joint>
   <joint name="right_arm_motor_0" type="revolute">
@@ -883,7 +883,7 @@
     <parent link="torso"/>
     <child link="right_shoulder"/>
     <axis xyz="0.0 -1.0 -0.0"/>
-    <dynamics damping="0.01" friction="0.1"/>
+    <dynamics damping="0.3" friction="0.83"/>
     <limit effort="4.1" lower="-3.141592653589793" upper="3.9269908169872414" velocity="4.82"/>
   </joint>
   <joint name="right_arm_motor_1" type="revolute">
@@ -891,7 +891,7 @@
     <parent link="right_shoulder"/>
     <child link="right_bicep"/>
     <axis xyz="-1.0 0.0 0.0"/>
-    <dynamics damping="0.01" friction="0.1"/>
+    <dynamics damping="0.3" friction="0.83"/>
     <limit effort="2.5" lower="0" upper="1.5707963267948966" velocity="5.76"/>
   </joint>
   <joint name="right_arm_motor_2" type="revolute">
@@ -899,7 +899,7 @@
     <parent link="right_bicep"/>
     <child link="right_forearm"/>
     <axis xyz="0.0 -1.0 0.0"/>
-    <dynamics damping="0.01" friction="0.1"/>
+    <dynamics damping="0.3" friction="0.83"/>
     <limit effort="2.5" lower="0" upper="3.141592653589793" velocity="5.76"/>
   </joint>
   <joint name="right_leg_motor_0" type="revolute">
@@ -907,7 +907,7 @@
     <parent link="torso"/>
     <child link="right_hip_side"/>
     <axis xyz="-0.0 -0.0 1.0"/>
-    <dynamics damping="0.01" friction="0.1"/>
+    <dynamics damping="0.72" friction="0.72"/>
     <limit effort="4.1" lower="-1.309" upper="0.524" velocity="4.82"/>
   </joint>
   <joint name="right_leg_motor_1" type="revolute">
@@ -915,7 +915,7 @@
     <parent link="right_hip_side"/>
     <child link="right_hip_front"/>
     <axis xyz="-1.0 0.0 0.0"/>
-    <dynamics damping="0.01" friction="0.1"/>
+    <dynamics damping="0.72" friction="0.72"/>
     <limit effort="4.1" lower="-0.7853981633974483" upper="1.5707963267948966" velocity="4.82"/>
   </joint>
   <joint name="right_leg_motor_2" type="revolute">
@@ -923,7 +923,7 @@
     <parent link="right_hip_front"/>
     <child link="right_thigh"/>
     <axis xyz="-0.0 -1.0 0.0"/>
-    <dynamics damping="0.01" friction="0.1"/>
+    <dynamics damping="0.72" friction="0.72"/>
     <limit effort="4.1" lower="-0.7853981633974483" upper="2.356194490192345" velocity="4.82"/>
   </joint>
   <joint name="right_leg_motor_3" type="revolute">
@@ -931,7 +931,7 @@
     <parent link="right_thigh"/>
     <child link="right_calve"/>
     <axis xyz="-0.0 -1.0 0.0"/>
-    <dynamics damping="0.01" friction="0.1"/>
+    <dynamics damping="0.66" friction="1.42"/>
     <limit effort="6.0" lower="-2.793" upper="0" velocity="6.6"/>
   </joint>
   <joint name="right_leg_motor_4" type="revolute">
@@ -939,7 +939,7 @@
     <parent link="right_calve"/>
     <child link="right_ankle"/>
     <axis xyz="-0.0 -1.0 0.0"/>
-    <dynamics damping="0.01" friction="0.1"/>
+    <dynamics damping="0.66" friction="1.42"/>
     <limit effort="6.0" lower="-0.7853981633974483" upper="1.5707963267948966" velocity="6.6"/>
   </joint>
   <joint name="right_leg_motor_5" type="revolute">
@@ -947,7 +947,7 @@
     <parent link="right_ankle"/>
     <child link="right_foot"/>
     <axis xyz="-1.0 0.0 0.0"/>
-    <dynamics damping="0.01" friction="0.1"/>
+    <dynamics damping="0.66" friction="1.42"/>
     <limit effort="6.0" lower="-0.7853981633974483" upper="0.7853981633974483" velocity="6.6"/>
   </joint>
   <link name="imu_link">

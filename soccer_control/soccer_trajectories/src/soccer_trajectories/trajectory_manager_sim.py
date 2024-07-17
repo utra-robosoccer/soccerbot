@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import time
 
 from sensor_msgs.msg import JointState
 from soccer_trajectories.pybullet_setup import PybulletSetup
@@ -42,9 +43,9 @@ class TrajectoryManagerSim(TrajectoryManager):
                 exit(0)
             t += 1 / self.sim.rate
 
-            print(t)
+            # print(t)
 
             self.sim.step()
-
+            # time.sleep(0.1)
         # self.sim.ramp.close()
         # self.trajectory.reset()
