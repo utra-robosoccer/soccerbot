@@ -14,7 +14,13 @@ class TrajectoryManagerSim(TrajectoryManager):
     """
 
     def __init__(
-        self, trajectory_path: str, pose: Transformation = Transformation(), robot_model: str = "bez1", real_time=False, mirror: bool = False, camera_yaw = 90
+        self,
+        trajectory_path: str,
+        pose: Transformation = Transformation(),
+        robot_model: str = "bez1",
+        real_time=False,
+        mirror: bool = False,
+        camera_yaw=90,
     ):
         super(TrajectoryManagerSim, self).__init__(trajectory_path, mirror)
 
@@ -43,9 +49,9 @@ class TrajectoryManagerSim(TrajectoryManager):
                 exit(0)
             t += 1 / self.sim.rate
 
-            # print(t)
+            print("time", t)
 
             self.sim.step()
-            # time.sleep(0.1)
+            # time.sleep(0.01)
         # self.sim.ramp.close()
         # self.trajectory.reset()
