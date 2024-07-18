@@ -477,16 +477,16 @@
       <inertia ixx="0.000265" ixy="-0.0" ixz="-7e-06" iyy="0.00026" iyz="-0.0" izz="2e-05"/>
     </inertial>
     <visual>
-      <origin rpy="0 0 0" xyz="-0.008351 -0.163675 0.10837"/>
+      <origin rpy="0 0 0" xyz="-0.008351 -0.163675 0.16837"/>
       <geometry>
-        <mesh filename="package://bez2_description/meshes/Bez1_forearm_v7_1.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://bez2_description/meshes/Bez1_forearm_v7_1.stl" scale="0.001 0.001 0.00133"/>
       </geometry>
       <material name="plastic_matte_yellow"/>
     </visual>
     <collision>
-      <origin rpy="0.00000 0.00000 0.00000" xyz="-0.01200 -0.02050 -0.08119"/>
+      <origin rpy="0.00000 0.00000 0.00000" xyz="-0.01200 -0.02050 -0.14119"/>
       <geometry>
-        <box size="0.04800 0.05300 0.18838"/>
+        <box size="0.04800 0.05300 0.24838"/>
       </geometry>
     </collision>
   </link>
@@ -777,16 +777,16 @@
       <inertia ixx="0.000265" ixy="-0.0" ixz="-7e-06" iyy="0.00026" iyz="-0.0" izz="2e-05"/>
     </inertial>
     <visual>
-      <origin rpy="0 0 0" xyz="-0.006227 0.1586 0.10837"/>
+      <origin rpy="0 0 0" xyz="-0.006227 0.1586 0.16837"/>
       <geometry>
-        <mesh filename="package://bez2_description/meshes/Bez1_forearm_v7_2.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="package://bez2_description/meshes/Bez1_forearm_v7_2.stl" scale="0.001 0.001 0.00133"/>
       </geometry>
       <material name="plastic_matte_yellow"/>
     </visual>
     <collision>
-      <origin rpy="0.00000 0.00000 0.00000" xyz="-0.01200 0.02050 -0.08119"/>
+      <origin rpy="0.00000 0.00000 0.00000" xyz="-0.01200 0.02050 -0.14119"/>
       <geometry>
-        <box size="0.04800 0.05300 0.18838"/>
+        <box size="0.04800 0.05300 0.24838"/>
       </geometry>
     </collision>
   </link>
@@ -812,7 +812,7 @@
     <child link="left_shoulder"/>
     <axis xyz="-0.0 -1.0 0.0"/>
     <dynamics damping="0.3" friction="0.83"/>
-    <limit effort="4.1" lower="-3.141592653589793" upper="3.9269908169872414" velocity="4.82"/>
+    <limit effort="4.1" velocity="4.82"/>
   </joint>
   <joint name="left_arm_motor_1" type="revolute">
     <origin rpy="0 0 0" xyz="0.0205 0.0295 -0.021"/>
@@ -884,7 +884,7 @@
     <child link="right_shoulder"/>
     <axis xyz="0.0 -1.0 -0.0"/>
     <dynamics damping="0.3" friction="0.83"/>
-    <limit effort="4.1" lower="-3.141592653589793" upper="3.9269908169872414" velocity="4.82"/>
+    <limit effort="4.1" velocity="4.82"/>
   </joint>
   <joint name="right_arm_motor_1" type="revolute">
     <origin rpy="0 0 0" xyz="0.021 -0.0295 -0.021"/>

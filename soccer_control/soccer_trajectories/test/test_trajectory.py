@@ -52,7 +52,7 @@ class TestTrajectory(unittest.TestCase):
         self.assertEqual(angles, [0.0, 0.0, 0.0, 0.0, 0.564, 0.564, -1.176, -1.176, 0.613, 0.613, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
 
 
-@pytest.mark.parametrize("trajectory_name", ["getupfront"])  # , "getupback", "rightkick", "getupfront"])
+@pytest.mark.parametrize("trajectory_name", ["getupback"])  # , "getupback", "rightkick", "getupfront"])
 @pytest.mark.parametrize("robot_model", ["bez2"])
 @pytest.mark.parametrize("real_time", [True])
 def test_trajectory_sim(trajectory_name: str, robot_model: str, real_time: bool):
@@ -108,7 +108,7 @@ def run_real_trajectory(robot_model: str, trajectory_name: str, real_time: bool)
 
 
 @pytest.mark.parametrize("robot_model", ["bez2"])
-@pytest.mark.parametrize("trajectory_name", ["getupfront"])
+@pytest.mark.parametrize("trajectory_name", ["getupback"])
 @pytest.mark.parametrize("real_time", [True])
 # @unittest.skip("Not integrated in CI")
 def test_traj_ros(robot_model: str, trajectory_name: str, real_time: bool):
