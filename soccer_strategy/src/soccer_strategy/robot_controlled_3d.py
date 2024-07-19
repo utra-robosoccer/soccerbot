@@ -231,9 +231,14 @@ class RobotControlled3D(RobotControlled):
             Robot.Status.KICKING,
             Robot.Status.LOCALIZING,
         ]:
-            if pitch < -angle_threshold:
-                rospy.logwarn_throttle(1, f"Fallen Back: (R: {roll}, P: {pitch}, Y: {yaw}), {t.quaternion}")
-                self.status = Robot.Status.FALLEN_BACK
+            if pitch < np.pi / 6:  # -angle_threshold:
+                if roll < 0:
+                    # RHR
+                    rospy.logwarn_throttle(1, f"Fallen Back Left: (R: {roll}, P: {pitch}, Y: {yaw}), {t.quaternion}")
+                    self.status = Robot.Status.FALLEN_BACK_LEFT
+                else:
+                    rospy.logwarn_throttle(1, f"Fallen Back Right: (R: {roll}, P: {pitch}, Y: {yaw}), {t.quaternion}")
+                    self.status = Robot.Status.FALLEN_BACK_RIGHT
 
             elif pitch > angle_threshold:
                 rospy.logwarn_throttle(1, f"Fallen Front: (R: {roll}, P: {pitch}, Y: {yaw}), {t.quaternion}")

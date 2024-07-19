@@ -957,6 +957,32 @@
       <inertia ixx="1e-9" ixy="0" ixz="0" iyy="1e-9" iyz="0" izz="1e-9"/>
     </inertial>
   </link>
+  <joint name="torso_cylinder_joint" type="fixed">
+    <parent link="torso"/>
+    <child link="torso_cylinder"/>
+    <origin rpy="0 0 0" xyz="0.0 0 0.000"/>
+    <axis xyz="0 0 0"/>
+  </joint>
+  <link name="torso_cylinder">
+    <inertial>
+      <origin rpy="0 0 0" xyz="-0.026300599945598205 0.02045796215352269 -0.07127075071519248"/>
+      <mass value="0.00001"/>
+      <inertia ixx="0.00001" ixy="-0.0" ixz="-0" iyy="0.00001" iyz="-0.0" izz="0.00001"/>
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="-0.14 0 -0.07"/>
+      <geometry>
+        <cylinder length="0.08" radius="0.02"/>
+      </geometry>
+      <material name="plastic_matte_yellow"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="-0.14 0 -0.07"/>
+      <geometry>
+        <cylinder length="0.08" radius="0.02"/>
+      </geometry>
+    </collision>
+  </link>
   <joint name="torso_imu" type="fixed">
     <parent link="torso"/>
     <child link="imu_link"/>

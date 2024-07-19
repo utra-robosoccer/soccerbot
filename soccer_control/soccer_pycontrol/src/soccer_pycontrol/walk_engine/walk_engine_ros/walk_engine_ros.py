@@ -154,7 +154,7 @@ class WalkEngineROS(WalkEngine):
         #         exit(0)
 
         self.bez.ready()
-        # self.bez.motor_control.set_motor()
+        self.bez.motor_control.set_motor()
         self.pid.reset_imus()
         self.bez.motor_control.updateRobotConfiguration()  # TODO why here
         time_now = 0
@@ -244,21 +244,22 @@ class WalkEngineROS(WalkEngine):
                 self.goal = self.new_goal
                 self.step_planner.robot_path = self.new_path
 
-            [_, pitch, roll] = self.bez.sensors.get_euler_angles()
-            # path in progress
-            if self.step_planner.robot_path is not None and 0 <= self.t <= self.step_planner.robot_path.duration():
+            if self.bez.sensors.imu_ready:
+                [_, pitch, roll] = self.bez.sensors.get_euler_angles()
+                # path in progress
+                if self.step_planner.robot_path is not None and 0 <= self.t <= self.step_planner.robot_path.duration():
 
-                # IMU feedback while walking (Average Time: 0.00017305118281667)
-                t_adj = self.t
-                if self.bez.sensors.imu_ready:
-                    # TODO needs to be fixed
-                    pass
-                    # self.stabilize_walk(pitch, roll)
-                    # t_adj = self.soccerbot.apply_phase_difference_roll_feedback(self.t, imu_pose)
+                    # IMU feedback while walking (Average Time: 0.00017305118281667)
+                    t_adj = self.t
+                    if self.bez.sensors.imu_ready:
+                        # TODO needs to be fixed
+                        pass
+                        # self.stabilize_walk(pitch, roll)
+                        # t_adj = self.soccerbot.apply_phase_difference_roll_feedback(self.t, imu_pose)
 
-                torso_to_right_foot, torso_to_left_foot = self.step_planner.get_next_step(t_adj)
-                self.bez.find_joint_angles(torso_to_right_foot, torso_to_left_foot)
-                self.step_planner.current_step_time = self.t
+                    torso_to_right_foot, torso_to_left_foot = self.step_planner.get_next_step(t_adj)
+                    self.bez.find_joint_angles(torso_to_right_foot, torso_to_left_foot)
+                    self.step_planner.current_step_time = self.t
 
             # Walk completed
             # if (
@@ -291,10 +292,11 @@ class WalkEngineROS(WalkEngine):
             #     if self.step_planner.robot_path is None:
             #         return True
             #
-            print(pitch, roll)
-            # if self.bez.sensors.imu_ready:
-            #     if self.bez.fallen(pitch):
-            #         return False
+            # print(pitch, roll)
+            if self.bez.sensors.imu_ready:
+                [_, pitch, roll] = self.bez.sensors.get_euler_angles()
+                if self.bez.fallen(pitch):
+                    return False
             # Publishes angles to robot (Average Time: 0.00041992547082119)
             # self.soccerbot.robot_path.show()
             # self.bez.motor_control.set_motor()

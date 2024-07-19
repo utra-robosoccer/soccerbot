@@ -14,4 +14,4 @@ class KinematicDataROS(KinematicData):
             sim = ""
         sim = "_sim"
 
-        super(KinematicDataROS, self).__init__(robot_model=robot_model, sim=sim)
+        super(KinematicDataROS, self).__init__(robot_model="bez2", sim=sim)

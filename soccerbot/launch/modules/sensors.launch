@@ -3,6 +3,9 @@
     <arg name="robot_model" default="bez2" />
     <arg name="play_rosbag" default="false" />
     <arg name="record_rosbag" default="true" />
+    <arg name="simulation" default="false" />
+
+    <arg name="param_file_name" value="$(arg robot_model)" unless="$(arg simulation)" />
     <!--    <arg name="rosbag_file" default="$(find soccer_common)/bags/bez2.bag" />-->
 
     <!--    <node pkg="rosbag" if="$(arg record_rosbag)" name="rosbag_record" type="record" args="-O $(arg rosbag_file) /robot1/imu_raw /robot1/joint_states /robot1/camera/image_raw /robot1/camera/camera_info" />-->
@@ -14,14 +17,14 @@
     <!-- Localization bag -->
 
     <group unless="$(arg play_rosbag)">
-        <!--        <node name="camera" pkg="usb_cam" type="usb_cam_node" output="screen" respawn="true" respawn_delay="30">-->
-        <!--            <param name="video_device" value="/dev/video4" />-->
-        <!--            <param name="image_width" value="640" />-->
-        <!--            <param name="image_height" value="480" />-->
-        <!--            <param name="pixel_format" value="yuyv" />-->
-        <!--            <param name="camera_frame_id" value="camera" />-->
-        <!--            <param name="io_method" value="mmap" />-->
-        <!--        </node>-->
+<!--                <node name="camera" pkg="usb_cam" type="usb_cam_node" output="screen" respawn="true" respawn_delay="30">--> -->
+<!--                    <param name="video_device" value="/dev/video0" />--> -->
+<!--                    <param name="image_width" value="640" />--> -->
+<!--                    <param name="image_height" value="480" />--> -->
+<!--                    <param name="pixel_format" value="yuyv" />--> -->
+<!--                    <param name="camera_frame_id" value="camera" />--> -->
+<!--                    <param name="io_method" value="mmap" />--> -->
+<!--                </node>--> -->
         <!--        <node pkg="soccer_object_localization" type="detector_objects.py" name="ball_detector" output="screen">-->
         <!--            <rosparam file="$(find soccer_object_localization)/config/$(arg param_file_name).yaml" command="load" />-->
         <!--        </node>-->
@@ -48,6 +51,23 @@
                <remap from="imu/data_raw" to="imu_raw" />-->
                <remap from="imu/data" to="imu_filtered" />-->
            </node>-->
+
+
+<!--          <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" /> -->
+<!--             <node pkg="soccer_strategy" type="game_controller_receiver.py" name="game_controller_receiver" output="screen" /> -->
+<!--            <node pkg="soccer_trajectories" type="trajectory_manager_ros.py" name="soccer_trajectories" output="screen"> -->
+<!--         <param name="trajectory_path" value="$(find soccer_trajectories)/trajectories/$(arg param_file_name)" /> -->
+<!--     </node> -->
+
+<!--     <rosparam command="load" file="$(find soccer_pycontrol)/config/$(arg robot_model)/$(arg param_file_name).yaml" /> -->
+<!--     <node pkg="soccer_pycontrol" type="main.py" name="soccer_pycontrol" output="screen"> -->
+<!--         <param name="robot_model" value="$(arg robot_model)" /> -->
+<!--     </node> -->
+<!--     <include file="$(find soccerbot)/launch/modules/strategy.launch"> -->
+<!--         <arg name="robot_model" value="$(arg robot_model)" /> -->
+<!--         <arg name="simulation" value="$(arg simulation)" /> -->
+<!--     </include> -->
+<!--      -->
     <!--        <param name="motor_mapping" value="$(find soccer_firmware_interface)/config/$(arg robot_model).yaml" />-->
     <!--        <param name="motor_types" value="$(find soccer_firmware_interface)/config/motor_types.yaml" />-->
     <!--        <node name="firmware_interface" pkg="soccer_firmware_interface" type="main.py" output="screen" unless="$(eval robot_model == 'bez1')" />-->

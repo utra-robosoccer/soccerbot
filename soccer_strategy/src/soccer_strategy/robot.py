@@ -55,6 +55,9 @@ class Robot:
         PENALIZED = RobotState.STATUS_PENALIZED
         STOPPED = RobotState.STATUS_STOPPED
 
+        FALLEN_BACK_LEFT = RobotState.STATUS_FALLEN_BACK_LEFT
+        FALLEN_BACK_RIGHT = RobotState.STATUS_FALLEN_BACK_RIGHT
+
     def __init__(
         self,
         robot_id=0,
