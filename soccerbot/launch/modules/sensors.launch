@@ -53,20 +53,20 @@
            </node>-->
 
 
-<!--          <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" /> -->
-<!--             <node pkg="soccer_strategy" type="game_controller_receiver.py" name="game_controller_receiver" output="screen" /> -->
-<!--            <node pkg="soccer_trajectories" type="trajectory_manager_ros.py" name="soccer_trajectories" output="screen"> -->
-<!--         <param name="trajectory_path" value="$(find soccer_trajectories)/trajectories/$(arg param_file_name)" /> -->
-<!--     </node> -->
+         <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" />
+            <node pkg="soccer_strategy" type="game_controller_receiver.py" name="game_controller_receiver" output="screen" />
+           <node pkg="soccer_trajectories" type="trajectory_manager_ros.py" name="soccer_trajectories" output="screen">
+        <param name="trajectory_path" value="$(find soccer_trajectories)/trajectories/$(arg param_file_name)" />
+    </node>
 
-<!--     <rosparam command="load" file="$(find soccer_pycontrol)/config/$(arg robot_model)/$(arg param_file_name).yaml" /> -->
-<!--     <node pkg="soccer_pycontrol" type="main.py" name="soccer_pycontrol" output="screen"> -->
-<!--         <param name="robot_model" value="$(arg robot_model)" /> -->
-<!--     </node> -->
-<!--     <include file="$(find soccerbot)/launch/modules/strategy.launch"> -->
-<!--         <arg name="robot_model" value="$(arg robot_model)" /> -->
-<!--         <arg name="simulation" value="$(arg simulation)" /> -->
-<!--     </include> -->
+    <rosparam command="load" file="$(find soccer_pycontrol)/config/$(arg robot_model)/$(arg param_file_name).yaml" />
+    <node pkg="soccer_pycontrol" type="main.py" name="soccer_pycontrol" output="screen">
+        <param name="robot_model" value="$(arg robot_model)" />
+    </node>
+    <include file="$(find soccerbot)/launch/modules/strategy.launch">
+        <arg name="robot_model" value="$(arg robot_model)" />
+        <arg name="simulation" value="$(arg simulation)" />
+    </include>
 <!--      -->
     <!--        <param name="motor_mapping" value="$(find soccer_firmware_interface)/config/$(arg robot_model).yaml" />-->
     <!--        <param name="motor_types" value="$(find soccer_firmware_interface)/config/motor_types.yaml" />-->
