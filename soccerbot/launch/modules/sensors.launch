@@ -43,11 +43,11 @@
         <node name="firmware_interface" pkg="soccer_firmware_interface" type="main.py" output="screen" unless="$(eval robot_model == 'bez1')" />
     </group>
     <!--    <include file="$(find soccer_hardware)/launch/soccer_hardware.launch" if="$(eval robot_model == 'bez1')" />-->
-    <!--        <node pkg="imu_complementary_filter" type="complementary_filter_node" name="imu_complementary_filter" output="log">-->
-    <!--            <rosparam file="$(find soccerbot)/config/imu_complementary_filter.yaml" command="load" />-->
-    <!--            <remap from="imu/data_raw" to="imu_raw" />-->
-    <!--            <remap from="imu/data" to="imu_filtered" />-->
-    <!--        </node>-->
+           <node pkg="imu_complementary_filter" type="complementary_filter_node" name="imu_complementary_filter" output="log">-->
+               <rosparam file="$(find soccerbot)/config/imu_complementary_filter.yaml" command="load" />-->
+               <remap from="imu/data_raw" to="imu_raw" />-->
+               <remap from="imu/data" to="imu_filtered" />-->
+           </node>-->
     <!--        <param name="motor_mapping" value="$(find soccer_firmware_interface)/config/$(arg robot_model).yaml" />-->
     <!--        <param name="motor_types" value="$(find soccer_firmware_interface)/config/motor_types.yaml" />-->
     <!--        <node name="firmware_interface" pkg="soccer_firmware_interface" type="main.py" output="screen" unless="$(eval robot_model == 'bez1')" />-->

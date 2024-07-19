@@ -30,7 +30,7 @@ head_rotation_yaw_range: 0.15
 
 # STEP PLANNER
 #: How much the torso is rotated in the x axis
-torso_offset_pitch: 0.05
+torso_offset_pitch: 0.1
 
 #: How much the torso is forward in the x axis
 torso_offset_x: 0.0 # positive is forward
@@ -103,19 +103,19 @@ torso_zdiff_sway: 0
 
 #: How much the torso sways left and right while following the torso trajectory  (m)
 torso_sidediff_sway:
-  -0.006
+  -0.01
 
   #: How much the torso rotates while following the torso trajectory (yaw, pitch, roll)
 torso_thetadiff_sway: [0, 0, 0]
 
 # PATH SECTION
 #: How much distance is a torso step (equivalent to a half step)
-torso_step_length: 0.06
+torso_step_length: 0.03
 torso_step_length_short_backwards: 0.025
 torso_step_length_short_forwards: 0.035
 scale_yaw: 1.0 # Increase the rotation by angle
 #: How many torso steps per second, approximately equivalent to foot steps per second
-steps_per_second_default: 3
+steps_per_second_default: 2.5
 
 # PATH SECTION BEZIER
 turn_duration: 3

@@ -60,9 +60,9 @@ void set_robot_motor_limits() {
 	// min position address => 48
 	// max position address => 52
 
-	// use index as motorID!!
+	// use index as motorID!! // ID 7 left knee and 13 right knee
 	//                        0	    1     2	     3	    4	  5	    6	  7	    8	  9	    10	  11    12	  13	14	  15	16	17	18	  19
-	uint32_t minLimits[20] = {1510, 1050, 2000,  2000,  1213, 1536, 1650,  760,  1610, 1825, 1100, 1550, 1720, 2057, 920,  1870, 0,  0,  0,    1060};
+	uint32_t minLimits[20] = {1510, 1050, 2000,  2000,  1213, 1536, 1650,  760,  1610, 1825, 1100, 1550, 770, 2057, 920,  1870, 0,  0,  0,    1060};
 	uint32_t maxLimits[20] = {2400, 3100, 2945,  4096,  3155, 2569, 3230, 2070, 3160, 2260, 3060, 2550, 3560, 3300, 2580, 2245, 0,  0,  3000, 4096};
 
 	for (uint16_t i = 0; i < 6; i++) {// reset variables

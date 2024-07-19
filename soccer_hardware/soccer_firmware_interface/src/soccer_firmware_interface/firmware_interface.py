@@ -115,7 +115,7 @@ class FirmwareInterface:
 
                 # https://www.mouser.com/datasheet/2/783/BST_BMI088_DS001-1509549.pdf
                 ACC_RANGE = 32768.0 / 2.0 / 1.5  # page 27 datasheet bmi088
-                IMU_GY_RANGE = 32768.0 / 1000.0  # page 39 datasheet bmi088
+                IMU_GY_RANGE = 32768.0 / (1000.0 * math.pi / 180)  # page 39 datasheet bmi088
                 # ACC_RANGE = 32768.0 / 2.0  # page 22 datasheet bmi085
                 # IMU_GY_RANGE = 32768.0 / 1000.0  # page 27 datasheet bmi085
                 G = 9.81
@@ -124,6 +124,8 @@ class FirmwareInterface:
                 ay = int.from_bytes(imu_data[2:4], byteorder="big", signed=True) / ACC_RANGE * G
                 az = int.from_bytes(imu_data[4:6], byteorder="big", signed=True) / ACC_RANGE * G
 
+                ax, ay = ay, ax  # flip pitch and roll
+
                 imu.linear_acceleration.x = ax
                 imu.linear_acceleration.y = ay
                 imu.linear_acceleration.z = az
@@ -131,6 +133,8 @@ class FirmwareInterface:
                 vx = int.from_bytes(imu_data[6:8], byteorder="big", signed=True) / IMU_GY_RANGE
                 vy = int.from_bytes(imu_data[8:10], byteorder="big", signed=True) / IMU_GY_RANGE
                 vz = int.from_bytes(imu_data[10:12], byteorder="big", signed=True) / IMU_GY_RANGE
+
+                vx, vy = vy, vx  # flip pitch and roll
 
                 print(f"a {ax} {ay} {az}")
                 print(f"v {vx:10.3f} {vy:10.3f} {vz:10.3f}")
