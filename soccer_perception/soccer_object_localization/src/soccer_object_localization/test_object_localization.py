@@ -130,11 +130,13 @@ class TestObjectLocalization(TestCase):
             # ROS
             # img_msg: Image = cvbridge.cv2_to_imgmsg(img, encoding="rgb8")
             # d.image_publisher.publish = MagicMock()
-            d.image_callback(img, debug=False)
+            lines_only = d.image_callback(img, debug=False)
 
             if "DISPLAY" in os.environ:
                 cv2.imshow("Before", img)
                 cv2.imwrite("/tmp/before.png", img)
+
+                cv2.imshow("After", lines_only)
 
                 # ROS
                 # if d.image_publisher.publish.call_count != 0:
@@ -497,6 +499,7 @@ class TestObjectLocalization(TestCase):
         test_path = src_path + "/../../../soccer_object_detection/images/simulation"
         download_dataset("https://drive.google.com/uc?id=11nN58j8_PBoLNRAzOEdk7fMe1UK1diCc", folder_path=test_path)
 
+        # ROS
         # rospy.init_node("test")
 
         Camera.reset_position = MagicMock()
@@ -519,7 +522,7 @@ class TestObjectLocalization(TestCase):
             img: Mat = cv2.imread(os.path.join(f"{test_path}/images", file_name))  # ground truth box = (68, 89) (257, 275)
             img_original_size = img.size
             img = cv2.resize(img, dsize=(640, 480))
-            # img_msg: Image = cvbridge.cv2_to_imgmsg(img)
+            img_msg: Image = cvbridge.cv2_to_imgmsg(img)
 
             # Mock the detections
             n.pub_detection = MagicMock()
@@ -538,16 +541,18 @@ class TestObjectLocalization(TestCase):
             do.camera.pose = n.camera.pose
 
             # n.callback(img_msg)
-            n.callback(img)
+            detection_image = n.callback(img)  # send the image directly
 
             # Check assertion
-            if n.pub_boundingbox.publish.call_args is not None:
-                bounding_boxes = n.pub_boundingbox.publish.call_args[0][0]
-                do.objectDetectorCallback(bounding_boxes)
+            # if n.pub_boundingbox.publish.call_args is not None:
+            #     bounding_boxes = n.pub_boundingbox.publish.call_args[0][0]
+            #     do.objectDetectorCallback(bounding_boxes)
 
             if "DISPLAY" in os.environ:
                 # mat = cvbridge.imgmsg_to_cv2(n.pub_detection.publish.call_args[0][0])
                 # cv2.imshow("Image", mat)
+                # cv2.imshow("Image", img)
+                cv2.imshow("Detections", detection_image)
                 cv2.waitKey()
 
         cv2.destroyAllWindows()

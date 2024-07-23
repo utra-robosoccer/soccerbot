@@ -63,7 +63,7 @@ class ObjectDetectionNode(object):
         # self.CONFIDENCE_THRESHOLD = rospy.get_param("~ball_confidence_threshold", 0.75)
         self.CONFIDENCE_THRESHOLD = 0.75
 
-        torch.hub._validate_not_a_forked_repo = (
+        torch.hub._brvalidate_not_a_forked_repo = (
             lambda a, b, c: True
         )  # https://discuss.pytorch.org/t/help-for-http-error-403-rate-limit-exceeded/125907
         self.model = torch.hub.load("ultralytics/yolov5", "custom", path=model_path)
@@ -74,7 +74,7 @@ class ObjectDetectionNode(object):
         #     self.model.cuda()
         # else:
         #     rospy.logwarn("Not using CUDA")
-        #
+
         self.robot_name = rospy.get_namespace()[1:-1]  # remove '/'
         # self.camera = Camera(self.robot_name)
         self.camera = Camera()
@@ -100,7 +100,7 @@ class ObjectDetectionNode(object):
     def robot_state_callback(self, robot_state: RobotState):
         self.robot_state = robot_state
 
-    def callback(self, image: Image):
+    def callback(self, image: Image):  # msg -> image
         # webots: 480x640x4pixels
         if self.robot_state.status not in [
             RobotState.STATUS_LOCALIZING,
@@ -116,7 +116,7 @@ class ObjectDetectionNode(object):
         # rospy.loginfo_once("Object Detection Receiving image")
         # width x height x channels (bgra8)
         # image = self.br.imgmsg_to_cv2(msg)
-        # self.camera.reset_position(timestamp=msg.header.stamp)
+        # self.camera.reset_position(timestamp=msg.header.stamp) # msg->image
 
         # ROS, replace with default value
         # cover horizon to help robot ignore things outside field
@@ -133,7 +133,7 @@ class ObjectDetectionNode(object):
 
             results = self.model(img)
 
-            bbs_msg = BoundingBoxes()
+            # bbs_msg = BoundingBoxes()
             id = 0
             for prediction in results.xyxy[0]:
                 x1, y1, x2, y2, confidence, img_class = prediction.cpu().numpy()
@@ -162,18 +162,36 @@ class ObjectDetectionNode(object):
                             bb_msg.xbase = round(midpoint[0])
                             bb_msg.obstacle_detected = True
 
-                    bbs_msg.bounding_boxes.append(bb_msg)
+                    # bbs_msg.bounding_boxes.append(bb_msg)
                     id += 1
 
+                    # cv2.imshow("test", results)
+
+                    # Draw bounding box on image cv2 test
+                    # cv2.rectangle(image, (bb_msg.xmin, bb_msg.ymin), (bb_msg.xmax, bb_msg.ymax), (0, 255, 0), 2)
+                    # label = f'{bb_msg.Class}: {bb_msg.probability:.2f}'
+                    # cv2.putText(image, label, (bb_msg.xmin, bb_msg.ymin - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5,
+                    #             (0, 255, 0), 2)
+            #         # id+=1
+            # # Optionally, display or save the image
+            # cv2.imshow("Detected Objec ts", image)
+            # cv2.waitKey(1)
+
+            detection_image = np.squeeze(results.render())
+            # detection_image = np.concatenate((np.zeros((h + 1, image.width, 3), detection_image.dtype), detection_image)) # msg -> image
+            detection_image = detection_image[..., ::-1]
+
+            # cv2.imshow('Object Detection', detection_image)
+
             # ROS
-            # bbs_msg.header = msg.header
+            # bbs_msg.header = msg.header # msg -> image
             # try:
             #     if self.pub_detection.get_num_connections() > 0:
             #         detection_image = np.squeeze(results.render())
-            # detection_image = np.concatenate((np.zeros((h + 1, msg.width, 3), detection_image.dtype), detection_image))
-
-            # detection_image = detection_image[..., ::-1]  # convert rgb to bgr
-            # self.pub_detection.publish(self.br.cv2_to_imgmsg(detection_image, encoding="bgr8"))
+            #         # detection_image = np.concatenate((np.zeros((h + 1, msg.width, 3), detection_image.dtype), detection_image)) # msg -> image
+            #
+            #         detection_image = detection_image[..., ::-1]  # convert rgb to bgr
+            #         self.pub_detection.publish(self.br.cv2_to_imgmsg(detection_image, encoding="bgr8"))
 
             # if self.pub_boundingbox.get_num_connections() > 0 and len(bbs_msg.bounding_boxes) > 0:
             #     self.pub_boundingbox.publish(bbs_msg)
@@ -181,6 +199,8 @@ class ObjectDetectionNode(object):
             # except ROSException as re:
             #     print(re)
             #     exit(0)
+
+            return detection_image
 
 
 if __name__ == "__main__":

@@ -120,32 +120,32 @@ class DetectorObjects(Detector):
                         world_to_obstacle = Transformation(position=floor_coordinate_robot)
                         camera_to_obstacle = np.linalg.inv(self.camera.pose) @ world_to_obstacle
 
-                        self.br.sendTransform(
-                            camera_to_obstacle.position,
-                            camera_to_obstacle.quaternion,
-                            msg.header.stamp,
-                            self.robot_name + f"/obstacle_{obstacle_counter}",
-                            self.robot_name + "/camera",
-                        )
-                        rospy.loginfo(f"Obstacle {obstacle_counter} detected at [{pos}] {floor_coordinate_robot} {camera_to_obstacle.position}")
+                        # self.br.sendTransform(
+                        #     camera_to_obstacle.position,
+                        #     camera_to_obstacle.quaternion,
+                        #     msg.header.stamp,
+                        #     self.robot_name + f"/obstacle_{obstacle_counter}",
+                        #     self.robot_name + "/camera",
+                        # )
+                        # rospy.loginfo(f"Obstacle {obstacle_counter} detected at [{pos}] {floor_coordinate_robot} {camera_to_obstacle.position}")
                         obstacle_counter += 1
 
         if final_camera_to_ball is not None:
             self.ball_pixel_publisher.publish(final_ball_pixel)
-            self.br.sendTransform(
-                final_camera_to_ball.position,
-                final_camera_to_ball.quaternion,
-                msg.header.stamp,
-                self.robot_name + "/ball",
-                self.robot_name + "/camera",
-            )
-            rospy.loginfo_throttle(
-                1,
-                f"\u001b[1m\u001b[34mBall detected [{self.last_ball_pose.position[0]:.3f}, {self.last_ball_pose.position[1]:.3f}] \u001b[0m",
-            )
+            # self.br.sendTransform(
+            #     final_camera_to_ball.position,
+            #     final_camera_to_ball.quaternion,
+            #     msg.header.stamp,
+            #     self.robot_name + "/ball",
+            #     self.robot_name + "/camera",
+            # )
+            # rospy.loginfo_throttle(
+            #     1,
+            #     f"\u001b[1m\u001b[34mBall detected [{self.last_ball_pose.position[0]:.3f}, {self.last_ball_pose.position[1]:.3f}] \u001b[0m",
+            # )
 
 
-if __name__ == "__main__":
-    rospy.init_node("ball_detector")
-    ball_detector = DetectorObjects()
-    rospy.spin()
+# if __name__ == "__main__":
+# rospy.init_node("ball_detector")
+# ball_detector = DetectorObjects()
+# rospy.spin()

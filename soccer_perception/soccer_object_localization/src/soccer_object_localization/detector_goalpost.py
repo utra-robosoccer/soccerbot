@@ -102,15 +102,17 @@ class DetectorGoalPost(Detector):
         image_hsv_filter = cv2.inRange(image_hsv, (0, 0, 150), (255, 50, 255))
         h = self.camera.calculateHorizonCoverArea()
         image_crop = image_hsv[h + 1 :, :, :]
-        grass_only = cv2.inRange(image_crop, (35, 85, 0), (115, 255, 255))
-        grass_only = cv2.vconcat([np.zeros((h + 1, grass_only.shape[1]), dtype=grass_only.dtype), grass_only])
-        # Use odd numbers for all circular masks otherwise the line will shift location
-        grass_only_0 = cv2.morphologyEx(grass_only, cv2.MORPH_OPEN, self.circular_mask(5))
-        grass_only_1 = cv2.morphologyEx(grass_only, cv2.MORPH_CLOSE, self.circular_mask(5))
-        grass_only_2 = cv2.morphologyEx(grass_only_1, cv2.MORPH_OPEN, self.circular_mask(21))
-        grass_only_3 = cv2.morphologyEx(grass_only_2, cv2.MORPH_CLOSE, self.circular_mask(61))
-        grass_only_morph = cv2.morphologyEx(grass_only_3, cv2.MORPH_ERODE, self.circular_mask(9))
-        grass_only_flipped = cv2.bitwise_not(grass_only_morph)
+        # grass_only = cv2.inRange(image_crop, (35, 85, 0), (115, 255, 255))
+        # grass_only = cv2.vconcat([np.zeros((h + 1, grass_only.shape[1]), dtype=grass_only.dtype), grass_only])
+        # # Use odd numbers for all circular masks otherwise the line will shift location
+        # grass_only_0 = cv2.morphologyEx(grass_only, cv2.MORPH_OPEN, self.circular_mask(5))
+        # grass_only_1 = cv2.morphologyEx(grass_only, cv2.MORPH_CLOSE, self.circular_mask(5))
+        # grass_only_2 = cv2.morphologyEx(grass_only_1, cv2.MORPH_OPEN, self.circular_mask(21))
+        # grass_only_3 = cv2.morphologyEx(grass_only_2, cv2.MORPH_CLOSE, self.circular_mask(61))
+        # grass_only_morph = cv2.morphologyEx(grass_only_3, cv2.MORPH_ERODE, self.circular_mask(9))
+        # grass_only_flipped = cv2.bitwise_not(grass_only_morph)
+
+        grass_only, grass_only_0, grass_only_1, grass_only_2, grass_only_3, grass_only_morph, grass_only_flipped = self.grass_mask(image_crop, h)
 
         image_bw = cv2.bitwise_and(image, image, mask=image_hsv_filter)
         image_bw = cv2.bitwise_and(image_bw, image_bw, mask=grass_only_flipped)

@@ -86,17 +86,20 @@ class DetectorFieldline(Detector):
 
         # Grass Mask
         # Hue > 115 needed
-        grass_only = cv2.inRange(hsv, (35, 85, 0), (115, 255, 255))
-        grass_only = cv2.vconcat([np.zeros((h + 1, grass_only.shape[1]), dtype=grass_only.dtype), grass_only])
+        # grass_only = cv2.inRange(hsv, (35, 85, 0), (115, 255, 255))
+        # grass_only = cv2.vconcat([np.zeros((h + 1, grass_only.shape[1]), dtype=grass_only.dtype), grass_only])
+        #
+        # # Use odd numbers for all circular masks otherwise the line will shift location
+        # grass_only_0 = cv2.morphologyEx(grass_only, cv2.MORPH_OPEN, self.circular_mask(5))
+        # grass_only_1 = cv2.morphologyEx(grass_only, cv2.MORPH_CLOSE, self.circular_mask(5))
+        # grass_only_2 = cv2.morphologyEx(grass_only_1, cv2.MORPH_OPEN, self.circular_mask(21))
+        # grass_only_3 = cv2.morphologyEx(grass_only_2, cv2.MORPH_CLOSE, self.circular_mask(61))
+        #
+        # grass_only_morph = cv2.morphologyEx(grass_only_3, cv2.MORPH_ERODE, self.circular_mask(9))
+        # grass_only_flipped = cv2.bitwise_not(grass_only)
 
-        # Use odd numbers for all circular masks otherwise the line will shift location
-        grass_only_0 = cv2.morphologyEx(grass_only, cv2.MORPH_OPEN, self.circular_mask(5))
-        grass_only_1 = cv2.morphologyEx(grass_only, cv2.MORPH_CLOSE, self.circular_mask(5))
-        grass_only_2 = cv2.morphologyEx(grass_only_1, cv2.MORPH_OPEN, self.circular_mask(21))
-        grass_only_3 = cv2.morphologyEx(grass_only_2, cv2.MORPH_CLOSE, self.circular_mask(61))
-
-        grass_only_morph = cv2.morphologyEx(grass_only_3, cv2.MORPH_ERODE, self.circular_mask(9))
-        grass_only_flipped = cv2.bitwise_not(grass_only)
+        # Grass Mask
+        grass_only, grass_only_0, grass_only_1, grass_only_2, grass_only_3, grass_only_morph, grass_only_flipped = self.grass_mask(hsv, h)
 
         lines_only = cv2.bitwise_and(grass_only_flipped, grass_only_flipped, mask=grass_only_morph)
         lines_only = cv2.morphologyEx(lines_only, cv2.MORPH_CLOSE, self.circular_mask(5))
@@ -123,7 +126,7 @@ class DetectorFieldline(Detector):
         # No line detection simply publish all white points
         pts_x, pts_y = np.where(lines_only == 255)
 
-        cv2.imshow("After", lines_only)
+        # cv2.imshow("After", lines_only) imshow in test_object_localization instead
 
         # ROS
         # if self.image_publisher.get_num_connections() > 0:
@@ -162,11 +165,13 @@ class DetectorFieldline(Detector):
                     header.frame_id = self.robot_name + "/base_footprint_straight"
                 else:
                     header.frame_id = "world"
-            point_cloud_msg = pcl2.create_cloud_xyz32(header, points3d)
+            # point_cloud_msg = pcl2.create_cloud_xyz32(header, points3d)
             # self.point_cloud_publisher.publish(point_cloud_msg)
 
         t_end = time.time()
         # rospy.loginfo_throttle(60, "Fieldline detection rate: " + str(t_end - t_start))
+
+        return lines_only
 
 
 if __name__ == "__main__":
