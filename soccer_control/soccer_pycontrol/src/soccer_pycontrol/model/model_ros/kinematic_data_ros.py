@@ -14,4 +14,5 @@ class KinematicDataROS(KinematicData):
             sim = ""
         sim = "_sim"
         # TODO fix later
+        # TODO is the best version for the ros layer and should pybullet be its own layer with an abstract as the base class?
         super(KinematicDataROS, self).__init__(robot_model=robot_model, sim=sim)

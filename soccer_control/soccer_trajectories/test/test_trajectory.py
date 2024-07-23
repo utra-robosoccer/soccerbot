@@ -52,7 +52,7 @@ class TestTrajectory(unittest.TestCase):
         self.assertEqual(angles, [0.0, 0.0, 0.0, 0.0, 0.564, 0.564, -1.176, -1.176, 0.613, 0.613, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
 
 
-@pytest.mark.parametrize("trajectory_name", ["getupback"])  # , "getupback", "rightkick"])
+@pytest.mark.parametrize("trajectory_name", ["getupfront"])  # , "getupback", "rightkick"])
 @pytest.mark.parametrize("robot_model", ["bez2"])
 @pytest.mark.parametrize("real_time", [True])
 def test_trajectory_sim(trajectory_name: str, robot_model: str, real_time: bool):
@@ -105,6 +105,9 @@ def run_real_trajectory(robot_model: str, trajectory_name: str, real_time: bool)
 
     c.command_callback(command=msg)
     c.send_trajectory(real_time=real_time)
+
+
+# TODO clean up the pybullet interface so that there is a uniform place for the code
 
 
 @pytest.mark.parametrize("robot_model", ["bez2"])

@@ -12,6 +12,8 @@ class Bez:
     High level abstraction to represent the model.
     """
 
+    # TODO should create more interfaces so that its easier to access objects, streamline interface
+
     def __init__(
         self,
         robot_model: str = "bez1",

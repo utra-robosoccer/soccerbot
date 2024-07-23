@@ -89,3 +89,5 @@ class IKCalculation:
             theta2 = np.arctan2(vec[2], vec[0] / np.cos(theta1))
 
         return theta1, theta2
+
+    # TODO integrate arm IK

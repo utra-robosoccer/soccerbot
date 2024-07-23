@@ -145,6 +145,7 @@ class IKActions:
 
         return np.array(thetas)
 
+    # TODO might need to be made more continouse and a resultantant from an equation also maybe split file
     # def head_localizing_sweep(self): # TODO will have to be split into a strategy pattern later
     #     angles = np.concatenate([np.linspace(-np.pi / 2, np.pi / 2, 100), np.linspace(np.pi / 2, -np.pi / 2, 100)])
     #     # TODO make more legit later
