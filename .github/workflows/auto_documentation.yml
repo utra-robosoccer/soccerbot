@@ -75,7 +75,7 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v3
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1
+        uses: actions/upload-pages-artifact@v2
         with:
           path: /home/runner/catkin_ws/src/soccerbot/docs/_build/html
       - name: Setup tmate session
