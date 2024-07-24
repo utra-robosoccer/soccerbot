@@ -269,6 +269,7 @@ def test_walk_forward():
     bag = rosbag.Bag(retrieve_bag())
     display_rosbag_map(bag=bag, map=map, debug=False)
 
+
 @pytest.mark.skip
 def test_walk_forward_striker():
 

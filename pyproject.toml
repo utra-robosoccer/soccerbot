@@ -1,0 +1,74 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+
+[project]
+
+name = "soccerbot"
+authors = [
+  {name = "Jonathan Spraggett", email = "jonathanspraggett@gmail.com" }
+]
+description = "Main software for bez the humanoid soccer player"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "BSD-3-Clause"}
+dynamic = ["version", "dependencies"]
+
+[project.urls]
+"Homepage" = "https://utra-robosoccer.github.io/"
+"Bug Reports" = "https://github.com/utra-robosoccer/soccerbot/issues"
+"Source" = "https://github.com/utra-robosoccer/soccerbot/"
+
+[tool.setuptools]
+py-modules = []
+package-data = {"sample" = ["*.dat"]}
+
+[tool.setuptools.dynamic]
+dependencies = {file = ["requirements.txt"]}
+
+[tool.mypy]
+warn_return_any = true
+warn_unused_configs = true
+ignore_missing_imports = true
+check_untyped_defs = true
+exclude = "cmake-build-debug|setup.py|external"
+disable_error_code = "attr-defined"
+
+
+[tool.coverage.run]
+branch = true
+omit =[
+        "*/usr/local/lib/*",
+        "*/usr/lib/*",
+        "*/opt/ros/noetic/lib/python3/*",
+        "*/home/$USER/catkin_ws/devel/lib/python3/dist-packages/*",
+        "*/home/$USER/.local/lib/python3.8/site-packages/*",
+        "*/__init__.py",
+        "*/setup.py",
+        "*/main.py",
+        "*/test*.py",
+        "*/external/*",
+        "*/docs/*",
+        "*/scripts/*",
+        "*/cmake-build-debug/*"]
+
+[tool.coverage.report]
+include_namespace_packages = true
+ignore_errors = true
+omit =[
+        "*/usr/local/lib/*",
+        "*/usr/lib/*",
+        "*/opt/ros/noetic/lib/python3/*",
+        "*/home/$USER/catkin_ws/devel/lib/python3/dist-packages/*",
+        "*/home/$USER/.local/lib/python3.8/site-packages/*",
+        "*/__init__.py",
+        "*/setup.py",
+        "*/main.py",
+        "*/test*.py",
+        "*ros*.py",
+        "*/*ros/*",
+        "*/external/*",
+        "*/docs/*",
+        "*/scripts/*",
+        "*/cmake-build-debug/*"]
