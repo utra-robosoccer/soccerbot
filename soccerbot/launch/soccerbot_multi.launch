@@ -9,7 +9,11 @@
         <arg name="single" value="$(arg single)" />
     </include>
 
-    <include file="$(find soccerbot)/launch/modules/gui.launch" />
+    <include file="$(find foxglove_bridge)/launch/foxglove_bridge.launch">
+        <arg name="port" value="8765" />
+    </include>
+
+<!--    <include file="$(find soccerbot)/launch/modules/gui.launch" />-->
 
     <include file="$(find soccerbot)/launch/soccerbot.launch" ns="robot1">
         <arg name="simulation" value="true" />
@@ -34,4 +38,6 @@
         <arg name="robot_id" value="4" />
         <arg name="robot_model" value="bez1" />
     </include>
+
+
 </launch>

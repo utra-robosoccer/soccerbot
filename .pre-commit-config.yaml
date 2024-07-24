@@ -1,6 +1,6 @@
 # Exclude Regex https://www3.ntu.edu.sg/home/ehchua/programming/howto/Regexe.html#zz-1.8
 x-exclude: &exclude
-  exclude: '^(external|cmake-build-debug|.pytest_cache|docs|.idea|.+pb2.py|soccer_description|soccer_firmware)'
+  exclude: '^(external|cmake-build-debug|.pytest_cache|docs|.idea|.+pb2.py|soccer_description|soccer_firmware|soccerbot/rviz/RoboSoccer.json)'
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
