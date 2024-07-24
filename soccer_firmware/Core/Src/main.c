@@ -17,18 +17,12 @@
   */
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
-
 #include "main.h"
 #include "usb_device.h"
-#include "dynamixel_p1.h"
-#include "dynamixel_p2.h"
-#include "MPU6050.h"
-#include "update_loop.h"
-#include "bringup_tests.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "BMI088.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -97,6 +91,7 @@ static void MX_I2C1_Init(void);
 /* USER CODE BEGIN 0 */
 // test various functionalities
 void init_ports() {
+  // port1 => UART1 ==> J2 on new PCB
   port1 = (MotorPort){
     .huart          = &huart1,
     .hdma_uart_tx   = &hdma_usart1_tx,
@@ -105,11 +100,12 @@ void init_ports() {
     .dirPinNum      = USART1_DIR_Pin,
     .dmaDoneReading = false,
     .currMotor      = 0,
-    .numMotors      = 2,
-    .motorIds       = {16, 17},
-    .protocol       = {1, 1}
+    .numMotors      = 5,
+    .motorIds       = {0, 1, 18, 16, 17}, // left arm chain + bottom neck motor
+    .protocol       = {2, 2, 2, 2, 2}
   };
 
+  // port2 => UART2 ==> J7 on new PCB
   port2 = (MotorPort){
       .huart          = &huart2,
       .hdma_uart_tx   = &hdma_usart2_tx,
@@ -118,11 +114,12 @@ void init_ports() {
       .dirPinNum      = USART2_DIR_Pin,
       .dmaDoneReading = false,
       .currMotor      = 0,
-      .numMotors      = 4,
-      .motorIds       = {0, 1, 2, 3},
-      .protocol       = {2, 2, 2, 2}
+      .numMotors      = 3,
+      .motorIds       = {2, 3, 19}, // right arm chain + top neck motor
+      .protocol       = {2, 2, 2}
     };
 
+  // port3 => UART3 ==> J12 on new PCB
   port3 = (MotorPort){
       .huart          = &huart3,
       .hdma_uart_tx   = &hdma_usart3_tx,
@@ -131,10 +128,11 @@ void init_ports() {
       .dirPinNum      = USART3_DIR_Pin,
       .dmaDoneReading = false,
       .numMotors      = 3,
-      .motorIds       = {13, 14, 15},
-      .protocol       = {1, 1, 1}
+      .motorIds       = {4, 5, 6}, // left hip
+      .protocol       = {2, 2, 2}
     };
 
+  // port4 => UART4 ==> J3 on new PCB
   port4 = (MotorPort){
       .huart          = &huart4,
       .hdma_uart_tx   = &hdma_uart4_tx,
@@ -143,10 +141,11 @@ void init_ports() {
       .dirPinNum      = USART4_DIR_Pin,
       .dmaDoneReading = false,
       .numMotors      = 3,
-      .motorIds       = {7, 8, 9},
-      .protocol       = {1, 1, 1}
+      .motorIds       = {7, 8, 9}, // left leg
+      .protocol       = {2, 2, 2}
     };
 
+  // port5 => UART5 ==> J6 on new PCB
   port5 = (MotorPort){
       .huart          = &huart5,
       .hdma_uart_tx   = &hdma_uart5_tx,
@@ -155,10 +154,11 @@ void init_ports() {
       .dirPinNum      = USART5_DIR_Pin,
       .dmaDoneReading = false,
       .numMotors      = 3,
-      .motorIds       = {4, 5, 6},
-      .protocol       = {2, 2, 2}
+      .motorIds       = {10, 11, 12}, // right hip
+      .protocol       = {2,2,2}
     };
 
+  // port6 => UART6 ==> J11 on new PCB
   port6 = (MotorPort){
       .huart          = &huart6,
       .hdma_uart_tx   = &hdma_usart6_tx,
@@ -167,7 +167,7 @@ void init_ports() {
       .dirPinNum      = USART6_DIR_Pin,
       .dmaDoneReading = false,
       .numMotors      = 3,
-      .motorIds       = {10, 11, 12},
+      .motorIds       = {13, 14, 15}, // right leg
       .protocol       = {2, 2, 2}
     };
 
@@ -252,8 +252,15 @@ int main(void)
   HAL_Delay(1000);
 
   init_ports();
-  MPU6050_init();
+//  MPU6050_init();
   init_motors();
+
+  BMI088 imu;
+  BMI088_Init(&imu, &hi2c1);
+
+//  uint16_t angle = 0;
+//  uint16_t angle_lo = 0;
+//  uint16_t angle_hi = 0;
 
   /* USER CODE END 2 */
 
@@ -261,10 +268,45 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-    update();
-    // test Dynamixel 2.0
-//    test_led_p2(&port2, 0x6);
-//    test_motor_sweep2(&port2);
+
+      update();
+
+//    angle += 1;
+//    angle %= 0x3FF;
+//    angle_lo = angle & 0xFF;
+//    angle_hi = (angle >> 8) & 0xFF;
+//
+//    write_goal_position_p2(motorPorts[4], 1, angle);
+//    write_goal_position_p2(motorPorts[4], 32, angle);
+//    write_goal_position_p2(motorPorts[4], 27, angle);
+//
+//    write_goal_position_p2(motorPorts[3], 3, angle);
+//    write_goal_position_p2(motorPorts[3], 4, angle); // range 212 - 122
+//    write_goal_position_p2(motorPorts[3], 10, angle);
+//
+//    write_goal_position_p2(motorPorts[2], 1, angle);
+//    write_goal_position_p2(motorPorts[2], 22, angle);
+//    write_goal_position_p2(motorPorts[2], 21, angle);
+//
+//    write_goal_position_p2(motorPorts[1], 26, angle);
+//    write_goal_position_p2(motorPorts[1], 31, angle);
+//    write_goal_position_p2(motorPorts[1], 30, angle);
+//
+//    write_goal_position_p2(motorPorts[0], 23, angle);
+//    write_goal_position_p2(motorPorts[0], 24, angle);
+//    write_goal_position_p2(motorPorts[0], 28, angle);
+//    write_goal_position_p2(motorPorts[0], 29, angle);
+//    write_goal_position_p2(motorPorts[0], 34, angle);
+//    write_goal_position_p2(motorPorts[0], 33, angle);
+
+
+//    // test Dynamixel 2.0
+//    test_led_p2(&port6, 0x1);
+//    test_motor_sweep2(&port6);
+//    HAL_Delay(9000);
+
+//    test_led_p2(&port4, 0x1);
+//    test_motor_sweep2(&port4);
 //    test_ping2(&port2);
 //    motor_torque_en_p2(&port2, 0xfe, 0);
 //    update_baud_rate_p2(&port2, 0x1, 3);
@@ -286,8 +328,8 @@ int main(void)
     // test Dynamixel 1.0
 //    test_motor_sweep1(&port2, 13);
 //    _motor_ping_p1(&port6, 13);
-	  HAL_GPIO_TogglePin(GPIOA, GREEN_LED_Pin);
-	  HAL_Delay(100);
+//	  HAL_GPIO_TogglePin(GPIOA, GREEN_LED_Pin);
+//	  HAL_Delay(50);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

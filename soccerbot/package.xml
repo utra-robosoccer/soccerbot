@@ -18,7 +18,7 @@
   <depend>usb_cam</depend>
   <depend>soccer_hardware</depend>
   <depend>soccer_hardware_bez3</depend>
-
+  <depend>foxglove_bridge</depend>
 <!--  <depend>soccer_embedded</depend>-->
 
   <!-- Localization -->
@@ -38,7 +38,7 @@
   <!-- Navigation-->
   <depend>soccer_trajectories</depend>
   <depend>soccer_firmware_interface</depend>
-  <depend>soccer_webots</depend>
+<!--  <depend>soccer_webots</depend>-->
   <depend>soccer_msgs</depend>
   <depend>python3-protobuf</depend>
 

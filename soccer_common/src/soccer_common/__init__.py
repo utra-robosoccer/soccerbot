@@ -6,3 +6,5 @@ try:
     from soccer_common.pid import PID
 except:
     print("not using camera")
+
+# TODO maybe combine with msgs and descriptions?

@@ -9,7 +9,7 @@ pyserial>=3.5
 transforms3d
 construct==2.10.67
 opencv-python>=4.5.5.62
-setuptools==67.4.0
+setuptools
 shapely
 vispy
 pytest
@@ -36,5 +36,6 @@ Pillow==10.0.1
 tqdm
 gitpython
 psutil==5.9.2; platform_machine == 'x86_64'
-torch==1.13.0+cu117; platform_machine == 'x86_64'
-torchvision==0.14.0+cu117; platform_machine == 'x86_64'
+#torch==2.0.1.0+cu117; platform_machine == 'x86_64'
+#torchvision==0.18.1.0+cu117; platform_machine == 'x86_64'
+# TODO why did this install torch

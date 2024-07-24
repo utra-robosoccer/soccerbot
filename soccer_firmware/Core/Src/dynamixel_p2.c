@@ -6,7 +6,7 @@
  */
 
 #include "dynamixel_p2.h"
-//#include "main.h"
+#include "main.h"
 
 
 /*
@@ -19,6 +19,19 @@ void write_goal_position_p2(MotorPort *port, uint8_t id, uint16_t angle) {
   _motor_write_p2(port, id, addr, data, dataLen);
 }
 
+void write_min_position_limit_p2(MotorPort *port, uint8_t id, uint32_t limit) {
+  uint8_t data[4] = {limit & 0xff, (limit>>8) & 0xff, 0, 0};
+  uint16_t dataLen = 4;
+  uint16_t addr = 48;
+  _motor_write_p2(port, id, addr, data, dataLen);
+}
+
+void write_max_position_limit_p2(MotorPort *port, uint8_t id, uint32_t limit) {
+  uint8_t data[4] = {limit & 0xff, (limit>>8) & 0xff, 0, 0};
+  uint16_t dataLen = 4;
+  uint16_t addr = 52;
+  _motor_write_p2(port, id, addr, data, dataLen);
+}
 /*
  * Dynamixel 2.0
  */

@@ -1,3 +1,0 @@
-<map id="IMUnamespace::MPU6050::Read_Gyroscope_Withoffset" name="IMUnamespace::MPU6050::Read_Gyroscope_Withoffset">
-<area shape="rect" id="node2" href="$dd/d03/group___m_p_u6050.html#ga0dba9d5b61de1b88f260e052f668dcdd" title="Reads 6 bytes from the sensor, and stores them in the sensor_buffer. " alt="" coords="248,5,425,47"/>
-</map>

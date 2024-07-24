@@ -5,20 +5,19 @@ find_package(
     catkin
     REQUIRED
     soccer_common
-    soccer_webots
     soccer_msgs
+    soccer_webots
     soccer_trajectories
     soccer_object_detection
     bez1_description
     bez2_description
-    bez3_description
     soccer_strategy
     soccer_hardware
     soccer_object_localization
     soccer_localization
     soccer_pycontrol
-    soccer_hardware_bez3
     soccer_firmware_interface
+    foxglove_bridge
 )
 
 catkin_package(CATKIN_DEPENDS soccer_msgs soccer_object_detection)
