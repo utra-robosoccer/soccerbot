@@ -48,7 +48,7 @@ class TrajectoryManagerSim(TrajectoryManager):
                 exit(0)
             t += 1 / self.sim.rate
 
-            print(t)
+            print("time", t)
 
             self.sim.step()
 
