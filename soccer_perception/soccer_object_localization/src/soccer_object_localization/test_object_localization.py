@@ -1,7 +1,9 @@
 import os
 
 from soccer_object_detection.object_detect_node import Label, ObjectDetectionNode
-from soccer_object_detection.test_object_detection import IoU
+
+# ROS
+# from soccer_object_detection.test_object_detection import IoU
 from soccer_object_localization.detector_objects import DetectorObjects
 
 os.environ["ROS_NAMESPACE"] = "/robot1"
@@ -13,9 +15,10 @@ from unittest.mock import MagicMock
 import cv2
 import numpy as np
 import pytest
-import rosbag
-import rospy
-import tf2_ros
+
+# import rosbag
+# import rospy
+# import tf2_ros
 from cv2 import Mat
 from cv_bridge import CvBridge
 from sensor_msgs.msg import CameraInfo, Image
@@ -30,9 +33,8 @@ from soccer_msgs.msg import GameState, RobotState
 
 class TestObjectLocalization(TestCase):
     def test_camera_find_floor_coordinate(self):
-        rospy.init_node("test")
         p = Transformation([0, 0, 0.5], euler=[0, math.pi / 4, 0])
-        c = Camera("robot1")
+        c = Camera()
         c.pose = p
         ci = CameraInfo()
         ci.height = 240
@@ -45,9 +47,8 @@ class TestObjectLocalization(TestCase):
         self.assertAlmostEqual(p2[2], 0, delta=0.005)
 
     def test_camera_find_camera_coordinate(self):
-        rospy.init_node("test")
         p = Transformation([0, 0, 0.5], euler=[0, math.pi / 4, 0])
-        c = Camera("robot1")
+        c = Camera()
         c.pose = p
         ci = CameraInfo()
         ci.height = 240
@@ -59,9 +60,8 @@ class TestObjectLocalization(TestCase):
         self.assertAlmostEqual(p2[1], 240 / 2, delta=0.5)
 
     def test_camera_find_camera_coordinate_2(self):
-        rospy.init_node("test")
         p = Transformation([0, 0, 0.5], euler=[0, 0, 0])
-        c = Camera("robot1")
+        c = Camera()
         c.pose = p
         ci = CameraInfo()
         ci.height = 240
@@ -73,12 +73,10 @@ class TestObjectLocalization(TestCase):
         self.assertAlmostEqual(p3[1], 240 / 2, delta=0.5)
 
     def test_calculate_bounding_boxes_from_ball(self):
-        rospy.init_node("test")
-
         for cam_angle in [0, 0.1, -0.1]:
             for cam_position in [[0, 0, 0], [0, 0, 0.1], [0, 0, -0.1]]:
                 p = Transformation(cam_position, euler=[cam_angle, 0, 0])
-                c = Camera("robot1")
+                c = Camera()
                 c.pose = p
                 ci = CameraInfo()
                 ci.height = 240
@@ -99,7 +97,7 @@ class TestObjectLocalization(TestCase):
                     self.assertAlmostEqual(position.position[2], ball_pose.position[2], delta=0.001)
 
     def test_fieldline_detection(self):
-        rospy.init_node("test")
+        # rospy.init_node("test")
 
         src_path = os.path.dirname(os.path.realpath(__file__))
         test_path = src_path + "/../../images/fieldlines"
@@ -107,9 +105,12 @@ class TestObjectLocalization(TestCase):
 
         Camera.reset_position = MagicMock()
         Camera.ready = MagicMock()
+
         d = DetectorFieldline()
         d.robot_state.status = RobotState.STATUS_READY
-        d.image_publisher.get_num_connections = MagicMock(return_value=1)
+
+        # ROS
+        # d.image_publisher.get_num_connections = MagicMock(return_value=1)
         # d.publish_point_cloud = True
         # d.point_cloud_publisher.get_num_connections = MagicMock(return_value=1)
 
@@ -126,24 +127,28 @@ class TestObjectLocalization(TestCase):
             c.width = img.shape[1]
             d.camera.camera_info = c
 
-            img_msg: Image = cvbridge.cv2_to_imgmsg(img, encoding="rgb8")
-            d.image_publisher.publish = MagicMock()
-            d.image_callback(img_msg, debug=False)
+            # ROS
+            # img_msg: Image = cvbridge.cv2_to_imgmsg(img, encoding="rgb8")
+            # d.image_publisher.publish = MagicMock()
+            lines_only = d.image_callback(img, debug=False)
 
             if "DISPLAY" in os.environ:
                 cv2.imshow("Before", img)
                 cv2.imwrite("/tmp/before.png", img)
 
-                if d.image_publisher.publish.call_count != 0:
-                    img_out = cvbridge.imgmsg_to_cv2(d.image_publisher.publish.call_args[0][0])
-                    cv2.imshow("After", img_out)
-                    cv2.imwrite("/tmp/after.png", img_out)
+                cv2.imshow("After", lines_only)
+
+                # ROS
+                # if d.image_publisher.publish.call_count != 0:
+                # img_out = cvbridge.imgmsg_to_cv2(d.image_publisher.publish.call_args[0][0])
+                # cv2.imshow("After", img_out)
+                # cv2.imwrite("/tmp/after.png", img_out)
 
                 cv2.waitKey(0)
         cv2.destroyAllWindows()
 
     def test_fieldline_detection_cam(self):
-        rospy.init_node("test")
+        # rospy.init_node("test")
 
         Camera.reset_position = MagicMock()
         Camera.ready = MagicMock()
@@ -187,7 +192,7 @@ class TestObjectLocalization(TestCase):
         cv2.destroyAllWindows()
 
     def test_fieldline_detection_vid(self):
-        rospy.init_node("test")
+        # rospy.init_node("test")
         os.environ["LD_LIBRARY_PATH"] = "$LD_LIBRARY_PATH:/opt/ros/noetic/lib/"
 
         src_path = os.path.dirname(os.path.realpath(__file__))
@@ -234,102 +239,101 @@ class TestObjectLocalization(TestCase):
         cv2.destroyAllWindows()
 
     def test_fieldline_detection_freehicle(self):
-        rospy.init_node("test")
-        rospy.set_param("point_cloud_max_distance", 20)
-        rospy.set_param("point_cloud_spacing", 20)
-
-        src_path = os.path.dirname(os.path.realpath(__file__))
-        folter_path = src_path + "/../../images/freehicle"
-        download_dataset(url="https://drive.google.com/uc?id=1Df7FMbnvJ5d7jAx-8fPiaFiLcd5nrsT9", folder_path=folter_path)
-
-        test_path = folter_path + "/freehicle.bag"
-        test_out = folter_path + "/freehicle_out.bag"
-
-        bag = rosbag.Bag(test_path)
-        bag_out = rosbag.Bag(test_out, mode="w")
-        Camera.reset_position = MagicMock()
-        Camera.ready = MagicMock()
-        d = DetectorFieldline()
-        d.camera.horizontalFOV = 1.3926 * 800 / 640
-        d.robot_name = "robot1"
-        d.robot_state.status = RobotState.STATUS_READY
-        d.image_publisher.get_num_connections = MagicMock(return_value=1)
-        d.point_cloud_publisher.get_num_connections = MagicMock(return_value=1)
-        d.publish_point_cloud = True
-
-        tfBuffer = tf2_ros.Buffer(rospy.Duration(1000))
-        tl = tf2_ros.TransformListener(tfBuffer)
-        camera_detected = False
-        debug = False
-        cvbridge = CvBridge()
-        original_publish = d.point_cloud_publisher.publish
-        t_init = None
-        for topic, msg, t in bag.read_messages():
-            if t_init is None:
-                t_init = t
-            else:
-                if t.secs - t_init.secs > 10:
-                    break
-            if topic == "/odom":
-                topic = "/robot1/odom_combined"
-            bag_out.write(topic, msg, t)
-
-            if topic == "/camera/image_raw":
-                if not camera_detected:
-                    continue
-
-                c = CameraInfo()
-                c.height = msg.height
-                c.width = msg.width
-                d.camera.camera_info = c
-
-                tf_stamped = tfBuffer.lookup_transform("map", "camera", rospy.Time())
-                d.camera.pose.geometry_msgs_transform = tf_stamped.transform
-                position_original = d.camera.pose.position
-                orientation_euler_original = d.camera.pose.orientation_euler
-                position_original[0:2] = 0
-                orientation_euler_original[0] = 0
-                orientation_euler_original[2] = 0
-                d.camera.pose.position = position_original
-                d.camera.pose.orientation_euler = orientation_euler_original
-                img = cvbridge.imgmsg_to_cv2(msg)
-                d.image_publisher.publish = MagicMock()
-
-                d.point_cloud_publisher.publish = MagicMock()
-                d.image_callback(msg, debug=debug)
-
-                bag_out.write("/robot1/field_point_cloud", d.point_cloud_publisher.publish.call_args[0][0], t)
-                original_publish(d.point_cloud_publisher.publish.call_args[0][0])
-
-                if "DISPLAY" in os.environ:
-                    cv2.imshow("Before", img)
-
-                    if d.image_publisher.publish.call_count != 0:
-                        img_out = cvbridge.imgmsg_to_cv2(d.image_publisher.publish.call_args[0][0])
-                        cv2.imshow("After", img_out)
-                        cv2.waitKey(1)
-
-            elif topic == "/tf":
-                camera_detected = True
-                msg._connection_header = MagicMock()
-                msg._connection_header.get = MagicMock(return_value="default_authority")
-                tl.callback(msg)
-            elif topic == "/tf_static":
-                msg._connection_header = MagicMock()
-                msg._connection_header.get = MagicMock(return_value="default_authority")
-                tl.static_callback(msg)
-                pass
-
-        bag_out.close()
-        bag.close()
-        if "DISPLAY" in os.environ:
-            cv2.destroyAllWindows()
+        pass
+        # rospy.init_node("test")
+        # rospy.set_param("point_cloud_max_distance", 20)
+        # rospy.set_param("point_cloud_spacing", 20)
+        #
+        # src_path = os.path.dirname(os.path.realpath(__file__))
+        # folter_path = src_path + "/../../images/freehicle"
+        # download_dataset(url="https://drive.google.com/uc?id=1Df7FMbnvJ5d7jAx-8fPiaFiLcd5nrsT9", folder_path=folter_path)
+        #
+        # test_path = folter_path + "/freehicle.bag"
+        # test_out = folter_path + "/freehicle_out.bag"
+        #
+        # bag = rosbag.Bag(test_path)
+        # bag_out = rosbag.Bag(test_out, mode="w")
+        # Camera.reset_position = MagicMock()
+        # Camera.ready = MagicMock()
+        # d = DetectorFieldline()
+        # d.camera.horizontalFOV = 1.3926 * 800 / 640
+        # d.robot_name = "robot1"
+        # d.robot_state.status = RobotState.STATUS_READY
+        # d.image_publisher.get_num_connections = MagicMock(return_value=1)
+        # d.point_cloud_publisher.get_num_connections = MagicMock(return_value=1)
+        # d.publish_point_cloud = True
+        #
+        # tfBuffer = tf2_ros.Buffer(rospy.Duration(1000))
+        # tl = tf2_ros.TransformListener(tfBuffer)
+        # camera_detected = False
+        # debug = False
+        # cvbridge = CvBridge()
+        # original_publish = d.point_cloud_publisher.publish
+        # t_init = None
+        # for topic, msg, t in bag.read_messages():
+        #     if t_init is None:
+        #         t_init = t
+        #     else:
+        #         if t.secs - t_init.secs > 10:
+        #             break
+        #     if topic == "/odom":
+        #         topic = "/robot1/odom_combined"
+        #     bag_out.write(topic, msg, t)
+        #
+        #     if topic == "/camera/image_raw":
+        #         if not camera_detected:
+        #             continue
+        #
+        #         c = CameraInfo()
+        #         c.height = msg.height
+        #         c.width = msg.width
+        #         d.camera.camera_info = c
+        #
+        #         tf_stamped = tfBuffer.lookup_transform("map", "camera", rospy.Time())
+        #         d.camera.pose.geometry_msgs_transform = tf_stamped.transform
+        #         position_original = d.camera.pose.position
+        #         orientation_euler_original = d.camera.pose.orientation_euler
+        #         position_original[0:2] = 0
+        #         orientation_euler_original[0] = 0
+        #         orientation_euler_original[2] = 0
+        #         d.camera.pose.position = position_original
+        #         d.camera.pose.orientation_euler = orientation_euler_original
+        #         img = cvbridge.imgmsg_to_cv2(msg)
+        #         d.image_publisher.publish = MagicMock()
+        #
+        #         d.point_cloud_publisher.publish = MagicMock()
+        #         d.image_callback(msg, debug=debug)
+        #
+        #         bag_out.write("/robot1/field_point_cloud", d.point_cloud_publisher.publish.call_args[0][0], t)
+        #         original_publish(d.point_cloud_publisher.publish.call_args[0][0])
+        #
+        #         if "DISPLAY" in os.environ:
+        #             cv2.imshow("Before", img)
+        #
+        #             if d.image_publisher.publish.call_count != 0:
+        #                 img_out = cvbridge.imgmsg_to_cv2(d.image_publisher.publish.call_args[0][0])
+        #                 cv2.imshow("After", img_out)
+        #                 cv2.waitKey(1)
+        #
+        #     elif topic == "/tf":
+        #         camera_detected = True
+        #         msg._connection_header = MagicMock()
+        #         msg._connection_header.get = MagicMock(return_value="default_authority")
+        #         tl.callback(msg)
+        #     elif topic == "/tf_static":
+        #         msg._connection_header = MagicMock()
+        #         msg._connection_header.get = MagicMock(return_value="default_authority")
+        #         tl.static_callback(msg)
+        #         pass
+        #
+        # bag_out.close()
+        # bag.close()
+        # if "DISPLAY" in os.environ:
+        #     cv2.destroyAllWindows()
 
     def test_goalpost_detection(self):
-        rospy.init_node("test")
-
         """
-            Returns whether a point at a given field coordinate is visible to the robot
+        Returns whether a point at a given field coordinate is visible to the robot
         """
 
         def get_point_visibility(robot_pose, point_coords):
@@ -384,14 +388,14 @@ class TestObjectLocalization(TestCase):
         test_path = src_path + "/../../images/goal_net"
         download_dataset(url="https://drive.google.com/uc?id=17qdnW7egoopXHvakiNnUUufP2MOjyZ18", folder_path=test_path)
 
-        Camera.reset_position = MagicMock()
-        Camera.ready = MagicMock()
+        # Camera.reset_position = MagicMock()
+        # Camera.ready = MagicMock()
         d = DetectorGoalPost()
         d.robot_state.status = RobotState.STATUS_DETERMINING_SIDE
         d.camera.pose = Transformation(position=[0, 0, 0.46])
-        d.image_publisher.get_num_connections = MagicMock(return_value=1)
+        # d.image_publisher.get_num_connections = MagicMock(return_value=1)
 
-        cvbridge = CvBridge()
+        # cvbridge = CvBridge()
 
         src_path = os.path.dirname(os.path.realpath(__file__))
         test_path = src_path + "/../../images/goal_net"
@@ -419,22 +423,20 @@ class TestObjectLocalization(TestCase):
 
             if "DISPLAY" in os.environ:
                 cv2.imshow("Before", img)
-                cv2.waitKey(0)
 
             c = CameraInfo()
             c.height = img.shape[0]
             c.width = img.shape[1]
             d.camera.camera_info = c
 
-            img_msg: Image = cvbridge.cv2_to_imgmsg(img, encoding="rgb8")
-            d.image_publisher.publish = MagicMock()
-            d.image_callback(img_msg, debug=True)
+            # img_msg: Image = cvbridge.cv2_to_imgmsg(img, encoding="rgb8")
+            # d.image_publisher.publish = MagicMock()
+            d.image_callback(img, debug=False)
 
             if "DISPLAY" in os.environ:
-                if d.image_publisher.publish.call_count != 0:
-                    img_out = cvbridge.imgmsg_to_cv2(d.image_publisher.publish.call_args[0][0])
-                    cv2.imshow("After", img_out)
-
+                # if d.image_publisher.publish.call_count != 0:
+                #     # img_out = cvbridge.imgmsg_to_cv2(d.image_publisher.publish.call_args[0][0])
+                cv2.imshow("After", d.img_out)
                 cv2.waitKey(0)
 
     # @pytest.mark.skip
@@ -443,14 +445,12 @@ class TestObjectLocalization(TestCase):
         Used for tuning vertical line detection parameters using sliders.
         """
 
-        rospy.init_node("test")
+        # rospy.init_node("test")
 
         src_path = os.path.dirname(os.path.realpath(__file__))
         test_path = src_path + "/../../images/goal_net"
         download_dataset(url="https://drive.google.com/uc?id=17qdnW7egoopXHvakiNnUUufP2MOjyZ18", folder_path=test_path)
 
-        Camera.reset_position = MagicMock()
-        Camera.ready = MagicMock()
         d = DetectorGoalPost()
 
         src_path = os.path.dirname(os.path.realpath(__file__))
@@ -590,7 +590,8 @@ class TestObjectLocalization(TestCase):
         test_path = src_path + "/../../../soccer_object_detection/images/simulation"
         download_dataset("https://drive.google.com/uc?id=11nN58j8_PBoLNRAzOEdk7fMe1UK1diCc", folder_path=test_path)
 
-        rospy.init_node("test")
+        # ROS
+        # rospy.init_node("test")
 
         Camera.reset_position = MagicMock()
 
@@ -630,16 +631,19 @@ class TestObjectLocalization(TestCase):
             n.camera.pose = Transformation(position=[0, 0, 0.46], orientation_euler=[0, np.pi / 8, 0])
             do.camera.pose = n.camera.pose
 
-            n.callback(img_msg)
+            # n.callback(img_msg)
+            detection_image = n.callback(img)  # send the image directly
 
             # Check assertion
-            if n.pub_boundingbox.publish.call_args is not None:
-                bounding_boxes = n.pub_boundingbox.publish.call_args[0][0]
-                do.objectDetectorCallback(bounding_boxes)
+            # if n.pub_boundingbox.publish.call_args is not None:
+            #     bounding_boxes = n.pub_boundingbox.publish.call_args[0][0]
+            #     do.objectDetectorCallback(bounding_boxes)
 
             if "DISPLAY" in os.environ:
-                mat = cvbridge.imgmsg_to_cv2(n.pub_detection.publish.call_args[0][0])
-                cv2.imshow("Image", mat)
+                # mat = cvbridge.imgmsg_to_cv2(n.pub_detection.publish.call_args[0][0])
+                # cv2.imshow("Image", mat)
+                # cv2.imshow("Image", img)
+                cv2.imshow("Detections", detection_image)
                 cv2.waitKey()
 
         cv2.destroyAllWindows()

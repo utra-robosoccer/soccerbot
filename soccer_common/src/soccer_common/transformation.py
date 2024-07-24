@@ -1,5 +1,4 @@
 import numpy as np
-import rospy
 from geometry_msgs.msg import Pose, PoseStamped, PoseWithCovarianceStamped
 from geometry_msgs.msg import Transform as GeometryMsgsTransform
 from scipy.spatial.transform import Rotation as R
@@ -25,9 +24,9 @@ class Transformation(np.ndarray):
         pose_with_covariance_stamped: PoseWithCovarianceStamped = None,
         geometry_msgs_transform: GeometryMsgsTransform = None,
         dh: np.array = None,
-        timestamp: rospy.Time = None,
+        timestamp: None = None,  # formerly handled by ROS
         *args,
-        **kwargs
+        **kwargs,
     ):
         """
         Constructor for the Transformation object
@@ -242,7 +241,7 @@ class Transformation(np.ndarray):
         The transformation represented in the PoseStamped format
         """
         t = PoseStamped()
-        t.header.stamp = rospy.Time.now()
+        # t.header.stamp = rospy.Time.now()
         t.header.frame_id = "world"
         t.pose = self.pose
         return t
@@ -257,7 +256,7 @@ class Transformation(np.ndarray):
         The transformation represented in the PoseStamped format
         """
         p = PoseWithCovarianceStamped()
-        p.header.stamp = rospy.Time.now()
+        # p.header.stamp = rospy.Time.now()
         p.header.frame_id = "world"
         p.pose.pose = self.pose
         p.pose.covariance = list(self.pose_covariance)

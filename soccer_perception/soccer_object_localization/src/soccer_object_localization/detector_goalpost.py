@@ -1,22 +1,18 @@
-#!/usr/bin/env python3
-
+import math
 import os
 import time
 
-from rospy.impl.tcpros_base import DEFAULT_BUFF_SIZE
-
-if "ROS_NAMESPACE" not in os.environ:
-    os.environ["ROS_NAMESPACE"] = "/robot1"
-
-import math
-
 import cv2
 import numpy as np
-import rospy
-from cv_bridge import CvBridge
-from sensor_msgs.msg import Image
+from cv2 import Mat
+
+# import rospy
+# from cv_bridge import CvBridge
+# from sensor_msgs.msg import Image
 from soccer_object_localization.detector import Detector
 
+# tmp
+from soccer_common.utils import download_dataset, wrapToPi
 from soccer_msgs.msg import RobotState
 
 
@@ -24,14 +20,15 @@ class DetectorGoalPost(Detector):
     def __init__(self):
         super().__init__()
 
-        self.image_subscriber = rospy.Subscriber(
-            "camera/image_raw", Image, self.image_callback, queue_size=1, buff_size=DEFAULT_BUFF_SIZE * 64
-        )  # Large buff size (https://answers.ros.org/question/220502/image-subscriber-lag-despite-queue-1/)
-        self.image_publisher = rospy.Publisher("camera/goal_image", Image, queue_size=1)
+        # self.image_subscriber = rospy.Subscriber(
+        #     "camera/image_raw", Image, self.image_callback, queue_size=1, buff_size=DEFAULT_BUFF_SIZE * 64
+        # )  # Large buff size (https://answers.ros.org/question/220502/image-subscriber-lag-despite-queue-1/)
+        # self.image_publisher = rospy.Publisher("camera/goal_image", Image, queue_size=1)
+        self.img_out = None
         cv2.setRNGSeed(12345)
         pass
 
-    def image_callback(self, img: Image, debug=False):
+    def image_callback(self, img: Mat, debug=False):
         t_start = time.time()
 
         if self.robot_state.status not in [RobotState.STATUS_DETERMINING_SIDE, RobotState.STATUS_LOCALIZING]:
@@ -40,10 +37,10 @@ class DetectorGoalPost(Detector):
         if not self.camera.ready():
             return
 
-        self.camera.reset_position(timestamp=img.header.stamp)
+        self.camera.reset_position()
 
-        image = CvBridge().imgmsg_to_cv2(img, desired_encoding="rgb8")
-        vertical_lines, image_out = self.get_vlines_from_img(image, debug=debug)
+        # image = CvBridge().imgmsg_to_cv2(img, desired_encoding="rgb8")
+        vertical_lines, image_out = self.get_vlines_from_img(img, debug=debug)
         if vertical_lines is None:
             return
 
@@ -70,20 +67,22 @@ class DetectorGoalPost(Detector):
 
         if closest_line is not None:
             cv2.line(image_out, (closest_line[0], closest_line[1]), (closest_line[2], closest_line[3]), (255, 0, 0), 2)
-            self.br.sendTransform(
-                closest_line_relative_position_post_to_robot,
-                (0, 0, 0, 1),
-                img.header.stamp,
-                self.robot_name + "/goal_post",
-                self.robot_name + "/base_footprint",
-            )
-        if self.image_publisher.get_num_connections() > 0:
-            img_out = CvBridge().cv2_to_imgmsg(image_out)
-            img_out.header = img.header
-            self.image_publisher.publish(img_out)
+            # self.br.sendTransform(
+            #     closest_line_relative_position_post_to_robot,
+            #     (0, 0, 0, 1),
+            #     img.header.stamp,
+            #     self.robot_name + "/goal_post",
+            #     self.robot_name + "/base_footprint",
+            # )
+
+        self.img_out = image_out
+        # if self.image_publisher.get_num_connections() > 0:
+        #     img_out = CvBridge().cv2_to_imgmsg(image_out)
+        #     img_out.header = img.header
+        #     self.image_publisher.publish(img_out)
 
         t_end = time.time()
-        rospy.loginfo_throttle(60, "GoalPost detection rate: " + str(t_end - t_start))
+        # rospy.loginfo_throttle(60, "GoalPost detection rate: " + str(t_end - t_start))
 
     """
         Retrieves the vertical lines in image by isolating the grass in the field, removing it and then uses
@@ -103,15 +102,17 @@ class DetectorGoalPost(Detector):
         image_hsv_filter = cv2.inRange(image_hsv, (0, 0, 150), (255, 50, 255))
         h = self.camera.calculateHorizonCoverArea()
         image_crop = image_hsv[h + 1 :, :, :]
-        grass_only = cv2.inRange(image_crop, (35, 85, 0), (115, 255, 255))
-        grass_only = cv2.vconcat([np.zeros((h + 1, grass_only.shape[1]), dtype=grass_only.dtype), grass_only])
-        # Use odd numbers for all circular masks otherwise the line will shift location
-        grass_only_0 = cv2.morphologyEx(grass_only, cv2.MORPH_OPEN, self.circular_mask(5))
-        grass_only_1 = cv2.morphologyEx(grass_only, cv2.MORPH_CLOSE, self.circular_mask(5))
-        grass_only_2 = cv2.morphologyEx(grass_only_1, cv2.MORPH_OPEN, self.circular_mask(21))
-        grass_only_3 = cv2.morphologyEx(grass_only_2, cv2.MORPH_CLOSE, self.circular_mask(61))
-        grass_only_morph = cv2.morphologyEx(grass_only_3, cv2.MORPH_ERODE, self.circular_mask(9))
-        grass_only_flipped = cv2.bitwise_not(grass_only_morph)
+        # grass_only = cv2.inRange(image_crop, (35, 85, 0), (115, 255, 255))
+        # grass_only = cv2.vconcat([np.zeros((h + 1, grass_only.shape[1]), dtype=grass_only.dtype), grass_only])
+        # # Use odd numbers for all circular masks otherwise the line will shift location
+        # grass_only_0 = cv2.morphologyEx(grass_only, cv2.MORPH_OPEN, self.circular_mask(5))
+        # grass_only_1 = cv2.morphologyEx(grass_only, cv2.MORPH_CLOSE, self.circular_mask(5))
+        # grass_only_2 = cv2.morphologyEx(grass_only_1, cv2.MORPH_OPEN, self.circular_mask(21))
+        # grass_only_3 = cv2.morphologyEx(grass_only_2, cv2.MORPH_CLOSE, self.circular_mask(61))
+        # grass_only_morph = cv2.morphologyEx(grass_only_3, cv2.MORPH_ERODE, self.circular_mask(9))
+        # grass_only_flipped = cv2.bitwise_not(grass_only_morph)
+
+        grass_only, grass_only_0, grass_only_1, grass_only_2, grass_only_3, grass_only_morph, grass_only_flipped = self.grass_mask(image_crop, h)
 
         image_bw = cv2.bitwise_and(image, image, mask=image_hsv_filter)
         image_bw = cv2.bitwise_and(image_bw, image_bw, mask=grass_only_flipped)
@@ -159,6 +160,7 @@ class DetectorGoalPost(Detector):
 
 
 if __name__ == "__main__":
-    rospy.init_node("detector_goalpost")
-    fieldline_detector = DetectorGoalPost()
-    rospy.spin()
+    # rospy.init_node("detector_goalpost")
+    # fieldline_detector = DetectorGoalPost()
+    # rospy.spin()
+    pass
