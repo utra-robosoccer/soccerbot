@@ -1,3 +1,0 @@
-<map id="MPU6050_Read_Accelerometer_Withoffset" name="MPU6050_Read_Accelerometer_Withoffset">
-<area shape="rect" id="node2" href="$d3/d37/group___register___r_w.html#ga2b23d5074d61632a9b4c6a520418de0a" title="This function reads a register from the MPU6050 without interrupts, and stores it into a buffer..." alt="" coords="260,13,423,39"/>
-</map>

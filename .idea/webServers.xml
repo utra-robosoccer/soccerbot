@@ -16,6 +16,13 @@
           </advancedOptions>
         </fileTransfer>
       </webServer>
+      <webServer id="e48b2695-e7a2-4480-87af-ef1a379e2de8" name="fewf">
+        <fileTransfer rootFolder="/home/robot1" accessType="SFTP" host="100.66.208.59" port="22" sshConfigId="be6a083d-36e6-4527-996d-72c08d1b2bbe" sshConfig="robot1@100.66.208.59:22 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
     </option>
     <groups>
       <group>
