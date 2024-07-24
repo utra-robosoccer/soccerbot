@@ -32,7 +32,7 @@ requests==2.31.0
 ipython==8.10.0
 seaborn
 tensorboard
-Pillow
+Pillow==10.0.1
 tqdm
 gitpython
 psutil==5.9.2; platform_machine == 'x86_64'
