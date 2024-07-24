@@ -52,7 +52,7 @@ class TestTrajectory(unittest.TestCase):
         self.assertEqual(angles, [0.0, 0.0, 0.0, 0.0, 0.564, 0.564, -1.176, -1.176, 0.613, 0.613, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
 
 
-@pytest.mark.parametrize("trajectory_name", ["getupfront"])  # , "getupback", "rightkick", "getupfront"])
+@pytest.mark.parametrize("trajectory_name", ["getupback_roll"])  # , "getupback_full", "rightkick", "getupfront"])
 @pytest.mark.parametrize("robot_model", ["bez2"])
 @pytest.mark.parametrize("real_time", [True])
 def test_trajectory_sim(trajectory_name: str, robot_model: str, real_time: bool):
@@ -64,7 +64,7 @@ def test_trajectory_sim(trajectory_name: str, robot_model: str, real_time: bool)
     if trajectory_name == "getupfront":
         pose = Transformation(position=[0, -0.5, 0.070], euler=[0, 1.57, 1.57])
         camera = 90
-    elif trajectory_name == "getupback":
+    elif trajectory_name == "getupback_full" or trajectory_name == "getupback_roll":
         pose = Transformation(position=[0, 0, 0.070], euler=[0, -1.57, 0])
         camera = 0
     # else:
@@ -106,12 +106,10 @@ def run_real_trajectory(robot_model: str, trajectory_name: str, real_time: bool)
     c.command_callback(command=msg)
     c.send_trajectory(real_time=real_time)
 
-
 # TODO clean up the pybullet interface so that there is a uniform place for the code
 
-
 @pytest.mark.parametrize("robot_model", ["bez2"])
-@pytest.mark.parametrize("trajectory_name", ["getupfront"])
+@pytest.mark.parametrize("trajectory_name", ["getupback_roll"])  # getupback_full
 @pytest.mark.parametrize("real_time", [True])
 # @unittest.skip("Not integrated in CI")
 def test_traj_ros(robot_model: str, trajectory_name: str, real_time: bool):

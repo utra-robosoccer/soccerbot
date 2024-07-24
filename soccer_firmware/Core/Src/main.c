@@ -100,9 +100,9 @@ void init_ports() {
     .dirPinNum      = USART1_DIR_Pin,
     .dmaDoneReading = false,
     .currMotor      = 0,
-    .numMotors      = 4,
-    .motorIds       = {0, 1, 18, 16}, // left arm chain + bottom neck motor
-    .protocol       = {2, 2, 2}
+    .numMotors      = 5,
+    .motorIds       = {0, 1, 18, 16, 17}, // left arm chain + bottom neck motor
+    .protocol       = {2, 2, 2, 2, 2}
   };
 
   // port2 => UART2 ==> J7 on new PCB
@@ -114,9 +114,9 @@ void init_ports() {
       .dirPinNum      = USART2_DIR_Pin,
       .dmaDoneReading = false,
       .currMotor      = 0,
-      .numMotors      = 4,
-      .motorIds       = {2, 3, 19, 17}, // right arm chain + top neck motor
-      .protocol       = {2, 2, 2, 2}
+      .numMotors      = 3,
+      .motorIds       = {2, 3, 19}, // right arm chain + top neck motor
+      .protocol       = {2, 2, 2}
     };
 
   // port3 => UART3 ==> J12 on new PCB

@@ -12,11 +12,13 @@ class FootStepPlannerROS(FootStepPlanner):
         torso_offset_pitch: float = 0.0,
         torso_offset_x: float = 0.0,
     ):
-        robot_model = rospy.get_param("robot_model", "bez1")
+        robot_model = rospy.get_param("robot_model", "bez2")
         if rospy.get_param("/use_sim_time", True):
             sim = "_sim"
         else:
             sim = ""
+
+        sim = "_sim"
         # TODO create path ros
         super(FootStepPlannerROS, self).__init__(
             sim=sim,

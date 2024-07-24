@@ -8,10 +8,10 @@ arm_0_center: -0.45
 arm_1_center: 2.512
 weird_x_offset: -0.06409
 #: How much the torso is forward in the x axis
-torso_offset_x_ready: 0 # positive is forward
+torso_offset_x_ready: 0.012 # positive is forward
 
 #: How much the torso is rotated in the x axis
-torso_offset_pitch_ready: 0.0
+torso_offset_pitch_ready: -0.01
 
 #: Dimensions of the foot collision box
 foot_box: [0.09, 0.07, 0.01474]
@@ -30,10 +30,10 @@ head_rotation_yaw_range: 0.15
 
 # STEP PLANNER
 #: How much the torso is rotated in the x axis
-torso_offset_pitch: 0.05
+torso_offset_pitch: 0.3
 
 #: How much the torso is forward in the x axis
-torso_offset_x: 0.0 # positive is forward
+torso_offset_x: 0.02 # positive is forward
 
 # STABILIZE
 standing_pitch_kp: 0.
@@ -103,19 +103,19 @@ torso_zdiff_sway: 0
 
 #: How much the torso sways left and right while following the torso trajectory  (m)
 torso_sidediff_sway:
-  -0.006
+  0.01
 
   #: How much the torso rotates while following the torso trajectory (yaw, pitch, roll)
 torso_thetadiff_sway: [0, 0, 0]
 
 # PATH SECTION
 #: How much distance is a torso step (equivalent to a half step)
-torso_step_length: 0.06
+torso_step_length: 0.03
 torso_step_length_short_backwards: 0.025
 torso_step_length_short_forwards: 0.035
 scale_yaw: 1.0 # Increase the rotation by angle
 #: How many torso steps per second, approximately equivalent to foot steps per second
-steps_per_second_default: 3
+steps_per_second_default: 1.5
 
 # PATH SECTION BEZIER
 turn_duration: 3

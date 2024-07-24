@@ -795,7 +795,7 @@
     <parent link="torso"/>
     <child link="neck"/>
     <axis xyz="0.0 0.0 -1.0"/>
-    <dynamics damping="0.16" friction="0.6"/>
+    <dynamics damping="0" friction="0"/>
     <limit effort="1.5" lower="-1.5707963267948966" upper="1.5707963267948966" velocity="6.39"/>
   </joint>
   <joint name="head_motor_1" type="revolute">
@@ -803,7 +803,7 @@
     <parent link="neck"/>
     <child link="head"/>
     <axis xyz="0.0 1.0 0.0"/>
-    <dynamics damping="0.16" friction="0.6"/>
+    <dynamics damping="0" friction="0"/>
     <limit effort="1.5" lower="0" upper="1.5707963267948966" velocity="6.39"/>
   </joint>
   <joint name="left_arm_motor_0" type="revolute">
@@ -811,7 +811,7 @@
     <parent link="torso"/>
     <child link="left_shoulder"/>
     <axis xyz="-0.0 -1.0 0.0"/>
-    <dynamics damping="0.3" friction="0.83"/>
+    <dynamics damping="0" friction="0"/>
     <limit effort="4.1" lower="-3.141592653589793" upper="3.9269908169872414" velocity="4.82"/>
   </joint>
   <joint name="left_arm_motor_1" type="revolute">
@@ -819,7 +819,7 @@
     <parent link="left_shoulder"/>
     <child link="left_bicep"/>
     <axis xyz="1.0 -0.0 0.0"/>
-    <dynamics damping="0.3" friction="0.83"/>
+    <dynamics damping="0" friction="0"/>
     <limit effort="2.5" lower="0" upper="1.5707963267948966" velocity="5.76"/>
   </joint>
   <joint name="left_arm_motor_2" type="revolute">
@@ -827,7 +827,7 @@
     <parent link="left_bicep"/>
     <child link="left_forearm"/>
     <axis xyz="-0.0 -1.0 -0.0"/>
-    <dynamics damping="0.3" friction="0.83"/>
+    <dynamics damping="0" friction="0"/>
     <limit effort="2.5" lower="0" upper="3.141592653589793" velocity="5.76"/>
   </joint>
   <joint name="left_leg_motor_0" type="revolute">
@@ -835,7 +835,7 @@
     <parent link="torso"/>
     <child link="left_hip_side"/>
     <axis xyz="0.0 0.0 -1.0"/>
-    <dynamics damping="0.72" friction="0.72"/>
+    <dynamics damping="0" friction="0"/>
     <limit effort="4.1" lower="-1.309" upper="0.524" velocity="4.82"/>
   </joint>
   <joint name="left_leg_motor_1" type="revolute">
@@ -843,7 +843,7 @@
     <parent link="left_hip_side"/>
     <child link="left_hip_front"/>
     <axis xyz="1.0 0.0 0.0"/>
-    <dynamics damping="0.72" friction="0.72"/>
+    <dynamics damping="0" friction="0"/>
     <limit effort="4.1" lower="-0.7853981633974483" upper="1.5707963267948966" velocity="4.82"/>
   </joint>
   <joint name="left_leg_motor_2" type="revolute">
@@ -851,7 +851,7 @@
     <parent link="left_hip_front"/>
     <child link="left_thigh"/>
     <axis xyz="-0.0 -1.0 0.0"/>
-    <dynamics damping="0.72" friction="0.72"/>
+    <dynamics damping="0" friction="0"/>
     <limit effort="4.1" lower="-0.7853981633974483" upper="2.356194490192345" velocity="4.82"/>
   </joint>
   <joint name="left_leg_motor_3" type="revolute">
@@ -859,7 +859,7 @@
     <parent link="left_thigh"/>
     <child link="left_calve"/>
     <axis xyz="-0.0 -1.0 0.0"/>
-    <dynamics damping="0.66" friction="1.42"/>
+    <dynamics damping="0" friction="0"/>
     <limit effort="6.0" lower="-2.793" upper="0" velocity="6.6"/>
   </joint>
   <joint name="left_leg_motor_4" type="revolute">
@@ -867,7 +867,7 @@
     <parent link="left_calve"/>
     <child link="left_ankle"/>
     <axis xyz="-0.0 -1.0 0.0"/>
-    <dynamics damping="0.66" friction="1.42"/>
+    <dynamics damping="0" friction="0"/>
     <limit effort="6.0" lower="-0.7853981633974483" upper="1.5707963267948966" velocity="6.6"/>
   </joint>
   <joint name="left_leg_motor_5" type="revolute">
@@ -875,7 +875,7 @@
     <parent link="left_ankle"/>
     <child link="left_foot"/>
     <axis xyz="1.0 0.0 0.0"/>
-    <dynamics damping="0.66" friction="1.42"/>
+    <dynamics damping="0" friction="0"/>
     <limit effort="6.0" lower="-0.7853981633974483" upper="0.7853981633974483" velocity="6.6"/>
   </joint>
   <joint name="right_arm_motor_0" type="revolute">
@@ -883,7 +883,7 @@
     <parent link="torso"/>
     <child link="right_shoulder"/>
     <axis xyz="0.0 -1.0 -0.0"/>
-    <dynamics damping="0.3" friction="0.83"/>
+    <dynamics damping="0" friction="0"/>
     <limit effort="4.1" lower="-3.141592653589793" upper="3.9269908169872414" velocity="4.82"/>
   </joint>
   <joint name="right_arm_motor_1" type="revolute">
@@ -891,7 +891,7 @@
     <parent link="right_shoulder"/>
     <child link="right_bicep"/>
     <axis xyz="-1.0 0.0 0.0"/>
-    <dynamics damping="0.3" friction="0.83"/>
+    <dynamics damping="0" friction="0"/>
     <limit effort="2.5" lower="0" upper="1.5707963267948966" velocity="5.76"/>
   </joint>
   <joint name="right_arm_motor_2" type="revolute">
@@ -899,7 +899,7 @@
     <parent link="right_bicep"/>
     <child link="right_forearm"/>
     <axis xyz="0.0 -1.0 0.0"/>
-    <dynamics damping="0.3" friction="0.83"/>
+    <dynamics damping="0" friction="0"/>
     <limit effort="2.5" lower="0" upper="3.141592653589793" velocity="5.76"/>
   </joint>
   <joint name="right_leg_motor_0" type="revolute">
@@ -907,7 +907,7 @@
     <parent link="torso"/>
     <child link="right_hip_side"/>
     <axis xyz="-0.0 -0.0 1.0"/>
-    <dynamics damping="0.72" friction="0.72"/>
+    <dynamics damping="0" friction="0"/>
     <limit effort="4.1" lower="-1.309" upper="0.524" velocity="4.82"/>
   </joint>
   <joint name="right_leg_motor_1" type="revolute">
@@ -915,7 +915,7 @@
     <parent link="right_hip_side"/>
     <child link="right_hip_front"/>
     <axis xyz="-1.0 0.0 0.0"/>
-    <dynamics damping="0.72" friction="0.72"/>
+    <dynamics damping="0" friction="0"/>
     <limit effort="4.1" lower="-0.7853981633974483" upper="1.5707963267948966" velocity="4.82"/>
   </joint>
   <joint name="right_leg_motor_2" type="revolute">
@@ -923,7 +923,7 @@
     <parent link="right_hip_front"/>
     <child link="right_thigh"/>
     <axis xyz="-0.0 -1.0 0.0"/>
-    <dynamics damping="0.72" friction="0.72"/>
+    <dynamics damping="0" friction="0"/>
     <limit effort="4.1" lower="-0.7853981633974483" upper="2.356194490192345" velocity="4.82"/>
   </joint>
   <joint name="right_leg_motor_3" type="revolute">
@@ -931,7 +931,7 @@
     <parent link="right_thigh"/>
     <child link="right_calve"/>
     <axis xyz="-0.0 -1.0 0.0"/>
-    <dynamics damping="0.66" friction="1.42"/>
+    <dynamics damping="0" friction="0"/>
     <limit effort="6.0" lower="-2.793" upper="0" velocity="6.6"/>
   </joint>
   <joint name="right_leg_motor_4" type="revolute">
@@ -939,7 +939,7 @@
     <parent link="right_calve"/>
     <child link="right_ankle"/>
     <axis xyz="-0.0 -1.0 0.0"/>
-    <dynamics damping="0.66" friction="1.42"/>
+    <dynamics damping="0" friction="0"/>
     <limit effort="6.0" lower="-0.7853981633974483" upper="1.5707963267948966" velocity="6.6"/>
   </joint>
   <joint name="right_leg_motor_5" type="revolute">
@@ -947,7 +947,7 @@
     <parent link="right_ankle"/>
     <child link="right_foot"/>
     <axis xyz="-1.0 0.0 0.0"/>
-    <dynamics damping="0.66" friction="1.42"/>
+    <dynamics damping="0" friction="0"/>
     <limit effort="6.0" lower="-0.7853981633974483" upper="0.7853981633974483" velocity="6.6"/>
   </joint>
   <link name="imu_link">
@@ -956,6 +956,32 @@
       <origin rpy="0  0  0" xyz="0 0 0"/>
       <inertia ixx="1e-9" ixy="0" ixz="0" iyy="1e-9" iyz="0" izz="1e-9"/>
     </inertial>
+  </link>
+  <joint name="torso_cylinder_joint" type="fixed">
+    <parent link="torso"/>
+    <child link="torso_cylinder"/>
+    <origin rpy="0 0 0" xyz="0.0 0 0.000"/>
+    <axis xyz="0 0 0"/>
+  </joint>
+  <link name="torso_cylinder">
+    <inertial>
+      <origin rpy="0 0 0" xyz="-0.026300599945598205 0.02045796215352269 -0.07127075071519248"/>
+      <mass value="0.00001"/>
+      <inertia ixx="0.00001" ixy="-0.0" ixz="-0" iyy="0.00001" iyz="-0.0" izz="0.00001"/>
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="-0.14 0 -0.07"/>
+      <geometry>
+        <cylinder length="0.08" radius="0.02"/>
+      </geometry>
+      <material name="plastic_matte_yellow"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="-0.14 0 -0.07"/>
+      <geometry>
+        <cylinder length="0.08" radius="0.02"/>
+      </geometry>
+    </collision>
   </link>
   <joint name="torso_imu" type="fixed">
     <parent link="torso"/>

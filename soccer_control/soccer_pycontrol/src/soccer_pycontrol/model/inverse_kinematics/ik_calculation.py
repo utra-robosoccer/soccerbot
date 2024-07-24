@@ -59,6 +59,10 @@ class IKCalculation:
         alpha = np.arcsin(num / denom)
         theta5 = np.arctan2(rx, np.sign(rz) * np.sqrt(ry**2 + rz**2)) + alpha
 
+        # offset hack fix
+        # theta4 -= np.arctan(2.4/15)
+        # theta5 += np.arctan(2.4/15) # off by 2mm
+
         return theta4, theta5, theta6
 
     def right_foot_rotation(self, transformation: Transformation, theta4: float, theta5: float, theta6: float):
