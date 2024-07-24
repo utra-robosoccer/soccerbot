@@ -17,7 +17,7 @@ class KinematicData:
         sim: str = "_sim",
         robot_model: str = "bez1",
     ):
-
+        # TODO evlaulate the best way to maintain config files and is rosparm really necessary
         with open(
             expanduser("~") + f"/catkin_ws/src/soccerbot/soccer_control/soccer_pycontrol/config/{robot_model}/{robot_model}{sim}.yaml", "r"
         ) as file:
