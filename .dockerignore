@@ -18,3 +18,4 @@ soccerbot/bags/
 !soccerbot/bags/*.sh
 LICENSE
 venv/
+*.webm

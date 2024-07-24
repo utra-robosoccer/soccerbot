@@ -1,7 +1,0 @@
-<map id="Dynamixel Protocol V1.0" name="Dynamixel Protocol V1.0">
-<area shape="rect" id="node1" href="$d5/d01/group___dynamixel_protocol_v1___public___functions.html" title="Globally&#45;accessible functions for interfacing with Dynamixel actuators and controlling the settings o..." alt="" coords="351,5,469,32"/>
-<area shape="rect" id="node3" href="$d5/d08/group___dynamixel_protocol_v1_header.html" title="Header" alt="" coords="379,56,441,83"/>
-<area shape="rect" id="node4" href="$d9/d76/group___dynamixel___data.html" title="Shared data within library (constants, macros, etc.) " alt="" coords="385,107,435,133"/>
-<area shape="rect" id="node6" href="$d7/de8/group___dynamixel_protocol_v1___i_o.html" title="Implements low&#45;level IO functions. " alt="" coords="391,157,429,184"/>
-<area shape="rect" id="node5" href="$d8/d66/group___dynamixel.html" title="Everything related to Dynamixel actuators. " alt="" coords="5,81,88,108"/>
-</map>

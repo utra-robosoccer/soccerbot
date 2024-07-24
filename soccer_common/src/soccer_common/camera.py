@@ -1,46 +1,20 @@
+import math
 from functools import cached_property
 
 import numpy as np
-import rospy
-import scipy
-import tf
-import tf2_py
-from rospy import Subscriber
-from sensor_msgs.msg import CameraInfo
-from tf import TransformListener
-from tf.transformations import *
 
 from soccer_common.transformation import Transformation
 
 
 class Camera:
-    """
-    This is a reusable class that instantiates an instance of a Camera object that listens to the camera related topics
-    related to a robot and has useful functions that use geometry to determine the 3d/2d projection and location of things
-
-    """
 
     HORIZONTAL_FOV = 1.39626
 
-    def __init__(self, robot_name: str):
-        """
-        Initializes the camera object
-
-        :param robot_name: Name of the robot, to be used in subscribers
-        """
-
-        self.robot_name = robot_name  #: Name of the robot
-        self.pose = Transformation()  #: Pose of the camera
-        self.pose_base_link_straight = Transformation()  #: Pose of the camera
-        self.camera_info = None  #: Camera info object recieved from the subscriber
+    def __init__(self):
+        self.pose = Transformation()
+        self.camera_info = None
         self.horizontalFOV = Camera.HORIZONTAL_FOV
         self.focal_length = 3.67  #: Focal length of the camera (meters) distance to the camera plane as projected in 3D
-
-        self.camera_info_subscriber = Subscriber("/" + robot_name + "/camera/camera_info", CameraInfo, self.cameraInfoCallback)
-
-        self.tf_listener = TransformListener()
-
-        self.init_time = rospy.Time.now()
 
     def ready(self) -> bool:
         """
@@ -50,7 +24,16 @@ class Camera:
         """
         return self.pose is not None and self.resolution_x is not None and self.resolution_y is not None and self.camera_info is not None
 
-    def reset_position(self, from_world_frame=False, timestamp=rospy.Time(0), camera_frame="/camera", skip_if_not_found=False):
+    def reset_position(self, from_world_frame=False, camera_frame="/camera", skip_if_not_found=False):
+        # same hardcoded values
+        if from_world_frame:
+            trans = [0, 0, 0]
+            rot = [0, 0, 0, 1]
+            self.pose = Transformation(trans, rot)
+        else:
+            trans = [0, 0, 0]
+            rot = [0, 0, 0, 1]
+            self.pose = Transformation(trans, rot)
         """
         Resets the position of the camera, it uses a series of methods that fall back on each other to get the location of the camera
 
@@ -58,6 +41,7 @@ class Camera:
         :param timestamp: What time do we want the camera tf frame, rospy.Time(0) if get the latest transform
         :param camera_frame: The name of the camera frame
         :param skip_if_not_found: If set to true, then will not wait if it cannot find the camera transform after the specified duration (1 second), it will just return
+        """
         """
         if from_world_frame:
             try:
@@ -104,33 +88,7 @@ class Camera:
                 tf2_py.TransformException,
             ) as ex:
                 rospy.logerr_throttle(5, f"Unable to find transformation from world to {self.robot_name + camera_frame}")
-                pass
-
-    def cameraInfoCallback(self, camera_info: CameraInfo):
         """
-        Callback function for the camera info subscriber
-
-        :param camera_info: from the camera info topic
-        """
-        self.camera_info = camera_info
-
-    @cached_property
-    def resolution_x(self) -> int:
-        """
-        The X resolution of the camera or the width of the screen in pixels
-
-        :return: width in pixels
-        """
-        return self.camera_info.width
-
-    @cached_property
-    def resolution_y(self):
-        """
-        The Y resolution of the camera or the height of the screen in pixels
-
-        :return: height in pixels
-        """
-        return self.camera_info.height
 
     def findFloorCoordinate(self, pos: [int]) -> [int]:
         """
@@ -179,43 +137,6 @@ class Camera:
         x, y = self.worldToImageFrame(tx, ty)
         return [x, y]
 
-    @cached_property
-    def verticalFOV(self):
-        """
-        The vertical field of vision of the camera.
-        See `Field of View <https://en.wikipedia.org/wiki/Field_of_view>`_
-        """
-        return 2 * math.atan(math.tan(self.horizontalFOV * 0.5) * (self.resolution_y / self.resolution_x))
-
-    @cached_property
-    def imageSensorHeight(self):
-        """
-        The height of the image sensor (m)
-        """
-        return math.tan(self.verticalFOV / 2.0) * 2.0 * self.focal_length
-
-    @cached_property
-    def imageSensorWidth(self):
-        """
-        The width of the image sensor (m)
-        """
-        return math.tan(self.horizontalFOV / 2.0) * 2.0 * self.focal_length
-
-    @cached_property
-    def pixelHeight(self):
-        """
-        The height of a pixel in real 3d measurements (m)
-        """
-        return self.imageSensorHeight / self.resolution_y
-
-    @cached_property
-    def pixelWidth(self):
-        """
-        The wdith of a pixel in real 3d measurements (m)
-        """
-        return self.imageSensorWidth / self.resolution_x
-        pass
-
     def imageToWorldFrame(self, pixel_x: int, pixel_y: int) -> tuple:
         """
         From image pixel coordinates, get the coordinates of the pixel as if they have been projected ot the camera plane, which is
@@ -263,24 +184,24 @@ class Camera:
         z = -pos3d_tr.position[2]
         r = ball_radius
 
-        thetay = math.atan2(y, x)
+        theta_y = math.atan2(y, x)
         dy = math.sqrt(x**2 + y**2)
-        phiy = math.asin(r / dy)
+        phi_y = math.asin(r / dy)
 
-        xyfar = [x - math.sin(thetay + phiy) * r, y + math.cos(thetay + phiy) * r]
-        xynear = [x + math.sin(thetay - phiy) * r, y - math.cos(thetay - phiy) * r]
+        xy_far = [x - math.sin(theta_y + phi_y) * r, y + math.cos(theta_y + phi_y) * r]
+        xy_near = [x + math.sin(theta_y - phi_y) * r, y - math.cos(theta_y - phi_y) * r]
 
-        thetaz = math.atan2(z, x)
+        theta_z = math.atan2(z, x)
         dz = math.sqrt(x**2 + z**2)
-        phiz = math.asin(r / dz)
+        phi_z = math.asin(r / dz)
 
-        xzfar = [x - math.sin(thetaz + phiz) * r, z + math.cos(thetaz + phiz) * r]
-        xznear = [x + math.sin(thetaz - phiz) * r, z - math.cos(thetaz - phiz) * r]
+        xz_far = [x - math.sin(theta_z + phi_z) * r, z + math.cos(theta_z + phi_z) * r]
+        xz_near = [x + math.sin(theta_z - phi_z) * r, z - math.cos(theta_z - phi_z) * r]
 
-        ball_right_point = [xyfar[0], xyfar[1], z]
-        ball_left_point = [xynear[0], xynear[1], z]
-        ball_bottom_point = [xzfar[0], y, xzfar[1]]
-        ball_top_point = [xznear[0], y, xznear[1]]
+        ball_right_point = [xy_far[0], xy_far[1], z]
+        ball_left_point = [xy_near[0], xy_near[1], z]
+        ball_bottom_point = [xz_far[0], y, xz_far[1]]
+        ball_top_point = [xz_near[0], y, xz_near[1]]
 
         ball_left_point_cam = self.findCameraCoordinateFixedCamera(ball_left_point)
         ball_right_point_cam = self.findCameraCoordinateFixedCamera(ball_right_point)
@@ -333,25 +254,25 @@ class Camera:
 
         f = self.focal_length
 
-        thetay1 = math.atan2(y1w, f)
-        thetay2 = math.atan2(y2w, f)
+        theta_y1 = math.atan2(y1w, f)
+        theta_y2 = math.atan2(y2w, f)
 
-        thetayy = (thetay2 - thetay1) / 2
-        thetay = thetay1 + thetayy
+        theta_yy = (theta_y2 - theta_y1) / 2
+        theta_y = theta_y1 + theta_yy
 
-        dy = r / math.sin(thetayy)
+        dy = r / math.sin(theta_yy)
 
-        xy = (math.cos(thetay) * dy, math.sin(thetay) * dy)
+        xy = (math.cos(theta_y) * dy, math.sin(theta_y) * dy)
 
-        thetaz1 = math.atan2(z1w, f)
-        thetaz2 = math.atan2(z2w, f)
+        theta_z1 = math.atan2(z1w, f)
+        theta_z2 = math.atan2(z2w, f)
 
-        thetazz = (thetaz2 - thetaz1) / 2
-        thetaz = thetaz1 + thetazz
+        theta_zz = (theta_z2 - theta_z1) / 2
+        theta_z = theta_z1 + theta_zz
 
-        dz = r / math.sin(thetazz)
+        dz = r / math.sin(theta_zz)
 
-        xz = (math.cos(thetaz) * dz, math.sin(thetaz) * dz)
+        xz = (math.cos(theta_z) * dz, math.sin(theta_z) * dz)
 
         ball_x = xy[0]
         ball_y = xy[1]
@@ -373,3 +294,59 @@ class Camera:
 
         (r, h) = self.worldToImageFrame(0, -d)
         return int(min(max(0, h), self.resolution_y))
+
+    # CACHED PROPERTIES ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    @cached_property
+    def resolution_x(self) -> int:
+        """
+        The X resolution of the camera or the width of the screen in pixels
+
+        :return: width in pixels
+        """
+        return self.camera_info.width
+
+    @cached_property
+    def resolution_y(self):
+        """
+        The Y resolution of the camera or the height of the screen in pixels
+
+        :return: height in pixels
+        """
+        return self.camera_info.height
+
+    @cached_property
+    def verticalFOV(self):
+        """
+        The vertical field of vision of the camera.
+        See `Field of View <https://en.wikipedia.org/wiki/Field_of_view>`_
+        """
+        return 2 * math.atan(math.tan(self.horizontalFOV * 0.5) * (self.resolution_y / self.resolution_x))
+
+    @cached_property
+    def imageSensorHeight(self):
+        """
+        The height of the image sensor (m)
+        """
+        return math.tan(self.verticalFOV / 2.0) * 2.0 * self.focal_length
+
+    @cached_property
+    def imageSensorWidth(self):
+        """
+        The width of the image sensor (m)
+        """
+        return math.tan(self.horizontalFOV / 2.0) * 2.0 * self.focal_length
+
+    @cached_property
+    def pixelHeight(self):
+        """
+        The height of a pixel in real 3d measurements (m)
+        """
+        return self.imageSensorHeight / self.resolution_y
+
+    @cached_property
+    def pixelWidth(self):
+        """
+        The wdith of a pixel in real 3d measurements (m)
+        """
+        return self.imageSensorWidth / self.resolution_x
+        pass
