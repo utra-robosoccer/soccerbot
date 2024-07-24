@@ -14,6 +14,7 @@ class StabilizePhase:
     Experimental for a phase roll pid thingy.
     """
 
+    # TODO should learn how this works and see if we can get it to work so the robot steps to finish the step
     def __init__(
         self,
         sim: str = "_sim",

@@ -47,6 +47,7 @@ class Sensors:
             return np.array([0, 0, 0])  # TODO should have a better error checking
 
         return imu.orientation_euler
+        # TODO maybe default return?
 
     def get_foot_pressure_sensors(self, floor: pb.loadURDF) -> List[bool]:
         """

@@ -247,7 +247,6 @@ class WalkEngineROS(WalkEngine):
             # [_, pitch, roll] = self.bez.sensors.get_euler_angles()
             # path in progress
             if self.step_planner.robot_path is not None and 0 <= self.t <= self.step_planner.robot_path.duration():
-
                 # IMU feedback while walking (Average Time: 0.00017305118281667)
                 t_adj = self.t
                 if self.bez.sensors.imu_ready:

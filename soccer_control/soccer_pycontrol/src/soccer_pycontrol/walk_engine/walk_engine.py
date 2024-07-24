@@ -73,6 +73,8 @@ class WalkEngine:
     def ready(self) -> None:
         self.bez.ready()
 
+    # TODO need to rethink how the walk engine stabilizes and does it really need a stabilize before and after or can
+    #  we implemment a stronger stabilise so the walk engine is a lot more robust
     def walk(self) -> bool:
         """
         The main run loop for the navigator, executes goals given through setGoal and then stops
@@ -113,6 +115,7 @@ class WalkEngine:
             self.t = self.t + self.PYBULLET_STEP
         return True
 
+    # TODO maybe stabilize in its own file or in stabilize class?
     def stabilize_stand(self, pitch: float, roll: float) -> None:
         error_pitch = self.pid.standing_pitch_pid.update(pitch)
         self.bez.motor_control.set_leg_joint_3_target_angle(error_pitch)

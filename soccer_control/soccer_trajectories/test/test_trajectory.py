@@ -107,6 +107,8 @@ def run_real_trajectory(robot_model: str, trajectory_name: str, real_time: bool)
     c.send_trajectory(real_time=real_time)
 
 
+
+# TODO clean up the pybullet interface so that there is a uniform place for the code
 @pytest.mark.parametrize("robot_model", ["bez2"])
 @pytest.mark.parametrize("trajectory_name", ["getupfront"])
 @pytest.mark.parametrize("real_time", [True])

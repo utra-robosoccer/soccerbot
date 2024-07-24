@@ -22,6 +22,7 @@ class SensorsROS(Sensors):
         """
         self.imu_msg = msg
         self.imu_ready = True
+        # TODO rework imu its a bit weird
 
     def get_imu(self):
         """

@@ -263,7 +263,7 @@ class TestObjectDetection(TestCase):
 
         n.robot_state.status = RobotState.STATUS_READY
         n.game_state.gameState = GameState.GAMESTATE_PLAYING
-        cap = cv2.VideoCapture(src_path + "/../../videos/2023-07-08-124050.webm")
+        cap = cv2.VideoCapture(src_path + "/../../videos/2023-07-08-125037.webm")
         if not cap.isOpened():
             print("Cannot open camera")
             exit()
@@ -295,7 +295,7 @@ class TestObjectDetection(TestCase):
             if "DISPLAY" in os.environ:
                 mat = cvbridge.imgmsg_to_cv2(n.pub_detection.publish.call_args[0][0])
                 cv2.imshow("Image", mat)
-                cv2.waitKey(1)
+                cv2.waitKey(10)
                 # cv2.destroyAllWindows()
 
             # Check assertion
@@ -346,10 +346,10 @@ class TestObjectDetection(TestCase):
                         # if bounding_box.obstacle_detected is True:
                         #     cv2.circle(mat, (bounding_box.xbase, bounding_box.ybase), 0, (0, 255, 255), 3)
 
-            if "DISPLAY" in os.environ:
-                cv2.imshow("Image", mat)
-                cv2.waitKey(1)
-                # cv2.destroyAllWindows()
+            # if "DISPLAY" in os.environ:
+            #     cv2.imshow("Image", mat)
+            #     cv2.waitKey(1)
+            # cv2.destroyAllWindows()
 
     @pytest.mark.skip(reason="Only run locally")
     def test_visualize_annotations(self):

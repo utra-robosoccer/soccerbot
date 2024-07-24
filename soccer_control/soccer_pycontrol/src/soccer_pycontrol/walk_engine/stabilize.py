@@ -61,6 +61,7 @@ class Stabilize:
         )
         self.walking_roll_offset = parameters["walking_roll_offset"]
 
+    # TODO i feel like this can be better organized
     def reset_imus(self):
         """
         Reset the walking and standing PID values
