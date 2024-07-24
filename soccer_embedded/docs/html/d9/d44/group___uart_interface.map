@@ -1,6 +1,0 @@
-<map id="UartInterface" name="UartInterface">
-<area shape="rect" id="node1" href="$d2/d54/group___header.html" title="Header" alt="" coords="209,5,271,32"/>
-<area shape="rect" id="node2" href="$d0/d27/group___uart_driver.html" title="Manages the usage of a particular UART, taking care of hardware&#45;level calls, OS&#45;level calls..." alt="" coords="201,56,279,83"/>
-<area shape="rect" id="node4" href="$d5/d66/group___hal_uart_interface.html" title="Implements UartInterface using HAL functions. " alt="" coords="183,107,297,133"/>
-<area shape="rect" id="node5" href="$d2/d48/group___u_a_r_t.html" title="UART" alt="" coords="212,175,268,201"/>
-</map>

@@ -155,3 +155,7 @@ Sponsors
 .. image:: ./images/sponsors/uoft.png
   :width: 200
   :alt: UofT
+.. image:: ./images/sponsors/WIN_SOURCE_logo.jpg
+  :width: 200
+  :alt: WIN SOURCE
+  :target: https://www.win-source.net/

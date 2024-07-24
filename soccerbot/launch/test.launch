@@ -1,0 +1,58 @@
+<launch>
+    <arg name="single" default="true" />
+    <arg name="robot_model" default="$(optenv ROBOT_MODEL bez1)" />
+    <env name="ROSCONSOLE_FORMAT" value="[${severity}] [${time}] [${node} ${logger} ${function} ${line}]: ${message}" />
+    <arg name="simulation" default="true" />
+    <arg name="robot_id" default="$(optenv ROBOCUP_ROBOT_ID 1)" />
+    <arg name="robot_name" value="robot$(arg robot_id)" />
+    <arg name="map_name" default="robocup" />
+
+    <env name="ROSCONSOLE_FORMAT" value="[${severity}] [${time: %r}] [${node} ${function} ${line}]: ${message}" />
+    <env name="ROSCONSOLE_CONFIG_FILE" value="$(find soccerbot)/config/rosconsole.conf" />
+
+
+
+    <!-- The master simulator controller -->
+    <include file="$(find soccerbot)/launch/modules/webots.launch">
+        <env name="ROBOT_MODEL" value="$(arg robot_model)" />
+        <arg name="single" value="$(arg single)" />
+    </include>
+    <include file="$(find soccerbot)/launch/modules/gui.launch" />
+
+    <group ns="robot1">
+            <include file="$(find soccerbot)/launch/modules/communication.launch" if="$(arg simulation)" />
+            <node pkg="soccer_strategy" type="game_controller_receiver.py" name="game_controller_receiver" output="screen" />
+
+        <param name="robot_id" value="$(arg robot_id)" />
+        <param name="/use_sim_time" value="$(arg simulation)" />
+        <param name="robot_description" if="$(eval robot_model == 'bez1')" command="xacro '$(find bez1_description)/urdf/bez1.xacro'
+            robot_name:=$(arg robot_name)
+            model_type:=dae
+            file_path:=package://bez1_description
+            has_base_footprint:=false
+            tf_prefix:=$(arg robot_name)
+            "
+        />
+
+        <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" />
+
+        <include file="$(find soccerbot)/launch/modules/navigation.launch">
+            <arg name="simulation" value="$(arg simulation)" />
+            <arg name="robot_model" value="$(arg robot_model)" />
+        </include>
+
+        <!-- Complementary filter -->
+        <node pkg="imu_complementary_filter" type="complementary_filter_node" name="imu_complementary_filter" output="log">
+            <rosparam file="$(find soccerbot)/config/imu_complementary_filter.yaml" command="load" />
+            <remap from="imu/data_raw" to="imu_raw" />
+            <remap from="imu/data" to="imu_filtered" />
+        </node>
+
+        <!-- Map server -->
+        <node name="map_server" pkg="map_server" type="map_server" args="$(find soccer_common)/maps/$(arg map_name).yaml">
+            <param name="frame_id" value="world" />
+        </node>
+    </group>
+
+
+</launch>
