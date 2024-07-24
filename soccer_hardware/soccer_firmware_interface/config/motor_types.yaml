@@ -8,6 +8,9 @@ ax12:
 mx64:
   max_angle_bytes: 0xFFF
   max_angle_degrees: 360
+mx28:
+  max_angle_bytes: 0xFFF
+  max_angle_degrees: 360
 xl430:
   max_angle_bytes: 0xFFF
   max_angle_degrees: 360

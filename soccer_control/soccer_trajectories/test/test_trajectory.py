@@ -1,22 +1,19 @@
 import os
 import unittest
+from unittest.mock import MagicMock
 
+import pytest
+import rospy
 from sensor_msgs.msg import JointState
 from soccer_trajectories.trajectory import Trajectory
 from soccer_trajectories.trajectory_manager_ros import TrajectoryManagerRos
 from soccer_trajectories.trajectory_manager_sim import TrajectoryManagerSim
 
 from soccer_common import Transformation
-
-os.environ["ROS_NAMESPACE"] = "/robot1"
-
-from unittest.mock import MagicMock
-
-import pytest
-import rospy
-
 from soccer_common.utils_rosparam import set_rosparam_from_yaml_file
 from soccer_msgs.msg import FixedTrajectoryCommand
+
+os.environ["ROS_NAMESPACE"] = "/robot1"
 
 
 class TestTrajectory(unittest.TestCase):
@@ -55,27 +52,30 @@ class TestTrajectory(unittest.TestCase):
         self.assertEqual(angles, [0.0, 0.0, 0.0, 0.0, 0.564, 0.564, -1.176, -1.176, 0.613, 0.613, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
 
 
-@pytest.mark.parametrize("trajectory_name", ["getupfront", "getupback", "rightkick"])
-@pytest.mark.parametrize("robot_model", ["bez1", "bez2"])
-@pytest.mark.parametrize("real_time", [False])
+@pytest.mark.parametrize("trajectory_name", ["getupback_roll"])  # , "getupback_full", "rightkick", "getupfront"])
+@pytest.mark.parametrize("robot_model", ["bez2"])
+@pytest.mark.parametrize("real_time", [True])
 def test_trajectory_sim(trajectory_name: str, robot_model: str, real_time: bool):
     """
     Case 1: Standard case
     :return: None
     """
+    # TODO update with pybullet updates
     if trajectory_name == "getupfront":
-        pose = Transformation(position=[0, 0, 0.070], quaternion=[0.0, 0.707, 0.0, 0.707])
-    elif trajectory_name == "getupback":
-        pose = Transformation(position=[0, 0, 0.070], quaternion=[0.0, 0.707, 0.0, -0.707])
-    else:
-        pose = Transformation(position=[0, 0, 0.315], quaternion=[0.0, 0.0, 0.0, 1])
+        pose = Transformation(position=[0, -0.5, 0.070], euler=[0, 1.57, 1.57])
+        camera = 90
+    elif trajectory_name == "getupback_full" or trajectory_name == "getupback_roll":
+        pose = Transformation(position=[0, 0, 0.070], euler=[0, -1.57, 0])
+        camera = 0
+    # else:
+    #     pose = Transformation(position=[0, 0, 0.315], quaternion=[0.0, 0.0, 0.0, 1])
 
-    print(os.path.join(os.path.dirname(__file__), "../trajectories/bez1_sim/" + trajectory_name + ".csv"))
+    print(os.path.join(os.path.dirname(__file__), "../trajectories/bez2/" + trajectory_name + ".csv"))
     tm = TrajectoryManagerSim(
-        os.path.join(os.path.dirname(__file__), "../trajectories/bez1_sim/" + trajectory_name + ".csv"), pose, robot_model, real_time
+        os.path.join(os.path.dirname(__file__), "../trajectories/bez2/" + trajectory_name + ".csv"), pose, robot_model, real_time, camera_yaw=camera
     )
     tm.send_trajectory()
-    assert True
+    tm.sim.wait(1000)
     # TODO add more testing from pybullet so like the height will reach a threshold and it doesnt fall over for
     #  some time also maybe split it per trajectory type
 
@@ -100,16 +100,19 @@ def run_real_trajectory(robot_model: str, trajectory_name: str, real_time: bool)
     msg.mirror = False
 
     joint_state = MagicMock()
-    joint_state.position = [0.0] * 18
+    joint_state.position = [0.0] * 20
     rospy.wait_for_message = MagicMock(return_value=joint_state)
 
     c.command_callback(command=msg)
     c.send_trajectory(real_time=real_time)
 
 
-@pytest.mark.parametrize("robot_model", ["bez1"])
-@pytest.mark.parametrize("trajectory_name", ["getupfront"])
+# TODO clean up the pybullet interface so that there is a uniform place for the code
+
+
+@pytest.mark.parametrize("robot_model", ["bez2"])
+@pytest.mark.parametrize("trajectory_name", ["getupback_roll"])  # getupback_full
 @pytest.mark.parametrize("real_time", [True])
-@unittest.skip("Not integrated in CI")
+# @unittest.skip("Not integrated in CI")
 def test_traj_ros(robot_model: str, trajectory_name: str, real_time: bool):
     run_real_trajectory(robot_model, trajectory_name, real_time)

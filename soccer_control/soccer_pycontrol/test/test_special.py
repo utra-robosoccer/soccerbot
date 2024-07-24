@@ -64,7 +64,7 @@ class TestSpecial(TestCase):
         self.walker.wait(150)
 
         # Reset robot position and goal
-        self.walker.soccerbot.createPathToGoal(Transformation([0.5, 0, 0], [0, 0, 0, 1]))
+        self.walker.soccerbot.create_path_to_goal(Transformation([0.5, 0, 0], [0, 0, 0, 1]))
 
         pitches = []
         times = []
@@ -73,7 +73,7 @@ class TestSpecial(TestCase):
 
         while t <= self.walker.soccerbot.robot_path.duration():
             if self.walker.soccerbot.current_step_time <= t <= self.walker.soccerbot.robot_path.duration():
-                self.walker.soccerbot.stepPath(t, verbose=True)
+                self.walker.soccerbot.get_next_step(t, verbose=True)
                 pitch = self.walker.soccerbot.get_imu().orientation_euler[1]
                 f = self.walker.soccerbot.apply_imu_feedback(t, self.walker.soccerbot.get_imu())
 
@@ -141,7 +141,7 @@ class TestSpecial(TestCase):
 
         while t <= self.walker.soccerbot.robot_path.duration():
             if self.walker.soccerbot.current_step_time <= t <= self.walker.soccerbot.robot_path.duration():
-                self.walker.soccerbot.stepPath(t, verbose=True)
+                self.walker.soccerbot.get_next_step(t, verbose=True)
                 self.walker.soccerbot.apply_imu_feedback(self.walker.soccerbot.get_imu())
                 sensors = self.walker.soccerbot.get_foot_pressure_sensors(self.walker.ramp.plane)
                 for i in range(len(sensors)):
@@ -253,9 +253,9 @@ class TestSpecial(TestCase):
         self.walker.setPose(Transformation([0.5, 0, 0], [0, 0, 0, 1]))
         self.walker.ready()
         self.walker.wait(100)
-        self.walker.soccerbot.createPathToGoal(Transformation([2, 0, 0], [0, 0, 0, 1]))
+        self.walker.soccerbot.create_path_to_goal(Transformation([2, 0, 0], [0, 0, 0, 1]))
         self.walker.soccerbot.robot_path.path_sections = path.path_sections
-        # self.walker.soccerbot.robot_path.show()
+        # self.walker.soccerbot2.robot_path.show()
         self.walker.run()
         pass
 

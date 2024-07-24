@@ -7,14 +7,23 @@ from soccer_pycontrol.path.path import Path
 from soccer_pycontrol.path.path_foot import PathFoot
 from soccer_pycontrol.path.path_torso import PathTorso
 
+from soccer_common import Transformation
+
 
 class PathRobot(PathTorso):
     """
     Subclass for the robot's path, contains functions to draw the path of the robot
     """
 
-    def __init__(self, start_transform, end_transform, foot_center_to_floor):
-        super().__init__(start_transform, end_transform, foot_center_to_floor)
+    def __init__(
+        self,
+        start_transform: Transformation,
+        end_transform: Transformation,
+        foot_center_to_floor: float,
+        sim: str = "_sim",
+        robot_model: str = "bez1",
+    ):
+        super().__init__(start_transform, end_transform, foot_center_to_floor=foot_center_to_floor, sim=sim, robot_model=robot_model)
 
     def show(self):
         fig = plt.figure(tight_layout=True, figsize=(10, 10))
@@ -128,4 +137,10 @@ class PathRobot(PathTorso):
         # plt.draw()
         fig.canvas.draw()
         plt.show(block=False)
-        # plt.show()
+        plt.show()
+
+
+if __name__ == "__main__":
+    p = PathRobot(Transformation(), Transformation([0, 0.5, 0], [0, 0, 0, 1]), 0.0221)
+    p.show()
+    p.showTimingDiagram()

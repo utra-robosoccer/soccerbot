@@ -32,3 +32,4 @@ venv/
 /soccer_strategy/src/soccer_strategy/log.txt
 .mypy_cache/
 cuda-ubuntu2004.pin.1
+*.webm

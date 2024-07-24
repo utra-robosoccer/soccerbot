@@ -4,7 +4,7 @@ left_leg_motor_0:
   angle_zero: 180
   angle_max: 360
   angle_min: 0
-  initial_state: 0.0
+
 left_leg_motor_1:
   id: 5
   type: "xm430"
@@ -12,7 +12,7 @@ left_leg_motor_1:
   angle_max: 360
   angle_min: 0
   flipped: "true"
-  initial_state: -0.05
+
 left_leg_motor_2:
   id: 6
   type: "xm430"
@@ -20,21 +20,21 @@ left_leg_motor_2:
   angle_max: 360
   angle_min: 0
   flipped: "true"
-  initial_state: 0.25
+
 left_leg_motor_3:
   id: 7
   type: "mx64"
-  angle_zero: 180
+  angle_zero: 270
   angle_max: 360
   angle_min: 0
-  initial_state: -0.4
+
 left_leg_motor_4:
   id: 8
   type: "mx64"
   angle_zero: 180
   angle_max: 360
   angle_min: 0
-  initial_state: 0.2
+
 left_leg_motor_5:
   id: 9
   type: "mx64"
@@ -42,7 +42,7 @@ left_leg_motor_5:
   angle_max: 360
   angle_min: 0
   flipped: "true"
-  initial_state: 0.0
+
 right_leg_motor_0:
   id: 10
   type: "xm430"
@@ -50,86 +50,100 @@ right_leg_motor_0:
   angle_max: 360
   angle_min: 0
   flipped: "true"
-  initial_state: 0.0
+
 right_leg_motor_1:
   id: 11
   type: "xm430"
   angle_zero: 180
   angle_max: 360
   angle_min: 0
-  initial_state: -0.05
+
 right_leg_motor_2:
   id: 12
   type: "xm430"
   angle_zero: 180
   angle_max: 360
   angle_min: 0
-  initial_state: 0.25
+
 right_leg_motor_3:
   id: 13
   type: "mx64"
-  angle_zero: 180
+  angle_zero: 90
   angle_max: 360
   angle_min: 0
   flipped: "true"
-  initial_state: -0.4
+
 right_leg_motor_4:
   id: 14
   type: "mx64"
   angle_zero: 180
   angle_max: 360
   angle_min: 0
-  initial_state: 0.2
   flipped: "true"
+
 right_leg_motor_5:
   id: 15
   type: "mx64"
   angle_zero: 180
   angle_max: 360
   angle_min: 0
-  initial_state: 0.0
+
 left_arm_motor_0:
-  id: 2
-  type: "xm430"
+  id: 18
+  type: "mx28"
   angle_zero: 180
   angle_max: 360
   angle_min: 0
   flipped: "true"
-  initial_state: 0.2
+
 left_arm_motor_1:
-  id: 3
-  type: "xm430"
-  angle_zero: 180
-  angle_max: 360
-  angle_min: 0
-  initial_state: 1.5
-right_arm_motor_0: # Checked
   id: 0
-  type: "xm430"
+  type: "mx28"
   angle_zero: 180
   angle_max: 360
   angle_min: 0
-  initial_state: 0.2
-right_arm_motor_1:
+
+left_arm_motor_2:
   id: 1
-  type: "xm430"
+  type: "mx28"
   angle_zero: 180
   angle_max: 360
   angle_min: 0
   flipped: "true"
-  initial_state: 1.5
+
+right_arm_motor_0: # Checked
+  id: 19
+  type: "mx28"
+  angle_zero: 180
+  angle_max: 360
+  angle_min: 0
+
+right_arm_motor_1:
+  id: 2
+  type: "mx28"
+  angle_zero: 180
+  angle_max: 360
+  angle_min: 0
+  flipped: "true"
+
+right_arm_motor_2:
+  id: 3
+  type: "mx28"
+  angle_zero: 180
+  angle_max: 360
+  angle_min: 0
+
 head_motor_0:
   id: 16
-  type: "ax12"
-  angle_zero: 150
-  angle_max: 300
+  type: "xl430"
+  angle_zero: 180
+  angle_max: 360
   angle_min: 0
   flipped: "true"
-  initial_state: 0.0
+
 head_motor_1:
   id: 17
-  type: "ax12"
-  angle_zero: 150
-  angle_max: 300
+  type: "xl430"
+  angle_zero: 180
+  angle_max: 360
   angle_min: 0
-  initial_state: 0.0

@@ -1,11 +1,12 @@
 import functools
 import math
 from math import ceil, floor
+from os.path import expanduser
 
 import matplotlib.pyplot as plt
 import numpy as np
-import rospy
 import scipy
+import yaml
 from soccer_pycontrol.path.path_section import PathSection
 from soccer_pycontrol.path.path_section_bezier import PathSectionBezier
 from soccer_pycontrol.path.path_section_short import PathSectionShort
@@ -20,7 +21,13 @@ class Path:
     Consists of a list of bezier or short path sections
     """
 
-    def __init__(self, start_transform: Transformation, end_transform: Transformation):
+    def __init__(
+        self,
+        start_transform: Transformation,
+        end_transform: Transformation,
+        sim: str = "_sim",
+        robot_model: str = "bez1",
+    ):
         """
         Initialization function for Path, creates a single path section, other path sections are only added when the route needs
         to change
@@ -28,10 +35,15 @@ class Path:
         :param start_transform: Starting Robot Position
         :param end_transform: Ending Robot Position
         """
-
+        with open(
+            expanduser("~") + f"/catkin_ws/src/soccerbot/soccer_control/soccer_pycontrol/config/{robot_model}/{robot_model}{sim}.yaml", "r"
+        ) as file:
+            self.parameters = yaml.safe_load(file)
+            file.close()
         #: How precise the curves are calculated. The amount of movement per given step_precision is calculated (s)
-        self.step_precision = rospy.get_param("step_precision", 0.02)
+        self.step_precision = self.parameters["step_precision"]
 
+        # TODO only used for plotting
         self.start_transform: Transformation = start_transform
         self.end_transform: Transformation = end_transform
 
@@ -41,7 +53,7 @@ class Path:
         self.path_sections.append(p)
 
     @functools.cached_property
-    def start_transformed_inv(self):
+    def start_transformed_inv(self):  # TODO is this needed
         return scipy.linalg.inv(self.start_transform)
 
     def isShortPath(self, start_transform: Transformation, end_transform: Transformation):
@@ -53,7 +65,7 @@ class Path:
         :param end_transform: The end transform
         :return:
         """
-
+        # TODO why were these conditions choosen
         # If there is too much final rotation
         theta_diff = wrapToPi(end_transform.orientation_euler[0] - start_transform.orientation_euler[0])
         pos_theta_diff = math.atan2(
@@ -82,9 +94,23 @@ class Path:
         """
         is_short_distance = self.isShortPath(start_transform, end_transform)
         if is_short_distance:
-            return PathSectionShort(start_transform, end_transform)
+            return PathSectionShort(
+                start_transform,
+                end_transform,
+                steps_per_second_default=self.parameters["steps_per_second_default"],
+                scale_yaw=self.parameters["scale_yaw"],
+                torso_step_length_short_backwards=self.parameters["torso_step_length_short_backwards"],
+                torso_step_length_short_forwards=self.parameters["torso_step_length_short_forwards"],
+            )
         else:
-            return PathSectionBezier(start_transform, end_transform)
+            return PathSectionBezier(
+                start_transform,
+                end_transform,
+                turn_duration=self.parameters["turn_duration"],
+                backwards_torso_step_length_ratio=self.parameters["backwards_torso_step_length_ratio"],
+                torso_step_length=self.parameters["torso_step_length"],
+                steps_per_second_default=self.parameters["steps_per_second_default"],
+            )
 
     @functools.lru_cache
     def linearStepCount(self) -> float:
@@ -132,7 +158,7 @@ class Path:
         :param step_num: The body step of the path
         :return: A position of the robot's torso at the spot
         """
-
+        # TODO why is this dynamic and not built into an array of all steps
         count = step_num
         for path_section in self.path_sections:
             if count <= path_section.torsoStepCount():
@@ -195,7 +221,7 @@ class Path:
         """
 
         total_duration = self.duration()
-
+        # TODO could probably sum up a lot of these at the init and make them access through the path section
         cumulative_ratio = 0
         for path_section in self.path_sections:
             if total_duration == 0:
@@ -215,7 +241,7 @@ class Path:
         :param r: ratio of the entire Path
         :return: Position of the torso at that time
         """
-
+        # TODO all this ratio stuff seems messy and overly complex
         ratio, path_section = self.getSubPathSectionAndRatio(r)
         return path_section.poseAtRatio(ratio)
 
@@ -226,7 +252,7 @@ class Path:
         :param t: The time relative to the entire path's time
         :return: a list of relavant information
         """
-
+        # TODO why not use a data class also this is barely used
         ratio = t / self.duration()
         ratio, path_section = self.getSubPathSectionAndRatio(ratio)
 
@@ -366,3 +392,9 @@ class Path:
 
         ax.view_init(90, 0)
         return ax
+
+
+if __name__ == "__main__":
+    p = Path(Transformation(), Transformation([0.5, 0, 0], [0, 0, 0, 1]))
+    ax = p.show()
+    plt.show()

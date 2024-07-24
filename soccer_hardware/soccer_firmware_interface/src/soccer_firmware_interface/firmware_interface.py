@@ -34,21 +34,20 @@ class FirmwareInterface:
         self.last_motor_publish_time = rospy.Time.now()
         self.last_motor_publish_time_real = rospy.Time.now()
 
-        self._IMU_FILT_B = np.array(
-            [0.030738841, 0.048424201, 0.083829062, 0.11125669, 0.13424691, 0.14013315, 0.13424691, 0.11125669, 0.083829062, 0.048424201, 0.030738841]
-        )  # from embedded code
-        self._imu_filt_zi = np.zeros((len(self._IMU_FILT_B) - 1, 3))
+        # self._IMU_FILT_B = np.array(
+        #     [0.030738841, 0.048424201, 0.083829062, 0.11125669, 0.13424691, 0.14013315, 0.13424691, 0.11125669, 0.083829062, 0.048424201, 0.030738841]
+        # )  # from embedded code
+        # self._imu_filt_zi = np.zeros((len(self._IMU_FILT_B) - 1, 3))
 
         # Start the thread
         serial_thread = threading.Thread(target=self.firmware_update_loop)
         serial_thread.start()
 
-        pass
-
     def reconnect_serial_port(self):
         if self.serial is None:
             # todo: loop through ACMs see which one connects
-            for i in range(10):
+            # for debug assume ACM0 is STLINK and ACM1 is our PCB
+            for i in range(0, 10):
                 rospy.loginfo_throttle(10, f"Trying connection to /dev/ttyACM{i}")
                 if os.path.exists(f"/dev/ttyACM{i}"):
                     self.serial = serial.Serial(f"/dev/ttyACM{i}")
@@ -60,6 +59,7 @@ class FirmwareInterface:
         while not rospy.is_shutdown():
             try:
                 self.reconnect_serial_port()
+
                 # data format
                 # FF
                 # (Raw data motor 0)            2 bytes
@@ -79,12 +79,12 @@ class FirmwareInterface:
                 # data_h = self.serial.read()
                 # angle = data_l[0] | (data_h[0] << 8)
                 # print(data_h[0], data_l[0], angle)
-                data = self.serial.read(size=2 + 2 * 18 + 12)
+                data = self.serial.read(size=2 + 2 * 20 + 12)
 
                 # Publish the Joint State
                 j = JointState()
                 j.header.stamp = rospy.Time.now()
-                for i in range(18):
+                for i in range(20):
                     val = data[i * 2 + 2] | data[i * 2 + 3] << 8
 
                     motor_name = self.motor_id_to_name_dict[i]
@@ -111,34 +111,38 @@ class FirmwareInterface:
                 imu = Imu()
                 imu.header.stamp = rospy.Time.now()
 
-                imu_data = data[2 + 2 * 18 : 2 + 2 * 18 + 12]
+                imu_data = data[2 + 2 * 20 : 2 + 2 * 20 + 12]
 
-                ACC_RANGE = 16384.0
-                IMU_GY_RANGE = 131
+                # https://www.mouser.com/datasheet/2/783/BST_BMI088_DS001-1509549.pdf
+                ACC_RANGE = 32768.0 / 2.0 / 1.5  # page 27 datasheet bmi088
+                IMU_GY_RANGE = 32768.0 / (1000.0 * math.pi / 180)  # page 39 datasheet bmi088
+                # ACC_RANGE = 32768.0 / 2.0  # page 22 datasheet bmi085
+                # IMU_GY_RANGE = 32768.0 / 1000.0  # page 27 datasheet bmi085
                 G = 9.81
 
-                ax = int.from_bytes(imu_data[0:2], byteorder="big", signed=True)
-                ay = int.from_bytes(imu_data[2:4], byteorder="big", signed=True)
-                az = int.from_bytes(imu_data[4:6], byteorder="big", signed=True)
+                ax = int.from_bytes(imu_data[0:2], byteorder="big", signed=True) / ACC_RANGE * G
+                ay = int.from_bytes(imu_data[2:4], byteorder="big", signed=True) / ACC_RANGE * G
+                az = int.from_bytes(imu_data[4:6], byteorder="big", signed=True) / ACC_RANGE * G
 
-                imu.linear_acceleration.x = -(ax) * G / ACC_RANGE
-                imu.linear_acceleration.y = -(ay) * G / ACC_RANGE
-                imu.linear_acceleration.z = -(az) * G / ACC_RANGE
+                ax, ay = ay, ax  # flip pitch and roll
+
+                imu.linear_acceleration.x = ax
+                imu.linear_acceleration.y = ay
+                imu.linear_acceleration.z = az
 
                 vx = int.from_bytes(imu_data[6:8], byteorder="big", signed=True) / IMU_GY_RANGE
                 vy = int.from_bytes(imu_data[8:10], byteorder="big", signed=True) / IMU_GY_RANGE
                 vz = int.from_bytes(imu_data[10:12], byteorder="big", signed=True) / IMU_GY_RANGE
 
-                # implement low-pass filter from embedded system
-                v_filt, self._imu_filt_zi = scipy.signal.lfilter(
-                    self._IMU_FILT_B, [1], [[vx, vy, vz]], axis=0, zi=self._imu_filt_zi
-                )  # note: expected to be shape (1, 3), double nested list is intentional
-                imu.angular_velocity = Vector3(*v_filt[0])
+                vx, vy = vy, vx  # flip pitch and roll
 
-                # imu.orientation.x = 0
-                # imu.orientation.y = 0
-                # imu.orientation.z = 0
-                # imu.orientation.w = 0
+                print(f"a {ax} {ay} {az}")
+                print(f"v {vx:10.3f} {vy:10.3f} {vz:10.3f}")
+
+                imu.angular_velocity.x = vx
+                imu.angular_velocity.y = vy
+                imu.angular_velocity.z = vz
+
                 self.imu_publisher.publish(imu)
 
             except Exception as ex:
@@ -147,26 +151,25 @@ class FirmwareInterface:
 
     def joint_command_callback(self, joint_state: JointState):
         try:
-
-            if self.last_motor_publish_time is not None:
-                time_diff_message_in = joint_state.header.stamp - self.last_motor_publish_time
-                time_diff_real = rospy.Time.now() - self.last_motor_publish_time_real
-
-                time_lag = rospy.Time.now() - joint_state.header.stamp
-                if time_lag > time_diff_message_in:
-                    print(f"Message Skipped Time Lag {time_lag}")
-                    self.last_motor_publish_time = joint_state.header.stamp
-                    return
-
-                if time_diff_real < time_diff_message_in:
-                    rospy.sleep(time_diff_message_in - time_diff_real)
+            # if self.last_motor_publish_time is not None:
+            #     time_diff_message_in = joint_state.header.stamp - self.last_motor_publish_time
+            #     time_diff_real = rospy.Time.now() - self.last_motor_publish_time_real
+            #
+            #     time_lag = rospy.Time.now() - joint_state.header.stamp
+            #     if time_lag > time_diff_message_in:
+            #         print(f"Message Skipped Time Lag {time_lag}")
+            #         self.last_motor_publish_time = joint_state.header.stamp
+            #         return
+            #
+            #     if time_diff_real < time_diff_message_in:
+            #         rospy.sleep(time_diff_message_in - time_diff_real)
 
             t1 = time.time()
 
             self.reconnect_serial_port()
 
             # [0xff, 0xff, angle1_lo, angle1_hi, angle2_lo ..., crc_lo, crc_hi]
-            bytes_to_write = [0x0] * (2 + 18 * 2)
+            bytes_to_write = [0x0] * (2 + 20 * 2)
             bytes_to_write[0] = 0xFF
             bytes_to_write[1] = 0xFF
 
@@ -176,6 +179,7 @@ class FirmwareInterface:
                 angle_zero = self.motor_mapping[name]["angle_zero"] / 180 * math.pi
                 angle_max = self.motor_mapping[name]["angle_max"] / 180 * math.pi
                 angle_min = self.motor_mapping[name]["angle_min"] / 180 * math.pi
+                ang_zero_deg = self.motor_mapping[name]["angle_zero"]
 
                 flipped = "flipped" in self.motor_mapping[name] and self.motor_mapping[name]["flipped"] == "true"
                 if flipped:
@@ -192,7 +196,7 @@ class FirmwareInterface:
                 angle_final_bytes_1 = angle_final_bytes & 0xFF
                 angle_final_bytes_2 = (angle_final_bytes >> 8) & 0xFF
 
-                assert id < 18
+                assert id < 20
                 bytes_to_write[2 + id * 2] = angle_final_bytes_1
                 bytes_to_write[2 + id * 2 + 1] = angle_final_bytes_2
                 pass

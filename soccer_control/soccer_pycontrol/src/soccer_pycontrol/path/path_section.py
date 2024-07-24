@@ -15,7 +15,7 @@ class PathSection(ABC):
     Base class for a Path Section
     """
 
-    def __init__(self, start_transform: Transformation, end_transform: Transformation, torso_step_length=0.04):
+    def __init__(self, start_transform: Transformation, end_transform: Transformation, torso_step_length: float, steps_per_second_default: float):
         """
         Initializes the Path Section
 
@@ -25,10 +25,10 @@ class PathSection(ABC):
         """
 
         #: How much distance is a torso step (equivalent to a half step)
-        self.torso_step_length = rospy.get_param("torso_step_length", torso_step_length)
+        self.torso_step_length = torso_step_length  # rospy.get_param("torso_step_length", 0.04)
 
         #: How many torso steps per second, approximately equivalent to foot steps per second
-        self.steps_per_second_default = rospy.get_param("steps_per_second_default", 2.5)
+        self.steps_per_second_default = steps_per_second_default  # rospy.get_param("steps_per_second_default", 2.5)
 
         self.start_transform: Transformation = start_transform
         self.end_transform: Transformation = end_transform

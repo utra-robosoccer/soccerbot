@@ -80,7 +80,7 @@ class TrajectoryManagerRos(TrajectoryManager):
         js.position = angles
         self.pub_all_motor.publish(js)
 
-    def send_trajectory(self, real_time: bool = False) -> None:
+    def send_trajectory(self, real_time: bool = True) -> None:
         t: float = 0
         while not rospy.is_shutdown() and t <= self.trajectory.max_time and not self.terminate:
             try:
