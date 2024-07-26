@@ -1,6 +1,6 @@
 from soccer_msgs.msg import GameState
+from soccer_strategy.old.team import Team
 from soccer_strategy.strategy.strategy import Strategy, get_back_up
-from soccer_strategy.team import Team
 
 
 class StrategySet(Strategy):

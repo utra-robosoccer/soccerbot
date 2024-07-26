@@ -11,9 +11,9 @@ import tf
 from soccer_common import Transformation
 from soccer_common.utils import wrapTo2Pi
 from soccer_msgs.msg import GameState
-from soccer_strategy.robot import Robot
+from soccer_strategy.old.robot import Robot
+from soccer_strategy.old.team import Team
 from soccer_strategy.strategy.strategy import Strategy, get_back_up
-from soccer_strategy.team import Team
 
 
 def flip_player_sides(team_info):

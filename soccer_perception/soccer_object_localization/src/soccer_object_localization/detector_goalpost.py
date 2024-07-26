@@ -49,6 +49,7 @@ class DetectorGoalPost(Detector):
         closest_line = None
         closest_line_relative_position_post_to_robot = None
         min_horizon_pixel = self.camera.calculateHorizonCoverArea()
+        # TODO should be its own function
 
         for line in vertical_lines:
             if line[1] > line[3]:

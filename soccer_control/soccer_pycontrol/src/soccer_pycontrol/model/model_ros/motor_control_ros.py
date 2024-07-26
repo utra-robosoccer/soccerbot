@@ -1,7 +1,6 @@
 import rospy
 from rospy import ROSException
 from sensor_msgs.msg import JointState
-from soccer_pycontrol.common.joints import Joints
 from soccer_pycontrol.model.motor_control import MotorControl
 
 

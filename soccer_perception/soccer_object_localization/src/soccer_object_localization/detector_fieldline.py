@@ -59,6 +59,7 @@ class DetectorFieldline(Detector):
         if not self.camera.ready():
             return
 
+        # TODO ros
         # if self.ground_truth:
         #     if not self.publish_point_cloud:
         #         self.camera.reset_position(timestamp=img.header.stamp)
@@ -85,25 +86,12 @@ class DetectorFieldline(Detector):
             cv2.waitKey(0)
 
         # Grass Mask
-        # Hue > 115 needed
-        # grass_only = cv2.inRange(hsv, (35, 85, 0), (115, 255, 255))
-        # grass_only = cv2.vconcat([np.zeros((h + 1, grass_only.shape[1]), dtype=grass_only.dtype), grass_only])
-        #
-        # # Use odd numbers for all circular masks otherwise the line will shift location
-        # grass_only_0 = cv2.morphologyEx(grass_only, cv2.MORPH_OPEN, self.circular_mask(5))
-        # grass_only_1 = cv2.morphologyEx(grass_only, cv2.MORPH_CLOSE, self.circular_mask(5))
-        # grass_only_2 = cv2.morphologyEx(grass_only_1, cv2.MORPH_OPEN, self.circular_mask(21))
-        # grass_only_3 = cv2.morphologyEx(grass_only_2, cv2.MORPH_CLOSE, self.circular_mask(61))
-        #
-        # grass_only_morph = cv2.morphologyEx(grass_only_3, cv2.MORPH_ERODE, self.circular_mask(9))
-        # grass_only_flipped = cv2.bitwise_not(grass_only)
-
-        # Grass Mask
         grass_only, grass_only_0, grass_only_1, grass_only_2, grass_only_3, grass_only_morph, grass_only_flipped = self.grass_mask(hsv, h)
 
         lines_only = cv2.bitwise_and(grass_only_flipped, grass_only_flipped, mask=grass_only_morph)
         lines_only = cv2.morphologyEx(lines_only, cv2.MORPH_CLOSE, self.circular_mask(5))
 
+        # TODO is this needed or should this be in a unit test
         if debug:
             cv2.imshow("grass_only", grass_only)
             cv2.imwrite("/tmp/grass_only.png", grass_only)
@@ -134,6 +122,7 @@ class DetectorFieldline(Detector):
         #     img_out.header = img.header
         #     self.image_publisher.publish(img_out)
 
+        # TODO own function
         if self.publish_point_cloud and self.point_cloud_publisher.get_num_connections() > 0:
             points3d = []
 
@@ -147,6 +136,7 @@ class DetectorFieldline(Detector):
                     if camToPoint.norm_squared < self.point_cloud_max_distance**2:
                         points3d.append(camToPoint.position)
 
+            # TODO ros
             # Publish straight base link
             self.tf_broadcaster.sendTransform(
                 self.camera.pose_base_link_straight.position,
@@ -156,6 +146,7 @@ class DetectorFieldline(Detector):
                 self.robot_name + "/odom",
             )
 
+            # TODO ros
             # Publish fieldlines in laserscan format
             header = Header()
             header.stamp = image.header.stamp

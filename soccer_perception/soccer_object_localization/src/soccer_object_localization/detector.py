@@ -10,14 +10,10 @@ class Detector:
     def __init__(self):
         self.camera = Camera()
         self.camera.reset_position()
+        # TODO remove all mentions of state for strategy
 
-        self.robot_state = RobotState()
-        self.robot_state.status = RobotState.STATUS_DISCONNECTED
-
-    def robot_state_callback(self, robot_state: RobotState):
-        self.robot_state = robot_state
-
-    def circular_mask(self, radius: int):
+    @staticmethod
+    def circular_mask(radius: int):
         return cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (radius, radius))
 
     def grass_mask(self, image: Image, h: int):

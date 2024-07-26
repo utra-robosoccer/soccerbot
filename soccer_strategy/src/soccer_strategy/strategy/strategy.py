@@ -5,10 +5,10 @@ import rospy
 
 from soccer_common import Transformation
 from soccer_msgs.msg import GameState
-from soccer_strategy.ball import Ball
-from soccer_strategy.robot import Robot
-from soccer_strategy.robot_controlled import RobotControlled
-from soccer_strategy.team import Team
+from soccer_strategy.old.ball import Ball
+from soccer_strategy.old.robot import Robot
+from soccer_strategy.old.robot_controlled import RobotControlled
+from soccer_strategy.old.team import Team
 
 
 def update_average_ball_position(update_next_strategy):

@@ -1,10 +1,6 @@
 import unittest
 
 import numpy as np
-import pybullet as pb
-import pytest
-import scipy
-from soccer_pycontrol.common.links import Links
 from soccer_pycontrol.model.bez import Bez
 from soccer_pycontrol.pybullet_usage.pybullet_world import PybulletWorld
 from soccer_pycontrol.walk_engine.walk_engine import WalkEngine

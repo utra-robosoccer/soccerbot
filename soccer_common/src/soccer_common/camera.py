@@ -7,10 +7,14 @@ from soccer_common.transformation import Transformation
 
 
 class Camera:
-
+    # TODO maybe put into a common percpetion
+    # TODO also could be split up into different files too many things
     HORIZONTAL_FOV = 1.39626
 
     def __init__(self):
+        # TODO why does this need pose shouldnt all the calcualtions be in the robots relative frame and
+        #  then transformed into the world frame that would make it a lot less relient on
+        #  knowledge of its global position
         self.pose = Transformation()
         self.camera_info = None
         self.horizontalFOV = Camera.HORIZONTAL_FOV
@@ -34,7 +38,9 @@ class Camera:
             trans = [0, 0, 0]
             rot = [0, 0, 0, 1]
             self.pose = Transformation(trans, rot)
+        # TODO put in its own ros file
         """
+
         Resets the position of the camera, it uses a series of methods that fall back on each other to get the location of the camera
 
         :param from_world_frame: If this is set to true, the camera position transformation will be from the world instead of the robot odom frame

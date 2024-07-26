@@ -5,14 +5,14 @@ import rospy
 
 from soccer_common.utils import wrapTo2Pi
 from soccer_msgs.msg import GameState
-from soccer_strategy.robot import Robot
+from soccer_strategy.old.robot import Robot
+from soccer_strategy.old.team import Team
 from soccer_strategy.strategy.strategy import (
     Strategy,
     get_back_up,
     update_average_ball_position,
 )
 from soccer_strategy.strategy.utils import Utility
-from soccer_strategy.team import Team
 
 
 class StrategyDummy(Strategy):

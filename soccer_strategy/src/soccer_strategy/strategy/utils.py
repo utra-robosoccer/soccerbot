@@ -4,8 +4,8 @@ import numpy as np
 import rospy
 
 from soccer_common.utils import wrapToPi
-from soccer_strategy.robot import Robot
-from soccer_strategy.robot_controlled import RobotControlled
+from soccer_strategy.old.robot import Robot
+from soccer_strategy.old.robot_controlled import RobotControlled
 
 
 class Utility:

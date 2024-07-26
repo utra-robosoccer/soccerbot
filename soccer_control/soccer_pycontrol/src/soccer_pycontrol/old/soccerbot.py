@@ -10,11 +10,11 @@ import pybullet as pb
 import rospy
 import scipy
 from rospy import ROSException
-from scipy.signal import butter, filtfilt, lfilter
+from scipy.signal import butter
 from sensor_msgs.msg import JointState
-from soccer_pycontrol.common.joints import Joints
-from soccer_pycontrol.common.links import Links
 from soccer_pycontrol.exp.calibration import adjust_navigation_transform
+from soccer_pycontrol.old.joints import Joints
+from soccer_pycontrol.old.links import Links
 from soccer_pycontrol.path.path_robot import PathRobot
 
 from soccer_common.pid import PID

@@ -1,13 +1,6 @@
 import os
 import struct
 import time
-
-import pybullet_data
-from scipy.signal import butter, lfilter
-from soccer_pycontrol.old.navigator_ros import NavigatorRos
-
-os.environ["ROS_NAMESPACE"] = "/robot1"
-
 from unittest.mock import MagicMock
 
 import numpy as np
@@ -15,12 +8,17 @@ import pybullet as pb
 import pytest
 import rospy
 from matplotlib import pyplot as plt
-from soccer_pycontrol.common.links import Links
+from scipy.signal import butter, lfilter
 from soccer_pycontrol.exp.calibration import adjust_navigation_transform
+from soccer_pycontrol.old.links import Links
 from soccer_pycontrol.old.navigator import Navigator
+from soccer_pycontrol.old.navigator_ros import NavigatorRos
 
 from soccer_common.transformation import Transformation
 from soccer_common.utils_rosparam import set_rosparam_from_yaml_file
+
+os.environ["ROS_NAMESPACE"] = "/robot1"
+
 
 # from soccer_pycontrol.navigator.navigator_ros import NavigatorRos
 
