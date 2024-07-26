@@ -1,5 +1,0 @@
-[
-  "src/soccer_firmware_interface/test_firmware_interface.py::test_firmware_interface",
-  "src/soccer_firmware_interface/test_firmware_interface.py::test_firmware_interface_normal",
-  "src/soccer_firmware_interface/test_firmware_interface.py::test_send_command"
-]

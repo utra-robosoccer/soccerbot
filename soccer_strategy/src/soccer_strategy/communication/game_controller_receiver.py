@@ -26,7 +26,7 @@ class GameStateReceiver:
     GAME_CONTROLLER_ANSWER_PORT = 3939
 
     def __init__(self):
-        self.team_id = int(os.getenv("ROBOCUP_TEAM_ID", 10))
+        self.team_id = int(os.getenv("ROBOCUP_TEAM_ID", 16))
         self.robot_id = rospy.get_param("robot_id", 1)
 
         rospy.loginfo("Listening to " + str(self.GAME_CONTROLLER_LISTEN_PORT) + " " + str(self.GAME_CONTROLLER_ANSWER_PORT))

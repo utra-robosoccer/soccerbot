@@ -1,4 +1,0 @@
-{
-  "src/soccer_firmware_interface/test_firmware_interface.py::test_send_command": true,
-  "src/soccer_firmware_interface/test_firmware_interface.py": true
-}
