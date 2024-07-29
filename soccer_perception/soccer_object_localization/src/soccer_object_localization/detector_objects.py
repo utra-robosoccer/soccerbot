@@ -64,7 +64,7 @@ class DetectorObjects(Detector):
                     continue
 
                 boundingBoxes = [[box.xmin, box.ymin], [box.xmax, box.ymax]]
-                ball_pose = self.camera.calculateBallFromBoundingBoxes(0.07, boundingBoxes)
+                ball_pose = self.camera.calculate_ball_from_bounding_boxes(0.07, boundingBoxes)
 
                 # Ignore balls outside of the field
                 camera_to_ball = np.linalg.inv(self.camera.pose) @ ball_pose
@@ -116,7 +116,7 @@ class DetectorObjects(Detector):
                     if box.obstacle_detected:
                         pos = [box.xbase, box.ybase]
 
-                        floor_coordinate_robot = self.camera.findFloorCoordinate(pos)
+                        floor_coordinate_robot = self.camera.find_floor_coordinate(pos)
                         world_to_obstacle = Transformation(position=floor_coordinate_robot)
                         camera_to_obstacle = np.linalg.inv(self.camera.pose) @ world_to_obstacle
 

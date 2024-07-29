@@ -2,6 +2,7 @@
 import os
 import time
 
+from cv2 import Mat
 from rospy.impl.tcpros_base import DEFAULT_BUFF_SIZE
 from tf import TransformBroadcaster
 
@@ -33,31 +34,31 @@ class DetectorFieldline(Detector):
         # self.point_cloud_publisher = rospy.Publisher("field_point_cloud", PointCloud2, queue_size=1)
         self.tf_broadcaster = TransformBroadcaster()
 
-        # self.point_cloud_max_distance = rospy.get_param("point_cloud_max_distance", 5)
-        # self.point_cloud_spacing = rospy.get_param("point_cloud_spacing", 30)
+        self.point_cloud_max_distance = 5  # rospy.get_param("point_cloud_max_distance", 5)
+        self.point_cloud_spacing = 30  # rospy.get_param("point_cloud_spacing", 30)
         self.publish_point_cloud = False
         self.ground_truth = False
 
         cv2.setRNGSeed(12345)
         pass
 
-    def initial_pose_callback(self, initial_pose: PoseWithCovarianceStamped):
-        self.publish_point_cloud = True
+    # def initial_pose_callback(self, initial_pose: PoseWithCovarianceStamped):
+    #     self.publish_point_cloud = True
 
-    def image_callback(self, image: Image, debug=False):
+    def image_callback(self, image: Mat, debug=False):  # : Image, debug=False):
 
-        t_start = time.time()
+        # t_start = time.time()
 
-        if self.robot_state.status not in [
-            RobotState.STATUS_READY,
-            RobotState.STATUS_LOCALIZING,
-            RobotState.STATUS_WALKING,
-            RobotState.STATUS_DETERMINING_SIDE,
-        ]:
-            return
-
-        if not self.camera.ready():
-            return
+        # if self.robot_state.status not in [
+        #     RobotState.STATUS_READY,
+        #     RobotState.STATUS_LOCALIZING,
+        #     RobotState.STATUS_WALKING,
+        #     RobotState.STATUS_DETERMINING_SIDE,
+        # ]:
+        #     return
+        #
+        # if not self.camera.ready():
+        #     return
 
         # TODO ros
         # if self.ground_truth:
@@ -71,7 +72,7 @@ class DetectorFieldline(Detector):
         # rospy.loginfo_once("Started Publishing Fieldlines")
 
         # image = CvBridge().imgmsg_to_cv2(img, desired_encoding="rgb8")
-        h = self.camera.calculateHorizonCoverArea()
+        h = self.camera.calculate_horizon_cover_area()
         if h + 1 >= self.camera.resolution_y:
             return
         image_crop = image[h + 1 :, :, :]
@@ -112,7 +113,7 @@ class DetectorFieldline(Detector):
             cv2.waitKey(0)
 
         # No line detection simply publish all white points
-        pts_x, pts_y = np.where(lines_only == 255)
+        # pts_x, pts_y = np.where(lines_only == 255)
 
         # cv2.imshow("After", lines_only) imshow in test_object_localization instead
 
@@ -123,43 +124,43 @@ class DetectorFieldline(Detector):
         #     self.image_publisher.publish(img_out)
 
         # TODO own function
-        if self.publish_point_cloud and self.point_cloud_publisher.get_num_connections() > 0:
-            points3d = []
+        # if self.publish_point_cloud and self.point_cloud_publisher.get_num_connections() > 0:
+        #     points3d = []
+        #
+        #     i = 0
+        #     for px, py in zip(pts_y, pts_x):
+        #         i = i + 1
+        #         if i % self.point_cloud_spacing == 0:
+        #             camToPoint = Transformation(self.camera.find_floor_coordinate([px, py]))
+        #
+        #             # Exclude points too far away
+        #             if camToPoint.norm_squared < self.point_cloud_max_distance**2:
+        #                 points3d.append(camToPoint.position)
+        #
+        #     # TODO ros
+        #     # Publish straight base link
+        #     self.tf_broadcaster.sendTransform(
+        #         self.camera.pose_base_link_straight.position,
+        #         self.camera.pose_base_link_straight.quaternion,
+        #         image.header.stamp,
+        #         self.robot_name + "/base_footprint_straight",
+        #         self.robot_name + "/odom",
+        #     )
+        #
+        #     # TODO ros
+        #     # Publish fieldlines in laserscan format
+        #     header = Header()
+        #     header.stamp = image.header.stamp
+        #     header.frame_id = self.robot_name + "/base_footprint_straight"
+        #     if self.ground_truth:
+        #         if not self.publish_point_cloud:
+        #             header.frame_id = self.robot_name + "/base_footprint_straight"
+        #         else:
+        #             header.frame_id = "world"
+        #     # point_cloud_msg = pcl2.create_cloud_xyz32(header, points3d)
+        #     # self.point_cloud_publisher.publish(point_cloud_msg)
 
-            i = 0
-            for px, py in zip(pts_y, pts_x):
-                i = i + 1
-                if i % self.point_cloud_spacing == 0:
-                    camToPoint = Transformation(self.camera.findFloorCoordinate([px, py]))
-
-                    # Exclude points too far away
-                    if camToPoint.norm_squared < self.point_cloud_max_distance**2:
-                        points3d.append(camToPoint.position)
-
-            # TODO ros
-            # Publish straight base link
-            self.tf_broadcaster.sendTransform(
-                self.camera.pose_base_link_straight.position,
-                self.camera.pose_base_link_straight.quaternion,
-                image.header.stamp,
-                self.robot_name + "/base_footprint_straight",
-                self.robot_name + "/odom",
-            )
-
-            # TODO ros
-            # Publish fieldlines in laserscan format
-            header = Header()
-            header.stamp = image.header.stamp
-            header.frame_id = self.robot_name + "/base_footprint_straight"
-            if self.ground_truth:
-                if not self.publish_point_cloud:
-                    header.frame_id = self.robot_name + "/base_footprint_straight"
-                else:
-                    header.frame_id = "world"
-            # point_cloud_msg = pcl2.create_cloud_xyz32(header, points3d)
-            # self.point_cloud_publisher.publish(point_cloud_msg)
-
-        t_end = time.time()
+        # t_end = time.time()
         # rospy.loginfo_throttle(60, "Fieldline detection rate: " + str(t_end - t_start))
 
         return lines_only

@@ -1,0 +1,44 @@
+<mujoco model="Double Pendulum">
+  <option timestep="0.005"/>
+
+  <size njmax="50" nconmax="10" nstack="200"/>
+
+  <visual>
+    <rgba haze=".3 .3 .3 1"/>
+  </visual>
+
+  <default>
+    <joint type="hinge" pos="0 0 0" axis="0 0 1" damping="0.1"/>
+    <motor ctrllimited="true" ctrlrange="-25 25"/>
+  </default>
+
+  <asset>
+    <texture type="skybox" builtin="gradient" rgb1="0.6 0.6 0.6" rgb2="0 0 0" width="512" height="512"/>
+
+    <texture name="texplane" type="2d" builtin="checker" rgb1=".25 .25 .25" rgb2=".3 .3 .3" width="512" height="512" mark="cross" markrgb=".8 .8 .8"/>
+
+    <material name="matplane" reflectance="0.3" texture="texplane" texrepeat="1 1" texuniform="true"/>
+  </asset>
+
+  <worldbody>
+    <geom name="floor" pos="0 0 -0.5" size="0 0 1" type="plane" material="matplane"/>
+
+    <light directional="true" diffuse=".8 .8 .8" specular=".2 .2 .2" pos="0 0 5" dir="0 0 -1"/>
+
+    <body pos="0 0 0" quat="0.5 0.5 -0.5 0.5">
+      <geom name="upper arm" type="capsule" size="0.045" fromto="0 0 0  0.5 0 0" rgba=".5 .1 .1 1"/>
+      <joint name="shoulder"/>
+      <geom name="shoulder" type="cylinder" pos="0 0 0" size=".1 .05" rgba=".5 .1 .8 .5" mass="0" group="1"/>
+
+      <body pos="0.5 0 0">
+        <geom name="forearm" type="capsule" size="0.035" fromto="0 0 0  0.5 0 0" rgba=".5 .1 .1 1"/>
+        <joint name="elbow"/>
+        <geom name="elbow" type="cylinder" pos="0 0 0" size=".08 .05" rgba=".5 .1 .8 .5" mass="0" group="1"/>
+      </body>
+    </body>
+  </worldbody>
+
+  <actuator>
+    <motor name="shoulder" joint="shoulder"/>
+  </actuator>
+</mujoco>

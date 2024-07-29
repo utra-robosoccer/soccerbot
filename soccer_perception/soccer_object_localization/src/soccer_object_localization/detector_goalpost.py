@@ -48,7 +48,7 @@ class DetectorGoalPost(Detector):
         closest_distance = np.inf
         closest_line = None
         closest_line_relative_position_post_to_robot = None
-        min_horizon_pixel = self.camera.calculateHorizonCoverArea()
+        min_horizon_pixel = self.camera.calculate_horizon_cover_area()
         # TODO should be its own function
 
         for line in vertical_lines:
@@ -60,7 +60,7 @@ class DetectorGoalPost(Detector):
             if lower_point[1] < min_horizon_pixel:
                 continue
 
-            relative_position_post_to_robot = self.camera.findFloorCoordinate(lower_point)
+            relative_position_post_to_robot = self.camera.find_floor_coordinate(lower_point)
             if np.linalg.norm(relative_position_post_to_robot) < closest_distance:
                 closest_distance = np.linalg.norm(relative_position_post_to_robot)
                 closest_line = line
@@ -101,7 +101,7 @@ class DetectorGoalPost(Detector):
         image_blurred = cv2.bilateralFilter(image, 9, 75, 75)
         image_hsv = cv2.cvtColor(src=image_blurred, code=cv2.COLOR_BGR2HSV)
         image_hsv_filter = cv2.inRange(image_hsv, (0, 0, 150), (255, 50, 255))
-        h = self.camera.calculateHorizonCoverArea()
+        h = self.camera.calculate_horizon_cover_area()
         image_crop = image_hsv[h + 1 :, :, :]
         # grass_only = cv2.inRange(image_crop, (35, 85, 0), (115, 255, 255))
         # grass_only = cv2.vconcat([np.zeros((h + 1, grass_only.shape[1]), dtype=grass_only.dtype), grass_only])

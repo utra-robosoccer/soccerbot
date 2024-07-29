@@ -2,26 +2,22 @@
 
 import enum
 import os
-from math import nan
 
 import numpy as np
-from matplotlib import pyplot as plt
-from rospy.impl.tcpros_base import DEFAULT_BUFF_SIZE
 
 if "ROS_NAMESPACE" not in os.environ:
     os.environ["ROS_NAMESPACE"] = "/robot1"
 
 from argparse import ArgumentParser
 
-import cv2
 import rospy
 import torch
 from cv_bridge import CvBridge
 from rospy import ROSException
 from sensor_msgs.msg import Image
 
-from soccer_common.camera import Camera
-from soccer_msgs.msg import BoundingBox, BoundingBoxes, GameState, RobotState
+from soccer_common.perception.camera import Camera
+from soccer_msgs.msg import BoundingBox, GameState, RobotState
 
 
 class Label(enum.IntEnum):
@@ -122,7 +118,7 @@ class ObjectDetectionNode(object):
         # cover horizon to help robot ignore things outside field
         # cover_horizon_up_threshold = rospy.get_param("cover_horizon_up_threshold", 30)
         cover_horizon_up_threshold = 30
-        h = max(self.camera.calculateHorizonCoverArea() - cover_horizon_up_threshold, 0)
+        h = max(self.camera.calculate_horizon_cover_area() - cover_horizon_up_threshold, 0)
 
         if image is not None:
             # 1. preprocess image

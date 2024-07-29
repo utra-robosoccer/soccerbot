@@ -2,13 +2,12 @@ import cv2
 import numpy as np
 from sensor_msgs.msg import Image
 
-from soccer_common.camera import Camera
-from soccer_msgs.msg import RobotState
+from soccer_common.perception.camera_calculations import CameraCalculations
 
 
 class Detector:
     def __init__(self):
-        self.camera = Camera()
+        self.camera = CameraCalculations()
         self.camera.reset_position()
         # TODO remove all mentions of state for strategy
 
