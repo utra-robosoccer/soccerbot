@@ -2,6 +2,7 @@ import math
 from functools import cached_property
 
 import numpy as np
+from sensor_msgs.msg import CameraInfo
 
 from soccer_common.transformation import Transformation
 
@@ -10,12 +11,12 @@ class CameraBase:
     # TODO maybe put into a common percpetion
     # TODO also could be split up into different files too many things
 
-    def __init__(self):
+    def __init__(self, camera_info: CameraInfo = CameraInfo(height=480, width=640)):
         # TODO why does this need pose shouldnt all the calcualtions be in the robots relative frame and
         #  then transformed into the world frame that would make it a lot less relient on
         #  knowledge of its global position
 
-        self.camera_info = None
+        self.camera_info = camera_info
         self.horizontalFOV = 1.39626
         self.focal_length = 3.67  #: Focal length of the camera (meters) distance to the camera plane as projected in 3D
 

@@ -1,6 +1,8 @@
 import cv2 as cv
 import numpy as np
 
+# TODO maybe a unit test
+
 cap = cv.VideoCapture(4)
 if not cap.isOpened():
     print("Cannot open camera")
