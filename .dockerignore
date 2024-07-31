@@ -19,3 +19,4 @@ soccerbot/bags/
 LICENSE
 venv/
 *.webm
+/soccer_perception/data/images/*

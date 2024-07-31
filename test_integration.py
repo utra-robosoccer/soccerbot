@@ -15,7 +15,7 @@ from scipy.spatial.transform import Rotation as R
 from sensor_msgs.msg import JointState
 from timeout_decorator import timeout_decorator
 
-from soccer_common.camera import Camera
+from soccer_common.perception.camera import Camera
 from soccer_msgs.msg import BoundingBoxes, RobotState
 from soccer_strategy.old.team import Team
 
@@ -316,7 +316,7 @@ class IntegrationTestPlaying(IntegrationTest):
                 continue
 
             self.camera.reset_position(from_world_frame=True, camera_frame="/camera_gt", timestamp=image_msg.header.stamp)
-            label = self.camera.calculateBoundingBoxesFromBall(Transformation(ball_position), ball_radius)
+            label = self.camera.calculate_bounding_boxes_from_ball(Transformation(ball_position), ball_radius)
 
             # Draw the rectangle
             pt1 = (round(label[0][0]), round(label[0][1]))

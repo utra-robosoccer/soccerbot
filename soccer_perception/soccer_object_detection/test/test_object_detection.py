@@ -1,171 +1,91 @@
+import math
 import os
 import os.path
 import pickle
 import sys
+from os.path import expanduser
 from unittest import TestCase
-from unittest.mock import MagicMock
 
 import cv2
 import numpy as np
 import pytest
 import rospy
-import tf2_ros
 import yaml
 from cv2 import Mat
-from cv_bridge import CvBridge
-from sensor_msgs.msg import CameraInfo, Image
 from soccer_object_detection.object_detect_node import Label, ObjectDetectionNode
 
-from soccer_common import Camera
-from soccer_common.utils import download_dataset
-from soccer_common.utils_rosparam import set_rosparam_from_yaml_file
-from soccer_msgs.msg import GameState, RobotState
-
-set_rosparam_from_yaml_file()
-
-
-def IoU(boxA, boxB):
-    # determine the (x, y)-coordinates of the intersection rectangle
-    xA = max(boxA[0], boxB[0])
-    yA = max(boxA[1], boxB[1])
-    xB = min(boxA[2], boxB[2])
-    yB = min(boxA[3], boxB[3])
-    # compute the area of intersection rectangle
-    interArea = max(0, xB - xA + 1) * max(0, yB - yA + 1)
-    # compute the area of both the prediction and ground-truth
-    # rectangles
-    boxAArea = (boxA[2] - boxA[0] + 1) * (boxA[3] - boxA[1] + 1)
-    boxBArea = (boxB[2] - boxB[0] + 1) * (boxB[3] - boxB[1] + 1)
-    # compute the intersection over union by taking the intersection
-    # area and dividing it by the sum of prediction + ground-truth
-    # areas - the interesection area
-    iou = interArea / float(boxAArea + boxBArea - interArea)
-    # return the intersection over union value
-    return iou
+from soccer_common import Transformation
+from soccer_common.utils import download_dataset, wrapToPi
+from soccer_perception.soccer_object_detection.test.utils import check_bounding_box
 
 
 class TestObjectDetection(TestCase):
-    def test_object_detection_node(self):
-        src_path = os.path.dirname(os.path.realpath(__file__))
-        test_path = src_path + "/../../images/simulation"
+    def test_object_detection(self):
+        src_path = expanduser("~") + "/catkin_ws/src/soccerbot/soccer_perception/"
+        test_path = src_path + "data/images/simulation"
+
         download_dataset("https://drive.google.com/uc?id=11nN58j8_PBoLNRAzOEdk7fMe1UK1diCc", folder_path=test_path)
 
-        rospy.init_node("test")
-
-        Camera.reset_position = MagicMock()
-
-        src_path = os.path.dirname(os.path.realpath(__file__))
-        model_path = src_path + "/../../models/half_5.pt"
+        model_path = src_path + "soccer_object_detection/models/half_5.pt"
 
         n = ObjectDetectionNode(model_path=model_path)
 
-        n.robot_state.status = RobotState.STATUS_READY
-        n.game_state.gameState = GameState.GAMESTATE_PLAYING
-
-        cvbridge = CvBridge()
         for file_name in os.listdir(f"{test_path}/images"):
             print(file_name)
             img: Mat = cv2.imread(os.path.join(f"{test_path}/images", file_name))  # ground truth box = (68, 89) (257, 275)
-            img_original_size = img.size
             img = cv2.resize(img, dsize=(640, 480))
 
-            img_msg: Image = cvbridge.cv2_to_imgmsg(img)
-
-            # Mock the detections
-            n.pub_detection = MagicMock()
-            n.pub_boundingbox = MagicMock()
-            n.pub_detection.get_num_connections = MagicMock(return_value=1)
-            n.pub_boundingbox.get_num_connections = MagicMock(return_value=1)
-            n.pub_detection.publish = MagicMock()
-            n.pub_boundingbox.publish = MagicMock()
-
-            ci = CameraInfo()
-            ci.height = img.shape[0]
-            ci.width = img.shape[1]
-            n.camera.camera_info = ci
             n.camera.pose.orientation_euler = [0, np.pi / 8, 0]
-            n.callback(img_msg)
+            detection_image, bbs_msg = n.get_model_output(img)
 
             with open(os.path.join(f"{test_path}/labels", file_name.replace("PNG", "txt"))) as f:
                 lines = f.readlines()
 
-            if "DISPLAY" in os.environ:
-                mat = cvbridge.imgmsg_to_cv2(n.pub_detection.publish.call_args[0][0])
-                cv2.imshow("Image", mat)
-                cv2.waitKey(1000)
-                cv2.destroyAllWindows()
-
             # Check assertion
-            if n.pub_boundingbox.publish.call_args is not None:
-                for bounding_box in n.pub_boundingbox.publish.call_args[0][0].bounding_boxes:
-                    if bounding_box.probability >= n.CONFIDENCE_THRESHOLD and int(bounding_box.Class) in [Label.BALL.value, Label.ROBOT.value]:
-                        bounding_boxes = [
-                            bounding_box.xmin,
-                            bounding_box.ymin,
-                            bounding_box.xmax,
-                            bounding_box.ymax,
-                        ]
+            # TODO is this really necessary
+            # Also can it be a function
+            for bounding_box in bbs_msg.bounding_boxes:
+                if bounding_box.probability >= n.CONFIDENCE_THRESHOLD and int(bounding_box.Class) in [
+                    Label.BALL.value,
+                    Label.ROBOT.value,
+                    Label.GOALPOST.value,
+                    Label.TOPBAR.value,
+                ]:
+                    best_iou = check_bounding_box(bounding_box, lines, n.camera.camera_info.width, n.camera.camera_info.height)
 
-                        best_iou = 0
-                        best_dimensions = None
-                        for line in lines:
-                            info = line.split(" ")
-                            label = int(info[0])
-                            if label != int(bounding_box.Class):
-                                continue
-
-                            x = float(info[1])
-                            y = float(info[2])
-                            width = float(info[3])
-                            height = float(info[4])
-
-                            xmin = int((x - width / 2) * ci.width)
-                            ymin = int((y - height / 2) * ci.height)
-                            xmax = int((x + width / 2) * ci.width)
-                            ymax = int((y + height / 2) * ci.height)
-                            ground_truth_boxes = [xmin, ymin, xmax, ymax]
-                            iou = IoU(bounding_boxes, ground_truth_boxes)
-                            if iou > best_iou:
-                                best_iou = iou
-                                best_dimensions = ground_truth_boxes
-
-                        self.assertGreater(best_iou, 0.05, f"bounding boxes are off by too much! Image= {file_name} Best IOU={best_iou}")
-                        if best_iou < 0.5:
-                            rospy.logwarn(f"bounding boxes lower than 0.5 Image= {file_name} Best IOU={best_iou}")
-
-                        # if "DISPLAY" in os.environ:
-                        # cv2.rectangle(
-                        #     img=mat,
-                        #     pt1=(best_dimensions[0], best_dimensions[1]),
-                        #     pt2=(best_dimensions[2], best_dimensions[3]),
-                        #     color=(255, 255, 255),
-                        # )
-                        # if bounding_box.obstacle_detected is True:
-                        #     cv2.circle(mat, (bounding_box.xbase, bounding_box.ybase), 0, (0, 255, 255), 3)
+                    self.assertGreater(best_iou, 0.05, f"bounding boxes are off by too much! Image= {file_name}" f" Best IOU={best_iou}")
+                    if best_iou < 0.5:
+                        print(f"bounding boxes lower than 0.5 Image= {file_name} Best IOU={best_iou}")
+                    # if "DISPLAY" in os.environ:
+                    #     cv2.rectangle(
+                    #         img=img,
+                    #         pt1=(bounding_box.xmin, bounding_box.ymin),
+                    #         pt2=(bounding_box.xmax, bounding_box.ymax),
+                    #         color=(255, 255, 255),
+                    #     )
+                    #     if bounding_box.obstacle_detected is True:
+                    #         cv2.circle(img, (bounding_box.xbase, bounding_box.ybase), 0, (0, 255, 255), 3)
 
             if "DISPLAY" in os.environ:
-                cv2.imshow("Image", mat)
+                cv2.imshow("Image", detection_image)
                 cv2.waitKey()
                 cv2.destroyAllWindows()
 
-    def test_object_detection_node_cam(self):
+    def test_object_detection_vid(self):
+        src_path = expanduser("~") + "/catkin_ws/src/soccerbot/soccer_perception/"
+        test_path = src_path + "data/videos/robocup2023"
 
-        rospy.init_node("test")
+        download_dataset("https://drive.google.com/uc?id=1UTQ6Rz0yk8jpWwWoq3eSf7DOmG_j9An3", folder_path=test_path)
 
-        Camera.reset_position = MagicMock()
-
-        src_path = os.path.dirname(os.path.realpath(__file__))
-        model_path = src_path + "/../../models/half_5.pt"
+        model_path = src_path + "soccer_object_detection/models/half_5.pt"
 
         n = ObjectDetectionNode(model_path=model_path)
 
-        n.robot_state.status = RobotState.STATUS_READY
-        n.game_state.gameState = GameState.GAMESTATE_PLAYING
-        cap = cv2.VideoCapture(4)
+        cap = cv2.VideoCapture(test_path + "/2023-07-08-124521.webm")
         if not cap.isOpened():
             print("Cannot open camera")
             exit()
-        cvbridge = CvBridge()
+
         while True:
             ret, frame = cap.read()
             if not ret:
@@ -173,84 +93,45 @@ class TestObjectDetection(TestCase):
                 break
             img = cv2.resize(frame, dsize=(640, 480))
 
-            img_msg: Image = cvbridge.cv2_to_imgmsg(img)
-
-            # Mock the detections
-            n.pub_detection = MagicMock()
-            n.pub_boundingbox = MagicMock()
-            n.pub_detection.get_num_connections = MagicMock(return_value=1)
-            n.pub_boundingbox.get_num_connections = MagicMock(return_value=1)
-            n.pub_detection.publish = MagicMock()
-            n.pub_boundingbox.publish = MagicMock()
-
-            ci = CameraInfo()
-            ci.height = img.shape[0]
-            ci.width = img.shape[1]
-            n.camera.camera_info = ci
             n.camera.pose.orientation_euler = [0, np.pi / 8, 0]
-            n.callback(img_msg)
+            detection_image, bbs_msg = n.get_model_output(img)  # 0.01
 
             if "DISPLAY" in os.environ:
-                mat = cvbridge.imgmsg_to_cv2(n.pub_detection.publish.call_args[0][0])
-                cv2.imshow("Image", mat)
-                cv2.waitKey(1)
-                # cv2.destroyAllWindows()
+                cv2.imshow("Image", detection_image)
+                cv2.waitKey(24)  # TODO why is this one so much faster
+        cv2.destroyAllWindows()
 
-            # Check assertion
-            if n.pub_boundingbox.publish.call_args is not None:
-                for bounding_box in n.pub_boundingbox.publish.call_args[0][0].bounding_boxes:
-                    if bounding_box.probability >= n.CONFIDENCE_THRESHOLD and int(bounding_box.Class) in [Label.BALL.value, Label.ROBOT.value]:
-                        bounding_boxes = [
-                            bounding_box.xmin,
-                            bounding_box.ymin,
-                            bounding_box.xmax,
-                            bounding_box.ymax,
-                        ]
+    def test_object_detection_node_cam(self):
 
-                        best_iou = 0
-                        best_dimensions = None
-                        # for line in lines:
-                        #     info = line.split(" ")
-                        #     label = int(info[0])
-                        #     if label != int(bounding_box.Class):
-                        #         continue
-                        #
-                        #     x = float(info[1])
-                        #     y = float(info[2])
-                        #     width = float(info[3])
-                        #     height = float(info[4])
-                        #
-                        #     xmin = int((x - width / 2) * ci.width)
-                        #     ymin = int((y - height / 2) * ci.height)
-                        #     xmax = int((x + width / 2) * ci.width)
-                        #     ymax = int((y + height / 2) * ci.height)
-                        #     ground_truth_boxes = [xmin, ymin, xmax, ymax]
-                        #     iou = IoU(bounding_boxes, ground_truth_boxes)
-                        #     if iou > best_iou:
-                        #         best_iou = iou
-                        #         best_dimensions = ground_truth_boxes
+        src_path = os.path.dirname(os.path.realpath(__file__))
 
-                        # self.assertGreater(best_iou, 0.05, f"bounding boxes are off by too much! Image= {file_name} Best IOU={best_iou}")
-                        # if best_iou < 0.5:
-                        #     rospy.logwarn(f"bounding boxes lower than 0.5 Image= {file_name} Best IOU={best_iou}")
+        model_path = src_path + "/../models/half_5.pt"
 
-                        # if "DISPLAY" in os.environ:
-                        # cv2.rectangle(
-                        #     img=mat,
-                        #     pt1=(best_dimensions[0], best_dimensions[1]),
-                        #     pt2=(best_dimensions[2], best_dimensions[3]),
-                        #     color=(255, 255, 255),
-                        # )
-                        # if bounding_box.obstacle_detected is True:
-                        #     cv2.circle(mat, (bounding_box.xbase, bounding_box.ybase), 0, (0, 255, 255), 3)
+        n = ObjectDetectionNode(model_path=model_path)
+
+        cap = cv2.VideoCapture(4)
+        if not cap.isOpened():
+            print("Cannot open camera")
+            exit()
+
+        while True:
+            ret, frame = cap.read()
+            if not ret:
+                print("Can't receive frame (stream end?). Exiting ...")
+                break
+            img = cv2.resize(frame, dsize=(640, 480))
+
+            n.camera.pose.orientation_euler = [0, np.pi / 8, 0]
+            detection_image, bbs_msg = n.get_model_output(img)  # 0.01
 
             if "DISPLAY" in os.environ:
-                cv2.imshow("Image", mat)
-                cv2.waitKey(1)
-                # cv2.destroyAllWindows()
+                cv2.imshow("Image", detection_image)
+                cv2.waitKey(24)  # TODO why is this one so much faster
+        cv2.destroyAllWindows()
 
     @pytest.mark.skip(reason="Only run locally")
     def test_visualize_annotations(self):
+        # TODO what does this do?
         src_path = os.path.dirname(os.path.realpath(__file__))
 
         # Data downloaded from https://github.com/bit-bots/TORSO_21_dataset
@@ -435,3 +316,96 @@ class TestObjectDetection(TestCase):
                 sys.stdout.write("\x1b[A")
                 sys.stdout.write("\x1b[A")
                 print(f"Current image number {i} name {f}\n")
+
+    def test_goalpost_detection(self):
+        """
+        Returns whether a point at a given field coordinate is visible to the robot
+        """
+
+        # TODO verify how this works
+        def get_point_visibility(robot_pose, point_coords):
+            robot_x, robot_y, robot_yaw = robot_pose
+            point_x, point_y = point_coords
+
+            point_yaw = math.atan2(point_y - robot_y, point_x - robot_x)
+            camera_fov = 1.39626  # rads
+
+            # Both yaw angles are between -pi and pi
+            delta_yaw = wrapToPi(point_yaw - robot_yaw)
+
+            # Check if the point is within the view cone
+            # No equals case as the point wouldn't be fully visible
+            is_point_visible = -camera_fov / 2.0 < delta_yaw < camera_fov / 2.0
+
+            return is_point_visible
+
+        """
+            Returns a dictionary that stores booleans indicating whether each post is visible
+            Visual reference: https://www.desmos.com/calculator/b9lndsb1bl
+            Example: both posts of the left net are visible
+            visible_posts = {
+                "NEG_X_NET": {
+                    "POS_Y_POST": True,
+                    "NEG_Y_POST": True
+                },
+                "POS_X_NET": {
+                    "POS_Y_POST": False,
+                    "NEG_Y_POST": False
+                }
+            }
+        """
+
+        def get_visible_posts(robot_x, robot_y, robot_yaw):
+            visible_posts = {"NEG_X_NET": {"POS_Y_POST": True, "NEG_Y_POST": True}, "POS_X_NET": {"POS_Y_POST": False, "NEG_Y_POST": False}}
+
+            net_coords = {
+                "NEG_X_NET": {"POS_Y_POST": [-4.5, 1.3], "NEG_Y_POST": [-4.5, -1.3]},
+                "POS_X_NET": {"POS_Y_POST": [4.5, 1.3], "NEG_Y_POST": [4.5, -1.3]},
+            }
+
+            for net in net_coords.keys():
+                post_coords = net_coords[net]
+                for post in post_coords.keys():
+                    visible_posts[net][post] = get_point_visibility((robot_x, robot_y, robot_yaw), net_coords[net][post])
+
+            return visible_posts
+
+        src_path = expanduser("~") + "/catkin_ws/src/soccerbot/soccer_perception/"
+        test_path = src_path + "data/images/goal_net"
+
+        download_dataset("https://drive.google.com/uc?id=17qdnW7egoopXHvakiNnUUufP2MOjyZ18", folder_path=test_path)
+
+        model_path = src_path + "soccer_object_detection/models/half_5.pt"
+
+        n = ObjectDetectionNode(model_path=model_path)
+
+        n.camera.pose = Transformation(position=[0, 0, 0.46])
+
+        # Loop through test images
+        for file_name in os.listdir(test_path):
+            # file_name = "img173_-0.852141317992289_3.15_-1.7125376246657054.png"
+
+            print(f"Loading {file_name} from goal_net dataset")
+            file_name_no_ext = os.path.splitext(file_name)[0]
+            x, y, yaw = file_name_no_ext.split("_")[1:]
+            yaw = wrapToPi(float(yaw))
+            if yaw < 0:
+                yaw = (yaw + np.pi) % np.pi
+
+            n.camera.pose.orientation_euler = [yaw, 0, 0]
+            print(f"Parsed (x, y, yaw): ({x}, {y}, {yaw}) from filename.")
+            visible_posts = get_visible_posts(float(x), float(y), float(yaw))
+            for net in visible_posts.keys():
+                for post in visible_posts[net].keys():
+                    if visible_posts[net][post]:
+                        print(f"{net}, {post} is visible")
+
+            img: Mat = cv2.imread(os.path.join(test_path, file_name))
+
+            if "DISPLAY" in os.environ:
+                cv2.imshow("Before", img)
+
+            detection_image, bbs_msg = n.get_model_output(img)
+            if "DISPLAY" in os.environ:
+                cv2.imshow("After", detection_image)
+                cv2.waitKey(0)
