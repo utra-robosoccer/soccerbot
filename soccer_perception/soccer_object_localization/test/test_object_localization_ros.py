@@ -1,39 +1,19 @@
 import os
-
-import rospy
-from soccer_object_localization.detector_fieldline_ros import DetectorFieldlineRos
-
-from soccer_common.perception.camera_calculations_ros import CameraCalculationsRos
-
-# from soccer_object_detection.object_detect_node import ObjectDetectionNode
-
-# ROS
-# from soccer_object_detection.test_object_detection import IoU
-# from soccer_object_localization.detector_objects import DetectorObjects
-
-os.environ["ROS_NAMESPACE"] = "/robot1"
-
-import math
+from os.path import expanduser
 from unittest import TestCase
 from unittest.mock import MagicMock
 
 import cv2
-import numpy as np
-import pytest
-
-# import rosbag
-# import rospy
-# import tf2_ros
+import rospy
 from cv2 import Mat
 from cv_bridge import CvBridge
-from sensor_msgs.msg import CameraInfo, Image
-from soccer_object_localization.detector_fieldline import DetectorFieldline
+from sensor_msgs.msg import Image
+from soccer_object_localization.detector_fieldline_ros import DetectorFieldlineRos
 
-from soccer_common.transformation import Transformation
-from soccer_common.utils import download_dataset, wrapToPi
-from soccer_msgs.msg import GameState, RobotState
+from soccer_common.perception.camera_calculations_ros import CameraCalculationsRos
+from soccer_common.utils import download_dataset
 
-# from soccer_object_localization.detector_goalpost import DetectorGoalPost
+os.environ["ROS_NAMESPACE"] = "/robot1"
 
 
 # TODO fix unit test
@@ -42,20 +22,19 @@ class TestObjectLocalizationRos(TestCase):
 
     def test_fieldline_detection_ros(self):
         rospy.init_node("test")
-        src_path = os.path.dirname(os.path.realpath(__file__))
-        test_path = src_path + "/../../images/fieldlines"
-        download_dataset(url="https://drive.google.com/uc?id=1nJX6ySks_a7mESvCm3sNllmJTNpm-x2_", folder_path=test_path)
+        src_path = expanduser("~") + "/catkin_ws/src/soccerbot/soccer_perception/"
+        test_path = src_path + "data/images/fieldlines"
+
+        download_dataset("https://drive.google.com/uc?id=1nJX6ySks_a7mESvCm3sNllmJTNpm-x2_", folder_path=test_path)
 
         # TODO should do on real world img set
         # TODO we shouldnt need this
         CameraCalculationsRos.reset_position = MagicMock()
-        CameraCalculationsRos.ready = MagicMock()
-
         d = DetectorFieldlineRos()
 
         # ROS
         d.image_publisher.get_num_connections = MagicMock(return_value=1)
-        d.publish_point_cloud = True
+        d.publish_point_cloud = True  # TODO is this really needed
         d.point_cloud_publisher.get_num_connections = MagicMock(return_value=1)
 
         cvbridge = CvBridge()

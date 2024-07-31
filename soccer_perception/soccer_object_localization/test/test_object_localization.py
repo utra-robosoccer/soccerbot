@@ -1,51 +1,22 @@
 import os
-import time
-
-import rospy
-from soccer_object_detection.object_detect_node import ObjectDetectionNode
-from soccer_object_localization.detector_fieldline_ros import DetectorFieldlineRos
-from soccer_object_localization.detector_goalpost import DetectorGoalPost
-
-from soccer_common.perception.camera_calculations_ros import CameraCalculationsRos
-
-# from soccer_object_detection.object_detect_node import ObjectDetectionNode
-
-# ROS
-# from soccer_object_detection.test_object_detection import IoU
-# from soccer_object_localization.detector_objects import DetectorObjects
-
-os.environ["ROS_NAMESPACE"] = "/robot1"
-
-import math
+from os.path import expanduser
 from unittest import TestCase
-from unittest.mock import MagicMock
 
 import cv2
-import numpy as np
-import pytest
-
-# import rosbag
-# import rospy
-# import tf2_ros
 from cv2 import Mat
-from cv_bridge import CvBridge
-from sensor_msgs.msg import CameraInfo, Image
 from soccer_object_localization.detector_fieldline import DetectorFieldline
 
-from soccer_common.transformation import Transformation
-from soccer_common.utils import download_dataset, wrapToPi
-from soccer_msgs.msg import GameState, RobotState
-
-# from soccer_object_localization.detector_goalpost import DetectorGoalPost
+from soccer_common.utils import download_dataset
 
 
 # TODO fix unit test
 class TestObjectLocalization(TestCase):
 
     def test_fieldline_detection(self):
-        src_path = os.path.dirname(os.path.realpath(__file__))
-        test_path = src_path + "/../../images/fieldlines"
-        download_dataset(url="https://drive.google.com/uc?id=1nJX6ySks_a7mESvCm3sNllmJTNpm-x2_", folder_path=test_path)
+        src_path = expanduser("~") + "/catkin_ws/src/soccerbot/soccer_perception/"
+        test_path = src_path + "data/images/fieldlines"
+
+        download_dataset("https://drive.google.com/uc?id=1nJX6ySks_a7mESvCm3sNllmJTNpm-x2_", folder_path=test_path)
 
         d = DetectorFieldline()
 
@@ -97,10 +68,12 @@ class TestObjectLocalization(TestCase):
 
     def test_fieldline_detection_vid(self):
         d = DetectorFieldline()
+        src_path = expanduser("~") + "/catkin_ws/src/soccerbot/soccer_perception/"
+        test_path = src_path + "data/videos/robocup2023"
 
-        src_path = os.path.dirname(os.path.realpath(__file__))
-        print(src_path + "../../soccer_object_detection/videos/2023-07-08-124521.webm")
-        cap = cv2.VideoCapture(src_path + "/../../soccer_object_detection/videos/2023-07-08-124521.webm")
+        download_dataset("https://drive.google.com/uc?id=1UTQ6Rz0yk8jpWwWoq3eSf7DOmG_j9An3", folder_path=test_path)
+
+        cap = cv2.VideoCapture(test_path + "/2023-07-08-124521.webm")
         if not cap.isOpened():
             print("Cannot open camera")
             exit()
@@ -125,9 +98,11 @@ class TestObjectLocalization(TestCase):
                 cv2.waitKey(1)
         cv2.destroyAllWindows()
 
+    # TODO this needs to be reworked
     # def test_robot_detection(self):
-    #     src_path = os.path.dirname(os.path.realpath(__file__))
-    #     test_path = src_path + "/../../../soccer_object_detection/images/simulation"
+    #     src_path = expanduser("~") + "/catkin_ws/src/soccerbot/soccer_perception/"
+    #     test_path = src_path + "data/images/simulation"
+    #
     #     download_dataset("https://drive.google.com/uc?id=11nN58j8_PBoLNRAzOEdk7fMe1UK1diCc", folder_path=test_path)
     #
     #     # ROS

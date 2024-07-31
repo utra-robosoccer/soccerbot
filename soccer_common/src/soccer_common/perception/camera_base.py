@@ -15,7 +15,6 @@ class CameraBase:
         # TODO why does this need pose shouldnt all the calcualtions be in the robots relative frame and
         #  then transformed into the world frame that would make it a lot less relient on
         #  knowledge of its global position
-
         self.camera_info = camera_info
         self.horizontalFOV = 1.39626
         self.focal_length = 3.67  #: Focal length of the camera (meters) distance to the camera plane as projected in 3D

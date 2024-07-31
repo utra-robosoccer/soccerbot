@@ -1,65 +1,38 @@
-import math
 import os
 import os.path
-import pickle
-import sys
-import time
+from os.path import expanduser
 from unittest import TestCase
 from unittest.mock import MagicMock
 
 import cv2
 import numpy as np
-import pytest
 import rospy
-import tf2_ros
-import yaml
 from cv2 import Mat
 from cv_bridge import CvBridge
-from sensor_msgs.msg import CameraInfo, Image
-from soccer_object_detection.object_detect_node import Label, ObjectDetectionNode
+from sensor_msgs.msg import Image
+from soccer_object_detection.object_detect_node import Label
 from soccer_object_detection.object_detect_node_ros import ObjectDetectionNodeRos
 
-from soccer_common import Transformation
 from soccer_common.perception.camera_calculations_ros import CameraCalculationsRos
-from soccer_common.utils import download_dataset, wrapToPi
+from soccer_common.utils import download_dataset
 from soccer_common.utils_rosparam import set_rosparam_from_yaml_file
-from soccer_msgs.msg import GameState, RobotState
+from soccer_perception.soccer_object_detection.test.utils import check_bounding_box
 
 set_rosparam_from_yaml_file()
 
 
-def IoU(boxA, boxB):
-    # determine the (x, y)-coordinates of the intersection rectangle
-    xA = max(boxA[0], boxB[0])
-    yA = max(boxA[1], boxB[1])
-    xB = min(boxA[2], boxB[2])
-    yB = min(boxA[3], boxB[3])
-    # compute the area of intersection rectangle
-    interArea = max(0, xB - xA + 1) * max(0, yB - yA + 1)
-    # compute the area of both the prediction and ground-truth
-    # rectangles
-    boxAArea = (boxA[2] - boxA[0] + 1) * (boxA[3] - boxA[1] + 1)
-    boxBArea = (boxB[2] - boxB[0] + 1) * (boxB[3] - boxB[1] + 1)
-    # compute the intersection over union by taking the intersection
-    # area and dividing it by the sum of prediction + ground-truth
-    # areas - the interesection area
-    iou = interArea / float(boxAArea + boxBArea - interArea)
-    # return the intersection over union value
-    return iou
-
-
 class TestObjectDetectionRos(TestCase):
-
+    # TODO should these just be simple usage
     def test_object_detection_node_ros(self):
-        src_path = os.path.dirname(os.path.realpath(__file__))
-        test_path = src_path + "/../../images/simulation"
+        src_path = expanduser("~") + "/catkin_ws/src/soccerbot/soccer_perception/"
+        test_path = src_path + "data/images/simulation"
+
         download_dataset("https://drive.google.com/uc?id=11nN58j8_PBoLNRAzOEdk7fMe1UK1diCc", folder_path=test_path)
 
-        model_path = src_path + "/../models/half_5.pt"
+        model_path = src_path + "soccer_object_detection/models/half_5.pt"
         rospy.init_node("test")
 
         CameraCalculationsRos.reset_position = MagicMock()
-
         n = ObjectDetectionNodeRos(model_path=model_path)
 
         cvbridge = CvBridge()
@@ -94,35 +67,7 @@ class TestObjectDetectionRos(TestCase):
             if n.pub_boundingbox.publish.call_args is not None:
                 for bounding_box in n.pub_boundingbox.publish.call_args[0][0].bounding_boxes:
                     if bounding_box.probability >= n.CONFIDENCE_THRESHOLD and int(bounding_box.Class) in [Label.BALL.value, Label.ROBOT.value]:
-                        bounding_boxes = [
-                            bounding_box.xmin,
-                            bounding_box.ymin,
-                            bounding_box.xmax,
-                            bounding_box.ymax,
-                        ]
-
-                        best_iou = 0
-                        best_dimensions = None
-                        for line in lines:
-                            info = line.split(" ")
-                            label = int(info[0])
-                            if label != int(bounding_box.Class):
-                                continue
-
-                            x = float(info[1])
-                            y = float(info[2])
-                            width = float(info[3])
-                            height = float(info[4])
-
-                            xmin = int((x - width / 2) * n.camera.camera_info.width)
-                            ymin = int((y - height / 2) * n.camera.camera_info.height)
-                            xmax = int((x + width / 2) * n.camera.camera_info.width)
-                            ymax = int((y + height / 2) * n.camera.camera_info.height)
-                            ground_truth_boxes = [xmin, ymin, xmax, ymax]
-                            iou = IoU(bounding_boxes, ground_truth_boxes)
-                            if iou > best_iou:
-                                best_iou = iou
-                                best_dimensions = ground_truth_boxes
+                        best_iou = check_bounding_box(bounding_box, lines, n.camera.camera_info.width, n.camera.camera_info.height)
 
                         self.assertGreater(best_iou, 0.05, f"bounding boxes are off by too much! Image= {file_name} Best IOU={best_iou}")
                         if best_iou < 0.5:

@@ -3,57 +3,30 @@ import os
 import os.path
 import pickle
 import sys
-import time
+from os.path import expanduser
 from unittest import TestCase
-from unittest.mock import MagicMock
 
 import cv2
 import numpy as np
 import pytest
 import rospy
-import tf2_ros
 import yaml
 from cv2 import Mat
-from cv_bridge import CvBridge
-from sensor_msgs.msg import CameraInfo, Image
 from soccer_object_detection.object_detect_node import Label, ObjectDetectionNode
 
 from soccer_common import Transformation
-from soccer_common.perception.camera_calculations_ros import CameraCalculationsRos
 from soccer_common.utils import download_dataset, wrapToPi
-from soccer_common.utils_rosparam import set_rosparam_from_yaml_file
-from soccer_msgs.msg import GameState, RobotState
-
-set_rosparam_from_yaml_file()
-
-
-def IoU(boxA, boxB):
-    # determine the (x, y)-coordinates of the intersection rectangle
-    xA = max(boxA[0], boxB[0])
-    yA = max(boxA[1], boxB[1])
-    xB = min(boxA[2], boxB[2])
-    yB = min(boxA[3], boxB[3])
-    # compute the area of intersection rectangle
-    interArea = max(0, xB - xA + 1) * max(0, yB - yA + 1)
-    # compute the area of both the prediction and ground-truth
-    # rectangles
-    boxAArea = (boxA[2] - boxA[0] + 1) * (boxA[3] - boxA[1] + 1)
-    boxBArea = (boxB[2] - boxB[0] + 1) * (boxB[3] - boxB[1] + 1)
-    # compute the intersection over union by taking the intersection
-    # area and dividing it by the sum of prediction + ground-truth
-    # areas - the interesection area
-    iou = interArea / float(boxAArea + boxBArea - interArea)
-    # return the intersection over union value
-    return iou
+from soccer_perception.soccer_object_detection.test.utils import check_bounding_box
 
 
 class TestObjectDetection(TestCase):
     def test_object_detection(self):
-        src_path = os.path.dirname(os.path.realpath(__file__))
-        test_path = src_path + "/../../images/simulation"
+        src_path = expanduser("~") + "/catkin_ws/src/soccerbot/soccer_perception/"
+        test_path = src_path + "data/images/simulation"
+
         download_dataset("https://drive.google.com/uc?id=11nN58j8_PBoLNRAzOEdk7fMe1UK1diCc", folder_path=test_path)
 
-        model_path = src_path + "/../models/half_5.pt"
+        model_path = src_path + "soccer_object_detection/models/half_5.pt"
 
         n = ObjectDetectionNode(model_path=model_path)
 
@@ -63,7 +36,6 @@ class TestObjectDetection(TestCase):
             img = cv2.resize(img, dsize=(640, 480))
 
             n.camera.pose.orientation_euler = [0, np.pi / 8, 0]
-            # n.get_model_output(img_msg)
             detection_image, bbs_msg = n.get_model_output(img)
 
             with open(os.path.join(f"{test_path}/labels", file_name.replace("PNG", "txt"))) as f:
@@ -71,6 +43,7 @@ class TestObjectDetection(TestCase):
 
             # Check assertion
             # TODO is this really necessary
+            # Also can it be a function
             for bounding_box in bbs_msg.bounding_boxes:
                 if bounding_box.probability >= n.CONFIDENCE_THRESHOLD and int(bounding_box.Class) in [
                     Label.BALL.value,
@@ -78,39 +51,11 @@ class TestObjectDetection(TestCase):
                     Label.GOALPOST.value,
                     Label.TOPBAR.value,
                 ]:
-                    bounding_boxes = [
-                        bounding_box.xmin,
-                        bounding_box.ymin,
-                        bounding_box.xmax,
-                        bounding_box.ymax,
-                    ]
+                    best_iou = check_bounding_box(bounding_box, lines, n.camera.camera_info.width, n.camera.camera_info.height)
 
-                    best_iou = 0
-                    best_dimensions = None
-                    for line in lines:
-                        info = line.split(" ")
-                        label = int(info[0])
-                        if label != int(bounding_box.Class):
-                            continue
-
-                        x = float(info[1])
-                        y = float(info[2])
-                        width = float(info[3])
-                        height = float(info[4])
-
-                        xmin = int((x - width / 2) * n.camera.camera_info.width)
-                        ymin = int((y - height / 2) * n.camera.camera_info.height)
-                        xmax = int((x + width / 2) * n.camera.camera_info.width)
-                        ymax = int((y + height / 2) * n.camera.camera_info.height)
-                        ground_truth_boxes = [xmin, ymin, xmax, ymax]
-                        iou = IoU(bounding_boxes, ground_truth_boxes)
-                        if iou > best_iou:
-                            best_iou = iou
-                            best_dimensions = ground_truth_boxes
-
-                    self.assertGreater(best_iou, 0.05, f"bounding boxes are off by too much! Image= {file_name} Best IOU={best_iou}")
+                    self.assertGreater(best_iou, 0.05, f"bounding boxes are off by too much! Image= {file_name}" f" Best IOU={best_iou}")
                     if best_iou < 0.5:
-                        rospy.logwarn(f"bounding boxes lower than 0.5 Image= {file_name} Best IOU={best_iou}")
+                        print(f"bounding boxes lower than 0.5 Image= {file_name} Best IOU={best_iou}")
                     # if "DISPLAY" in os.environ:
                     #     cv2.rectangle(
                     #         img=img,
@@ -127,13 +72,16 @@ class TestObjectDetection(TestCase):
                 cv2.destroyAllWindows()
 
     def test_object_detection_vid(self):
-        src_path = os.path.dirname(os.path.realpath(__file__))
+        src_path = expanduser("~") + "/catkin_ws/src/soccerbot/soccer_perception/"
+        test_path = src_path + "data/videos/robocup2023"
 
-        model_path = src_path + "/../models/half_5.pt"
+        download_dataset("https://drive.google.com/uc?id=1UTQ6Rz0yk8jpWwWoq3eSf7DOmG_j9An3", folder_path=test_path)
+
+        model_path = src_path + "soccer_object_detection/models/half_5.pt"
 
         n = ObjectDetectionNode(model_path=model_path)
 
-        cap = cv2.VideoCapture(src_path + "/../../soccer_object_detection/videos/2023-07-08-124521.webm")
+        cap = cv2.VideoCapture(test_path + "/2023-07-08-124521.webm")
         if not cap.isOpened():
             print("Cannot open camera")
             exit()
@@ -183,6 +131,7 @@ class TestObjectDetection(TestCase):
 
     @pytest.mark.skip(reason="Only run locally")
     def test_visualize_annotations(self):
+        # TODO what does this do?
         src_path = os.path.dirname(os.path.realpath(__file__))
 
         # Data downloaded from https://github.com/bit-bots/TORSO_21_dataset
@@ -421,24 +370,16 @@ class TestObjectDetection(TestCase):
 
             return visible_posts
 
-        # Setup test environment:
-        src_path = os.path.dirname(os.path.realpath(__file__))
-        test_path = src_path + "/../../images/goal_net"
-        download_dataset(url="https://drive.google.com/uc?id=17qdnW7egoopXHvakiNnUUufP2MOjyZ18", folder_path=test_path)
-        model_path = src_path + "/../models/half_5.pt"
+        src_path = expanduser("~") + "/catkin_ws/src/soccerbot/soccer_perception/"
+        test_path = src_path + "data/images/goal_net"
+
+        download_dataset("https://drive.google.com/uc?id=17qdnW7egoopXHvakiNnUUufP2MOjyZ18", folder_path=test_path)
+
+        model_path = src_path + "soccer_object_detection/models/half_5.pt"
 
         n = ObjectDetectionNode(model_path=model_path)
-        # Camera.reset_position = MagicMock()
-        # Camera.ready = MagicMock()
-        # d = DetectorGoalPost()
-        # d.robot_state.status = RobotState.STATUS_DETERMINING_SIDE
+
         n.camera.pose = Transformation(position=[0, 0, 0.46])
-        # d.image_publisher.get_num_connections = MagicMock(return_value=1)
-
-        # cvbridge = CvBridge()
-
-        src_path = os.path.dirname(os.path.realpath(__file__))
-        test_path = src_path + "/../../images/goal_net"
 
         # Loop through test images
         for file_name in os.listdir(test_path):
@@ -449,7 +390,7 @@ class TestObjectDetection(TestCase):
             x, y, yaw = file_name_no_ext.split("_")[1:]
             yaw = wrapToPi(float(yaw))
             if yaw < 0:
-                yaw = (yaw + np.pi) % (np.pi)
+                yaw = (yaw + np.pi) % np.pi
 
             n.camera.pose.orientation_euler = [yaw, 0, 0]
             print(f"Parsed (x, y, yaw): ({x}, {y}, {yaw}) from filename.")
@@ -464,18 +405,7 @@ class TestObjectDetection(TestCase):
             if "DISPLAY" in os.environ:
                 cv2.imshow("Before", img)
 
-            # c = CameraInfo()
-            # c.height = img.shape[0]
-            # c.width = img.shape[1]
-            # d.camera.camera_info = c
-
-            # img_msg: Image = cvbridge.cv2_to_imgmsg(img, encoding="rgb8")
-            # d.image_publisher.publish = MagicMock()
-            # d.image_callback(img, debug=False)
             detection_image, bbs_msg = n.get_model_output(img)
             if "DISPLAY" in os.environ:
-                # if d.image_publisher.publish.call_count != 0:
-                #     # img_out = cvbridge.imgmsg_to_cv2(d.image_publisher.publish.call_args[0][0])
-                # cv2.imshow("After", d.img_out)
                 cv2.imshow("After", detection_image)
                 cv2.waitKey(0)

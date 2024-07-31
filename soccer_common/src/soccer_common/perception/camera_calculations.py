@@ -11,6 +11,92 @@ class CameraCalculations(CameraBase):
         super(CameraCalculations, self).__init__()
         self.pose = Transformation()
 
+    def calculate_horizon_cover_area(self) -> int:
+        """
+        Given the camera's position, return the area that is covered by the horizon (that is not the field area) in pixels from the top position
+        :return: Pixel length from the top of the image to the point where it meets the horizon
+        """
+        # TODO verify this works cause there is some weird stuff going on in the resultant image
+        # TODO the relative frame needs some more thought since this will break some things so
+        #  will focus on basics before that section
+        # TODO need to find a way to visualize or verify this works with out sim maybe a graph that could work
+        pitch = self.pose.orientation_euler[1]
+        d = math.sin(pitch) * self.focal_length
+
+        (r, h) = self.world_to_image_frame(0, -d)
+        return int(min(max(0, h), self.resolution_y))
+
+    def reset_position(self, from_world_frame=False, camera_frame="/camera", skip_if_not_found=False):
+        """
+        Resets the position of the camera, it uses a series of methods that fall back on each other to get the location of the camera
+
+        :param from_world_frame: If this is set to true, the camera position transformation will be from the world instead of the robot odom frame
+        :param timestamp: What time do we want the camera tf frame, rospy.Time(0) if get the latest transform
+        :param camera_frame: The name of the camera frame
+        :param skip_if_not_found: If set to true, then will not wait if it cannot find the camera transform after the specified duration (1 second), it will just return
+        """
+
+        # same hardcoded values
+        if from_world_frame:
+            trans = [0, 0, 0.5]
+            rot = [0, 0, 0, 1]
+            self.pose = Transformation(trans, rot)
+        else:
+            trans = [0, 0, 0.5]  # TODO find init height
+            rot = [0, 0, 0, 1]
+            self.pose = Transformation(trans, rot)
+
+    def find_floor_coordinate(self, pos: [int]) -> [int]:
+        """
+        From a camera pixel, get a coordinate on the floor
+
+        :param pos: The position on the screen in pixels (x, y)
+        :return: The 3D coordinate of the pixel as projected to the floor
+        """
+        # TODO this actually might need an accruate pose, but is it truly necessay
+        # TODO verify the math
+        # TODO should be easy to verify if the relative conversion works since you have the answers
+        tx, ty = self.image_to_world_frame(pos[0], pos[1])
+        pixel_pose = Transformation(position=(self.focal_length, tx, ty))
+        camera_pose = self.pose
+        pixel_world_pose = camera_pose @ pixel_pose
+        ratio = (camera_pose.position[2] - pixel_world_pose.position[2]) / self.pose.position[2]  # TODO Fix divide by 0 problem
+        x_delta = (pixel_world_pose.position[0] - camera_pose.position[0]) / ratio
+        y_delta = (pixel_world_pose.position[1] - camera_pose.position[1]) / ratio
+
+        return [x_delta + camera_pose.position[0], y_delta + camera_pose.position[1], 0]
+
+    def find_camera_coordinate(self, pos: [int]) -> [int]:
+        """
+        From a 3d position on the field, get the camera coordinate, opposite of :func:`~soccer_common.Camera.findFloorCoordinate`
+
+        :param pos: The 3D coordinate of the object
+        :return: The 2D pixel (x, y) on the camera, if the object was projected on the camera
+        """
+        pos3d = Transformation(pos)
+        camera_pose = self.pose
+        pos3d_tr = np.linalg.inv(camera_pose) @ pos3d
+
+        return self.find_camera_coordinate_fixed_camera(pos3d_tr.position)
+
+    def find_camera_coordinate_fixed_camera(self, pos: [int]) -> [int]:
+        """
+        Helper function for :func:`~soccer_common.Camera.findCameraCoordinate`, finds the camera coordinate if the camera were fixed at the origin
+
+        :param pos: The 3D coordinate of the object
+        :return: The 2D pixel (x, y) on the camera, if the object was projected on the camera and the camera is placed at the origin
+        """
+
+        pos = Transformation(pos)
+
+        ratio = self.focal_length / pos.position[0]
+
+        tx = pos.position[1] * ratio
+        ty = pos.position[2] * ratio
+        x, y = self.world_to_image_frame(tx, ty)
+        return [x, y]
+
+    # TODO should these be here or in the node?
     def calculate_bounding_boxes_from_ball(self, ball_position: Transformation, ball_radius: float = 0.07):
         """
         Takes a 3D ball transformation and returns the bounding boxes of the ball if seen on camera
@@ -127,96 +213,3 @@ class CameraCalculations(CameraBase):
         tr_cam = self.pose @ tr
 
         return tr_cam
-
-    def calculate_horizon_cover_area(self) -> int:
-        """
-        Given the camera's position, return the area that is covered by the horizon (that is not the field area) in pixels from the top position
-        :return: Pixel length from the top of the image to the point where it meets the horizon
-        """
-        # TODO verify this works cause there is some weird stuff going on in the resultant image
-        # TODO the relative frame needs some more thought since this will break some things so
-        #  will focus on basics before that section
-        # TODO need to find a way to visualize or verify this works with out sim maybe a graph that could work
-        pitch = self.pose.orientation_euler[1]
-        d = math.sin(pitch) * self.focal_length
-
-        (r, h) = self.world_to_image_frame(0, -d)
-        return int(min(max(0, h), self.resolution_y))
-
-    def ready(self) -> bool:
-        """
-        Function to determine when the camera object has recieved the necessary information and is ready to be used
-
-        :return: True if the camera is ready, else False
-        """
-        return self.pose is not None and self.resolution_x is not None and self.resolution_y is not None and self.camera_info is not None
-
-    def reset_position(self, from_world_frame=False, camera_frame="/camera", skip_if_not_found=False):
-        """
-        Resets the position of the camera, it uses a series of methods that fall back on each other to get the location of the camera
-
-        :param from_world_frame: If this is set to true, the camera position transformation will be from the world instead of the robot odom frame
-        :param timestamp: What time do we want the camera tf frame, rospy.Time(0) if get the latest transform
-        :param camera_frame: The name of the camera frame
-        :param skip_if_not_found: If set to true, then will not wait if it cannot find the camera transform after the specified duration (1 second), it will just return
-        """
-
-        # same hardcoded values
-        if from_world_frame:
-            trans = [0, 0, 0.5]
-            rot = [0, 0, 0, 1]
-            self.pose = Transformation(trans, rot)
-        else:
-            trans = [0, 0, 0.5]  # TODO find init height
-            rot = [0, 0, 0, 1]
-            self.pose = Transformation(trans, rot)
-
-    def find_floor_coordinate(self, pos: [int]) -> [int]:
-        """
-        From a camera pixel, get a coordinate on the floor
-
-        :param pos: The position on the screen in pixels (x, y)
-        :return: The 3D coordinate of the pixel as projected to the floor
-        """
-        # TODO this actually might need an accruate pose, but is it truly necessay
-        # TODO verify the math
-        # TODO should be easy to verify if the relative conversion works since you have the answers
-        tx, ty = self.image_to_world_frame(pos[0], pos[1])
-        pixel_pose = Transformation(position=(self.focal_length, tx, ty))
-        camera_pose = self.pose
-        pixel_world_pose = camera_pose @ pixel_pose
-        ratio = (camera_pose.position[2] - pixel_world_pose.position[2]) / self.pose.position[2]  # TODO Fix divide by 0 problem
-        x_delta = (pixel_world_pose.position[0] - camera_pose.position[0]) / ratio
-        y_delta = (pixel_world_pose.position[1] - camera_pose.position[1]) / ratio
-
-        return [x_delta + camera_pose.position[0], y_delta + camera_pose.position[1], 0]
-
-    def find_camera_coordinate(self, pos: [int]) -> [int]:
-        """
-        From a 3d position on the field, get the camera coordinate, opposite of :func:`~soccer_common.Camera.findFloorCoordinate`
-
-        :param pos: The 3D coordinate of the object
-        :return: The 2D pixel (x, y) on the camera, if the object was projected on the camera
-        """
-        pos3d = Transformation(pos)
-        camera_pose = self.pose
-        pos3d_tr = np.linalg.inv(camera_pose) @ pos3d
-
-        return self.find_camera_coordinate_fixed_camera(pos3d_tr.position)
-
-    def find_camera_coordinate_fixed_camera(self, pos: [int]) -> [int]:
-        """
-        Helper function for :func:`~soccer_common.Camera.findCameraCoordinate`, finds the camera coordinate if the camera were fixed at the origin
-
-        :param pos: The 3D coordinate of the object
-        :return: The 2D pixel (x, y) on the camera, if the object was projected on the camera and the camera is placed at the origin
-        """
-
-        pos = Transformation(pos)
-
-        ratio = self.focal_length / pos.position[0]
-
-        tx = pos.position[1] * ratio
-        ty = pos.position[2] * ratio
-        x, y = self.world_to_image_frame(tx, ty)
-        return [x, y]

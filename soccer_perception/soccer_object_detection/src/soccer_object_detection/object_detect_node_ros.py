@@ -25,8 +25,7 @@ from soccer_msgs.msg import BoundingBoxes
 
 class ObjectDetectionNodeRos(ObjectDetectionNode):
     """
-    Detect ball, robot
-    publish bounding boxes
+    Ros bridge
     input: 480x640x4 bgra8 -> output: 3x200x150
     """
 
@@ -60,6 +59,7 @@ class ObjectDetectionNodeRos(ObjectDetectionNode):
 
     def callback(self, msg: Image):
         # webots: 480x640x4pixels
+        # TODo should be in strategy
         # if self.robot_state.status not in [
         #     RobotState.STATUS_LOCALIZING,
         #     RobotState.STATUS_READY,

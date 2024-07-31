@@ -19,6 +19,10 @@ from std_msgs.msg import Header
 
 
 class DetectorFieldlineRos(DetectorFieldline):
+    """
+    Ros bridge for detecting fieldlines.
+    """
+
     def __init__(self):
         super().__init__()
         self.robot_name = rospy.get_namespace()[1:-1]
@@ -53,8 +57,9 @@ class DetectorFieldlineRos(DetectorFieldline):
         # ]:
         #     return
         #
-        if not self.camera.ready():
-            return
+        # TODO shouldnt need since this is only called if we get an image
+        # if not self.camera.ready:
+        #     return
 
         # TODO ros
         if self.ground_truth:
@@ -88,7 +93,7 @@ class DetectorFieldlineRos(DetectorFieldline):
         # TODO own function
         if self.publish_point_cloud and self.point_cloud_publisher.get_num_connections() > 0:
 
-            # Publish straight base link
+            # Publish straight base link TODO why is this here
             self.tf_broadcaster.sendTransform(
                 self.camera.pose_base_link_straight.position,
                 self.camera.pose_base_link_straight.quaternion,

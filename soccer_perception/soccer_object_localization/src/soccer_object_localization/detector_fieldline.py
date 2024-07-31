@@ -9,6 +9,10 @@ from soccer_common.transformation import Transformation
 
 
 class DetectorFieldline(Detector):
+    """
+    Class for detecting field lines and converting to pointclouds.
+    """
+
     def __init__(self):
         super().__init__()
 

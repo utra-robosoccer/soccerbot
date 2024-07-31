@@ -6,6 +6,10 @@ from soccer_common.perception.camera_calculations import CameraCalculations
 
 
 class Detector:
+    """
+    Base class for object-localization  to group common functionality together.
+    """
+
     def __init__(self):
         self.camera = CameraCalculations()
         self.camera.reset_position()
@@ -19,8 +23,6 @@ class Detector:
         # Grass Mask
         # Hue > 115 needed
         grass_only = cv2.inRange(image, (35, 85, 0), (115, 255, 255))
-        # TODO what does this do and why does it need h. needed for goal post but not sure why
-        grass_only = cv2.vconcat([np.zeros((h + 1, grass_only.shape[1]), dtype=grass_only.dtype), grass_only])
 
         # Use odd numbers for all circular masks otherwise the line will shift location
         grass_only_0 = cv2.morphologyEx(grass_only, cv2.MORPH_OPEN, self.circular_mask(5))

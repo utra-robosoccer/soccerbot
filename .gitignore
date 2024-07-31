@@ -28,7 +28,8 @@ venv/
 /docs/generated/
 *.bag
 
-/soccer_perception/images/*
+/soccer_perception/data/images/*
+/soccer_perception/data/videos/*
 /soccer_strategy/src/soccer_strategy/log.txt
 .mypy_cache/
 cuda-ubuntu2004.pin.1
