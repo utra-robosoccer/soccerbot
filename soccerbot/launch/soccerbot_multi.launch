@@ -13,7 +13,7 @@
         <arg name="port" value="8765" />
     </include>
 
-<!--    <include file="$(find soccerbot)/launch/modules/gui.launch" />-->
+    <include file="$(find soccerbot)/launch/modules/gui.launch" />
 
     <include file="$(find soccerbot)/launch/soccerbot.launch" ns="robot1">
         <arg name="simulation" value="true" />
@@ -21,23 +21,23 @@
         <arg name="robot_model" value="$(arg robot_model)" />
     </include>
 
-    <include file="$(find soccerbot)/launch/soccerbot.launch" ns="robot2" unless="$(arg single)">
-        <arg name="simulation" value="true" />
-        <arg name="robot_id" value="2" />
-        <arg name="robot_model" value="bez1" />
-    </include>
+<!--    <include file="$(find soccerbot)/launch/soccerbot.launch" ns="robot2" unless="$(arg single)">-->
+<!--        <arg name="simulation" value="true" />-->
+<!--        <arg name="robot_id" value="2" />-->
+<!--        <arg name="robot_model" value="bez1" />-->
+<!--    </include>-->
 
-    <include file="$(find soccerbot)/launch/soccerbot.launch" ns="robot3" unless="$(arg single)">
-        <arg name="simulation" value="true" />
-        <arg name="robot_id" value="3" />
-        <arg name="robot_model" value="bez1" />
-    </include>
+<!--    <include file="$(find soccerbot)/launch/soccerbot.launch" ns="robot3" unless="$(arg single)">-->
+<!--        <arg name="simulation" value="true" />-->
+<!--        <arg name="robot_id" value="3" />-->
+<!--        <arg name="robot_model" value="bez1" />-->
+<!--    </include>-->
 
-    <include file="$(find soccerbot)/launch/soccerbot.launch" ns="robot4" unless="$(arg single)">
-        <arg name="simulation" value="true" />
-        <arg name="robot_id" value="4" />
-        <arg name="robot_model" value="bez1" />
-    </include>
+<!--    <include file="$(find soccerbot)/launch/soccerbot.launch" ns="robot4" unless="$(arg single)">-->
+<!--        <arg name="simulation" value="true" />-->
+<!--        <arg name="robot_id" value="4" />-->
+<!--        <arg name="robot_model" value="bez1" />-->
+<!--    </include>-->
 
 
 </launch>

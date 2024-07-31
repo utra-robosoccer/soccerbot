@@ -15,7 +15,6 @@ class DetectorFieldline(Detector):
 
     def __init__(self):
         super().__init__()
-
         self.point_cloud_max_distance = 5
         self.point_cloud_spacing = 30
         self.publish_point_cloud = True  # TODO is this necessary?

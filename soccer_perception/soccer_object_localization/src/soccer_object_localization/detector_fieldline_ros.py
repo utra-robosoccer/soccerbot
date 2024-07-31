@@ -60,7 +60,6 @@ class DetectorFieldlineRos(DetectorFieldline):
         # TODO shouldnt need since this is only called if we get an image
         # if not self.camera.ready:
         #     return
-
         # TODO ros
         if self.ground_truth:
             if not self.publish_point_cloud:
@@ -118,5 +117,5 @@ class DetectorFieldlineRos(DetectorFieldline):
 
 if __name__ == "__main__":
     rospy.init_node("detector_fieldline")
-    fieldline_detector = DetectorFieldline()
+    fieldline_detector = DetectorFieldlineRos()
     rospy.spin()

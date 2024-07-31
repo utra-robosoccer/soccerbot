@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import os
+from os.path import expanduser
 
 from rospy.impl.tcpros_base import DEFAULT_BUFF_SIZE
 from soccer_object_detection.object_detect_node import ObjectDetectionNode, bcolors
@@ -91,13 +92,16 @@ class ObjectDetectionNodeRos(ObjectDetectionNode):
 
 
 if __name__ == "__main__":
+    src_path = expanduser("~") + "/catkin_ws/src/soccerbot/soccer_perception/"
+
+    model_path = src_path + "soccer_object_detection/models/half_5.pt"
+
     parser = ArgumentParser()
-    parser.add_argument("--model", dest="model_path", default="../../models/July14.pt", help="pytorch model")
+    parser.add_argument("--model", dest="model_path", default=model_path, help="pytorch model")
     parser.add_argument("--num-feat", dest="num_feat", default=10, help="specify model size of the neural network")
     args, unknown = parser.parse_known_args()
-
     rospy.init_node("object_detector")
-    my_node = ObjectDetectionNode(args.model_path)
+    my_node = ObjectDetectionNodeRos(args.model_path)
 
     try:
         rospy.spin()

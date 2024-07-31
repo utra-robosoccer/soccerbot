@@ -46,6 +46,7 @@ class CameraCalculations(CameraBase):
             rot = [0, 0, 0, 1]
             self.pose = Transformation(trans, rot)
 
+    # TODO maybe in localization
     def find_floor_coordinate(self, pos: [int]) -> [int]:
         """
         From a camera pixel, get a coordinate on the floor
