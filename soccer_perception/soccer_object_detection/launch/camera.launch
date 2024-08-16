@@ -1,0 +1,38 @@
+<!-- Launches the sensors and darknet for the robot -->
+<launch>
+    <arg name="robot_model" default="bez2" />
+    <arg name="play_rosbag" default="false" />
+    <arg name="record_rosbag" default="true" />
+    <arg name="simulation" default="false" />
+
+    <arg name="param_file_name" value="$(arg robot_model)" unless="$(arg simulation)" />
+<!--    <arg name="rosbag_file" default="$(find soccer_common)/bags/bez2.bag" />-->
+
+<!--    <node pkg="rosbag" if="$(arg record_rosbag)" name="rosbag_record" type="record" args="-O $(arg rosbag_file) /robot1/imu_raw /robot1/joint_states /robot1/camera/image_raw /robot1/camera/camera_info" />-->
+
+<!--    <group if="$(arg play_rosbag)">-->
+<!--        <node pkg="rosbag" name="rosbag_player" type="play" args="$(arg rosbag_file)" />-->
+<!--        <include file="$(find soccerbot)/launch/modules/gui.launch" />-->
+<!--    </group>-->
+
+
+    <node name="camera" pkg="usb_cam" type="usb_cam_node" output="screen" respawn="true" respawn_delay="30"> -->
+        <param name="video_device" value="/dev/video0" />
+        <param name="image_width" value="640" />
+        <param name="image_height" value="480" />
+        <param name="pixel_format" value="yuyv" />
+        <param name="camera_frame_id" value="camera" />
+        <param name="io_method" value="mmap" />
+    </node>
+    <node pkg="soccer_object_localization" type="detector_fieldline_ros.py" name="ball_detector" output="screen">
+        <rosparam file="$(find soccer_object_localization)/config/$(arg param_file_name).yaml" command="load" />
+    </node>
+    <node name="object_detector" pkg="soccer_object_detection" type="object_detect_node_ros.py" output="screen" args="--model $(find soccer_object_detection)/models/half_5.pt">
+        <rosparam file="$(find soccer_object_detection)/config/$(arg param_file_name).yaml" command="load" />
+    </node>
+    <include file="$(find foxglove_bridge)/launch/foxglove_bridge.launch">
+        <arg name="port" value="8765" />
+    </include>
+
+
+</launch>

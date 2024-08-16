@@ -7,24 +7,26 @@
     <arg name="robot_name" value="robot$(arg robot_id)" />
     <arg name="map_name" default="robocup" />
 
+    <arg name="param_file_name" value="$(arg robot_model)_sim" if="$(arg simulation)" />
+    <arg name="param_file_name" value="$(arg robot_model)" unless="$(arg simulation)" />
+
     <env name="ROSCONSOLE_FORMAT" value="[${severity}] [${time: %r}] [${node} ${function} ${line}]: ${message}" />
     <env name="ROSCONSOLE_CONFIG_FILE" value="$(find soccerbot)/config/rosconsole.conf" />
-
-
 
     <!-- The master simulator controller -->
     <include file="$(find soccerbot)/launch/modules/webots.launch">
         <env name="ROBOT_MODEL" value="$(arg robot_model)" />
         <arg name="single" value="$(arg single)" />
     </include>
-    <include file="$(find soccerbot)/launch/modules/gui.launch" />
+
+    <include file="$(find foxglove_bridge)/launch/foxglove_bridge.launch">
+        <arg name="port" value="8765" />
+    </include>
 
     <group ns="robot1">
-            <include file="$(find soccerbot)/launch/modules/communication.launch" if="$(arg simulation)" />
-            <node pkg="soccer_strategy" type="game_controller_receiver.py" name="game_controller_receiver" output="screen" />
-
         <param name="robot_id" value="$(arg robot_id)" />
         <param name="/use_sim_time" value="$(arg simulation)" />
+
         <param name="robot_description" if="$(eval robot_model == 'bez1')" command="xacro '$(find bez1_description)/urdf/bez1.xacro'
             robot_name:=$(arg robot_name)
             model_type:=dae
@@ -33,10 +35,11 @@
             tf_prefix:=$(arg robot_name)
             "
         />
+        <include file="$(find soccerbot)/launch/modules/communication.launch" if="$(arg simulation)" />
 
         <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" />
 
-        <include file="$(find soccerbot)/launch/modules/navigation.launch">
+        <include file="$(find soccerbot)/launch/modules/control.launch">
             <arg name="simulation" value="$(arg simulation)" />
             <arg name="robot_model" value="$(arg robot_model)" />
         </include>
@@ -48,10 +51,14 @@
             <remap from="imu/data" to="imu_filtered" />
         </node>
 
-        <!-- Map server -->
-        <node name="map_server" pkg="map_server" type="map_server" args="$(find soccer_common)/maps/$(arg map_name).yaml">
-            <param name="frame_id" value="world" />
+
+        <node pkg="soccer_object_localization" type="detector_fieldline_ros.py" name="ball_detector" output="screen">
+            <rosparam file="$(find soccer_object_localization)/config/$(arg param_file_name).yaml" command="load" />
         </node>
+        <node name="object_detector" pkg="soccer_object_detection" type="object_detect_node_ros.py" output="screen" args="--model $(find soccer_object_detection)/models/half_5.pt">
+            <rosparam file="$(find soccer_object_detection)/config/$(arg param_file_name).yaml" command="load" />
+        </node>
+
     </group>
 
 

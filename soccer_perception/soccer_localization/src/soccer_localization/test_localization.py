@@ -10,11 +10,11 @@ import pytest
 import rosbag
 import rospy
 import sensor_msgs.point_cloud2 as pcl2
-
-from soccer_common.transformation import Transformation
 from soccer_localization.field import Circle, Field, Line, Point
 from soccer_localization.field_lines_ukf import FieldLinesUKF
 from soccer_localization.field_lines_ukf_ros import FieldLinesUKFROS
+
+from soccer_common.transformation import Transformation
 from soccer_msgs.msg import RobotState
 
 

@@ -2,8 +2,8 @@ import math
 from unittest import TestCase
 
 from sensor_msgs.msg import CameraInfo
+from soccer_object_detection.camera.camera_calculations import CameraCalculations
 
-from soccer_common.perception.camera_calculations import CameraCalculations
 from soccer_common.transformation import Transformation
 
 

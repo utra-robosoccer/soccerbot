@@ -93,7 +93,7 @@ class TestObjectDetection(TestCase):
                 break
             img = cv2.resize(frame, dsize=(640, 480))
 
-            n.camera.pose.orientation_euler = [0, np.pi / 8, 0]
+            n.camera.pose.orientation_euler = [0, np.pi / 8, 0]  # TODO why does this disable cover horizon
             detection_image, bbs_msg = n.get_model_output(img)  # 0.01
 
             if "DISPLAY" in os.environ:
@@ -109,7 +109,7 @@ class TestObjectDetection(TestCase):
 
         n = ObjectDetectionNode(model_path=model_path)
 
-        cap = cv2.VideoCapture(4)
+        cap = cv2.VideoCapture(0)
         if not cap.isOpened():
             print("Cannot open camera")
             exit()

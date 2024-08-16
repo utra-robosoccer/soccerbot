@@ -13,9 +13,9 @@ from geometry_msgs.msg import PoseStamped
 from rosgraph_msgs.msg import Clock
 from scipy.spatial.transform import Rotation as R
 from sensor_msgs.msg import JointState
+from soccer_object_detection.camera import Camera
 from timeout_decorator import timeout_decorator
 
-from soccer_common.perception.camera import Camera
 from soccer_msgs.msg import BoundingBoxes, RobotState
 from soccer_strategy.old.team import Team
 

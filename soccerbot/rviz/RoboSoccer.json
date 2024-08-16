@@ -205,13 +205,13 @@
     "3D!3l175lw": {
       "cameraState": {
         "perspective": true,
-        "distance": 4.292775278843672,
-        "phi": 59.66372248538623,
-        "thetaOffset": 53.61634160767656,
+        "distance": 6.147137354478574,
+        "phi": 21.869216176830875,
+        "thetaOffset": 70.43877155717223,
         "targetOffset": [
-          -0.4327897329893991,
-          -2.051331864986416,
-          2.312661527082919e-16
+          0.36831105874015047,
+          -3.251943760525912,
+          8.072767753215658e-17
         ],
         "target": [
           0,
@@ -392,14 +392,14 @@
       },
       "layers": {
         "0eef232e-4e7d-4770-be66-56afaed7881f": {
-          "visible": false,
+          "visible": true,
           "frameLocked": true,
           "label": "",
           "instanceId": "0eef232e-4e7d-4770-be66-56afaed7881f",
           "layerId": "foxglove.Urdf",
-          "sourceType": "url",
-          "url": "file:////home/jonathan/catkin_ws/src/soccerbot/bez1_description/urdf/bez1.urdf",
-          "filePath": "home/jonathan/catkin_ws/src/soccerbot/bez1_description/urdf/bez1.urdf",
+          "sourceType": "filePath",
+          "url": "file:////home/jonathan/catkin_ws/src/soccerbot/soccer_description/bez1_description/urdf/bez1.urdf",
+          "filePath": "home/jonathan/catkin_ws/src/soccerbot/soccer_description/bez1_description/urdf/bez1.urdf",
           "parameter": "/robot1/robot_description",
           "topic": "",
           "framePrefix": "robot1",
@@ -458,7 +458,8 @@
     },
     "RosOut!46j7atp": {
       "searchTerms": [],
-      "minLogLevel": 2
+      "minLogLevel": 2,
+      "nameFilter": {}
     }
   },
   "globalVariables": {},

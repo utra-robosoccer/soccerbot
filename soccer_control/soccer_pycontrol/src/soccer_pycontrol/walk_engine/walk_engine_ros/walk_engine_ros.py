@@ -18,6 +18,8 @@ from std_msgs.msg import Empty
 from soccer_common import Transformation
 from soccer_msgs.msg import RobotState
 
+# TODO clean up and remove unused
+
 
 class WalkEngineROS(WalkEngine):
     def __init__(self, bez: BezROS):
@@ -137,7 +139,7 @@ class WalkEngineROS(WalkEngine):
             pass
         self.new_goal = pose
 
-    def run(self, single_trajectory=False):
+    def run(self, single_trajectory=True):
         # set time settings
         self.t = 0
         r = rospy.Rate(1 / self.PYBULLET_STEP)
@@ -198,6 +200,7 @@ class WalkEngineROS(WalkEngine):
             #     continue
 
             # New goal added
+            # TODO fix this layer it is a mess and needs global loc
             if self.new_goal != self.goal and self.step_planner.robot_path is None:
                 if not single_trajectory:
                     pose_updated = self.bez.update_robot_pose()

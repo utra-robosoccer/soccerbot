@@ -4,19 +4,24 @@ import numpy as np
 import pybullet as pb
 import pytest
 from soccer_pycontrol.model.bez import Bez
-from soccer_pycontrol.old.links import Links
 from soccer_pycontrol.pybullet_usage.pybullet_world import PybulletWorld
 from soccer_pycontrol.walk_engine.walk_engine import WalkEngine
+
+from soccer_common import Transformation
 
 
 class TestPybullet(unittest.TestCase):
 
     def test_imu(self):
         world = PybulletWorld(camera_yaw=45, real_time=True, rate=100)
-        bez = Bez(robot_model="bez2")
+        # pose = Transformation()
+        pose = Transformation(position=[0, 0, 0.070], euler=[0, -1.57, 0])
+        pose = Transformation(position=[0, 0, 0.070], euler=[0, 1.57, 0])
+        bez = Bez(robot_model="bez2", pose=pose)
         world.wait(100)
         for i in range(100):
-            print(bez.sensors.get_imu().orientation_euler)
+            [_, pitch, roll] = bez.sensors.get_euler_angles()
+            print(bez.fallen(pitch))
             world.step()
         # TODO add more
 
@@ -81,7 +86,8 @@ class TestPybullet(unittest.TestCase):
             # if tf.fallen(pitch):
             #     pb.applyExternalForce(p.model.body, Links.TORSO, [0, 5, 0], [0, 0, 0], pb.LINK_FRAME)
             # p.model.set_pose()
-            pb.applyExternalForce(tf.bez.model.body, Links.TORSO, [3, 0, 0], [0, 0, 0], pb.LINK_FRAME)
+            # TODO fix link alignment
+            # pb.applyExternalForce(tf.bez.model.body, Links.TORSO, [3, 0, 0], [0, 0, 0], pb.LINK_FRAME)
             tf.stabilize_stand(pitch, roll)
             tf.world.step()
             tf.t += +0.01

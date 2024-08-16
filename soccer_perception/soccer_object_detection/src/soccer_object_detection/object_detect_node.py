@@ -5,8 +5,8 @@ import enum
 import numpy as np
 import torch
 from cv2 import Mat
+from soccer_object_detection.camera.camera_calculations import CameraCalculations
 
-from soccer_common import CameraCalculations
 from soccer_msgs.msg import BoundingBox, BoundingBoxes
 
 

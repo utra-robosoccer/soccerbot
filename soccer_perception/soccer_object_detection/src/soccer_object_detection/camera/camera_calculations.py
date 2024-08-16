@@ -1,9 +1,9 @@
 import math
 
 import numpy as np
+from soccer_object_detection.camera.camera_base import CameraBase
 
 from soccer_common import Transformation
-from soccer_common.perception.camera_base import CameraBase
 
 
 class CameraCalculations(CameraBase):

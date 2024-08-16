@@ -136,6 +136,7 @@ class Field:
     def matchPointsWithMapIterative(
         self, current_transform: Transformation, point_cloud_array: np.array, iterations=3, localizing=False
     ) -> Union[Tuple[Transformation, List[int]], None]:
+        # TODO compare with cv::estimateTranslation3D
         match_iterations = iterations
         offset_transform_cumulative = Transformation()
         transform_confidence = None

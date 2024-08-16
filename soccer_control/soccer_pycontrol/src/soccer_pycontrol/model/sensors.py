@@ -2,7 +2,6 @@ from typing import List
 
 import numpy as np
 import pybullet as pb
-from soccer_pycontrol.old.links import Links
 
 from soccer_common import Transformation
 
@@ -66,21 +65,22 @@ class Sensors:
         :return: boolean array of 8 contact points on both feet, True: that point is touching the ground False: otherwise
         """
         locations = [False] * 8
-
-        right_pts = pb.getContactPoints(bodyA=self.body, bodyB=floor, linkIndexA=Links.RIGHT_LEG_6)
-        left_pts = pb.getContactPoints(bodyA=self.body, bodyB=floor, linkIndexA=Links.LEFT_LEG_6)
-
-        right_center = np.array(pb.getLinkState(self.body, linkIndex=Links.RIGHT_LEG_6)[4])
-        left_center = np.array(pb.getLinkState(self.body, linkIndex=Links.LEFT_LEG_6)[4])
-
-        right_tr = Transformation(quaternion=pb.getLinkState(self.body, linkIndex=Links.RIGHT_LEG_6)[5]).rotation_matrix
-        left_tr = Transformation(quaternion=pb.getLinkState(self.body, linkIndex=Links.LEFT_LEG_6)[5]).rotation_matrix
-
-        # TODO verify calculations
-        for point in right_pts:
-            index = np.signbit(np.matmul(right_tr, point[5] - right_center))[0:2]
-            locations[index[1] + index[0] * 2] = True
-        for point in left_pts:
-            index = np.signbit(np.matmul(left_tr, point[5] - left_center))[0:2]
-            locations[index[1] + (index[0] * 2) + 4] = True
+        # TODO fix the links
+        #
+        # right_pts = pb.getContactPoints(bodyA=self.body, bodyB=floor, linkIndexA=Links.RIGHT_LEG_6)
+        # left_pts = pb.getContactPoints(bodyA=self.body, bodyB=floor, linkIndexA=Links.LEFT_LEG_6)
+        #
+        # right_center = np.array(pb.getLinkState(self.body, linkIndex=Links.RIGHT_LEG_6)[4])
+        # left_center = np.array(pb.getLinkState(self.body, linkIndex=Links.LEFT_LEG_6)[4])
+        #
+        # right_tr = Transformation(quaternion=pb.getLinkState(self.body, linkIndex=Links.RIGHT_LEG_6)[5]).rotation_matrix
+        # left_tr = Transformation(quaternion=pb.getLinkState(self.body, linkIndex=Links.LEFT_LEG_6)[5]).rotation_matrix
+        #
+        # # TODO verify calculations
+        # for point in right_pts:
+        #     index = np.signbit(np.matmul(right_tr, point[5] - right_center))[0:2]
+        #     locations[index[1] + index[0] * 2] = True
+        # for point in left_pts:
+        #     index = np.signbit(np.matmul(left_tr, point[5] - left_center))[0:2]
+        #     locations[index[1] + (index[0] * 2) + 4] = True
         return locations
