@@ -52,8 +52,8 @@ class LoadModel:  # TODO Maybe rename to body
 
         [y, _, _] = pose.orientation_euler
         r = 0
-        if pb.getNumJoints(self.body) > 20:
-            r = -0.64
+        # if pb.getNumJoints(self.body) > 20:
+        #     r = -0.64
         self.pose.orientation_euler = [y, 0, r]  # TODO need to fix this
         if pb.isConnected():
             pb.resetBasePositionAndOrientation(self.body, self.pose.position, self.pose.quaternion)

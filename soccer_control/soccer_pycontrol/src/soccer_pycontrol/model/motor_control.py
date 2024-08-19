@@ -12,7 +12,7 @@ class MotorControl:
     # TODO update with the modified for pycontrol
     def __init__(self, body: pb.loadURDF, motor_names: list):
         self.body = body
-        self.motor_names = motor_names  # [pb.getJointInfo(self.body, i)[1].decode("utf-8") for i in range(18)]
+        self.motor_names = [pb.getJointInfo(self.body, i)[1].decode("utf-8") for i in range(18)]  # 25
         self.numb_of_motors = len(self.motor_names)
         # Todo make it numpy and add getter and setters
         self.configuration = [0.0] * self.numb_of_motors

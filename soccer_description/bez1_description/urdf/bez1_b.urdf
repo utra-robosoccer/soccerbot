@@ -849,7 +849,19 @@
     <mu1>0.2</mu1>
     <mu2>0.2</mu2>
   </gazebo>
-
+  <link name="/imu_link">
+    <inertial>
+      <mass value="0.01"/>
+      <origin rpy="0  0  0" xyz="0 0 0"/>
+      <inertia ixx="1e-9" ixy="0" ixz="0" iyy="1e-9" iyz="0" izz="1e-9"/>
+    </inertial>
+  </link>
+  <joint name="/torso_imu" type="fixed">
+    <parent link="/torso"/>
+    <child link="/imu_link"/>
+    <origin rpy="0 0 0" xyz="0.0 0 0.000"/>
+    <axis xyz="0 0 0"/>
+  </joint>
   <gazebo reference="/imu_link">
     <gravity>true</gravity>
     <sensor name="imu_sensor" type="imu">

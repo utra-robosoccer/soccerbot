@@ -1,0 +1,36 @@
+{
+    "documentId": "62a76f7d866be3ef835dd2e4",
+    "assemblyName": "robot",
+    "outputFormat": "urdf",
+    "drawFrames": false,
+    // "drawCollisions": true,
+    "mergeSTLs": "visual",
+    "simplifySTLs": "visual",
+    "maxSTLSize": 3,
+    "useScads": true,
+    "ignoreLimits": false,
+
+    "jointMaxEffort": 10,
+    "jointMaxVelocity": 6,
+
+    "whitelist": [
+        "mx-64at_ar",
+        "foot_plate",
+        "cleat",
+        "mx106",
+        "u_side_femur_2023",
+        "u_side_small_with_trace_2023",
+        "u_side_femur_mir_2023",
+        "hand_2023",
+        "head_plate_g_2023",
+        "head_plate_d_2023",
+        "u_side_neck",
+        "u_base_64",
+        "u_base_106",
+        "u_side_small_2023",
+        "u_base_motors_blocs",
+        "x_plate_23_front",
+        "tibia_plate_2023",
+        "humerus_plate"
+    ]
+}

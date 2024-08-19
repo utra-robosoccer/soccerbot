@@ -28,20 +28,20 @@ class Bez:
         self.motor_control = MotorControl(self.model.body, self.data.motor_names)
         self.sensors = Sensors(self.model.body)
 
-        self.ik_actions = IKActions(self.data)
+        # self.ik_actions = IKActions(self.data)
 
-    def ready(self) -> None:
-        """
-        Puts the robot into a ready pose to begin walking
-        """
-        self.motor_control.set_target_angles(self.ik_actions.ready())
-        # TODO maybe change name to action or make it more clear
-
-    def find_joint_angles(self, torso_to_right_foot: Transformation, torso_to_left_foot: Transformation):
-        r_theta = self.ik_actions.get_right_leg_angles(torso_to_right_foot)
-        l_theta = self.ik_actions.get_left_leg_angles(torso_to_left_foot)
-        self.motor_control.set_right_leg_target_angles(r_theta[0:6])
-        self.motor_control.set_left_leg_target_angles(l_theta[0:6])
+    # def ready(self) -> None:
+    #     """
+    #     Puts the robot into a ready pose to begin walking
+    #     """
+    #     self.motor_control.set_target_angles(self.ik_actions.ready())
+    #     # TODO maybe change name to action or make it more clear
+    #
+    # def find_joint_angles(self, torso_to_right_foot: Transformation, torso_to_left_foot: Transformation):
+    #     r_theta = self.ik_actions.get_right_leg_angles(torso_to_right_foot)
+    #     l_theta = self.ik_actions.get_left_leg_angles(torso_to_left_foot)
+    #     self.motor_control.set_right_leg_target_angles(r_theta[0:6])
+    #     self.motor_control.set_left_leg_target_angles(l_theta[0:6])
 
     @staticmethod
     def fallen(pitch: float) -> bool:
