@@ -10,9 +10,19 @@ class MotorControl:
     """
 
     # TODO update with the modified for pycontrol
-    def __init__(self, body: pb.loadURDF, motor_names: list):
+    def __init__(self, robot_model: str, body: pb.loadURDF):
         self.body = body
-        self.motor_names = [pb.getJointInfo(self.body, i)[1].decode("utf-8") for i in range(18)]  # 25
+
+        mot = []
+        for i in range(pb.getNumJoints(self.body)):
+            joint_info = pb.getJointInfo(self.body, i)
+            if joint_info[2] == pb.JOINT_REVOLUTE:
+                mot.append(joint_info[1].decode("utf-8"))
+        self.motor_names = mot
+
+        if robot_model == "sigmaban":
+            self.motor_names = [pb.getJointInfo(self.body, i)[1].decode("utf-8") for i in range(pb.getNumJoints(self.body))]
+
         self.numb_of_motors = len(self.motor_names)
         # Todo make it numpy and add getter and setters
         self.configuration = [0.0] * self.numb_of_motors
@@ -47,42 +57,42 @@ class MotorControl:
         self.configuration[0 : self.numb_of_motors] = target_angles
 
     def set_head_target_angles(self, target_angles: np.ndarray) -> None:
-        self.configuration[self.motor_names.index("head_motor_0") : self.motor_names.index("head_motor_1") + 1] = (
+        self.configuration[self.motor_names.index("head_yaw") : self.motor_names.index("head_pitch") + 1] = (
             target_angles  # TODO find new links number
         )
 
     def set_right_arm_target_angles(self, target_angles: np.ndarray) -> None:
-        self.configuration[self.motor_names.index("right_arm_motor_0") : self.motor_names.index("right_arm_motor_2") + 1] = (
+        self.configuration[self.motor_names.index("right_shoulder_pitch") : self.motor_names.index("right_elbow") + 1] = (
             target_angles  # TODO find new links number
         )
 
     def set_left_arm_target_angles(self, target_angles: np.ndarray) -> None:
-        self.configuration[self.motor_names.index("left_arm_motor_0") : self.motor_names.index("left_arm_motor_2") + 1] = (
+        self.configuration[self.motor_names.index("left_shoulder_pitch") : self.motor_names.index("left_elbow") + 1] = (
             target_angles  # TODO find new links number
         )
 
     def set_right_leg_target_angles(self, target_angles: np.ndarray) -> None:
-        self.configuration[self.motor_names.index("right_leg_motor_0") : self.motor_names.index("right_leg_motor_5") + 1] = (
+        self.configuration[self.motor_names.index("right_hip_yaw") : self.motor_names.index("right_ankle_roll") + 1] = (
             target_angles  # TODO find new links number
         )
 
     def set_left_leg_target_angles(self, target_angles: np.ndarray) -> None:
-        self.configuration[self.motor_names.index("left_leg_motor_0") : self.motor_names.index("left_leg_motor_5") + 1] = (
+        self.configuration[self.motor_names.index("left_hip_yaw") : self.motor_names.index("left_ankle_roll") + 1] = (
             target_angles  # TODO find new links number
         )
 
     def set_leg_joint_2_target_angle(self, target: float) -> None:
-        self.configuration_offset[self.motor_names.index("left_leg_motor_1")] -= target
-        self.configuration_offset[self.motor_names.index("right_leg_motor_1")] += target
+        self.configuration_offset[self.motor_names.index("left_hip_roll")] -= target
+        self.configuration_offset[self.motor_names.index("right_hip_roll")] += target
 
     def set_leg_joint_3_target_angle(self, target: float) -> None:
-        self.configuration_offset[self.motor_names.index("left_leg_motor_2")] = +target
-        self.configuration_offset[self.motor_names.index("right_leg_motor_2")] = +target
+        self.configuration_offset[self.motor_names.index("left_hip_pitch")] = +target
+        self.configuration_offset[self.motor_names.index("right_hip_pitch")] = +target
 
     def set_leg_joint_5_target_angle(self, target: float) -> None:
-        self.configuration_offset[self.motor_names.index("left_leg_motor_4")] = target
-        self.configuration_offset[self.motor_names.index("right_leg_motor_4")] = target
+        self.configuration_offset[self.motor_names.index("left_ankle_pitch")] = target
+        self.configuration_offset[self.motor_names.index("right_ankle_pitch")] = target
 
     def set_leg_joint_6_target_angle(self, target: float) -> None:
-        self.configuration_offset[self.motor_names.index("left_leg_motor_5")] -= target
-        self.configuration_offset[self.motor_names.index("right_leg_motor_5")] += target
+        self.configuration_offset[self.motor_names.index("left_ankle_roll")] -= target
+        self.configuration_offset[self.motor_names.index("right_ankle_roll")] += target

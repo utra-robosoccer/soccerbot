@@ -9,9 +9,9 @@ class LoadModel:  # TODO Maybe rename to body
     """
 
     # TODO dont know if i like this file
-    def __init__(self, urdf_model_path: str, walking_torso_height: float, pose: Transformation, fixed_base: bool):
+    def __init__(self, robot_model: str, urdf_model_path: str, walking_torso_height: float, pose: Transformation, fixed_base: bool):
         self.pose = pose
-
+        self.robot_model = robot_model
         self.body = self.load_urdf_pybullet(urdf_model_path, fixed_base)
         self.walking_torso_height = walking_torso_height
 
@@ -52,8 +52,9 @@ class LoadModel:  # TODO Maybe rename to body
 
         [y, _, _] = pose.orientation_euler
         r = 0
-        # if pb.getNumJoints(self.body) > 20:
-        #     r = -0.64
+        if self.robot_model == "bez2":
+            r = -0.64
+
         self.pose.orientation_euler = [y, 0, r]  # TODO need to fix this
         if pb.isConnected():
             pb.resetBasePositionAndOrientation(self.body, self.pose.position, self.pose.quaternion)

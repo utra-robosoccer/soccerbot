@@ -10,7 +10,7 @@ from soccer_common import Transformation
 
 class TestPybullet(unittest.TestCase):
     @staticmethod
-    def custom_walk(cameraTargetPosition: list, start_pose: Transformation, goal_pose: Transformation, robot_model: str = "bez2"):
+    def custom_walk(cameraTargetPosition: list, start_pose: Transformation, goal_pose: Transformation, robot_model: str = "bez1"):
         world = PybulletWorld(camera_yaw=90, real_time=True, rate=100, cameraTargetPosition=cameraTargetPosition)
         bez = Bez(robot_model=robot_model)
         tf = WalkEngine(world, bez)

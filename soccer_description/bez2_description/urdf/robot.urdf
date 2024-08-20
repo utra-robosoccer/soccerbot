@@ -40,337 +40,7 @@
   <material name="plastic_matte_yellow">
     <color rgba="0.9098039215686274 0.6784313725490196 0.13725490196078433 1.0"/>
   </material>
-  <transmission name="right_hip_yaw_tran">
-    <type>transmission_interface/SimpleTransmission</type>
-    <joint name="right_hip_yaw">
-      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
-    </joint>
-    <actuator name="right_hip_yaw_actr">
-      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
-      <mechanicalReduction>1</mechanicalReduction>
-    </actuator>
-  </transmission>
-  <transmission name="left_hip_yaw_tran">
-    <type>transmission_interface/SimpleTransmission</type>
-    <joint name="left_hip_yaw">
-      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
-    </joint>
-    <actuator name="left_hip_yaw_actr">
-      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
-      <mechanicalReduction>1</mechanicalReduction>
-    </actuator>
-  </transmission>
-  <transmission name="left_hip_roll_tran">
-    <type>transmission_interface/SimpleTransmission</type>
-    <joint name="left_hip_roll">
-      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
-    </joint>
-    <actuator name="left_hip_roll_actr">
-      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
-      <mechanicalReduction>1</mechanicalReduction>
-    </actuator>
-  </transmission>
-  <transmission name="right_hip_roll_tran">
-    <type>transmission_interface/SimpleTransmission</type>
-    <joint name="right_hip_roll">
-      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
-    </joint>
-    <actuator name="right_hip_roll_actr">
-      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
-      <mechanicalReduction>1</mechanicalReduction>
-    </actuator>
-  </transmission>
-  <transmission name="left_hip_pitch_tran">
-    <type>transmission_interface/SimpleTransmission</type>
-    <joint name="left_hip_pitch">
-      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
-    </joint>
-    <actuator name="left_hip_pitch_actr">
-      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
-      <mechanicalReduction>1</mechanicalReduction>
-    </actuator>
-  </transmission>
-  <transmission name="right_hip_pitch_tran">
-    <type>transmission_interface/SimpleTransmission</type>
-    <joint name="right_hip_pitch">
-      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
-    </joint>
-    <actuator name="right_hip_pitch_actr">
-      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
-      <mechanicalReduction>1</mechanicalReduction>
-    </actuator>
-  </transmission>
-  <transmission name="left_knee_tran">
-    <type>transmission_interface/SimpleTransmission</type>
-    <joint name="left_knee">
-      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
-    </joint>
-    <actuator name="left_knee_actr">
-      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
-      <mechanicalReduction>1</mechanicalReduction>
-    </actuator>
-  </transmission>
-  <transmission name="right_knee_tran">
-    <type>transmission_interface/SimpleTransmission</type>
-    <joint name="right_knee">
-      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
-    </joint>
-    <actuator name="right_knee_actr">
-      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
-      <mechanicalReduction>1</mechanicalReduction>
-    </actuator>
-  </transmission>
-  <transmission name="left_ankle_pitch_tran">
-    <type>transmission_interface/SimpleTransmission</type>
-    <joint name="left_ankle_pitch">
-      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
-    </joint>
-    <actuator name="left_ankle_pitch_actr">
-      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
-      <mechanicalReduction>1</mechanicalReduction>
-    </actuator>
-  </transmission>
-  <transmission name="right_ankle_pitch_tran">
-    <type>transmission_interface/SimpleTransmission</type>
-    <joint name="right_ankle_pitch">
-      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
-    </joint>
-    <actuator name="right_ankle_pitch_actr">
-      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
-      <mechanicalReduction>1</mechanicalReduction>
-    </actuator>
-  </transmission>
-  <transmission name="right_ankle_roll_tran">
-    <type>transmission_interface/SimpleTransmission</type>
-    <joint name="right_ankle_roll">
-      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
-    </joint>
-    <actuator name="right_ankle_roll_actr">
-      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
-      <mechanicalReduction>1</mechanicalReduction>
-    </actuator>
-  </transmission>
-  <transmission name="left_ankle_roll_tran">
-    <type>transmission_interface/SimpleTransmission</type>
-    <joint name="left_ankle_roll">
-      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
-    </joint>
-    <actuator name="left_ankle_roll_actr">
-      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
-      <mechanicalReduction>1</mechanicalReduction>
-    </actuator>
-  </transmission>
-  <transmission name="head_yaw_tran">
-    <type>transmission_interface/SimpleTransmission</type>
-    <joint name="head_yaw">
-      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
-    </joint>
-    <actuator name="head_yaw_actr">
-      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
-      <mechanicalReduction>1</mechanicalReduction>
-    </actuator>
-  </transmission>
-  <transmission name="head_pitch_tran">
-    <type>transmission_interface/SimpleTransmission</type>
-    <joint name="head_pitch">
-      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
-    </joint>
-    <actuator name="head_pitch_actr">
-      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
-      <mechanicalReduction>1</mechanicalReduction>
-    </actuator>
-  </transmission>
-  <transmission name="right_shoulder_pitch_tran">
-    <type>transmission_interface/SimpleTransmission</type>
-    <joint name="right_shoulder_pitch">
-      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
-    </joint>
-    <actuator name="right_shoulder_pitch_actr">
-      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
-      <mechanicalReduction>1</mechanicalReduction>
-    </actuator>
-  </transmission>
-  <transmission name="left_shoulder_pitch_tran">
-    <type>transmission_interface/SimpleTransmission</type>
-    <joint name="left_shoulder_pitch">
-      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
-    </joint>
-    <actuator name="left_shoulder_pitch_actr">
-      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
-      <mechanicalReduction>1</mechanicalReduction>
-    </actuator>
-  </transmission>
-  <transmission name="left_shoulder_roll_tran">
-    <type>transmission_interface/SimpleTransmission</type>
-    <joint name="left_shoulder_roll">
-      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
-    </joint>
-    <actuator name="left_shoulder_roll_actr">
-      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
-      <mechanicalReduction>1</mechanicalReduction>
-    </actuator>
-  </transmission>
-  <transmission name="right_shoulder_roll_tran">
-    <type>transmission_interface/SimpleTransmission</type>
-    <joint name="right_shoulder_roll">
-      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
-    </joint>
-    <actuator name="right_shoulder_roll_actr">
-      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
-      <mechanicalReduction>1</mechanicalReduction>
-    </actuator>
-  </transmission>
-  <transmission name="left_elbow_tran">
-    <type>transmission_interface/SimpleTransmission</type>
-    <joint name="left_elbow">
-      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
-    </joint>
-    <actuator name="left_elbow_actr">
-      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
-      <mechanicalReduction>1</mechanicalReduction>
-    </actuator>
-  </transmission>
-  <transmission name="right_elbow_tran">
-    <type>transmission_interface/SimpleTransmission</type>
-    <joint name="right_elbow">
-      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
-    </joint>
-    <actuator name="right_elbow_actr">
-      <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
-      <mechanicalReduction>1</mechanicalReduction>
-    </actuator>
-  </transmission>
-  <gazebo>
-    <plugin filename="libgazebo_ros_control.so" name="control"/>
-  </gazebo>
-  <gazebo reference="base_link">
-    <material>Gazebo/Silver</material>
-    <mu1>0.2</mu1>
-    <mu2>0.2</mu2>
-    <selfCollide>true</selfCollide>
-    <gravity>true</gravity>
-  </gazebo>
-  <gazebo reference="fr12_h101_v1_1">
-    <material>Gazebo/Silver</material>
-    <mu1>0.2</mu1>
-    <mu2>0.2</mu2>
-    <selfCollide>true</selfCollide>
-  </gazebo>
-  <gazebo reference="fr12_h101_v1_2">
-    <material>Gazebo/Silver</material>
-    <mu1>0.2</mu1>
-    <mu2>0.2</mu2>
-    <selfCollide>true</selfCollide>
-  </gazebo>
-  <gazebo reference="hip_v1_1">
-    <material>Gazebo/Silver</material>
-    <mu1>0.2</mu1>
-    <mu2>0.2</mu2>
-    <selfCollide>true</selfCollide>
-  </gazebo>
-  <gazebo reference="hip_v1_2">
-    <material>Gazebo/Silver</material>
-    <mu1>0.2</mu1>
-    <mu2>0.2</mu2>
-    <selfCollide>true</selfCollide>
-  </gazebo>
-  <gazebo reference="thigh_v1_1">
-    <material>Gazebo/Silver</material>
-    <mu1>0.2</mu1>
-    <mu2>0.2</mu2>
-    <selfCollide>true</selfCollide>
-  </gazebo>
-  <gazebo reference="thigh_v1_2">
-    <material>Gazebo/Silver</material>
-    <mu1>0.2</mu1>
-    <mu2>0.2</mu2>
-    <selfCollide>true</selfCollide>
-  </gazebo>
-  <gazebo reference="calf_v1_1">
-    <material>Gazebo/Silver</material>
-    <mu1>0.2</mu1>
-    <mu2>0.2</mu2>
-    <selfCollide>true</selfCollide>
-  </gazebo>
-  <gazebo reference="calf_v1_2">
-    <material>Gazebo/Silver</material>
-    <mu1>0.2</mu1>
-    <mu2>0.2</mu2>
-    <selfCollide>true</selfCollide>
-  </gazebo>
-  <gazebo reference="ankle_v2_1">
-    <material>Gazebo/Silver</material>
-    <mu1>0.2</mu1>
-    <mu2>0.2</mu2>
-    <selfCollide>true</selfCollide>
-  </gazebo>
-  <gazebo reference="ankle_v2_2">
-    <material>Gazebo/Silver</material>
-    <mu1>0.2</mu1>
-    <mu2>0.2</mu2>
-    <selfCollide>true</selfCollide>
-  </gazebo>
-  <gazebo reference="right_foot_v2_1">
-    <material>Gazebo/Silver</material>
-    <mu1>0.2</mu1>
-    <mu2>0.2</mu2>
-    <selfCollide>true</selfCollide>
-  </gazebo>
-  <gazebo reference="left_foot_v2_1">
-    <material>Gazebo/Silver</material>
-    <mu1>0.2</mu1>
-    <mu2>0.2</mu2>
-    <selfCollide>true</selfCollide>
-  </gazebo>
-  <gazebo reference="Head_Yaw_Assembly_v1_1">
-    <material>Gazebo/Silver</material>
-    <mu1>0.2</mu1>
-    <mu2>0.2</mu2>
-    <selfCollide>true</selfCollide>
-  </gazebo>
-  <gazebo reference="Head_Pitch_Assembly_v4_1">
-    <material>Gazebo/Silver</material>
-    <mu1>0.2</mu1>
-    <mu2>0.2</mu2>
-    <selfCollide>true</selfCollide>
-  </gazebo>
-  <gazebo reference="right_shoulder_v2_1">
-    <material>Gazebo/Silver</material>
-    <mu1>0.2</mu1>
-    <mu2>0.2</mu2>
-    <selfCollide>true</selfCollide>
-  </gazebo>
-  <gazebo reference="left_shoulder_v1_1">
-    <material>Gazebo/Silver</material>
-    <mu1>0.2</mu1>
-    <mu2>0.2</mu2>
-    <selfCollide>true</selfCollide>
-  </gazebo>
-  <gazebo reference="bicep_v1_1">
-    <material>Gazebo/Silver</material>
-    <mu1>0.2</mu1>
-    <mu2>0.2</mu2>
-    <selfCollide>true</selfCollide>
-  </gazebo>
-  <gazebo reference="bicep_v1_2">
-    <material>Gazebo/Silver</material>
-    <mu1>0.2</mu1>
-    <mu2>0.2</mu2>
-    <selfCollide>true</selfCollide>
-  </gazebo>
-  <gazebo reference="Bez1_forearm_v7_1">
-    <material>Gazebo/Silver</material>
-    <mu1>0.2</mu1>
-    <mu2>0.2</mu2>
-    <selfCollide>true</selfCollide>
-  </gazebo>
-  <gazebo reference="Bez1_forearm_v7_2">
-    <material>Gazebo/Silver</material>
-    <mu1>0.2</mu1>
-    <mu2>0.2</mu2>
-    <selfCollide>true</selfCollide>
-  </gazebo>
-  <link name="torso">
+  <link name="trunk">
     <inertial>
       <origin rpy="0 0 0" xyz="-2.6182166493521018e-05 0.0037391632790891283 -0.07310917852477573"/>
       <mass value="1.62191101903404"/>
@@ -379,7 +49,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="package://bez2_description/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="/home/jonathan/catkin_ws/src/soccerbot/soccer_description/bez2_description/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="steel_satin"/>
     </visual>
@@ -399,7 +69,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="-0.009539 -0.002537 -0.03138"/>
       <geometry>
-        <mesh filename="package://bez2_description/meshes/Head_Yaw_Assembly_v1_1.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="/home/jonathan/catkin_ws/src/soccerbot/soccer_description/bez2_description/meshes/Head_Yaw_Assembly_v1_1.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="plastic_matte_yellow"/>
     </visual>
@@ -419,7 +89,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="-0.009539 0.016963 -0.05638"/>
       <geometry>
-        <mesh filename="package://bez2_description/meshes/Head_Pitch_Assembly_v4_1.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="/home/jonathan/catkin_ws/src/soccerbot/soccer_description/bez2_description/meshes/Head_Pitch_Assembly_v4_1.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="plastic_matte_yellow"/>
     </visual>
@@ -439,7 +109,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="-0.006539 -0.112237 0.00062"/>
       <geometry>
-        <mesh filename="package://bez2_description/meshes/left_shoulder_v1_1.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="/home/jonathan/catkin_ws/src/soccerbot/soccer_description/bez2_description/meshes/left_shoulder_v1_1.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="steel_satin"/>
     </visual>
@@ -459,7 +129,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="-0.027039 -0.141737 0.02162"/>
       <geometry>
-        <mesh filename="package://bez2_description/meshes/bicep_v1_1.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="/home/jonathan/catkin_ws/src/soccerbot/soccer_description/bez2_description/meshes/bicep_v1_1.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="steel_satin"/>
     </visual>
@@ -479,7 +149,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="-0.008351 -0.163675 0.10837"/>
       <geometry>
-        <mesh filename="package://bez2_description/meshes/Bez1_forearm_v7_1.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="/home/jonathan/catkin_ws/src/soccerbot/soccer_description/bez2_description/meshes/Bez1_forearm_v7_1.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="plastic_matte_yellow"/>
     </visual>
@@ -499,7 +169,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="-0.018839 -0.067737 0.20662"/>
       <geometry>
-        <mesh filename="package://bez2_description/meshes/fr12_h101_v1_2.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="/home/jonathan/catkin_ws/src/soccerbot/soccer_description/bez2_description/meshes/fr12_h101_v1_2.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="steel_satin"/>
     </visual>
@@ -519,7 +189,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0.001661 -0.067737 0.23462"/>
       <geometry>
-        <mesh filename="package://bez2_description/meshes/hip_v1_1.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="/home/jonathan/catkin_ws/src/soccerbot/soccer_description/bez2_description/meshes/hip_v1_1.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="steel_satin"/>
     </visual>
@@ -539,7 +209,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="-0.01911 -0.088037 0.23462"/>
       <geometry>
-        <mesh filename="package://bez2_description/meshes/thigh_v1_1.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="/home/jonathan/catkin_ws/src/soccerbot/soccer_description/bez2_description/meshes/thigh_v1_1.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="steel_satin"/>
     </visual>
@@ -559,7 +229,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="-0.01911 -0.093306 0.35062"/>
       <geometry>
-        <mesh filename="package://bez2_description/meshes/calf_v1_1.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="/home/jonathan/catkin_ws/src/soccerbot/soccer_description/bez2_description/meshes/calf_v1_1.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="steel_satin"/>
     </visual>
@@ -579,7 +249,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="-0.02041 -0.093306 0.43862"/>
       <geometry>
-        <mesh filename="package://bez2_description/meshes/ankle_v2_1.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="/home/jonathan/catkin_ws/src/soccerbot/soccer_description/bez2_description/meshes/ankle_v2_1.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="steel_satin"/>
     </visual>
@@ -599,7 +269,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0.04409 -0.069806 0.47462"/>
       <geometry>
-        <mesh filename="package://bez2_description/meshes/left_foot_v2_1.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="/home/jonathan/catkin_ws/src/soccerbot/soccer_description/bez2_description/meshes/left_foot_v2_1.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="steel_satin"/>
     </visual>
@@ -619,7 +289,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="-0.018839 0.062663 0.20662"/>
       <geometry>
-        <mesh filename="package://bez2_description/meshes/fr12_h101_v1_1.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="/home/jonathan/catkin_ws/src/soccerbot/soccer_description/bez2_description/meshes/fr12_h101_v1_1.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="steel_satin"/>
     </visual>
@@ -639,7 +309,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0.001661 0.062663 0.23462"/>
       <geometry>
-        <mesh filename="package://bez2_description/meshes/hip_v1_2.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="/home/jonathan/catkin_ws/src/soccerbot/soccer_description/bez2_description/meshes/hip_v1_2.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="steel_satin"/>
     </visual>
@@ -659,7 +329,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="-0.01911 0.042363 0.23462"/>
       <geometry>
-        <mesh filename="package://bez2_description/meshes/thigh_v1_2.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="/home/jonathan/catkin_ws/src/soccerbot/soccer_description/bez2_description/meshes/thigh_v1_2.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="steel_satin"/>
     </visual>
@@ -679,7 +349,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="-0.01911 0.037094 0.35062"/>
       <geometry>
-        <mesh filename="package://bez2_description/meshes/calf_v1_2.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="/home/jonathan/catkin_ws/src/soccerbot/soccer_description/bez2_description/meshes/calf_v1_2.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="steel_satin"/>
     </visual>
@@ -699,7 +369,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="-0.02041 0.037094 0.43862"/>
       <geometry>
-        <mesh filename="package://bez2_description/meshes/ankle_v2_2.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="/home/jonathan/catkin_ws/src/soccerbot/soccer_description/bez2_description/meshes/ankle_v2_2.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="steel_satin"/>
     </visual>
@@ -719,7 +389,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0.04409 0.060594 0.47462"/>
       <geometry>
-        <mesh filename="package://bez2_description/meshes/right_foot_v2_1.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="/home/jonathan/catkin_ws/src/soccerbot/soccer_description/bez2_description/meshes/right_foot_v2_1.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="steel_satin"/>
     </visual>
@@ -739,7 +409,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="-0.006539 0.107163 0.00062"/>
       <geometry>
-        <mesh filename="package://bez2_description/meshes/right_shoulder_v2_1.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="/home/jonathan/catkin_ws/src/soccerbot/soccer_description/bez2_description/meshes/right_shoulder_v2_1.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="steel_satin"/>
     </visual>
@@ -759,7 +429,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="-0.027539 0.136663 0.02162"/>
       <geometry>
-        <mesh filename="package://bez2_description/meshes/bicep_v1_2.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="/home/jonathan/catkin_ws/src/soccerbot/soccer_description/bez2_description/meshes/bicep_v1_2.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="steel_satin"/>
     </visual>
@@ -779,7 +449,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="-0.006227 0.1586 0.10837"/>
       <geometry>
-        <mesh filename="package://bez2_description/meshes/Bez1_forearm_v7_2.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="/home/jonathan/catkin_ws/src/soccerbot/soccer_description/bez2_description/meshes/Bez1_forearm_v7_2.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="plastic_matte_yellow"/>
     </visual>
@@ -792,7 +462,7 @@
   </link>
   <joint name="head_yaw" type="revolute">
     <origin rpy="0 0 0" xyz="0.009539 0.002537 0.03138"/>
-    <parent link="torso"/>
+    <parent link="trunk"/>
     <child link="neck"/>
     <axis xyz="0.0 0.0 -1.0"/>
     <dynamics damping="0" friction="0"/>
@@ -808,7 +478,7 @@
   </joint>
   <joint name="left_shoulder_pitch" type="revolute">
     <origin rpy="0 0 0" xyz="0.006539 0.112237 -0.00062"/>
-    <parent link="torso"/>
+    <parent link="trunk"/>
     <child link="left_shoulder"/>
     <axis xyz="-0.0 -1.0 0.0"/>
     <dynamics damping="0" friction="0"/>
@@ -832,7 +502,7 @@
   </joint>
   <joint name="left_hip_yaw" type="revolute">
     <origin rpy="0 0 0" xyz="0.018839 0.067737 -0.20662"/>
-    <parent link="torso"/>
+    <parent link="trunk"/>
     <child link="left_hip_side"/>
     <axis xyz="0.0 0.0 -1.0"/>
     <dynamics damping="0" friction="0"/>
@@ -880,7 +550,7 @@
   </joint>
   <joint name="right_shoulder_pitch" type="revolute">
     <origin rpy="0 0 0" xyz="0.006539 -0.107163 -0.00062"/>
-    <parent link="torso"/>
+    <parent link="trunk"/>
     <child link="right_shoulder"/>
     <axis xyz="0.0 -1.0 -0.0"/>
     <dynamics damping="0" friction="0"/>
@@ -904,7 +574,7 @@
   </joint>
   <joint name="right_hip_yaw" type="revolute">
     <origin rpy="0 0 0" xyz="0.018839 -0.062663 -0.20662"/>
-    <parent link="torso"/>
+    <parent link="trunk"/>
     <child link="right_hip_side"/>
     <axis xyz="-0.0 -0.0 1.0"/>
     <dynamics damping="0" friction="0"/>
@@ -957,61 +627,11 @@
       <inertia ixx="1e-9" ixy="0" ixz="0" iyy="1e-9" iyz="0" izz="1e-9"/>
     </inertial>
   </link>
-  <joint name="torso_cylinder_joint" type="fixed">
-    <parent link="torso"/>
-    <child link="torso_cylinder"/>
-    <origin rpy="0 0 0" xyz="0.0 0 0.000"/>
-    <axis xyz="0 0 0"/>
-  </joint>
-  <link name="torso_cylinder">
-    <inertial>
-      <origin rpy="0 0 0" xyz="-0.026300599945598205 0.02045796215352269 -0.07127075071519248"/>
-      <mass value="0.00001"/>
-      <inertia ixx="0.00001" ixy="-0.0" ixz="-0" iyy="0.00001" iyz="-0.0" izz="0.00001"/>
-    </inertial>
-    <visual>
-      <origin rpy="0 0 0" xyz="-0.14 0 -0.07"/>
-      <geometry>
-        <cylinder length="0.08" radius="0.02"/>
-      </geometry>
-      <material name="plastic_matte_yellow"/>
-    </visual>
-    <collision>
-      <origin rpy="0 0 0" xyz="-0.14 0 -0.07"/>
-      <geometry>
-        <cylinder length="0.08" radius="0.02"/>
-      </geometry>
-    </collision>
-  </link>
   <joint name="torso_imu" type="fixed">
-    <parent link="torso"/>
+    <parent link="trunk"/>
     <child link="imu_link"/>
     <origin rpy="0 0 0" xyz="0.0 0 0.000"/>
     <axis xyz="0 0 0"/>
   </joint>
-  <gazebo reference="imu_link">
-    <gravity>true</gravity>
-    <sensor name="imu_sensor" type="imu">
-      <always_on>true</always_on>
-      <update_rate>100</update_rate>
-      <visualize>true</visualize>
-      <topic>__default_topic__</topic>
-      <plugin filename="libgazebo_ros_imu_sensor.so" name="imu_plugin">
-        <topicName>imu_raw</topicName>
-        <bodyName>imu_link</bodyName>
-        <updateRateHZ>50.0</updateRateHZ>
-        <gaussianNoise>0.0</gaussianNoise>
-        <xyzOffset>0 0 0</xyzOffset>
-        <rpyOffset>0 0 0</rpyOffset>
-        <frameName>imu_link</frameName>
-      </plugin>
-      <pose>0 0 0 0 0 0</pose>
-    </sensor>
-  </gazebo>
-  <gazebo reference="imu_link">
-    <kp>1000000000000000.0</kp>
-    <kd>10000000000000.0</kd>
-    <mu1>0.2</mu1>
-    <mu2>0.2</mu2>
-  </gazebo>
+
 </robot>

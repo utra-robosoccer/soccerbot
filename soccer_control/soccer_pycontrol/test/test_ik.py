@@ -14,7 +14,7 @@ class TestIK(unittest.TestCase):
         Case 1: Standard case
         :return: None
         """
-        kinematic_data = KinematicData()
+        kinematic_data = KinematicData(robot_model="sigmaban")
         ik_actions = IKActions(kinematic_data)
         thetas, x, z = ik_actions.x_sweep()
         # np.save('ik_data''/x_sweep', thetas)

@@ -92,7 +92,7 @@
     <axis xyz="0.0 -1.0 0.0"/>
     <parent link="trunk"/>
     <child link="/left_bicep"/>
-    <limit effort="1.5" lower="-1.5707963267948966" upper="3.9269908169872414" velocity="1.0"/>
+    <limit effort="1.5" lower="-1.5707963267948966" upper="3.9269908169872414" velocity="5.76"/>
     <dynamics damping="0.01" friction="0.1"/>
   </joint>
   <joint name="left_elbow" type="revolute">
@@ -100,7 +100,7 @@
     <axis xyz="0.0 -1.0 0.0"/>
     <parent link="/left_bicep"/>
     <child link="/left_forearm"/>
-    <limit effort="1.5" lower="0.0" upper="3.141592653589793" velocity="1.0"/>
+    <limit effort="1.5" lower="0.0" upper="3.141592653589793" velocity="5.76"/>
     <dynamics damping="0.01" friction="0.1"/>
   </joint>
   <link name="/right_bicep">
@@ -148,7 +148,7 @@
     <axis xyz="0.0 -1.0 0.0"/>
     <parent link="trunk"/>
     <child link="/right_bicep"/>
-    <limit effort="1.5" lower="-1.5707963267948966" upper="3.9269908169872414" velocity="1.0"/>
+    <limit effort="1.5" lower="-1.5707963267948966" upper="3.9269908169872414" velocity="5.76"/>
     <dynamics damping="0.01" friction="0.1"/>
   </joint>
   <joint name="right_elbow" type="revolute">
@@ -156,7 +156,7 @@
     <axis xyz="0.0 -1.0 0.0"/>
     <parent link="/right_bicep"/>
     <child link="/right_forearm"/>
-    <limit effort="1.5" lower="0.0" upper="3.141592653589793" velocity="1.0"/>
+    <limit effort="1.5" lower="0.0" upper="3.141592653589793" velocity="5.76"/>
     <dynamics damping="0.01" friction="0.1"/>
   </joint>
   <link name="/left_hip_side">
@@ -284,7 +284,7 @@
     <axis xyz="0.0 0.0 -1.0"/>
     <parent link="trunk"/>
     <child link="/left_hip_side"/>
-    <limit effort="2.5" lower="-1.309" upper="0.524" velocity="1.0"/>
+    <limit effort="2.5" lower="-1.309" upper="0.524" velocity="5.76"/>
     <dynamics damping="0.01" friction="0.1"/>
   </joint>
   <joint name="left_hip_roll" type="revolute">
@@ -292,7 +292,7 @@
     <axis xyz="1.0 0.0 0.0"/>
     <parent link="/left_hip_side"/>
     <child link="/left_hip_front"/>
-    <limit effort="2.5" lower="-0.7853981633974483" upper="1.5707963267948966" velocity="1.0"/>
+    <limit effort="2.5" lower="-0.7853981633974483" upper="1.5707963267948966" velocity="5.76"/>
     <dynamics damping="0.01" friction="0.1"/>
   </joint>
   <joint name="left_hip_pitch" type="revolute">
@@ -300,7 +300,7 @@
     <axis xyz="0.0 -1.0 0.0"/>
     <parent link="/left_hip_front"/>
     <child link="/left_thigh"/>
-    <limit effort="2.5" lower="-0.7853981633974483" upper="2.356194490192345" velocity="1.0"/>
+    <limit effort="2.5" lower="-0.7853981633974483" upper="2.356194490192345" velocity="5.76"/>
     <dynamics damping="0.01" friction="0.1"/>
   </joint>
   <joint name="left_knee" type="revolute">
@@ -308,7 +308,7 @@
     <axis xyz="0.0 -1.0 0.0"/>
     <parent link="/left_thigh"/>
     <child link="/left_calve"/>
-    <limit effort="2.5" lower="-2.793" upper="0.0" velocity="1.0"/>
+    <limit effort="2.5" lower="-2.793" upper="0.0" velocity="5.76"/>
     <dynamics damping="0.01" friction="0.1"/>
   </joint>
   <joint name="left_ankle_pitch" type="revolute">
@@ -316,7 +316,7 @@
     <axis xyz="0.0 -1.0 0.0"/>
     <parent link="/left_calve"/>
     <child link="/left_ankle"/>
-    <limit effort="2.5" lower="-0.7853981633974483" upper="1.5707963267948966" velocity="1.0"/>
+    <limit effort="2.5" lower="-0.7853981633974483" upper="1.5707963267948966" velocity="5.76"/>
     <dynamics damping="0.01" friction="0.1"/>
   </joint>
   <joint name="left_ankle_roll" type="revolute">
@@ -324,7 +324,7 @@
     <axis xyz="1.0 0.0 0.0"/>
     <parent link="/left_ankle"/>
     <child link="left_foot"/>
-    <limit effort="2.5" lower="-0.7853981633974483" upper="0.7853981633974483" velocity="1.0"/>
+    <limit effort="2.5" lower="-0.7853981633974483" upper="0.7853981633974483" velocity="5.76"/>
     <dynamics damping="0.01" friction="0.1"/>
   </joint>
   <link name="/right_hip_side">
@@ -452,7 +452,7 @@
     <axis xyz="0.0 0.0 1.0"/>
     <parent link="trunk"/>
     <child link="/right_hip_side"/>
-    <limit effort="2.5" lower="-1.309" upper="0.524" velocity="1.0"/>
+    <limit effort="2.5" lower="-1.309" upper="0.524" velocity="5.76"/>
     <dynamics damping="0.01" friction="0.1"/>
   </joint>
   <joint name="right_hip_roll" type="revolute">
@@ -460,7 +460,7 @@
     <axis xyz="-1.0 0.0 0.0"/>
     <parent link="/right_hip_side"/>
     <child link="/right_hip_front"/>
-    <limit effort="2.5" lower="-0.7853981633974483" upper="1.5707963267948966" velocity="1.0"/>
+    <limit effort="2.5" lower="-0.7853981633974483" upper="1.5707963267948966" velocity="5.76"/>
     <dynamics damping="0.01" friction="0.1"/>
   </joint>
   <joint name="right_hip_pitch" type="revolute">
@@ -468,7 +468,7 @@
     <axis xyz="0.0 -1.0 0.0"/>
     <parent link="/right_hip_front"/>
     <child link="/right_thigh"/>
-    <limit effort="2.5" lower="-0.7853981633974483" upper="2.356194490192345" velocity="1.0"/>
+    <limit effort="2.5" lower="-0.7853981633974483" upper="2.356194490192345" velocity="5.76"/>
     <dynamics damping="0.01" friction="0.1"/>
   </joint>
   <joint name="right_knee" type="revolute">
@@ -476,7 +476,7 @@
     <axis xyz="0.0 -1.0 0.0"/>
     <parent link="/right_thigh"/>
     <child link="/right_calve"/>
-    <limit effort="2.5" lower="-2.793" upper="0.0" velocity="1.0"/>
+    <limit effort="2.5" lower="-2.793" upper="0.0" velocity="5.76"/>
     <dynamics damping="0.01" friction="0.1"/>
   </joint>
   <joint name="right_ankle_pitch" type="revolute">
@@ -484,7 +484,7 @@
     <axis xyz="0.0 -1.0 0.0"/>
     <parent link="/right_calve"/>
     <child link="/right_ankle"/>
-    <limit effort="2.5" lower="-0.7853981633974483" upper="1.5707963267948966" velocity="1.0"/>
+    <limit effort="2.5" lower="-0.7853981633974483" upper="1.5707963267948966" velocity="5.76"/>
     <dynamics damping="0.01" friction="0.1"/>
   </joint>
   <joint name="right_ankle_roll" type="revolute">
@@ -492,7 +492,7 @@
     <axis xyz="-1.0 0.0 0.0"/>
     <parent link="/right_ankle"/>
     <child link="right_foot"/>
-    <limit effort="2.5" lower="-0.7853981633974483" upper="0.7853981633974483" velocity="1.0"/>
+    <limit effort="2.5" lower="-0.7853981633974483" upper="0.7853981633974483" velocity="5.76"/>
     <dynamics damping="0.01" friction="0.1"/>
   </joint>
   <link name="head_base">
@@ -540,7 +540,7 @@
     <axis xyz="0.0 0.0 1.0"/>
     <parent link="trunk"/>
     <child link="head_base"/>
-    <limit effort="1.5" lower="-1.5707963267948966" upper="1.5707963267948966" velocity="1.0"/>
+    <limit effort="1.5" lower="-1.5707963267948966" upper="1.5707963267948966" velocity="5.76"/>
     <dynamics damping="0.01" friction="0.1"/>
   </joint>
   <joint name="head_pitch" type="revolute">
@@ -548,7 +548,7 @@
     <axis xyz="0.0 1.0 0.0"/>
     <parent link="head_base"/>
     <child link="/head"/>
-    <limit effort="1.5" lower="-2.356194490192345" upper="2.356194490192345" velocity="1.0"/>
+    <limit effort="1.5" lower="-2.356194490192345" upper="2.356194490192345" velocity="5.76"/>
     <dynamics damping="0.01" friction="0.1"/>
   </joint>
 
