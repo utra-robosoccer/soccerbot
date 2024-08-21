@@ -42,15 +42,6 @@ class SensorsROS(Sensors):
             ],
         )
 
-    def get_pose(self, footprint_name="/base_footprint_gt"):
-        try:
-            (trans, rot) = self.tf_listener.lookupTransform("world", os.environ["ROS_NAMESPACE"] + footprint_name, rospy.Time(0))
-        except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException) as e:
-            print(e)
-            return False
-
-        return Transformation(position=trans, quaternion=rot).pos_theta
-
     def get_foot_pressure_sensors(self, floor):
         # TODO subscribe to foot pressure sensors
         pass

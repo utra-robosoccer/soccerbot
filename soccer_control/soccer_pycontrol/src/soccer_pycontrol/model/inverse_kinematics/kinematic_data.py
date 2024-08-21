@@ -46,7 +46,7 @@ class KinematicData:
         self.right_hip_to_left_hip = Transformation(position=(motor_offsets["right_hip_yaw"] - motor_offsets["left_hip_yaw"]))
 
         self.right_foot_init_position = Transformation(position=(motor_offsets["right_ankle_roll"] - [parameters["weird_x_offset"], 0, 0]))
-        self.left_foot_init_position = Transformation(position=(motor_offsets["right_ankle_roll"] - [parameters["weird_x_offset"], 0, 0]))
+        self.left_foot_init_position = Transformation(position=(motor_offsets["left_ankle_roll"] - [parameters["weird_x_offset"], 0, 0]))
 
         #: Dimensions of the foot collision box #TODO get it from URDF also what do they mean
         self.foot_box = parameters["foot_box"]

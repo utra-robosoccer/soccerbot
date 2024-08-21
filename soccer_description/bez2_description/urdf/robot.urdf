@@ -541,7 +541,7 @@
     <limit effort="6.0" lower="-0.7853981633974483" upper="1.5707963267948966" velocity="6.6"/>
   </joint>
   <joint name="left_ankle_roll" type="revolute">
-    <origin rpy="0 0 0" xyz="-0.0645 -0.0235 -0.036"/>
+    <origin rpy="0 0 0" xyz="0 -0.025 0 "/>
     <parent link="left_ankle"/>
     <child link="left_foot"/>
     <axis xyz="1.0 0.0 0.0"/>
@@ -613,7 +613,7 @@
     <limit effort="6.0" lower="-0.7853981633974483" upper="1.5707963267948966" velocity="6.6"/>
   </joint>
   <joint name="right_ankle_roll" type="revolute">
-    <origin rpy="0 0 0" xyz="-0.0645 -0.0235 -0.036"/>
+    <origin rpy="0 0 0" xyz="0 -0.025 0"/>
     <parent link="right_ankle"/>
     <child link="right_foot"/>
     <axis xyz="-1.0 0.0 0.0"/>

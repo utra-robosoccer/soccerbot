@@ -79,6 +79,39 @@ class TestPlaco(unittest.TestCase):
         parameters.walk_max_dx_backward = 0.03  # Maximum dx per step backward [m]
         return parameters
 
+    def bez2_walk_param(self):
+        # Walk parameters - if double_support_ratio is not set to 0, should be greater than replan_frequency
+        parameters = placo.HumanoidParameters()
+
+        # Timing parameters
+        parameters.single_support_duration = 0.3  # Duration of single support phase [s]
+        parameters.single_support_timesteps = 10  # Number of planning timesteps per single support phase
+        parameters.double_support_ratio = 0.0  # Ratio of double support (0.0 to 1.0)
+        parameters.startend_double_support_ratio = 1.5  # Ratio duration of supports for starting and stopping walk
+        parameters.planned_timesteps = 48  # Number of timesteps planned ahead
+        parameters.replan_timesteps = 10  # Replanning each n timesteps
+
+        # Posture parameters
+        parameters.walk_com_height = 0.25  # Constant height for the CoM [m]
+        parameters.walk_foot_height = 0.04  # Height of foot rising while walking [m]
+        parameters.walk_trunk_pitch = 0.0  # Trunk pitch angle [rad]
+        parameters.walk_foot_rise_ratio = 0.2  # Time ratio for the foot swing plateau (0.0 to 1.0)
+
+        # Feet parameters
+        parameters.foot_length = 0.1576  # Foot length [m]
+        parameters.foot_width = 0.092  # Foot width [m]
+        parameters.feet_spacing = 0.122  # Lateral feet spacing [m]
+        parameters.zmp_margin = 0.02  # ZMP margin [m]
+        parameters.foot_zmp_target_x = 0.0  # Reference target ZMP position in the foot [m]
+        parameters.foot_zmp_target_y = 0.0  # Reference target ZMP position in the foot [m]
+
+        # Limit parameters
+        parameters.walk_max_dtheta = 1  # Maximum dtheta per step [rad]
+        parameters.walk_max_dy = 0.04  # Maximum dy per step [m]
+        parameters.walk_max_dx_forward = 0.08  # Maximum dx per step forward [m]
+        parameters.walk_max_dx_backward = 0.03  # Maximum dx per step backward [m]
+        return parameters
+
     def walk(self, robot, bez, world, parameters, debug):
         # Creating the kinematics solver
         solver = placo.KinematicsSolver(robot)
@@ -120,7 +153,7 @@ class TestPlaco(unittest.TestCase):
 
         # Creating the FootstepsPlanner
         repetitive_footsteps_planner = placo.FootstepsPlannerRepetitive(parameters)
-        d_x = 0.04
+        d_x = 0.05
         d_y = 0.0
         d_theta = 0.0
         nb_steps = 10
@@ -186,7 +219,7 @@ class TestPlaco(unittest.TestCase):
                     # repetitive_footsteps_planner = placo.FootstepsPlannerRepetitive(parameters)
                     d_x = 0.03
                     d_y = 0.0
-                    d_theta = 0.03
+                    d_theta = 0.3
                     nb_steps = 10
                     repetitive_footsteps_planner.configure(d_x, d_y, d_theta, nb_steps)
                 # Replanning footsteps from current trajectory
@@ -260,8 +293,21 @@ class TestPlaco(unittest.TestCase):
         )
         bez = Bez(robot_model="bez1")
         model_filename = expanduser("~") + "/catkin_ws/src/soccerbot/soccer_description/bez1_description/urdf/robot.urdf"
-        # model_filename = expanduser("~") + "/catkin_ws/src/soccerbot/soccer_description/bez2_description/urdf/robot.urdf"
 
         robot = placo.HumanoidRobot(model_filename)
         parameters = self.bez1_walk_param()
+        self.walk(robot, bez, world, parameters, debug)
+
+    def test_bez2(self):
+        debug = True
+        world = PybulletWorld(
+            camera_yaw=90,
+            real_time=True,
+            rate=200,
+        )
+        bez = Bez(robot_model="bez2")
+        model_filename = expanduser("~") + "/catkin_ws/src/soccerbot/soccer_description/bez2_description/urdf/robot.urdf"
+        # TODO weird stuff with the axes in bez2 robot.urdf
+        robot = placo.HumanoidRobot(model_filename)
+        parameters = self.bez2_walk_param()
         self.walk(robot, bez, world, parameters, debug)

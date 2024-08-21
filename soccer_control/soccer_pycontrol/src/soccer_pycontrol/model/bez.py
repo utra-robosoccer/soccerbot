@@ -22,6 +22,7 @@ class Bez:
         self.model = LoadModel(robot_model, self.data.urdf_model_path, self.data.walking_torso_height, pose, fixed_base)
 
         self.motor_control = MotorControl(robot_model, self.model.body)
+        self.data.motor_names = self.motor_control.motor_names  # TODO fix later
         self.sensors = Sensors(self.model.body)
 
         self.ik_actions = IKActions(self.data)

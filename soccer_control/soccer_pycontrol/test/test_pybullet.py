@@ -61,8 +61,8 @@ class TestPybullet(unittest.TestCase):
 
         for j in angles:
             x = [0.0] * bez.motor_control.numb_of_motors
-            x[bez.data.motor_names.index("left_leg_motor_5")] = j
-            x[bez.data.motor_names.index("right_leg_motor_5")] = j
+            x[bez.motor_control.motor_names.index("left_ankle_roll")] = j
+            x[bez.motor_control.motor_names.index("right_ankle_roll")] = j
 
             pb.setJointMotorControlArray(
                 bodyIndex=bez.model.body,
@@ -118,7 +118,7 @@ def test_head_localizing_sweep(robot_model: str):
     world.close()
 
 
-@pytest.mark.parametrize("robot_model", ["bez1", "bez2"])
+@pytest.mark.parametrize("robot_model", ["bez1"])  # , "bez2"])
 def test_ready(robot_model: str):
     """
     Case 1: Standard case

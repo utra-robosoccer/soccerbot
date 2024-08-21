@@ -45,7 +45,7 @@
                 </visual>
             </link>
 
-            <joint name="${name}_arm_motor_0" type="revolute">
+            <joint name="${name}_shoulder_pitch" type="revolute">
                 <parent link="${origin}"/>
                 <child link="$(arg tf_prefix)/${name}_bicep"/>
                 <origin rpy="0 0 0" xyz="-0.0157 ${direction * 0.0725} 0"/>
@@ -53,7 +53,7 @@
                 <dynamics damping="${JOINT_DAMPING}" friction="${JOINT_FRICTION}" />
                 <limit effort="${AX12_TORQUE}" lower="-${PI/2}" upper="${PI*5/4}" velocity="${AX12_VELOCITY}"/>
             </joint>
-            <joint name="${name}_arm_motor_1" type="revolute">
+            <joint name="${name}_elbow" type="revolute">
                 <parent link="$(arg tf_prefix)/${name}_bicep"/>
                 <child link="$(arg tf_prefix)/${name}_forearm"/>
                 <origin rpy="0 0 0" xyz="0 0 -0.10"/>
@@ -67,22 +67,22 @@
                 <mu2>${FOREARM_MU2}</mu2>
             </gazebo>
 
-            <transmission name="${name}_arm_motor_0">
+            <transmission name="${name}_shoulder_pitch">
                 <type>transmission_interface/SimpleTransmission</type>
-                <joint name="${name}_arm_motor_0">
+                <joint name="${name}_shoulder_pitch">
                     <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
                 </joint>
-                <actuator name="${name}_arm_motor_0">
+                <actuator name="${name}_shoulder_pitch">
                     <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
                     <mechanicalReduction>1</mechanicalReduction>
                 </actuator>
             </transmission>
-            <transmission name="${name}_arm_motor_1">
+            <transmission name="${name}_elbow">
                 <type>transmission_interface/SimpleTransmission</type>
-                <joint name="${name}_arm_motor_1">
+                <joint name="${name}_elbow">
                     <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
                 </joint>
-                <actuator name="${name}_arm_motor_1">
+                <actuator name="${name}_elbow">
                     <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
                     <mechanicalReduction>1</mechanicalReduction>
                 </actuator>
