@@ -6,13 +6,13 @@ roslibpy
 scipy>=1.10.1
 prettytable
 pyserial>=3.5
-transforms3d
+transforms3d~=0.4.1
 construct==2.10.67
 opencv-python>=4.5.5.62
-setuptools
+setuptools~=73.0.1
 shapely
 vispy
-pytest
+pytest~=7.4.0
 protobuf==3.20.2
 keras
 gluoncv
@@ -21,10 +21,10 @@ timeout_decorator
 pytest-timeout
 pytest-rerunfailures
 ruamel.yaml
-filterpy
+filterpy~=1.4.5
 gdown==4.5.4
-pybullet
-pygame
+pybullet~=3.2.5
+pygame~=2.5.0
 ultralytics
 
 # object detection
@@ -39,3 +39,34 @@ psutil==5.9.2; platform_machine == 'x86_64'
 #torch==2.0.1.0+cu117; platform_machine == 'x86_64'
 #torchvision==0.18.1.0+cu117; platform_machine == 'x86_64'
 # TODO why did this install torch
+
+keyring~=18.0.1
+mypy-extensions~=1.0.0
+Cython~=3.0.10
+PyYAML~=6.0.1
+catkin-pkg~=0.5.2
+qpsolvers~=4.3.2
+mujoco~=3.2.0
+torch~=1.13.0+cu117
+psutil~=5.9.8
+placo
+argparse~=1.4.0
+open3d~=0.17.0
+timeout-decorator~=0.5.0
+rospkg~=1.5.1
+python-dateutil~=2.8.2
+empy~=3.3.4
+pymavlink~=2.4.39
+PyQt6~=6.7.0
+python-gnupg~=0.4.5
+pycryptodomex~=3.6.1
+netifaces~=0.10.4
+defusedxml~=0.6.0
+pydot~=1.4.1
+PyGObject~=3.36.0
+PyOpenGL~=3.1.0
+pycairo~=1.16.2
+Twisted~=18.9.0
+autobahn~=17.10.1
+tornado~=6.4
+cbor~=1.0.0

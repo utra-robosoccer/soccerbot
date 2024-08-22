@@ -10,7 +10,7 @@ from soccer_common import Transformation
 
 class SensorsROS(Sensors):
     def __init__(self):
-        self.imu_subscriber = rospy.Subscriber("imu_filtered", Imu, self.imu_callback, queue_size=1)
+        self.imu_subscriber = rospy.Subscriber("/robot1/imu_filtered", Imu, self.imu_callback, queue_size=1)
         self.imu_ready = False
         self.tf_listener = tf.TransformListener()
 

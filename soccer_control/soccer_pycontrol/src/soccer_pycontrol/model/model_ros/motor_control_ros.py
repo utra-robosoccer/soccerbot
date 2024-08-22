@@ -13,8 +13,8 @@ class MotorControlROS(MotorControl):
         self.configuration_offset = [0.0] * self.numb_of_motors
         # TODO should separate config to current and target
         self.motor_names = motor_names
-
-        self.pub_all_motor = rospy.Publisher("joint_command", JointState, queue_size=1)
+        # TODo fix namespace
+        self.pub_all_motor = rospy.Publisher("/robot1/joint_command", JointState, queue_size=1)
 
     def set_motor(self) -> None:
         """

@@ -5,22 +5,28 @@ from typing import List
 import numpy as np
 import placo
 from placo_utils.visualization import footsteps_viz, frame_viz, line_viz, robot_viz
+from soccer_pycontrol.walk_engine import walk_parameters
+from soccer_pycontrol.walk_engine.walk_parameters import walk_parameters_sigmaban
 
 
 class WalkPlaco:
-    def __init__(self, debug: bool = True):
-
-        self.DT = 0.005
+    def __init__(self, robot_model: str, funct_time, debug: bool = True):
+        self.funct_time = funct_time
+        self.DT = 0.01  # 0.005
 
         self.debug = debug
-
-        model_filename = expanduser("~") + "/catkin_ws/src/soccerbot/soccer_description/bez1_description/urdf/robot.urdf"
+        if robot_model == "sigmaban":
+            model_filename = expanduser("~") + "/catkin_ws/src/soccerbot/soccer_description/bez1_description/urdf/sigmaban"
+            self.parameters = walk_parameters_sigmaban()
+        else:
+            model_filename = expanduser("~") + f"/catkin_ws/src/soccerbot/soccer_description/{robot_model}_description/urdf/robot.urdf"
+            self.parameters = getattr(walk_parameters, "walk_parameters_" + robot_model)()
 
         self.last_replan = 0
-        self.start_t = time.time()
+        self.start_t = self.funct_time()
         # TODO is there too many global var
         self.robot = placo.HumanoidRobot(model_filename)
-        self.parameters = self.walk_parameters()
+
         self.walk_pattern = placo.WalkPatternGenerator(self.robot, self.parameters)
         self.repetitive_footsteps_planner = placo.FootstepsPlannerRepetitive(self.parameters)
         self.trajectory = None
@@ -30,41 +36,7 @@ class WalkPlaco:
         if self.debug:
             # Starting Meshcat viewer
             self.viz = robot_viz(self.robot)
-            self.last_display = time.time()
-
-    @staticmethod
-    def walk_parameters():
-        # Walk parameters - if double_support_ratio is not set to 0, should be greater than replan_frequency
-        parameters = placo.HumanoidParameters()
-
-        # Timing parameters
-        parameters.single_support_duration = 0.25  # Duration of single support phase [s]
-        parameters.single_support_timesteps = 10  # Number of planning timesteps per single support phase
-        parameters.double_support_ratio = 0.0  # Ratio of double support (0.0 to 1.0)
-        parameters.startend_double_support_ratio = 2.0  # Ratio duration of supports for starting and stopping walk
-        parameters.planned_timesteps = 48  # Number of timesteps planned ahead
-        parameters.replan_timesteps = 10  # Replanning each n timesteps    # 50
-
-        # Posture parameters
-        parameters.walk_com_height = 0.21  # Constant height for the CoM [m]
-        parameters.walk_foot_height = 0.04  # Height of foot rising while walking [m]
-        parameters.walk_trunk_pitch = 0.0  # Trunk pitch angle [rad]
-        parameters.walk_foot_rise_ratio = 0.2  # Time ratio for the foot swing plateau (0.0 to 1.0)
-
-        # Feet parameters
-        parameters.foot_length = 0.1200  # Foot length [m]
-        parameters.foot_width = 0.072  # Foot width [m]
-        parameters.feet_spacing = 0.122  # Lateral feet spacing [m]
-        parameters.zmp_margin = 0.02  # ZMP margin [m]
-        parameters.foot_zmp_target_x = 0.0  # Reference target ZMP position in the foot [m]
-        parameters.foot_zmp_target_y = 0.0  # Reference target ZMP position in the foot [m]
-
-        # Limit parameters
-        parameters.walk_max_dtheta = 1  # Maximum dtheta per step [rad]
-        parameters.walk_max_dy = 0.04  # Maximum dy per step [m]
-        parameters.walk_max_dx_forward = 0.08  # Maximum dx per step forward [m]
-        parameters.walk_max_dx_backward = 0.03  # Maximum dx per step backward [m]
-        return parameters
+            self.last_display = self.funct_time()
 
     # TODO can this be in init
     def setup_tasks(self):
@@ -130,9 +102,9 @@ class WalkPlaco:
 
         self.setup_footsteps()
 
-        self.last_display = time.time()
+        self.last_display = self.funct_time()
         self.last_replan = 0
-        self.start_t = time.time()
+        self.start_t = self.funct_time()
 
     def walk_loop(
         self,
@@ -170,8 +142,8 @@ class WalkPlaco:
     def step(self, t: float):
         # Spin-lock until the next tick
         t += self.DT
-        while time.time() < self.start_t + t:
-            time.sleep(1e-3)
+        # while self.funct_time() < self.start_t + t:
+        #     time.sleep(1e-3)
 
         return t
 
@@ -187,8 +159,8 @@ class WalkPlaco:
     def update_meshcat(self, t: float):
         # Updating meshcat display periodically
         if self.debug:
-            if time.time() - self.last_display > 0.03:
-                self.last_display = time.time()
+            if self.funct_time() - self.last_display > 0.03:
+                self.last_display = self.funct_time()
                 self.viz.display(self.robot.state.q)
 
                 frame_viz("left_foot_target", self.trajectory.get_T_world_left(t))
@@ -201,4 +173,4 @@ class WalkPlaco:
 
 
 if __name__ == "__main__":
-    walk = WalkPlaco(debug=True)
+    walk = WalkPlaco("bez1", time.time, debug=True)

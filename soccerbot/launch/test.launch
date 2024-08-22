@@ -39,10 +39,10 @@
 
         <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" />
 
-        <include file="$(find soccerbot)/launch/modules/control.launch">
-            <arg name="simulation" value="$(arg simulation)" />
-            <arg name="robot_model" value="$(arg robot_model)" />
-        </include>
+<!--        <include file="$(find soccerbot)/launch/modules/control.launch">-->
+<!--            <arg name="simulation" value="$(arg simulation)" />-->
+<!--            <arg name="robot_model" value="$(arg robot_model)" />-->
+<!--        </include>-->
 
         <!-- Complementary filter -->
         <node pkg="imu_complementary_filter" type="complementary_filter_node" name="imu_complementary_filter" output="log">

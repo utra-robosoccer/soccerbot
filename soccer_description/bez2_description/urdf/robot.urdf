@@ -49,7 +49,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0 0 0"/>
       <geometry>
-        <mesh filename="/home/jonathan/catkin_ws/src/soccerbot/soccer_description/bez2_description/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="../meshes/base_link.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="steel_satin"/>
     </visual>
@@ -69,7 +69,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="-0.009539 -0.002537 -0.03138"/>
       <geometry>
-        <mesh filename="/home/jonathan/catkin_ws/src/soccerbot/soccer_description/bez2_description/meshes/Head_Yaw_Assembly_v1_1.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="../meshes/Head_Yaw_Assembly_v1_1.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="plastic_matte_yellow"/>
     </visual>
@@ -89,7 +89,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="-0.009539 0.016963 -0.05638"/>
       <geometry>
-        <mesh filename="/home/jonathan/catkin_ws/src/soccerbot/soccer_description/bez2_description/meshes/Head_Pitch_Assembly_v4_1.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="../meshes/Head_Pitch_Assembly_v4_1.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="plastic_matte_yellow"/>
     </visual>
@@ -109,7 +109,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="-0.006539 -0.112237 0.00062"/>
       <geometry>
-        <mesh filename="/home/jonathan/catkin_ws/src/soccerbot/soccer_description/bez2_description/meshes/left_shoulder_v1_1.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="../meshes/left_shoulder_v1_1.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="steel_satin"/>
     </visual>
@@ -129,7 +129,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="-0.027039 -0.141737 0.02162"/>
       <geometry>
-        <mesh filename="/home/jonathan/catkin_ws/src/soccerbot/soccer_description/bez2_description/meshes/bicep_v1_1.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="../meshes/bicep_v1_1.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="steel_satin"/>
     </visual>
@@ -149,7 +149,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="-0.008351 -0.163675 0.10837"/>
       <geometry>
-        <mesh filename="/home/jonathan/catkin_ws/src/soccerbot/soccer_description/bez2_description/meshes/Bez1_forearm_v7_1.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="../meshes/Bez1_forearm_v7_1.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="plastic_matte_yellow"/>
     </visual>
@@ -169,7 +169,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="-0.018839 -0.067737 0.20662"/>
       <geometry>
-        <mesh filename="/home/jonathan/catkin_ws/src/soccerbot/soccer_description/bez2_description/meshes/fr12_h101_v1_2.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="../meshes/fr12_h101_v1_2.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="steel_satin"/>
     </visual>
@@ -189,7 +189,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0.001661 -0.067737 0.23462"/>
       <geometry>
-        <mesh filename="/home/jonathan/catkin_ws/src/soccerbot/soccer_description/bez2_description/meshes/hip_v1_1.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="../meshes/hip_v1_1.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="steel_satin"/>
     </visual>
@@ -209,7 +209,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="-0.01911 -0.088037 0.23462"/>
       <geometry>
-        <mesh filename="/home/jonathan/catkin_ws/src/soccerbot/soccer_description/bez2_description/meshes/thigh_v1_1.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="../meshes/thigh_v1_1.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="steel_satin"/>
     </visual>
@@ -229,7 +229,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="-0.01911 -0.093306 0.35062"/>
       <geometry>
-        <mesh filename="/home/jonathan/catkin_ws/src/soccerbot/soccer_description/bez2_description/meshes/calf_v1_1.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="../meshes/calf_v1_1.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="steel_satin"/>
     </visual>
@@ -249,7 +249,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="-0.02041 -0.093306 0.43862"/>
       <geometry>
-        <mesh filename="/home/jonathan/catkin_ws/src/soccerbot/soccer_description/bez2_description/meshes/ankle_v2_1.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="../meshes/ankle_v2_1.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="steel_satin"/>
     </visual>
@@ -269,7 +269,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0.04409 -0.069806 0.47462"/>
       <geometry>
-        <mesh filename="/home/jonathan/catkin_ws/src/soccerbot/soccer_description/bez2_description/meshes/left_foot_v2_1.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="../meshes/left_foot_v2_1.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="steel_satin"/>
     </visual>
@@ -289,7 +289,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="-0.018839 0.062663 0.20662"/>
       <geometry>
-        <mesh filename="/home/jonathan/catkin_ws/src/soccerbot/soccer_description/bez2_description/meshes/fr12_h101_v1_1.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="../meshes/fr12_h101_v1_1.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="steel_satin"/>
     </visual>
@@ -309,7 +309,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0.001661 0.062663 0.23462"/>
       <geometry>
-        <mesh filename="/home/jonathan/catkin_ws/src/soccerbot/soccer_description/bez2_description/meshes/hip_v1_2.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="../meshes/hip_v1_2.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="steel_satin"/>
     </visual>
@@ -329,7 +329,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="-0.01911 0.042363 0.23462"/>
       <geometry>
-        <mesh filename="/home/jonathan/catkin_ws/src/soccerbot/soccer_description/bez2_description/meshes/thigh_v1_2.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="../meshes/thigh_v1_2.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="steel_satin"/>
     </visual>
@@ -349,7 +349,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="-0.01911 0.037094 0.35062"/>
       <geometry>
-        <mesh filename="/home/jonathan/catkin_ws/src/soccerbot/soccer_description/bez2_description/meshes/calf_v1_2.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="../meshes/calf_v1_2.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="steel_satin"/>
     </visual>
@@ -369,7 +369,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="-0.02041 0.037094 0.43862"/>
       <geometry>
-        <mesh filename="/home/jonathan/catkin_ws/src/soccerbot/soccer_description/bez2_description/meshes/ankle_v2_2.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="../meshes/ankle_v2_2.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="steel_satin"/>
     </visual>
@@ -389,7 +389,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="0.04409 0.060594 0.47462"/>
       <geometry>
-        <mesh filename="/home/jonathan/catkin_ws/src/soccerbot/soccer_description/bez2_description/meshes/right_foot_v2_1.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="../meshes/right_foot_v2_1.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="steel_satin"/>
     </visual>
@@ -409,7 +409,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="-0.006539 0.107163 0.00062"/>
       <geometry>
-        <mesh filename="/home/jonathan/catkin_ws/src/soccerbot/soccer_description/bez2_description/meshes/right_shoulder_v2_1.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="../meshes/right_shoulder_v2_1.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="steel_satin"/>
     </visual>
@@ -429,7 +429,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="-0.027539 0.136663 0.02162"/>
       <geometry>
-        <mesh filename="/home/jonathan/catkin_ws/src/soccerbot/soccer_description/bez2_description/meshes/bicep_v1_2.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="../meshes/bicep_v1_2.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="steel_satin"/>
     </visual>
@@ -449,7 +449,7 @@
     <visual>
       <origin rpy="0 0 0" xyz="-0.006227 0.1586 0.10837"/>
       <geometry>
-        <mesh filename="/home/jonathan/catkin_ws/src/soccerbot/soccer_description/bez2_description/meshes/Bez1_forearm_v7_2.stl" scale="0.001 0.001 0.001"/>
+        <mesh filename="../meshes/Bez1_forearm_v7_2.stl" scale="0.001 0.001 0.001"/>
       </geometry>
       <material name="plastic_matte_yellow"/>
     </visual>
