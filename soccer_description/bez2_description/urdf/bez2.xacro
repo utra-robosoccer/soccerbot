@@ -4,7 +4,7 @@
 <xacro:include filename="$(find bez2_description)/urdf/materials.xacro" />
 <xacro:include filename="$(find bez2_description)/urdf/bez2.trans" />
 <xacro:include filename="$(find bez2_description)/urdf/bez2.gazebo" />
-<link name="torso">
+<link name="trunk">
   <inertial>
     <origin xyz="-2.6182166493521018e-05 0.0037391632790891283 -0.07310917852477573" rpy="0 0 0"/>
     <mass value="1.62191101903404"/>
@@ -428,7 +428,7 @@
   </collision>
 </link>
 
-<joint name="head_motor_0" type="revolute">
+<joint name="head_yaw" type="revolute">
   <origin xyz="0.009539 0.002537 0.03138" rpy="0 0 0"/>
   <parent link="torso"/>
   <child link="neck"/>
@@ -436,7 +436,7 @@
   <dynamics damping="${XL430_DAMPING}" friction="${XL430_FRICTION}" />
           <limit effort="${XL430_TORQUE}" lower="-${PI/2}" upper="${PI/2}" velocity="${XL430_VELOCITY}"/>
 </joint>
-<joint name="head_motor_1" type="revolute">
+<joint name="head_pitch" type="revolute">
   <origin xyz="0.0 -0.0195 0.025" rpy="0 0 0"/>
   <parent link="neck"/>
   <child link="head"/>
@@ -445,7 +445,7 @@
             <limit effort="${XL430_TORQUE}" lower="0" upper="${PI*2/4}" velocity="${XL430_VELOCITY}"/>
 </joint>
 
-<joint name="left_arm_motor_0" type="revolute">
+<joint name="left_shoulder_pitch" type="revolute">
   <origin xyz="0.006539 0.112237 -0.00062" rpy="0 0 0"/>
   <parent link="torso"/>
   <child link="left_shoulder"/>
@@ -453,7 +453,7 @@
   <dynamics damping="${MX28_DAMPING}" friction="${MX28_FRICTION}" />
 <limit effort="${XM430_TORQUE}" lower="-${PI}" upper="${PI*5/4}" velocity="${XM430_VELOCITY}"/>
 </joint>
-<joint name="left_arm_motor_1" type="revolute">
+<joint name="left_shoulder_roll" type="revolute">
   <origin xyz="0.0205 0.0295 -0.021" rpy="0 0 0"/>
   <parent link="left_shoulder"/>
   <child link="left_bicep"/>
@@ -462,7 +462,7 @@
                 <limit effort="${MX28_TORQUE}" lower="0" upper="${PI/2}" velocity="${MX28_VELOCITY}"/>
 
 </joint>
-<joint name="left_arm_motor_2" type="revolute">
+<joint name="left_elbow" type="revolute">
 <origin xyz="-0.018688 0.021938 -0.08675" rpy="0 0 0"/>
 <parent link="left_bicep"/>
 <child link="left_forearm"/>
@@ -472,7 +472,7 @@
 
 </joint>
 
-<joint name="left_leg_motor_0" type="revolute">
+<joint name="left_hip_yaw" type="revolute">
 <origin xyz="0.018839 0.067737 -0.20662" rpy="0 0 0"/>
 <parent link="torso"/>
 <child link="left_hip_side"/>
@@ -480,7 +480,7 @@
   <dynamics damping="${XM430_DAMPING}" friction="${XM430_FRICTION}" />
 <limit effort="${XM430_TORQUE}" lower="-1.309" upper="0.524" velocity="${XM430_VELOCITY}"/>
 </joint>
-<joint name="left_leg_motor_1" type="revolute">
+<joint name="left_hip_roll" type="revolute">
 <origin xyz="-0.0205 0.0 -0.028" rpy="0 0 0"/>
 <parent link="left_hip_side"/>
 <child link="left_hip_front"/>
@@ -489,7 +489,7 @@
           <limit effort="${XM430_TORQUE}" lower="-${PI/4}" upper="${PI/2}" velocity="${XM430_VELOCITY}"/>
 
 </joint>
-<joint name="left_leg_motor_2" type="revolute">
+<joint name="left_hip_pitch" type="revolute">
 <origin xyz="0.020771 0.0203 0.0" rpy="0 0 0"/>
 <parent link="left_hip_front"/>
 <child link="left_thigh"/>
@@ -498,7 +498,7 @@
             <limit effort="${XM430_TORQUE}" lower="-${PI/4}" upper="${PI*3/4}" velocity="${XM430_VELOCITY}"/>
 
 </joint>
-<joint name="left_leg_motor_3" type="revolute">
+<joint name="left_knee" type="revolute">
   <origin xyz="0.0 0.005269 -0.116" rpy="0 0 0"/>
   <parent link="left_thigh"/>
   <child link="left_calve"/>
@@ -507,7 +507,7 @@
             <limit effort="${MX64_TORQUE}" lower="-2.793" upper="0" velocity="${MX64_VELOCITY}"/>
 
 </joint>
-<joint name="left_leg_motor_4" type="revolute">
+<joint name="left_ankle_pitch" type="revolute">
   <origin xyz="0.0013 0.0 -0.088" rpy="0 0 0"/>
   <parent link="left_calve"/>
   <child link="left_ankle"/>
@@ -516,7 +516,7 @@
             <limit effort="${MX64_TORQUE}" lower="-${PI/4}" upper="${PI/2}" velocity="${MX64_VELOCITY}"/>
 
 </joint>
-<joint name="left_leg_motor_5" type="revolute">
+<joint name="left_ankle_roll" type="revolute">
 <origin xyz="-0.0645 -0.0235 -0.036" rpy="0 0 0"/>
 <parent link="left_ankle"/>
 <child link="left_foot"/>
@@ -526,7 +526,7 @@
 
 </joint>
 
-<joint name="right_arm_motor_0" type="revolute">
+<joint name="right_shoulder_pitch" type="revolute">
   <origin xyz="0.006539 -0.107163 -0.00062" rpy="0 0 0"/>
   <parent link="torso"/>
   <child link="right_shoulder"/>
@@ -535,7 +535,7 @@
               <limit effort="${XM430_TORQUE}" lower="-${PI}" upper="${PI*5/4}" velocity="${XM430_VELOCITY}"/>
 
 </joint>
-<joint name="right_arm_motor_1" type="revolute">
+<joint name="right_shoulder_roll" type="revolute">
   <origin xyz="0.021 -0.0295 -0.021" rpy="0 0 0"/>
   <parent link="right_shoulder"/>
   <child link="right_bicep"/>
@@ -544,7 +544,7 @@
                 <limit effort="${MX28_TORQUE}" lower="0" upper="${PI/2}" velocity="${MX28_VELOCITY}"/>
 
 </joint>
-<joint name="right_arm_motor_2" type="revolute">
+<joint name="right_elbow" type="revolute">
   <origin xyz="-0.021312 -0.021937 -0.08675" rpy="0 0 0"/>
   <parent link="right_bicep"/>
   <child link="right_forearm"/>
@@ -554,7 +554,7 @@
 
 </joint>
 
-<joint name="right_leg_motor_0" type="revolute">
+<joint name="right_hip_yaw" type="revolute">
   <origin xyz="0.018839 -0.062663 -0.20662" rpy="0 0 0"/>
   <parent link="torso"/>
   <child link="right_hip_side"/>
@@ -563,7 +563,7 @@
   <limit effort="${XM430_TORQUE}" lower="-1.309" upper="0.524" velocity="${XM430_VELOCITY}"/>
 
 </joint>
-<joint name="right_leg_motor_1" type="revolute">
+<joint name="right_hip_roll" type="revolute">
   <origin xyz="-0.0205 0.0 -0.028" rpy="0 0 0"/>
   <parent link="right_hip_side"/>
   <child link="right_hip_front"/>
@@ -572,7 +572,7 @@
             <limit effort="${XM430_TORQUE}" lower="-${PI/4}" upper="${PI/2}" velocity="${XM430_VELOCITY}"/>
 
 </joint>
-<joint name="right_leg_motor_2" type="revolute">
+<joint name="right_hip_pitch" type="revolute">
   <origin xyz="0.020771 0.0203 0.0" rpy="0 0 0"/>
   <parent link="right_hip_front"/>
   <child link="right_thigh"/>
@@ -581,7 +581,7 @@
             <limit effort="${XM430_TORQUE}" lower="-${PI/4}" upper="${PI*3/4}" velocity="${XM430_VELOCITY}"/>
 
 </joint>
-<joint name="right_leg_motor_3" type="revolute">
+<joint name="right_knee" type="revolute">
   <origin xyz="0.0 0.005269 -0.116" rpy="0 0 0"/>
   <parent link="right_thigh"/>
   <child link="right_calve"/>
@@ -590,7 +590,7 @@
             <limit effort="${MX64_TORQUE}" lower="-2.793" upper="0" velocity="${MX64_VELOCITY}"/>
 
 </joint>
-<joint name="right_leg_motor_4" type="revolute">
+<joint name="right_ankle_pitch" type="revolute">
   <origin xyz="0.0013 0.0 -0.088" rpy="0 0 0"/>
   <parent link="right_calve"/>
   <child link="right_ankle"/>
@@ -599,7 +599,7 @@
             <limit effort="${MX64_TORQUE}" lower="-${PI/4}" upper="${PI/2}" velocity="${MX64_VELOCITY}"/>
 
 </joint>
-<joint name="right_leg_motor_5" type="revolute">
+<joint name="right_ankle_roll" type="revolute">
   <origin xyz="-0.0645 -0.0235 -0.036" rpy="0 0 0"/>
   <parent link="right_ankle"/>
   <child link="right_foot"/>

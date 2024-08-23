@@ -14,7 +14,10 @@ class Sensors:
     def __init__(self, body: pb.loadURDF):
         # TODO does this need to be a class?
         self.body = body
+        # TODO should get based on name
         self.imu_link = pb.getNumJoints(self.body) - 1
+        self.imu_ready = False
+        self.get_imu()  # to init
 
     def get_pose(self) -> Transformation:
         """
@@ -36,17 +39,8 @@ class Sensors:
 
         # 6:8 for linear and angular velocity this gets the imu link position and orientation
         [pos, orientation] = pb.getLinkState(self.body, linkIndex=self.imu_link, computeLinkVelocity=1)[4:6]  # TODO double check
-
-        return Transformation(pos, orientation)
-
-    def get_euler_angles(self) -> np.ndarray:
-        imu = self.get_imu()
-
-        if imu is None:
-            return np.array([0, 0, 0])  # TODO should have a better error checking
-
-        return imu.orientation_euler
-        # TODO maybe default return?
+        self.imu_ready = True
+        return Transformation(pos, orientation).orientation_euler
 
     def get_foot_pressure_sensors(self, floor: pb.loadURDF) -> List[bool]:
         """

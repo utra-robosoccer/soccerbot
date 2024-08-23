@@ -1,3 +1,5 @@
+from os.path import expanduser
+
 import pybullet as pb
 
 from soccer_common import Transformation
@@ -9,9 +11,11 @@ class LoadModel:  # TODO Maybe rename to body
     """
 
     # TODO dont know if i like this file
-    def __init__(self, robot_model: str, urdf_model_path: str, walking_torso_height: float, pose: Transformation, fixed_base: bool):
+    def __init__(self, robot_model: str, walking_torso_height: float, pose: Transformation, fixed_base: bool):
         self.pose = pose
         self.robot_model = robot_model
+
+        urdf_model_path = expanduser("~") + f"/catkin_ws/src/soccerbot/soccer_description/{robot_model}" f"_description/urdf/{robot_model}.urdf"
         self.body = self.load_urdf_pybullet(urdf_model_path, fixed_base)
         self.walking_torso_height = walking_torso_height
 
@@ -30,31 +34,20 @@ class LoadModel:  # TODO Maybe rename to body
         return body
 
     # Pose
-    # TODO still dont fully like these solutions
-    def set_walking_torso_height(self, pose: Transformation) -> Transformation:
-        """
-        Takes a 2D pose and sets the height of the pose to the height of the torso
-        https://docs.google.com/presentation/d/10DKYteySkw8dYXDMqL2Klby-Kq4FlJRnc4XUZyJcKsw/edit#slide=id.g163c1c67b73_0_0
-        """
-        # if pose.position[2] < self.walking_torso_height:
-        pose.position = (pose.position[0], pose.position[1], self.walking_torso_height)
-
-        return pose
-
     def set_pose(self, pose: Transformation = Transformation()) -> None:
         """
         Teleports the robot to the desired pose
 
         :param pose: 3D position in pybullet
         """
-        self.pose = self.set_walking_torso_height(pose)
         self.pose.position = (self.pose.position[0], self.pose.position[1], self.walking_torso_height + 0.03)
 
         [y, _, _] = pose.orientation_euler
         r = 0
-        if self.robot_model == "bez2":
+
+        if self.robot_model == "bez2":  # TODO need to fix this
             r = -0.64
 
-        self.pose.orientation_euler = [y, 0, r]  # TODO need to fix this
+        self.pose.orientation_euler = [y, 0, r]
         if pb.isConnected():
             pb.resetBasePositionAndOrientation(self.body, self.pose.position, self.pose.quaternion)

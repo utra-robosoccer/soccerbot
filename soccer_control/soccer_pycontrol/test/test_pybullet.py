@@ -20,7 +20,7 @@ class TestPybullet(unittest.TestCase):
         bez = Bez(robot_model="bez2", pose=pose)
         world.wait(100)
         for i in range(100):
-            [_, pitch, roll] = bez.sensors.get_euler_angles()
+            [_, pitch, roll] = bez.sensors.get_imu()
             print(bez.fallen(pitch))
             world.step()
         # TODO add more
@@ -82,7 +82,7 @@ class TestPybullet(unittest.TestCase):
         tf.bez.ready()
         tf.wait(50)
         while tf.t < 1000:
-            [_, pitch, roll] = tf.bez.sensors.get_euler_angles()
+            [_, pitch, roll] = tf.bez.sensors.get_imu()
             # if tf.fallen(pitch):
             #     pb.applyExternalForce(p.model.body, Links.TORSO, [0, 5, 0], [0, 0, 0], pb.LINK_FRAME)
             # p.model.set_pose()

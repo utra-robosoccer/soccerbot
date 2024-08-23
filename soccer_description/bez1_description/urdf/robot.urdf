@@ -42,7 +42,7 @@
     <visual name="visual">
       <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
       <geometry>
-        <mesh filename="meshes/torso.stl" scale="1.0 1.0 1.0"/>
+        <mesh filename="../meshes/torso.stl" scale="1.0 1.0 1.0"/>
       </geometry>
       <material name="black"/>
     </visual>
@@ -62,7 +62,7 @@
     <visual name="visual">
       <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
       <geometry>
-        <mesh filename="meshes/left_bicep.stl" scale="1.0 1.0 1.0"/>
+        <mesh filename="../meshes/left_bicep.stl" scale="1.0 1.0 1.0"/>
       </geometry>
       <material name="white"/>
     </visual>
@@ -82,7 +82,7 @@
     <visual name="visual">
       <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
       <geometry>
-        <mesh filename="meshes/left_forearm.stl" scale="1.0 1.0 1.0"/>
+        <mesh filename="../meshes/left_forearm.stl" scale="1.0 1.0 1.0"/>
       </geometry>
       <material name="purple"/>
     </visual>
@@ -118,7 +118,7 @@
     <visual name="visual">
       <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
       <geometry>
-        <mesh filename="meshes/right_bicep.stl" scale="1.0 1.0 1.0"/>
+        <mesh filename="../meshes/right_bicep.stl" scale="1.0 1.0 1.0"/>
       </geometry>
       <material name="white"/>
     </visual>
@@ -138,7 +138,7 @@
     <visual name="visual">
       <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
       <geometry>
-        <mesh filename="meshes/right_forearm.stl" scale="1.0 1.0 1.0"/>
+        <mesh filename="../meshes/right_forearm.stl" scale="1.0 1.0 1.0"/>
       </geometry>
       <material name="purple"/>
     </visual>
@@ -174,7 +174,7 @@
     <visual name="visual">
       <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
       <geometry>
-        <mesh filename="meshes/left_hip_side.stl" scale="1.0 1.0 1.0"/>
+        <mesh filename="../meshes/left_hip_side.stl" scale="1.0 1.0 1.0"/>
       </geometry>
       <material name="cyan"/>
     </visual>
@@ -194,7 +194,7 @@
     <visual name="visual">
       <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
       <geometry>
-        <mesh filename="meshes/left_hip_front.stl" scale="1.0 1.0 1.0"/>
+        <mesh filename="../meshes/left_hip_front.stl" scale="1.0 1.0 1.0"/>
       </geometry>
       <material name="blue"/>
     </visual>
@@ -214,7 +214,7 @@
     <visual name="visual">
       <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
       <geometry>
-        <mesh filename="meshes/left_thigh.stl" scale="1.0 1.0 1.0"/>
+        <mesh filename="../meshes/left_thigh.stl" scale="1.0 1.0 1.0"/>
       </geometry>
       <material name="red"/>
     </visual>
@@ -234,7 +234,7 @@
     <visual name="visual">
       <origin xyz="0.0 0.0 -0.0827" rpy="0.0 0.0 0.0"/>
       <geometry>
-        <mesh filename="meshes/left_calve.stl" scale="1.0 1.0 1.0"/>
+        <mesh filename="../meshes/left_calve.stl" scale="1.0 1.0 1.0"/>
       </geometry>
       <material name="yellow"/>
     </visual>
@@ -254,7 +254,7 @@
     <visual name="visual">
       <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
       <geometry>
-        <mesh filename="meshes/left_ankle.stl" scale="1.0 1.0 1.0"/>
+        <mesh filename="../meshes/left_ankle.stl" scale="1.0 1.0 1.0"/>
       </geometry>
       <material name="purple"/>
     </visual>
@@ -274,7 +274,7 @@
     <visual name="visual">
       <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
       <geometry>
-        <mesh filename="meshes/left_foot.stl" scale="1.0 1.0 1.0"/>
+        <mesh filename="../meshes/left_foot.stl" scale="1.0 1.0 1.0"/>
       </geometry>
       <material name="green"/>
     </visual>
@@ -342,7 +342,7 @@
     <visual name="visual">
       <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
       <geometry>
-        <mesh filename="meshes/right_hip_side.stl" scale="1.0 1.0 1.0"/>
+        <mesh filename="../meshes/right_hip_side.stl" scale="1.0 1.0 1.0"/>
       </geometry>
       <material name="cyan"/>
     </visual>
@@ -362,7 +362,7 @@
     <visual name="visual">
       <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
       <geometry>
-        <mesh filename="meshes/right_hip_front.stl" scale="1.0 1.0 1.0"/>
+        <mesh filename="../meshes/right_hip_front.stl" scale="1.0 1.0 1.0"/>
       </geometry>
       <material name="blue"/>
     </visual>
@@ -382,7 +382,7 @@
     <visual name="visual">
       <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
       <geometry>
-        <mesh filename="meshes/right_thigh.stl" scale="1.0 1.0 1.0"/>
+        <mesh filename="../meshes/right_thigh.stl" scale="1.0 1.0 1.0"/>
       </geometry>
       <material name="red"/>
     </visual>
@@ -402,7 +402,7 @@
     <visual name="visual">
       <origin xyz="0.0 0.0 -0.0827" rpy="0.0 0.0 0.0"/>
       <geometry>
-        <mesh filename="meshes/right_calve.stl" scale="1.0 1.0 1.0"/>
+        <mesh filename="../meshes/right_calve.stl" scale="1.0 1.0 1.0"/>
       </geometry>
       <material name="yellow"/>
     </visual>
@@ -422,7 +422,7 @@
     <visual name="visual">
       <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
       <geometry>
-        <mesh filename="meshes/right_ankle.stl" scale="1.0 1.0 1.0"/>
+        <mesh filename="../meshes/right_ankle.stl" scale="1.0 1.0 1.0"/>
       </geometry>
       <material name="purple"/>
     </visual>
@@ -442,7 +442,7 @@
     <visual name="visual">
       <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
       <geometry>
-        <mesh filename="meshes/right_foot.stl" scale="1.0 1.0 1.0"/>
+        <mesh filename="../meshes/right_foot.stl" scale="1.0 1.0 1.0"/>
       </geometry>
       <material name="green"/>
     </visual>
@@ -510,7 +510,7 @@
     <visual name="visual">
       <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
       <geometry>
-        <mesh filename="meshes/neck.stl" scale="1.0 1.0 1.0"/>
+        <mesh filename="../meshes/neck.stl" scale="1.0 1.0 1.0"/>
       </geometry>
       <material name="silver"/>
     </visual>
@@ -530,7 +530,7 @@
     <visual name="visual">
       <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
       <geometry>
-        <mesh filename="meshes/head.stl" scale="1.0 1.0 1.0"/>
+        <mesh filename="../meshes/head.stl" scale="1.0 1.0 1.0"/>
       </geometry>
       <material name="silver"/>
     </visual>

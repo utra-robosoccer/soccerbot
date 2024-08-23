@@ -9,6 +9,7 @@ PLOT = True
 
 
 class TestIK(unittest.TestCase):
+    # TODO switch to placo for IK
     def test_x_sweep(self):
         """
         Case 1: Standard case

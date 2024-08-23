@@ -1,115 +1,202 @@
-from copy import deepcopy
-from typing import Tuple, Union
+import time
+from os.path import expanduser
+from typing import List
 
-import scipy
-
-# from soccer_pycontrol.exp.calibration import adjust_navigation_transform
-from soccer_pycontrol.path.path_robot import PathRobot
-
-from soccer_common import Transformation
+import numpy as np
+import placo
+from placo_utils.visualization import footsteps_viz, frame_viz, line_viz, robot_viz
 
 
 class FootStepPlanner:
-    """
-    Class to interface with path for robot foot steps.
-    """
+    def __init__(self, robot_model: str, parameters: dict, funct_time, debug: bool = True):
+        self.funct_time = funct_time
+        self.DT = parameters["control_frequency"]
 
-    def __init__(
-        self,
-        use_calibration: bool = False,
-        sim: str = "_sim",
-        robot_model: str = "bez1",
-        torso_offset_pitch: float = 0.0,
-        torso_offset_x: float = 0.0,
-        walking_torso_height: float = 0.40,
-        foot_center_to_floor: float = 0.0221,
-    ):
-        self.robot_model = robot_model
-        self.sim = sim
+        self.debug = debug
 
-        self.robot_path: Union[PathRobot, None] = None
-        self.use_calibration = use_calibration
+        model_filename = expanduser("~") + f"/catkin_ws/src/soccerbot/soccer_description/{robot_model}_description/urdf/robot.urdf"
+        self.parameters = self.walk_parameters(parameters)
 
-        self.walking_torso_height = walking_torso_height
-        self.foot_center_to_floor = foot_center_to_floor
-        pitch_correction = Transformation([0, 0, 0], euler=[0, torso_offset_pitch, 0])
-        self.torso_offset = Transformation([torso_offset_x, 0, 0]) @ pitch_correction
+        self.last_replan = 0
+        self.start_t = self.funct_time()
+        # TODO is there too many global var
+        self.robot = placo.HumanoidRobot(model_filename)
 
-        # Odom pose at start of path, reset everytime a new path is created
-        # Odom pose, always starts at (0,0) and is the odometry of the robot's movement.
-        # All odom paths start from odom pose
-        self.odom_pose_start_path = Transformation()
-        self.odom_pose = Transformation()
+        self.walk_pattern = placo.WalkPatternGenerator(self.robot, self.parameters)
+        self.repetitive_footsteps_planner = placo.FootstepsPlannerRepetitive(self.parameters)
+        self.trajectory = None
+        self.tasks = None
+        self.solver = None
 
-        self.current_step_time = 0
+        if self.debug:
+            # Starting Meshcat viewer
+            self.viz = robot_viz(self.robot)
+            self.last_display = self.funct_time()
 
-    def create_path_to_goal(self, end_pose: Transformation) -> PathRobot:
-        """
-        Creates a path from the robot's current location to the goal location
+    @staticmethod
+    def walk_parameters(parameters: dict):
+        placo_parameters = placo.HumanoidParameters()
 
-        :param end_pose: 3D transformation
-        :return: Robot path
-        """
-        # TODO make all end goals relative
-        # TODO is this the best place for it?
-        # start_pose.position = [start_pose.position[0], start_pose.position[1], self.walking_torso_height]
+        # Timing parameters
+        placo_parameters.single_support_duration = parameters["single_support_duration"]
+        placo_parameters.single_support_timesteps = parameters["single_support_timesteps"]
+        placo_parameters.double_support_ratio = parameters["double_support_ratio"]
+        placo_parameters.startend_double_support_ratio = parameters["startend_double_support_ratio"]
+        placo_parameters.planned_timesteps = parameters["planned_timesteps"]
+        placo_parameters.replan_timesteps = parameters["replan_timesteps"]
 
-        end_pose.position = [end_pose.position[0], end_pose.position[1], self.walking_torso_height]
+        # Posture parameters
+        placo_parameters.walk_com_height = parameters["walk_com_height"]
+        placo_parameters.walk_foot_height = parameters["walk_foot_height"]
+        placo_parameters.walk_trunk_pitch = parameters["walk_trunk_pitch"]
+        placo_parameters.walk_foot_rise_ratio = parameters["walk_foot_rise_ratio"]
 
-        # Remove the roll and pitch from the designated position
-        [y, _, _] = end_pose.orientation_euler
-        end_pose.orientation_euler = [y, 0, 0]
+        # Feet parameters
+        placo_parameters.foot_length = parameters["foot_length"]
+        placo_parameters.foot_width = parameters["foot_width"]
+        placo_parameters.feet_spacing = parameters["feet_spacing"]
+        placo_parameters.zmp_margin = parameters["zmp_margin"]
+        placo_parameters.foot_zmp_target_x = parameters["foot_zmp_target_x"]
+        placo_parameters.foot_zmp_target_y = parameters["foot_zmp_target_y"]
 
-        # Add calibration
-        # TODO add when fixed
-        # if self.use_calibration:
-        #     end_pose_calibrated = adjust_navigation_transform(start_pose, end_pose)
-        # else:
-        end_pose_calibrated = end_pose
+        # Limit parameters
+        placo_parameters.walk_max_dtheta = parameters["walk_max_dtheta"]
+        placo_parameters.walk_max_dy = parameters["walk_max_dy"]
+        placo_parameters.walk_max_dx_forward = parameters["walk_max_dx_forward"]
+        placo_parameters.walk_max_dx_backward = parameters["walk_max_dx_backward"]
+        return placo_parameters
 
-        # print( f"\033[92mEnd Pose Calibrated: Position (xyz) [{end_pose_calibrated.position[0]:.3f} {
-        # end_pose_calibrated.position[1]:.3f} {end_pose_calibrated.position[2]:.3f}], " f"Orientation (xyzw) [{
-        # end_pose_calibrated.quaternion[0]:.3f} {end_pose_calibrated.quaternion[1]:.3f} {end_pose_calibrated.quaternion[
-        # 2]:.3f} {end_pose_calibrated.quaternion[3]:.3f}]\033[0m" )
+    # TODO can this be in init
+    def setup_tasks(self):
+        # Creating the kinematics solver
+        self.solver = placo.KinematicsSolver(self.robot)
+        self.solver.enable_velocity_limits(True)
+        self.solver.dt = self.DT
 
-        self.robot_path = PathRobot(
-            Transformation([0, 0, self.walking_torso_height], [0, 0, 0, 1]),
-            end_pose_calibrated,
-            foot_center_to_floor=self.foot_center_to_floor,
-            sim=self.sim,
-            robot_model=self.robot_model,
+        # Creating the walk QP tasks
+        self.tasks = placo.WalkTasks()
+        self.tasks.initialize_tasks(self.solver, self.robot)
+
+        # Creating a joint task to assign DoF values for upper body
+        elbow = -50 * np.pi / 180
+        shoulder_roll = 0 * np.pi / 180
+        shoulder_pitch = 20 * np.pi / 180
+        joints_task = self.solver.add_joints_task()
+        joints_task.set_joints(
+            {
+                # "left_shoulder_roll": shoulder_roll,
+                "left_shoulder_pitch": shoulder_pitch,
+                "left_elbow": elbow,
+                # "right_shoulder_roll": -shoulder_roll,
+                "right_shoulder_pitch": shoulder_pitch,
+                "right_elbow": elbow,
+                "head_pitch": 0.0,
+                "head_yaw": 0.0,
+            }
         )
+        joints_task.configure("joints", "soft", 1.0)
 
-        # TODO this edits the rate for the controller need to figure out how to use it
-        self.current_step_time = 0
+        # Placing the robot in the initial position
+        print("Placing the robot in the initial position...")
+        self.tasks.reach_initial_pose(
+            np.eye(4),
+            self.parameters.feet_spacing,
+            self.parameters.walk_com_height,
+            self.parameters.walk_trunk_pitch,
+        )
+        print("Initial position reached")
 
-        self.odom_pose_start_path = deepcopy(self.odom_pose)
-        # TODO add unit test
-        return self.robot_path
+    def configure_planner(self, d_x: float = 0.0, d_y: float = 0.0, d_theta: float = 0.0, nb_steps: int = 10):
+        # Configure the FootstepsPlanner
+        self.repetitive_footsteps_planner.configure(d_x, d_y, d_theta, nb_steps)
 
-    def get_next_step(self, t: float) -> Tuple[Transformation, Transformation]:
-        """
-        Updates the configuration for the robot for the next position t based on the current path
+    def setup_footsteps(self):
+        # Planning footsteps
+        T_world_left = placo.flatten_on_floor(self.robot.get_T_world_left())
+        T_world_right = placo.flatten_on_floor(self.robot.get_T_world_right())
+        footsteps = self.repetitive_footsteps_planner.plan(placo.HumanoidRobot_Side.left, T_world_left, T_world_right)
 
-        :param t: Timestep relative to the time of the first path, where t=0 is the beginning of the path
-        """
+        supports = placo.FootstepsPlanner.make_supports(footsteps, True, self.parameters.has_double_support(), True)
 
-        assert t <= self.robot_path.duration()
+        # Creating the pattern generator and making an initial plan
+        self.trajectory = self.walk_pattern.plan(supports, self.robot.com_world(), 0.0)
 
-        # Get Torso position (Average Time: 0.0007538795471191406)
-        torso_position = self.robot_path.torsoPosition(t) @ self.torso_offset
+    def setup_walk(self, d_x: float = 0.0, d_y: float = 0.0, d_theta: float = 0.0, nb_steps: int = 10):
+        self.setup_tasks()
 
-        # Get foot position at time (Average Time: 0.0004878044128417969)
-        [right_foot_position, left_foot_position] = self.robot_path.footPosition(t)
+        self.configure_planner(d_x, d_y, d_theta, nb_steps)
 
-        # Calcualate the feet position relative from torso (Average Time: 0.000133514404296875)
-        torso_to_left_foot = scipy.linalg.lstsq(torso_position, left_foot_position, lapack_driver="gelsy")[0]
-        torso_to_right_foot = scipy.linalg.lstsq(torso_position, right_foot_position, lapack_driver="gelsy")[0]
+        self.setup_footsteps()
 
-        # TODO is this needed ?
-        # self.urdf.pose = torso_position
+        self.last_display = self.funct_time()
+        self.last_replan = 0
+        self.start_t = self.funct_time()
 
-        # Inverse kinematics for both feet (Average Time: 0.0015840530395507812)
+    def walk_loop(
+        self,
+        t: float,
+    ):
+        # Updating the QP tasks from planned trajectory
+        self.tasks.update_tasks_from_trajectory(self.trajectory, t)
 
-        # TODO add unit test
-        return torso_to_right_foot, torso_to_left_foot
+        # Invoking the IK QP solver
+        self.robot.update_kinematics()
+        qd_sol = self.solver.solve(True)
+
+        # Ensuring the robot is kinematically placed on the floor on the proper foot to avoid integration drifts
+        if not self.trajectory.support_is_both(t):
+            self.robot.update_support_side(str(self.trajectory.support_side(t)))
+            self.robot.ensure_on_floor()
+
+        # If enough time elapsed and we can replan, do the replanning
+        if t - self.last_replan > self.parameters.replan_timesteps * self.parameters.dt() and self.walk_pattern.can_replan_supports(
+            self.trajectory, t
+        ):
+
+            self.last_replan = t
+            # Replanning footsteps from current trajectory
+            supports = self.walk_pattern.replan_supports(self.repetitive_footsteps_planner, self.trajectory, t)
+
+            # Replanning CoM trajectory, yielding a new trajectory we can switch to
+            self.trajectory = self.walk_pattern.replan(supports, self.trajectory, t)
+
+            self.update_viz(supports, self.trajectory)
+
+        # During the warmup phase, the robot is enforced to stay in the initial position
+        self.update_meshcat(t)
+
+    def step(self, t: float):
+        # Spin-lock until the next tick
+        t += self.DT
+        # while self.funct_time() < self.start_t + t:
+        #     time.sleep(1e-3)
+
+        return t
+
+    def update_viz(self, supports: List[placo.Supports], trajectory: placo.WalkTrajectory):
+        if self.debug:
+            # Drawing footsteps
+            footsteps_viz(supports)
+
+            # Drawing planned CoM trajectory on the ground
+            coms = [[*trajectory.get_p_world_CoM(t)[:2], 0.0] for t in np.linspace(trajectory.t_start, trajectory.t_end, 100)]
+            line_viz("CoM_trajectory", np.array(coms), 0xFFAA00)
+
+    def update_meshcat(self, t: float):
+        # Updating meshcat display periodically
+        if self.debug:
+            if self.funct_time() - self.last_display > 0.03:
+                self.last_display = self.funct_time()
+                self.viz.display(self.robot.state.q)
+
+                frame_viz("left_foot_target", self.trajectory.get_T_world_left(t))
+                frame_viz("right_foot_target", self.trajectory.get_T_world_right(t))
+
+                T_world_trunk = np.eye(4)
+                T_world_trunk[:3, :3] = self.trajectory.get_R_world_trunk(t)
+                T_world_trunk[:3, 3] = self.trajectory.get_p_world_CoM(t)
+                frame_viz("trunk_target", T_world_trunk)
+
+
+if __name__ == "__main__":
+    walk = FootStepPlanner("bez1", time.time, debug=True)

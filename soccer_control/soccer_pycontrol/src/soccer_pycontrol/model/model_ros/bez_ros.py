@@ -1,50 +1,55 @@
-import math
-import os
-from typing import Optional
+from os.path import expanduser
 
 import numpy as np
+import pinocchio
 import rospy
-import scipy
-import tf
-import tf2_py
-import torch
-from geometry_msgs.msg import Pose2D, PoseStamped
+import yaml
 from soccer_pycontrol.model.bez import Bez
-from soccer_pycontrol.model.inverse_kinematics.ik_actions import IKActions
-from soccer_pycontrol.model.model_ros.kinematic_data_ros import KinematicDataROS
 from soccer_pycontrol.model.model_ros.motor_control_ros import MotorControlROS
 from soccer_pycontrol.model.model_ros.sensors_ros import SensorsROS
 
-# from soccer_pycontrol.old.joints import Joints
-from std_msgs.msg import Empty
-
-from soccer_common import Transformation
-from soccer_msgs.msg import RobotState
-
 
 class BezROS(Bez):
-    def __init__(self):
+    def __init__(self, ns: str = ""):
+        self.ns = ns
+        self.robot_model = rospy.get_param("robot_model", "bez1")
+        if rospy.get_param("/use_sim_time", True):
+            sim = "_sim"
+        else:
+            sim = ""
 
-        self.data = KinematicDataROS()
+        self.parameters = self.get_parameters(sim)
 
-        self.motor_control = MotorControlROS(self.data.motor_names)
-        self.sensors = SensorsROS()
+        motor_offsets = self.get_motor_names()
+        motor_names = list(motor_offsets.keys())[1:]
 
-        self.ik_actions = IKActions(self.data)
+        self.motor_control = MotorControlROS(motor_names, ns)
 
-    # TODO dont like this placement
-    def set_walking_torso_height(self, pose: Transformation) -> Transformation:
-        """
-        Takes a 2D pose and sets the height of the pose to the height of the torso
-        https://docs.google.com/presentation/d/10DKYteySkw8dYXDMqL2Klby-Kq4FlJRnc4XUZyJcKsw/edit#slide=id.g163c1c67b73_0_0
-        """
-        # if pose.position[2] < self.walking_torso_height:
-        # pose.position = (pose.position[0], pose.position[1], self.data.walking_torso_height)
-        p = pose
-        position = p.position
-        position[2] = self.data.walking_torso_height
-        p.position = position
-        return p
+        self.sensors = SensorsROS(ns)
 
-    def ready(self) -> None:
-        super(BezROS, self).ready()
+    # TODO fix dupe
+    def get_motor_names(self):
+        urdf_model_path = (
+            expanduser("~") + f"/catkin_ws/src/soccerbot/soccer_description/{self.robot_model}" f"_description/urdf/{self.robot_model}.urdf"
+        )
+
+        model = pinocchio.buildModelFromUrdf(urdf_model_path)
+
+        data = model.createData()
+
+        q = np.zeros_like(pinocchio.randomConfiguration(model))
+        v = pinocchio.utils.zero(model.nv)
+
+        pinocchio.ccrba(model, data, q, v)
+        # for name, oMi in zip(model.names, data.oMi):
+        #     print(("{:<24} : {: .2f} {: .2f} {: .2f}".format(name, *oMi.translation.T.flat)))
+        # TODO should make a unit test to make sure the data is correct and maybe use pybullet toverify
+        return {model.names[i]: data.oMi[i].translation.T for i in range(len(model.names))}
+
+    def get_parameters(self, sim: str) -> dict:
+        with open(
+            expanduser("~") + f"/catkin_ws/src/soccerbot/soccer_control/soccer_pycontrol/config/{self.robot_model}/{self.robot_model}{sim}.yaml", "r"
+        ) as file:
+            parameters = yaml.safe_load(file)
+            file.close()
+        return parameters

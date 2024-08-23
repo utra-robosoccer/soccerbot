@@ -1,5 +1,7 @@
 import os
 
+import numpy as np
+
 if "ROS_NAMESPACE" not in os.environ:
     os.environ["ROS_NAMESPACE"] = "/robot1"
 
@@ -57,26 +59,26 @@ def test_firmware_interface():
     for i in range(50000):
         j = JointState()
         j.name = [
-            "left_arm_motor_2",
-            "right_arm_motor_2",
-            "head_motor_0",
-            "head_motor_1",
-            "left_arm_motor_0",
-            "left_arm_motor_1",
-            "right_arm_motor_0",
-            "right_arm_motor_1",
-            "left_leg_motor_0",
-            "left_leg_motor_1",
-            "left_leg_motor_2",
-            "left_leg_motor_3",
-            "left_leg_motor_4",
-            "left_leg_motor_5",
-            "right_leg_motor_0",
-            "right_leg_motor_1",
-            "right_leg_motor_2",
-            "right_leg_motor_3",
-            "right_leg_motor_4",
-            "right_leg_motor_5",
+            "left_shoulder_pitch",
+            "left_shoulder_roll",
+            "left_elbow",
+            "right_shoulder_pitch",
+            "right_shoulder_roll",
+            "right_elbow",
+            "right_hip_yaw",
+            "right_hip_roll",
+            "right_hip_pitch",
+            "right_knee",
+            "right_ankle_pitch",
+            "right_ankle_roll",
+            "left_hip_yaw",
+            "left_hip_roll",
+            "left_hip_pitch",
+            "left_knee",
+            "left_ankle_pitch",
+            "left_ankle_roll",
+            "head_yaw",
+            "head_pitch",
         ]
         # j.position = [math.sin(i / 180 * math.pi) * 0.1, math.cos(i / 180 * math.pi) * 0.1]
 
@@ -95,7 +97,29 @@ def test_firmware_interface():
 
         time.sleep(0.01)
 
-    pass
+def test_firmware_interface_single_motor_range(motor_name: str = "head_yaw"):
+    rospy.init_node("firmware_interface")
+    rospy.set_param("motor_mapping", os.path.dirname(os.path.realpath(__file__)) + "/../../config/bez2.yaml")
+    rospy.set_param("motor_types", os.path.dirname(os.path.realpath(__file__)) + "/../../config/motor_types.yaml")
+
+    f = FirmwareInterface()
+    motor_range = np.linspace(-np.pi, np.pi)
+    for i in motor_range:
+        j = JointState()
+        j.name = [
+            motor_name
+        ]
+
+        j.position = [i]
+
+
+
+        j.header.stamp = rospy.Time.now()
+
+        f.joint_command_callback(j)
+
+        time.sleep(0.01)
+
 
 
 def test_firmware_interface_normal():

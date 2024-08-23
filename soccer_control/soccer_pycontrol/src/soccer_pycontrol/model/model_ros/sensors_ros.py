@@ -9,8 +9,9 @@ from soccer_common import Transformation
 
 
 class SensorsROS(Sensors):
-    def __init__(self):
-        self.imu_subscriber = rospy.Subscriber("/robot1/imu_filtered", Imu, self.imu_callback, queue_size=1)
+    def __init__(self, ns: str = ""):
+        self.imu_msg = None
+        self.imu_subscriber = rospy.Subscriber(ns + "imu_filtered", Imu, self.imu_callback, queue_size=1)
         self.imu_ready = False
         self.tf_listener = tf.TransformListener()
 
@@ -40,10 +41,8 @@ class SensorsROS(Sensors):
                 self.imu_msg.orientation.z,
                 self.imu_msg.orientation.w,
             ],
-        )
+        ).orientation_euler
 
     def get_foot_pressure_sensors(self, floor):
         # TODO subscribe to foot pressure sensors
         pass
-
-    # TODO should add get pose
