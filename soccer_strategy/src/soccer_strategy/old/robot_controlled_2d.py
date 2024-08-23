@@ -3,9 +3,9 @@ from typing import List, Optional
 
 import numpy as np
 import rospy
+from soccer_object_detection.camera import Camera
 from soccer_pycontrol import path
 
-from soccer_common.perception.camera import Camera
 from soccer_common.transformation import Transformation
 from soccer_common.utils import wrapToPi
 from soccer_strategy.old.ball import Ball

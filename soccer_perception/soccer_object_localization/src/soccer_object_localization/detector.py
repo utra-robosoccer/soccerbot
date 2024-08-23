@@ -1,8 +1,6 @@
 import cv2
-import numpy as np
 from sensor_msgs.msg import Image
-
-from soccer_common.perception.camera_calculations import CameraCalculations
+from soccer_object_detection.camera.camera_calculations import CameraCalculations
 
 
 class Detector:

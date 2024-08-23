@@ -4,10 +4,9 @@ import time
 
 from cv2 import Mat
 from rospy.impl.tcpros_base import DEFAULT_BUFF_SIZE
+from soccer_object_detection.camera.camera_calculations_ros import CameraCalculationsRos
 from soccer_object_localization.detector_fieldline import DetectorFieldline
 from tf import TransformBroadcaster
-
-from soccer_common.perception.camera_calculations_ros import CameraCalculationsRos
 
 if "ROS_NAMESPACE" not in os.environ:
     os.environ["ROS_NAMESPACE"] = "/robot1"

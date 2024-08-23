@@ -40,202 +40,202 @@
   <material name="plastic_matte_yellow">
     <color rgba="0.9098039215686274 0.6784313725490196 0.13725490196078433 1.0"/>
   </material>
-  <transmission name="right_leg_motor_0_tran">
+  <transmission name="right_hip_yaw_tran">
     <type>transmission_interface/SimpleTransmission</type>
-    <joint name="right_leg_motor_0">
+    <joint name="right_hip_yaw">
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
     </joint>
-    <actuator name="right_leg_motor_0_actr">
+    <actuator name="right_hip_yaw_actr">
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
-  <transmission name="left_leg_motor_0_tran">
+  <transmission name="left_hip_yaw_tran">
     <type>transmission_interface/SimpleTransmission</type>
-    <joint name="left_leg_motor_0">
+    <joint name="left_hip_yaw">
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
     </joint>
-    <actuator name="left_leg_motor_0_actr">
+    <actuator name="left_hip_yaw_actr">
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
-  <transmission name="left_leg_motor_1_tran">
+  <transmission name="left_hip_roll_tran">
     <type>transmission_interface/SimpleTransmission</type>
-    <joint name="left_leg_motor_1">
+    <joint name="left_hip_roll">
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
     </joint>
-    <actuator name="left_leg_motor_1_actr">
+    <actuator name="left_hip_roll_actr">
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
-  <transmission name="right_leg_motor_1_tran">
+  <transmission name="right_hip_roll_tran">
     <type>transmission_interface/SimpleTransmission</type>
-    <joint name="right_leg_motor_1">
+    <joint name="right_hip_roll">
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
     </joint>
-    <actuator name="right_leg_motor_1_actr">
+    <actuator name="right_hip_roll_actr">
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
-  <transmission name="left_leg_motor_2_tran">
+  <transmission name="left_hip_pitch_tran">
     <type>transmission_interface/SimpleTransmission</type>
-    <joint name="left_leg_motor_2">
+    <joint name="left_hip_pitch">
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
     </joint>
-    <actuator name="left_leg_motor_2_actr">
+    <actuator name="left_hip_pitch_actr">
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
-  <transmission name="right_leg_motor_2_tran">
+  <transmission name="right_hip_pitch_tran">
     <type>transmission_interface/SimpleTransmission</type>
-    <joint name="right_leg_motor_2">
+    <joint name="right_hip_pitch">
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
     </joint>
-    <actuator name="right_leg_motor_2_actr">
+    <actuator name="right_hip_pitch_actr">
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
-  <transmission name="left_leg_motor_3_tran">
+  <transmission name="left_knee_tran">
     <type>transmission_interface/SimpleTransmission</type>
-    <joint name="left_leg_motor_3">
+    <joint name="left_knee">
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
     </joint>
-    <actuator name="left_leg_motor_3_actr">
+    <actuator name="left_knee_actr">
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
-  <transmission name="right_leg_motor_3_tran">
+  <transmission name="right_knee_tran">
     <type>transmission_interface/SimpleTransmission</type>
-    <joint name="right_leg_motor_3">
+    <joint name="right_knee">
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
     </joint>
-    <actuator name="right_leg_motor_3_actr">
+    <actuator name="right_knee_actr">
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
-  <transmission name="left_leg_motor_4_tran">
+  <transmission name="left_ankle_pitch_tran">
     <type>transmission_interface/SimpleTransmission</type>
-    <joint name="left_leg_motor_4">
+    <joint name="left_ankle_pitch">
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
     </joint>
-    <actuator name="left_leg_motor_4_actr">
+    <actuator name="left_ankle_pitch_actr">
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
-  <transmission name="right_leg_motor_4_tran">
+  <transmission name="right_ankle_pitch_tran">
     <type>transmission_interface/SimpleTransmission</type>
-    <joint name="right_leg_motor_4">
+    <joint name="right_ankle_pitch">
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
     </joint>
-    <actuator name="right_leg_motor_4_actr">
+    <actuator name="right_ankle_pitch_actr">
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
-  <transmission name="right_leg_motor_5_tran">
+  <transmission name="right_ankle_roll_tran">
     <type>transmission_interface/SimpleTransmission</type>
-    <joint name="right_leg_motor_5">
+    <joint name="right_ankle_roll">
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
     </joint>
-    <actuator name="right_leg_motor_5_actr">
+    <actuator name="right_ankle_roll_actr">
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
-  <transmission name="left_leg_motor_5_tran">
+  <transmission name="left_ankle_roll_tran">
     <type>transmission_interface/SimpleTransmission</type>
-    <joint name="left_leg_motor_5">
+    <joint name="left_ankle_roll">
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
     </joint>
-    <actuator name="left_leg_motor_5_actr">
+    <actuator name="left_ankle_roll_actr">
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
-  <transmission name="head_motor_0_tran">
+  <transmission name="head_yaw_tran">
     <type>transmission_interface/SimpleTransmission</type>
-    <joint name="head_motor_0">
+    <joint name="head_yaw">
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
     </joint>
-    <actuator name="head_motor_0_actr">
+    <actuator name="head_yaw_actr">
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
-  <transmission name="head_motor_1_tran">
+  <transmission name="head_pitch_tran">
     <type>transmission_interface/SimpleTransmission</type>
-    <joint name="head_motor_1">
+    <joint name="head_pitch">
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
     </joint>
-    <actuator name="head_motor_1_actr">
+    <actuator name="head_pitch_actr">
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
-  <transmission name="right_arm_motor_0_tran">
+  <transmission name="right_shoulder_pitch_tran">
     <type>transmission_interface/SimpleTransmission</type>
-    <joint name="right_arm_motor_0">
+    <joint name="right_shoulder_pitch">
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
     </joint>
-    <actuator name="right_arm_motor_0_actr">
+    <actuator name="right_shoulder_pitch_actr">
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
-  <transmission name="left_arm_motor_0_tran">
+  <transmission name="left_shoulder_pitch_tran">
     <type>transmission_interface/SimpleTransmission</type>
-    <joint name="left_arm_motor_0">
+    <joint name="left_shoulder_pitch">
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
     </joint>
-    <actuator name="left_arm_motor_0_actr">
+    <actuator name="left_shoulder_pitch_actr">
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
-  <transmission name="left_arm_motor_1_tran">
+  <transmission name="left_shoulder_roll_tran">
     <type>transmission_interface/SimpleTransmission</type>
-    <joint name="left_arm_motor_1">
+    <joint name="left_shoulder_roll">
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
     </joint>
-    <actuator name="left_arm_motor_1_actr">
+    <actuator name="left_shoulder_roll_actr">
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
-  <transmission name="right_arm_motor_1_tran">
+  <transmission name="right_shoulder_roll_tran">
     <type>transmission_interface/SimpleTransmission</type>
-    <joint name="right_arm_motor_1">
+    <joint name="right_shoulder_roll">
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
     </joint>
-    <actuator name="right_arm_motor_1_actr">
+    <actuator name="right_shoulder_roll_actr">
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
-  <transmission name="left_arm_motor_2_tran">
+  <transmission name="left_elbow_tran">
     <type>transmission_interface/SimpleTransmission</type>
-    <joint name="left_arm_motor_2">
+    <joint name="left_elbow">
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
     </joint>
-    <actuator name="left_arm_motor_2_actr">
+    <actuator name="left_elbow_actr">
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
-  <transmission name="right_arm_motor_2_tran">
+  <transmission name="right_elbow_tran">
     <type>transmission_interface/SimpleTransmission</type>
-    <joint name="right_arm_motor_2">
+    <joint name="right_elbow">
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
     </joint>
-    <actuator name="right_arm_motor_2_actr">
+    <actuator name="right_elbow_actr">
       <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
@@ -790,7 +790,7 @@
       </geometry>
     </collision>
   </link>
-  <joint name="head_motor_0" type="revolute">
+  <joint name="head_yaw" type="revolute">
     <origin rpy="0 0 0" xyz="0.009539 0.002537 0.03138"/>
     <parent link="torso"/>
     <child link="neck"/>
@@ -798,7 +798,7 @@
     <dynamics damping="0" friction="0"/>
     <limit effort="1.5" lower="-1.5707963267948966" upper="1.5707963267948966" velocity="6.39"/>
   </joint>
-  <joint name="head_motor_1" type="revolute">
+  <joint name="head_pitch" type="revolute">
     <origin rpy="0 0 0" xyz="0.0 -0.0195 0.025"/>
     <parent link="neck"/>
     <child link="head"/>
@@ -806,7 +806,7 @@
     <dynamics damping="0" friction="0"/>
     <limit effort="1.5" lower="0" upper="1.5707963267948966" velocity="6.39"/>
   </joint>
-  <joint name="left_arm_motor_0" type="revolute">
+  <joint name="left_shoulder_pitch" type="revolute">
     <origin rpy="0 0 0" xyz="0.006539 0.112237 -0.00062"/>
     <parent link="torso"/>
     <child link="left_shoulder"/>
@@ -814,7 +814,7 @@
     <dynamics damping="0" friction="0"/>
     <limit effort="4.1" lower="-3.141592653589793" upper="3.9269908169872414" velocity="4.82"/>
   </joint>
-  <joint name="left_arm_motor_1" type="revolute">
+  <joint name="left_shoulder_roll" type="revolute">
     <origin rpy="0 0 0" xyz="0.0205 0.0295 -0.021"/>
     <parent link="left_shoulder"/>
     <child link="left_bicep"/>
@@ -822,7 +822,7 @@
     <dynamics damping="0" friction="0"/>
     <limit effort="2.5" lower="0" upper="1.5707963267948966" velocity="5.76"/>
   </joint>
-  <joint name="left_arm_motor_2" type="revolute">
+  <joint name="left_elbow" type="revolute">
     <origin rpy="0 0 0" xyz="-0.018688 0.021938 -0.08675"/>
     <parent link="left_bicep"/>
     <child link="left_forearm"/>
@@ -830,7 +830,7 @@
     <dynamics damping="0" friction="0"/>
     <limit effort="2.5" lower="0" upper="3.141592653589793" velocity="5.76"/>
   </joint>
-  <joint name="left_leg_motor_0" type="revolute">
+  <joint name="left_hip_yaw" type="revolute">
     <origin rpy="0 0 0" xyz="0.018839 0.067737 -0.20662"/>
     <parent link="torso"/>
     <child link="left_hip_side"/>
@@ -838,7 +838,7 @@
     <dynamics damping="0" friction="0"/>
     <limit effort="4.1" lower="-1.309" upper="0.524" velocity="4.82"/>
   </joint>
-  <joint name="left_leg_motor_1" type="revolute">
+  <joint name="left_hip_roll" type="revolute">
     <origin rpy="0 0 0" xyz="-0.0205 0.0 -0.028"/>
     <parent link="left_hip_side"/>
     <child link="left_hip_front"/>
@@ -846,7 +846,7 @@
     <dynamics damping="0" friction="0"/>
     <limit effort="4.1" lower="-0.7853981633974483" upper="1.5707963267948966" velocity="4.82"/>
   </joint>
-  <joint name="left_leg_motor_2" type="revolute">
+  <joint name="left_hip_pitch" type="revolute">
     <origin rpy="0 0 0" xyz="0.020771 0.0203 0.0"/>
     <parent link="left_hip_front"/>
     <child link="left_thigh"/>
@@ -854,7 +854,7 @@
     <dynamics damping="0" friction="0"/>
     <limit effort="4.1" lower="-0.7853981633974483" upper="2.356194490192345" velocity="4.82"/>
   </joint>
-  <joint name="left_leg_motor_3" type="revolute">
+  <joint name="left_knee" type="revolute">
     <origin rpy="0 0 0" xyz="0.0 0.005269 -0.116"/>
     <parent link="left_thigh"/>
     <child link="left_calve"/>
@@ -862,7 +862,7 @@
     <dynamics damping="0" friction="0"/>
     <limit effort="6.0" lower="-2.793" upper="0" velocity="6.6"/>
   </joint>
-  <joint name="left_leg_motor_4" type="revolute">
+  <joint name="left_ankle_pitch" type="revolute">
     <origin rpy="0 0 0" xyz="0.0013 0.0 -0.088"/>
     <parent link="left_calve"/>
     <child link="left_ankle"/>
@@ -870,7 +870,7 @@
     <dynamics damping="0" friction="0"/>
     <limit effort="6.0" lower="-0.7853981633974483" upper="1.5707963267948966" velocity="6.6"/>
   </joint>
-  <joint name="left_leg_motor_5" type="revolute">
+  <joint name="left_ankle_roll" type="revolute">
     <origin rpy="0 0 0" xyz="-0.0645 -0.0235 -0.036"/>
     <parent link="left_ankle"/>
     <child link="left_foot"/>
@@ -878,7 +878,7 @@
     <dynamics damping="0" friction="0"/>
     <limit effort="6.0" lower="-0.7853981633974483" upper="0.7853981633974483" velocity="6.6"/>
   </joint>
-  <joint name="right_arm_motor_0" type="revolute">
+  <joint name="right_shoulder_pitch" type="revolute">
     <origin rpy="0 0 0" xyz="0.006539 -0.107163 -0.00062"/>
     <parent link="torso"/>
     <child link="right_shoulder"/>
@@ -886,7 +886,7 @@
     <dynamics damping="0" friction="0"/>
     <limit effort="4.1" lower="-3.141592653589793" upper="3.9269908169872414" velocity="4.82"/>
   </joint>
-  <joint name="right_arm_motor_1" type="revolute">
+  <joint name="right_shoulder_roll" type="revolute">
     <origin rpy="0 0 0" xyz="0.021 -0.0295 -0.021"/>
     <parent link="right_shoulder"/>
     <child link="right_bicep"/>
@@ -894,7 +894,7 @@
     <dynamics damping="0" friction="0"/>
     <limit effort="2.5" lower="0" upper="1.5707963267948966" velocity="5.76"/>
   </joint>
-  <joint name="right_arm_motor_2" type="revolute">
+  <joint name="right_elbow" type="revolute">
     <origin rpy="0 0 0" xyz="-0.021312 -0.021937 -0.08675"/>
     <parent link="right_bicep"/>
     <child link="right_forearm"/>
@@ -902,7 +902,7 @@
     <dynamics damping="0" friction="0"/>
     <limit effort="2.5" lower="0" upper="3.141592653589793" velocity="5.76"/>
   </joint>
-  <joint name="right_leg_motor_0" type="revolute">
+  <joint name="right_hip_yaw" type="revolute">
     <origin rpy="0 0 0" xyz="0.018839 -0.062663 -0.20662"/>
     <parent link="torso"/>
     <child link="right_hip_side"/>
@@ -910,7 +910,7 @@
     <dynamics damping="0" friction="0"/>
     <limit effort="4.1" lower="-1.309" upper="0.524" velocity="4.82"/>
   </joint>
-  <joint name="right_leg_motor_1" type="revolute">
+  <joint name="right_hip_roll" type="revolute">
     <origin rpy="0 0 0" xyz="-0.0205 0.0 -0.028"/>
     <parent link="right_hip_side"/>
     <child link="right_hip_front"/>
@@ -918,7 +918,7 @@
     <dynamics damping="0" friction="0"/>
     <limit effort="4.1" lower="-0.7853981633974483" upper="1.5707963267948966" velocity="4.82"/>
   </joint>
-  <joint name="right_leg_motor_2" type="revolute">
+  <joint name="right_hip_pitch" type="revolute">
     <origin rpy="0 0 0" xyz="0.020771 0.0203 0.0"/>
     <parent link="right_hip_front"/>
     <child link="right_thigh"/>
@@ -926,7 +926,7 @@
     <dynamics damping="0" friction="0"/>
     <limit effort="4.1" lower="-0.7853981633974483" upper="2.356194490192345" velocity="4.82"/>
   </joint>
-  <joint name="right_leg_motor_3" type="revolute">
+  <joint name="right_knee" type="revolute">
     <origin rpy="0 0 0" xyz="0.0 0.005269 -0.116"/>
     <parent link="right_thigh"/>
     <child link="right_calve"/>
@@ -934,7 +934,7 @@
     <dynamics damping="0" friction="0"/>
     <limit effort="6.0" lower="-2.793" upper="0" velocity="6.6"/>
   </joint>
-  <joint name="right_leg_motor_4" type="revolute">
+  <joint name="right_ankle_pitch" type="revolute">
     <origin rpy="0 0 0" xyz="0.0013 0.0 -0.088"/>
     <parent link="right_calve"/>
     <child link="right_ankle"/>
@@ -942,7 +942,7 @@
     <dynamics damping="0" friction="0"/>
     <limit effort="6.0" lower="-0.7853981633974483" upper="1.5707963267948966" velocity="6.6"/>
   </joint>
-  <joint name="right_leg_motor_5" type="revolute">
+  <joint name="right_ankle_roll" type="revolute">
     <origin rpy="0 0 0" xyz="-0.0645 -0.0235 -0.036"/>
     <parent link="right_ankle"/>
     <child link="right_foot"/>

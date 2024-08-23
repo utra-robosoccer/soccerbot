@@ -4,9 +4,8 @@ import os
 from os.path import expanduser
 
 from rospy.impl.tcpros_base import DEFAULT_BUFF_SIZE
+from soccer_object_detection.camera.camera_calculations_ros import CameraCalculationsRos
 from soccer_object_detection.object_detect_node import ObjectDetectionNode, bcolors
-
-from soccer_common.perception.camera_calculations_ros import CameraCalculationsRos
 
 if "ROS_NAMESPACE" not in os.environ:
     os.environ["ROS_NAMESPACE"] = "/robot1"
@@ -70,7 +69,6 @@ class ObjectDetectionNodeRos(ObjectDetectionNode):
         #
         # if self.game_state.gameState != GameState.GAMESTATE_PLAYING:
         #     return
-
         rospy.loginfo_once("Object Detection Receiving image")
         # width x height x channels (bgra8)
         image = self.br.imgmsg_to_cv2(msg)

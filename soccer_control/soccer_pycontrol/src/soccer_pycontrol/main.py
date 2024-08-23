@@ -16,7 +16,6 @@ if "ROS_NAMESPACE" not in os.environ:
     os.environ["ROS_NAMESPACE"] = "/robot1"
 import numpy as np
 import rospy
-from soccer_pycontrol.old.navigator_ros import NavigatorRos
 
 np.set_printoptions(precision=3)
 

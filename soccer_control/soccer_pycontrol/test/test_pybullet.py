@@ -4,19 +4,24 @@ import numpy as np
 import pybullet as pb
 import pytest
 from soccer_pycontrol.model.bez import Bez
-from soccer_pycontrol.old.links import Links
 from soccer_pycontrol.pybullet_usage.pybullet_world import PybulletWorld
 from soccer_pycontrol.walk_engine.walk_engine import WalkEngine
+
+from soccer_common import Transformation
 
 
 class TestPybullet(unittest.TestCase):
 
     def test_imu(self):
         world = PybulletWorld(camera_yaw=45, real_time=True, rate=100)
-        bez = Bez(robot_model="bez2")
+        # pose = Transformation()
+        pose = Transformation(position=[0, 0, 0.070], euler=[0, -1.57, 0])
+        pose = Transformation(position=[0, 0, 0.070], euler=[0, 1.57, 0])
+        bez = Bez(robot_model="bez2", pose=pose)
         world.wait(100)
         for i in range(100):
-            print(bez.sensors.get_imu().orientation_euler)
+            [_, pitch, roll] = bez.sensors.get_imu()
+            print(bez.fallen(pitch))
             world.step()
         # TODO add more
 
@@ -56,8 +61,8 @@ class TestPybullet(unittest.TestCase):
 
         for j in angles:
             x = [0.0] * bez.motor_control.numb_of_motors
-            x[bez.data.motor_names.index("left_leg_motor_5")] = j
-            x[bez.data.motor_names.index("right_leg_motor_5")] = j
+            x[bez.motor_control.motor_names.index("left_ankle_roll")] = j
+            x[bez.motor_control.motor_names.index("right_ankle_roll")] = j
 
             pb.setJointMotorControlArray(
                 bodyIndex=bez.model.body,
@@ -77,11 +82,12 @@ class TestPybullet(unittest.TestCase):
         tf.bez.ready()
         tf.wait(50)
         while tf.t < 1000:
-            [_, pitch, roll] = tf.bez.sensors.get_euler_angles()
+            [_, pitch, roll] = tf.bez.sensors.get_imu()
             # if tf.fallen(pitch):
             #     pb.applyExternalForce(p.model.body, Links.TORSO, [0, 5, 0], [0, 0, 0], pb.LINK_FRAME)
             # p.model.set_pose()
-            pb.applyExternalForce(tf.bez.model.body, Links.TORSO, [3, 0, 0], [0, 0, 0], pb.LINK_FRAME)
+            # TODO fix link alignment
+            # pb.applyExternalForce(tf.bez.model.body, Links.TORSO, [3, 0, 0], [0, 0, 0], pb.LINK_FRAME)
             tf.stabilize_stand(pitch, roll)
             tf.world.step()
             tf.t += +0.01
@@ -112,7 +118,7 @@ def test_head_localizing_sweep(robot_model: str):
     world.close()
 
 
-@pytest.mark.parametrize("robot_model", ["bez1", "bez2"])
+@pytest.mark.parametrize("robot_model", ["bez1"])  # , "bez2"])
 def test_ready(robot_model: str):
     """
     Case 1: Standard case

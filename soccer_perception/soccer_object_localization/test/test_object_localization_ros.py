@@ -8,9 +8,9 @@ import rospy
 from cv2 import Mat
 from cv_bridge import CvBridge
 from sensor_msgs.msg import Image
+from soccer_object_detection.camera.camera_calculations_ros import CameraCalculationsRos
 from soccer_object_localization.detector_fieldline_ros import DetectorFieldlineRos
 
-from soccer_common.perception.camera_calculations_ros import CameraCalculationsRos
 from soccer_common.utils import download_dataset
 
 os.environ["ROS_NAMESPACE"] = "/robot1"

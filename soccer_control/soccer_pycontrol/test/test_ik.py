@@ -1,4 +1,3 @@
-import os
 import unittest
 
 import numpy as np
@@ -6,18 +5,17 @@ from matplotlib import pyplot as plt
 from soccer_pycontrol.model.inverse_kinematics.ik_actions import IKActions
 from soccer_pycontrol.model.inverse_kinematics.kinematic_data import KinematicData
 
-os.environ["ROS_NAMESPACE"] = "/robot1"
-
 PLOT = True
 
 
 class TestIK(unittest.TestCase):
+    # TODO switch to placo for IK
     def test_x_sweep(self):
         """
         Case 1: Standard case
         :return: None
         """
-        kinematic_data = KinematicData()
+        kinematic_data = KinematicData(robot_model="sigmaban")
         ik_actions = IKActions(kinematic_data)
         thetas, x, z = ik_actions.x_sweep()
         # np.save('ik_data''/x_sweep', thetas)

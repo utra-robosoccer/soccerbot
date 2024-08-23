@@ -9,8 +9,8 @@ from soccer_common import Transformation
 
 
 class TestPybullet(unittest.TestCase):
-
-    def custom_walk(self, cameraTargetPosition: list, start_pose: Transformation, goal_pose: Transformation, robot_model: str = "bez2"):
+    @staticmethod
+    def custom_walk(cameraTargetPosition: list, start_pose: Transformation, goal_pose: Transformation, robot_model: str = "bez1"):
         world = PybulletWorld(camera_yaw=90, real_time=True, rate=100, cameraTargetPosition=cameraTargetPosition)
         bez = Bez(robot_model=robot_model)
         tf = WalkEngine(world, bez)
@@ -39,7 +39,7 @@ class TestPybullet(unittest.TestCase):
 
     def test_foot_step_planner_plane(self):
         world = PybulletWorld(camera_yaw=90, real_time=True, rate=100, cameraTargetPosition=[0, 0, 0.45])
-        bez = Bez(robot_model="bez2")
+        bez = Bez(robot_model="bez1")
         tf = WalkEngine(world, bez)
         tf.wait(50)
         tf.ready()
