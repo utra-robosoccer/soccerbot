@@ -107,10 +107,30 @@ def test_firmware_interface_single_motor_range(motor_name: str = "head_yaw"):
     for i in motor_range:
         j = JointState()
         j.name = [
-            motor_name
+            "left_shoulder_pitch",
+            "left_shoulder_roll",
+            "left_elbow",
+            "right_shoulder_pitch",
+            "right_shoulder_roll",
+            "right_elbow",
+            "right_hip_yaw",
+            "right_hip_roll",
+            "right_hip_pitch",
+            "right_knee",
+            "right_ankle_pitch",
+            "right_ankle_roll",
+            "left_hip_yaw",
+            "left_hip_roll",
+            "left_hip_pitch",
+            "left_knee",
+            "left_ankle_pitch",
+            "left_ankle_roll",
+            "head_yaw",
+            "head_pitch",
         ]
 
-        j.position = [i]
+        j.position = [0.0] * 20
+        j.position[j.name.index(motor_name)] = i
 
 
 

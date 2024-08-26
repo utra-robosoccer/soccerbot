@@ -26,6 +26,7 @@ class FirmwareInterface:
         with open(rospy.get_param("motor_mapping")) as f:
             param_info = yaml.safe_load(f)
             rosparam.upload_params("motor_mapping", param_info)
+
         self.motor_mapping = rospy.get_param("motor_mapping")
         self.motor_id_to_name_dict = {self.motor_mapping[m]["id"]: m for m in self.motor_mapping}
 
@@ -42,6 +43,9 @@ class FirmwareInterface:
         # Start the thread
         serial_thread = threading.Thread(target=self.firmware_update_loop)
         serial_thread.start()
+
+        self._lock = threading.Lock()
+
 
     def reconnect_serial_port(self):
         if self.serial is None:
@@ -79,77 +83,87 @@ class FirmwareInterface:
                 # data_h = self.serial.read()
                 # angle = data_l[0] | (data_h[0] << 8)
                 # print(data_h[0], data_l[0], angle)
+
                 data = self.serial.read(size=2 + 2 * 20 + 12)
 
-                # Publish the Joint State
-                j = JointState()
-                j.header.stamp = rospy.Time.now()
-                for i in range(20):
-                    val = data[i * 2 + 2] | data[i * 2 + 3] << 8
+                self.pub_joint_state(data)
 
-                    motor_name = self.motor_id_to_name_dict[i]
-                    motor_type = self.motor_mapping[motor_name]["type"]
-                    motor_angle_zero = self.motor_mapping[motor_name]["angle_zero"]
-                    max_angle_bytes = self.motor_types[motor_type]["max_angle_bytes"]
-                    max_angle_radians = self.motor_types[motor_type]["max_angle_degrees"] / 180 * math.pi
-
-                    motor_angle_zero_radian = motor_angle_zero / 180 * math.pi
-
-                    motor_angle_radian = (val / max_angle_bytes) * max_angle_radians - motor_angle_zero_radian
-                    flipped = "flipped" in self.motor_mapping[motor_name] and self.motor_mapping[motor_name]["flipped"] == "true"
-                    if flipped:
-                        motor_angle_radian = -motor_angle_radian
-                    j.name.append(motor_name)
-
-                    # TODO debug head motor angles
-                    if "head" in motor_name:
-                        j.position.append(0)
-                    else:
-                        j.position.append(motor_angle_radian)
-                self.joint_state_publisher.publish(j)
-
-                imu = Imu()
-                imu.header.stamp = rospy.Time.now()
-
-                imu_data = data[2 + 2 * 20 : 2 + 2 * 20 + 12]
-
-                # https://www.mouser.com/datasheet/2/783/BST_BMI088_DS001-1509549.pdf
-                ACC_RANGE = 32768.0 / 2.0 / 1.5  # page 27 datasheet bmi088
-                IMU_GY_RANGE = 32768.0 / (1000.0 * math.pi / 180)  # page 39 datasheet bmi088
-                # ACC_RANGE = 32768.0 / 2.0  # page 22 datasheet bmi085
-                # IMU_GY_RANGE = 32768.0 / 1000.0  # page 27 datasheet bmi085
-                G = 9.81
-
-                ax = int.from_bytes(imu_data[0:2], byteorder="big", signed=True) / ACC_RANGE * G
-                ay = int.from_bytes(imu_data[2:4], byteorder="big", signed=True) / ACC_RANGE * G
-                az = int.from_bytes(imu_data[4:6], byteorder="big", signed=True) / ACC_RANGE * G
-
-                ax, ay = ay, ax  # flip pitch and roll
-
-                imu.linear_acceleration.x = ax
-                imu.linear_acceleration.y = ay
-                imu.linear_acceleration.z = az
-
-                vx = int.from_bytes(imu_data[6:8], byteorder="big", signed=True) / IMU_GY_RANGE
-                vy = int.from_bytes(imu_data[8:10], byteorder="big", signed=True) / IMU_GY_RANGE
-                vz = int.from_bytes(imu_data[10:12], byteorder="big", signed=True) / IMU_GY_RANGE
-
-                vx, vy = vy, vx  # flip pitch and roll
-
-                print(f"a {ax} {ay} {az}")
-                print(f"v {vx:10.3f} {vy:10.3f} {vz:10.3f}")
-
-                imu.angular_velocity.x = vx
-                imu.angular_velocity.y = vy
-                imu.angular_velocity.z = vz
-
-                self.imu_publisher.publish(imu)
+                self.pub_imu(data)
 
             except Exception as ex:
                 rospy.logerr_throttle(10, f"Lost connection to serial port {type(ex)} {ex}, retrying...")
                 pass
 
+    def pub_joint_state(self, data):
+        # Publish the Joint State
+        j = JointState()
+        j.header.stamp = rospy.Time.now()
+        for i in range(20):
+            val = data[i * 2 + 2] | data[i * 2 + 3] << 8
+
+            motor_name = self.motor_id_to_name_dict[i]
+            motor_type = self.motor_mapping[motor_name]["type"]
+            motor_angle_zero = self.motor_mapping[motor_name]["angle_zero"]
+            max_angle_bytes = self.motor_types[motor_type]["max_angle_bytes"]
+            max_angle_radians = self.motor_types[motor_type]["max_angle_degrees"] / 180 * math.pi
+
+            motor_angle_zero_radian = motor_angle_zero / 180 * math.pi
+
+            motor_angle_radian = (val / max_angle_bytes) * max_angle_radians - motor_angle_zero_radian
+            flipped = "flipped" in self.motor_mapping[motor_name] and self.motor_mapping[motor_name][
+                "flipped"] == "true"
+            if flipped:
+                motor_angle_radian = -motor_angle_radian
+            j.name.append(motor_name)
+
+            # TODO debug head motor angles
+            if "head" in motor_name:
+                j.position.append(0)
+            else:
+                j.position.append(motor_angle_radian)
+        self.joint_state_publisher.publish(j)
+
+    def pub_imu(self, data):
+        imu = Imu()
+        imu.header.stamp = rospy.Time.now()
+
+        imu_data = data[2 + 2 * 20: 2 + 2 * 20 + 12]
+
+        # https://www.mouser.com/datasheet/2/783/BST_BMI088_DS001-1509549.pdf
+        ACC_RANGE = 32768.0 / 2.0 / 1.5  # page 27 datasheet bmi088
+        IMU_GY_RANGE = 32768.0 / (1000.0 * math.pi / 180)  # page 39 datasheet bmi088
+        # ACC_RANGE = 32768.0 / 2.0  # page 22 datasheet bmi085
+        # IMU_GY_RANGE = 32768.0 / 1000.0  # page 27 datasheet bmi085
+        G = 9.81
+
+        ax = int.from_bytes(imu_data[0:2], byteorder="big", signed=True) / ACC_RANGE * G
+        ay = int.from_bytes(imu_data[2:4], byteorder="big", signed=True) / ACC_RANGE * G
+        az = int.from_bytes(imu_data[4:6], byteorder="big", signed=True) / ACC_RANGE * G
+
+        ax, ay = ay, ax  # flip pitch and roll
+
+        imu.linear_acceleration.x = ax
+        imu.linear_acceleration.y = ay
+        imu.linear_acceleration.z = az
+
+        vx = int.from_bytes(imu_data[6:8], byteorder="big", signed=True) / IMU_GY_RANGE
+        vy = int.from_bytes(imu_data[8:10], byteorder="big", signed=True) / IMU_GY_RANGE
+        vz = int.from_bytes(imu_data[10:12], byteorder="big", signed=True) / IMU_GY_RANGE
+
+        vx, vy = vy, vx  # flip pitch and roll
+
+        print(f"a {ax} {ay} {az}")
+        print(f"v {vx:10.3f} {vy:10.3f} {vz:10.3f}")
+
+        imu.angular_velocity.x = vx
+        imu.angular_velocity.y = vy
+        imu.angular_velocity.z = vz
+
+        self.imu_publisher.publish(imu)
+
     def joint_command_callback(self, joint_state: JointState):
+        self._lock.acquire(blocking=True)
+
         try:
             # if self.last_motor_publish_time is not None:
             #     time_diff_message_in = joint_state.header.stamp - self.last_motor_publish_time
@@ -167,6 +181,7 @@ class FirmwareInterface:
             t1 = time.time()
 
             self.reconnect_serial_port()
+
 
             # [0xff, 0xff, angle1_lo, angle1_hi, angle2_lo ..., crc_lo, crc_hi]
             bytes_to_write = [0x0] * (2 + 20 * 2)
@@ -215,3 +230,5 @@ class FirmwareInterface:
             rospy.logerr_throttle(10, f"Lost connection to serial port {ex}, retrying...")
             self.serial = None
             pass
+
+        self._lock.release()

@@ -13,7 +13,7 @@ class FootStepPlanner:
         self.DT = parameters["control_frequency"]
 
         self.debug = debug
-
+        self.robot_model = robot_model
         model_filename = expanduser("~") + f"/catkin_ws/src/soccerbot/soccer_description/{robot_model}_description/urdf/robot.urdf"
         self.parameters = self.walk_parameters(parameters)
 
@@ -82,18 +82,32 @@ class FootStepPlanner:
         shoulder_roll = 0 * np.pi / 180
         shoulder_pitch = 20 * np.pi / 180
         joints_task = self.solver.add_joints_task()
-        joints_task.set_joints(
-            {
-                # "left_shoulder_roll": shoulder_roll,
-                "left_shoulder_pitch": shoulder_pitch,
-                "left_elbow": elbow,
-                # "right_shoulder_roll": -shoulder_roll,
-                "right_shoulder_pitch": shoulder_pitch,
-                "right_elbow": elbow,
-                "head_pitch": 0.0,
-                "head_yaw": 0.0,
-            }
-        )
+        if self.robot_model == "bez2":
+            joints_task.set_joints(
+                {
+                    "left_shoulder_roll": shoulder_roll,
+                    "left_shoulder_pitch": shoulder_pitch,
+                    "left_elbow": elbow,
+                    "right_shoulder_roll": -shoulder_roll,
+                    "right_shoulder_pitch": shoulder_pitch,
+                    "right_elbow": elbow,
+                    "head_pitch": 0.0,
+                    "head_yaw": 0.0,
+                }
+            )
+        else:
+            joints_task.set_joints(
+                {
+                    # "left_shoulder_roll": shoulder_roll,
+                    "left_shoulder_pitch": shoulder_pitch,
+                    "left_elbow": elbow,
+                    # "right_shoulder_roll": -shoulder_roll,
+                    "right_shoulder_pitch": shoulder_pitch,
+                    "right_elbow": elbow,
+                    "head_pitch": 0.0,
+                    "head_yaw": 0.0,
+                }
+            )
         joints_task.configure("joints", "soft", 1.0)
 
         # Placing the robot in the initial position

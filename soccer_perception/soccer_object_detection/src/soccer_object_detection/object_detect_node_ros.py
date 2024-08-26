@@ -3,9 +3,13 @@
 import os
 from os.path import expanduser
 
+import numpy as np
+import tf
 from rospy.impl.tcpros_base import DEFAULT_BUFF_SIZE
 from soccer_object_detection.camera.camera_calculations_ros import CameraCalculationsRos
 from soccer_object_detection.object_detect_node import ObjectDetectionNode, bcolors
+
+from soccer_common import Transformation
 
 if "ROS_NAMESPACE" not in os.environ:
     os.environ["ROS_NAMESPACE"] = "/robot1"
@@ -43,12 +47,13 @@ class ObjectDetectionNodeRos(ObjectDetectionNode):
 
         # Params
         self.br = CvBridge()
+        self.br2 = tf.TransformBroadcaster()
 
         # ROS
-        self.pub_detection = rospy.Publisher("detection_image", Image, queue_size=1, latch=True)
-        self.pub_boundingbox = rospy.Publisher("object_bounding_boxes", BoundingBoxes, queue_size=1, latch=True)
+        self.pub_detection = rospy.Publisher("/robot1/detection_image", Image, queue_size=1, latch=True)
+        self.pub_boundingbox = rospy.Publisher("/robot1/object_bounding_boxes", BoundingBoxes, queue_size=1, latch=True)
         self.image_subscriber = rospy.Subscriber(
-            "camera/image_raw", Image, self.callback, queue_size=1, buff_size=DEFAULT_BUFF_SIZE * 64
+            "/robot1/camera/image_raw", Image, self.callback, queue_size=1, buff_size=DEFAULT_BUFF_SIZE * 64
         )  # Large buff size (https://answers.ros.org/question/220502/image-subscriber-lag-despite-queue-1/)
 
     #     self.game_state_subscriber = rospy.Subscriber("gamestate", GameState, self.game_state_callback)
@@ -83,6 +88,43 @@ class ObjectDetectionNodeRos(ObjectDetectionNode):
 
             if self.pub_boundingbox.get_num_connections() > 0 and len(bbs_msg.bounding_boxes) > 0:
                 self.pub_boundingbox.publish(bbs_msg)
+            # TODO
+            for box in bbs_msg.bounding_boxes:
+                if box.Class == "0":
+                    boundingBoxes = [[box.xmin, box.ymin], [box.xmax, box.ymax]]
+                    ball_pose = self.camera.calculate_ball_from_bounding_boxes(0.07, boundingBoxes)
+                    self.br2.sendTransform(
+                        ball_pose.position,
+                        ball_pose.quaternion,
+                        msg.header.stamp,
+                        "robot1" + "/ball",
+                        "robot1" + "/camera",
+                    )
+                    pos = [box.xbase, box.ybase]
+                    floor_coordinate_robot = self.camera.find_floor_coordinate(pos)
+                    world_to_obstacle = Transformation(position=floor_coordinate_robot)
+                    camera_to_obstacle = np.linalg.inv(self.camera.pose) @ world_to_obstacle
+                    self.br2.sendTransform(
+                        camera_to_obstacle.position,
+                        camera_to_obstacle.quaternion,
+                        msg.header.stamp,
+                        "robot1" + "/ball_2",
+                        "robot1" + "/camera",
+                    )
+
+                elif box.Class == "1":
+                    pos = [box.xbase, box.ybase]
+
+                    floor_coordinate_robot = self.camera.find_floor_coordinate(pos)
+                    world_to_obstacle = Transformation(position=floor_coordinate_robot)
+                    camera_to_obstacle = np.linalg.inv(self.camera.pose) @ world_to_obstacle
+                    self.br2.sendTransform(
+                        camera_to_obstacle.position,
+                        camera_to_obstacle.quaternion,
+                        msg.header.stamp,
+                        "robot1" + "/Goal_pose",
+                        "robot1" + "/camera",
+                    )
 
         except ROSException as re:
             print(re)

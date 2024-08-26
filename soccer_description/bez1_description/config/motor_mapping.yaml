@@ -6,17 +6,17 @@ motor_mapping:
     direction: -1 #leg turns inwards
     offset: 150
     initial_state: 0.0
-  right_leg_motor_1:
+  right_hip_roll:
     id: 4
     direction: 1 #leg goes outwards
     offset: 150
     initial_state: -0.05
-  right_leg_motor_2:
+  right_hip_pitch:
     id: 3
     direction: -1 #leg goes forwards
     offset: 152
     initial_state: 0.25
-  right_leg_motor_3:
+  right_knee:
     id: 2
     direction: 1 #calve goes forwards
     offset: 150
