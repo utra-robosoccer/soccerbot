@@ -12,7 +12,9 @@ if __name__ == "__main__":
 
     rospy.loginfo("Initializing Soccer Firmware")
     rospy.loginfo("Starting Firmware")
+    r = rospy.Rate(1/100)
     try:
         rospy.spin()
+        #r.sleep()
     except rospy.exceptions.ROSException as ex:
         exit(0)

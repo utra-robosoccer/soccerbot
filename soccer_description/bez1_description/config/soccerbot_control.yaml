@@ -8,15 +8,15 @@ right_leg_motor_0:
   type: effort_controllers/JointPositionController
   joint: right_leg_motor_0
   pid: { p: 10.0, i: 0.0, d: 0.0 }
-right_leg_motor_1:
+right_hip_roll:
   type: effort_controllers/JointPositionController
   joint: right_leg_motor_1
   pid: { p: 10.0, i: 0.0, d: 0.0 }
-right_leg_motor_2:
+right_hip_pitch:
   type: effort_controllers/JointPositionController
   joint: right_leg_motor_2
   pid: { p: 10.0, i: 0.0, d: 0.0 }
-right_leg_motor_3:
+right_knee:
   type: effort_controllers/JointPositionController
   joint: right_leg_motor_3
   pid: { p: 10.0, i: 0.0, d: 0.0 }

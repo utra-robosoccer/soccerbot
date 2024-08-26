@@ -26,17 +26,17 @@ class TestTrajectory(unittest.TestCase):
         #
         joint_state = JointState()
         joint_state.name = [
-            "right_leg_motor_0",
+            "right_hip_yaw",
             "left_leg_motor_0",
-            "right_leg_motor_1",
+            "right_hip_roll",
             "left_leg_motor_1",
-            "right_leg_motor_2",
+            "right_hip_pitch",
             "left_leg_motor_2",
-            "right_leg_motor_3",
+            "right_knee",
             "left_leg_motor_3",
-            "right_leg_motor_4",
+            "right_ankle_pitch",
             "left_leg_motor_4",
-            "right_leg_motor_5",
+            "right_ankle_roll",
             "left_leg_motor_5",
             "right_arm_motor_0",
             "left_arm_motor_0",
@@ -52,7 +52,7 @@ class TestTrajectory(unittest.TestCase):
         self.assertEqual(angles, [0.0, 0.0, 0.0, 0.0, 0.564, 0.564, -1.176, -1.176, 0.613, 0.613, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
 
 
-@pytest.mark.parametrize("trajectory_name", ["getupfront"])  # , "getupback_full", "rightkick", "getupfront"])
+@pytest.mark.parametrize("trajectory_name", ["fix_angle_test"])  # , "getupback_full", "rightkick", "getupfront"])
 @pytest.mark.parametrize("robot_model", ["bez2"])
 @pytest.mark.parametrize("real_time", [True])
 def test_trajectory_sim(trajectory_name: str, robot_model: str, real_time: bool):
@@ -67,9 +67,9 @@ def test_trajectory_sim(trajectory_name: str, robot_model: str, real_time: bool)
     elif trajectory_name == "getupback_full" or trajectory_name == "getupback_roll":
         pose = Transformation(position=[0, 0, 0.070], euler=[0, -1.57, 0])
         camera = 0
-    # else:
-    #     pose = Transformation(position=[0, 0, 0.315], quaternion=[0.0, 0.0, 0.0, 1])
-
+    else:
+        camera = 90
+        pose = Transformation(position=[0, 0, 0.45], quaternion=[0.0, 0.0, 0.0, 1])
     print(os.path.join(os.path.dirname(__file__), "../trajectories/bez2/" + trajectory_name + ".csv"))
     tm = TrajectoryManagerSim(
         os.path.join(os.path.dirname(__file__), "../trajectories/bez2/" + trajectory_name + ".csv"), pose, robot_model, real_time, camera_yaw=camera

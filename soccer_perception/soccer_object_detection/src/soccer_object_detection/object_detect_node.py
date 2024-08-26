@@ -93,7 +93,7 @@ class ObjectDetectionNode:
                     bb_msg.Class = str(int(img_class))
                     # TODO Joanne look the pixels of the image in addition to the bounding box,
                     #  calculate likely foot coordinate xy
-                    if bb_msg.Class == "2":
+                    if bb_msg.Class == "2" or bb_msg.Class == "0" or bb_msg.Class == "1":
 
                         # --- simple version just draw the box in bottom ratio of box to detect feet position---
                         # only look at bottom 1/3 of bounding box (assumption: bounding box is of a standing robot)

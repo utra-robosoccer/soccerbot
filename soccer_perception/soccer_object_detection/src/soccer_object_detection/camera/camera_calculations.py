@@ -38,11 +38,11 @@ class CameraCalculations(CameraBase):
 
         # same hardcoded values
         if from_world_frame:
-            trans = [0, 0, 0.5]
+            trans = [0, 0, 0.46]
             rot = [0, 0, 0, 1]
             self.pose = Transformation(trans, rot)
         else:
-            trans = [0, 0, 0.5]  # TODO find init height
+            trans = [0, 0, 0.46]  # TODO find init height
             rot = [0, 0, 0, 1]
             self.pose = Transformation(trans, rot)
 
@@ -213,4 +213,4 @@ class CameraCalculations(CameraBase):
         tr = Transformation([ball_x, -ball_y, -ball_z])
         tr_cam = self.pose @ tr
 
-        return tr_cam
+        return tr
