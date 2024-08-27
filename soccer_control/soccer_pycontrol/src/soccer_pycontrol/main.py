@@ -2,7 +2,7 @@
 
 import psutil
 from soccer_pycontrol.model.model_ros.bez_ros import BezROS
-from soccer_pycontrol.walk_engine.walk_engine_ros.walk_engine_ros import WalkEngineROS
+from soccer_pycontrol.walk_engine.walk_engine_ros.walk_engine_ros import WalkEngineRos
 
 pid = psutil.Process()
 try:
@@ -23,11 +23,11 @@ np.set_printoptions(precision=3)
 if __name__ == "__main__":
     rospy.init_node("soccer_control")
     rospy.loginfo("Initializing Soccer Control")
-    bez = BezROS()
-    walker = WalkEngineROS(bez)
-    # walker = NavigatorRos()
+    ns = "/robot1/"
+    bez = BezROS(ns=ns)
+    walker = WalkEngineRos(bez)
     rospy.loginfo("Starting Control Loop")
     try:
-        walker.run()
+        walker.walk(d_x=0.00, t_goal=10)
     except rospy.exceptions.ROSException as ex:
         exit(0)

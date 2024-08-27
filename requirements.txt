@@ -19,7 +19,7 @@ pygame~=2.5.0
 ultralytics~=8.2.82
 
 # Control
-pinocchio==0.4.3
+pin==2.7.0
 placo~=0.6.2
 pybullet~=3.2.5
 mujoco~=3.2.0
