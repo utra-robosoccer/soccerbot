@@ -25,7 +25,7 @@ pybullet~=3.2.5
 mujoco~=3.2.0
 
 # object detection
-requests==2.31.0
+requests==2.32.2
 ipython==8.10.0
 Pillow==10.0.1
 psutil==5.9.8; platform_machine == 'x86_64'
