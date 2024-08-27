@@ -51,8 +51,8 @@ def test_send_command():
 
 def test_firmware_interface():
     rospy.init_node("firmware_interface")
-    rospy.set_param("motor_mapping", os.path.dirname(os.path.realpath(__file__)) + "/../../config/bez2.yaml")
-    rospy.set_param("motor_types", os.path.dirname(os.path.realpath(__file__)) + "/../../config/motor_types.yaml")
+    rospy.set_param("motor_mapping", os.path.dirname(os.path.realpath(__file__)) + "/../config/bez2.yaml")
+    rospy.set_param("motor_types", os.path.dirname(os.path.realpath(__file__)) + "/../config/motor_types.yaml")
 
     f = FirmwareInterface()
 
@@ -97,13 +97,13 @@ def test_firmware_interface():
 
         time.sleep(0.01)
 
-def test_firmware_interface_single_motor_range(motor_name: str = "head_yaw"):
+def test_firmware_interface_single_motor_range(motor_name: str = "left_knee"):
     rospy.init_node("firmware_interface")
-    rospy.set_param("motor_mapping", os.path.dirname(os.path.realpath(__file__)) + "/../../config/bez2.yaml")
-    rospy.set_param("motor_types", os.path.dirname(os.path.realpath(__file__)) + "/../../config/motor_types.yaml")
+    rospy.set_param("motor_mapping", os.path.dirname(os.path.realpath(__file__)) + "/../config/bez2.yaml")
+    rospy.set_param("motor_types", os.path.dirname(os.path.realpath(__file__)) + "/../config/motor_types.yaml")
 
     f = FirmwareInterface()
-    motor_range = np.linspace(-np.pi, np.pi)
+    motor_range = np.linspace(-np.pi, 0)
     for i in motor_range:
         j = JointState()
         j.name = [
@@ -137,7 +137,7 @@ def test_firmware_interface_single_motor_range(motor_name: str = "head_yaw"):
         j.header.stamp = rospy.Time.now()
 
         f.joint_command_callback(j)
-
+        rospy.sleep(1/10.0)
         time.sleep(0.01)
 
 

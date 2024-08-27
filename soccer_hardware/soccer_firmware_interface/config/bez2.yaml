@@ -24,7 +24,7 @@ left_hip_pitch:
 left_knee:
   id: 7
   type: "mx64"
-  angle_zero: 270
+  angle_zero: 180
   angle_max: 360
   angle_min: 0
 
@@ -68,7 +68,7 @@ right_hip_pitch:
 right_knee:
   id: 13
   type: "mx64"
-  angle_zero: 90
+  angle_zero: 180
   angle_max: 360
   angle_min: 0
   flipped: "true"

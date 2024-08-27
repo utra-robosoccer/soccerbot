@@ -24,11 +24,11 @@ walking_roll_offset: 0.0
 ### WALK ENGINE
 # Walk parameters - if double_support_ratio is not set to 0, should be greater than replan_frequency
 # Timing parameters
-control_frequency: 0.005
+control_frequency: 0.01
 single_support_duration: 0.3 # Duration of single support phase [s]
 single_support_timesteps: 10 # Number of planning timesteps per single support phase
 double_support_ratio: 0.0 # Ratio of double support (0.0 to 1.0)
-startend_double_support_ratio: 1.5 # Ratio duration of supports for starting and stopping walk
+startend_double_support_ratio: 2.0 # Ratio duration of supports for starting and stopping walk
 planned_timesteps: 48 # Number of timesteps planned ahead
 replan_timesteps: 10 # Replanning each n timesteps
 

@@ -26,7 +26,7 @@ class TestPybullet(unittest.TestCase):
         # bez.motor_control.set_motor()
         # walker.wait(50)
         # walker.goal_callback(PoseStamped())
-        walker.walk(d_x=0.03, t_goal=10)
+        walker.walk(d_x=0.0, t_goal=10)
         # walker.walk(d_x=0.0, d_y=0.06, t_goal=5)
         # walker.walk(d_x=0.0, d_theta=0.3, t_goal=5)
         # walker.walk(d_x=-0.04, t_goal=5)
