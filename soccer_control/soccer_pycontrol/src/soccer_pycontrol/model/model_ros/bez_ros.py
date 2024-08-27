@@ -13,7 +13,7 @@ class BezROS(Bez):
     def __init__(self, ns: str = ""):
         self.ns = ns
         self.robot_model = rospy.get_param("robot_model", "bez2")
-        if rospy.get_param("/use_sim_time", True):
+        if rospy.get_param("/use_sim_time", False):
             sim = "_sim"
         else:
             sim = ""

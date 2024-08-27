@@ -5,7 +5,7 @@
     <arg name="record_rosbag" default="true" />
     <arg name="simulation" default="false" />
     <param name="robot_model" value="$(arg robot_model)" />
-
+    <param name="/use_sim_time" value="$(arg simulation)" />
     <param name="motor_mapping" value="$(find soccer_firmware_interface)/config/$(arg robot_model).yaml" />
     <param name="motor_types" value="$(find soccer_firmware_interface)/config/motor_types.yaml" />
     <node name="firmware_interface" pkg="soccer_firmware_interface" type="main.py" output="screen" unless="$(eval robot_model == 'bez1')" />
