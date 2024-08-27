@@ -13,7 +13,7 @@ from geometry_msgs.msg import PoseStamped
 from rosgraph_msgs.msg import Clock
 from scipy.spatial.transform import Rotation as R
 from sensor_msgs.msg import JointState
-from soccer_object_detection.camera import Camera
+from soccer_object_detection.camera.camera_calculations_ros import CameraCalculationsRos
 from timeout_decorator import timeout_decorator
 
 from soccer_msgs.msg import BoundingBoxes, RobotState
@@ -70,7 +70,7 @@ class IntegrationTest(TestCase):
 
         rospy.init_node("integration_test")
         rospy.wait_for_message("/clock", Clock, 40)
-        self.camera = Camera("robot1")
+        self.camera = CameraCalculationsRos("robot1")
         self.tf_listener = tf.TransformListener()
         self.bounding_boxes_detector = rospy.Subscriber("/robot1/object_bounding_boxes", BoundingBoxes, self.bounding_boxes_callback)
         self.bounding_boxes = None
@@ -263,7 +263,7 @@ class IntegrationTestPlaying(IntegrationTest):
             "/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_strategy /robot1/soccer_pycontrol /robot1/soccer_trajectories'"
         )
 
-        self.camera = Camera("robot1")
+        self.camera = CameraCalculationsRos("robot1")
 
         field_width = 2.5  # m
         field_height = 1.5
@@ -411,7 +411,7 @@ class IntegrationTestPlaying(IntegrationTest):
             "/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_strategy /robot1/soccer_pycontrol /robot1/soccer_trajectories'"
         )
 
-        self.camera = Camera("robot1")
+        self.camera = CameraCalculationsRos("robot1")
 
         while not rospy.is_shutdown() and not self.camera.ready():
             print("Waiting for camera info")
