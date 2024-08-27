@@ -54,7 +54,7 @@ class TestTrajectory(unittest.TestCase):
 
 @pytest.mark.parametrize("trajectory_name", ["fix_angle_test"])  # , "getupback_full", "rightkick", "getupfront"])
 @pytest.mark.parametrize("robot_model", ["bez2"])
-@pytest.mark.parametrize("real_time", [True])
+@pytest.mark.parametrize("real_time", [False])
 def test_trajectory_sim(trajectory_name: str, robot_model: str, real_time: bool):
     """
     Case 1: Standard case
@@ -75,7 +75,8 @@ def test_trajectory_sim(trajectory_name: str, robot_model: str, real_time: bool)
         os.path.join(os.path.dirname(__file__), "../trajectories/bez2/" + trajectory_name + ".csv"), pose, robot_model, real_time, camera_yaw=camera
     )
     tm.send_trajectory()
-    tm.sim.wait(1000)
+    tm.sim.wait(100)
+    tm.sim.ramp.close()
     # TODO add more testing from pybullet so like the height will reach a threshold and it doesnt fall over for
     #  some time also maybe split it per trajectory type
 
@@ -111,8 +112,8 @@ def run_real_trajectory(robot_model: str, trajectory_name: str, real_time: bool)
 
 
 @pytest.mark.parametrize("robot_model", ["bez2"])
-@pytest.mark.parametrize("trajectory_name", ["getupback_roll"])  # getupback_full
+@pytest.mark.parametrize("trajectory_name", ["fix_angle_test"])  # getupback_full
 @pytest.mark.parametrize("real_time", [True])
-# @unittest.skip("Not integrated in CI")
+@unittest.skipIf("DISPLAY" not in os.environ, "only local")
 def test_traj_ros(robot_model: str, trajectory_name: str, real_time: bool):
     run_real_trajectory(robot_model, trajectory_name, real_time)

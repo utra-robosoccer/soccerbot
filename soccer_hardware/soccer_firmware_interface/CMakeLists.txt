@@ -6,6 +6,12 @@ find_package(
     REQUIRED
     COMPONENTS rospy std_msgs sensor_msgs geometry_msgs control_msgs
 )
-
-catkin_package()
+catkin_package(
+    CATKIN_DEPENDS
+    rospy
+    std_msgs
+    sensor_msgs
+    geometry_msgs
+    control_msgs
+)
 catkin_python_setup()

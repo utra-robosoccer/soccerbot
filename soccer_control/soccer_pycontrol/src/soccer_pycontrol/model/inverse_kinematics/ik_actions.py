@@ -10,8 +10,7 @@
 #     Class for actions robot will do using ik
 #     """
 #
-#     def __init__(self, data: KinematicData, motor_names: List[str]):
-#         self.data = data
+#     def __init__(self,  motor_names: List[str]):
 #         self.motor_names = motor_names
 #         self.leg_length = self.data.thigh_length + self.data.tibia_length
 #         # self.ik = IKCalculation(self.data.thigh_length, self.data.tibia_length)

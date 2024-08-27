@@ -10,7 +10,7 @@ os.environ["ROS_NAMESPACE"] = "/robot1"
 
 
 class TestPybullet(unittest.TestCase):
-
+    @unittest.skipIf("DISPLAY" not in os.environ, "only local")
     def test_walk_ros_local(self):
         robot_ns = os.environ["ROS_NAMESPACE"]
         os.system(
@@ -34,6 +34,7 @@ class TestPybullet(unittest.TestCase):
         # walker.walk(d_x=0.04, d_theta=0.2, t_goal=5)
         walker.wait(100)
 
+    @unittest.skipIf("DISPLAY" not in os.environ, "only local")
     def test_walk_ros_webots(self):
         robot_ns = os.environ["ROS_NAMESPACE"]
         os.system(

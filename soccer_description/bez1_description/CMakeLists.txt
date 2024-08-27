@@ -3,10 +3,24 @@ project(bez1_description)
 
 find_package(
     catkin
-    REQUIRED urdf xacro
+    REQUIRED
+    urdf
+    xacro
+    foxglove_bridge
+    dynamic_reconfigure
+    effort_controllers
+    rospy
 )
 
-catkin_package(CATKIN_DEPENDS urdf xacro)
+catkin_package(
+    CATKIN_DEPENDS
+    urdf
+    xacro
+    foxglove_bridge
+    dynamic_reconfigure
+    effort_controllers
+    rospy
+)
 
 xacro_add_files(
     urdf/bez1.xacro OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/urdf/bez1.urdf TARGET

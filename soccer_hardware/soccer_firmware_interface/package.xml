@@ -14,5 +14,7 @@
   <depend>std_msgs</depend>
   <depend>sensor_msgs</depend>
   <depend>rospy</depend>
+  <depend>geometry_msgs</depend>
+  <depend>control_msgs</depend>
 
 </package>

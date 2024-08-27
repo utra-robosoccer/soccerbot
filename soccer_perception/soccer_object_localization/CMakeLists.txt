@@ -18,5 +18,5 @@ find_package(
     REQUIRED
 )
 
-catkin_package()
+catkin_package(CATKIN_DEPENDS ${PKG_DEPS})
 catkin_python_setup()

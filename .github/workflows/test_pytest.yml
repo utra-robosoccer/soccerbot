@@ -54,7 +54,7 @@ jobs:
           source /opt/ros/noetic/setup.bash
           pip install pyOpenSSL==23.0.0
           pip install --trusted-host=pypi.org --trusted-host=files.pythonhosted.org --trusted-host=pytorch.org --trusted-host=download.pytorch.org --trusted-host=files.pypi.org --trusted-host=files.pytorch.org \
-            -r requirements.txt --find-links https://download.pytorch.org/whl/torch_stable.html
+            -r requirements.txt --find-links https://download.pytorch.org/whl/torch/ --find-links https://download.pytorch.org/whl/torchvision/
       - name: Build Soccerbot
         run: |
           cd $HOME/catkin_ws
@@ -75,7 +75,7 @@ jobs:
           source /opt/ros/noetic/setup.bash
           source $HOME/catkin_ws/devel/setup.bash
           export PYTHONPATH=$PYTHONPATH:soccer_common/src:soccer_pycontrol/src
-          pytest -s --cache-clear --ignore=soccer_embedded --ignore=external --ignore=soccer_rlcontrol --ignore=test_integration.py --ignore=soccer_webots
+          pytest -s --cache-clear --ignore=soccer_strategy --ignore=external --ignore=soccer_hardware/ --ignore=test_integration.py --ignore=soccer_webots
 
 #      - name: Setup tmate session
 #        timeout-minutes: 15

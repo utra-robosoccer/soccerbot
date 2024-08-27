@@ -17,6 +17,8 @@ from soccer_localization.field_lines_ukf_ros import FieldLinesUKFROS
 from soccer_common.transformation import Transformation
 from soccer_msgs.msg import RobotState
 
+PLOT = True
+
 
 def retrieve_bag(url="https://drive.google.com/uc?id=1T_oyM1rZwWgUy6A6KlsJ7Oqn8J3vpGDo", bag_name="localization"):
     src_path = os.path.dirname(os.path.realpath(__file__))
@@ -111,7 +113,7 @@ def draw_points_correction(bag, map, t_start, transform_gt_offset, xlim, ylim, d
                 plt.ylim(ylim)
                 plt.legend()
 
-                if "DISPLAY" in os.environ:
+                if "DISPLAY" in os.environ and PLOT:
                     plt.draw()
                     if debug:
                         plt.waitforbuttonpress()
@@ -252,7 +254,7 @@ def display_rosbag_map(bag, map, debug=False, pos_theta_start=[-4, -3.15, np.pi 
     plt_dim_error(1, "Y")
     plt_dim_error(2, "Theta")
 
-    if "DISPLAY" in os.environ:
+    if "DISPLAY" in os.environ and PLOT:
         plt.show(block=False)
         plt.waitforbuttonpress()
         plt.close("all")
@@ -331,7 +333,7 @@ def test_show_ukf_stuff():
     f.draw_covariance()
     ukf_internal.plot_sigmas(f.ukf.points_fn, x=f.ukf.x, cov=f.ukf.P)
 
-    if "DISPLAY" in os.environ:
+    if "DISPLAY" in os.environ and PLOT:
         plt.show(block=False)
         plt.waitforbuttonpress(timeout=10)
         plt.close("all")

@@ -1,4 +1,5 @@
 import os
+import unittest
 from os.path import expanduser
 from unittest import TestCase
 
@@ -7,6 +8,8 @@ from cv2 import Mat
 from soccer_object_localization.detector_fieldline import DetectorFieldline
 
 from soccer_common.utils import download_dataset
+
+PLOT = True
 
 
 # TODO fix unit test
@@ -30,7 +33,7 @@ class TestObjectLocalization(TestCase):
             points3d = d.img_to_points(lines_only)
             print(points3d)  # TODO need way to vis and verify
 
-            if "DISPLAY" in os.environ:
+            if "DISPLAY" in os.environ and PLOT:
                 cv2.imshow("Before", img)
                 # cv2.imwrite("/tmp/before.png", img) # TODO why
 
@@ -39,6 +42,7 @@ class TestObjectLocalization(TestCase):
                 cv2.waitKey(0)
         cv2.destroyAllWindows()
 
+    @unittest.skipIf("DISPLAY" not in os.environ, "only local")
     def test_fieldline_detection_cam(self):
         d = DetectorFieldline()
 
@@ -57,7 +61,7 @@ class TestObjectLocalization(TestCase):
 
             lines_only = d.image_filter(img, debug=False)
 
-            if "DISPLAY" in os.environ:
+            if "DISPLAY" in os.environ and PLOT:
                 cv2.imshow("Before", img)
                 # cv2.imwrite("/tmp/before.png", img) # TODO why
 
@@ -89,7 +93,7 @@ class TestObjectLocalization(TestCase):
             points3d = d.img_to_points(lines_only)
             print(points3d)  # TODO need way to vis and verify
 
-            if "DISPLAY" in os.environ:
+            if "DISPLAY" in os.environ and PLOT:
                 cv2.imshow("Before", img)
                 # cv2.imwrite("/tmp/before.png", img) # TODO why
 

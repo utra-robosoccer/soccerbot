@@ -21,7 +21,16 @@ find_package(
 )
 
 catkin_python_setup()
-catkin_package()
+catkin_package(
+    CATKIN_DEPENDS
+    dynamic_reconfigure
+    tf2_ros
+    roscpp
+    rospy
+    sensor_msgs
+    rosgraph_msgs
+    std_msgs
+)
 
 include_directories(${catkin_INCLUDE_DIRS})
 

@@ -52,7 +52,10 @@ RUN apt-get update && apt-fast install -y --no-install-recommends \
     libxcb-xinerama0 \
     qt5-default \
     qtbase5-dev \
-    python3-pyqt5
+    python3-pyqt5 \
+    python-is-python3 \
+    git \
+    python3-setuptools
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y --no-install-recommends install keyboard-configuration # This needs to be its own individual step
 
 # CUDA Installation
@@ -69,20 +72,24 @@ RUN if [[ "$INSTALL_CUDA" == "true" ]] ; then \
     add-apt-repository "deb https://developer.download.nvidia.com/compute/cuda/repos/${OS}/$ARCHITECTURE/ /" && \
     apt-get update; fi
 
-RUN if [[ "$INSTALL_CUDA" == "true" ]] ; then DEBIAN_FRONTEND=noninteractive apt-fast -yq --no-install-recommends install cuda libcudnn8 libcudnn8-dev libnccl2 libnccl-dev; fi
+RUN if [[ "$INSTALL_CUDA" == "true" ]] ; then DEBIAN_FRONTEND=noninteractive apt-fast -yq --no-install-recommends install cuda libcudnn9-cuda-12 libcudnn9-dev-cuda-12 libnccl2 libnccl-dev; fi
 
 RUN pip install --no-cache-dir --upgrade pip Cython pybullet
 
+# TODO redo docker for jetson
 RUN if [[ "$(dpkg --print-architecture)" == "arm64" ]] ; then \
     apt-get update && \
-    apt-get install -y libomp5 libopenblas-dev && \
-    pip install gdown && \
-    gdown https://drive.google.com/uc?id=1AQQuBS9skNk1mgZXMp0FmTIwjuxc81WY && \
-    gdown https://drive.google.com/uc?id=1BaBhpAizP33SV_34-l3es9MOEFhhS1i2 && \
-    pip install torch-1.11.0a0+gitbc2c6ed-cp38-cp38-linux_aarch64.whl && \
-    pip install torchvision-0.12.0a0+9b5a3fe-cp38-cp38-linux_aarch64.whl && \
-    rm -rf torch-1.11.0a0+gitbc2c6ed-cp38-cp38-linux_aarch64.whl && \
-    rm -rf torchvision-0.12.0a0+9b5a3fe-cp38-cp38-linux_aarch64.whl; fi
+    apt-get install -y libopenblas-base libopenmpi-dev libomp-dev libjpeg-dev zlib1g-dev libpython3-dev libopenblas-dev libavcodec-dev libavformat-dev libswscale-dev && \
+    wget https://developer.download.nvidia.cn/compute/redist/jp/v512/pytorch/torch-2.1.0a0+41361538.nv23.06-cp38-cp38-linux_aarch64.whl &&\
+    pip3 install 'Cython<3' && \
+    pip3 install numpy torch-2.1.0a0+41361538.nv23.06-cp38-cp38-linux_aarch64.whl && \
+    git clone --branch v0.16.1 https://github.com/pytorch/vision torchvision && \
+    cd torchvision && \
+    export BUILD_VERSION=0.16.1 && \
+    python3 setup.py install --user && \
+    cd ../ && \
+    pip install 'pillow<7' && \
+    rm -rf torch-2.1.0a0+41361538.nv23.06-cp38-cp38-linux_aarch64.whl ; fi
 
 # Create User
 RUN groupadd -g 1000 robosoccer && \
@@ -91,7 +98,7 @@ RUN groupadd -g 1000 robosoccer && \
     echo "robosoccer ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers && \
     usermod --append --groups 29,20,104,46,5,44 robosoccer
 
-# Allow nice for all users
+# Allow nice for all users TODO research
 RUN echo "*                -       priority        -20" >> /etc/security/limits.conf
 
 # Install apt dependencies
@@ -102,7 +109,7 @@ RUN (apt-get update || echo "Apt Error") && apt-fast install -y --no-install-rec
 USER robosoccer
 COPY requirements.txt /tmp/requirements.txt
 ENV PATH=/home/robosoccer/.local/bin:$PATH
-RUN pip3 install -r /tmp/requirements.txt -f https://download.pytorch.org/whl/torch_stable.html
+RUN pip3 install -r /tmp/requirements.txt -f https://download.pytorch.org/whl/torch/ -f https://download.pytorch.org/whl/torchvision/
 
 RUN mkdir -p /home/robosoccer/catkin_ws/src
 WORKDIR /home/robosoccer/catkin_ws

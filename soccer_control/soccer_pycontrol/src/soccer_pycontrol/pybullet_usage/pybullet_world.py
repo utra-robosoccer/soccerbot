@@ -1,3 +1,4 @@
+import os
 import time
 
 import numpy as np
@@ -18,7 +19,7 @@ class PybulletWorld:
         lateral_friction: float = 0.9,
         spinning_friction: float = 0.9,
         rolling_friction: float = 0.0,
-        display: bool = True,
+        display: bool = "DISPLAY" in os.environ,
         camera_yaw: float = 90,
         cameraTargetPosition: list = (0, 0, 0.45),
         real_time: bool = False,

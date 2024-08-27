@@ -3,7 +3,7 @@ robot_model: bez2
 
 # KINEMATIC DATA
 #: Height of the robot's torso (center between two arms) while walking
-walking_torso_height: 0.37
+walking_torso_height: 0.43
 arm_0_center: -0.45
 arm_1_center: 2.512
 # merge_fixed_links: true

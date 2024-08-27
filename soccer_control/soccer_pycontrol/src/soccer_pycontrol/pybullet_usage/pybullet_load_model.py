@@ -40,7 +40,7 @@ class LoadModel:  # TODO Maybe rename to body
 
         :param pose: 3D position in pybullet
         """
-        self.pose.position = (self.pose.position[0], self.pose.position[1], self.walking_torso_height + 0.03)
+        self.pose.position = (self.pose.position[0], self.pose.position[1], self.walking_torso_height)
 
         [y, _, _] = pose.orientation_euler
         r = 0

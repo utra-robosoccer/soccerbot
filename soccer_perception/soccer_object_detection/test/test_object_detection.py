@@ -9,14 +9,15 @@ from unittest import TestCase
 import cv2
 import numpy as np
 import pytest
-import rospy
 import yaml
 from cv2 import Mat
 from soccer_object_detection.object_detect_node import Label, ObjectDetectionNode
+from soccer_object_detection.utils import check_bounding_box
 
 from soccer_common import Transformation
 from soccer_common.utils import download_dataset, wrapToPi
-from soccer_perception.soccer_object_detection.test.utils import check_bounding_box
+
+PLOT = True
 
 
 class TestObjectDetection(TestCase):
@@ -66,7 +67,7 @@ class TestObjectDetection(TestCase):
                     #     if bounding_box.obstacle_detected is True:
                     #         cv2.circle(img, (bounding_box.xbase, bounding_box.ybase), 0, (0, 255, 255), 3)
 
-            if "DISPLAY" in os.environ:
+            if "DISPLAY" in os.environ and PLOT:
                 cv2.imshow("Image", detection_image)
                 cv2.waitKey()
                 cv2.destroyAllWindows()
@@ -96,11 +97,12 @@ class TestObjectDetection(TestCase):
             n.camera.pose.orientation_euler = [0, np.pi / 8, 0]  # TODO why does this disable cover horizon
             detection_image, bbs_msg = n.get_model_output(img)  # 0.01
 
-            if "DISPLAY" in os.environ:
+            if "DISPLAY" in os.environ and PLOT:
                 cv2.imshow("Image", detection_image)
                 cv2.waitKey(24)  # TODO why is this one so much faster
         cv2.destroyAllWindows()
 
+    @pytest.mark.skip(reason="Only run locally")
     def test_object_detection_node_cam(self):
 
         src_path = os.path.dirname(os.path.realpath(__file__))
@@ -124,7 +126,7 @@ class TestObjectDetection(TestCase):
             n.camera.pose.orientation_euler = [0, np.pi / 8, 0]
             detection_image, bbs_msg = n.get_model_output(img)  # 0.01
 
-            if "DISPLAY" in os.environ:
+            if "DISPLAY" in os.environ and PLOT:
                 cv2.imshow("Image", detection_image)
                 cv2.waitKey(24)  # TODO why is this one so much faster
         cv2.destroyAllWindows()
@@ -402,10 +404,10 @@ class TestObjectDetection(TestCase):
 
             img: Mat = cv2.imread(os.path.join(test_path, file_name))
 
-            if "DISPLAY" in os.environ:
+            if "DISPLAY" in os.environ and PLOT:
                 cv2.imshow("Before", img)
 
             detection_image, bbs_msg = n.get_model_output(img)
-            if "DISPLAY" in os.environ:
+            if "DISPLAY" in os.environ and PLOT:
                 cv2.imshow("After", detection_image)
                 cv2.waitKey(0)
