@@ -81,12 +81,12 @@ RUN if [[ "$(dpkg --print-architecture)" == "arm64" ]] ; then \
     wget https://developer.download.nvidia.cn/compute/redist/jp/v512/pytorch/torch-2.1.0a0+41361538.nv23.06-cp38-cp38-linux_aarch64.whl &&\
     pip3 install 'Cython<3' && \
     pip3 install numpy torch-2.1.0a0+41361538.nv23.06-cp38-cp38-linux_aarch64.whl && \
-    git clone --branch v0.16.1 https://github.com/pytorch/vision torchvision && \
-    cd torchvision && \
-    export BUILD_VERSION=0.16.1 && \
-    python3 setup.py install --user && \
-    cd ../ && \
-    pip install 'pillow<7' && \
+#    git clone --branch v0.16.1 https://github.com/pytorch/vision torchvision && \
+#    cd torchvision && \
+#    export BUILD_VERSION=0.16.1 && \
+#    python3 setup.py install --user && \
+#    cd ../ && \
+#    pip install 'pillow<7' && \
     rm -rf torch-2.1.0a0+41361538.nv23.06-cp38-cp38-linux_aarch64.whl ; fi
 
 # Create User
@@ -107,6 +107,7 @@ RUN (apt-get update || echo "Apt Error") && apt-fast install -y --no-install-rec
 USER robosoccer
 COPY requirements.txt /tmp/requirements.txt
 ENV PATH=/home/robosoccer/.local/bin:$PATH
+RUN pip3 install --upgrade pip
 RUN pip3 install -r /tmp/requirements.txt -f https://download.pytorch.org/whl/torch/ -f https://download.pytorch.org/whl/torchvision/
 
 RUN mkdir -p /home/robosoccer/catkin_ws/src
