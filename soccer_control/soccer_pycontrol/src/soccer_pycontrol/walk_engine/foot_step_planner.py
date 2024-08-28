@@ -4,6 +4,7 @@ from typing import List
 
 import numpy as np
 import placo
+import pybullet as p
 from placo_utils.visualization import footsteps_viz, frame_viz, line_viz, robot_viz
 
 
@@ -27,7 +28,6 @@ class FootStepPlanner:
         self.trajectory = None
         self.tasks = None
         self.solver = None
-
         if self.debug:
             # Starting Meshcat viewer
             self.viz = robot_viz(self.robot)
@@ -126,6 +126,12 @@ class FootStepPlanner:
 
     def setup_footsteps(self):
         # Planning footsteps
+        # set init position
+        # self.robot.set_T_world_frame("right_foot", np.eye(4))
+        # self.robot.update_kinematics()
+        # self.last_display = self.funct_time()
+        # self.viz.display(self.robot.state.q)
+        self.init_foot = self.robot.get_T_world_right()
         T_world_left = placo.flatten_on_floor(self.robot.get_T_world_left())
         T_world_right = placo.flatten_on_floor(self.robot.get_T_world_right())
         footsteps = self.repetitive_footsteps_planner.plan(placo.HumanoidRobot_Side.left, T_world_left, T_world_right)
@@ -190,8 +196,22 @@ class FootStepPlanner:
     def update_viz(self, supports: List[placo.Supports], trajectory: placo.WalkTrajectory):
         if self.debug:
             # Drawing footsteps
-            footsteps_viz(supports)
-
+            footsteps_viz(supports)  # TODO look for step vis
+            # TODO convert for ros
+            # steps = len(supports)
+            # T = np.eye(4)
+            # k = 0
+            # for footstep in supports:
+            #     k += 1
+            #     polygon = [(T @ [*xy, 0, 1])[:3] for xy in footstep.support_polygon()]
+            #     polygon = np.array([*polygon, polygon[-1]])
+            #
+            #     polygon[:, 1] -= self.init_foot[1, 3]/2
+            #     p.addUserDebugLine(polygon[0], polygon[1], [1, 0,0], lifeTime=1)
+            #     p.addUserDebugLine(polygon[1], polygon[2], [0, 1, 0], lifeTime=1)
+            #     p.addUserDebugLine(polygon[2], polygon[3], [0, 0, 1], lifeTime=1)
+            #     p.addUserDebugLine(polygon[0], polygon[3], [0, 1, 1], lifeTime=1)
+            #     print("fsd")
             # Drawing planned CoM trajectory on the ground
             coms = [[*trajectory.get_p_world_CoM(t)[:2], 0.0] for t in np.linspace(trajectory.t_start, trajectory.t_end, 100)]
             line_viz("CoM_trajectory", np.array(coms), 0xFFAA00)

@@ -22,9 +22,11 @@ class WalkEngine:
         self.foot_step_planner.setup_walk(d_x, d_y, d_theta, nb_steps)
         self.pid.reset_imus()
         t = 0
-        while t < t_goal:
+        # TODO fix and add to a nav could add a funct for pybullet or python
+        position = self.foot_step_planner.robot.get_T_world_trunk()  # can use self.foot_step_planner.trajectory.get_p_world_CoM(t)
+        while position[0, 3] < 1.0:  # self.bez.sensors.get_pose() #TODO about 20% error
+            position = self.foot_step_planner.robot.get_T_world_trunk()  # can use self.foot_step_planner.trajectory.get_p_world_CoM(t)
             self.foot_step_planner.walk_loop(t)
-
             self.bez.motor_control.configuration = self.filter_joints()
 
             if self.imu_feedback_enabled and self.bez.sensors.imu_ready:
@@ -35,6 +37,7 @@ class WalkEngine:
             self.func_step()
 
             t = self.foot_step_planner.step(t)
+        print("fs")
 
     def ready(self):
         self.foot_step_planner.setup_tasks()

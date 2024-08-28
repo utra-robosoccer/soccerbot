@@ -6,7 +6,7 @@ from soccer_pycontrol.walk_engine.walk_engine import WalkEngine
 
 from soccer_common import Transformation
 
-REAL_TIME = False
+REAL_TIME = True
 
 
 class TestPlaco(unittest.TestCase):
@@ -23,10 +23,10 @@ class TestPlaco(unittest.TestCase):
         )
         self.bez = Bez(robot_model="bez1", pose=Transformation())
         walk = WalkEngine(self.world, self.bez)
-        walk.ready()
-        self.bez.motor_control.set_motor()
-        walk.wait(50)
-        walk.walk(d_x=0.04, t_goal=10)
+        # walk.ready()
+        # self.bez.motor_control.set_motor()
+        # walk.wait(50)
+        walk.walk(d_x=0.06, t_goal=10)
 
     def test_bez2(self):
         self.world = PybulletWorld(
