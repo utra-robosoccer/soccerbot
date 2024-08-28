@@ -19,10 +19,10 @@ pygame~=2.5.0
 ultralytics~=8.2.82
 
 # Control
-pin==2.7.0
+pin~=2.7.0
 placo~=0.6.2
-pybullet~=3.2.5
-mujoco~=3.2.0
+pybullet~=3.2.5; platform_machine == 'x86_64'
+mujoco~=3.2.0; platform_machine == 'x86_64'
 
 # object detection
 requests==2.32.03
@@ -35,7 +35,7 @@ mypy-extensions~=1.0.0
 Cython~=3.0.10
 PyYAML~=6.0.1
 argparse~=1.4.0
-open3d~=0.17.0
+open3d~=0.17.0; platform_machine == 'x86_64'
 
 empy~=3.3.4
 

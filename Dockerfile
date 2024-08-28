@@ -28,6 +28,7 @@ RUN apt-get update && apt-fast install -y --no-install-recommends \
     protobuf-compiler \
     libprotobuf-dev \
     libjpeg9-dev \
+    libjpeg8-dev  \
     wget \
     ccache \
     dirmngr \
@@ -73,8 +74,6 @@ RUN if [[ "$INSTALL_CUDA" == "true" ]] ; then \
     apt-get update; fi
 
 RUN if [[ "$INSTALL_CUDA" == "true" ]] ; then DEBIAN_FRONTEND=noninteractive apt-fast -yq --no-install-recommends install cuda libcudnn9-cuda-12 libcudnn9-dev-cuda-12 libnccl2 libnccl-dev; fi
-
-RUN pip install --no-cache-dir --upgrade pip Cython pybullet
 
 # TODO redo docker for jetson
 RUN if [[ "$(dpkg --print-architecture)" == "arm64" ]] ; then \
