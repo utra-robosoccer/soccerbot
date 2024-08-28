@@ -47,15 +47,14 @@ jobs:
           rosdep update
           rosdep install --from-paths . --ignore-src -r -s  | grep 'apt-get install' | awk '{print $5}' | sort  >  /tmp/catkin_install_list
           sudo apt-fast install -y --no-install-recommends $(cat /tmp/catkin_install_list)
-          sudo apt-fast install -y python3-catkin-tools
+          sudo apt-fast install -y python3-catkin-tools python-is-python3
       - name: Install python dependencies
         run: |
           cd $HOME/catkin_ws/src/soccerbot
           source /opt/ros/noetic/setup.bash
-          pip install pyOpenSSL==23.0.0
-          pip install --upgrade pip
-          pip install --trusted-host=pypi.org --trusted-host=files.pythonhosted.org --trusted-host=pytorch.org --trusted-host=download.pytorch.org --trusted-host=files.pypi.org --trusted-host=files.pytorch.org \
-            -r requirements.txt --find-links https://download.pytorch.org/whl/torch/ --find-links https://download.pytorch.org/whl/torchvision/
+          pip3 install pyOpenSSL==23.0.0
+          pip3 install --upgrade pip
+          pip3 install -r requirements.txt -f https://download.pytorch.org/whl/torch/ -f https://download.pytorch.org/whl/torchvision/
       - name: Build Soccerbot
         run: |
           cd $HOME/catkin_ws
