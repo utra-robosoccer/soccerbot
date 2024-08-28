@@ -27,7 +27,6 @@ RUN apt-get update && apt-fast install -y --no-install-recommends \
     python3-protobuf \
     protobuf-compiler \
     libprotobuf-dev \
-    libjpeg9-dev \
     libjpeg8-dev  \
     wget \
     ccache \
