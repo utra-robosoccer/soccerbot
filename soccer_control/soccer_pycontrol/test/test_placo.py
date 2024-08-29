@@ -2,7 +2,7 @@ import unittest
 
 from soccer_pycontrol.model.bez import Bez
 from soccer_pycontrol.pybullet_usage.pybullet_world import PybulletWorld
-from soccer_pycontrol.walk_engine.walk_engine import WalkEngine
+from soccer_pycontrol.walk_engine.navigator import Navigator
 
 from soccer_common import Transformation
 
@@ -22,12 +22,16 @@ class TestPlaco(unittest.TestCase):
             rate=200,
         )
         self.bez = Bez(robot_model="bez1", pose=Transformation())
-        walk = WalkEngine(self.world, self.bez)
+        walk = Navigator(self.world, self.bez)
         # walk.ready()
         # self.bez.motor_control.set_motor()
         # walk.wait(50)
-        walk.walk(d_x=0.06, t_goal=10)
+        # target_goal = [0.03, 0, 0,10, 5]
+        target_goal = Transformation(position=[0.5, 0.5, 0])
+        walk.walk(target_goal)
+        walk.wait(1000)
 
+    # TODO fix
     def test_bez2(self):
         self.world = PybulletWorld(
             camera_yaw=90,
@@ -35,7 +39,7 @@ class TestPlaco(unittest.TestCase):
             rate=200,
         )
         self.bez = Bez(robot_model="bez2", pose=Transformation())
-        walk = WalkEngine(self.world, self.bez)
+        walk = Navigator(self.world, self.bez)
         walk.walk(d_x=0.03, t_goal=10)
 
     def test_bez1_start_stop(self):
@@ -45,7 +49,7 @@ class TestPlaco(unittest.TestCase):
             rate=200,
         )
         self.bez = Bez(robot_model="bez1", pose=Transformation())
-        walk = WalkEngine(self.world, self.bez)
+        walk = Navigator(self.world, self.bez)
         walk.walk(d_x=0.03, t_goal=5)
         walk.wait(100)
         walk.walk(d_x=0.03, t_goal=5)
@@ -58,7 +62,7 @@ class TestPlaco(unittest.TestCase):
             rate=200,
         )
         self.bez = Bez(robot_model="bez1", pose=Transformation())
-        walk = WalkEngine(self.world, self.bez)
+        walk = Navigator(self.world, self.bez)
         walk.foot_step_planner.setup_walk(d_x=0.03)
         walk.pid.reset_imus()
         t = 0
@@ -70,7 +74,7 @@ class TestPlaco(unittest.TestCase):
                 walk.foot_step_planner.configure_planner(d_x=0.0, d_theta=0.4)
             if t > 9:
                 walk.foot_step_planner.configure_planner(d_x=0.03, d_y=0.03)
-            walk.foot_step_planner.walk_loop(t)
+            walk.foot_step_planner.plan_steps(t)
 
             walk.bez.motor_control.configuration = walk.filter_joints()
             walk.stabilize_walk(pitch, roll)
@@ -88,7 +92,7 @@ class TestPlaco(unittest.TestCase):
         )
         # TODO should bez be init in walk_engine
         self.bez = Bez(robot_model="bez1", pose=Transformation())
-        walk = WalkEngine(self.world, self.bez)
+        walk = Navigator(self.world, self.bez)
         walk.ready()
         walk.world.step()
         walk.wait(100)

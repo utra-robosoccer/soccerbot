@@ -152,13 +152,13 @@ class FootStepPlanner:
         self.last_replan = 0
         self.start_t = self.funct_time()
 
-    def walk_loop(
+    def plan_steps(
         self,
         t: float,
     ):
         # Updating the QP tasks from planned trajectory
         self.tasks.update_tasks_from_trajectory(self.trajectory, t)
-
+        # TODO add joints from sim for better feedback
         # Invoking the IK QP solver
         self.robot.update_kinematics()
         qd_sol = self.solver.solve(True)
@@ -173,17 +173,20 @@ class FootStepPlanner:
             self.trajectory, t
         ):
 
-            self.last_replan = t
-            # Replanning footsteps from current trajectory
-            supports = self.walk_pattern.replan_supports(self.repetitive_footsteps_planner, self.trajectory, t)
-
-            # Replanning CoM trajectory, yielding a new trajectory we can switch to
-            self.trajectory = self.walk_pattern.replan(supports, self.trajectory, t)
-
-            self.update_viz(supports, self.trajectory)
+            self.replan(t)
 
         # During the warmup phase, the robot is enforced to stay in the initial position
         self.update_meshcat(t)
+
+    def replan(self, t: float):
+        self.last_replan = t
+        # Replanning footsteps from current trajectory
+        supports = self.walk_pattern.replan_supports(self.repetitive_footsteps_planner, self.trajectory, t)
+
+        # Replanning CoM trajectory, yielding a new trajectory we can switch to
+        self.trajectory = self.walk_pattern.replan(supports, self.trajectory, t)
+
+        self.update_viz(supports, self.trajectory)
 
     def step(self, t: float):
         # Spin-lock until the next tick

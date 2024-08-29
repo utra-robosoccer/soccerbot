@@ -3,7 +3,7 @@
 # import numpy as np
 # from soccer_pycontrol.model.bez import Bez
 # from soccer_pycontrol.pybullet_usage.pybullet_world import PybulletWorld
-# from soccer_pycontrol.walk_engine.walk_engine import WalkEngine
+# from soccer_pycontrol.walk_engine.navigator import Navigator
 #
 # from soccer_common import Transformation
 #
@@ -13,7 +13,7 @@
 #     def custom_walk(cameraTargetPosition: list, start_pose: Transformation, goal_pose: Transformation, robot_model: str = "bez1"):
 #         world = PybulletWorld(camera_yaw=90, real_time=True, rate=100, cameraTargetPosition=cameraTargetPosition)
 #         bez = Bez(robot_model=robot_model)
-#         tf = WalkEngine(world, bez)
+#         tf = Navigator(world, bez)
 #         tf.bez.model.set_pose(start_pose)
 #         tf.wait(50)
 #         tf.ready()
@@ -25,7 +25,7 @@
 #     def test_foot_step_planner_fixed(self):
 #         world = PybulletWorld(path="", camera_yaw=90, real_time=True, rate=100, cameraTargetPosition=[0, 0, 0.25])
 #         bez = Bez(robot_model="bez1", fixed_base=True)
-#         tf = WalkEngine(world, bez)
+#         tf = Navigator(world, bez)
 #
 #         # TODO fix with torso height or start pose
 #         tf.wait(50)
@@ -40,7 +40,7 @@
 #     def test_foot_step_planner_plane(self):
 #         world = PybulletWorld(camera_yaw=90, real_time=True, rate=100, cameraTargetPosition=[0, 0, 0.45])
 #         bez = Bez(robot_model="bez1")
-#         tf = WalkEngine(world, bez)
+#         tf = Navigator(world, bez)
 #         tf.wait(50)
 #         tf.ready()
 #         bez.motor_control.set_motor()
@@ -191,7 +191,7 @@
 #     def test_foot_step_planner_plane_dynamic(self):
 #         world = PybulletWorld(camera_yaw=90, real_time=True, rate=100)
 #         bez = Bez(robot_model="bez2")
-#         tf = WalkEngine(world, bez)
+#         tf = Navigator(world, bez)
 #         tf.wait(50)
 #         tf.ready()
 #         tf.wait(50)

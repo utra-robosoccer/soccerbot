@@ -83,7 +83,7 @@ class TestPybullet(unittest.TestCase):
     # def test_stand_plane(self):
     #     self.world = PybulletWorld(camera_yaw=0, real_time=REAL_TIME, rate=100)
     #     self.bez = Bez(pose=Transformation())
-    #     tf = WalkEngine(self.world, self.bez)
+    #     tf = Navigator(self.world, self.bez)
     #     tf.wait(50)
     #     tf.bez.ready()
     #     tf.wait(50)

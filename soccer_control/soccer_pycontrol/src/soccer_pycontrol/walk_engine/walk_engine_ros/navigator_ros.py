@@ -2,21 +2,40 @@ import rospy
 from geometry_msgs.msg import PoseStamped
 from soccer_pycontrol.model.model_ros.bez_ros import BezROS
 from soccer_pycontrol.walk_engine.foot_step_planner import FootStepPlanner
+from soccer_pycontrol.walk_engine.navigator import Navigator
 from soccer_pycontrol.walk_engine.stabilize import Stabilize
-from soccer_pycontrol.walk_engine.walk_engine import WalkEngine
+
+from soccer_common import PID
 
 
-class WalkEngineRos(WalkEngine):
+class NavigatorRos(Navigator):
     def __init__(self, bez: BezROS, imu_feedback_enabled: bool = False):
         self.imu_feedback_enabled = imu_feedback_enabled
         self.bez = bez
 
         self.foot_step_planner = FootStepPlanner(self.bez.robot_model, self.bez.parameters, rospy.get_time)
+        # TODO publish local odomtry from foot step planner
         self.rate = rospy.Rate(1 / self.foot_step_planner.DT)
         self.func_step = self.rate.sleep
 
-        self.pid = Stabilize(self.bez.parameters)
+        self.walk_pid = Stabilize(self.bez.parameters)
+        self.max_vel = 0.06
+        self.nav_x_pid = PID(
+            Kp=0.5,
+            Kd=1,
+            Ki=0,
+            setpoint=0,
+            output_limits=(-self.max_vel, self.max_vel),
+        )
+        self.nav_y_pid = PID(  # TODO properly tune later
+            Kp=0.5,
+            Kd=0,
+            Ki=0,
+            setpoint=0,
+            output_limits=(-0.1, 0.1),
+        )  # TODO could also mod if balance is decreasing
 
+        self.error_tol = 0.01  # in m TODO add as a param and in the ros version
         self.position_subscriber = rospy.Subscriber(self.bez.ns + "goal", PoseStamped, self.goal_callback)
         self.goal = PoseStamped()
 
