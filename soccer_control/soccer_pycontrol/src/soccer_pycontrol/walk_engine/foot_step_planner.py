@@ -78,9 +78,9 @@ class FootStepPlanner:
         self.tasks.initialize_tasks(self.solver, self.robot)
 
         # Creating a joint task to assign DoF values for upper body
-        elbow = -50 * np.pi / 180
+        elbow = 2.512  # -50 * np.pi / 180
         shoulder_roll = 0 * np.pi / 180
-        shoulder_pitch = 20 * np.pi / 180
+        shoulder_pitch = -0.45  # 20 * np.pi / 180
         joints_task = self.solver.add_joints_task()
         if self.robot_model == "bez2":
             joints_task.set_joints(
@@ -109,6 +109,11 @@ class FootStepPlanner:
                 }
             )
         joints_task.configure("joints", "soft", 1.0)
+
+        # self.look_at_ball = self.solver.add_axisalign_task(
+        #     "camera", np.array([1.0, 0.0, 0.0]), np.array([1.0, 0.0, 0.0])
+        # )
+        # self.look_at_ball.configure("look_ball", "soft", 1)
 
         # Placing the robot in the initial position
         print("Placing the robot in the initial position...")
@@ -152,12 +157,20 @@ class FootStepPlanner:
         self.last_replan = 0
         self.start_t = self.funct_time()
 
+    def head_movement(self, target: List[float]):
+        # TODO clean up and add a cone or it breaks walking
+        ball = np.array(target)
+        camera_pos = self.robot.get_T_world_frame("camera")[:3, 3]
+        ball[2] -= camera_pos[2]
+        self.look_at_ball.targetAxis_world = ball
+
     def plan_steps(
         self,
         t: float,
     ):
         # Updating the QP tasks from planned trajectory
         self.tasks.update_tasks_from_trajectory(self.trajectory, t)
+
         # TODO add joints from sim for better feedback
         # Invoking the IK QP solver
         self.robot.update_kinematics()

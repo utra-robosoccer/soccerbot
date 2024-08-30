@@ -42,6 +42,9 @@ class Sensors:
         self.imu_ready = True
         return Transformation(pos, orientation).orientation_euler
 
+    def get_ball(self):
+        return Transformation()
+
     def get_foot_pressure_sensors(self, floor: pb.loadURDF) -> List[bool]:
         """
         Checks if 4 corners of the each feet are in contact with ground #

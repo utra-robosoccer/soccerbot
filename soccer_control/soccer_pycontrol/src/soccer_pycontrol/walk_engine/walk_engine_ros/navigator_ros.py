@@ -19,10 +19,10 @@ class NavigatorRos(Navigator):
         self.func_step = self.rate.sleep
 
         self.walk_pid = Stabilize(self.bez.parameters)
-        self.max_vel = 0.06
+        self.max_vel = 0.09
         self.nav_x_pid = PID(
             Kp=0.5,
-            Kd=1,
+            Kd=0,
             Ki=0,
             setpoint=0,
             output_limits=(-self.max_vel, self.max_vel),
@@ -32,10 +32,17 @@ class NavigatorRos(Navigator):
             Kd=0,
             Ki=0,
             setpoint=0,
-            output_limits=(-0.1, 0.1),
+            output_limits=(-0.05, 0.05),
         )  # TODO could also mod if balance is decreasing
+        self.nav_yaw_pid = PID(
+            Kp=0.2,
+            Kd=0,
+            Ki=0,
+            setpoint=0,
+            output_limits=(-0.3, 0.3),
+        )
 
-        self.error_tol = 0.01  # in m TODO add as a param and in the ros version
+        self.error_tol = 0.05  # in m TODO add as a param and in the ros version
         self.position_subscriber = rospy.Subscriber(self.bez.ns + "goal", PoseStamped, self.goal_callback)
         self.goal = PoseStamped()
 

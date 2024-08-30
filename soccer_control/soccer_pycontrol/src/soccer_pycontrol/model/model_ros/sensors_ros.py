@@ -1,7 +1,9 @@
 import os
 
+import numpy as np
 import rospy
 import tf
+import tf2_py
 from nav_msgs.msg import Odometry
 from sensor_msgs.msg import Imu
 from soccer_pycontrol.model.sensors import Sensors
@@ -60,4 +62,24 @@ class SensorsROS(Sensors):
         pass
 
     def get_pose(self):
+        Transformation(pose=self.odom_msg.pose.pose)
         return Transformation(pose=self.odom_msg.pose.pose)
+
+    def get_ball(self):
+        try:
+            time_stamp1 = self.tf_listener.getLatestCommonTime("world", "robot1/base_footprint_gt")
+
+            (trans1, rot) = self.tf_listener.lookupTransform("world", "robot1/base_footprint_gt", time_stamp1)
+            time_stamp2 = self.tf_listener.getLatestCommonTime("world", "robot1/ball_gt")
+            (trans2, rot) = self.tf_listener.lookupTransform("world", "robot1/ball_gt", time_stamp2)
+            trans = (np.array(trans2) - np.array(trans1)).tolist()
+            return Transformation(position=trans, orientation=rot)
+        except (
+            tf2_py.LookupException,
+            tf.LookupException,
+            tf.ConnectivityException,
+            tf.ExtrapolationException,
+            tf2_py.TransformException,
+        ) as ex:
+            rospy.logerr_throttle(5, "Unable to find transformation from world to ")
+            pass

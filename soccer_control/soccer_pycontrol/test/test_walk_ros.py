@@ -31,10 +31,7 @@ class TestPybullet(unittest.TestCase):
         # walker.goal_callback(PoseStamped())
         walker.walk(d_x=0.04, t_goal=10)
         walker.ready()
-        # walker.walk(d_x=0.0, d_y=0.06, t_goal=5)
-        # walker.walk(d_x=0.0, d_theta=0.3, t_goal=5)
-        # walker.walk(d_x=-0.04, t_goal=5)
-        # walker.walk(d_x=0.04, d_theta=0.2, t_goal=5)
+
         walker.wait(100)
 
     @unittest.skipIf("DISPLAY" not in os.environ, "only local")
@@ -47,6 +44,7 @@ class TestPybullet(unittest.TestCase):
         ns = "/robot1/"
         bez = BezROS(ns=ns)
         tmp = rospy.Publisher(ns + "reset_robot", PoseStamped)
+        # tmp = rospy.Publisher(ns + "reset_robot", PoseStamped)
         walker = NavigatorRos(bez)
         walker.bez.motor_control.reset_target_angles()
         walker.bez.motor_control.set_motor()
@@ -58,7 +56,11 @@ class TestPybullet(unittest.TestCase):
         # walker.wait(50)
         # walker.goal_callback(PoseStamped())
         start = time.time()
-        target_goal = Transformation(position=[-1, 0, 0])
-        walker.walk(target_goal)
-        print(time.time() - start)
+        # target_goal = Transformation(position=[1, 0, 0], euler=[0,0,0])
+        # walker.walk(target_goal)
+        walker.walk(bez.sensors.get_ball(), True)
+        # target_goal = [0.0, 0, 0, 10, 500]
+        # walker.walk(target_goal)
+        print("cm/s: ", 100 / (time.time() - start))
+        # walker.bez.sensors.get_ball(rospy.Time.now())
         walker.wait(100)
