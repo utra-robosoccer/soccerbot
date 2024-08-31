@@ -36,7 +36,8 @@ Cython~=3.0.10
 PyYAML~=6.0.1
 argparse~=1.4.0
 open3d~=0.17.0; platform_machine == 'x86_64'
-
+Werkzeug==3.0.4
+flask==3.0.3
 empy~=3.3.4
 
 catkin_pkg_modules==1.0.0
