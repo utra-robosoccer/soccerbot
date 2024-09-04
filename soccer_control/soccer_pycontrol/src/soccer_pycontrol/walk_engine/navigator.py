@@ -3,6 +3,7 @@ import time
 from typing import List, Union
 
 import numpy as np
+import scipy
 from soccer_pycontrol.model.bez import Bez
 from soccer_pycontrol.pybullet_usage.pybullet_world import PybulletWorld
 from soccer_pycontrol.walk_engine.foot_step_planner import FootStepPlanner
@@ -21,7 +22,7 @@ class Navigator:
         self.foot_step_planner = FootStepPlanner(self.bez.robot_model, self.bez.parameters, time.time)
 
         self.walk_pid = Stabilize(self.bez.parameters)
-        self.max_vel = 0.09
+        self.max_vel = 0.02
         self.nav_x_pid = PID(
             Kp=0.5,
             Kd=0,
@@ -38,7 +39,7 @@ class Navigator:
         )  # TODO could also mod if balance is decreasing
 
         self.nav_yaw_pid = PID(
-            Kp=0.1,
+            Kp=0.05,
             Kd=0,
             Ki=0,
             setpoint=0,
@@ -103,14 +104,19 @@ class Navigator:
             pose = (
                 self.bez.sensors.get_pose()
             )  # self.foot_step_planner.robot.get_T_world_trunk()  # can use self.foot_step_planner.trajectory.get_p_world_CoM(t)
+            goal = Transformation()
+            goal.rotation_matrix = np.matmul(target_goal.rotation_matrix, scipy.linalg.inv(pose.rotation_matrix))
+            goal.position = pose.rotation_matrix.T @ target_goal.position - pose.rotation_matrix.T @ pose.position
+            # print(goal.position , pose.position)
             x_error = target_goal.position[0] - pose.position[0]
             y_error = target_goal.position[1] - pose.position[1]
             head_error = self.heading_error(target_goal.orientation_euler[0], pose.orientation_euler[0])
             # TODO replace with pure pursuit
             # TODO make  a 2d unit test
-
-            dx = self.nav_x_pid.update(pose.position[0])
-            dy = self.nav_y_pid.update(pose.position[1])
+            self.nav_x_pid.setpoint = goal.position[0]
+            self.nav_y_pid.setpoint = goal.position[1]
+            dx = self.nav_x_pid.update(0)
+            dy = self.nav_y_pid.update(0)
             dtheta = self.nav_yaw_pid.update(pose.orientation_euler[0])
             print(round(dx, 3), " ", round(dy, 3), " ", round(dtheta, 3), " ", round(x_error, 3), " ", round(y_error, 3), " ", round(head_error, 3))
             self.foot_step_planner.configure_planner(dx, dy, dtheta)
@@ -132,7 +138,7 @@ class Navigator:
         self.nav_y_pid.setpoint = target_goal.position[1]
 
         self.nav_yaw_pid.reset()
-        self.nav_yaw_pid.setpoint = 0
+        self.nav_yaw_pid.setpoint = 0  # TODO add  yaw modes
 
         dx, dy = self.find_new_vel(goal_loc=target_goal.position[:2])
         # dx, dy = 0, 0

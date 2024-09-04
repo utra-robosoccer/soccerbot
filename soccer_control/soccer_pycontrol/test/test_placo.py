@@ -26,10 +26,10 @@ class TestPlaco(unittest.TestCase):
         # walk.ready()
         # self.bez.motor_control.set_motor()
         # walk.wait(50)
-        target_goal = [0.05, 0, 0, 10, 500]
-        # target_goal = Transformation(position=[1, 1, 0], euler=[0,0,0])
+        # target_goal = [0.05, 0, 0, 10, 500]
+        target_goal = Transformation(position=[1, 0.5, 0], euler=[-3.14, 0, 0])
         walk.walk(target_goal)
-        walk.wait(1000)
+        # walk.wait(1000)
 
     # TODO fix
     def test_bez2(self):
