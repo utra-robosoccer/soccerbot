@@ -43,3 +43,6 @@ empy~=3.3.4
 catkin_pkg_modules==1.0.0
 catkin-pkg~=0.5.2
 rospkg~=1.5.1
+
+
+jetson-stats~=4.2.3; platform_machine == 'aarch64'

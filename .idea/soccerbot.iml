@@ -19,7 +19,6 @@
       <excludeFolder url="file://$MODULE_DIR$/.pytest_cache" />
       <excludeFolder url="file://$MODULE_DIR$/external/hlvs_webots/controllers/referee/textures" />
     </content>
-    <content url="file:///opt/ros/noetic/lib/python3/dist-packages" />
     <orderEntry type="jdk" jdkName="Python 3.8" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="workspace" level="project" />
