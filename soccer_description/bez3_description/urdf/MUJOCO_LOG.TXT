@@ -1,0 +1,6 @@
+Fri May  3 15:15:26 2024
+ERROR: Headers and library have different versions
+
+Fri May  3 15:30:36 2024
+WARNING: Nan, Inf or huge value in QACC at DOF 2. The simulation is unstable. Time = 66.6160.
+

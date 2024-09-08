@@ -92,3 +92,6 @@ class TestPlaco(unittest.TestCase):
         walk.ready()
         walk.world.step()
         walk.wait(100)
+
+if __name__ == '__main__':
+    TestPlaco().test_bez1()

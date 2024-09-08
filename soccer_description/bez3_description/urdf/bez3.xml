@@ -1,0 +1,85 @@
+<mujoco model="bez3">
+  <compiler angle="radian"/>
+  <worldbody>
+    <body name="left_hip_side_1" pos="-0.0045 0.0545 -0.16339">
+      <inertial pos="-0.000660176 7.98424e-10 -0.0211415" quat="0.5 0.5 0.5 0.5" mass="0.0189998" diaginertia="1.8e-05 1.4e-05 9e-06"/>
+      <joint name="left_leg_motor_0" pos="0 0 0" axis="0 0 1" limited="false"/>
+      <body name="JX_servo_v12_8" pos="-0.03 0 -0.035336">
+        <inertial pos="-0.00457814 -0.000422492 -0.0194649" quat="0.513019 0.493752 0.510815 0.481755" mass="0.423047" diaginertia="0.000742563 0.0006386 0.000268572"/>
+        <joint name="left_leg_motor_1" pos="0 0 0" axis="-1 0 0" limited="false"/>
+        <body name="left_thigh_1" pos="0.0295 0.0379 0">
+          <inertial pos="0.00355223 -0.037286 -0.0673853" quat="0.999801 0 -0.0199562 0" mass="0.0469874" diaginertia="0.00014412 8.9e-05 6.88802e-05"/>
+          <joint name="left_leg_motor_2" pos="0 0 0" axis="0 -1 0" limited="false"/>
+          <body name="JX_servo_v12_11" pos="0 0 -0.124">
+            <inertial pos="-7.61703e-06 -0.038798 -0.0287705" quat="0.99982 -0.0189961 0.000220296 2.84536e-05" mass="0.234224" diaginertia="0.000368962 0.000288189 0.000119773"/>
+            <joint name="left_leg_motor_3" pos="0 0 0" axis="0 -1 0" limited="false"/>
+            <body name="JX_servo_v12_12" pos="-5e-05 0.0016 -0.139905">
+              <inertial pos="-0.0340781 -0.039009 0.0194651" quat="0.485816 0.512986 0.481901 0.518266" mass="0.423047" diaginertia="0.000742644 0.000638296 0.000268545"/>
+              <joint name="left_leg_motor_4" pos="0 0 0" axis="0 -1 0" limited="false"/>
+              <body name="left_foot_1" pos="-0.0295 -0.039 0">
+                <inertial pos="0.0356643 0.00794366 -0.0251471" quat="0.0747217 0.686511 0.0733634 0.719539" mass="0.123535" diaginertia="0.00035306 0.000318503 9.44367e-05"/>
+                <joint name="left_leg_motor_5" pos="0 0 0" axis="-1 0 0" limited="false"/>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+    </body>
+    <body name="right_hip_side_1" pos="-0.0045 -0.0545 -0.1634">
+      <inertial pos="-0.000660176 -7.98424e-10 -0.0211416" quat="0.5 0.5 0.5 0.5" mass="0.0189998" diaginertia="1.8e-05 1.4e-05 9e-06"/>
+      <joint name="right_leg_motor_0" pos="0 0 0" axis="0 0 -1" limited="false"/>
+      <body name="JX_servo_v12_15" pos="-0.03 0 -0.035336">
+        <inertial pos="-0.00457814 0.000422492 -0.0194649" quat="0.481755 0.510815 0.493752 0.513019" mass="0.423047" diaginertia="0.000742563 0.0006386 0.000268572"/>
+        <joint name="right_leg_motor_1" pos="0 0 0" axis="1 0 0" limited="false"/>
+        <body name="right_thigh_1" pos="0.0295 -0.0379 0">
+          <inertial pos="0.00355223 0.037286 -0.0673853" quat="0.999801 0 -0.0199562 0" mass="0.0469873" diaginertia="0.00014412 8.9e-05 6.88802e-05"/>
+          <joint name="right_leg_motor_2" pos="0 0 0" axis="0 1 0" limited="false"/>
+          <body name="JX_servo_v12_17" pos="0 0 -0.124">
+            <inertial pos="-7.61703e-06 0.038798 -0.0287706" quat="0.99982 0.0189957 0.000220296 -2.84537e-05" mass="0.234224" diaginertia="0.000368962 0.000288189 0.000119773"/>
+            <joint name="right_leg_motor_3" pos="0 0 0" axis="0 -1 0" limited="false"/>
+            <body name="JX_servo_v12_18" pos="-5e-05 -0.0016 -0.139905">
+              <inertial pos="-0.0340781 0.039009 0.0194651" quat="0.518266 0.481901 0.512986 0.485816" mass="0.423047" diaginertia="0.000742644 0.000638296 0.000268545"/>
+              <joint name="right_leg_motor_4" pos="0 0 0" axis="0 -1 0" limited="false"/>
+              <body name="right_foot_1" pos="-0.0295 0.039 0">
+                <inertial pos="0.0356643 -0.00794365 -0.0251471" quat="-0.0747217 0.686511 -0.0733634 0.719539" mass="0.123535" diaginertia="0.00035306 0.000318503 9.44367e-05"/>
+                <joint name="right_leg_motor_5" pos="0 0 0" axis="-1 0 0" limited="false"/>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+    </body>
+    <body name="gobilda-servo_1" pos="-0.021 0.110294 -0.0365">
+      <inertial pos="1.2273e-09 0.02218 -0.0456737" quat="0.999978 0.00664033 0 0" mass="0.13263" diaginertia="0.000189096 0.000178541 1.85547e-05"/>
+      <joint name="left_arm_motor_0" pos="0 0 0" axis="0 -1 0" limited="false"/>
+      <body name="25t-servo-hub_2" pos="0 0 -0.0703">
+        <inertial pos="-0.0182716 0.0186695 -0.0374471" quat="0.986686 0.0371119 0.036951 0.153977" mass="0.0430401" diaginertia="0.000103618 9.72453e-05 2.00127e-05"/>
+        <joint name="left_arm_motor_1" pos="0 0 0" axis="0 1 0" limited="false"/>
+      </body>
+    </body>
+    <body name="gobilda-servo_Mirror__1" pos="-0.021 -0.110294 -0.0365">
+      <inertial pos="1.2273e-09 -0.02218 -0.0456737" quat="0.999978 -0.00664033 0 0" mass="0.13263" diaginertia="0.000189096 0.000178541 1.85547e-05"/>
+      <joint name="right_arm_motor_0" pos="0 0 0" axis="0 -1 0" limited="false"/>
+      <body name="25t-servo-hub_Mirror__2" pos="0 0 -0.0703">
+        <inertial pos="-0.0182716 -0.0186696 -0.0374472" quat="0.986684 -0.037112 0.036952 -0.153985" mass="0.0430399" diaginertia="0.000103618 9.72455e-05 2.00128e-05"/>
+        <joint name="right_arm_motor_1" pos="0 0 0" axis="0 1 0" limited="false"/>
+      </body>
+    </body>
+    <body name="25t-servo-hub_3" pos="-0.00965 0 0.04387">
+      <inertial pos="-2.21353e-07 -0.00357555 0.0177924" quat="0.875219 0.483727 -4.49345e-07 -2.33377e-06" mass="0.0241101" diaginertia="1.65659e-05 1.3012e-05 8.55391e-06"/>
+      <joint name="head_motor_0" pos="0 0 0" axis="0 0 1" limited="false"/>
+      <body name="gobilda-servo_5" pos="0 -0.019393 0.036611">
+        <inertial pos="0.0219242 0.0226331 0.0236831" quat="0.943429 -0.00665966 0.331227 0.0136109" mass="0.162498" diaginertia="0.000158379 0.000134981 6.9115e-05"/>
+        <joint name="head_motor_1" pos="0 0 0" axis="0 1 0" limited="false"/>
+        <body name="camera-link_1" pos="0.0537 0.02288 0.048">
+          <inertial pos="0.000500001 -3.12984e-10 4.70062e-07" mass="0.00019625" diaginertia="1e-06 1e-06 1e-06"/>
+          <joint name="camera_joint" pos="0 0 0" axis="1 0 0" limited="false"/>
+        </body>
+      </body>
+    </body>
+    <body name="imu-link_1" pos="0 0 -0.005">
+      <inertial pos="0 0 -0.0495" mass="0.00019625" diaginertia="1e-06 1e-06 1e-06"/>
+      <joint name="imu_joint" pos="0 0 0" axis="0 0 1" limited="false"/>
+    </body>
+  </worldbody>
+</mujoco>

@@ -16,29 +16,29 @@ filterpy~=1.4.5
 gdown==4.5.4
 
 pygame~=2.5.0
-ultralytics~=8.2.82
+# ultralytics~=8.2.82
 
 # Control
 pin~=2.7.0
-placo~=0.6.2
+# placo~=0.6.2
 pybullet~=3.2.5; platform_machine == 'x86_64'
 mujoco~=3.2.0; platform_machine == 'x86_64'
 
 # object detection
-requests==2.32.03
-ipython==8.10.0
-Pillow==10.4.0
-psutil==5.9.8; platform_machine == 'x86_64'
-torch==2.3.1+cu121; platform_machine == 'x86_64'
-torchvision==0.18.1+cu121; platform_machine == 'x86_64'
-mypy-extensions~=1.0.0
-Cython~=3.0.10
-PyYAML~=6.0.1
-argparse~=1.4.0
-open3d~=0.17.0; platform_machine == 'x86_64'
+# requests==2.32.03
+# ipython==8.10.0
+# Pillow==10.4.0
+# psutil==5.9.8; platform_machine == 'x86_64'
+# torch==2.3.1+cu121; platform_machine == 'x86_64'
+# torchvision==0.18.1+cu121; platform_machine == 'x86_64'
+# mypy-extensions~=1.0.0
+# Cython~=3.0.10
+# PyYAML~=6.0.1
+# argparse~=1.4.0
+# open3d~=0.17.0; platform_machine == 'x86_64'
 
 empy~=3.3.4
 
-catkin_pkg_modules==1.0.0
-catkin-pkg~=0.5.2
+# catkin_pkg_modules==1.0.0
+# catkin-pkg~=0.5.2
 rospkg~=1.5.1

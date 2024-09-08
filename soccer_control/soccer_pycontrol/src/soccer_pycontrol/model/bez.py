@@ -4,8 +4,11 @@ import yaml
 from soccer_pycontrol.model.motor_control import MotorControl
 from soccer_pycontrol.model.sensors import Sensors
 from soccer_pycontrol.pybullet_usage.pybullet_load_model import LoadModel
+import pybullet
 
 from soccer_common import Transformation
+
+import warnings
 
 
 class Bez:
@@ -19,11 +22,15 @@ class Bez:
         self.robot_model = robot_model
         self.parameters = self.get_parameters()
 
-        self.model = LoadModel(self.robot_model, self.parameters["walking_torso_height"], pose, fixed_base)
+        try:
+            self.model = LoadModel(self.robot_model, self.parameters["walking_torso_height"], pose, fixed_base)
 
-        self.motor_control = MotorControl(self.model.body)
+            self.motor_control = MotorControl(self.model.body)
 
-        self.sensors = Sensors(self.model.body)
+            self.sensors = Sensors(self.model.body)
+        except pybullet.error as e:
+            warnings.warn(str(e))
+
 
     def get_parameters(self) -> dict:
         with open(

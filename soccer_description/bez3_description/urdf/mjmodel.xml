@@ -1,0 +1,307 @@
+<mujoco model="bez3">
+  <compiler meshdir="../meshes_simplified/"/>
+  <include file="../../common.xml" />
+
+  <default class="body">
+    <!--geom condim="3" friction=".7" solimp=".3 .95 .05 0.5 3" solref=".5 9" material="body" /-->
+  </default>
+
+
+  <asset>
+    <mesh name="base_link" file="base_link.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="torso_1" file="torso_1.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="JX_servo_v12_1" file="JX_servo_v12_1.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="left_hip_side_1" file="left_hip_side_1.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="JX_servo_v12_8" file="JX_servo_v12_8.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="left_hip_front_1" file="left_hip_front_1.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="JX_servo_v12_9" file="JX_servo_v12_9.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="left_thigh_1" file="left_thigh_1.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="JX_servo_v12_11" file="JX_servo_v12_11.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="left_calve_1" file="left_calve_1.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="JX_servo_v12_12" file="JX_servo_v12_12.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="left_hip_front_2" file="left_hip_front_2.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="JX_servo_v12_13" file="JX_servo_v12_13.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="JX_servo_v12_14" file="JX_servo_v12_14.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="right_hip_side_1" file="right_hip_side_1.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="JX_servo_v12_15" file="JX_servo_v12_15.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="right_ankle_1" file="right_ankle_1.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="JX_servo_v12_16" file="JX_servo_v12_16.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="right_thigh_1" file="right_thigh_1.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="JX_servo_v12_17" file="JX_servo_v12_17.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="right_calve_1" file="right_calve_1.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="JX_servo_v12_18" file="JX_servo_v12_18.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="right_ankle_2" file="right_ankle_2.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="JX_servo_v12_19" file="JX_servo_v12_19.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="25t-servo-hub_1" file="25t-servo-hub_1.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="gobilda-servo_1" file="gobilda-servo_1.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="left_bicep_1" file="left_bicep_1.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="gobilda-servo_3" file="gobilda-servo_3.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="25t-servo-hub_2" file="25t-servo-hub_2.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="elbow-attach_1" file="elbow-attach_1.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="left_forearm_1" file="left_forearm_1.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="elbow-bearing_1" file="elbow-bearing_1.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="25t-servo-hub_Mirror__1" file="25t-servo-hub_Mirror__1.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="gobilda-servo_Mirror__1" file="gobilda-servo_Mirror__1.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="right_bicep_1" file="right_bicep_1.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="gobilda-servo_Mirror__2" file="gobilda-servo_Mirror__2.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="25t-servo-hub_Mirror__2" file="25t-servo-hub_Mirror__2.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="elbow-attach_Mirror__1" file="elbow-attach_Mirror__1.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="right_forearm_1" file="right_forearm_1.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="elbow-bearing_Mirror__1" file="elbow-bearing_Mirror__1.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="custom_servo_support__lower_neck__v2_1" file="custom_servo_support__lower_neck__v2_1.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="gobilda-servo_4" file="gobilda-servo_4.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="25t-servo-hub_3" file="25t-servo-hub_3.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="neck_1" file="neck_1.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="25t-servo-hub_4" file="25t-servo-hub_4.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="gobilda-servo_5" file="gobilda-servo_5.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="head_1" file="head_1.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="camera_1" file="camera_1.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="camera-link_1" file="camera-link_1.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="imu-link_1" file="imu-link_1.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="Component32_1" file="Component32_1.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="TX2_board_v2_1" file="TX2_board_v2_1.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="left_foot_1" file="left_foot_1.stl" scale="0.001 0.001 0.001"/>
+    <mesh name="right_foot_1" file="right_foot_1.stl" scale="0.001 0.001 0.001"/>
+  </asset>
+  <worldbody>
+    <body name="torso" pos="0 0 0.53">
+      <freejoint name="root" />
+
+      <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.627451 0.627451 0.627451 1" mesh="base_link"/>
+      <!--geom type="mesh" rgba="0.627451 0.627451 0.627451 1" mesh="base_link"/-->
+      <geom type="mesh" contype="0" conaffinity="0" group="1" mass="0.1" density="0" rgba="0.784314 0.556863 0.027451 1" mesh="torso_1"/>
+      <!--geom type="mesh" rgba="0.784314 0.556863 0.027451 1" mesh="torso_1"/-->
+      <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.0980392 0.0980392 0.0980392 1" mesh="JX_servo_v12_1"/>
+      <!--geom type="mesh" rgba="0.0980392 0.0980392 0.0980392 1" mesh="JX_servo_v12_1"/-->
+      <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.0980392 0.0980392 0.0980392 1" mesh="JX_servo_v12_14"/>
+      <!--geom type="mesh" rgba="0.0980392 0.0980392 0.0980392 1" mesh="JX_servo_v12_14"/-->
+      <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.960784 0.960784 0.964706 1" mesh="25t-servo-hub_1"/>
+      <!--geom type="mesh" rgba="0.960784 0.960784 0.964706 1" mesh="25t-servo-hub_1"/-->
+      <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.960784 0.960784 0.964706 1" mesh="25t-servo-hub_Mirror__1"/>
+      <!--geom type="mesh" rgba="0.960784 0.960784 0.964706 1" mesh="25t-servo-hub_Mirror__1"/-->
+      <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.0980392 0.0980392 0.0980392 1" mesh="custom_servo_support__lower_neck__v2_1"/>
+      <!--geom type="mesh" rgba="0.0980392 0.0980392 0.0980392 1" mesh="custom_servo_support__lower_neck__v2_1"/-->
+      <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.290196 0.290196 0.290196 1" mesh="gobilda-servo_4"/>
+      <!--geom type="mesh" rgba="0.290196 0.290196 0.290196 1" mesh="gobilda-servo_4"/-->
+      <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.160784 0.505882 0.807843 1" mesh="Component32_1"/>
+      <!--geom type="mesh" rgba="0.160784 0.505882 0.807843 1" mesh="Component32_1"/-->
+      <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.7 0.7 0.7 1" mesh="TX2_board_v2_1"/>
+      <!--geom type="mesh" rgba="0.7 0.7 0.7 1" mesh="TX2_board_v2_1"/-->
+      <body name="left_hip_side_1" pos="-0.0045 0.0545 -0.16339">
+        <inertial pos="-0.000660176 7.98424e-10 -0.0211415" quat="0.5 0.5 0.5 0.5" mass="0.0189998" diaginertia="1.8e-05 1.4e-05 9e-06"/>
+        <joint name="left_leg_motor_0" pos="0 0 0" axis="0 0 1" limited="true" range="-1.51 1.51"/>
+        <geom pos="0.0045 -0.0545 0.16339" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.0980392 0.0980392 0.0980392 1" mesh="left_hip_side_1"/>
+        <!--geom pos="0.0045 -0.0545 0.16339" type="mesh" rgba="0.0980392 0.0980392 0.0980392 1" mesh="left_hip_side_1"/-->
+        <body name="JX_servo_v12_8" pos="-0.03 0 -0.035336">
+          <inertial pos="-0.00457814 -0.000422492 -0.0194649" quat="0.513019 0.493752 0.510815 0.481755" mass="0.423047" diaginertia="0.000742563 0.0006386 0.000268572"/>
+          <joint name="left_leg_motor_1" pos="0 0 0" axis="-1 0 0" limited="true" range="-0.723 0.534" />
+          <geom pos="0.0345 -0.0545 0.198726" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.0980392 0.0980392 0.0980392 1" mesh="JX_servo_v12_8"/>
+          <!--geom pos="0.0345 -0.0545 0.198726" type="mesh" rgba="0.0980392 0.0980392 0.0980392 1" mesh="JX_servo_v12_8"/-->
+          <geom pos="0.0345 -0.0545 0.198726" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.0980392 0.0980392 0.0980392 1" mesh="left_hip_front_1"/>
+          <!--geom pos="0.0345 -0.0545 0.198726" type="mesh" rgba="0.0980392 0.0980392 0.0980392 1" mesh="left_hip_front_1"/-->
+          <geom pos="0.0345 -0.0545 0.198726" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.0980392 0.0980392 0.0980392 1" mesh="JX_servo_v12_9"/>
+          <!--geom pos="0.0345 -0.0545 0.198726" type="mesh" rgba="0.0980392 0.0980392 0.0980392 1" mesh="JX_servo_v12_9"/-->
+          <body name="left_thigh_1" pos="0.0295 0.0379 0">
+            <inertial pos="0.00355223 -0.037286 -0.0673853" quat="0.999801 0 -0.0199562 0" mass="0.0469874" diaginertia="0.00014412 8.9e-05 6.88802e-05"/>
+            <joint name="left_leg_motor_2" pos="0 0 0" axis="0 -1 0" limited="true" range="-0.66 2.23" />
+            <geom pos="0.005 -0.0924 0.198726" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.0980392 0.0980392 0.0980392 1" mesh="left_thigh_1"/>
+            <!--geom pos="0.005 -0.0924 0.198726" type="mesh" rgba="0.0980392 0.0980392 0.0980392 1" mesh="left_thigh_1"/-->
+            <body name="JX_servo_v12_11" pos="0 0 -0.124">
+              <inertial pos="-7.61703e-06 -0.038798 -0.0287705" quat="0.99982 -0.0189961 0.000220296 2.84536e-05" mass="0.234224" diaginertia="0.000368962 0.000288189 0.000119773"/>
+              <joint name="left_leg_motor_3" pos="0 0 0" axis="0 -1 0" limited="true" range="-1.2 0.34" />
+              <geom pos="0.005 -0.0924 0.322726" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.0980392 0.0980392 0.0980392 1" mesh="JX_servo_v12_11"/>
+              <!--geom pos="0.005 -0.0924 0.322726" type="mesh" rgba="0.0980392 0.0980392 0.0980392 1" mesh="JX_servo_v12_11"/-->
+              <geom pos="0.005 -0.0924 0.322726" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.0980392 0.0980392 0.0980392 1" mesh="left_calve_1"/>
+              <!--geom pos="0.005 -0.0924 0.322726" type="mesh" rgba="0.0980392 0.0980392 0.0980392 1" mesh="left_calve_1"/-->
+              <body name="JX_servo_v12_12" pos="-5e-05 0.0016 -0.139905">
+                <inertial pos="-0.0340781 -0.039009 0.0194651" quat="0.485816 0.512986 0.481901 0.518266" mass="0.423047" diaginertia="0.000742644 0.000638296 0.000268545"/>
+                <joint name="left_leg_motor_4" pos="0 0 0" axis="0 -1 0" limited="true" range="-0.3 1.23" />
+                <geom pos="0.00505 -0.094 0.462631" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.0980392 0.0980392 0.0980392 1" mesh="JX_servo_v12_12"/>
+                <!--geom pos="0.00505 -0.094 0.462631" type="mesh" rgba="0.0980392 0.0980392 0.0980392 1" mesh="JX_servo_v12_12"/-->
+                <geom pos="0.00505 -0.094 0.462631" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.0980392 0.0980392 0.0980392 1" mesh="left_hip_front_2"/>
+                <!--geom pos="0.00505 -0.094 0.462631" type="mesh" rgba="0.0980392 0.0980392 0.0980392 1" mesh="left_hip_front_2"/-->
+                <geom pos="0.00505 -0.094 0.462631" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.0980392 0.0980392 0.0980392 1" mesh="JX_servo_v12_13"/>
+                <!--geom pos="0.00505 -0.094 0.462631" type="mesh" rgba="0.0980392 0.0980392 0.0980392 1" mesh="JX_servo_v12_13"/-->
+                <body name="left_foot_1" pos="-0.0295 -0.039 0">
+                  <inertial pos="0.0356643 0.00794366 -0.0251471" quat="0.0747217 0.686511 0.0733634 0.719539" mass="0.123535" diaginertia="0.00035306 0.000318503 9.44367e-05"/>
+                  <joint name="left_leg_motor_5" pos="0 0 0" axis="-1 0 0" limited="true" range="-0.251 0.251" />
+                  <geom pos="0.03455 -0.055 0.462631" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.0980392 0.0980392 0.0980392 1" mesh="left_foot_1"/>
+                  <!--geom pos="0.03455 -0.055 0.462631" type="mesh" rgba="0.0980392 0.0980392 0.0980392 1" mesh="left_foot_1"/-->
+
+                  <!--body name="left_foot_contact">
+                    <geom mass="0" pos="0.03 0 0.017" type="box" size="0.08 0.05 0.055" />
+                    <site name="left_foot_site" rgba="1 0 0 0.3" pos="0.03 0 0.017" type="box" size="0.081 0.051 0.056" />
+                  </body-->
+
+                  <!-- MANUAL ELEMENT -->
+                  <body name="left_foot" pos="0.03 0 -0.033">
+                    <!--geom name="left_foot" mass="0" type="box" size="0.08 0.05 0.055" /><!-- -0.033 -->
+                    <geom name="left_foot" mass="0" type="box" size="0.08 0.05 0.005" />
+                  </body>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+      <body name="right_hip_side_1" pos="-0.0045 -0.0545 -0.1634">
+        <inertial pos="-0.000660176 -7.98424e-10 -0.0211416" quat="0.5 0.5 0.5 0.5" mass="0.0189998" diaginertia="1.8e-05 1.4e-05 9e-06"/>
+        <joint name="right_leg_motor_0" pos="0 0 0" axis="0 0 -1" limited="true" range="-1.51 1.51"/>
+        <geom pos="0.0045 0.0545 0.1634" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.0980392 0.0980392 0.0980392 1" mesh="right_hip_side_1"/>
+        <!--geom pos="0.0045 0.0545 0.1634" type="mesh" rgba="0.0980392 0.0980392 0.0980392 1" mesh="right_hip_side_1"/-->
+        <body name="JX_servo_v12_15" pos="-0.03 0 -0.035336">
+          <inertial pos="-0.00457814 0.000422492 -0.0194649" quat="0.481755 0.510815 0.493752 0.513019" mass="0.423047" diaginertia="0.000742563 0.0006386 0.000268572"/>
+          <joint name="right_leg_motor_1" pos="0 0 0" axis="1 0 0" limited="true" range="-0.723 0.534"/>
+          <geom pos="0.0345 0.0545 0.198736" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.0980392 0.0980392 0.0980392 1" mesh="JX_servo_v12_15"/>
+          <!--geom pos="0.0345 0.0545 0.198736" type="mesh" rgba="0.0980392 0.0980392 0.0980392 1" mesh="JX_servo_v12_15"/-->
+          <geom pos="0.0345 0.0545 0.198736" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.0980392 0.0980392 0.0980392 1" mesh="right_ankle_1"/>
+          <!--geom pos="0.0345 0.0545 0.198736" type="mesh" rgba="0.0980392 0.0980392 0.0980392 1" mesh="right_ankle_1"/-->
+          <geom pos="0.0345 0.0545 0.198736" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.0980392 0.0980392 0.0980392 1" mesh="JX_servo_v12_16"/>
+          <!--geom pos="0.0345 0.0545 0.198736" type="mesh" rgba="0.0980392 0.0980392 0.0980392 1" mesh="JX_servo_v12_16"/-->
+          <body name="right_thigh_1" pos="0.0295 -0.0379 0">
+            <inertial pos="0.00355223 0.037286 -0.0673853" quat="0.999801 0 -0.0199562 0" mass="0.0469873" diaginertia="0.00014412 8.9e-05 6.88802e-05"/>
+            <joint name="right_leg_motor_2" pos="0 0 0" axis="0 1 0" limited="true" range="-2.23 0.66"/>
+            <geom pos="0.005 0.0924 0.198736" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.0980392 0.0980392 0.0980392 1" mesh="right_thigh_1"/>
+            <!--geom pos="0.005 0.0924 0.198736" type="mesh" rgba="0.0980392 0.0980392 0.0980392 1" mesh="right_thigh_1"/-->
+            <body name="JX_servo_v12_17" pos="0 0 -0.124">
+              <inertial pos="-7.61703e-06 0.038798 -0.0287706" quat="0.99982 0.0189957 0.000220296 -2.84537e-05" mass="0.234224" diaginertia="0.000368962 0.000288189 0.000119773"/>
+              <joint name="right_leg_motor_3" pos="0 0 0" axis="0 -1 0" limited="true" range="-1.21 0.34" />
+              <geom pos="0.005 0.0924 0.322736" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.0980392 0.0980392 0.0980392 1" mesh="JX_servo_v12_17"/>
+              <!--geom pos="0.005 0.0924 0.322736" type="mesh" rgba="0.0980392 0.0980392 0.0980392 1" mesh="JX_servo_v12_17"/-->
+              <geom pos="0.005 0.0924 0.322736" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.0980392 0.0980392 0.0980392 1" mesh="right_calve_1"/>
+              <!--geom pos="0.005 0.0924 0.322736" type="mesh" rgba="0.0980392 0.0980392 0.0980392 1" mesh="right_calve_1"/-->
+              <body name="JX_servo_v12_18" pos="-5e-05 -0.0016 -0.139905">
+                <inertial pos="-0.0340781 0.039009 0.0194651" quat="0.518266 0.481901 0.512986 0.485816" mass="0.423047" diaginertia="0.000742644 0.000638296 0.000268545"/>
+                <joint name="right_leg_motor_4" pos="0 0 0" axis="0 -1 0" limited="true" range="-1.23 0.3"/>
+                <geom pos="0.00505 0.094 0.462641" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.0980392 0.0980392 0.0980392 1" mesh="JX_servo_v12_18"/>
+                <!--geom pos="0.00505 0.094 0.462641" type="mesh" rgba="0.0980392 0.0980392 0.0980392 1" mesh="JX_servo_v12_18"/-->
+                <geom pos="0.00505 0.094 0.462641" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.0980392 0.0980392 0.0980392 1" mesh="right_ankle_2"/>
+                <!--geom pos="0.00505 0.094 0.462641" type="mesh" rgba="0.0980392 0.0980392 0.0980392 1" mesh="right_ankle_2"/-->
+                <geom pos="0.00505 0.094 0.462641" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.0980392 0.0980392 0.0980392 1" mesh="JX_servo_v12_19"/>
+                <!--geom pos="0.00505 0.094 0.462641" type="mesh" rgba="0.0980392 0.0980392 0.0980392 1" mesh="JX_servo_v12_19"/-->
+                <body name="right_foot_1" pos="-0.0295 0.039 0">
+                  <inertial pos="0.0356643 -0.00794365 -0.0251471" quat="-0.0747217 0.686511 -0.0733634 0.719539" mass="0.123535" diaginertia="0.00035306 0.000318503 9.44367e-05"/>
+                  <joint name="right_leg_motor_5" pos="0 0 0" axis="-1 0 0" limited="true" range="-0.251 0.251" />
+                  <geom pos="0.03455 0.055 0.462641" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.0980392 0.0980392 0.0980392 1" mesh="right_foot_1"/>
+                  <!--geom pos="0.03455 0.055 0.462641" type="mesh" rgba="0.0980392 0.0980392 0.0980392 1" mesh="right_foot_1"/-->
+                  <!--body name="right_foot_contact">
+                    <geom mass="0" pos="0.03 0 0.017" type="box" size="0.08 0.05 0.055" />
+                    <site name="left_foot_site" rgba="1 0 0 0.3" pos="0.03 0 0.017" type="box" size="0.081 0.051 0.056" />
+                  </body-->
+
+                  <!-- MANUAL ELEMENT -->
+                  <body name="right_foot" pos="0.03 0 -0.033">
+                    <!--geom name="right_foot" mass="0" type="box" size="0.08 0.05 0.055" /><!-- -0.033 -->
+                    <geom name="right_foot" mass="0" type="box" size="0.08 0.05 0.005" />
+                  </body>
+                </body>
+              </body>
+            </body>
+          </body>
+        </body>
+      </body>
+      <body name="gobilda-servo_1" pos="-0.021 0.110294 -0.0365">
+        <inertial pos="1.2273e-09 0.02218 -0.0456737" quat="0.999978 0.00664033 0 0" mass="0.13263" diaginertia="0.000189096 0.000178541 1.85547e-05"/>
+        <joint name="left_arm_motor_0" pos="0 0 0" axis="0 -1 0" limited="false"/>
+        <geom pos="0.021 -0.110294 0.0365" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.290196 0.290196 0.290196 1" mesh="gobilda-servo_1"/>
+        <!--geom pos="0.021 -0.110294 0.0365" type="mesh" rgba="0.290196 0.290196 0.290196 1" mesh="gobilda-servo_1"/-->
+        <geom pos="0.021 -0.110294 0.0365" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.0980392 0.0980392 0.0980392 1" mesh="left_bicep_1"/>
+        <!--geom pos="0.021 -0.110294 0.0365" type="mesh" rgba="0.0980392 0.0980392 0.0980392 1" mesh="left_bicep_1"/-->
+        <geom pos="0.021 -0.110294 0.0365" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.290196 0.290196 0.290196 1" mesh="gobilda-servo_3"/>
+        <!--geom pos="0.021 -0.110294 0.0365" type="mesh" rgba="0.290196 0.290196 0.290196 1" mesh="gobilda-servo_3"/-->
+        <body name="25t-servo-hub_2" pos="0 0 -0.0703">
+          <inertial pos="-0.0182716 0.0186695 -0.0374471" quat="0.986686 0.0371119 0.036951 0.153977" mass="0.0430401" diaginertia="0.000103618 9.72453e-05 2.00127e-05"/>
+          <joint name="left_arm_motor_1" pos="0 0 0" axis="0 1 0" limited="false"/>
+          <geom pos="0.021 -0.110294 0.1068" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.960784 0.960784 0.964706 1" mesh="25t-servo-hub_2"/>
+          <!--geom pos="0.021 -0.110294 0.1068" type="mesh" rgba="0.960784 0.960784 0.964706 1" mesh="25t-servo-hub_2"/-->
+          <geom pos="0.021 -0.110294 0.1068" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.0980392 0.0980392 0.0980392 1" mesh="elbow-attach_1"/>
+          <!--geom pos="0.021 -0.110294 0.1068" type="mesh" rgba="0.0980392 0.0980392 0.0980392 1" mesh="elbow-attach_1"/-->
+          <geom pos="0.021 -0.110294 0.1068" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.0980392 0.0980392 0.0980392 1" mesh="left_forearm_1"/>
+          <!--geom pos="0.021 -0.110294 0.1068" type="mesh" rgba="0.0980392 0.0980392 0.0980392 1" mesh="left_forearm_1"/-->
+          <geom pos="0.021 -0.110294 0.1068" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.0980392 0.0980392 0.0980392 1" mesh="elbow-bearing_1"/>
+          <!--geom pos="0.021 -0.110294 0.1068" type="mesh" rgba="0.0980392 0.0980392 0.0980392 1" mesh="elbow-bearing_1"/-->
+        </body>
+      </body>
+      <body name="gobilda-servo_Mirror__1" pos="-0.021 -0.110294 -0.0365">
+        <inertial pos="1.2273e-09 -0.02218 -0.0456737" quat="0.999978 -0.00664033 0 0" mass="0.13263" diaginertia="0.000189096 0.000178541 1.85547e-05"/>
+        <joint name="right_arm_motor_0" pos="0 0 0" axis="0 -1 0" limited="false"/>
+        <geom pos="0.021 0.110294 0.0365" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.290196 0.290196 0.290196 1" mesh="gobilda-servo_Mirror__1"/>
+        <!--geom pos="0.021 0.110294 0.0365" type="mesh" rgba="0.290196 0.290196 0.290196 1" mesh="gobilda-servo_Mirror__1"/-->
+        <geom pos="0.021 0.110294 0.0365" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.0980392 0.0980392 0.0980392 1" mesh="right_bicep_1"/>
+        <!--geom pos="0.021 0.110294 0.0365" type="mesh" rgba="0.0980392 0.0980392 0.0980392 1" mesh="right_bicep_1"/-->
+        <geom pos="0.021 0.110294 0.0365" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.290196 0.290196 0.290196 1" mesh="gobilda-servo_Mirror__2"/>
+        <!--geom pos="0.021 0.110294 0.0365" type="mesh" rgba="0.290196 0.290196 0.290196 1" mesh="gobilda-servo_Mirror__2"/-->
+        <body name="25t-servo-hub_Mirror__2" pos="0 0 -0.0703">
+          <inertial pos="-0.0182716 -0.0186696 -0.0374472" quat="0.986684 -0.037112 0.036952 -0.153985" mass="0.0430399" diaginertia="0.000103618 9.72455e-05 2.00128e-05"/>
+          <joint name="right_arm_motor_1" pos="0 0 0" axis="0 1 0" limited="false"/>
+          <geom pos="0.021 0.110294 0.1068" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.960784 0.960784 0.964706 1" mesh="25t-servo-hub_Mirror__2"/>
+          <!--geom pos="0.021 0.110294 0.1068" type="mesh" rgba="0.960784 0.960784 0.964706 1" mesh="25t-servo-hub_Mirror__2"/-->
+          <geom pos="0.021 0.110294 0.1068" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.0980392 0.0980392 0.0980392 1" mesh="elbow-attach_Mirror__1"/>
+          <!--geom pos="0.021 0.110294 0.1068" type="mesh" rgba="0.0980392 0.0980392 0.0980392 1" mesh="elbow-attach_Mirror__1"/-->
+          <geom pos="0.021 0.110294 0.1068" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.0980392 0.0980392 0.0980392 1" mesh="right_forearm_1"/>
+          <!--geom pos="0.021 0.110294 0.1068" type="mesh" rgba="0.0980392 0.0980392 0.0980392 1" mesh="right_forearm_1"/-->
+          <geom pos="0.021 0.110294 0.1068" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.0980392 0.0980392 0.0980392 1" mesh="elbow-bearing_Mirror__1"/>
+          <!--geom pos="0.021 0.110294 0.1068" type="mesh" rgba="0.0980392 0.0980392 0.0980392 1" mesh="elbow-bearing_Mirror__1"/-->
+        </body>
+      </body>
+      <body name="25t-servo-hub_3" pos="-0.00965 0 0.04387">
+        <inertial pos="-2.21353e-07 -0.00357555 0.0177924" quat="0.875219 0.483727 -4.49345e-07 -2.33377e-06" mass="0.0241101" diaginertia="1.65659e-05 1.3012e-05 8.55391e-06"/>
+        <joint name="head_motor_0" pos="0 0 0" axis="0 0 1" limited="false"/>
+        <geom pos="0.00965 0 -0.04387" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.960784 0.960784 0.964706 1" mesh="25t-servo-hub_3"/>
+        <!--geom pos="0.00965 0 -0.04387" type="mesh" rgba="0.960784 0.960784 0.964706 1" mesh="25t-servo-hub_3"/-->
+        <geom pos="0.00965 0 -0.04387" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.0980392 0.0980392 0.0980392 1" mesh="neck_1"/>
+        <!--geom pos="0.00965 0 -0.04387" type="mesh" rgba="0.0980392 0.0980392 0.0980392 1" mesh="neck_1"/-->
+        <geom pos="0.00965 0 -0.04387" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.960784 0.960784 0.964706 1" mesh="25t-servo-hub_4"/>
+        <!--geom pos="0.00965 0 -0.04387" type="mesh" rgba="0.960784 0.960784 0.964706 1" mesh="25t-servo-hub_4"/-->
+        <body name="gobilda-servo_5" pos="0 -0.019393 0.036611">
+          <inertial pos="0.0219242 0.0226331 0.0236831" quat="0.943429 -0.00665966 0.331227 0.0136109" mass="0.162498" diaginertia="0.000158379 0.000134981 6.9115e-05"/>
+          <joint name="head_motor_1" pos="0 0 0" axis="0 1 0" limited="false"/>
+          <geom pos="0.00965 0.019393 -0.080481" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.290196 0.290196 0.290196 1" mesh="gobilda-servo_5"/>
+          <!--geom pos="0.00965 0.019393 -0.080481" type="mesh" rgba="0.290196 0.290196 0.290196 1" mesh="gobilda-servo_5"/-->
+          <geom pos="0.00965 0.019393 -0.080481" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.0980392 0.0980392 0.0980392 1" mesh="head_1"/>
+          <!--geom pos="0.00965 0.019393 -0.080481" type="mesh" rgba="0.0980392 0.0980392 0.0980392 1" mesh="head_1"/-->
+          <geom pos="0.00965 0.019393 -0.080481" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.0980392 0.0980392 0.0980392 1" mesh="camera_1"/>
+          <!--geom pos="0.00965 0.019393 -0.080481" type="mesh" rgba="0.0980392 0.0980392 0.0980392 1" mesh="camera_1"/-->
+          <body name="camera-link_1" pos="0.0537 0.02288 0.048">
+            <inertial pos="0.000500001 -3.12984e-10 4.70062e-07" mass="0.00019625" diaginertia="1e-06 1e-06 1e-06"/>
+            <!--joint name="camera_joint" pos="0 0 0" axis="1 0 0" limited="true"/-->
+            <geom pos="-0.04405 -0.003487 -0.128481" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.627451 0.627451 0.627451 1" mesh="camera-link_1"/>
+            <!--geom pos="-0.04405 -0.003487 -0.128481" type="mesh" rgba="0.627451 0.627451 0.627451 1" mesh="camera-link_1"/-->
+          </body>
+        </body>
+      </body>
+      <body name="imu-link_1" pos="0 0 -0.005">
+        <inertial pos="0 0 -0.0495" mass="0.00019625" diaginertia="1e-06 1e-06 1e-06"/>
+        <!--joint name="imu_joint" pos="0 0 0" axis="0 0 1" limited="true"/-->
+        <geom pos="0 0 0.005" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.627451 0.627451 0.627451 1" mesh="imu-link_1"/>
+        <!--geom pos="0 0 0.005" type="mesh" rgba="0.627451 0.627451 0.627451 1" mesh="imu-link_1"/-->
+      </body>
+    </body>
+  </worldbody>
+
+  <actuator>
+    <general name="j_left_arm_motor_0" joint="left_arm_motor_0" />
+    <general name="j_left_arm_motor_1" joint="left_arm_motor_1" />
+    <general name="j_right_arm_motor_0" joint="right_arm_motor_0" />
+    <general name="j_right_arm_motor_1" joint="right_arm_motor_1" />
+    <general name="j_left_leg_motor_0" joint="left_leg_motor_0" />
+    <general name="j_left_leg_motor_1" joint="left_leg_motor_1" />
+    <general name="j_left_leg_motor_2" joint="left_leg_motor_2" />
+    <general name="j_left_leg_motor_3" joint="left_leg_motor_3" />
+    <general name="j_left_leg_motor_4" joint="left_leg_motor_4" />
+    <general name="j_left_leg_motor_5" joint="left_leg_motor_5" />
+    <general name="j_right_leg_motor_0" joint="right_leg_motor_0" />
+    <general name="j_right_leg_motor_1" joint="right_leg_motor_1" />
+    <general name="j_right_leg_motor_2" joint="right_leg_motor_2" />
+    <general name="j_right_leg_motor_3" joint="right_leg_motor_3" />
+    <general name="j_right_leg_motor_4" joint="right_leg_motor_4" />
+    <general name="j_right_leg_motor_5" joint="right_leg_motor_5" />
+    <general name="j_head_motor_0" joint="head_motor_0" />
+    <general name="j_head_motor_1" joint="head_motor_1" />
+  </actuator>
+
+  <!--sensor>
+    <force site="left_foot_site" />
+    <force site="right_foot_site" />
+  </sensor-->
+</mujoco>

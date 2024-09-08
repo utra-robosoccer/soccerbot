@@ -2,6 +2,7 @@ import time
 from os.path import expanduser
 from typing import List
 
+from soccer_pycontrol.model.bez import Bez
 import numpy as np
 import placo
 from placo_utils.visualization import footsteps_viz, frame_viz, line_viz, robot_viz
@@ -20,6 +21,7 @@ class FootStepPlanner:
         self.last_replan = 0
         self.start_t = self.funct_time()
         # TODO is there too many global var
+        print(model_filename)
         self.robot = placo.HumanoidRobot(model_filename)
 
         self.walk_pattern = placo.WalkPatternGenerator(self.robot, self.parameters)
@@ -213,4 +215,14 @@ class FootStepPlanner:
 
 
 if __name__ == "__main__":
-    walk = FootStepPlanner("bez1", time.time, debug=True)
+    def walk(d_x: float = 0.0, d_y: float = 0.0, d_theta: float = 0.0, nb_steps: int = 10, t_goal: float = 10):
+        bez = Bez(robot_model="bez3")
+        planner = FootStepPlanner(bez.robot_model, bez.parameters, time.time)
+        planner.setup_walk(d_x, d_y, d_theta, nb_steps)
+        t = 0
+        t0 = time.time()
+        while True:
+            planner.walk_loop(t) # time.time() - t0)
+            t = planner.step(t)
+            # print(t - (time.time() - t0))
+    walk(d_x=0.04, t_goal=10)

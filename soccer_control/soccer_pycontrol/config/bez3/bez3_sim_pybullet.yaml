@@ -1,0 +1,53 @@
+# Path calibration Parameters
+robot_model: bez3
+
+# KINEMATIC DATA
+#: Height of the robot's torso (center between two arms) while walking
+walking_torso_height: 0.315
+arm_0_center: -0.45
+arm_1_center: 2.512
+# merge_fixed_links: true
+
+# STABILIZE
+walking_pitch_kp: 1 #2.3  1
+walking_pitch_kd: 0 #1
+walking_pitch_ki: 0.000
+walking_pitch_setpoint: -0.01
+walking_pitch_offset: 0.0
+
+walking_roll_kp: 1 #1.5   1
+walking_roll_kd: 0 #0.5
+walking_roll_ki: 0.0
+walking_roll_setpoint: -0.01
+walking_roll_offset: 0.0
+
+### WALK ENGINE
+# Walk parameters - if double_support_ratio is not set to 0, should be greater than replan_frequency
+# Timing parameters
+control_frequency: 0.02
+single_support_duration: 0.25 # Duration of single support phase [s]
+single_support_timesteps: 10 # Number of planning timesteps per single support phase
+double_support_ratio: 0.0 # Ratio of double support (0.0 to 1.0)
+startend_double_support_ratio: 2.0 # Ratio duration of supports for starting and stopping walk
+planned_timesteps: 48 # Number of timesteps planned ahead
+replan_timesteps: 10 # Replanning each n timesteps
+
+# Posture parameters
+walk_com_height: 0.21 # Constant height for the CoM [m]
+walk_foot_height: 0.04 # Height of foot rising while walking [m]
+walk_trunk_pitch: 0.0 # Trunk pitch angle [rad]
+walk_foot_rise_ratio: 0.2 # Time ratio for the foot swing plateau (0.0 to 1.0)
+
+# Feet parameters
+foot_length: 0.1200 # Foot length [m]
+foot_width: 0.072 # Foot width [m]
+feet_spacing: 0.122 # Lateral feet spacing [m]
+zmp_margin: 0.02 # ZMP margin [m]
+foot_zmp_target_x: 0.0 # Reference target ZMP position in the foot [m]
+foot_zmp_target_y: 0.0 # Reference target ZMP position in the foot [m]
+
+# Limit parameters
+walk_max_dtheta: 1 # Maximum dtheta per step [rad]
+walk_max_dy: 0.04 # Maximum dy per step [m]
+walk_max_dx_forward: 0.08 # Maximum dx per step forward [m]
+walk_max_dx_backward: 0.03 # Maximum dx per step backward [m]

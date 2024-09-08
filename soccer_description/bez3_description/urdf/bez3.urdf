@@ -1,0 +1,1742 @@
+<?xml version="1.0" ?>
+<robot name="bez3" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+<mujoco>
+  <compiler meshdir="/home/q2/dev/bez3robocup2024/rl/bez3_description/meshes_simplified" balanceinertia="true" discardvisual="false"/>
+</mujoco>
+
+<!--
+Changelog:
+
+1. Merge in all include xacros
+2. Resolve all parametric paths
+3. ~~Comment out collisions with mesh geoms (possibly a bug in mujoco compile)~~ <- visual and collision probably just needs meshdir set
+4. Fix all zero diagonal inertias: set to 1E-06 (default [?] small inertia from fusion2urdf) via s/i(\w)\1="\-?0.0"/i\1\1="1E-06"/g
+	1. May not be necessary with balanceinertia="true"
+
+Post-processing:
+
+1. Add back transmissions (not included in mujoco compile)
+2. Add feet meshes and collision exclusions
+-->
+
+<material name="silver_default">
+  <color rgba="0.700 0.700 0.700 1.000"/>
+</material>
+<material name="steel_satin">
+  <color rgba="0.6274509803921569 0.6274509803921569 0.6274509803921569 1.0"/>
+</material>
+<material name="polymide_kapton">
+  <color rgba="0.7843137254901961 0.5568627450980392 0.027450980392156862 1.0"/>
+</material>
+<material name="plastic_matte_black">
+  <color rgba="0.09803921568627451 0.09803921568627451 0.09803921568627451 1.0"/>
+</material>
+<material name="plastic_glossy_black">
+  <color rgba="0.09803921568627451 0.09803921568627451 0.09803921568627451 1.0"/>
+</material>
+<material name="plastic_glossy_grey">
+  <color rgba="0.2901960784313726 0.2901960784313726 0.2901960784313726 1.0"/>
+</material>
+<material name="aluminum_satin">
+  <color rgba="0.9607843137254902 0.9607843137254902 0.9647058823529412 1.0"/>
+</material>
+<material name="plastic_matte_blue">
+  <color rgba="0.1607843137254902 0.5058823529411764 0.807843137254902 1.0"/>
+</material>
+
+<link name="base_link">
+  <inertial>
+    <origin xyz="0.005 0.005 0.005" rpy="0 0 0"/>
+    <mass value="0.00785"/>
+    <inertia ixx="1E-06" iyy="1E-06" izz="1E-06" ixy="0.0" iyz="0.0" ixz="0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="base_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="steel_satin"/>
+  </visual>
+  <collision>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="base_link.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="torso_1">
+  <inertial>
+    <origin xyz="-0.003658211229359205 -0.006167940664238083 -0.07338742094913073" rpy="0 0 0"/>
+    <mass value="0.2968069064800233"/>
+    <inertia ixx="0.002664" iyy="0.001243" izz="0.002203" ixy="5e-06" iyz="0.0" ixz="6e-05"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.0 -0.005 -0.0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="torso_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="polymide_kapton"/>
+  </visual>
+  <collision>
+    <origin xyz="-0.0 -0.005 -0.0" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="torso_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="JX_servo_v12_1">
+  <inertial>
+    <origin xyz="0.0002740722762930893 4.563641131660745e-13 0.012509678934478047" rpy="0 0 0"/>
+    <mass value="0.19853540350189502"/>
+    <inertia ixx="7.7e-05" iyy="0.000137" izz="9e-05" ixy="0.0" iyz="0.0" ixz="6e-06"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.0225 -0.0545 0.13699" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="JX_servo_v12_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="plastic_matte_black"/>
+  </visual>
+  <collision>
+    <origin xyz="0.0225 -0.0545 0.13699" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="JX_servo_v12_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="left_hip_side_1">
+  <inertial>
+    <origin xyz="-0.0006601764265435524 7.984241046088414e-10 -0.021141547194982763" rpy="0 0 0"/>
+    <mass value="0.018999817606213904"/>
+    <inertia ixx="9e-06" iyy="1.8e-05" izz="1.4e-05" ixy="0.0" iyz="0.0" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.0045 -0.0545 0.16339" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="left_hip_side_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="plastic_glossy_black"/>
+  </visual>
+  <collision>
+    <origin xyz="0.0045 -0.0545 0.16339" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="left_hip_side_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="JX_servo_v12_8">
+  <inertial>
+    <origin xyz="-0.03890967893447789 4.561906408184768e-13 -0.01772583889835086" rpy="0 0 0"/>
+    <mass value="0.19853540350189502"/>
+    <inertia ixx="9e-05" iyy="0.000137" izz="7.7e-05" ixy="-0.0" iyz="0.0" ixz="-6e-06"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.0345 -0.0545 0.198726" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="JX_servo_v12_8.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="plastic_matte_black"/>
+  </visual>
+  <collision>
+    <origin xyz="0.0345 -0.0545 0.198726" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="JX_servo_v12_8.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="left_hip_front_1">
+  <inertial>
+    <origin xyz="0.023758590398210495 0.009336273295607947 -0.06494791715192266" rpy="0 0 0"/>
+    <mass value="0.025976181664280836"/>
+    <inertia ixx="2.2e-05" iyy="3.1e-05" izz="2e-05" ixy="0.0" iyz="-0.0" ixz="8e-06"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.0609 -0.046 0.179826" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="left_hip_front_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="plastic_glossy_black"/>
+  </visual>
+  <collision>
+    <origin xyz="0.0609 -0.046 0.179826" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="left_hip_front_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="JX_servo_v12_9">
+  <inertial>
+    <origin xyz="-0.008499999657729443 -0.016409678591751735 0.03717416110164981" rpy="0 0 0"/>
+    <mass value="0.19853540350189502"/>
+    <inertia ixx="0.000137" iyy="9e-05" izz="7.7e-05" ixy="0.0" iyz="-6e-06" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.0035 -0.0699 0.253626" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="JX_servo_v12_9.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="plastic_matte_black"/>
+  </visual>
+  <collision>
+    <origin xyz="-0.0035 -0.0699 0.253626" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="JX_servo_v12_9.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="left_thigh_1">
+  <inertial>
+    <origin xyz="0.0035522308946802695 -0.037286001427951104 -0.06738530321679864" rpy="0 0 0"/>
+    <mass value="0.04698736144283967"/>
+    <inertia ixx="0.000144" iyy="8.9e-05" izz="6.9e-05" ixy="-0.0" iyz="0.0" ixz="3e-06"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.005 -0.0924 0.198726" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="left_thigh_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="plastic_glossy_black"/>
+  </visual>
+  <collision>
+    <origin xyz="0.005 -0.0924 0.198726" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="left_thigh_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="JX_servo_v12_11">
+  <inertial>
+    <origin xyz="3.422704715136393e-10 -0.038909678591752414 -0.017725838898350055" rpy="0 0 0"/>
+    <mass value="0.19853540350189502"/>
+    <inertia ixx="0.000137" iyy="9e-05" izz="7.7e-05" ixy="0.0" iyz="-6e-06" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.005 -0.0924 0.322726" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="JX_servo_v12_11.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="plastic_matte_black"/>
+  </visual>
+  <collision>
+    <origin xyz="0.005 -0.0924 0.322726" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="JX_servo_v12_11.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="left_calve_1">
+  <inertial>
+    <origin xyz="-0.008549992578499489 -0.011776675554452998 -0.0353123749558687" rpy="0 0 0"/>
+    <mass value="0.035688451730559324"/>
+    <inertia ixx="7.3e-05" iyy="3.9e-05" izz="4.3e-05" ixy="-0.0" iyz="-2e-06" ixz="0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.0035 -0.066 0.377626" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="left_calve_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="plastic_glossy_black"/>
+  </visual>
+  <collision>
+    <origin xyz="-0.0035 -0.066 0.377626" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="left_calve_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="JX_servo_v12_12">
+  <inertial>
+    <origin xyz="3.431833506609139e-10 -0.038909678591753115 0.01772604982501308" rpy="0 0 0"/>
+    <mass value="0.19853540350189502"/>
+    <inertia ixx="0.000137" iyy="9e-05" izz="7.7e-05" ixy="-0.0" iyz="6e-06" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.00505 -0.094 0.462631" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="JX_servo_v12_12.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="plastic_matte_black"/>
+  </visual>
+  <collision>
+    <origin xyz="0.00505 -0.094 0.462631" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="JX_servo_v12_12.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="left_hip_front_2">
+  <inertial>
+    <origin xyz="-0.040641409601790045 -0.017336272610156404 -0.008851871921414733" rpy="0 0 0"/>
+    <mass value="0.025976181664280836"/>
+    <inertia ixx="2.2e-05" iyy="3.1e-05" izz="2e-05" ixy="-0.0" iyz="-0.0" ixz="-8e-06"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.00345 -0.0715 0.407731" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="left_hip_front_2.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="plastic_glossy_black"/>
+  </visual>
+  <collision>
+    <origin xyz="-0.00345 -0.0715 0.407731" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="left_hip_front_2.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="JX_servo_v12_13">
+  <inertial>
+    <origin xyz="-0.012509678934478456 0.008500000684995637 -0.03717395017498709" rpy="0 0 0"/>
+    <mass value="0.19853540350189502"/>
+    <inertia ixx="9e-05" iyy="0.000137" izz="7.7e-05" ixy="0.0" iyz="0.0" ixz="6e-06"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.06095 -0.0465 0.407731" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="JX_servo_v12_13.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="plastic_matte_black"/>
+  </visual>
+  <collision>
+    <origin xyz="0.06095 -0.0465 0.407731" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="JX_servo_v12_13.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="JX_servo_v12_14">
+  <inertial>
+    <origin xyz="0.0002740722762930893 4.563710520599784e-13 0.01250967893447795" rpy="0 0 0"/>
+    <mass value="0.19853540350189502"/>
+    <inertia ixx="7.7e-05" iyy="0.000137" izz="9e-05" ixy="0.0" iyz="0.0" ixz="6e-06"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.0225 0.0545 0.137" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="JX_servo_v12_14.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="plastic_matte_black"/>
+  </visual>
+  <collision>
+    <origin xyz="0.0225 0.0545 0.137" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="JX_servo_v12_14.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="right_hip_side_1">
+  <inertial>
+    <origin xyz="-0.0006601764265435368 -7.984240907310536e-10 -0.021141552658250296" rpy="0 0 0"/>
+    <mass value="0.018999817606213918"/>
+    <inertia ixx="9e-06" iyy="1.8e-05" izz="1.4e-05" ixy="-0.0" iyz="-0.0" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.0045 0.0545 0.1634" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="right_hip_side_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="plastic_glossy_black"/>
+  </visual>
+  <collision>
+    <origin xyz="0.0045 0.0545 0.1634" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="right_hip_side_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="JX_servo_v12_15">
+  <inertial>
+    <origin xyz="-0.03890967893447783 4.565028910441526e-13 -0.017725838898350915" rpy="0 0 0"/>
+    <mass value="0.19853540350189502"/>
+    <inertia ixx="9e-05" iyy="0.000137" izz="7.7e-05" ixy="-0.0" iyz="0.0" ixz="-6e-06"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.0345 0.0545 0.198736" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="JX_servo_v12_15.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="plastic_matte_black"/>
+  </visual>
+  <collision>
+    <origin xyz="0.0345 0.0545 0.198736" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="JX_servo_v12_15.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="right_ankle_1">
+  <inertial>
+    <origin xyz="0.02375859039821196 -0.00933627329560792 -0.06494791715192275" rpy="0 0 0"/>
+    <mass value="0.025976181664280826"/>
+    <inertia ixx="2.2e-05" iyy="3.1e-05" izz="2e-05" ixy="-0.0" iyz="0.0" ixz="8e-06"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.0609 0.046 0.179836" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="right_ankle_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="plastic_glossy_black"/>
+  </visual>
+  <collision>
+    <origin xyz="0.0609 0.046 0.179836" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="right_ankle_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="JX_servo_v12_16">
+  <inertial>
+    <origin xyz="-0.008499999656816326 0.016409678591751603 0.03717416110164956" rpy="0 0 0"/>
+    <mass value="0.19853540350189502"/>
+    <inertia ixx="0.000137" iyy="9e-05" izz="7.7e-05" ixy="0.0" iyz="6e-06" ixz="0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.0035 0.0699 0.253636" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="JX_servo_v12_16.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="plastic_matte_black"/>
+  </visual>
+  <collision>
+    <origin xyz="-0.0035 0.0699 0.253636" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="JX_servo_v12_16.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="right_thigh_1">
+  <inertial>
+    <origin xyz="0.0035522343275843837 0.03728602282125167 -0.06738525640624529" rpy="0 0 0"/>
+    <mass value="0.04698731628682583"/>
+    <inertia ixx="0.000144" iyy="8.9e-05" izz="6.9e-05" ixy="0.0" iyz="-0.0" ixz="3e-06"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.005 0.0924 0.198736" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="right_thigh_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="plastic_glossy_black"/>
+  </visual>
+  <collision>
+    <origin xyz="0.005 0.0924 0.198736" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="right_thigh_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="JX_servo_v12_17">
+  <inertial>
+    <origin xyz="3.4318368979935343e-10 0.0389096785917523 -0.017725838898350443" rpy="0 0 0"/>
+    <mass value="0.19853540350189502"/>
+    <inertia ixx="0.000137" iyy="9e-05" izz="7.7e-05" ixy="0.0" iyz="6e-06" ixz="0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.005 0.0924 0.322736" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="JX_servo_v12_17.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="plastic_matte_black"/>
+  </visual>
+  <collision>
+    <origin xyz="0.005 0.0924 0.322736" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="JX_servo_v12_17.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="right_calve_1">
+  <inertial>
+    <origin xyz="-0.008549992533062739 0.01177662703102094 -0.03531238005988813" rpy="0 0 0"/>
+    <mass value="0.035688490814490284"/>
+    <inertia ixx="7.3e-05" iyy="3.9e-05" izz="4.3e-05" ixy="0.0" iyz="2e-06" ixz="0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.0035 0.066 0.377636" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="right_calve_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="plastic_glossy_black"/>
+  </visual>
+  <collision>
+    <origin xyz="-0.0035 0.066 0.377636" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="right_calve_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="JX_servo_v12_18">
+  <inertial>
+    <origin xyz="3.4227094249106305e-10 0.03890967859175307 0.017726049825012857" rpy="0 0 0"/>
+    <mass value="0.19853540350189502"/>
+    <inertia ixx="0.000137" iyy="9e-05" izz="7.7e-05" ixy="-0.0" iyz="-6e-06" ixz="0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.00505 0.094 0.462641" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="JX_servo_v12_18.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="plastic_matte_black"/>
+  </visual>
+  <collision>
+    <origin xyz="0.00505 0.094 0.462641" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="JX_servo_v12_18.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="right_ankle_2">
+  <inertial>
+    <origin xyz="-0.040641409601788116 0.017336272610156585 -0.008851871921415178" rpy="0 0 0"/>
+    <mass value="0.025976181664280826"/>
+    <inertia ixx="2.2e-05" iyy="3.1e-05" izz="2e-05" ixy="0.0" iyz="0.0" ixz="-8e-06"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.00345 0.0715 0.407741" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="right_ankle_2.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="plastic_glossy_black"/>
+  </visual>
+  <collision>
+    <origin xyz="-0.00345 0.0715 0.407741" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="right_ankle_2.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="JX_servo_v12_19">
+  <inertial>
+    <origin xyz="-0.012509678934477707 -0.008500000685908227 -0.03717395017498698" rpy="0 0 0"/>
+    <mass value="0.19853540350189502"/>
+    <inertia ixx="9e-05" iyy="0.000137" izz="7.7e-05" ixy="0.0" iyz="0.0" ixz="6e-06"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.06095 0.0465 0.407741" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="JX_servo_v12_19.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="plastic_matte_black"/>
+  </visual>
+  <collision>
+    <origin xyz="0.06095 0.0465 0.407741" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="JX_servo_v12_19.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="25t-servo-hub_1">
+  <inertial>
+    <origin xyz="-4.77893450374911e-07 0.003136191852991313 1.6215494567234368e-07" rpy="0 0 0"/>
+    <mass value="0.005584850212079893"/>
+    <inertia ixx="1E-06" iyy="1E-06" izz="1E-06" ixy="0.0" iyz="-0.0" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.021 -0.1075 0.0365" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="25t-servo-hub_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="aluminum_satin"/>
+  </visual>
+  <collision>
+    <origin xyz="0.021 -0.1075 0.0365" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="25t-servo-hub_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="gobilda-servo_1">
+  <inertial>
+    <origin xyz="1.3433243441218767e-09 0.021117732524250116 -0.00976910769495494" rpy="0 0 0"/>
+    <mass value="0.060587311248822606"/>
+    <inertia ixx="1.4e-05" iyy="1e-05" izz="7e-06" ixy="0.0" iyz="0.0" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.021 -0.110294 0.0365" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="gobilda-servo_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="plastic_glossy_grey"/>
+  </visual>
+  <collision>
+    <origin xyz="0.021 -0.110294 0.0365" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="gobilda-servo_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="left_bicep_1">
+  <inertial>
+    <origin xyz="0.007500000000005787 -0.003484179384329711 -0.06115545050144429" rpy="0 0 0"/>
+    <mass value="0.011455626340925264"/>
+    <inertia ixx="9e-06" iyy="8e-06" izz="3e-06" ixy="-0.0" iyz="1e-06" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.0285 -0.147194 0.029" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="left_bicep_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="plastic_glossy_black"/>
+  </visual>
+  <collision>
+    <origin xyz="0.0285 -0.147194 0.029" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="left_bicep_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="gobilda-servo_3">
+  <inertial>
+    <origin xyz="0.007500001343324372 -0.015782267475749873 -0.01726910769495492" rpy="0 0 0"/>
+    <mass value="0.060587311248822606"/>
+    <inertia ixx="1.4e-05" iyy="1e-05" izz="7e-06" ixy="0.0" iyz="0.0" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.0285 -0.147194 0.0993" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="gobilda-servo_3.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="plastic_glossy_grey"/>
+  </visual>
+  <collision>
+    <origin xyz="0.0285 -0.147194 0.0993" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="gobilda-servo_3.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="25t-servo-hub_2">
+  <inertial>
+    <origin xyz="-4.77893450343686e-07 0.000342191852934437 1.6215494560989363e-07" rpy="0 0 0"/>
+    <mass value="0.005584850212079893"/>
+    <inertia ixx="1E-06" iyy="1E-06" izz="1E-06" ixy="0.0" iyz="-0.0" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.021 -0.110294 0.1068" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="25t-servo-hub_2.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="aluminum_satin"/>
+  </visual>
+  <collision>
+    <origin xyz="0.021 -0.110294 0.1068" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="25t-servo-hub_2.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="elbow-attach_1">
+  <inertial>
+    <origin xyz="-0.009233924925004727 -0.0015151372970110405 -0.002548115188024211" rpy="0 0 0"/>
+    <mass value="0.005141835270301899"/>
+    <inertia ixx="1e-06" iyy="2e-06" izz="1e-06" ixy="0.0" iyz="-0.0" ixz="0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.021 -0.1075 0.1068" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="elbow-attach_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="plastic_glossy_black"/>
+  </visual>
+  <collision>
+    <origin xyz="0.021 -0.1075 0.1068" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="elbow-attach_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="left_forearm_1">
+  <inertial>
+    <origin xyz="0.00223843912986596 0.02233699999994311 -0.06792564077352817" rpy="0 0 0"/>
+    <mass value="0.027371737365874692"/>
+    <inertia ixx="5.9e-05" iyy="5.7e-05" izz="5e-06" ixy="0.0" iyz="0.0" ixz="4e-06"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.0485 -0.1095 0.0968" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="left_forearm_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="plastic_glossy_black"/>
+  </visual>
+  <collision>
+    <origin xyz="0.0485 -0.1095 0.0968" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="left_forearm_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="elbow-bearing_1">
+  <inertial>
+    <origin xyz="0.017892138559024794 0.003495502323537125 -0.012651303520558516" rpy="0 0 0"/>
+    <mass value="0.004941715818268227"/>
+    <inertia ixx="1e-06" iyy="2e-06" izz="1e-06" ixy="-0.0" iyz="0.0" ixz="0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.0485 -0.154174 0.0968" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="elbow-bearing_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="plastic_glossy_black"/>
+  </visual>
+  <collision>
+    <origin xyz="0.0485 -0.154174 0.0968" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="elbow-bearing_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="25t-servo-hub_Mirror__1">
+  <inertial>
+    <origin xyz="8.974977877482249e-07 -0.0031361151897775635 1.0845728465602722e-06" rpy="0 0 0"/>
+    <mass value="0.005584585205775494"/>
+    <inertia ixx="1E-06" iyy="1E-06" izz="1E-06" ixy="-0.0" iyz="-0.0" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.021 0.1075 0.0365" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="25t-servo-hub_Mirror__1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="aluminum_satin"/>
+  </visual>
+  <collision>
+    <origin xyz="0.021 0.1075 0.0365" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="25t-servo-hub_Mirror__1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="gobilda-servo_Mirror__1">
+  <inertial>
+    <origin xyz="1.3433243441218767e-09 -0.02111773252430696 -0.009769107694954933" rpy="0 0 0"/>
+    <mass value="0.06058731124882261"/>
+    <inertia ixx="1.4e-05" iyy="1e-05" izz="7e-06" ixy="-0.0" iyz="-0.0" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.021 0.110294 0.0365" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="gobilda-servo_Mirror__1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="plastic_glossy_grey"/>
+  </visual>
+  <collision>
+    <origin xyz="0.021 0.110294 0.0365" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="gobilda-servo_Mirror__1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="right_bicep_1">
+  <inertial>
+    <origin xyz="0.00750000000000579 0.0034841793842728674 -0.06115545050144429" rpy="0 0 0"/>
+    <mass value="0.011455626340925269"/>
+    <inertia ixx="9e-06" iyy="8e-06" izz="3e-06" ixy="0.0" iyz="-1e-06" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.0285 0.147194 0.029" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="right_bicep_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="plastic_glossy_black"/>
+  </visual>
+  <collision>
+    <origin xyz="0.0285 0.147194 0.029" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="right_bicep_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="gobilda-servo_Mirror__2">
+  <inertial>
+    <origin xyz="0.007500001343324372 0.015782267475693 -0.017269107694954933" rpy="0 0 0"/>
+    <mass value="0.06058731124882261"/>
+    <inertia ixx="1.4e-05" iyy="1e-05" izz="7e-06" ixy="-0.0" iyz="-0.0" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.0285 0.147194 0.0993" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="gobilda-servo_Mirror__2.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="plastic_glossy_grey"/>
+  </visual>
+  <collision>
+    <origin xyz="0.0285 0.147194 0.0993" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="gobilda-servo_Mirror__2.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="25t-servo-hub_Mirror__2">
+  <inertial>
+    <origin xyz="8.97497787772511e-07 -0.00034211518977761424 1.0845728465325166e-06" rpy="0 0 0"/>
+    <mass value="0.005584585205775494"/>
+    <inertia ixx="1E-06" iyy="1E-06" izz="1E-06" ixy="-0.0" iyz="-0.0" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.021 0.110294 0.1068" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="25t-servo-hub_Mirror__2.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="aluminum_satin"/>
+  </visual>
+  <collision>
+    <origin xyz="0.021 0.110294 0.1068" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="25t-servo-hub_Mirror__2.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="elbow-attach_Mirror__1">
+  <inertial>
+    <origin xyz="-0.009233924925004636 0.001515137296954086 -0.0025481151880241137" rpy="0 0 0"/>
+    <mass value="0.005141835270301901"/>
+    <inertia ixx="1e-06" iyy="2e-06" izz="1e-06" ixy="-0.0" iyz="0.0" ixz="0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.021 0.1075 0.1068" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="elbow-attach_Mirror__1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="plastic_glossy_black"/>
+  </visual>
+  <collision>
+    <origin xyz="0.021 0.1075 0.1068" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="elbow-attach_Mirror__1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="right_forearm_1">
+  <inertial>
+    <origin xyz="0.0022384391298659947 -0.02233700000000001 -0.06792564077352811" rpy="0 0 0"/>
+    <mass value="0.027371737365874692"/>
+    <inertia ixx="5.9e-05" iyy="5.7e-05" izz="5e-06" ixy="-0.0" iyz="0.0" ixz="4e-06"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.0485 0.1095 0.0968" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="right_forearm_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="plastic_glossy_black"/>
+  </visual>
+  <collision>
+    <origin xyz="0.0485 0.1095 0.0968" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="right_forearm_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="elbow-bearing_Mirror__1">
+  <inertial>
+    <origin xyz="0.01789213855902462 -0.003495502323594024 -0.012651303520558488" rpy="0 0 0"/>
+    <mass value="0.004941715818268223"/>
+    <inertia ixx="1e-06" iyy="2e-06" izz="1e-06" ixy="0.0" iyz="-0.0" ixz="0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.0485 0.154174 0.0968" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="elbow-bearing_Mirror__1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="plastic_glossy_black"/>
+  </visual>
+  <collision>
+    <origin xyz="0.0485 0.154174 0.0968" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="elbow-bearing_Mirror__1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="custom_servo_support__lower_neck__v2_1">
+  <inertial>
+    <origin xyz="-0.0001818603745370151 4.095612737842203e-15 0.001967193599301919" rpy="0 0 0"/>
+    <mass value="0.003136252201459725"/>
+    <inertia ixx="1E-06" iyy="1E-06" izz="1e-06" ixy="-0.0" iyz="-0.0" ixz="0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.0 -0.0 1e-05" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="custom_servo_support__lower_neck__v2_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="plastic_glossy_black"/>
+  </visual>
+  <collision>
+    <origin xyz="-0.0 -0.0 1e-05" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="custom_servo_support__lower_neck__v2_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="gobilda-servo_4">
+  <inertial>
+    <origin xyz="0.017269107739658406 0.007500001343324397 0.015782267475689782" rpy="0 0 0"/>
+    <mass value="0.060587311248822606"/>
+    <inertia ixx="7e-06" iyy="1.4e-05" izz="1e-05" ixy="0.0" iyz="-0.0" ixz="0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.01715 0.0075 -0.00697" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="gobilda-servo_4.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="plastic_glossy_grey"/>
+  </visual>
+  <collision>
+    <origin xyz="0.01715 0.0075 -0.00697" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="gobilda-servo_4.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="25t-servo-hub_3">
+  <inertial>
+    <origin xyz="-4.778487469048187e-07 1.6215494569815637e-07 -0.0003421918530514406" rpy="0 0 0"/>
+    <mass value="0.005584850212079893"/>
+    <inertia ixx="1E-06" iyy="1E-06" izz="1E-06" ixy="-0.0" iyz="0.0" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.00965 -0.0 -0.04387" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="25t-servo-hub_3.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="aluminum_satin"/>
+  </visual>
+  <collision>
+    <origin xyz="0.00965 -0.0 -0.04387" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="25t-servo-hub_3.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="neck_1">
+  <inertial>
+    <origin xyz="4.4703468357609744e-11 0.0015600923125218369 0.014702901470170587" rpy="0 0 0"/>
+    <mass value="0.012940388012734224"/>
+    <inertia ixx="9e-06" iyy="4e-06" izz="8e-06" ixy="-0.0" iyz="0.0" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.00965 -0.0 -0.046664" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="neck_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="plastic_glossy_black"/>
+  </visual>
+  <collision>
+    <origin xyz="0.00965 -0.0 -0.046664" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="neck_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="25t-servo-hub_4">
+  <inertial>
+    <origin xyz="-4.77848746903084e-07 0.003136191852991365 6.322169145839274e-07" rpy="0 0 0"/>
+    <mass value="0.005584850212079893"/>
+    <inertia ixx="1E-06" iyy="1E-06" izz="1E-06" ixy="0.0" iyz="-0.0" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.00965 0.022187 -0.080481" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="25t-servo-hub_4.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="aluminum_satin"/>
+  </visual>
+  <collision>
+    <origin xyz="0.00965 0.022187 -0.080481" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="25t-servo-hub_4.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="gobilda-servo_5">
+  <inertial>
+    <origin xyz="0.009769107739658408 0.021117732524250185 4.714052932869306e-07" rpy="0 0 0"/>
+    <mass value="0.060587311248822606"/>
+    <inertia ixx="7e-06" iyy="1e-05" izz="1.4e-05" ixy="-0.0" iyz="0.0" ixz="0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.00965 0.019393 -0.080481" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="gobilda-servo_5.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="plastic_glossy_grey"/>
+  </visual>
+  <collision>
+    <origin xyz="0.00965 0.019393 -0.080481" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="gobilda-servo_5.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="head_1">
+  <inertial>
+    <origin xyz="0.017762050405363966 -0.005180173125019489 5.450273398273364e-05" rpy="0 0 0"/>
+    <mass value="0.007653734054253099"/>
+    <inertia ixx="2e-06" iyy="3e-06" izz="3e-06" ixy="0.0" iyz="0.0" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.01715 -0.017507 -0.087981" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="head_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="plastic_glossy_black"/>
+  </visual>
+  <collision>
+    <origin xyz="0.01715 -0.017507 -0.087981" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="head_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="camera_1">
+  <inertial>
+    <origin xyz="0.014184398578565184 -1.0759407732763727e-05 0.019215618136865634" rpy="0 0 0"/>
+    <mass value="0.094257141411043"/>
+    <inertia ixx="5.2e-05" iyy="4.3e-05" izz="6.9e-05" ixy="0.0" iyz="-0.0" ixz="-1.1e-05"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.00685 -0.003487 -0.101481" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="camera_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="plastic_glossy_black"/>
+  </visual>
+  <collision>
+    <origin xyz="-0.00685 -0.003487 -0.101481" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="camera_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="camera-link_1">
+  <inertial>
+    <origin xyz="0.0005000006258488593 -3.1298447384156547e-10 4.7006196884913365e-07" rpy="0 0 0"/>
+    <mass value="0.00019624999999999932"/>
+    <inertia ixx="1E-06" iyy="1E-06" izz="1E-06" ixy="-0.0" iyz="0.0" ixz="0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.04405 -0.003487 -0.128481" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="camera-link_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="steel_satin"/>
+  </visual>
+  <collision>
+    <origin xyz="-0.04405 -0.003487 -0.128481" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="camera-link_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="imu-link_1">
+  <inertial>
+    <origin xyz="-4.440892098500626e-18 -1.7763568394002505e-17 -0.0495" rpy="0 0 0"/>
+    <mass value="0.00019625"/>
+    <inertia ixx="1E-06" iyy="1E-06" izz="1E-06" ixy="0.0" iyz="0.0" ixz="0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="-0.0 -0.0 0.005" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="imu-link_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="steel_satin"/>
+  </visual>
+  <collision>
+    <origin xyz="-0.0 -0.0 0.005" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="imu-link_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="Component32_1">
+  <inertial>
+    <origin xyz="-8.673617379884035e-18 3.3333333333211267e-07 -0.0235" rpy="0 0 0"/>
+    <mass value="0.31999527000000005"/>
+    <inertia ixx="0.000364" iyy="9.2e-05" izz="0.000338" ixy="-0.0" iyz="0.0" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.012 -0.000333 0.005" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="Component32_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="plastic_matte_blue"/>
+  </visual>
+  <collision>
+    <origin xyz="0.012 -0.000333 0.005" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="Component32_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="TX2_board_v2_1">
+  <inertial>
+    <origin xyz="0.0007727738044017683 -3.4264702715669016e-05 -0.015294861571827419" rpy="0 0 0"/>
+    <mass value="0.2621637321081563"/>
+    <inertia ixx="0.000165" iyy="7.1e-05" izz="0.000195" ixy="-0.0" iyz="-0.0" ixz="3e-06"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.012 -0.000333 0.052" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="TX2_board_v2_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="silver_default"/>
+  </visual>
+  <collision>
+    <origin xyz="0.012 -0.000333 0.052" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="TX2_board_v2_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="left_foot_1">
+  <inertial>
+    <origin xyz="0.03566427755708927 0.007943656408146073 -0.025147122096524588" rpy="0 0 0"/>
+    <mass value="0.12353540058419325"/>
+    <inertia ixx="9.5e-05" iyy="0.00032" izz="0.000351" ixy="-1e-06" iyz="7e-06" ixz="-1.2e-05"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.03455 -0.055 0.462631" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="left_foot_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="plastic_glossy_black"/>
+  </visual>
+  <collision>
+    <origin xyz="0.03455 -0.055 0.462631" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="left_foot_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="right_foot_1">
+  <inertial>
+    <origin xyz="0.03566427501342068 -0.007943646533630423 -0.025147120467514994" rpy="0 0 0"/>
+    <mass value="0.12353541624057736"/>
+    <inertia ixx="9.5e-05" iyy="0.00032" izz="0.000351" ixy="1e-06" iyz="-7e-06" ixz="-1.2e-05"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.03455 0.055 0.462641" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="right_foot_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="plastic_glossy_black"/>
+  </visual>
+  <collision>
+    <origin xyz="0.03455 0.055 0.462641" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="right_foot_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<joint name="Rigid1" type="fixed">
+  <origin xyz="0.0 0.005 0.0" rpy="0 0 0"/>
+  <parent link="base_link"/>
+  <child link="torso_1"/>
+</joint>
+
+<joint name="Rigid2" type="fixed">
+  <origin xyz="-0.0225 0.0495 -0.13699" rpy="0 0 0"/>
+  <parent link="torso_1"/>
+  <child link="JX_servo_v12_1"/>
+</joint>
+
+<joint name="left_leg_motor_0" type="continuous">
+  <origin xyz="0.018 0.0 -0.0264" rpy="0 0 0"/>
+  <parent link="JX_servo_v12_1"/>
+  <child link="left_hip_side_1"/>
+  <axis xyz="0.0 0.0 1.0"/>
+</joint>
+
+<joint name="left_leg_motor_1" type="continuous">
+  <origin xyz="-0.03 0.0 -0.035336" rpy="0 0 0"/>
+  <parent link="left_hip_side_1"/>
+  <child link="JX_servo_v12_8"/>
+  <axis xyz="-1.0 -0.0 -0.0"/>
+</joint>
+
+<joint name="Rigid5" type="fixed">
+  <origin xyz="-0.0264 -0.0085 0.0189" rpy="0 0 0"/>
+  <parent link="JX_servo_v12_8"/>
+  <child link="left_hip_front_1"/>
+</joint>
+
+<joint name="Rigid6" type="fixed">
+  <origin xyz="0.0644 0.0239 -0.0738" rpy="0 0 0"/>
+  <parent link="left_hip_front_1"/>
+  <child link="JX_servo_v12_9"/>
+</joint>
+
+<joint name="left_leg_motor_2" type="continuous">
+  <origin xyz="-0.0085 0.0225 0.0549" rpy="0 0 0"/>
+  <parent link="JX_servo_v12_9"/>
+  <child link="left_thigh_1"/>
+  <axis xyz="0.0 -1.0 0.0"/>
+</joint>
+
+<joint name="left_leg_motor_3" type="continuous">
+  <origin xyz="0.0 0.0 -0.124" rpy="0 0 0"/>
+  <parent link="left_thigh_1"/>
+  <child link="JX_servo_v12_11"/>
+  <axis xyz="0.0 -1.0 0.0"/>
+</joint>
+
+<joint name="Rigid9" type="fixed">
+  <origin xyz="0.0085 -0.0264 -0.0549" rpy="0 0 0"/>
+  <parent link="JX_servo_v12_11"/>
+  <child link="left_calve_1"/>
+</joint>
+
+<joint name="left_leg_motor_4" type="continuous">
+  <origin xyz="-0.00855 0.028 -0.085005" rpy="0 0 0"/>
+  <parent link="left_calve_1"/>
+  <child link="JX_servo_v12_12"/>
+  <axis xyz="0.0 -1.0 0.0"/>
+</joint>
+
+<joint name="Rigid11" type="fixed">
+  <origin xyz="0.0085 -0.0225 0.0549" rpy="0 0 0"/>
+  <parent link="JX_servo_v12_12"/>
+  <child link="left_hip_front_2"/>
+</joint>
+
+<joint name="Rigid12" type="fixed">
+  <origin xyz="-0.0644 -0.025 0.0" rpy="0 0 0"/>
+  <parent link="left_hip_front_2"/>
+  <child link="JX_servo_v12_13"/>
+</joint>
+
+<joint name="Rigid14" type="fixed">
+  <origin xyz="-0.0225 -0.0595 -0.137" rpy="0 0 0"/>
+  <parent link="torso_1"/>
+  <child link="JX_servo_v12_14"/>
+</joint>
+
+<joint name="right_leg_motor_0" type="continuous">
+  <origin xyz="0.018 0.0 -0.0264" rpy="0 0 0"/>
+  <parent link="JX_servo_v12_14"/>
+  <child link="right_hip_side_1"/>
+  <axis xyz="-0.0 0.0 -1.0"/>
+</joint>
+
+<joint name="right_leg_motor_1" type="continuous">
+  <origin xyz="-0.03 0.0 -0.035336" rpy="0 0 0"/>
+  <parent link="right_hip_side_1"/>
+  <child link="JX_servo_v12_15"/>
+  <axis xyz="1.0 0.0 0.0"/>
+</joint>
+
+<joint name="Rigid17" type="fixed">
+  <origin xyz="-0.0264 0.0085 0.0189" rpy="0 0 0"/>
+  <parent link="JX_servo_v12_15"/>
+  <child link="right_ankle_1"/>
+</joint>
+
+<joint name="Rigid18" type="fixed">
+  <origin xyz="0.0644 -0.0239 -0.0738" rpy="0 0 0"/>
+  <parent link="right_ankle_1"/>
+  <child link="JX_servo_v12_16"/>
+</joint>
+
+<joint name="right_leg_motor_2" type="continuous">
+  <origin xyz="-0.0085 -0.0225 0.0549" rpy="0 0 0"/>
+  <parent link="JX_servo_v12_16"/>
+  <child link="right_thigh_1"/>
+  <axis xyz="0.0 1.0 0.0"/>
+</joint>
+
+<joint name="right_leg_motor_3" type="continuous">
+  <origin xyz="0.0 0.0 -0.124" rpy="0 0 0"/>
+  <parent link="right_thigh_1"/>
+  <child link="JX_servo_v12_17"/>
+  <axis xyz="-0.0 -1.0 -0.0"/>
+</joint>
+
+<joint name="Rigid21" type="fixed">
+  <origin xyz="0.0085 0.0264 -0.0549" rpy="0 0 0"/>
+  <parent link="JX_servo_v12_17"/>
+  <child link="right_calve_1"/>
+</joint>
+
+<joint name="right_leg_motor_4" type="continuous">
+  <origin xyz="-0.00855 -0.028 -0.085005" rpy="0 0 0"/>
+  <parent link="right_calve_1"/>
+  <child link="JX_servo_v12_18"/>
+  <axis xyz="-0.0 -1.0 -0.0"/>
+</joint>
+
+<joint name="Rigid23" type="fixed">
+  <origin xyz="0.0085 0.0225 0.0549" rpy="0 0 0"/>
+  <parent link="JX_servo_v12_18"/>
+  <child link="right_ankle_2"/>
+</joint>
+
+<joint name="Rigid24" type="fixed">
+  <origin xyz="-0.0644 0.025 0.0" rpy="0 0 0"/>
+  <parent link="right_ankle_2"/>
+  <child link="JX_servo_v12_19"/>
+</joint>
+
+<joint name="Rigid26" type="fixed">
+  <origin xyz="-0.021 0.1025 -0.0365" rpy="0 0 0"/>
+  <parent link="torso_1"/>
+  <child link="25t-servo-hub_1"/>
+</joint>
+
+<joint name="left_arm_motor_0" type="continuous">
+  <origin xyz="0.0 0.002794 0.0" rpy="0 0 0"/>
+  <parent link="25t-servo-hub_1"/>
+  <child link="gobilda-servo_1"/>
+  <axis xyz="0.0 -1.0 0.0"/>
+</joint>
+
+<joint name="Rigid28" type="fixed">
+  <origin xyz="-0.0075 0.0369 0.0075" rpy="0 0 0"/>
+  <parent link="gobilda-servo_1"/>
+  <child link="left_bicep_1"/>
+</joint>
+
+<joint name="Rigid29" type="fixed">
+  <origin xyz="0.0 0.0 -0.0703" rpy="0 0 0"/>
+  <parent link="left_bicep_1"/>
+  <child link="gobilda-servo_3"/>
+</joint>
+
+<joint name="left_arm_motor_1" type="continuous">
+  <origin xyz="0.0075 -0.0369 -0.0075" rpy="0 0 0"/>
+  <parent link="gobilda-servo_3"/>
+  <child link="25t-servo-hub_2"/>
+  <axis xyz="-0.0 1.0 -0.0"/>
+</joint>
+
+<joint name="Rigid31" type="fixed">
+  <origin xyz="0.0 -0.002794 0.0" rpy="0 0 0"/>
+  <parent link="25t-servo-hub_2"/>
+  <child link="elbow-attach_1"/>
+</joint>
+
+<joint name="Rigid32" type="fixed">
+  <origin xyz="-0.0275 0.002 0.01" rpy="0 0 0"/>
+  <parent link="elbow-attach_1"/>
+  <child link="left_forearm_1"/>
+</joint>
+
+<joint name="Rigid33" type="fixed">
+  <origin xyz="0.0 0.044674 0.0" rpy="0 0 0"/>
+  <parent link="left_forearm_1"/>
+  <child link="elbow-bearing_1"/>
+</joint>
+
+<joint name="Rigid34" type="fixed">
+  <origin xyz="-0.021 -0.1125 -0.0365" rpy="0 0 0"/>
+  <parent link="torso_1"/>
+  <child link="25t-servo-hub_Mirror__1"/>
+</joint>
+
+<joint name="right_arm_motor_0" type="continuous">
+  <origin xyz="0.0 -0.002794 0.0" rpy="0 0 0"/>
+  <parent link="25t-servo-hub_Mirror__1"/>
+  <child link="gobilda-servo_Mirror__1"/>
+  <axis xyz="0.0 -1.0 0.0"/>
+</joint>
+
+<joint name="Rigid36" type="fixed">
+  <origin xyz="-0.0075 -0.0369 0.0075" rpy="0 0 0"/>
+  <parent link="gobilda-servo_Mirror__1"/>
+  <child link="right_bicep_1"/>
+</joint>
+
+<joint name="Rigid37" type="fixed">
+  <origin xyz="0.0 0.0 -0.0703" rpy="0 0 0"/>
+  <parent link="right_bicep_1"/>
+  <child link="gobilda-servo_Mirror__2"/>
+</joint>
+
+<joint name="right_arm_motor_1" type="continuous">
+  <origin xyz="0.0075 0.0369 -0.0075" rpy="0 0 0"/>
+  <parent link="gobilda-servo_Mirror__2"/>
+  <child link="25t-servo-hub_Mirror__2"/>
+  <axis xyz="-0.0 1.0 0.0"/>
+</joint>
+
+<joint name="Rigid39" type="fixed">
+  <origin xyz="0.0 0.002794 0.0" rpy="0 0 0"/>
+  <parent link="25t-servo-hub_Mirror__2"/>
+  <child link="elbow-attach_Mirror__1"/>
+</joint>
+
+<joint name="Rigid40" type="fixed">
+  <origin xyz="-0.0275 -0.002 0.01" rpy="0 0 0"/>
+  <parent link="elbow-attach_Mirror__1"/>
+  <child link="right_forearm_1"/>
+</joint>
+
+<joint name="Rigid41" type="fixed">
+  <origin xyz="0.0 -0.044674 0.0" rpy="0 0 0"/>
+  <parent link="right_forearm_1"/>
+  <child link="elbow-bearing_Mirror__1"/>
+</joint>
+
+<joint name="Rigid42" type="fixed">
+  <origin xyz="0.0 -0.005 -1e-05" rpy="0 0 0"/>
+  <parent link="torso_1"/>
+  <child link="custom_servo_support__lower_neck__v2_1"/>
+</joint>
+
+<joint name="Rigid43" type="fixed">
+  <origin xyz="-0.01715 -0.0075 0.00698" rpy="0 0 0"/>
+  <parent link="custom_servo_support__lower_neck__v2_1"/>
+  <child link="gobilda-servo_4"/>
+</joint>
+
+<joint name="head_motor_0" type="continuous">
+  <origin xyz="0.0075 0.0075 0.0369" rpy="0 0 0"/>
+  <parent link="gobilda-servo_4"/>
+  <child link="25t-servo-hub_3"/>
+  <axis xyz="0.0 -0.0 1.0"/>
+</joint>
+
+<joint name="Rigid45" type="fixed">
+  <origin xyz="0.0 0.0 0.002794" rpy="0 0 0"/>
+  <parent link="25t-servo-hub_3"/>
+  <child link="neck_1"/>
+</joint>
+
+<joint name="Rigid46" type="fixed">
+  <origin xyz="0.0 -0.022187 0.033817" rpy="0 0 0"/>
+  <parent link="neck_1"/>
+  <child link="25t-servo-hub_4"/>
+</joint>
+
+<joint name="head_motor_1" type="continuous">
+  <origin xyz="0.0 0.002794 0.0" rpy="0 0 0"/>
+  <parent link="25t-servo-hub_4"/>
+  <child link="gobilda-servo_5"/>
+  <axis xyz="-0.0 1.0 -0.0"/>
+</joint>
+
+<joint name="Rigid48" type="fixed">
+  <origin xyz="-0.0075 0.0369 0.0075" rpy="0 0 0"/>
+  <parent link="gobilda-servo_5"/>
+  <child link="head_1"/>
+</joint>
+
+<joint name="Rigid49" type="fixed">
+  <origin xyz="0.024 -0.01402 0.0135" rpy="0 0 0"/>
+  <parent link="head_1"/>
+  <child link="camera_1"/>
+</joint>
+
+<joint name="camera_joint" type="continuous">
+  <origin xyz="0.0372 0.0 0.027" rpy="0 0 0"/>
+  <parent link="camera_1"/>
+  <child link="camera-link_1"/>
+  <axis xyz="1.0 -0.0 0.0"/>
+</joint>
+
+<joint name="imu_joint" type="continuous">
+  <origin xyz="0.0 -0.005 -0.005" rpy="0 0 0"/>
+  <parent link="torso_1"/>
+  <child link="imu-link_1"/>
+  <axis xyz="0.0 0.0 1.0"/>
+</joint>
+
+<joint name="Rigid52" type="fixed">
+  <origin xyz="-0.012 -0.004667 -0.005" rpy="0 0 0"/>
+  <parent link="torso_1"/>
+  <child link="Component32_1"/>
+</joint>
+
+<joint name="Rigid53" type="fixed">
+  <origin xyz="0.0 0.0 -0.047" rpy="0 0 0"/>
+  <parent link="Component32_1"/>
+  <child link="TX2_board_v2_1"/>
+</joint>
+
+<joint name="left_leg_motor_5" type="continuous">
+  <origin xyz="0.0264 0.0085 -0.0549" rpy="0 0 0"/>
+  <parent link="JX_servo_v12_13"/>
+  <child link="left_foot_1"/>
+  <axis xyz="-1.0 -0.0 -0.0"/>
+</joint>
+
+<joint name="right_leg_motor_5" type="continuous">
+  <origin xyz="0.0264 -0.0085 -0.0549" rpy="0 0 0"/>
+  <parent link="JX_servo_v12_19"/>
+  <child link="right_foot_1"/>
+  <axis xyz="-1.0 0.0 -0.0"/>
+</joint>
+
+<!-- TRANSMISSIONS -->
+<transmission name="left_leg_motor_0_tran">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="left_leg_motor_0">
+    <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="left_leg_motor_0_actr">
+    <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+</transmission>
+
+<transmission name="left_leg_motor_1_tran">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="left_leg_motor_1">
+    <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="left_leg_motor_1_actr">
+    <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+</transmission>
+
+<transmission name="left_leg_motor_2_tran">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="left_leg_motor_2">
+    <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="left_leg_motor_2_actr">
+    <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+</transmission>
+
+<transmission name="left_leg_motor_3_tran">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="left_leg_motor_3">
+    <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="left_leg_motor_3_actr">
+    <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+</transmission>
+
+<transmission name="left_leg_motor_4_tran">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="left_leg_motor_4">
+    <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="left_leg_motor_4_actr">
+    <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+</transmission>
+
+<transmission name="right_leg_motor_0_tran">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="right_leg_motor_0">
+    <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="right_leg_motor_0_actr">
+    <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+</transmission>
+
+<transmission name="right_leg_motor_1_tran">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="right_leg_motor_1">
+    <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="right_leg_motor_1_actr">
+    <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+</transmission>
+
+<transmission name="right_leg_motor_2_tran">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="right_leg_motor_2">
+    <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="right_leg_motor_2_actr">
+    <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+</transmission>
+
+<transmission name="right_leg_motor_3_tran">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="right_leg_motor_3">
+    <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="right_leg_motor_3_actr">
+    <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+</transmission>
+
+<transmission name="right_leg_motor_4_tran">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="right_leg_motor_4">
+    <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="right_leg_motor_4_actr">
+    <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+</transmission>
+
+<transmission name="left_arm_motor_0_tran">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="left_arm_motor_0">
+    <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="left_arm_motor_0_actr">
+    <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+</transmission>
+
+<transmission name="left_arm_motor_1_tran">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="left_arm_motor_1">
+    <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="left_arm_motor_1_actr">
+    <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+</transmission>
+
+<transmission name="right_arm_motor_0_tran">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="right_arm_motor_0">
+    <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="right_arm_motor_0_actr">
+    <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+</transmission>
+
+<transmission name="right_arm_motor_1_tran">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="right_arm_motor_1">
+    <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="right_arm_motor_1_actr">
+    <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+</transmission>
+
+<transmission name="head_motor_0_tran">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="head_motor_0">
+    <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="head_motor_0_actr">
+    <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+</transmission>
+
+<transmission name="head_motor_1_tran">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="head_motor_1">
+    <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="head_motor_1_actr">
+    <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+</transmission>
+
+<transmission name="camera_joint_tran">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="camera_joint">
+    <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="camera_joint_actr">
+    <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+</transmission>
+
+<transmission name="imu_joint_tran">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="imu_joint">
+    <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="imu_joint_actr">
+    <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+</transmission>
+
+<transmission name="left_leg_motor_5_tran">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="left_leg_motor_5">
+    <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="left_leg_motor_5_actr">
+    <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+</transmission>
+
+<transmission name="right_leg_motor_5_tran">
+  <type>transmission_interface/SimpleTransmission</type>
+  <joint name="right_leg_motor_5">
+    <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+  </joint>
+  <actuator name="right_leg_motor_5_actr">
+    <hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
+    <mechanicalReduction>1</mechanicalReduction>
+  </actuator>
+</transmission>
+
+
+</robot>

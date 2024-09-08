@@ -1,0 +1,9 @@
+<launch>
+
+<rosparam file="$(find bez3_description)/launch/controller.yaml" command="load"/>
+<node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" ns="bez3" args="left_leg_motor_0_position_controller left_leg_motor_1_position_controller left_leg_motor_2_position_controller left_leg_motor_3_position_controller left_leg_motor_4_position_controller right_leg_motor_0_position_controller right_leg_motor_1_position_controller right_leg_motor_2_position_controller right_leg_motor_3_position_controller right_leg_motor_4_position_controller left_arm_motor_0_position_controller left_arm_motor_1_position_controller right_arm_motor_0_position_controller right_arm_motor_1_position_controller head_motor_0_position_controller head_motor_1_position_controller camera_joint_position_controller imu_joint_position_controller left_leg_motor_5_position_controller right_leg_motor_5_position_controller joint_state_controller "/>
+<node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen">
+  <remap from="/joint_states" to="/bez3/joint_states"/>
+</node>
+
+</launch>
