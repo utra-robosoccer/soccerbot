@@ -1226,7 +1226,7 @@ Post-processing:
 
 <joint name="left_knee" type="revolute">
   <origin xyz="0.0 0.0 -0.124" rpy="0 0 0"/>
-  <limit effort="1.5" lower="-1.5707963267948966" upper="1.5707963267948966" velocity="6.39"/><parent link="left_thigh"/>
+  <limit effort="1.5" lower="-3.14" upper="0" velocity="6.39"/><parent link="left_thigh"/>
   <child link="JX_servo_v12_11"/>
   <axis xyz="0.0 -1.0 0.0"/>
 </joint>
@@ -1297,7 +1297,7 @@ Post-processing:
 
 <joint name="right_knee" type="revolute">
   <origin xyz="0.0 0.0 -0.124" rpy="0 0 0"/>
-  <limit effort="1.5" lower="-1.5707963267948966" upper="1.5707963267948966" velocity="6.39"/><parent link="right_thigh"/>
+  <limit effort="1.5" lower="-3.14" upper="0" velocity="6.39"/><parent link="right_thigh"/>
   <child link="JX_servo_v12_17"/>
   <axis xyz="-0.0 -1.0 -0.0"/>
 </joint>
