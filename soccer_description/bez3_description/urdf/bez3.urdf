@@ -1139,7 +1139,7 @@ Post-processing:
 
 <link name="left_foot">
   <inertial>
-    <origin xyz="0.03566427755708927 0.007943656408146073 -0.025147122096524588" rpy="0 0 0"/>
+    <origin xyz="0.08566427755708927 0.007943656408146073 -0.025147122096524588" rpy="0 0 0"/>
     <mass value="0.12353540058419325"/>
     <inertia ixx="9.5e-05" iyy="0.00032" izz="0.000351" ixy="-1e-06" iyz="7e-06" ixz="-1.2e-05"/>
   </inertial>
@@ -1160,7 +1160,7 @@ Post-processing:
 
 <link name="right_foot">
   <inertial>
-    <origin xyz="0.03566427501342068 -0.007943646533630423 -0.025147120467514994" rpy="0 0 0"/>
+    <origin xyz="0.08566427501342068 -0.007943646533630423 -0.025147120467514994" rpy="0 0 0"/>
     <mass value="0.12353541624057736"/>
     <inertia ixx="9.5e-05" iyy="0.00032" izz="0.000351" ixy="1e-06" iyz="-7e-06" ixz="-1.2e-05"/>
   </inertial>
@@ -1504,14 +1504,14 @@ Post-processing:
 </joint>
 
 <joint name="left_ankle_roll" type="revolute">
-  <origin xyz="0.0264 0.0085 -0.0549" rpy="0 0 0"/>
+  <origin xyz="0.0764 0.0085 -0.0549" rpy="0 0 0"/>
   <limit effort="1.5" lower="-1.5707963267948966" upper="1.5707963267948966" velocity="6.39"/><parent link="JX_servo_v12_13"/>
   <child link="left_foot"/>
   <axis xyz="-1.0 -0.0 -0.0"/>
 </joint>
 
 <joint name="right_ankle_roll" type="revolute">
-  <origin xyz="0.0264 -0.0085 -0.0549" rpy="0 0 0"/>
+  <origin xyz="0.0764 -0.0085 -0.0549" rpy="0 0 0"/>
   <limit effort="1.5" lower="-1.5707963267948966" upper="1.5707963267948966" velocity="6.39"/><parent link="JX_servo_v12_19"/>
   <child link="right_foot"/>
   <axis xyz="-1.0 0.0 -0.0"/>
