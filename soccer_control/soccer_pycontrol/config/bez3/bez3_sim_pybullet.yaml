@@ -34,7 +34,7 @@ replan_timesteps: 10 # Replanning each n timesteps
 
 # Posture parameters
 walk_com_height: 0.21 # Constant height for the CoM [m]
-walk_foot_height: 0.04 # Height of foot rising while walking [m]
+walk_foot_height: 0.10  # Height of foot rising while walking [m]
 walk_trunk_pitch: 0.0 # Trunk pitch angle [rad]
 walk_foot_rise_ratio: 0.2 # Time ratio for the foot swing plateau (0.0 to 1.0)
 
@@ -49,5 +49,5 @@ foot_zmp_target_y: 0.0 # Reference target ZMP position in the foot [m]
 # Limit parameters
 walk_max_dtheta: 1 # Maximum dtheta per step [rad]
 walk_max_dy: 0.04 # Maximum dy per step [m]
-walk_max_dx_forward: 0.08 # Maximum dx per step forward [m]
+walk_max_dx_forward: 0.24 # Maximum dx per step forward [m]
 walk_max_dx_backward: 0.03 # Maximum dx per step backward [m]

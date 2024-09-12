@@ -222,7 +222,7 @@ if __name__ == "__main__":
         t = 0
         t0 = time.time()
         while True:
-            planner.walk_loop(t) # time.time() - t0)
-            t = planner.step(t)
+            t = planner.step(t) # time.time() - t0)
+            planner.walk_loop(t)
             # print(t - (time.time() - t0))
-    walk(d_x=0.04, t_goal=10)
+    walk(d_x=0.08, t_goal=30)
