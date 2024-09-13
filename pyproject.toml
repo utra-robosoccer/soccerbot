@@ -32,7 +32,7 @@ warn_return_any = true
 warn_unused_configs = true
 ignore_missing_imports = true
 check_untyped_defs = true
-exclude = "cmake-build-debug|setup.py|external"
+exclude = "cmake-build-debug|setup.py|external|soccer_strategy|soccer_common|soccer_msgs|soccer_localization|soccer_description|soccer_webots"
 disable_error_code = "attr-defined"
 
 
@@ -72,3 +72,6 @@ omit =[
         "*/docs/*",
         "*/scripts/*",
         "*/cmake-build-debug/*"]
+
+[tool.pytest.ini_options]
+qt_api="pyqt6"

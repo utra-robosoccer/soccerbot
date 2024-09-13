@@ -177,7 +177,7 @@ class Navigator:
         self.walk_pid.reset_imus()
         t = 0
         while t < target_goal[4]:
-            self.foot_step_planner.head_movement(self.bez.sensors.get_ball().position)
+            # self.foot_step_planner.head_movement(self.bez.sensors.get_ball().position)
             t = self.walk_loop(t)
 
     def walk_loop(self, t: float):
@@ -192,6 +192,17 @@ class Navigator:
         self.func_step()
 
         t = self.foot_step_planner.step(t)
+
+        # update joints in control # TODO investigate it has an effect but not sure how much also with step time
+        # for joint in self.bez.motor_control.motor_names:
+        #     self.foot_step_planner.robot.set_joint(joint,
+        #                                            self.bez.motor_control.configuration
+        #                                            [self.bez.motor_control.motor_names.index(joint)])
+        # T = self.foot_step_planner.robot.get_T_world_fbase()
+        # T[0:3,0:3] = self.bez.sensors.get_pose().rotation_matrix
+        # self.foot_step_planner.robot.set_T_world_fbase(T)
+        # self.foot_step_planner.robot.update_kinematics()
+
         return t
 
     @staticmethod

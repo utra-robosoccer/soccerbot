@@ -133,6 +133,7 @@ class Field:
         # TODO filter density
         return world_frame_points
 
+    # TODO compare with open3d
     def matchPointsWithMapIterative(
         self, current_transform: Transformation, point_cloud_array: np.array, iterations=3, localizing=False
     ) -> Union[Tuple[Transformation, List[int]], None]:
