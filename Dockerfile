@@ -1,13 +1,9 @@
 ARG BASE_IMAGE=utrarobosoccer/noetic
+ARG INSTALL_CUDA=true
+ARG ARCHITECTURE=x86_64
+ARG OS=ubuntu2004
 
 FROM $BASE_IMAGE as dependencies
-WORKDIR /root/src
-RUN apt-get update && rosdep update --rosdistro noetic
-ADD . .
-RUN rosdep install --from-paths . --ignore-src -r -s  | grep 'apt-get install' | awk '{print $3}' | sort  >  /tmp/catkin_install_list
-WORKDIR /root/dependencies
-
-FROM $BASE_IMAGE as builder
 SHELL ["/bin/bash", "-c"]
 
 # Install dependencies
@@ -62,9 +58,6 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -y --no-install-recommends install ke
 # Architecture: Use sbsa for arm build
 # CUDA Installation Ref: https://developer.nvidia.com/cuda-downloads?target_os=Linux&target_arch=x86_64&Distribution=Ubuntu&target_version=20.04&target_type=deb_network
 # CUDNN (Ref: https://docs.nvidia.com/deeplearning/cudnn/install-guide/index.html#installlinux)
-ARG INSTALL_CUDA=true
-ARG ARCHITECTURE=x86_64
-ARG OS=ubuntu2004
 RUN if [[ "$INSTALL_CUDA" == "true" ]] ; then \
     wget --progress=dot:mega https://developer.download.nvidia.com/compute/cuda/repos/$OS/$ARCHITECTURE/cuda-$OS.pin && \
     mv cuda-$OS.pin /etc/apt/preferences.d/cuda-repository-pin-600 && \
@@ -99,33 +92,30 @@ RUN groupadd -g 1000 robosoccer && \
 # Allow nice for all users TODO research
 RUN echo "*                -       priority        -20" >> /etc/security/limits.conf
 
-# Install apt dependencies
-COPY --from=dependencies /tmp/catkin_install_list /tmp/catkin_install_list
-RUN (apt-get update || echo "Apt Error") && apt-fast install -y --no-install-recommends $(cat /tmp/catkin_install_list)
-
 # Install python dependencies
 USER robosoccer
-COPY requirements.txt /tmp/requirements.txt
+COPY requirements /tmp/requirements
 ENV PATH=/home/robosoccer/.local/bin:$PATH
-RUN pip3 install --upgrade pip
-RUN pip3 install -r /tmp/requirements.txt -f https://download.pytorch.org/whl/torch/ -f https://download.pytorch.org/whl/torchvision/
+RUN pip install --upgrade pip
+RUN pip install -r /tmp/requirements/requirements.txt
+RUN if [[ "$INSTALL_CUDA" == "true" ]] ; then pip install -r /tmp/requirements/requirements-gpu.txt ; fi
+RUN sudo apt-get update && rosdep update --rosdistro noetic  # TODO add an automated way
+RUN apt-fast install -y --no-install-recommends $(cat /tmp/requirements/rosdep.txt)
 
-RUN mkdir -p /home/robosoccer/catkin_ws/src
+FROM dependencies as builder
+
+RUN mkdir -p /home/robosoccer/catkin_ws/src/soccerbot
+WORKDIR /home/robosoccer/catkin_ws/src/soccerbot
+ADD . .
+RUN apt-fast install -y --no-install-recommends $(rosdep install --from-paths . --ignore-src -r -s  | grep 'apt-get install' | awk '{print $5}' | sort)
+
 WORKDIR /home/robosoccer/catkin_ws
 
-# Predownload neural networks
-RUN mkdir -p /home/robosoccer/.cache/torch/hub/ &&  \
-    cd /home/robosoccer/.cache/torch/hub/ && \
-    wget https://github.com/ultralytics/yolov5/archive/master.zip && \
-    unzip /home/robosoccer/.cache/torch/hub/master.zip && \
-    mv yolov5-master ultralytics_yolov5_master && \
-    rm -rf master.zip
-
 # Build Python ROS Packages
-COPY --from=dependencies --chown=robosoccer /root/src src/soccerbot
 RUN source /opt/ros/noetic/setup.bash && catkin config --cmake-args -DCMAKE_BUILD_TYPE=Debug
 RUN source /opt/ros/noetic/setup.bash && catkin build --no-status soccerbot
 RUN echo "source /home/robosoccer/catkin_ws/devel/setup.bash" >> ~/.bashrc
 
+RUN sudo ln -s /home/robosoccer/catkin_ws/devel/lib/python3/dist-packages/soccer_msgs  /opt/ros/noetic/lib/python3/dist-packages/
 ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/aarch64-linux-gnu/tegra:/usr/local/cuda/targets/aarch64-linux/lib/:/usr/local/cuda-10.2/lib64
-ENV PYTHONPATH=$PYTHONPATH:/home/robosoccer/.local/lib/python3.8/site-packages
+ENV PYTHONPATH=$PYTHONPATH:/home/robosoccer/.local/lib/python3.8/site-packages:/opt/ros/noetic/lib/python3/dist-packages:/home/robosoccer/catkin_ws/devel/lib/python3/dist-packages
