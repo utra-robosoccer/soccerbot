@@ -25,9 +25,11 @@ py-modules = []
 package-data = {"sample" = ["*.dat"]}
 
 [tool.setuptools.dynamic]
-dependencies = {file = ["requirements.txt"]}
-optional-dependencies = {gpu = { file = ["requirements-gpu.txt"] }}
+dependencies = {file = ["tools/setup/requirements.txt"]}
+optional-dependencies = {gpu = { file = ["tools/setup/requirements-gpu.txt"] }}
 
+[tool.distutils.egg_info]
+egg_base = "/tmp"
 
 [tool.mypy]
 warn_return_any = true
@@ -35,7 +37,7 @@ warn_unused_configs = true
 ignore_missing_imports = true
 check_untyped_defs = true
 exclude = "cmake-build-debug|setup.py|external|soccer_strategy|soccer_common|soccer_msgs|soccer_localization|soccer_description|soccer_webots"
-disable_error_code = "attr-defined"
+disable_error_code = ["attr-defined", "import-untyped"]
 
 
 [tool.coverage.run]

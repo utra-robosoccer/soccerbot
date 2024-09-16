@@ -3,7 +3,7 @@ ARG INSTALL_CUDA=true
 ARG ARCHITECTURE=x86_64
 ARG OS=ubuntu2004
 
-FROM $BASE_IMAGE as dependencies
+FROM $BASE_IMAGE AS dependencies
 SHELL ["/bin/bash", "-c"]
 
 # Install dependencies
@@ -15,43 +15,10 @@ RUN apt-get update && \
     echo debconf apt-fast/aptmanager string apt-get | debconf-set-selections && \
     apt-get install -q -y apt-fast && \
     apt-get clean
-RUN apt-get update && apt-fast install -y --no-install-recommends \
-    screen \
-    vim \
-    python3-pip \
-    python3-catkin-tools \
-    python3-protobuf \
-    protobuf-compiler \
-    libprotobuf-dev \
-    libjpeg8-dev  \
-    wget \
-    ccache \
-    dirmngr \
-    gnupg2 \
-    lsb-release \
-    net-tools \
-    iputils-ping \
-    apt-utils \
-    software-properties-common \
-    sudo \
-    unzip \
-    ros-noetic-robot-state-publisher \
-    curl \
-    libxkbcommon-x11-0 \
-    libxcb-icccm4 \
-    libxcb-xkb1 \
-    libxcb-icccm4 \
-    libxcb-image0 \
-    libxcb-render-util0 \
-    libxcb-randr0 \
-    libxcb-keysyms1 \
-    libxcb-xinerama0 \
-    qt5-default \
-    qtbase5-dev \
-    python3-pyqt5 \
-    python-is-python3 \
-    git \
-    python3-setuptools
+
+COPY tools/setup/rosdep.txt /tmp/setup/
+RUN apt-get update && rosdep update --rosdistro noetic  # TODO add an automated way
+RUN apt-fast install -y --no-install-recommends $(cat /tmp/setup/rosdep.txt)
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y --no-install-recommends install keyboard-configuration # This needs to be its own individual step
 
 # CUDA Installation
@@ -94,21 +61,27 @@ RUN echo "*                -       priority        -20" >> /etc/security/limits.
 
 # Install python dependencies
 USER robosoccer
-COPY requirements /tmp/requirements
 ENV PATH=/home/robosoccer/.local/bin:$PATH
+COPY tools/setup/requirements.txt tools/setup/requirements-gpu.txt /tmp/setup/
 RUN pip install --upgrade pip
-RUN pip install -r /tmp/requirements/requirements.txt
-RUN if [[ "$INSTALL_CUDA" == "true" ]] ; then pip install -r /tmp/requirements/requirements-gpu.txt ; fi
-RUN sudo apt-get update && rosdep update --rosdistro noetic  # TODO add an automated way
-RUN apt-fast install -y --no-install-recommends $(cat /tmp/requirements/rosdep.txt)
+RUN pip install -r /tmp/setup/requirements.txt
+RUN if [[ "$INSTALL_CUDA" == "true" ]] ; then pip install -r /tmp/setup/requirements-gpu.txt ; fi
 
-FROM dependencies as builder
+# Predownload neural networks
+RUN mkdir -p /home/robosoccer/.cache/torch/hub/ &&  \
+    cd /home/robosoccer/.cache/torch/hub/ && \
+    wget https://github.com/ultralytics/yolov5/archive/master.zip && \
+    unzip /home/robosoccer/.cache/torch/hub/master.zip && \
+    mv yolov5-master ultralytics_yolov5_master && \
+    rm -rf master.zip
 
+
+FROM dependencies AS builder
 RUN mkdir -p /home/robosoccer/catkin_ws/src/soccerbot
 WORKDIR /home/robosoccer/catkin_ws/src/soccerbot
-ADD . .
+COPY --chown=robosoccer . .
+RUN sudo apt-get update && rosdep update --rosdistro noetic
 RUN apt-fast install -y --no-install-recommends $(rosdep install --from-paths . --ignore-src -r -s  | grep 'apt-get install' | awk '{print $5}' | sort)
-
 WORKDIR /home/robosoccer/catkin_ws
 
 # Build Python ROS Packages
@@ -117,5 +90,5 @@ RUN source /opt/ros/noetic/setup.bash && catkin build --no-status soccerbot
 RUN echo "source /home/robosoccer/catkin_ws/devel/setup.bash" >> ~/.bashrc
 
 RUN sudo ln -s /home/robosoccer/catkin_ws/devel/lib/python3/dist-packages/soccer_msgs  /opt/ros/noetic/lib/python3/dist-packages/
-ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/aarch64-linux-gnu/tegra:/usr/local/cuda/targets/aarch64-linux/lib/:/usr/local/cuda-10.2/lib64
+ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/aarch64-linux-gnu/tegra:/usr/local/cuda/targets/aarch64-linux/lib/
 ENV PYTHONPATH=$PYTHONPATH:/home/robosoccer/.local/lib/python3.8/site-packages:/opt/ros/noetic/lib/python3/dist-packages:/home/robosoccer/catkin_ws/devel/lib/python3/dist-packages

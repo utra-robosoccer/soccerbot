@@ -648,12 +648,12 @@ tomli==2.0.1
     #   incremental
     #   pytest
     #   soccerbot (pyproject.toml)
-torch==2.3.1
+torch==2.3.1; platform_machine == 'x86_64'
     # via
     #   torchvision
     #   ultralytics
     #   ultralytics-thop
-torchvision==0.18.1
+torchvision==0.18.1 ; platform_machine == 'x86_64'
     # via ultralytics
 tornado==6.4.1
     # via
@@ -742,6 +742,6 @@ zope-interface==7.0.3
     # via
     #   soccerbot (pyproject.toml)
     #   twisted
-
+gitpython>=3.1.30
 # The following packages are considered to be unsafe in a requirements file:
 # setuptools

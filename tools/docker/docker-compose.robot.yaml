@@ -8,7 +8,7 @@ services:
       service: friendly
     image: utrarobosoccer/soccerbot:arm64
     build:
-      context: .
+      context: ../..
       target: builder
       args:
         - BUILDKIT_INLINE_CACHE=1
