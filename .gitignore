@@ -7,7 +7,7 @@
 # Python compiled files
 __pycache__/
 *.pyc
-
+.idea/
 # webots cache files
 soccer_webots/protos/*.cache
 soccer_webots/protos/Soccerbot_meshes/*.cache
@@ -34,5 +34,3 @@ venv/
 .mypy_cache/
 cuda-ubuntu2004.pin.1
 *.webm
-
-.idea/

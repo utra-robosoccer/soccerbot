@@ -16,7 +16,7 @@ classDiagram
         class IKCalc
     }
     namespace Walk {
-        class WalkEngine
+        class Navigator
         class FootStepPlanner
         class Path
         class Stabilize
@@ -40,17 +40,17 @@ classDiagram
 
 
 %%    Nav *--|> FootStepPlanner
-    FootStepPlanner <|--* WalkEngine
+    FootStepPlanner <|--* Navigator
 %%    FootStepPlanner *--|> Path
     Path <|--* FootStepPlanner
 
-    WalkEngine *--|> Stabilize
+    Navigator *--|> Stabilize
     Stabilize *--|> StabilizePhase
 
 %%    Nav *--|> World
-    World <|--* WalkEngine
+    World <|--* Navigator
 %%    Nav *--|> Bez
-    Bez <|--* WalkEngine
+    Bez <|--* Navigator
 
 
 

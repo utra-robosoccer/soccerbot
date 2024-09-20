@@ -4,6 +4,7 @@ from typing import List
 
 import numpy as np
 import placo
+import pybullet as p
 from placo_utils.visualization import footsteps_viz, frame_viz, line_viz, robot_viz
 
 
@@ -27,7 +28,6 @@ class FootStepPlanner:
         self.trajectory = None
         self.tasks = None
         self.solver = None
-
         if self.debug:
             # Starting Meshcat viewer
             self.viz = robot_viz(self.robot)
@@ -78,9 +78,9 @@ class FootStepPlanner:
         self.tasks.initialize_tasks(self.solver, self.robot)
 
         # Creating a joint task to assign DoF values for upper body
-        elbow = -50 * np.pi / 180
+        elbow = 2.512  # -50 * np.pi / 180
         shoulder_roll = 0 * np.pi / 180
-        shoulder_pitch = 20 * np.pi / 180
+        shoulder_pitch = -0.45  # 20 * np.pi / 180
         joints_task = self.solver.add_joints_task()
         if self.robot_model == "bez2":
             joints_task.set_joints(
@@ -110,6 +110,11 @@ class FootStepPlanner:
             )
         joints_task.configure("joints", "soft", 1.0)
 
+        # self.look_at_ball = self.solver.add_axisalign_task(
+        #     "camera", np.array([1.0, 0.0, 0.0]), np.array([1.0, 0.0, 0.0])
+        # )
+        # self.look_at_ball.configure("look_ball", "soft", 1)
+
         # Placing the robot in the initial position
         print("Placing the robot in the initial position...")
         self.tasks.reach_initial_pose(
@@ -126,6 +131,12 @@ class FootStepPlanner:
 
     def setup_footsteps(self):
         # Planning footsteps
+        # set init position
+        # self.robot.set_T_world_frame("right_foot", np.eye(4))
+        # self.robot.update_kinematics()
+        # self.last_display = self.funct_time()
+        # self.viz.display(self.robot.state.q)
+        self.init_foot = self.robot.get_T_world_right()
         T_world_left = placo.flatten_on_floor(self.robot.get_T_world_left())
         T_world_right = placo.flatten_on_floor(self.robot.get_T_world_right())
         footsteps = self.repetitive_footsteps_planner.plan(placo.HumanoidRobot_Side.left, T_world_left, T_world_right)
@@ -146,13 +157,21 @@ class FootStepPlanner:
         self.last_replan = 0
         self.start_t = self.funct_time()
 
-    def walk_loop(
+    def head_movement(self, target: List[float]):
+        # TODO clean up and add a cone or it breaks walking
+        ball = np.array(target)
+        camera_pos = self.robot.get_T_world_frame("camera")[:3, 3]
+        ball[2] -= camera_pos[2]
+        self.look_at_ball.targetAxis_world = ball
+
+    def plan_steps(
         self,
         t: float,
     ):
         # Updating the QP tasks from planned trajectory
         self.tasks.update_tasks_from_trajectory(self.trajectory, t)
 
+        # TODO add joints from sim for better feedback
         # Invoking the IK QP solver
         self.robot.update_kinematics()
         qd_sol = self.solver.solve(True)
@@ -167,17 +186,20 @@ class FootStepPlanner:
             self.trajectory, t
         ):
 
-            self.last_replan = t
-            # Replanning footsteps from current trajectory
-            supports = self.walk_pattern.replan_supports(self.repetitive_footsteps_planner, self.trajectory, t)
-
-            # Replanning CoM trajectory, yielding a new trajectory we can switch to
-            self.trajectory = self.walk_pattern.replan(supports, self.trajectory, t)
-
-            self.update_viz(supports, self.trajectory)
+            self.replan(t)
 
         # During the warmup phase, the robot is enforced to stay in the initial position
         self.update_meshcat(t)
+
+    def replan(self, t: float):
+        self.last_replan = t
+        # Replanning footsteps from current trajectory
+        supports = self.walk_pattern.replan_supports(self.repetitive_footsteps_planner, self.trajectory, t)
+
+        # Replanning CoM trajectory, yielding a new trajectory we can switch to
+        self.trajectory = self.walk_pattern.replan(supports, self.trajectory, t)
+
+        self.update_viz(supports, self.trajectory)
 
     def step(self, t: float):
         # Spin-lock until the next tick
@@ -190,8 +212,22 @@ class FootStepPlanner:
     def update_viz(self, supports: List[placo.Supports], trajectory: placo.WalkTrajectory):
         if self.debug:
             # Drawing footsteps
-            footsteps_viz(supports)
-
+            footsteps_viz(supports)  # TODO look for step vis
+            # TODO convert for ros
+            # steps = len(supports)
+            # T = np.eye(4)
+            # k = 0
+            # for footstep in supports:
+            #     k += 1
+            #     polygon = [(T @ [*xy, 0, 1])[:3] for xy in footstep.support_polygon()]
+            #     polygon = np.array([*polygon, polygon[-1]])
+            #
+            #     polygon[:, 1] -= self.init_foot[1, 3]/2
+            #     p.addUserDebugLine(polygon[0], polygon[1], [1, 0,0], lifeTime=1)
+            #     p.addUserDebugLine(polygon[1], polygon[2], [0, 1, 0], lifeTime=1)
+            #     p.addUserDebugLine(polygon[2], polygon[3], [0, 0, 1], lifeTime=1)
+            #     p.addUserDebugLine(polygon[0], polygon[3], [0, 1, 1], lifeTime=1)
+            #     print("fsd")
             # Drawing planned CoM trajectory on the ground
             coms = [[*trajectory.get_p_world_CoM(t)[:2], 0.0] for t in np.linspace(trajectory.t_start, trajectory.t_end, 100)]
             line_viz("CoM_trajectory", np.array(coms), 0xFFAA00)

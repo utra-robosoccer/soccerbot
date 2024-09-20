@@ -35,7 +35,7 @@ services:
     image: utrarobosoccer/webots
     privileged: true
     build:
-      context: external
+      context: ../../external
       args:
         - BUILDKIT_INLINE_CACHE=1
       cache_from:

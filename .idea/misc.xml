@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Black">
-    <option name="sdkName" value="Python 3.8" />
+    <option name="sdkName" value="Remote Python 3.8.10 Docker Compose (soccerbot)" />
   </component>
-  <component name="CMakeWorkspace" PROJECT_DIR="$PROJECT_DIR$" />
-  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.8" project-jdk-type="Python SDK" />
-  <component name="PyPackaging">
-    <option name="earlyReleasesAsUpgrades" value="true" />
-  </component>
+  <component name="ProjectRootManager" version="2" project-jdk-name="Remote Python 3.8.10 Docker Compose (soccerbot)" project-jdk-type="Python SDK" />
 </project>

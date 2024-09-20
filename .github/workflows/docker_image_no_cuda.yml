@@ -44,9 +44,9 @@ jobs:
         with:
           context: .
           push: true
-          file: Dockerfile
+          file: tools/docker/Dockerfile
           build-args: |
             INSTALL_CUDA=false
           tags: utrarobosoccer/soccerbot:no_cuda
-          cache-from: type=registry,ref=utrarobosoccer/soccerbot
+          cache-from: type=registry,ref=utrarobosoccer/soccerbot:no_cuda
           cache-to: type=inline

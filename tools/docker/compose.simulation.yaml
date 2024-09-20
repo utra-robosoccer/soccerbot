@@ -1,0 +1,37 @@
+x-simulator: &simulator
+  image: utrarobosoccer/webots
+  stop_signal: SIGINT
+  stop_grace_period: 10s
+  privileged: true
+  build:
+    context: ./../external
+    args:
+      - BUILDKIT_INLINE_CACHE=1
+    cache_from:
+      - utrarobosoccer/webots
+  cap_add:
+    - SYS_PTRACE
+  pid: "host"
+  command: bash -c "cd webots && ./webots --batch --sysinfo --log-performance=performance.log /usr/local/hlvs_webots/worlds/robocup.wbt"
+  volumes:
+    - /tmp/.X11-unix:/tmp/.X11-unix:rw
+    - /dev/dri:/dev/dri:rw
+    - /dev/snd:/dev/snd:rw
+    - ./external/hlvs_webots/worlds:/usr/local/hlvs_webots/worlds:rw
+    - ./external/hlvs_webots/controllers/referee/:/usr/local/hlvs_webots/controllers/referee/:rw
+    - ./external/hlvs_webots/protos/:/usr/local/hlvs_webots/protos/:rw
+    - /var/run/docker.sock:/var/run/docker.sock
+    - /dev:/dev
+
+services:
+  simulator:
+    <<: *simulator
+    environment:
+      PYTHONUNBUFFERED: 1
+      DISPLAY: unix$DISPLAY
+      JAVA_HOME: /usr
+      XDG_RUNTIME_DIR: $XDG_RUNTIME_DIR
+      # Specify in comma seperated list see https://github.com/utra-robosoccer/hlvs_webots/blob/16194d22c91b8dfcae3b3298524281bf895cab5d/controllers/referee/team.py#L36
+      TEAM_1_PLAYERS_ON_FIELD: "1"
+      TEAM_2_PLAYERS_ON_FIELD: ""
+      ROBOT_MODEL: "bez1"

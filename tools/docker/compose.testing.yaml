@@ -1,0 +1,40 @@
+networks:
+  evtol_network:
+    ipam:
+      config:
+        - subnet: 172.10.0.0/24
+services:
+  simulator_test:
+    networks:
+      evtol_network:
+        ipv4_address: 172.10.0.10
+    extends:
+      file: compose.simulation.yaml
+      service: simulator
+    command:
+      /bin/bash -c "export ROS_MASTER_URI=http://172.10.0.10:11311 && export ROS_IP=172.10.0.10 && source $$HOME/catkin_ws/devel/setup.bash && source $$HOME/.bashrc &&
+      source /home/evtol/catkin_ws/src/PX4-Autopilot/Tools/simulation/gazebo-classic/setup_gazebo.bash /home/evtol/catkin_ws/src/PX4-Autopilot /home/evtol/catkin_ws/src/PX4-Autopilot/build/px4_sitl_default &&
+      export ROS_PACKAGE_PATH=$$ROS_PACKAGE_PATH:/home/evtol/catkin_ws/src/PX4-Autopilot:/home/evtol/catkin_ws/src/PX4-Autopilot/Tools/simulation/gazebo-classic/sitl_gazebo-classic &&
+      if [[ $$DISPLAY != '' ]]; then export DISPLAY=unix$DISPLAY && roslaunch px4 mavros_posix_sitl.launch;
+      else export DISPLAY=unix:1 && Xvfb :1 -screen 0 1024x768x24 | (roslaunch px4 mavros_posix_sitl.launch gui:=false);
+      fi || sleep infinity"
+  #    healthcheck:
+  #      test: exit 0
+  #      interval: 3s
+  #      timeout: 3s
+  #      retries: 1
+  #      start_period: 0s
+  #      start_interval: 3s
+
+  evtol_test:
+    networks:
+      evtol_network:
+        ipv4_address: 172.10.0.2
+    extends:
+      file: compose.autonomy.yaml
+      service: evtol_no_cuda
+    command:
+      /bin/bash -c "export ROS_MASTER_URI=http://172.10.0.10:11311 && export ROS_IP=172.10.0.2 && source $$HOME/catkin_ws/devel/setup.bash &&
+      pytest -s $$HOME/catkin_ws/src/evtol_software/test/test_integration.py::IntegrationTestInitial::${TEST_NAME:-test_arm}"
+    ports:
+      - 11311:11311

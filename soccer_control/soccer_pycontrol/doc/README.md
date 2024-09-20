@@ -7,7 +7,7 @@
 | `KinematicData`   | Class to contain all relevant information about the kinematics of model. Uses pinnoccio to load from urdf |
 | `IKActions`       | Class for actions robot will do using ik                                                                  |
 | `IKCalculation`   | Main inverse kinematic calculations.                                                                      |
-| `WalkEngine`      | Main loop for the walk engine. Interfaces with all classes to perform walking.                            |
+| `Navigator`       | Main loop for the walk engine. Interfaces with all classes to perform walking.                            |
 | `FootStepPlanner` | Class to interface with path for robot foot steps.                                                        |
 | `Stabilize`       | Manages PID loops for pitch, roll while standing and walking.                                             |
 | `StabilizePhase`  | Experimental for a phase roll pid thingy.                                                                 |

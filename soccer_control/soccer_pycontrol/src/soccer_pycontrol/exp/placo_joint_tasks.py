@@ -6,7 +6,7 @@ import placo
 from ischedule import run_loop, schedule
 from placo_utils.visualization import point_viz, robot_frame_viz, robot_viz
 
-robot_model = "bez2"
+robot_model = "bez1"
 model_filename = expanduser("~") + f"/catkin_ws/src/soccerbot/soccer_description/{robot_model}_description/urdf/robot.urdf"
 
 robot = placo.HumanoidRobot(model_filename)
@@ -39,9 +39,14 @@ left_foot_task.configure("left_foot", "soft", 1.0, 1.0)
 right_foot_task = solver.add_frame_task("right_foot", T_world_right)
 right_foot_task.configure("right_foot", "soft", 1.0, 1.0)
 
-T_world_right_forearm = robot.get_T_world_frame("right_forearm")
-right_hand_task = solver.add_frame_task("right_forearm", T_world_right_forearm)
-right_hand_task.configure("right_forearm", "soft", 1.0, 1.0)
+# T_world_right_forearm = robot.get_T_world_frame("right_forearm")
+# right_hand_task = solver.add_frame_task("right_forearm", T_world_right_forearm)
+# right_hand_task.configure("right_forearm", "soft", 1.0, 1.0)
+
+# Look at ball
+look_at_ball = solver.add_axisalign_task("camera", np.array([1.0, 0.0, 0.0]), np.array([1.0, 0.0, 0.0]))
+look_at_ball.configure("look_ball", "soft", 1.0)
+
 # right_forearm
 # head_task = solver.add_joints_task()
 # elbow = 2.512
@@ -58,24 +63,24 @@ right_hand_task.configure("right_forearm", "soft", 1.0, 1.0)
 #     }
 # )
 # head_task.configure("joints", "soft", 1.0)
-x, y, z = T_world_right_forearm[:3, 3].copy()
-right_hand_y_traj = placo.CubicSpline()
-right_hand_y_traj.add_point(0.0, y, 0.0)
-right_hand_y_traj.add_point(0.5, y - 0.5, 0.0)
-right_hand_y_traj.add_point(1.0, y, 0.0)
-right_hand_y_traj.add_point(2.0, y, 0.0)
-
-right_hand_x_traj = placo.CubicSpline()
-right_hand_x_traj.add_point(0.0, x + 5, 0.0)
-right_hand_x_traj.add_point(0.5, x + 5, 0.0)
-right_hand_x_traj.add_point(1.0, x + 5, 0.0)
-right_hand_x_traj.add_point(2.0, x + 5, 0.0)
-
-right_hand_z_traj = placo.CubicSpline()
-right_hand_z_traj.add_point(0.0, z + 0.3, 0.0)
-right_hand_z_traj.add_point(0.5, z + 0.3, 0.0)
-right_hand_z_traj.add_point(1.0, z + 0.3, 0.0)
-right_hand_z_traj.add_point(2.0, z + 0.1, 0.0)
+# x, y, z = T_world_right_forearm[:3, 3].copy()
+# right_hand_y_traj = placo.CubicSpline()
+# right_hand_y_traj.add_point(0.0, y, 0.0)
+# right_hand_y_traj.add_point(0.5, y - 0.5, 0.0)
+# right_hand_y_traj.add_point(1.0, y, 0.0)
+# right_hand_y_traj.add_point(2.0, y, 0.0)
+#
+# right_hand_x_traj = placo.CubicSpline()
+# right_hand_x_traj.add_point(0.0, x + 5, 0.0)
+# right_hand_x_traj.add_point(0.5, x + 5, 0.0)
+# right_hand_x_traj.add_point(1.0, x + 5, 0.0)
+# right_hand_x_traj.add_point(2.0, x + 5, 0.0)
+#
+# right_hand_z_traj = placo.CubicSpline()
+# right_hand_z_traj.add_point(0.0, z + 0.3, 0.0)
+# right_hand_z_traj.add_point(0.5, z + 0.3, 0.0)
+# right_hand_z_traj.add_point(1.0, z + 0.3, 0.0)
+# right_hand_z_traj.add_point(2.0, z + 0.1, 0.0)
 
 # Regularization task
 # posture_regularization_task = solver.add_joints_task()
@@ -103,12 +108,16 @@ def loop():
     # com_target[2] = 0.21  # T_world_trunk[2,3] - 0.1
     # com_task.target_world = com_target
     # Updating the target
-    t_mod = t % 2.0
-    target = right_hand_task.position().target_world
-    # target[0] = right_hand_x_traj.pos(t_mod)
-    # target[1] = right_hand_y_traj.pos(t_mod)
-    # target[2] = right_hand_z_traj.pos(t_mod)
-    right_hand_task.position().target_world = target
+    # t_mod = t % 2.0
+    # target = right_hand_task.position().target_world
+    # # target[0] = right_hand_x_traj.pos(t_mod)
+    # # target[1] = right_hand_y_traj.pos(t_mod)
+    # # target[2] = right_hand_z_traj.pos(t_mod)
+    # right_hand_task.position().target_world = target
+
+    ball = np.array([0.5 + np.cos(t) * 0.25, np.sin(t) * 0.7, 0.0])
+    camera_pos = robot.get_T_world_frame("camera")[:3, 3]
+    look_at_ball.targetAxis_world = ball - camera_pos
 
     solver.solve(True)
     robot.update_kinematics()

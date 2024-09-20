@@ -13,7 +13,7 @@ description = "Main software for bez the humanoid soccer player"
 readme = "README.md"
 requires-python = ">=3.8"
 license = {text = "BSD-3-Clause"}
-dynamic = ["version", "dependencies"]
+dynamic = ["version", "dependencies", "optional-dependencies"]
 
 [project.urls]
 "Homepage" = "https://utra-robosoccer.github.io/"
@@ -25,15 +25,19 @@ py-modules = []
 package-data = {"sample" = ["*.dat"]}
 
 [tool.setuptools.dynamic]
-dependencies = {file = ["requirements.txt"]}
+dependencies = {file = ["tools/setup/requirements.txt"]}
+optional-dependencies = {gpu = { file = ["tools/setup/requirements-gpu.txt"] }}
+
+[tool.distutils.egg_info]
+egg_base = "/tmp"
 
 [tool.mypy]
 warn_return_any = true
 warn_unused_configs = true
 ignore_missing_imports = true
 check_untyped_defs = true
-exclude = "cmake-build-debug|setup.py|external"
-disable_error_code = "attr-defined"
+exclude = "cmake-build-debug|setup.py|external|soccer_strategy|soccer_common|soccer_msgs|soccer_localization|soccer_description|soccer_webots"
+disable_error_code = ["attr-defined", "import-untyped"]
 
 
 [tool.coverage.run]
@@ -72,3 +76,6 @@ omit =[
         "*/docs/*",
         "*/scripts/*",
         "*/cmake-build-debug/*"]
+
+[tool.pytest.ini_options]
+qt_api="pyqt6"
