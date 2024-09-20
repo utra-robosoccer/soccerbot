@@ -595,7 +595,7 @@ rpds-py==0.20.0
     #   jsonschema
     #   referencing
     #   soccerbot (pyproject.toml)
-scikit-learn==1.3.2
+scikit-learn==1.5.0
     # via
     #   open3d
     #   soccerbot (pyproject.toml)
