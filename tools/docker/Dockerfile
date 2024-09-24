@@ -1,9 +1,10 @@
 ARG BASE_IMAGE=utrarobosoccer/noetic
+
+FROM $BASE_IMAGE AS dependencies
 ARG INSTALL_CUDA=true
 ARG ARCHITECTURE=x86_64
 ARG OS=ubuntu2004
 
-FROM $BASE_IMAGE AS dependencies
 SHELL ["/bin/bash", "-c"]
 
 # Install dependencies
@@ -64,8 +65,8 @@ USER robosoccer
 ENV PATH=/home/robosoccer/.local/bin:$PATH
 COPY tools/setup/requirements.txt tools/setup/requirements-gpu.txt /tmp/setup/
 RUN pip install --upgrade pip
-RUN pip install -r /tmp/setup/requirements.txt
-RUN if [[ "$INSTALL_CUDA" == "true" ]] ; then pip install -r /tmp/setup/requirements-gpu.txt ; fi
+RUN pip install -r /tmp/setup/requirements.txt --no-cache-dir
+RUN if [[ "$INSTALL_CUDA" == "true" ]] ; then pip install -r /tmp/setup/requirements-gpu.txt --no-cache-dir ; fi
 
 # Predownload neural networks
 RUN mkdir -p /home/robosoccer/.cache/torch/hub/ &&  \
