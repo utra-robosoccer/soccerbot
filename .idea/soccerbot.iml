@@ -11,7 +11,7 @@
       <sourceFolder url="file://$MODULE_DIR$/soccer_strategy/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/soccer_webots/src" isTestSource="false" />
     </content>
-    <orderEntry type="jdk" jdkName="Remote Python 3.8.10 Docker Compose (soccerbot_no_cuda)" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Python 3.8" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="PyDocumentationSettings">
