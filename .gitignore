@@ -8,6 +8,7 @@
 __pycache__/
 *.pyc
 .idea
+!.idea/soccerbot.iml
 # webots cache files
 soccer_webots/protos/*.cache
 soccer_webots/protos/Soccerbot_meshes/*.cache
