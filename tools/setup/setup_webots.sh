@@ -28,7 +28,8 @@ else
     # Install the webots simulator
     sudo apt-get install "/tmp/webots_${WEBOTS_VERSION}.deb" -y
 
-    echo "export WEBOTS_HOME=/usr/local/webots" >> ~/.bashrc  && source ~/.bashrc
+    echo "export WEBOTS_HOME=/usr/local/webots" >> ~/.bashrc
+    export WEBOTS_HOME=/usr/local/webots
     echo "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/ros/noetic/lib/:$WEBOTS_HOME/lib/controller"  >> ~/.bashrc
     echo "export PYTHONPATH=$PYTHONPATH:$WEBOTS_HOME/lib/controller/python38"  >> ~/.bashrc && source ~/.bashrc
 
