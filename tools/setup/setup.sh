@@ -7,6 +7,16 @@ check_internet_connection () {
     fi
 }
 
+check_ssh_connection() {
+  if ssh -q git@github.com; [ $? -eq 255 ]; then
+     echo "SSH is not authenticated. Please setup ssh key"
+     exit 1
+  else
+    echo "SSH is successfully authenticated"
+  fi
+
+}
+
 ask_question() {
     while true; do
         read -p "$1 [Y/n]: " -n 1 -r response
@@ -109,6 +119,10 @@ setup_repo(){
         catkin build soccerbot
         echo "source /home/$USER/catkin_ws/devel/setup.bash" >> ~/.bashrc && source ~/.bashrc
 
+        # Fixing ros logging in pytests
+        mkdir -p /home/$USER/.ros/config && cd /home/$USER/.ros/config
+        ln -s /opt/ros/noetic/etc/ros/python_logging.conf
+
    else
         echo "Please install Repo manually!"
    fi
@@ -125,6 +139,7 @@ if ask_question "Do you have sudo rights?"; then
     has_sudo=1
     sudo apt update
 fi
+
 if ask_question "Do you have a nvidia graphics card and want to install cuda?"; then
     wants_cuda=1
 fi
@@ -157,9 +172,7 @@ if ask_question "Install ROS?"; then
 fi
 
 if ask_question "Setup Repo?"; then
-  if ask_question "Is ssh key setup correctly?"; then # TODO Maybe do a check
+    check_ssh_connection
     setup_repo
-  else
-    echo "Please install Repo manually!"
-  fi
+
 fi
