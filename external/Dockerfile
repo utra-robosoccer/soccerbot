@@ -1,7 +1,7 @@
 FROM nvidia/cudagl:11.4.2-base
 
 ENV DEBIAN_FRONTEND=noninteractive
-
+#TODO how should i split, should it be its own repo?. The dockerfile should be in hlvs_webots and we can probably rebuild when there is a puch on it
 # Install dependencies
 RUN apt-key adv --keyserver 'hkp://keyserver.ubuntu.com:80' --recv-key C1CF6E31E6BADE8868B172B4F42ED6FBAB17C654
 RUN apt update && \
@@ -37,15 +37,16 @@ RUN apt update && apt-fast install -y \
 
 RUN pip3 install transforms3d
 
-WORKDIR /usr/local
+ARG WEBOTS_VERSION="2022b"
+ARG WEBOTS_DOWNLOAD_URL="https://github.com/cyberbotics/webots/releases/download/R${WEBOTS_VERSION}/webots_${WEBOTS_VERSION}_amd64.deb"
 
-COPY webots/scripts webots/scripts
-RUN ./webots/scripts/install/linux_compilation_dependencies.sh
+RUN wget --no-verbose --show-progress "$WEBOTS_DOWNLOAD_URL" -O "/tmp/webots_${WEBOTS_VERSION}.deb" && sudo apt-get install "/tmp/webots_${WEBOTS_VERSION}.deb" -y
 
-COPY webots webots
-RUN echo WEBOTS_HOME="/usr/local/webots" >> ~/.bashrc && \
-    cd webots && \
-    export WEBOTS_HOME="/usr/local/webots" && make
+ENV WEBOTS_HOME /usr/local/webots
+RUN echo "export WEBOTS_HOME=/usr/local/webots" >> ~/.bashrc
+RUN echo "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$WEBOTS_HOME/lib/controller"  >> ~/.bashrc
+RUN echo "export PYTHONPATH=$PYTHONPATH:$WEBOTS_HOME/lib/controller/python38"  >> ~/.bashrc && source ~/.bashrc
+
 
 COPY GameController GameController
 RUN apt update && apt-fast -y install ant protobuf-compiler libprotobuf-dev libjpeg9-dev && \
@@ -59,13 +60,12 @@ RUN cd hlvs_webots/controllers/referee && \
 
 RUN apt-get install -y protobuf-compiler libprotobuf-dev libjpeg9-dev && \
     cd hlvs_webots && \
-    WEBOTS_HOME=/usr/local/webots make clean && \
-    WEBOTS_HOME=/usr/local/webots make
+    make clean && \
+    make
 
 RUN pip3 install pyyaml
 
 ENV QTWEBENGINE_DISABLE_SANDBOX=1
-ENV WEBOTS_HOME /usr/local/webots
 ENV GAME_CONTROLLER_HOME /usr/local/GameController
 
 SHELL ["/bin/bash", "-c"]
