@@ -38,9 +38,9 @@ RUN apt update && apt-fast install -y \
 RUN pip3 install transforms3d
 
 ARG WEBOTS_VERSION="2022b"
-ARG WEBOTS_DOWNLOAD_URL="https://github.com/cyberbotics/webots/releases/download/R${WEBOTS_VERSION}/webots_${WEBOTS_VERSION}_amd64.deb"
+ARG WEBOTS_DOWNLOAD_URL="https://github.com/cyberbotics/webots/releases/download/R$WEBOTS_VERSION/webots_$WEBOTS_VERSION_amd64.deb"
 
-RUN wget --no-verbose --show-progress "$WEBOTS_DOWNLOAD_URL" -O "/tmp/webots_${WEBOTS_VERSION}.deb" && sudo apt-get install "/tmp/webots_${WEBOTS_VERSION}.deb" -y
+RUN wget --no-verbose --show-progress "$WEBOTS_DOWNLOAD_URL" -O "/tmp/webots_$WEBOTS_VERSION.deb" && sudo apt-get install "/tmp/webots_$WEBOTS_VERSION.deb" -y
 
 ENV WEBOTS_HOME /usr/local/webots
 RUN echo "export WEBOTS_HOME=/usr/local/webots" >> ~/.bashrc
