@@ -38,27 +38,31 @@ RUN apt update && apt-fast install -y \
 RUN pip3 install transforms3d
 
 ARG WEBOTS_VERSION="2022b"
-ARG WEBOTS_DOWNLOAD_URL="https://github.com/cyberbotics/webots/releases/download/R$WEBOTS_VERSION/webots_$WEBOTS_VERSION_amd64.deb"
+ARG WEBOTS_DOWNLOAD_URL="https://github.com/cyberbotics/webots/releases/download/R${WEBOTS_VERSION}/webots_${WEBOTS_VERSION}_amd64.deb"
 
-RUN wget --no-verbose --show-progress "$WEBOTS_DOWNLOAD_URL" -O "/tmp/webots_$WEBOTS_VERSION.deb" && sudo apt-get install "/tmp/webots_$WEBOTS_VERSION.deb" -y
+RUN wget --no-verbose --show-progress "$WEBOTS_DOWNLOAD_URL" -O "/tmp/webots_${WEBOTS_VERSION}.deb"
+RUN apt update && apt-fast -y install "/tmp/webots_${WEBOTS_VERSION}.deb"
 
 ENV WEBOTS_HOME /usr/local/webots
 RUN echo "export WEBOTS_HOME=/usr/local/webots" >> ~/.bashrc
 RUN echo "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$WEBOTS_HOME/lib/controller"  >> ~/.bashrc
-RUN echo "export PYTHONPATH=$PYTHONPATH:$WEBOTS_HOME/lib/controller/python38"  >> ~/.bashrc && source ~/.bashrc
+RUN echo "export PYTHONPATH=$PYTHONPATH:$WEBOTS_HOME/lib/controller/python38"  >> ~/.bashrc
 
+WORKDIR /usr/local
 
-COPY GameController GameController
-RUN apt update && apt-fast -y install ant protobuf-compiler libprotobuf-dev libjpeg9-dev && \
-    cd GameController && \
-    ant
 
 COPY hlvs_webots hlvs_webots
 RUN cd hlvs_webots/controllers/referee && \
     pip3 install numpy==1.20.2 && \
     pip3 install -r requirements.txt
 
-RUN apt-get install -y protobuf-compiler libprotobuf-dev libjpeg9-dev && \
+COPY GameController GameController
+RUN apt update && apt-fast -y install ant protobuf-compiler libprotobuf-dev && \
+   cd GameController && \
+    ant
+
+
+RUN apt-fast install -y protobuf-compiler libprotobuf-dev && \
     cd hlvs_webots && \
     make clean && \
     make

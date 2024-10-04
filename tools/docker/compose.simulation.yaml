@@ -4,7 +4,7 @@ x-simulator: &simulator
   stop_grace_period: 10s
   privileged: true
   build:
-    context: ./../external
+    context: ../../external
     args:
       - BUILDKIT_INLINE_CACHE=1
     cache_from:
@@ -12,7 +12,7 @@ x-simulator: &simulator
   cap_add:
     - SYS_PTRACE
   pid: "host"
-  command: bash -c "cd webots && ./webots --batch --sysinfo --log-performance=performance.log /usr/local/hlvs_webots/worlds/robocup.wbt"
+  command: bash -c "sleep "
   volumes:
     - /tmp/.X11-unix:/tmp/.X11-unix:rw
     - /dev/dri:/dev/dri:rw
