@@ -4,7 +4,6 @@ from typing import List
 
 import numpy as np
 import placo
-import pybullet as p
 from placo_utils.visualization import footsteps_viz, frame_viz, line_viz, robot_viz
 
 
