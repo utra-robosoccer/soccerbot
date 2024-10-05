@@ -12,14 +12,14 @@ x-simulator: &simulator
   cap_add:
     - SYS_PTRACE
   pid: "host"
-  command: bash -c "sleep "
+  command: bash -c "webots --batch --sysinfo --log-performance=performance.log ./hlvs_webots/worlds/robocup.wbt"
   volumes:
     - /tmp/.X11-unix:/tmp/.X11-unix:rw
     - /dev/dri:/dev/dri:rw
     - /dev/snd:/dev/snd:rw
-    - ./external/hlvs_webots/worlds:/usr/local/hlvs_webots/worlds:rw
-    - ./external/hlvs_webots/controllers/referee/:/usr/local/hlvs_webots/controllers/referee/:rw
-    - ./external/hlvs_webots/protos/:/usr/local/hlvs_webots/protos/:rw
+    - /home/$USER/catkin_ws/src/soccerbot/external/hlvs_webots/worlds:/usr/local/hlvs_webots/worlds:rw
+    - /home/$USER/catkin_ws/src/soccerbot/external/hlvs_webots/controllers/referee/:/usr/local/hlvs_webots/controllers/referee/:rw
+    - /home/$USER/catkin_ws/src/soccerbot/external/hlvs_webots/protos/:/usr/local/hlvs_webots/protos/:rw
     - /var/run/docker.sock:/var/run/docker.sock
     - /dev:/dev
 

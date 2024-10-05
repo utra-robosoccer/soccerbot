@@ -21,6 +21,7 @@ RUN apt update && apt-fast install -y \
     libprotobuf-dev \
     libjpeg9-dev \
     wget \
+    ant \
     dirmngr \
     gnupg2 \
     lsb-release \
@@ -48,8 +49,7 @@ RUN echo "export WEBOTS_HOME=/usr/local/webots" >> ~/.bashrc
 RUN echo "export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$WEBOTS_HOME/lib/controller"  >> ~/.bashrc
 RUN echo "export PYTHONPATH=$PYTHONPATH:$WEBOTS_HOME/lib/controller/python38"  >> ~/.bashrc
 
-WORKDIR /usr/local
-
+WORKDIR /usr/local/
 
 COPY hlvs_webots hlvs_webots
 RUN cd hlvs_webots/controllers/referee && \
@@ -57,13 +57,10 @@ RUN cd hlvs_webots/controllers/referee && \
     pip3 install -r requirements.txt
 
 COPY GameController GameController
-RUN apt update && apt-fast -y install ant protobuf-compiler libprotobuf-dev && \
-   cd GameController && \
-    ant
+RUN cd GameController && ant
 
 
-RUN apt-fast install -y protobuf-compiler libprotobuf-dev && \
-    cd hlvs_webots && \
+RUN cd hlvs_webots && \
     make clean && \
     make
 
