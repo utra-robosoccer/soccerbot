@@ -4,6 +4,7 @@ from soccer_pycontrol.model.model_ros.bez_ros import BezROS
 from soccer_pycontrol.walk_engine.foot_step_planner import FootStepPlanner
 from soccer_pycontrol.walk_engine.navigator import Navigator
 from soccer_pycontrol.walk_engine.stabilize import Stabilize
+from soccer_pycontrol.walk_engine.stabilize_nav import StabilizeNav
 
 from soccer_common import PID
 
@@ -19,28 +20,8 @@ class NavigatorRos(Navigator):
         self.func_step = self.rate.sleep
 
         self.walk_pid = Stabilize(self.bez.parameters)
-        self.max_vel = 0.09
-        self.nav_x_pid = PID(
-            Kp=0.5,
-            Kd=0,
-            Ki=0,
-            setpoint=0,
-            output_limits=(-self.max_vel, self.max_vel),
-        )
-        self.nav_y_pid = PID(  # TODO properly tune later
-            Kp=0.5,
-            Kd=0,
-            Ki=0,
-            setpoint=0,
-            output_limits=(-0.05, 0.05),
-        )  # TODO could also mod if balance is decreasing
-        self.nav_yaw_pid = PID(
-            Kp=0.2,
-            Kd=0,
-            Ki=0,
-            setpoint=0,
-            output_limits=(-0.3, 0.3),
-        )
+        self.max_vel = 0.07
+        self.nav_pid = StabilizeNav(self.max_vel)
 
         self.error_tol = 0.05  # in m TODO add as a param and in the ros version
         self.position_subscriber = rospy.Subscriber(self.bez.ns + "goal", PoseStamped, self.goal_callback)
