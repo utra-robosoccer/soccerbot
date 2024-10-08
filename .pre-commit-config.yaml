@@ -57,5 +57,5 @@ repos:
 #    rev: ''  # Use the sha / tag you want to point at
 #    hooks:
 #      - id: mypy
-#        exclude: "cmake-build-debug|setup.py|external"
+#        exclude: "cmake-build-debug|setup.py|external|soccer_strategy|soccer_common|soccer_msgs|soccer_localization|soccer_description|soccer_webots|test_integration.py"
 #        args: ["--config-file","pyproject.toml"]
