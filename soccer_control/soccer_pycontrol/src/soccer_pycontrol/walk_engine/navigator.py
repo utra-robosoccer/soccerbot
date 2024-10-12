@@ -270,7 +270,6 @@ class Navigator:
             joints[self.bez.motor_control.motor_names.index(joint)] = self.foot_step_planner.robot.get_joint(joint)
         return joints
 
-    # todo: add function to display tracked data
     def display_walking_metrics(self, show_targets: bool = False) -> None:
         metrics = " ".join(self.walking_data.keys())  # todo: remove if statements, just graph everything
 
@@ -347,7 +346,6 @@ class Navigator:
 
             plt.show()
 
-    # todo: add function to clear data
     def clear_walking_metrics(self, target_data: list = None) -> None:
         """reinitialize walking data"""
         if not target_data:
@@ -355,7 +353,7 @@ class Navigator:
             self.walking_data = defaultdict(list)
             return
         for name in self.walking_data.keys():
-            if "IMU" in target_data and "IMU" in name:
+            if name in target_data:
                 self.walking_data[name] = []
 
     # todo: add function to update stored data
