@@ -96,3 +96,7 @@ https://github.com/dfki-ric/phobos/commit/757d7b58b41240ea4aa54e20ddd1665072e6da
 rosrun xacro xacro -o bez2.urdf bez2.xacro
 
 todo look into xrdp remote desktop
+uv pip install -r tools/setup/requirements.txt --python $(which python) --prefix $(python -m site --user-base)
+
+to compare
+uv pip install -r tools/setup/requirements.txt --python $(which python) --prefix $(python -m site --user-base) --no-cache-dir --force-reinstall
