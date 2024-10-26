@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="VcsDirectoryMappings">
+    <mapping directory="$PROJECT_DIR$/.." vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../external/GameController" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../external/hlvs_webots" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../external/webots" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../external/webots/projects/robots/mobsya/thymio/controllers/thymio2_aseba/aseba" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../external/webots/projects/robots/mobsya/thymio/controllers/thymio2_aseba/aseba/dashel" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../external/webots/projects/robots/mobsya/thymio/controllers/thymio2_aseba/aseba/enki" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../external/webots/projects/robots/mobsya/thymio/libraries/dashel-src" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../external/webots/resources/webots_ros" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../external/webots/src/glm" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../external/webots/src/stb" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/../external/yolov5" vcs="Git" />
+  </component>
+</project>
