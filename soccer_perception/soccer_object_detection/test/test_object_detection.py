@@ -27,7 +27,7 @@ class TestObjectDetection(TestCase):
 
         download_dataset("https://drive.google.com/uc?id=11nN58j8_PBoLNRAzOEdk7fMe1UK1diCc", folder_path=test_path)
 
-        model_path = src_path + "soccer_object_detection/models/half_5.pt"
+        model_path = src_path + "soccer_object_detection/models/yolov8s_detect.pt"
 
         n = ObjectDetectionNode(model_path=model_path)
 
@@ -78,7 +78,7 @@ class TestObjectDetection(TestCase):
 
         download_dataset("https://drive.google.com/uc?id=1UTQ6Rz0yk8jpWwWoq3eSf7DOmG_j9An3", folder_path=test_path)
 
-        model_path = src_path + "soccer_object_detection/models/half_5.pt"
+        model_path = src_path + "soccer_object_detection/models/yolov8s_detect.pt"
 
         n = ObjectDetectionNode(model_path=model_path)
 

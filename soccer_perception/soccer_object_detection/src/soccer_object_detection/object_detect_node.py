@@ -6,6 +6,7 @@ import numpy as np
 import torch
 from cv2 import Mat
 from soccer_object_detection.camera.camera_calculations import CameraCalculations
+from ultralytics import YOLO
 
 from soccer_msgs.msg import BoundingBox, BoundingBoxes
 
@@ -47,10 +48,12 @@ class ObjectDetectionNode:
         self.CONFIDENCE_THRESHOLD = 0.75
         self.cover_horizon_up_threshold = 30
 
-        torch.hub._brvalidate_not_a_forked_repo = (
-            lambda a, b, c: True
-        )  # https://discuss.pytorch.org/t/help-for-http-error-403-rate-limit-exceeded/125907
-        self.model = torch.hub.load("ultralytics/yolov5", "custom", path=model_path)
+        # torch.hub._brvalidate_not_a_forked_repo = (
+        #     lambda a, b, c: True
+        # )  # https://discuss.pytorch.org/t/help-for-http-error-403-rate-limit-exceeded/125907
+        # self.model = torch.hub.load("ultralytics/yolov5", "custom", path=model_path)
+
+        self.model = YOLO(model_path)
 
         # ROS
         if torch.cuda.is_available():
@@ -78,8 +81,10 @@ class ObjectDetectionNode:
             # TODO should be a func
             bbs_msg = BoundingBoxes()
             id = 0
-            for prediction in results.xyxy[0]:
-                x1, y1, x2, y2, confidence, img_class = prediction.cpu().numpy()  # TODO cuda?
+            for prediction in results[0].boxes:
+                x1, y1, x2, y2 = prediction.xyxy[0].cpu().numpy()  # TODO cuda?
+                confidence = float(prediction.conf.cpu().numpy())
+                img_class = int(prediction.cls.cpu().numpy())
                 y1 += h + 1
                 y2 += h + 1
                 if img_class in [label.value for label in Label] and confidence > self.CONFIDENCE_THRESHOLD:
@@ -107,7 +112,7 @@ class ObjectDetectionNode:
                     bbs_msg.bounding_boxes.append(bb_msg)
                     id += 1
 
-            detection_image = np.squeeze(results.render())
+            detection_image = np.squeeze(results[0].plot())
             # TODO needed for cover horizon but that might not be needed
             detection_image = np.concatenate((np.zeros((h + 1, self.camera.camera_info.width, 3), detection_image.dtype), detection_image))
             detection_image = detection_image[..., ::-1]
