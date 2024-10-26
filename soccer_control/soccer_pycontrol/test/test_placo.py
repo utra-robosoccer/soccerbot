@@ -26,7 +26,7 @@ class TestPlaco(unittest.TestCase):
         # walk.ready()
         # self.bez.motor_control.set_motor()
         # walk.wait(50)
-        target_goal = [0.08, 0, 0, 3, 3]
+        target_goal = [0.08, 0, 0, 3, 10]
         # target_goal = Transformation(position=[1, 0, 0], euler=[0, 0, 0])
         print("STARTING WALK")
         walk.walk(target_goal, display_metrics=True)

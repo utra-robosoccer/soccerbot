@@ -52,11 +52,13 @@ class Navigator:
 
         self.error_tol = 0.01  # in m TODO add as a param and in the ros version
 
-        # todo: add np array(s)/matrix to store data
+        # joints
+        self.left_ankle_index = self.bez.motor_control.motor_names.index("left_ankle_roll")
+        self.right_ankle_index = self.bez.motor_control.motor_names.index("right_ankle_roll")
+        # self.torso_index = self.bez.motor_control.body.
+
         self.record_walking_metrics = record_walking_metrics
         self.walking_data = defaultdict(list)
-
-        # todo: call function to setup data
 
     # TODO could make input a vector
     def walk(self, target_goal: Union[Transformation, List], ball_mode: bool = False, display_metrics: bool = False):
@@ -277,6 +279,7 @@ class Navigator:
 
         if "IMU" in metrics:
             fig, (ax_imu0, ax_imu1, ax_imu2) = plt.subplots(3, 1, sharex=True)
+            fig.canvas.set_window_title("imu")
 
             imu_0 = np.array(np.array(self.walking_data["IMU_0"]).transpose())
             ax_imu0.plot(imu_0[0, :], imu_0[1, :])
@@ -310,6 +313,7 @@ class Navigator:
         if "POSITION" in metrics:
             # fig, ax = plt.subplots(3, 1)
             fig = plt.figure(figsize=(5, 7))
+            fig.canvas.set_window_title("position")
             gs = fig.add_gridspec(10, 1)
 
             ax_position = fig.add_subplot(gs[:6])
@@ -346,6 +350,78 @@ class Navigator:
 
             plt.show()
 
+        if "LEFT_FOOT" in metrics and "RIGHT_FOOT" in metrics and "COM" in metrics and "IMU" in metrics:
+            fig = plt.figure()
+            fig.canvas.set_window_title("3d position")
+            gs = fig.add_gridspec(1, 1)
+
+            ax_path = fig.add_subplot(gs[0], projection="3d")
+
+            left = np.array(self.walking_data["LEFT_FOOT"]).T
+            right = np.array(self.walking_data["RIGHT_FOOT"]).T
+            com = np.array(self.walking_data["COM"]).T
+
+            ax_path.plot(left[1, :], left[2, :], left[3, :], label="left foot")
+            ax_path.plot(right[1, :], right[2, :], right[3, :], label="right foot")
+            ax_path.plot(com[1, :], com[2, :], com[3, :], label="centre of mass")
+            # ax_path.plot(com[1, :], com[2, :], np.zeros(com[3, :].shape), label="centre of mass projected")
+            ax_path.set_title("robot stance")
+            ax_path.grid()
+            ax_path.legend()
+
+            plt.show()
+
+            fig = plt.figure()
+            fig.canvas.set_window_title("footprints")
+            gs = fig.add_gridspec(1, 1)
+
+            ax_footprints = fig.add_subplot(gs[0])
+
+            # both feet on the ground
+            ground = 0.025
+            left_grounded_i = np.where(left[3] < ground)[0]
+            right_grounded_i = np.where(right[3] < ground)[0]
+
+            rectangle_width = 0.075
+            rectangle_length = 0.125
+            rectangle_x_offset = 0
+            rectangle_y_offset = 0
+
+            make_rotation = lambda theta, x, y: np.array([[np.cos(theta), -np.sin(theta), x], [np.sin(theta), np.cos(theta), y]])
+            rectangle = np.array(
+                [
+                    [rectangle_x_offset - rectangle_width / 2, rectangle_y_offset + rectangle_length / 2, 1],
+                    [rectangle_x_offset + rectangle_width / 2, rectangle_y_offset + rectangle_length / 2, 1],
+                    [rectangle_x_offset + rectangle_width / 2, rectangle_y_offset - rectangle_length / 2, 1],
+                    [rectangle_x_offset - rectangle_width / 2, rectangle_y_offset - rectangle_length / 2, 1],
+                    [rectangle_x_offset - rectangle_width / 2, rectangle_y_offset + rectangle_length / 2, 1],
+                ]
+            )
+            make_rectangle = lambda theta, x, y: np.array([make_rotation(theta, x, y) @ rectangle[i].T for i in range(5)])
+
+            yaw_data = np.array(self.walking_data["IMU_0"]).T
+
+            left_rectangles = []
+            for i in left_grounded_i:
+                if np.any(np.where(yaw_data[0] == left[0, i])[0]):
+                    left_rectangles.append(make_rectangle(yaw_data[1][np.where(yaw_data[0] == left[0, i])[0][0]], left[1, i], left[2, i]).T)
+
+            right_rectangles = []
+            for i in right_grounded_i:
+                if np.any(np.where(yaw_data[0] == right[0, i])[0]):
+                    right_rectangles.append(make_rectangle(yaw_data[1][np.where(yaw_data[0] == right[0, i])[0][0]], right[1, i], right[2, i]).T)
+
+            for r in left_rectangles:
+                ax_footprints.plot(r[0], r[1])
+            for r in right_rectangles:
+                ax_footprints.plot(r[0], r[1])
+
+            ax_footprints.plot(com[1, :], com[2, :], label="centre of mass")
+
+            ax_footprints.set_aspect("equal")
+
+            plt.show()
+
     def clear_walking_metrics(self, target_data: list = None) -> None:
         """reinitialize walking data"""
         if not target_data:
@@ -369,6 +445,14 @@ class Navigator:
         # position data
         pose = self.bez.sensors.get_pose()
         self.walking_data["POSITION"].append((t, pose.position[0], pose.position[1], pose.orientation_euler[0]))
+
+        # feet and COM data
+        left_foot = self.bez.sensors.get_pose(self.left_ankle_index)  # 13 for left foot joint
+        right_foot = self.bez.sensors.get_pose(self.right_ankle_index)  # 7 for right foot joint
+        com = self.bez.sensors.get_pose(1)  # 1 for torso joint
+        self.walking_data["LEFT_FOOT"].append((t, left_foot.position[0], left_foot.position[1], left_foot.position[2]))
+        self.walking_data["RIGHT_FOOT"].append((t, right_foot.position[0], right_foot.position[1], right_foot.position[2]))
+        self.walking_data["COM"].append((t, com.position[0], com.position[1], com.position[2]))
 
 
 if __name__ == "__main__":
