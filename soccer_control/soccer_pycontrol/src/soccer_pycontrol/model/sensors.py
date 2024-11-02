@@ -81,3 +81,36 @@ class Sensors:
         #     index = np.signbit(np.matmul(left_tr, point[5] - left_center))[0:2]
         #     locations[index[1] + (index[0] * 2) + 4] = True
         return locations
+
+    def get_camera_image(self):
+        """
+        Captures the image from the camera mounted on the robot
+        """
+        robot_position, robot_orientation = pb.getBasePositionAndOrientation(self.body)
+
+        # Add more offsets later
+        camera_position = robot_position
+        camera_target = [robot_position[0] + 1, robot_position[1], robot_position[2]]
+
+        camera_up = [0, 0, 1]
+
+        view_matrix = pb.computeViewMatrix(camera_position, camera_target, camera_up)
+
+        width, height = 1280, 720
+        fov = 60
+        aspect = width / height
+        near = 0.1
+        far = 50
+
+        projection_matrix = pb.computeProjectionMatrixFOV(fov, aspect, near, far)
+
+        images = pb.getCameraImage(width, height, view_matrix, projection_matrix, shadow=False,
+                                   renderer=pb.ER_BULLET_HARDWARE_OPENGL)
+
+        # NOTE: the ordering of height and width change based on the conversion
+        rgb_opengl = np.reshape(images[2], (height, width, 4))[:, :, :3] * 1. / 255.
+        # depth_buffer_opengl = np.reshape(images[3], [width, height])
+        # depth_opengl = far * near / (far - (far - near) * depth_buffer_opengl)
+        # seg_opengl = np.reshape(images[4], [width, height]) * 1. / 255.
+
+        return rgb_opengl
