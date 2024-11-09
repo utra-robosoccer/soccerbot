@@ -106,8 +106,6 @@ void Error_Handler(void);
 #define USART3_DIR_GPIO_Port GPIOB
 #define USART6_DIR_Pin GPIO_PIN_15
 #define USART6_DIR_GPIO_Port GPIOB
-#define USART1_DIR_Pin GPIO_PIN_8
-#define USART1_DIR_GPIO_Port GPIOA
 #define GREEN_LED_Pin GPIO_PIN_15
 #define GREEN_LED_GPIO_Port GPIOA
 #define USART5_DIR_Pin GPIO_PIN_4
