@@ -382,8 +382,8 @@ class Navigator:
             left_grounded_i = np.where(left[3] < ground)[0]
             right_grounded_i = np.where(right[3] < ground)[0]
 
-            rectangle_width = 0.075
-            rectangle_length = 0.125
+            rectangle_width = 0.1
+            rectangle_length = 0.05
             rectangle_x_offset = 0
             rectangle_y_offset = 0
 
