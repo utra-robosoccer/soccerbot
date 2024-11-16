@@ -269,152 +269,147 @@ class Navigator:
         return joints
 
     def display_walking_metrics(self, show_targets: bool = False) -> None:
-        metrics = " ".join(self.walking_data.keys())
+        fig, (ax_imu0, ax_imu1, ax_imu2) = plt.subplots(3, 1, sharex=True)
+        fig.canvas.set_window_title("imu")
 
-        if "IMU" in metrics:
-            fig, (ax_imu0, ax_imu1, ax_imu2) = plt.subplots(3, 1, sharex=True)
-            fig.canvas.set_window_title("imu")
-
-            imu_0 = np.array(np.array(self.walking_data["IMU_0"]).transpose())
-            ax_imu0.plot(imu_0[0, :], imu_0[1, :])
-            if show_targets:
-                ax_imu0.plot(
-                    imu_0[0, :],
-                    np.ones(imu_0[0, :].shape) * self.nav_yaw_pid.setpoint,
-                    linewidth=0.5,
-                    color="r",
-                    label=f"target yaw ({self.nav_yaw_pid.setpoint})",
-                )
-            ax_imu0.set_title("yaw")
-            ax_imu0.grid()
-
-            imu_1 = np.array(np.array(self.walking_data["IMU_1"]).transpose())
-            ax_imu1.plot(imu_1[0, :], imu_1[1, :])
-            ax_imu1.plot(imu_1[0, :], np.zeros(imu_1[0, :].shape), linewidth=0.5, color="r", label=f"target pitch ({0.0})")
-            ax_imu1.set_title("pitch")
-            ax_imu1.grid()
-
-            imu_2 = np.array(np.array(self.walking_data["IMU_2"]).transpose())
-            ax_imu2.plot(imu_2[0, :], imu_2[1, :])
-            ax_imu2.plot(imu_2[0, :], np.zeros(imu_2[0, :].shape), linewidth=0.5, color="r", label=f"target roll ({0.0})")
-            ax_imu2.set_title("roll")
-            ax_imu2.grid()
-
-            plt.subplots_adjust(wspace=0.3, hspace=0.5)
-
-            plt.show()
-
-        if "POSITION" in metrics:
-            # fig, ax = plt.subplots(3, 1)
-            fig = plt.figure(figsize=(5, 7))
-            fig.canvas.set_window_title("position")
-            gs = fig.add_gridspec(10, 1)
-
-            ax_position = fig.add_subplot(gs[:6])
-            ax_pos_err = fig.add_subplot(gs[7])
-            ax_yaw_err = fig.add_subplot(gs[9])
-
-            target_x = 0 if not show_targets else self.nav_x_pid.setpoint
-            target_y = 0 if not show_targets else self.nav_y_pid.setpoint
-            target_yaw = 0 if not show_targets else self.nav_yaw_pid.setpoint
-
-            position = np.array(self.walking_data["POSITION"]).transpose()
-            ax_position.plot(position[1, :], position[2, :])
-            ax_position.plot(position[1, 0], position[2, 0], "yo", label="start point")
-            ax_position.plot(position[1, -1], position[2, -1], "go", label="end point")
-            if show_targets:
-                ax_position.plot(self.nav_x_pid.setpoint, self.nav_y_pid.setpoint, "ro", label="target point")
-            ax_position.set_title("position")
-            ax_position.set_xlabel("x")
-            ax_position.set_ylabel("y")
-            ax_position.grid()
-            ax_position.legend()
-
-            if show_targets:
-                ax_pos_err.plot(position[0, :], np.linalg.norm(position[1:3, :].transpose() - np.array([target_x, target_y]), axis=1))
-                ax_pos_err.plot(position[0, :], np.zeros(position[0, :].shape), linewidth=0.5, color="r")
-                ax_pos_err.set_title("position error")
-                ax_pos_err.set_ylabel("euclidean distance")
-                ax_pos_err.grid()
-
-                ax_yaw_err.plot(position[0, :], position[3, :] - target_yaw)
-                ax_yaw_err.plot(position[0, :], np.zeros(position[0, :].shape), linewidth=0.5, color="r")
-                ax_yaw_err.set_title("orientation error")
-                ax_yaw_err.grid()
-
-            plt.show()
-
-        if "LEFT_FOOT" in metrics and "RIGHT_FOOT" in metrics and "COM" in metrics and "IMU" in metrics:
-            fig = plt.figure()
-            fig.canvas.set_window_title("3d position")
-            gs = fig.add_gridspec(1, 1)
-
-            ax_path = fig.add_subplot(gs[0], projection="3d")
-
-            left = np.array(self.walking_data["LEFT_FOOT"]).T
-            right = np.array(self.walking_data["RIGHT_FOOT"]).T
-            com = np.array(self.walking_data["COM"]).T
-
-            ax_path.plot(left[1, :], left[2, :], left[3, :], label="left foot")
-            ax_path.plot(right[1, :], right[2, :], right[3, :], label="right foot")
-            ax_path.plot(com[1, :], com[2, :], com[3, :], label="centre of mass")
-            # ax_path.plot(com[1, :], com[2, :], np.zeros(com[3, :].shape), label="centre of mass projected")
-            ax_path.set_title("robot stance")
-            ax_path.grid()
-            ax_path.legend()
-
-            plt.show()
-
-            fig = plt.figure()
-            fig.canvas.set_window_title("footprints")
-            gs = fig.add_gridspec(1, 1)
-
-            ax_footprints = fig.add_subplot(gs[0])
-
-            # both feet on the ground
-            ground = 0.025
-            left_grounded_i = np.where(left[3] < ground)[0]
-            right_grounded_i = np.where(right[3] < ground)[0]
-
-            rectangle_width = 0.1
-            rectangle_length = 0.05
-            rectangle_x_offset = 0
-            rectangle_y_offset = 0
-
-            make_rotation = lambda theta, x, y: np.array([[np.cos(theta), -np.sin(theta), x], [np.sin(theta), np.cos(theta), y]])
-            rectangle = np.array(
-                [
-                    [rectangle_x_offset - rectangle_width / 2, rectangle_y_offset + rectangle_length / 2, 1],
-                    [rectangle_x_offset + rectangle_width / 2, rectangle_y_offset + rectangle_length / 2, 1],
-                    [rectangle_x_offset + rectangle_width / 2, rectangle_y_offset - rectangle_length / 2, 1],
-                    [rectangle_x_offset - rectangle_width / 2, rectangle_y_offset - rectangle_length / 2, 1],
-                    [rectangle_x_offset - rectangle_width / 2, rectangle_y_offset + rectangle_length / 2, 1],
-                ]
+        imu_0 = np.array(np.array(self.walking_data["IMU_0"]).transpose())
+        ax_imu0.plot(imu_0[0, :], imu_0[1, :])
+        if show_targets:
+            ax_imu0.plot(
+                imu_0[0, :],
+                np.ones(imu_0[0, :].shape) * self.nav_yaw_pid.setpoint,
+                linewidth=0.5,
+                color="r",
+                label=f"target yaw ({self.nav_yaw_pid.setpoint})",
             )
-            make_rectangle = lambda theta, x, y: np.array([make_rotation(theta, x, y) @ rectangle[i].T for i in range(5)])
+        ax_imu0.set_title("yaw")
+        ax_imu0.grid()
 
-            yaw_data = np.array(self.walking_data["IMU_0"]).T
+        imu_1 = np.array(np.array(self.walking_data["IMU_1"]).transpose())
+        ax_imu1.plot(imu_1[0, :], imu_1[1, :])
+        ax_imu1.plot(imu_1[0, :], np.zeros(imu_1[0, :].shape), linewidth=0.5, color="r", label=f"target pitch ({0.0})")
+        ax_imu1.set_title("pitch")
+        ax_imu1.grid()
 
-            left_rectangles = []
-            for i in left_grounded_i:
-                if np.any(np.where(yaw_data[0] == left[0, i])[0]):
-                    left_rectangles.append(make_rectangle(yaw_data[1][np.where(yaw_data[0] == left[0, i])[0][0]], left[1, i], left[2, i]).T)
+        imu_2 = np.array(np.array(self.walking_data["IMU_2"]).transpose())
+        ax_imu2.plot(imu_2[0, :], imu_2[1, :])
+        ax_imu2.plot(imu_2[0, :], np.zeros(imu_2[0, :].shape), linewidth=0.5, color="r", label=f"target roll ({0.0})")
+        ax_imu2.set_title("roll")
+        ax_imu2.grid()
 
-            right_rectangles = []
-            for i in right_grounded_i:
-                if np.any(np.where(yaw_data[0] == right[0, i])[0]):
-                    right_rectangles.append(make_rectangle(yaw_data[1][np.where(yaw_data[0] == right[0, i])[0][0]], right[1, i], right[2, i]).T)
+        plt.subplots_adjust(wspace=0.3, hspace=0.5)
 
-            for r in left_rectangles:
-                ax_footprints.plot(r[0], r[1])
-            for r in right_rectangles:
-                ax_footprints.plot(r[0], r[1])
+        plt.show()
 
-            ax_footprints.plot(com[1, :], com[2, :], label="centre of mass")
+        # fig, ax = plt.subplots(3, 1)
+        fig = plt.figure(figsize=(5, 7))
+        fig.canvas.set_window_title("position")
+        gs = fig.add_gridspec(10, 1)
 
-            ax_footprints.set_aspect("equal")
+        ax_position = fig.add_subplot(gs[:6])
+        ax_pos_err = fig.add_subplot(gs[7])
+        ax_yaw_err = fig.add_subplot(gs[9])
 
-            plt.show()
+        target_x = 0 if not show_targets else self.nav_x_pid.setpoint
+        target_y = 0 if not show_targets else self.nav_y_pid.setpoint
+        target_yaw = 0 if not show_targets else self.nav_yaw_pid.setpoint
+
+        position = np.array(self.walking_data["POSITION"]).transpose()
+        ax_position.plot(position[1, :], position[2, :])
+        ax_position.plot(position[1, 0], position[2, 0], "yo", label="start point")
+        ax_position.plot(position[1, -1], position[2, -1], "go", label="end point")
+        if show_targets:
+            ax_position.plot(self.nav_x_pid.setpoint, self.nav_y_pid.setpoint, "ro", label="target point")
+        ax_position.set_title("position")
+        ax_position.set_xlabel("x")
+        ax_position.set_ylabel("y")
+        ax_position.grid()
+        ax_position.legend()
+
+        if show_targets:
+            ax_pos_err.plot(position[0, :], np.linalg.norm(position[1:3, :].transpose() - np.array([target_x, target_y]), axis=1))
+            ax_pos_err.plot(position[0, :], np.zeros(position[0, :].shape), linewidth=0.5, color="r")
+            ax_pos_err.set_title("position error")
+            ax_pos_err.set_ylabel("euclidean distance")
+            ax_pos_err.grid()
+
+            ax_yaw_err.plot(position[0, :], position[3, :] - target_yaw)
+            ax_yaw_err.plot(position[0, :], np.zeros(position[0, :].shape), linewidth=0.5, color="r")
+            ax_yaw_err.set_title("orientation error")
+            ax_yaw_err.grid()
+
+        plt.show()
+
+        fig = plt.figure()
+        fig.canvas.set_window_title("3d position")
+        gs = fig.add_gridspec(1, 1)
+
+        ax_path = fig.add_subplot(gs[0], projection="3d")
+
+        left = np.array(self.walking_data["LEFT_FOOT"]).T
+        right = np.array(self.walking_data["RIGHT_FOOT"]).T
+        com = np.array(self.walking_data["COM"]).T
+
+        ax_path.plot(left[1, :], left[2, :], left[3, :], label="left foot")
+        ax_path.plot(right[1, :], right[2, :], right[3, :], label="right foot")
+        ax_path.plot(com[1, :], com[2, :], com[3, :], label="centre of mass")
+        # ax_path.plot(com[1, :], com[2, :], np.zeros(com[3, :].shape), label="centre of mass projected")
+        ax_path.set_title("robot stance")
+        ax_path.grid()
+        ax_path.legend()
+
+        plt.show()
+
+        fig = plt.figure()
+        fig.canvas.set_window_title("footprints")
+        gs = fig.add_gridspec(1, 1)
+
+        ax_footprints = fig.add_subplot(gs[0])
+
+        # both feet on the ground
+        ground = 0.025
+        left_grounded_i = np.where(left[3] < ground)[0]
+        right_grounded_i = np.where(right[3] < ground)[0]
+
+        rectangle_width = 0.1
+        rectangle_length = 0.05
+        rectangle_x_offset = 0
+        rectangle_y_offset = 0
+
+        make_rotation = lambda theta, x, y: np.array([[np.cos(theta), -np.sin(theta), x], [np.sin(theta), np.cos(theta), y]])
+        rectangle = np.array(
+            [
+                [rectangle_x_offset - rectangle_width / 2, rectangle_y_offset + rectangle_length / 2, 1],
+                [rectangle_x_offset + rectangle_width / 2, rectangle_y_offset + rectangle_length / 2, 1],
+                [rectangle_x_offset + rectangle_width / 2, rectangle_y_offset - rectangle_length / 2, 1],
+                [rectangle_x_offset - rectangle_width / 2, rectangle_y_offset - rectangle_length / 2, 1],
+                [rectangle_x_offset - rectangle_width / 2, rectangle_y_offset + rectangle_length / 2, 1],
+            ]
+        )
+        make_rectangle = lambda theta, x, y: np.array([make_rotation(theta, x, y) @ rectangle[i].T for i in range(5)])
+
+        yaw_data = np.array(self.walking_data["IMU_0"]).T
+
+        left_rectangles = []
+        for i in left_grounded_i:
+            if np.any(np.where(yaw_data[0] == left[0, i])[0]):
+                left_rectangles.append(make_rectangle(yaw_data[1][np.where(yaw_data[0] == left[0, i])[0][0]], left[1, i], left[2, i]).T)
+
+        right_rectangles = []
+        for i in right_grounded_i:
+            if np.any(np.where(yaw_data[0] == right[0, i])[0]):
+                right_rectangles.append(make_rectangle(yaw_data[1][np.where(yaw_data[0] == right[0, i])[0][0]], right[1, i], right[2, i]).T)
+
+        for r in left_rectangles:
+            ax_footprints.plot(r[0], r[1])
+        for r in right_rectangles:
+            ax_footprints.plot(r[0], r[1])
+
+        ax_footprints.plot(com[1, :], com[2, :], label="centre of mass")
+
+        ax_footprints.set_aspect("equal")
+
+        plt.show()
 
     def clear_walking_metrics(self, target_data: list = None) -> None:
         """reinitialize walking data"""
