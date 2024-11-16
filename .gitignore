@@ -34,3 +34,6 @@ venv/
 .mypy_cache/
 cuda-ubuntu2004.pin.1
 *.webm
+
+# vscode
+.vscode/*
