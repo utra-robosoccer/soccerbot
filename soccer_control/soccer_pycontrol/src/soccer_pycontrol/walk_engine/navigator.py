@@ -16,9 +16,7 @@ from soccer_common import PID, Transformation
 
 # TODO change to trajectory controller
 class Navigator:
-    def __init__(
-        self, world: PybulletWorld, bez: Bez, imu_feedback_enabled: bool = False, record_walking_metrics: bool = True
-    ):  # todo: add display option
+    def __init__(self, world: PybulletWorld, bez: Bez, imu_feedback_enabled: bool = False, record_walking_metrics: bool = True):
         self.world = world
         self.bez = bez
         self.imu_feedback_enabled = imu_feedback_enabled
@@ -184,8 +182,6 @@ class Navigator:
             print(round(dx, 3), " ", round(dy, 3), " ", round(dtheta, 3), " ", round(x_error, 3), " ", round(y_error, 3), " ", round(head_error, 3))
             self.foot_step_planner.configure_planner(dx, dy, dtheta)
 
-            # todo: get sensor data, etc. and store in matrix
-
             t = self.walk_loop(t)
 
     def walk_time(self, target_goal: list):
@@ -273,9 +269,7 @@ class Navigator:
         return joints
 
     def display_walking_metrics(self, show_targets: bool = False) -> None:
-        metrics = " ".join(self.walking_data.keys())  # todo: remove if statements, just graph everything
-
-        show_targets = True  # for testing!!!
+        metrics = " ".join(self.walking_data.keys())
 
         if "IMU" in metrics:
             fig, (ax_imu0, ax_imu1, ax_imu2) = plt.subplots(3, 1, sharex=True)
@@ -432,7 +426,6 @@ class Navigator:
             if name in target_data:
                 self.walking_data[name] = []
 
-    # todo: add function to update stored data
     def update_walking_metrics(self, t: float) -> None:
         """update stored data for time t"""
 

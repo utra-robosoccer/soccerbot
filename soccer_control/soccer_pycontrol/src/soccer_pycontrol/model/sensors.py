@@ -19,10 +19,6 @@ class Sensors:
         self.imu_ready = False
         self.get_imu()  # to init
 
-        # joint_names = [pb.getJointInfo(self.body, i)[1].decode("utf-8") for i in range(pb.getNumJoints(self.body))]
-        # print(f"JOINT NAMES")
-        # print(joint_names)
-
     def get_pose(self, link=None) -> Transformation:
         """
         Get the 3D pose of the robot
