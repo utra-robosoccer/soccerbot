@@ -12,8 +12,9 @@ from soccer_common import PID
 
 
 class NavigatorRos(Navigator):
-    def __init__(self, bez: BezROS, imu_feedback_enabled: bool = False):
+    def __init__(self, bez: BezROS, imu_feedback_enabled: bool = False, record_walking_metrics: bool = False):
         self.imu_feedback_enabled = imu_feedback_enabled
+        self.record_walking_metrics = record_walking_metrics
         self.bez = bez
 
         self.foot_step_planner = FootStepPlanner(self.bez.robot_model, self.bez.parameters, rospy.get_time)
