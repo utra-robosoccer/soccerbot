@@ -6,7 +6,7 @@ from soccer_pycontrol.walk_engine.navigator import Navigator
 
 from soccer_common import Transformation
 
-REAL_TIME = True
+REAL_TIME = False
 
 
 class TestPlaco(unittest.TestCase):
@@ -22,13 +22,14 @@ class TestPlaco(unittest.TestCase):
             rate=200,
         )
         self.bez = Bez(robot_model="bez1", pose=Transformation())
-        walk = Navigator(self.world, self.bez)
+        walk = Navigator(self.world, self.bez, imu_feedback_enabled=True)
         # walk.ready()
         # self.bez.motor_control.set_motor()
         # walk.wait(50)
-        target_goal = [0.08, 0, 0, 3, 500]
+        target_goal = [0.08, 0, 0, 3, 10]
         # target_goal = Transformation(position=[1, 0, 0], euler=[0, 0, 0])
-        walk.walk(target_goal)
+        print("STARTING WALK")
+        walk.walk(target_goal, display_metrics=True)
         # walk.wait(1000)
 
     # TODO fix
