@@ -255,16 +255,20 @@ int main(void)
   MX_I2C2_Init();
   /* USER CODE BEGIN 2 */
 
-  char myText[] = "Robosoccer";
+//  char myText[] = "Robosoccer";
   char retVal;
+  uint32_t lastTime;
+  uint32_t startTime;
+  uint32_t time;
+  char myText[50];
 
   ssd1306_Init();
-//  ssd1306_Fill(0x01);
+////  ssd1306_Fill(0x01);
 
 
   ssd1306_SetCursor(5,5);
-  retVal = ssd1306_WriteString(myText, Font_7x10, 0x01);
-  ssd1306_UpdateScreen();
+//  retVal = ssd1306_WriteString(myText, Font_7x10, 0x01);
+//  ssd1306_UpdateScreen();
 
   // give some time for motors to power on and initialize, before we try to talk to them
 
@@ -287,6 +291,23 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  startTime = HAL_GetTick();
+
+	  HAL_Delay(1000);
+
+	  lastTime = HAL_GetTick();
+
+	  time = lastTime - startTime;
+
+	  memset(myText, '\0', sizeof(myText));  // Clear the array (set all elements to '\0')
+	  sprintf(myText, "%d", time);  // Format lastTime into myText
+
+	  ssd1306_Fill(0x00);
+	  ssd1306_SetCursor(5,5);
+	  retVal = ssd1306_WriteString(myText, Font_7x10, 0x01);
+	  ssd1306_UpdateScreen();
+
+
 
 
 //      update();
