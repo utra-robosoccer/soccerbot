@@ -16,6 +16,7 @@ services:
       service: simulator
 
   soccerbot_no_cuda:
+    image: utrarobosoccer/soccerbot:no_cuda
     network_mode: host
     extends:
       file: tools/docker/compose.autonomy.yaml

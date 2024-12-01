@@ -82,7 +82,7 @@ class FootStepPlanner:
         shoulder_roll = 0 * np.pi / 180
         shoulder_pitch = -0.45  # 20 * np.pi / 180
         joints_task = self.solver.add_joints_task()
-        if self.robot_model == "bez2":
+        if self.robot_model == "bez2" or self.robot_model == "assembly":
             joints_task.set_joints(
                 {
                     "left_shoulder_roll": shoulder_roll,

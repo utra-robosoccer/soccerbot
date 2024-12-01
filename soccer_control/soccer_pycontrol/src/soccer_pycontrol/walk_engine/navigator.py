@@ -13,7 +13,7 @@ from soccer_pycontrol.walk_engine.stabilize import Stabilize
 
 from soccer_common import PID, Transformation
 
-
+# TODO could make it more modular by passing in pybullet stuff or have it at one layer higher so we can reuse code
 # TODO change to trajectory controller
 class Navigator:
     def __init__(self, world: PybulletWorld, bez: Bez, imu_feedback_enabled: bool = False, record_walking_metrics: bool = True):
@@ -68,8 +68,8 @@ class Navigator:
         elif isinstance(target_goal, list):  # [d_x: float = 0.0, d_y: float = 0.0, d_theta: float = 0.0, nb_steps: int = 10, t_goal: float = 10]
             self.walk_time(target_goal)
 
-        if self.record_walking_metrics and display_metrics:
-            self.display_walking_metrics(show_targets=isinstance(target_goal, Transformation))
+        # if self.record_walking_metrics and display_metrics:
+        #     self.display_walking_metrics(show_targets=isinstance(target_goal, Transformation))
         self.ready()
 
     def find_new_vel(self, goal_loc: list, curr_loc: list = (0, 0)):
@@ -116,6 +116,9 @@ class Navigator:
             pose = (
                 self.bez.sensors.get_pose()
             )  # self.foot_step_planner.robot.get_T_world_trunk()  # can use self.foot_step_planner.trajectory.get_p_world_CoM(t)
+
+            # TODO should be broken up and a unit test
+            print(self.foot_step_planner.robot.com_world())
             goal = Transformation()
             goal.rotation_matrix = np.matmul(target_goal.rotation_matrix, scipy.linalg.inv(pose.rotation_matrix))
             goal.position = pose.rotation_matrix.T @ target_goal.position - pose.rotation_matrix.T @ pose.position
@@ -215,8 +218,8 @@ class Navigator:
         # self.foot_step_planner.robot.set_T_world_fbase(T)
         # self.foot_step_planner.robot.update_kinematics()
 
-        if self.record_walking_metrics:
-            self.update_walking_metrics(t)
+        # if self.record_walking_metrics:
+        #     self.update_walking_metrics(t)
 
         return t
 

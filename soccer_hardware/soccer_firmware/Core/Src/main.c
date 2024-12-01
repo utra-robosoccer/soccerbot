@@ -167,7 +167,7 @@ void init_ports() {
       .dirPinNum      = USART6_DIR_Pin,
       .dmaDoneReading = false,
       .numMotors      = 3,
-      .motorIds       = {13, 14, 15}, // right leg
+      .motorIds       = { 13, 14, 15}, // right leg
       .protocol       = {2, 2, 2}
     };
 
