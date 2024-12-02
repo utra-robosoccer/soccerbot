@@ -1,5 +1,6 @@
 import time
 from os.path import expanduser
+from typing import List
 
 import pybullet as pb
 from soccer_pycontrol.pybullet_usage.pybullet_world import PybulletWorld
@@ -38,11 +39,23 @@ class PybulletSetup:
             baseOrientation=pose.quaternion,
         )
 
-        self.motor_names = [pb.getJointInfo(self.body, i)[1].decode("utf-8") for i in range(20)]
+        self.motor_names = self.find_motor_names()
+
+        self.numb_of_motors = len(self.motor_names)
         self.max_forces = []
 
-        for i in range(0, 20):
+        for i in range(0, self.numb_of_motors):
             self.max_forces.append(pb.getJointInfo(self.body, i)[10] or 6)  # TODO why is this acting so weird
+
+    def find_motor_names(self) -> List[str]:
+
+        names = []
+        for i in range(pb.getNumJoints(self.body)):
+            joint_info = pb.getJointInfo(self.body, i)
+            if joint_info[2] == pb.JOINT_REVOLUTE:
+                names.append(joint_info[1].decode("utf-8"))
+
+        return names
 
     def wait(self, steps) -> None:
         """
@@ -62,7 +75,7 @@ class PybulletSetup:
         pb.setJointMotorControlArray(
             bodyIndex=self.body,
             controlMode=pb.POSITION_CONTROL,
-            jointIndices=list(range(0, 20, 1)),
+            jointIndices=list(range(0, self.numb_of_motors, 1)),
             targetPositions=target,
             forces=self.max_forces,
         )

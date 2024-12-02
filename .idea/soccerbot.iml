@@ -7,6 +7,10 @@
       <sourceFolder url="file://$MODULE_DIR$/soccer_strategy/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/soccer_control/soccer_trajectories/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/soccer_common/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/soccer_perception/soccer_localization/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/soccer_perception/soccer_object_detection/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/soccer_perception/soccer_object_localization/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/soccer_webots/src" isTestSource="false" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

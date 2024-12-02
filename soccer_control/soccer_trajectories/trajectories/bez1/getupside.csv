@@ -15,5 +15,5 @@ right_shoulder_pitch,0,-1.5708
 left_shoulder_pitch,0,-1.5708
 right_elbow,0,0
 left_elbow,0,0
-head_motor_0,0,0
-head_motor_1,0,0
+head_yaw,0,0
+head_pitch,0,0

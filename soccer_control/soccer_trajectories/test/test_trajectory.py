@@ -31,19 +31,19 @@ class TestTrajectory(unittest.TestCase):
             "right_hip_roll",
             "left_hip_roll",
             "right_hip_pitch",
-            "left_leg_motor_2",
+            "left_hip_pitch",
             "right_knee",
-            "left_leg_motor_3",
+            "left_knee",
             "right_ankle_pitch",
-            "left_leg_motor_4",
+            "left_ankle_pitch",
             "right_ankle_roll",
-            "left_leg_motor_5",
-            "right_arm_motor_0",
-            "left_arm_motor_0",
-            "right_arm_motor_1",
-            "left_arm_motor_1",
-            "head_motor_0",
-            "head_motor_1",
+            "left_ankle_roll",
+            "right_shoulder_pitch",
+            "left_shoulder_pitch",
+            "right_shoulder_roll",
+            "left_shoulder_roll",
+            "head_yaw",
+            "head_pitch",
         ]
         joint_state.position = [0.0] * 18
 
@@ -52,7 +52,7 @@ class TestTrajectory(unittest.TestCase):
         self.assertEqual(angles, [0.0, 0.0, 0.0, 0.0, 0.564, 0.564, -1.176, -1.176, 0.613, 0.613, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
 
 
-@pytest.mark.parametrize("trajectory_name", ["rightkick_2"])  # , "getupback_full", "rightkick", "getupfront"])
+@pytest.mark.parametrize("trajectory_name", ["getupfront"])  # , "getupback_full", "rightkick", "getupfront"])
 @pytest.mark.parametrize("robot_model", ["assembly"])
 @pytest.mark.parametrize("real_time", [True])
 def test_trajectory_sim(trajectory_name: str, robot_model: str, real_time: bool):
@@ -64,7 +64,7 @@ def test_trajectory_sim(trajectory_name: str, robot_model: str, real_time: bool)
     if trajectory_name == "getupfront":
         pose = Transformation(position=[0, 0, 0.070], euler=[0, 1.57, 0])
         camera = 0
-    elif trajectory_name == "getupback_full" or trajectory_name == "getupback_roll" or trajectory_name == "getupback":
+    elif "getupback" in trajectory_name:
         pose = Transformation(position=[0, 0, 0.070], euler=[0, -1.57, 0])
         camera = 0
     else:
