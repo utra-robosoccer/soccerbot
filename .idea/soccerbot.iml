@@ -6,6 +6,7 @@
       <sourceFolder url="file://$MODULE_DIR$/soccer_hardware/soccer_firmware_interface/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/soccer_strategy/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/soccer_control/soccer_trajectories/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/soccer_common/src" isTestSource="false" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

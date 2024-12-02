@@ -18,7 +18,8 @@
   </material>
   <link name="trunk">
     <inertial>
-      <origin rpy="0 0 0" xyz="-0.02024929347181477 0.00329389202927954 -0.02671963219571571"/>
+      <origin rpy="0 0 0" xyz="-0.1324929347181477 0.00329389202927954 -0.02671963219571571"/> <!-- cant decide between -0.14 -0.13 -0.12-->
+
       <mass value="1.4429325287174738"/>
       <inertia ixx="0.009761" ixy="7.9e-05" ixz="-0.000195" iyy="0.006663" iyz="8.1e-05" izz="0.008082"/>
     </inertial>
@@ -521,7 +522,7 @@
     <limit effort="6.0" lower="-0.7853981633974483" upper="1.5707963267948966" velocity="6.6"/>
   </joint>
   <joint name="left_ankle_roll" type="revolute">
-    <origin rpy="0 0 0" xyz="0 -0.025 0 "/>
+    <origin rpy="0 0 0" xyz="-0.0663 -0.0235 -0.036"/>
     <parent link="left_ankle"/>
     <child link="left_foot"/>
     <axis xyz="1.0 -0.0 0.0"/>
@@ -595,7 +596,7 @@
     <limit effort="6.0" lower="-0.7853981633974483" upper="1.5707963267948966" velocity="6.6"/>
   </joint>
   <joint name="right_ankle_roll" type="revolute">
-    <origin rpy="0 0 0" xyz=" 0 0.025 0 "/>
+    <origin rpy="0 0 0" xyz="-0.0663 0.0235 -0.036"/>
     <parent link="right_ankle"/>
     <child link="right_foot"/>
     <axis xyz="-1.0 -0.0 0.0"/>
