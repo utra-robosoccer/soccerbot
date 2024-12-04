@@ -5,7 +5,7 @@ from soccer_strategy.behavior import Behavior
 
 class Balance(Behavior):
     def action(self) -> None:
-        self.bez.status = BezStatusEnum.BALANCE
+        self.bez.status = BezStatusEnum.FALLEN
 
     def run_algorithim(self) -> None:
         pass

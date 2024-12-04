@@ -64,8 +64,8 @@ class ObjectDetectionNode:
 
         # cover horizon to help robot ignore things outside field
         # TODO do we need a cover horizon?
-        h = max(self.camera.calculate_horizon_cover_area() - self.cover_horizon_up_threshold, 0)
-        # h = 0
+        # h = max(self.camera.calculate_horizon_cover_area() - self.cover_horizon_up_threshold, 0)
+        h = 0
         if image is not None:
             # 1. preprocess image
             img = image[:, :, :3]  # get rid of alpha channel

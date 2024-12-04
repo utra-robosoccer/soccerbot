@@ -30,7 +30,8 @@ class TestPlaco(unittest.TestCase):
         # target_goal = Transformation(position=[1, 0, 0], euler=[0, 0, 0])
         print("STARTING WALK")
         walk.walk(target_goal, display_metrics=False)
-        # walk.wait(1000)
+
+        walk.wait(1000)
 
     # TODO fix
     def test_bez2(self):

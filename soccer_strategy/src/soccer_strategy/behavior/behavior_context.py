@@ -1,5 +1,12 @@
 from __future__ import annotations
 
+from os.path import expanduser
+
+from soccer_object_detection.object_detect_node import ObjectDetectionNode
+from soccer_pycontrol.model.bez import Bez
+from soccer_pycontrol.pybullet_usage.pybullet_world import PybulletWorld
+from soccer_pycontrol.walk_engine.navigator import Navigator
+
 from soccer_strategy.behavior import Behavior
 from soccer_strategy.behavior.state.balance import Balance
 
@@ -17,7 +24,12 @@ class BehaviorContext:
     A reference to the current state of the BehaviorContext.
     """
 
-    def __init__(self, sim: bool = True) -> None:
+    def __init__(self, world: PybulletWorld, bez: Bez, nav: Navigator, detect: ObjectDetectionNode, sim: bool = True) -> None:
+        self.world = world
+        self.bez = bez
+        self.nav = nav
+        self.detect = detect
+
         self.sim = sim  # TODO clean up
         self.transition_to(Balance())  # Has to be last. setting context for current state
 

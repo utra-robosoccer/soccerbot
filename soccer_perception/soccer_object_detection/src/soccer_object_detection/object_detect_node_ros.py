@@ -92,7 +92,7 @@ class ObjectDetectionNodeRos(ObjectDetectionNode):
             for box in bbs_msg.bounding_boxes:
                 if box.Class == "0":
                     boundingBoxes = [[box.xmin, box.ymin], [box.xmax, box.ymax]]
-                    ball_pose = self.camera.calculate_ball_from_bounding_boxes(0.07, boundingBoxes)
+                    ball_pose = self.camera.calculate_ball_from_bounding_boxes(boundingBoxes)
                     self.br2.sendTransform(
                         ball_pose.position,
                         ball_pose.quaternion,

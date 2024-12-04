@@ -3,9 +3,9 @@ from soccer_pycontrol.model.bez import BezStatusEnum
 from soccer_strategy.behavior import Behavior
 
 
-class Balance(Behavior):
+class Walk(Behavior):
     def action(self) -> None:
-        self.bez.status = BezStatusEnum.BALANCE
+        self.bez.status = BezStatusEnum.WALK
 
     def run_algorithim(self) -> None:
         pass

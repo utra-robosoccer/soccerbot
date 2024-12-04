@@ -13,6 +13,7 @@ from soccer_pycontrol.walk_engine.stabilize import Stabilize
 
 from soccer_common import PID, Transformation
 
+
 # TODO could make it more modular by passing in pybullet stuff or have it at one layer higher so we can reuse code
 # TODO change to trajectory controller
 class Navigator:
@@ -142,7 +143,7 @@ class Navigator:
             #     dx, dy = self.find_new_vel(goal_loc=target_goal.position[:2], curr_loc=position[:2])
             #     self.foot_step_planner.configure_planner(dx, dy)
 
-            t = self.walk_loop(t)
+            t = self.walk_loop(t)  # TODO move main loop out of here
 
     def walk_ball(self, target_goal: Transformation):
         self.walk_pid.reset_imus()
@@ -192,13 +193,13 @@ class Navigator:
         self.walk_pid.reset_imus()
         t = 0
         while t < target_goal[4]:
-            # self.foot_step_planner.head_movement(self.bez.sensors.get_ball().position)
+            # self.foot_step_planner.head_movement([1,1,0])#self.bez.sensors.get_ball().position)
             t = self.walk_loop(t)
 
     def walk_loop(self, t: float):
         self.foot_step_planner.plan_steps(t)
         self.bez.motor_control.configuration = self.filter_joints()
-
+        # self.foot_step_planner.head_movement([1, 1, 0])
         if self.imu_feedback_enabled and self.bez.sensors.imu_ready:
             [_, pitch, roll] = self.bez.sensors.get_imu()
             self.stabilize_walk(pitch, roll)

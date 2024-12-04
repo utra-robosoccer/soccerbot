@@ -110,10 +110,8 @@ class FootStepPlanner:
             )
         joints_task.configure("joints", "soft", 1.0)
 
-        # self.look_at_ball = self.solver.add_axisalign_task(
-        #     "camera", np.array([1.0, 0.0, 0.0]), np.array([1.0, 0.0, 0.0])
-        # )
-        # self.look_at_ball.configure("look_ball", "soft", 1)
+        self.look_at_ball = self.solver.add_axisalign_task("camera", np.array([1.0, 0.0, 0.0]), np.array([1.0, 0.0, 0.0]))
+        self.look_at_ball.configure("look_ball", "soft", 1)
 
         # Placing the robot in the initial position
         print("Placing the robot in the initial position...")

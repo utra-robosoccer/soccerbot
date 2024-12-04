@@ -68,9 +68,9 @@ class TestCamera(TestCase):
                     ball_pose = Transformation(position)
                     ball_radius = 0.07
 
-                    bounding_boxes = c.calculate_bounding_boxes_from_ball(ball_pose, ball_radius)
+                    bounding_boxes = c.calculate_bounding_boxes_from_ball(ball_pose, ball_radius)  # TODO fix return format
                     # [[135.87634651355825, 75.87634651355823], [224.12365348644175, 164.12365348644175]]
-                    position = c.calculate_ball_from_bounding_boxes(ball_radius, bounding_boxes)
+                    position = c.calculate_ball_from_bounding_boxes(bounding_boxes, ball_radius)
                     # TODO fix
                     # self.assertAlmostEqual(position.position[0], ball_pose.position[0], delta=0.001)
                     # self.assertAlmostEqual(position.position[1], ball_pose.position[1], delta=0.001)

@@ -54,6 +54,9 @@ class PybulletWorld:
                 spinningFriction=spinning_friction,
                 rollingFriction=rolling_friction,
             )
+        ball = pb.loadURDF("soccerball.urdf", [1, 0, 0.1], globalScaling=0.14)
+        pb.changeDynamics(ball, -1, linearDamping=0, angularDamping=0, rollingFriction=0.001, spinningFriction=0.001)
+        pb.changeVisualShape(ball, -1, rgbaColor=[0.8, 0.8, 0.8, 1])
 
     def close(self):
         if pb.isConnected(self.client_id):

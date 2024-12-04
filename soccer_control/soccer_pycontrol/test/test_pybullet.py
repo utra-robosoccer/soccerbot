@@ -1,5 +1,7 @@
 import unittest
+from os.path import expanduser
 
+import cv2
 import numpy as np
 import pybullet as pb
 import pytest

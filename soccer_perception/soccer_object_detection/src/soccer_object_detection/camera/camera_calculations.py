@@ -149,7 +149,7 @@ class CameraCalculations(CameraBase):
 
         return bounding_box
 
-    def calculate_ball_from_bounding_boxes(self, ball_radius: float = 0.07, bounding_boxes: [float] = []) -> Transformation:
+    def calculate_ball_from_bounding_boxes(self, bounding_boxes: [float] = [], ball_radius: float = 0.07) -> Transformation:
         """
         Reverse function for  :func:`~soccer_common.Camera.calculateBoundingBoxesFromBall`, takes the bounding boxes
         of the ball as seen on the camera and return the 3D position of the ball assuming that the ball is on the ground

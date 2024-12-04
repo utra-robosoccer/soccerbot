@@ -616,6 +616,20 @@
     <origin rpy="0 0 0" xyz="0.0 0 0.000"/>
     <axis xyz="0 0 0"/>
   </joint>
-
+  <link name="camera">
+    <inertial>
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+      <mass value="0.01"/>
+      <inertia ixx="1e-09" ixy="0.0" ixz="0.0" iyy="1e-09" iyz="0.0" izz="1e-09"/>
+    </inertial>
+  </link>
+  <joint name="camera_frame" type="fixed">
+    <origin xyz="0.015 0.00145 0.0474" rpy="0.0 0.0 0.0"/>
+    <axis xyz="0.0 0.0 0.0"/>
+    <parent link="head"/>
+    <child link="camera"/>
+    <limit effort="0.0" lower="0.0" upper="0.0" velocity="0.0"/>
+    <dynamics damping="0.01" friction="0.1"/>
+  </joint>
 </robot>
 
