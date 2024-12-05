@@ -3,7 +3,7 @@ import os
 from sklearn.model_selection import train_test_split
 
 # Define paths
-base_dir = os.path.expanduser("~/test_data_split")
+base_dir = os.path.expanduser("~/hdd/robosoccer_yolo/yolov8_segmentation")
 images_dir = os.path.join(base_dir, "images")
 labels_dir = os.path.join(base_dir, "labels")
 
@@ -18,16 +18,19 @@ for split in ["train", "val", "test"]:
     os.makedirs(os.path.join(labels_dir, split), exist_ok=True)
 
 # Gather image and label pairs
-image_files = [f for f in os.listdir(images_dir) if f.endswith(".jpg") or f.endswith(".png") and not os.path.isdir(os.path.join(images_dir, f))]
+image_files = [
+    f for f in os.listdir(images_dir) if f.endswith(".jpg") or f.lower().endswith(".png") and not os.path.isdir(os.path.join(images_dir, f))
+]
 label_files = [f for f in os.listdir(labels_dir) if f.endswith(".txt") and not os.path.isdir(os.path.join(labels_dir, f))]
 
 # Pair images and labels by filename
 image_label_pairs = [
-    (img, img.replace(".jpg", ".txt").replace(".png", ".txt"))
+    (img, img.lower().replace(".jpg", ".txt").replace(".png", ".txt"))
     for img in image_files
-    if img.replace(".jpg", ".txt").replace(".png", ".txt") in label_files
+    if img.lower().replace(".jpg", ".txt").replace(".png", ".txt") in label_files
 ]
-
+print(image_files)
+print(image_label_pairs)
 # Split pairs into train, validation, and test sets
 train_pairs, temp_pairs = train_test_split(image_label_pairs, test_size=(1 - train_ratio), random_state=42)
 val_pairs, test_pairs = train_test_split(temp_pairs, test_size=(test_ratio / (test_ratio + val_ratio)), random_state=42)

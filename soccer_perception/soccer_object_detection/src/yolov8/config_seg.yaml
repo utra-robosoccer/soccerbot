@@ -1,0 +1,7 @@
+path: /home/utra-robosoccer/hdd/robosoccer_yolo/yolov8_segmentation # dataset root dir
+train: images/train # train images (relative to 'path') 4 images
+val: images/val # val images (relative to 'path') 4 images
+test: images/test
+
+nc: 2
+names: ["field", "field_lines"]
