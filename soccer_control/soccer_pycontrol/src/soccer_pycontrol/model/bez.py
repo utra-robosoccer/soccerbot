@@ -38,7 +38,7 @@ class Bez:
 
         self.motor_control = MotorControl(self.model.body)
 
-        self.sensors = Sensors(self.model.body)
+        self.sensors = Sensors(self.model.body, self.model.ball)
 
     @property
     def status(self) -> BezStatusEnum:

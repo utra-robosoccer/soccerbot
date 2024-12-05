@@ -22,12 +22,16 @@ class LoadModel:  # TODO Maybe rename to body
         if not fixed_base and (self.pose == Transformation()).all():  # TODO need way to have custom height
             self.set_pose(pose)
 
+        self.ball = pb.loadURDF("soccerball.urdf", [1, 0, 0.1], globalScaling=0.14)
+        pb.changeDynamics(self.ball, -1, linearDamping=0, angularDamping=0, rollingFriction=0.001, spinningFriction=0.001)
+        pb.changeVisualShape(self.ball, -1, rgbaColor=[0.8, 0.8, 0.8, 1])
+
     def load_urdf_pybullet(self, urdf_model_path: str, fixed_base: bool):  # -> pb.loadURDF:
         # TODO read from yaml? Also maybe put in world
         body = pb.loadURDF(
             urdf_model_path,
             useFixedBase=fixed_base,
-            flags=pb.URDF_USE_INERTIA_FROM_FILE | 0,
+            flags=pb.URDF_USE_INERTIA_FROM_FILE | pb.URDF_ENABLE_CACHED_GRAPHICS_SHAPES | 0,
             basePosition=self.pose.position,
             baseOrientation=self.pose.quaternion,
         )

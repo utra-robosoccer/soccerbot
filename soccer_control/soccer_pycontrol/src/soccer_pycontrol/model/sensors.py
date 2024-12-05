@@ -12,9 +12,10 @@ class Sensors:
     Interfaces with pybullet to extract sensor data.
     """
 
-    def __init__(self, body: pb.loadURDF):
+    def __init__(self, body: pb.loadURDF, ball: pb.loadURDF):
         # TODO does this need to be a class?
         self.body = body
+        self.ball = ball
         # TODO should get based on name
         self.imu_link = pb.getNumJoints(self.body) - 1
         self.imu_ready = False
@@ -44,8 +45,10 @@ class Sensors:
         return Transformation(pos, orientation).orientation_euler
 
     def get_ball(self):
-
-        return Transformation()
+        [position, quaternion] = pb.getBasePositionAndOrientation(self.body)
+        [ball_position, ball_quaternion] = pb.getBasePositionAndOrientation(self.ball)
+        trans = (np.array(ball_position) - np.array(position)).tolist()
+        return Transformation(position=trans, quaternion=ball_quaternion)
 
     def get_foot_pressure_sensors(self, floor: pb.loadURDF) -> List[bool]:
         """
