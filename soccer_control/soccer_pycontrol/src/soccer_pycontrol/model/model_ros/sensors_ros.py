@@ -83,3 +83,36 @@ class SensorsROS(Sensors):
         ) as ex:
             rospy.logerr_throttle(5, "Unable to find transformation from world to ")
             pass
+
+    def get_height(self):
+        try:
+
+            time_stamp1 = self.tf_listener.getLatestCommonTime("robot1/left_foot", "robot1/head")
+
+            (trans1, rot) = self.tf_listener.lookupTransform("robot1/left_foot", "robot1/head", time_stamp1)
+            return Transformation(position=trans1, quaternion=rot)
+        except (
+            tf2_py.LookupException,
+            tf.LookupException,
+            tf.ConnectivityException,
+            tf.ExtrapolationException,
+            tf2_py.TransformException,
+        ) as ex:
+            rospy.logerr_throttle(5, "Unable to find transformation from world to ")
+            pass
+
+    def get_global_height(self):
+        try:
+            time_stamp1 = self.tf_listener.getLatestCommonTime("robot1/base_footprint_gt", "robot1/camera_gt")
+
+            (trans1, rot) = self.tf_listener.lookupTransform("robot1/base_footprint_gt", "robot1/camera_gt", time_stamp1)
+            return Transformation(position=trans1, quaternion=rot)
+        except (
+            tf2_py.LookupException,
+            tf.LookupException,
+            tf.ConnectivityException,
+            tf.ExtrapolationException,
+            tf2_py.TransformException,
+        ) as ex:
+            rospy.logerr_throttle(5, "Unable to find transformation from world to ")
+            pass

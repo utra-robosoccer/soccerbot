@@ -41,7 +41,21 @@ class CameraCalculationsRos(CameraCalculations):
         :param camera_frame: The name of the camera frame
         :param skip_if_not_found: If set to true, then will not wait if it cannot find the camera transform after the specified duration (1 second), it will just return
         """
-        super().reset_position()
+        try:
+
+            time_stamp1 = self.tf_listener.getLatestCommonTime("robot1/left_foot", "robot1/head")
+
+            (trans1, rot) = self.tf_listener.lookupTransform("robot1/left_foot", "robot1/head", time_stamp1)
+            self.pose = Transformation(position=trans1, quaternion=rot)
+        except (
+            tf2_py.LookupException,
+            tf.LookupException,
+            tf.ConnectivityException,
+            tf.ExtrapolationException,
+            tf2_py.TransformException,
+        ) as ex:
+            rospy.logerr_throttle(5, "Unable to find transformation from world to ")
+            pass
         # TODO lets make it relative for now
         # if from_world_frame:
         #     try:

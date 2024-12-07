@@ -22,8 +22,8 @@ class LoadModel:  # TODO Maybe rename to body
         if not fixed_base and (self.pose == Transformation()).all():  # TODO need way to have custom height
             self.set_pose(pose)
 
-        self.ball = pb.loadURDF("soccerball.urdf", [1, 0, 0.1], globalScaling=0.14)
-        pb.changeDynamics(self.ball, -1, linearDamping=0, angularDamping=0, rollingFriction=0.001, spinningFriction=0.001)
+        self.ball = pb.loadURDF("soccerball.urdf", [0.12, -0.05, 0.1], globalScaling=0.14)
+        pb.changeDynamics(self.ball, -1, mass=0.2, linearDamping=0, angularDamping=0, rollingFriction=0.001, spinningFriction=0.001)
         pb.changeVisualShape(self.ball, -1, rgbaColor=[0.8, 0.8, 0.8, 1])
 
     def load_urdf_pybullet(self, urdf_model_path: str, fixed_base: bool):  # -> pb.loadURDF:
