@@ -49,7 +49,7 @@ class TestPybullet(unittest.TestCase):
         tmp = rospy.Publisher(ns + "reset_robot", PoseStamped)
         # tmp = rospy.Publisher(ns + "reset_robot", PoseStamped)
         walker = NavigatorRos(bez)
-        walker.bez.motor_control.reset_target_angles()
+        walker.bez.motor_control.configuration.reset()
         walker.bez.motor_control.set_motor()
         walker.wait(50)
         tmp.publish(PoseStamped())
@@ -61,7 +61,7 @@ class TestPybullet(unittest.TestCase):
         start = time.time()
         # target_goal = Transformation(position=[1, 0, 0], euler=[0,0,0])
         # walker.walk(target_goal)
-        walker.walk(bez.sensors.get_ball(), True)
+        walker.run(bez.sensors.get_ball())
         # target_goal = [0.0, 0, 0, 10, 500]
         # walker.walk(target_goal)
         print("cm/s: ", 100 / (time.time() - start))

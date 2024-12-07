@@ -52,8 +52,8 @@ class Navigator:
         self.error_tol = 0.03  # in m TODO add as a param and in the ros version
 
         # joints
-        self.left_ankle_index = self.bez.motor_control.motor_names.index("left_ankle_roll")
-        self.right_ankle_index = self.bez.motor_control.motor_names.index("right_ankle_roll")
+        self.left_ankle_index = self.bez.motor_control.motor_names["left_ankle_roll"]
+        self.right_ankle_index = self.bez.motor_control.motor_names["right_ankle_roll"]
         # self.torso_index = self.bez.motor_control.body.
 
         self.record_walking_metrics = record_walking_metrics
@@ -178,8 +178,8 @@ class Navigator:
             # print(target_goal.position)
             self.foot_step_planner.head_movement(target_goal.position)
 
-            self.nav_x_pid.setpoint = 0  # target_goal.position[0]
-            self.nav_y_pid.setpoint = 0  # target_goal.position[1]
+            self.nav_x_pid.setpoint = target_goal.position[0]
+            self.nav_y_pid.setpoint = target_goal.position[1]
             x_error = target_goal.position[0]
             y_error = target_goal.position[1]
             head_error = self.heading_error(target_goal.orientation_euler[0], self.bez.sensors.get_pose().orientation_euler[0])
@@ -212,7 +212,7 @@ class Navigator:
 
     def walk_loop(self):
         self.foot_step_planner.plan_steps(self.t)
-        self.bez.motor_control.configuration = self.filter_joints()
+        self.set_angles_from_placo()
         # self.foot_step_planner.head_movement([1, 1, 0])
         if self.imu_feedback_enabled and self.bez.sensors.imu_ready:
             [_, pitch, roll] = self.bez.sensors.get_imu()
@@ -263,7 +263,8 @@ class Navigator:
 
     def ready(self):
         self.foot_step_planner.setup_tasks()
-        self.bez.motor_control.configuration = self.filter_joints()
+
+        self.set_angles_from_placo()
 
         self.bez.motor_control.set_motor()
 
@@ -277,11 +278,9 @@ class Navigator:
         error_roll = self.walk_pid.walking_pitch_pid.update(roll)  # TODO retune
         self.bez.motor_control.set_leg_joint_2_target_angle(error_roll)
 
-    def filter_joints(self) -> List[int]:
-        joints = [0] * self.bez.motor_control.numb_of_motors
+    def set_angles_from_placo(self) -> None:
         for joint in self.bez.motor_control.motor_names:
-            joints[self.bez.motor_control.motor_names.index(joint)] = self.foot_step_planner.robot.get_joint(joint)
-        return joints
+            self.bez.motor_control.configuration[joint] = self.foot_step_planner.robot.get_joint(joint)
 
     def display_walking_metrics(self, show_targets: bool = False) -> None:
         fig, (ax_imu0, ax_imu1, ax_imu2) = plt.subplots(3, 1, sharex=True)

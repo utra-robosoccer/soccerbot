@@ -75,8 +75,8 @@ def test_trajectory_sim(trajectory_name: str, robot_model: str, real_time: bool)
         os.path.join(os.path.dirname(__file__), "../trajectories/bez2/" + trajectory_name + ".csv"), pose, robot_model, real_time, camera_yaw=camera
     )
     tm.send_trajectory()
-    tm.sim.wait(100)
-    tm.sim.ramp.close()
+    tm.world.wait(100)
+    tm.world.close()
     # TODO add more testing from pybullet so like the height will reach a threshold and it doesnt fall over for
     #  some time also maybe split it per trajectory type
 

@@ -45,6 +45,9 @@ class NavigatorRos(Navigator):
         self.error_tol = 0.05  # in m TODO add as a param and in the ros version
         self.position_subscriber = rospy.Subscriber(self.bez.ns + "goal", PoseStamped, self.goal_callback)
         self.goal = PoseStamped()
+        self.t = None
+        self.enable_walking = None
+        self.reset_walk()
 
     def goal_callback(self, pose: PoseStamped) -> None:
         """
@@ -61,3 +64,11 @@ class NavigatorRos(Navigator):
     def wait(self, steps: int):
         for i in range(steps):
             rospy.sleep(self.foot_step_planner.DT)
+
+    def run(self, target_goal):
+        while not rospy.is_shutdown():
+            self.walk(self.bez.sensors.get_ball(), True)
+            # if i % 1000 == 0:
+            #     walk.reset_walk()
+
+            self.func_step()

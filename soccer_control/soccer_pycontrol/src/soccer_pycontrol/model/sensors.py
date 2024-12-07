@@ -50,6 +50,10 @@ class Sensors:
         trans = (np.array(ball_position) - np.array(position)).tolist()
         return Transformation(position=trans, quaternion=ball_quaternion)
 
+    def get_ball_global(self):
+        [ball_position, ball_quaternion] = pb.getBasePositionAndOrientation(self.ball)
+        return Transformation(position=ball_position, quaternion=ball_quaternion)
+
     def get_foot_pressure_sensors(self, floor: pb.loadURDF) -> List[bool]:
         """
         Checks if 4 corners of the each feet are in contact with ground #
@@ -92,13 +96,17 @@ class Sensors:
         Captures the image from the camera mounted on the robot
         """
         # Add more offsets later
-        camera_position = self.get_pose(link=1).position
-        camera_target = [camera_position[0] + 1, camera_position[1], camera_position[2]]
+        camera_position = self.get_pose(link=2).position
 
-        camera_up = [0, 0, 1]
-
-        view_matrix = pb.computeViewMatrix(camera_position, camera_target, camera_up)
-
+        # print(f"Pos: {camera_position} Orient: {self.get_pose(link=2).orientation_euler}")
+        view_matrix = pb.computeViewMatrixFromYawPitchRoll(
+            camera_position,
+            0.000367,
+            pb.getJointState(self.body, 0)[0] * (180 / np.pi) - 90,  # self.get_pose(link=2).orientation_euler[0]*(180/np.pi) + 90,
+            -pb.getJointState(self.body, 1)[0] * (180 / np.pi),  # self.get_pose(link=2).orientation_euler[1]*(180/np.pi)+90,
+            0,  # self.get_pose(link=2).orientation_euler[2]*(180/np.pi) ,
+            2,
+        )
         width, height = 640, 480
         fov = 78
         aspect = width / height

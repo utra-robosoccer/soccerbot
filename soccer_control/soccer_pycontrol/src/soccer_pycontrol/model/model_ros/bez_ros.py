@@ -21,9 +21,10 @@ class BezROS(Bez):
         self.parameters = self.get_parameters(sim)
 
         motor_offsets = self.get_motor_names()
-        motor_names = list(motor_offsets.keys())[1:]
 
-        self.motor_control = MotorControlROS(motor_names, ns)
+        motor_names = list(motor_offsets.keys())[1:]
+        del motor_offsets["universe"]
+        self.motor_control = MotorControlROS(motor_offsets, ns)
 
         self.sensors = SensorsROS(ns)
 
@@ -44,7 +45,9 @@ class BezROS(Bez):
         # for name, oMi in zip(model.names, data.oMi):
         #     print(("{:<24} : {: .2f} {: .2f} {: .2f}".format(name, *oMi.translation.T.flat)))
         # TODO should make a unit test to make sure the data is correct and maybe use pybullet toverify
-        return {model.names[i]: data.oMi[i].translation.T for i in range(len(model.names))}
+        return {
+            model.names[i]: [i - 1, i - 1] for i in range(len(model.names))
+        }  # {model.names[i]: data.oMi[i].translation.T for i in range(len(model.names))}
 
     def get_parameters(self, sim: str) -> dict:
         with open(

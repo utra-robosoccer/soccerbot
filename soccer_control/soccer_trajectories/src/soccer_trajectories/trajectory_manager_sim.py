@@ -2,7 +2,8 @@
 import time
 
 from sensor_msgs.msg import JointState
-from soccer_trajectories.pybullet_setup import PybulletSetup
+from soccer_pycontrol.model.bez import Bez
+from soccer_pycontrol.pybullet_usage.pybullet_world import PybulletWorld
 from soccer_trajectories.trajectory_manager import TrajectoryManager
 
 from soccer_common import Transformation
@@ -23,19 +24,22 @@ class TrajectoryManagerSim(TrajectoryManager):
         camera_yaw=90,
     ):
         super(TrajectoryManagerSim, self).__init__(trajectory_path, mirror)
-
-        self.sim = PybulletSetup(robot_model=robot_model, real_time=real_time, pose=pose, camera_yaw=camera_yaw)
+        self.world = PybulletWorld(
+            camera_yaw=camera_yaw,
+            real_time=real_time,
+            rate=75,
+        )
+        self.bez = Bez(robot_model=robot_model, pose=pose)
 
     def read_joint_state(self) -> JointState:
-        return JointState(name=self.sim.motor_names, position=[0.0] * self.sim.numb_of_motors)
+        return JointState(name=list(self.bez.motor_control.motor_names.keys()), position=[0.0] * self.bez.motor_control.numb_of_motors)
 
     def send_joint_msg(self, timestamp: float) -> None:
-        states = [0.0] * self.sim.numb_of_motors
         joints, angles = self.trajectory.create_joint_states(timestamp)
         for i, joint in enumerate(joints):
-            states[self.sim.motor_names.index(joint)] = angles[i]
+            self.bez.motor_control.configuration[joint] = angles[i]
 
-        self.sim.motor_control(states)
+        self.bez.motor_control.set_motor()
 
     def send_trajectory(self, mirror: bool = False) -> None:
         self.process_trajectory(self.trajectory_path, mirror)
@@ -47,11 +51,11 @@ class TrajectoryManagerSim(TrajectoryManager):
             except Exception as ex:
                 print(ex)
                 exit(0)
-            t += 1 / self.sim.rate
+            t += 1 / self.world.rate
 
             print("time", t)
 
-            self.sim.step()
+            self.world.step()
             # time.sleep(0.01)
         # self.sim.ramp.close()
         # self.trajectory.reset()

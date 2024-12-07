@@ -213,4 +213,4 @@ class CameraCalculations(CameraBase):
         tr = Transformation([ball_x, -ball_y, -ball_z])
         tr_cam = self.pose @ tr
 
-        return tr
+        return tr_cam  # tr

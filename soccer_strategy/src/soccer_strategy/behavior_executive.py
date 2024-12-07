@@ -37,6 +37,9 @@ class BehaviorExecutive:
 
         self.behavior = BehaviorContext(world=self.world, bez=self.bez, nav=self.nav, detect=self.detect)
 
+        self.nav.ready()
+        self.nav.wait(100)
+
     # Main communication node for ground control
     def run(self):
         """
@@ -49,10 +52,10 @@ class BehaviorExecutive:
         while not rospy.is_shutdown():
             # Behaviour Executive
             # TODO pass drone & path harder then previously thought might be possible but not worth time rigth now
-            self.behavior.run_state_algorithim()
+            # self.behavior.run_state_algorithim()
 
             # AutoPilot
             # # TODO pass behavior
             # self._autopilot.check_autopilot()
 
-            self.rate.sleep()
+            self.world.step()
