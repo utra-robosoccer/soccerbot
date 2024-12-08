@@ -52,7 +52,7 @@ class TestTrajectory(unittest.TestCase):
         self.assertEqual(angles, [0.0, 0.0, 0.0, 0.0, 0.564, 0.564, -1.176, -1.176, 0.613, 0.613, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
 
 
-@pytest.mark.parametrize("trajectory_name", ["getupfront"])  # , "getupback_full", "rightkick", "getupfront"])
+@pytest.mark.parametrize("trajectory_name", ["getupback"])  # , "getupback_full", "rightkick", "getupfront"])
 @pytest.mark.parametrize("robot_model", ["assembly"])
 @pytest.mark.parametrize("real_time", [True])
 def test_trajectory_sim(trajectory_name: str, robot_model: str, real_time: bool):
@@ -75,7 +75,7 @@ def test_trajectory_sim(trajectory_name: str, robot_model: str, real_time: bool)
         os.path.join(os.path.dirname(__file__), "../trajectories/bez2/" + trajectory_name + ".csv"), pose, robot_model, real_time, camera_yaw=camera
     )
     tm.send_trajectory()
-    tm.sim.wait(100)
+    tm.sim.wait(1000)
     tm.sim.ramp.close()
     # TODO add more testing from pybullet so like the height will reach a threshold and it doesnt fall over for
     #  some time also maybe split it per trajectory type
