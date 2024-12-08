@@ -91,8 +91,8 @@ class FootStepPlanner:
                     "right_shoulder_roll": -shoulder_roll,
                     "right_shoulder_pitch": shoulder_pitch,
                     "right_elbow": elbow,
-                    # "head_pitch": 0.0,
-                    # "head_yaw": 0.0,
+                    "head_pitch": 0.0,
+                    "head_yaw": 0.0,
                 }
             )
         else:
@@ -110,8 +110,8 @@ class FootStepPlanner:
             )
         joints_task.configure("joints", "soft", 1.0)
 
-        self.look_at_ball = self.solver.add_axisalign_task("camera", np.array([1.0, 0.0, 0.0]), np.array([1.0, 0.0, 0.0]))
-        self.look_at_ball.configure("look_ball", "soft", 1)  # TODO replace with a function that remove_task
+        # self.look_at_ball = self.solver.add_axisalign_task("camera", np.array([1.0, 0.0, 0.0]), np.array([1.0, 0.0, 0.0]))
+        # self.look_at_ball.configure("look_ball", "soft", 1)  # TODO replace with a function that remove_task
 
         # Placing the robot in the initial position
         print("Placing the robot in the initial position...")

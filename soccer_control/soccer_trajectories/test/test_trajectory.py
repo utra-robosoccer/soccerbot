@@ -52,7 +52,7 @@ class TestTrajectory(unittest.TestCase):
         self.assertEqual(angles, [0.0, 0.0, 0.0, 0.0, 0.564, 0.564, -1.176, -1.176, 0.613, 0.613, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
 
 
-@pytest.mark.parametrize("trajectory_name", ["rightkick_2"])  # , "getupback_full", "rightkick", "getupfront"])
+@pytest.mark.parametrize("trajectory_name", ["getupfront_old"])  # ,rightkick_2 "getupback_full", "rightkick", "getupfront"])
 @pytest.mark.parametrize("robot_model", ["assembly"])
 @pytest.mark.parametrize("real_time", [True])
 def test_trajectory_sim(trajectory_name: str, robot_model: str, real_time: bool):
@@ -61,7 +61,7 @@ def test_trajectory_sim(trajectory_name: str, robot_model: str, real_time: bool)
     :return: None
     """
     # TODO update with pybullet updates
-    if trajectory_name == "getupfront":
+    if "getupfront" in trajectory_name:
         pose = Transformation(position=[0, 0, 0.070], euler=[0, 1.57, 0])
         camera = 0
     elif "getupback" in trajectory_name:
@@ -112,7 +112,7 @@ def run_real_trajectory(robot_model: str, trajectory_name: str, real_time: bool)
 
 
 @pytest.mark.parametrize("robot_model", ["bez2"])
-@pytest.mark.parametrize("trajectory_name", ["fix_angle_test"])  # getupback_full
+@pytest.mark.parametrize("trajectory_name", ["getupfront_old"])  # getupfront getupfront_old
 @pytest.mark.parametrize("real_time", [True])
 @unittest.skipIf("DISPLAY" not in os.environ, "only local")
 def test_traj_ros(robot_model: str, trajectory_name: str, real_time: bool):

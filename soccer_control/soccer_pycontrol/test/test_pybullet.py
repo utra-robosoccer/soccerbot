@@ -62,24 +62,21 @@ class TestPybullet(unittest.TestCase):
 
     def test_bez_motor_range_single(self):
         self.world = PybulletWorld(path="", camera_yaw=45, real_time=REAL_TIME, rate=500)
-        self.bez = Bez(robot_model="bez1", fixed_base=True, pose=Transformation())
-        # self.bez = Bez(robot_model="assembly", fixed_base=True, pose=Transformation())
+        # self.bez = Bez(robot_model="bez1", fixed_base=True, pose=Transformation())
+        self.bez = Bez(robot_model="assembly", fixed_base=True, pose=Transformation())
         self.world.wait(50)
         angles = np.linspace(-np.pi, np.pi)
 
         for j in angles:
-            x = [0.0] * self.bez.motor_control.numb_of_motors
-            t = "elbow"
-            x[self.bez.motor_control.motor_names.index("head_pitch")] = j
+            # x = [0.0] * self.bez.motor_control.numb_of_motors
+            t = "shoulder_roll"
+            # x[self.bez.motor_control.motor_names.index("head_pitch")] = j
+            self.bez.motor_control.configuration["right_" + t] = j
+            self.bez.motor_control.configuration["left_" + t] = j
             # x[self.bez.motor_control.motor_names.index("right_"+t)] = j
             # x[self.bez.motor_control.motor_names.index("left_"+t)] = j
 
-            pb.setJointMotorControlArray(
-                bodyIndex=self.bez.model.body,
-                controlMode=pb.POSITION_CONTROL,
-                jointIndices=list(range(0, self.bez.motor_control.numb_of_motors, 1)),
-                targetPositions=x,
-            )
+            self.bez.motor_control.set_motor()
             self.world.wait_motor()
 
         self.world.wait(100)

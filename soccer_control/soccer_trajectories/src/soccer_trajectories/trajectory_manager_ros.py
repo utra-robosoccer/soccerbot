@@ -84,6 +84,8 @@ class TrajectoryManagerRos(TrajectoryManager):
         t: float = 0
         while not rospy.is_shutdown() and t <= self.trajectory.max_time and not self.terminate:
             try:
+                if t%0.25:
+                    print(1)
                 self.send_joint_msg(t)
             except ROSException as ex:
                 print(ex)
