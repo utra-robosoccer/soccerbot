@@ -16,7 +16,7 @@ class NavigatorRos(Navigator):
         self.imu_feedback_enabled = imu_feedback_enabled
         self.bez = bez
 
-        self.foot_step_planner = FootStepPlanner(self.bez.robot_model, self.bez.parameters, rospy.get_time)
+        self.foot_step_planner = FootStepPlanner(self.bez.robot_model, self.bez.parameters, rospy.get_time, debug=False)
         # TODO publish local odomtry from foot step planner
         self.rate = rospy.Rate(1 / self.foot_step_planner.DT)
         self.func_step = self.rate.sleep
@@ -77,6 +77,7 @@ class NavigatorRos(Navigator):
 
         while not rospy.is_shutdown():
             # self.walk(self.ball, True)
+            self.walk(target_goal, False)
             # for j in angles:
             #
             #     # print(f"POS: tf: {self.bez.sensors.get_height().position} gt:   {self.bez.sensors.get_global_height().position}")

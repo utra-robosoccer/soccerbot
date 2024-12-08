@@ -37,44 +37,44 @@ class TestPlaco(unittest.TestCase):
         walk = Navigator(self.world, self.bez, imu_feedback_enabled=False)
         walk.ready()
         walk.wait(100)
-        target_goal = [1, 0, 0, 10, 500]
-        target_goal = Transformation(position=[0, 0, 0], euler=[0, 0, 0])
+        target_goal = [0, 0, 0.3, 10, 500]
+        # target_goal = Transformation(position=[0, 0, 0], euler=[0, 0, 0])
         print("STARTING WALK")
         ball_pos = Transformation(position=[0, 0, 0], euler=[0, 0, 0])
         for i in range(10000):
-            if i % 10 == 0:
-                img = self.bez.sensors.get_camera_image()
-                img = cv2.resize(img, dsize=(640, 480))
-                # detect.camera.pose.orientation_euler = [0, np.pi / 8, 0]
-                dimg, bbs_msg = detect.get_model_output(img)
-                for box in bbs_msg.bounding_boxes:
-                    if box.Class == "0":
-                        detect.camera.pose.position = [0, 0, self.bez.sensors.get_pose(link=2).position[2]]
-                        detect.camera.pose.orientation_euler = self.bez.sensors.get_pose(link=2).orientation_euler
-                        # detect.camera.pose = self.bez.sensors.get_pose(link=2)
-                        boundingBoxes = [[box.xmin, box.ymin], [box.xmax, box.ymax]]
-                        # print(detect.camera.calculate_ball_from_bounding_boxes(boundingBoxes).position)
+            # if i % 10 == 0:
+            #     img = self.bez.sensors.get_camera_image()
+            #     img = cv2.resize(img, dsize=(640, 480))
+            #     # detect.camera.pose.orientation_euler = [0, np.pi / 8, 0]
+            #     dimg, bbs_msg = detect.get_model_output(img)
+            #     for box in bbs_msg.bounding_boxes:
+            #         if box.Class == "0":
+            #             detect.camera.pose.position = [0, 0, self.bez.sensors.get_pose(link=2).position[2]]
+            #             detect.camera.pose.orientation_euler = self.bez.sensors.get_pose(link=2).orientation_euler
+            #             # detect.camera.pose = self.bez.sensors.get_pose(link=2)
+            #             boundingBoxes = [[box.xmin, box.ymin], [box.xmax, box.ymax]]
+            #             # print(detect.camera.calculate_ball_from_bounding_boxes(boundingBoxes).position)
+            #
+            #             ball_pos = self.bez.sensors.get_ball()
+            #             print(
+            #                 f"floor pos: {detect.camera.calculate_ball_from_bounding_boxes(boundingBoxes).position}  ball: {self.bez.sensors.get_ball().position}"
+            #             )
+            #             # pos = [box.xbase, box.ybase]
+            #             # # detect.camera.pose.position = self.bez.sensors.get_pose(link=2).position
+            #             # detect.camera.pose.position = [0, 0, self.bez.sensors.get_pose(link=2).position[2]]
+            #             # detect.camera.pose.orientation_euler = self.bez.sensors.get_pose(link=2).orientation_euler
+            #             # floor_coordinate_robot = detect.camera.find_floor_coordinate(pos)
+            #             # print(f"floor pos: {floor_coordinate_robot}  ball: {self.bez.sensors.get_ball().position}")
+            #             #
+            #             # ball_pos = Transformation(position=floor_coordinate_robot)
+            #             # temp = self.bez.sensors.get_pose().rotation_matrix @ self.bez.sensors.get_ball().position + self.bez.sensors.get_pose().position
+            #             # print(f"pos2: {temp} ball: {self.bez.sensors.get_ball_global().position}")
+            #     if "DISPLAY" in os.environ:
+            #         cv2.imshow("CVT Color2", dimg)
+            #         cv2.waitKey(1)
 
-                        ball_pos = self.bez.sensors.get_ball()
-                        print(
-                            f"floor pos: {detect.camera.calculate_ball_from_bounding_boxes(boundingBoxes).position}  ball: {self.bez.sensors.get_ball().position}"
-                        )
-                        # pos = [box.xbase, box.ybase]
-                        # # detect.camera.pose.position = self.bez.sensors.get_pose(link=2).position
-                        # detect.camera.pose.position = [0, 0, self.bez.sensors.get_pose(link=2).position[2]]
-                        # detect.camera.pose.orientation_euler = self.bez.sensors.get_pose(link=2).orientation_euler
-                        # floor_coordinate_robot = detect.camera.find_floor_coordinate(pos)
-                        # print(f"floor pos: {floor_coordinate_robot}  ball: {self.bez.sensors.get_ball().position}")
-                        #
-                        # ball_pos = Transformation(position=floor_coordinate_robot)
-                        # temp = self.bez.sensors.get_pose().rotation_matrix @ self.bez.sensors.get_ball().position + self.bez.sensors.get_pose().position
-                        # print(f"pos2: {temp} ball: {self.bez.sensors.get_ball_global().position}")
-                if "DISPLAY" in os.environ:
-                    cv2.imshow("CVT Color2", dimg)
-                    cv2.waitKey(1)
-
-            walk.walk(ball_pos, True)
-            # walk.walk(target_goal, display_metrics=False)
+            # walk.walk(ball_pos, True)
+            walk.walk(target_goal, display_metrics=False)
             # if not walk.enable_walking:
             #     print("WALK ENABLED")
             #     x = uniform(-1, 1) # TODO own unit test for yaw
@@ -107,9 +107,9 @@ class TestPlaco(unittest.TestCase):
             if "DISPLAY" in os.environ:
                 cv2.imshow("CVT Color2", img)
                 cv2.waitKey(1)
-            t = "elbow"
-            self.bez.motor_control.configuration["head_yaw"] = j
-            # self.bez.motor_control.configuration["head_pitch"] = j
+            t = "shoulder_roll"
+            self.bez.motor_control.configuration["right_" + t] = j
+            self.bez.motor_control.configuration["left_" + t] = j
             # self.bez.motor_control.configuration[self.bez.motor_control.get_motor_array_index("head_yaw")] = j
             # x[self.bez.motor_control.get_motor_array_index("head_yaw")] = j
             # x[self.bez.motor_control.motor_names.index("right_"+t)] = j
