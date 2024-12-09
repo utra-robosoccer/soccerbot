@@ -32,7 +32,7 @@ class TestPybullet(unittest.TestCase):
         # walker.walk(d_x=0.04, t_goal=10)
         # target_goal = Transformation(position=[1, 0, 0], euler=[0, 0, 0])
         # walker.walk(target_goal)
-        target_goal = [0.0, 0.0, 0.0, 10, 500]
+        target_goal = [0.05, 0.0, 0.0, 10, 500]
         # walker.walk(target_goal)
         walker.run(target_goal)
 

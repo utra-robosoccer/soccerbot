@@ -27,6 +27,7 @@ left_knee:
   angle_zero: 180
   angle_max: 360
   angle_min: 0
+  flipped: "true"
 
 left_ankle_pitch:
   id: 8
@@ -72,7 +73,7 @@ right_knee:
   angle_zero: 180
   angle_max: 360
   angle_min: 0
-  flipped: "true"
+  flipped: "false"
 
 right_ankle_pitch:
   id: 14
