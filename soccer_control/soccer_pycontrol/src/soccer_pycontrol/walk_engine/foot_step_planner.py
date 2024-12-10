@@ -91,8 +91,8 @@ class FootStepPlanner:
                     "right_shoulder_roll": -shoulder_roll,
                     "right_shoulder_pitch": shoulder_pitch,
                     "right_elbow": elbow,
-                    # "head_pitch": 0.0,
-                    # "head_yaw": 0.0,
+                    "head_pitch": 0.0,
+                    "head_yaw": 0.0,
                 }
             )
         else:

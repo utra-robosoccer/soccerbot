@@ -38,8 +38,8 @@ class PybulletWorld:
             self.client_id = pb.connect(pb.GUI, optionstring)
         else:
             self.client_id = pb.connect(pb.DIRECT)
-        # pb.setTimeStep(0.005)
-        pb.setRealTimeSimulation(0)
+        pb.setTimeStep(1.0 / rate)
+        # pb.setRealTimeSimulation(0)
 
         pb.setAdditionalSearchPath(pybullet_data.getDataPath())  # optionally
         pb.resetDebugVisualizerCamera(cameraDistance=1.0, cameraYaw=camera_yaw, cameraPitch=0, cameraTargetPosition=cameraTargetPosition)

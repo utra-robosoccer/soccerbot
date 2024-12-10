@@ -32,8 +32,8 @@ class TrajectoryManagerRos(TrajectoryManager):
         super(TrajectoryManagerRos, self).__init__(path)
 
         self.terminate = False
-
-        self.rate = rospy.Rate(100)
+        self.period = 200
+        self.rate = rospy.Rate(self.period)
 
         self.command_subscriber = rospy.Subscriber("command", FixedTrajectoryCommand, self.command_callback, queue_size=1)
         self.robot_state_subscriber = rospy.Subscriber("state", RobotState, self.robot_state_callback, queue_size=1)
@@ -90,8 +90,8 @@ class TrajectoryManagerRos(TrajectoryManager):
             except ROSException as ex:
                 print(ex)
                 exit(0)
-            t += 0.01
-            if int(t + 0.01) != int(t):
+            t += 1.0 / self.period
+            if int(t + (1.0 / self.period)) != int(t):
                 print(f"Trajectory at t={t}")
 
             if real_time:

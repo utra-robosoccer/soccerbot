@@ -9,6 +9,7 @@ import scipy
 from soccer_pycontrol.model.bez import Bez
 from soccer_pycontrol.pybullet_usage.pybullet_world import PybulletWorld
 from soccer_pycontrol.walk_engine.foot_step_planner import FootStepPlanner
+from soccer_pycontrol.walk_engine.kick_planner import KickPlanner
 from soccer_pycontrol.walk_engine.stabilize import Stabilize
 
 from soccer_common import PID, Transformation
@@ -23,7 +24,7 @@ class Navigator:
         self.imu_feedback_enabled = imu_feedback_enabled
         self.func_step = self.world.step
         self.foot_step_planner = FootStepPlanner(self.bez.robot_model, self.bez.parameters, time.time)
-
+        self.kick_planner = KickPlanner(self.bez.robot_model, self.bez.parameters, time.time)
         self.walk_pid = Stabilize(self.bez.parameters)
         self.max_vel = 0.1
         self.nav_x_pid = PID(
@@ -61,10 +62,19 @@ class Navigator:
         self.t = None
         self.enable_walking = None
         self.reset_walk()
+        self.t2 = 0
 
     def reset_walk(self):
         self.t = -1
         self.enable_walking = True
+
+    def kick(self):
+        self.kick_planner.plan_kick(self.t2)
+        self.set_angles_from_placo(self.kick_planner)
+
+        self.bez.motor_control.set_motor()
+
+        self.t2 = self.kick_planner.step(self.t2)
 
     # TODO could make input a vector
     def walk(self, target_goal: Union[Transformation, List], ball_mode: bool = False, display_metrics: bool = False):
@@ -176,7 +186,7 @@ class Navigator:
         ):
             # target_goal = self.bez.sensors.get_ball()
             # print(target_goal.position)
-            # self.foot_step_planner.head_movement(target_goal.position)
+            self.foot_step_planner.head_movement(target_goal.position)
 
             self.nav_x_pid.setpoint = target_goal.position[0]
             self.nav_y_pid.setpoint = target_goal.position[1]
@@ -212,7 +222,7 @@ class Navigator:
 
     def walk_loop(self):
         self.foot_step_planner.plan_steps(self.t)
-        self.set_angles_from_placo()
+        self.set_angles_from_placo(self.foot_step_planner)
         # self.foot_step_planner.head_movement([1, 1, 0])
         if self.imu_feedback_enabled and self.bez.sensors.imu_ready:
             [_, pitch, roll] = self.bez.sensors.get_imu()
@@ -264,10 +274,18 @@ class Navigator:
     def position_error(goal_loc: np.ndarray, curr_loc: np.ndarray = (0, 0)):
         return float(np.linalg.norm(goal_loc - curr_loc))
 
+    def kick_ready(self):
+        self.t2 = 0
+        self.kick_planner.setup_tasks()
+
+        self.set_angles_from_placo(self.kick_planner)
+
+        self.bez.motor_control.set_motor()
+
     def ready(self):
         self.foot_step_planner.setup_tasks()
 
-        self.set_angles_from_placo()
+        self.set_angles_from_placo(self.foot_step_planner)
 
         self.bez.motor_control.set_motor()
 
@@ -281,9 +299,9 @@ class Navigator:
         error_roll = self.walk_pid.walking_pitch_pid.update(roll)  # TODO retune
         self.bez.motor_control.set_leg_joint_2_target_angle(error_roll)
 
-    def set_angles_from_placo(self) -> None:
+    def set_angles_from_placo(self, planner) -> None:
         for joint in self.bez.motor_control.motor_names:
-            self.bez.motor_control.configuration[joint] = self.foot_step_planner.robot.get_joint(joint)
+            self.bez.motor_control.configuration[joint] = planner.robot.get_joint(joint)
 
     def display_walking_metrics(self, show_targets: bool = False) -> None:
         fig, (ax_imu0, ax_imu1, ax_imu2) = plt.subplots(3, 1, sharex=True)

@@ -14,22 +14,10 @@ class TrajectoryManagerSim(TrajectoryManager):
     Interfaces with trajectory and sends to pybullet
     """
 
-    def __init__(
-        self,
-        trajectory_path: str,
-        pose: Transformation = Transformation(),
-        robot_model: str = "bez1",
-        real_time=False,
-        mirror: bool = False,
-        camera_yaw=90,
-    ):
+    def __init__(self, world: PybulletWorld, bez: Bez, trajectory_path: str, mirror: bool = False):
         super(TrajectoryManagerSim, self).__init__(trajectory_path, mirror)
-        self.world = PybulletWorld(
-            camera_yaw=camera_yaw,
-            real_time=real_time,
-            rate=75,
-        )
-        self.bez = Bez(robot_model=robot_model, pose=pose)
+        self.world = world
+        self.bez = bez
 
     def read_joint_state(self) -> JointState:
         return JointState(name=list(self.bez.motor_control.motor_names.keys()), position=[0.0] * self.bez.motor_control.numb_of_motors)
@@ -47,6 +35,8 @@ class TrajectoryManagerSim(TrajectoryManager):
         t: float = 0
         while t <= self.trajectory.max_time:
             try:
+                if t % 0.75:
+                    print("f")
                 self.send_joint_msg(t)
             except Exception as ex:
                 print(ex)
