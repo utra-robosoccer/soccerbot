@@ -227,8 +227,8 @@ class Navigator:
         if self.imu_feedback_enabled and self.bez.sensors.imu_ready:
             [_, pitch, roll] = self.bez.sensors.get_imu()
             self.stabilize_walk(pitch, roll)
-        self.bez.motor_control.configuration_offset["left_hip_pitch"] = 0.15
-        self.bez.motor_control.configuration_offset["right_hip_pitch"] = 0.15
+        self.bez.motor_control.configuration_offset["left_hip_pitch"] = 0.2
+        self.bez.motor_control.configuration_offset["right_hip_pitch"] = 0.2
         self.bez.motor_control.configuration["left_elbow"] = 1.57
         self.bez.motor_control.configuration["right_elbow"] = 1.57
         self.bez.motor_control.set_motor()

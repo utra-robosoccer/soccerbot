@@ -93,7 +93,9 @@ class TrajectoryManagerRos(TrajectoryManager):
             t += 1.0 / self.period
             if int(t + (1.0 / self.period)) != int(t):
                 print(f"Trajectory at t={t}")
-
+            # t += 0.01
+            # if int(t + 0.01) != int(t):
+            #     print(f"Trajectory at t={t}")
             if real_time:
                 self.rate.sleep()
 
