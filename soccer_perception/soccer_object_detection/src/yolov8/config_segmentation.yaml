@@ -1,6 +1,0 @@
-path: /home/anthonykpinson/robosoccer_yolo/code/data/segmentation # dataset root dir
-train: images/train # train images (relative to 'path') 4 images
-val: images/test # val images (relative to 'path') 4 images
-
-nc: 2
-names: ["field", "field_lines"]
