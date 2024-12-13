@@ -16,7 +16,7 @@ from soccer_common import PID, Transformation
 # TODO could make it more modular by passing in pybullet stuff or have it at one layer higher so we can reuse code
 # TODO change to trajectory controller
 class Navigator:
-    def __init__(self, world: PybulletWorld, bez: Bez, imu_feedback_enabled: bool = False, record_walking_metrics: bool = True):
+    def __init__(self, world: PybulletWorld, bez: Bez, imu_feedback_enabled: bool = False, record_walking_metrics: bool = False):
         self.world = world
         self.bez = bez
         self.imu_feedback_enabled = imu_feedback_enabled
