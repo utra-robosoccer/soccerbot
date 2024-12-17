@@ -54,7 +54,7 @@ class TestTrajectory(unittest.TestCase):
         self.assertEqual(angles, [0.0, 0.0, 0.0, 0.0, 0.564, 0.564, -1.176, -1.176, 0.613, 0.613, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
 
 
-@pytest.mark.parametrize("trajectory_name", ["getupback_old"])  # fix_angle_test ,rightkick_2 " getupback getupfront_old
+@pytest.mark.parametrize("trajectory_name", ["getupsideleft"])  # getupside rightkick " getupback getupfront
 @pytest.mark.parametrize("robot_model", ["assembly"])
 @pytest.mark.parametrize("real_time", [True])
 def test_trajectory_sim(trajectory_name: str, robot_model: str, real_time: bool):
@@ -64,16 +64,19 @@ def test_trajectory_sim(trajectory_name: str, robot_model: str, real_time: bool)
     """
     # TODO update with pybullet updates
     camera = 0
-    if "getupfront" in trajectory_name or trajectory_name == "fix_angle_test":
+    if "getupfront" in trajectory_name:
         pose = Transformation(position=[0, 0, 0.070], euler=[0, 1.57, 0])
         camera = 0
     elif "getupback" in trajectory_name:
         pose = Transformation(position=[0, 0, 0.070], euler=[0, -1.57, 0])
         camera = 0
+    elif "getupside" in trajectory_name:
+        pose = Transformation(position=[0, 0, 0.13], euler=[0, 0, -1.57])
+        camera = 0
     else:
         camera = 45
         pose = Transformation(position=[0, 0, 0.45], quaternion=[0.0, 0.0, 0.0, 1])
-    print(os.path.join(os.path.dirname(__file__), "../trajectories/bez2/" + trajectory_name + ".csv"))
+    print(os.path.join(os.path.dirname(__file__), "../trajectories/bez2_sim/" + trajectory_name + ".csv"))
     world = PybulletWorld(
         camera_yaw=camera,
         real_time=real_time,
@@ -81,8 +84,8 @@ def test_trajectory_sim(trajectory_name: str, robot_model: str, real_time: bool)
     )
     bez = Bez(robot_model=robot_model, pose=pose)
 
-    tm = TrajectoryManagerSim(world, bez, os.path.join(os.path.dirname(__file__), "../trajectories/bez2/" + trajectory_name + ".csv"))
-    tm.send_trajectory()
+    tm = TrajectoryManagerSim(world, bez, "bez2_sim", trajectory_name)
+    tm.send_trajectory(trajectory_name)
     tm.world.wait(10000)
     tm.world.close()
     # TODO add more testing from pybullet so like the height will reach a threshold and it doesnt fall over for

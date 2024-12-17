@@ -11,8 +11,8 @@ print("Simplifying meshes in Open3D...")
 
 # iterate over files in
 # that directory
-directory = home + "/catkin_ws/src/soccerbot/bez1_description/meshes"
-new_dir = home + "/catkin_ws/src/soccerbot/bez1_description/Bez1_meshes"
+directory = home + "/catkin_ws/src/soccerbot/soccer_description/assembly_description/meshes/simplified"
+new_dir = home + "/catkin_ws/src/soccerbot/soccer_description/assembly_description/meshes/simplified"
 if not os.path.exists(new_dir):
     os.mkdir(new_dir)
     print(f"----------------------- creating {new_dir}")
@@ -30,12 +30,9 @@ for filename in os.listdir(directory):
             print("Triangles:")
             print(len(mesh.triangles))
             if (
-                os.path.basename(f) == "head.stl"
-                or os.path.basename(f) == "left_bicep.stl"
-                or os.path.basename(f) == "right_bicep.stl"
-                or os.path.basename(f) == "torso.stl"
+                os.path.basename(f) == "base_link.stl"
             ):
-                target_triangles = 21000
+                target_triangles = 19000
             else:
                 target_triangles = int(len(mesh.triangles) * 0.5)
 

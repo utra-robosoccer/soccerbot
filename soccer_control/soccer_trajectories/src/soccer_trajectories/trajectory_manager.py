@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
+import os
 from abc import ABC, abstractmethod
+from os.path import expanduser
 
 from sensor_msgs.msg import JointState
 from soccer_trajectories.trajectory import Trajectory
@@ -10,12 +12,14 @@ class TrajectoryManager(ABC):
     Interfaces with trajectory and sends to pybullet
     """
 
-    def __init__(self, trajectory_path: str, mirror: bool = False):
-        self.trajectory_path = trajectory_path
-        self.trajectory = Trajectory(trajectory_path, mirror=mirror)
+    def __init__(self, robot_model: str, traj_name: str, mirror: bool = False):
+        trajectory_path = expanduser("~") + f"/catkin_ws/src/soccerbot/soccer_control/soccer_trajectories/trajectories/{robot_model}/"
 
-    def process_trajectory(self, path: str, mirror: bool):
-        self.trajectory.trajectory_path = path
+        self.trajectory_path = trajectory_path
+        self.trajectory = Trajectory(trajectory_path + traj_name + ".csv", mirror=mirror)
+
+    def process_trajectory(self, traj_name: str, mirror: bool):
+        self.trajectory.trajectory_path = self.trajectory_path + traj_name + ".csv"
         self.trajectory.mirror = mirror
         self.trajectory.reset()
 
@@ -26,7 +30,7 @@ class TrajectoryManager(ABC):
         pass
 
     @abstractmethod
-    def send_trajectory(self) -> None:
+    def send_trajectory(self, traj_name: str) -> None:
         pass
 
     @abstractmethod

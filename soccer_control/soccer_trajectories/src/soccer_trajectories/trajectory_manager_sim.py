@@ -14,8 +14,8 @@ class TrajectoryManagerSim(TrajectoryManager):
     Interfaces with trajectory and sends to pybullet
     """
 
-    def __init__(self, world: PybulletWorld, bez: Bez, trajectory_path: str, mirror: bool = False):
-        super(TrajectoryManagerSim, self).__init__(trajectory_path, mirror)
+    def __init__(self, world: PybulletWorld, bez: Bez, robot_model: str, traj_name: str, mirror: bool = False):
+        super(TrajectoryManagerSim, self).__init__(robot_model, traj_name, mirror)
         self.world = world
         self.bez = bez
 
@@ -29,14 +29,12 @@ class TrajectoryManagerSim(TrajectoryManager):
 
         self.bez.motor_control.set_motor()
 
-    def send_trajectory(self, mirror: bool = False) -> None:
-        self.process_trajectory(self.trajectory_path, mirror)
+    def send_trajectory(self, traj_name: str, mirror: bool = False) -> None:
+        self.process_trajectory(traj_name, mirror)
 
         t: float = 0
         while t <= self.trajectory.max_time:
             try:
-                if t % 0.75:
-                    print("f")
                 self.send_joint_msg(t)
             except Exception as ex:
                 print(ex)

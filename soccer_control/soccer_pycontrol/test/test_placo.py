@@ -35,11 +35,10 @@ class TestPlaco(unittest.TestCase):
             rate=200,
         )
         self.bez = Bez(robot_model="assembly", pose=Transformation())
-        tm = TrajectoryManagerSim(
-            self.world, self.bez, os.path.join(os.path.dirname(__file__), "../../soccer_trajectories/trajectories/bez2/" + "rightkick_2" + ".csv")
-        )
+        tm = TrajectoryManagerSim(self.world, self.bez, "bez2_sim", "getupfront")
+
         # self.bez = Bez(robot_model="bez1", pose=Transformation())
-        walk = Navigator(self.world, self.bez, imu_feedback_enabled=False)
+        walk = Navigator(self.world, self.bez, imu_feedback_enabled=False, ball=True)
         walk.ready()
         walk.wait(100)
         target_goal = [0.05, 0, 0.0, 10, 500]
@@ -82,7 +81,7 @@ class TestPlaco(unittest.TestCase):
             if 0 < np.linalg.norm(ball_pos.position[:2]) < 0.2 and not kicked:
                 walk.ready()
                 walk.wait(100)
-                tm.send_trajectory()
+                tm.send_trajectory("rightkick")
                 kicked = True
                 # walk.kick_ready()
                 # walk.kick()
@@ -130,6 +129,32 @@ class TestPlaco(unittest.TestCase):
             #     walk.reset_walk()
             self.world.step()
         walk.wait(10000)
+
+    def test_bez1_auto(self):
+
+        self.world = PybulletWorld(
+            camera_yaw=90,
+            real_time=REAL_TIME,
+            rate=200,
+        )
+        self.bez = Bez(robot_model="assembly", pose=Transformation())
+        tm = TrajectoryManagerSim(self.world, self.bez, "bez2_sim", "getupfront")
+
+        for i in range(100000):
+            y, p, r = self.bez.sensors.get_imu()
+            print(y, "  ", p, "  ", r)
+
+            if p > 1.25:
+                print("getupfront")
+                tm.send_trajectory("getupfront")
+            elif p < -1.25:
+                print("getupback: ")
+                tm.send_trajectory("getupback")
+            elif r < -1.54 and -0.5 < p < -0.4:
+                tm.send_trajectory("getupsideleft")
+            elif r > 1.54 and -0.5 < p < -0.4:
+                tm.send_trajectory("getupsideright")
+            self.world.step()
 
     def test_bez1_kick(self):
 
