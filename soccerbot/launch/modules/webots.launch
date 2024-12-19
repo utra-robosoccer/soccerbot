@@ -6,5 +6,9 @@
     <env name="TEAM_1_PLAYERS_ON_FIELD" value="1" if="$(arg single)" />
     <env name="TEAM_2_PLAYERS_ON_FIELD" value="" if="$(arg single)" />
     <env name="JAVA_HOME" value="/usr" />
-    <node pkg="soccerbot" type="webots.sh" name="webots" required="true" />
+    <node pkg="soccer_webots" type="webots.sh" name="webots" required="true" />
+
+    <node pkg="soccer_webots" type="bridge_ground_truth.py" name="bridge_ground_truth" output="screen" unless="$(optenv COMPETITION false)" />
+
+    <node pkg="soccer_webots" type="bridge_webots.py" name="bridge_webots" output="screen" />
 </launch>

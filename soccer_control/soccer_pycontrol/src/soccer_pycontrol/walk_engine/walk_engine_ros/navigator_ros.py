@@ -11,18 +11,19 @@ from soccer_msgs.msg import BoundingBoxes
 
 
 class NavigatorRos(Navigator):
-    def __init__(self, bez: BezROS, imu_feedback_enabled: bool = False):
+    def __init__(self, bez: BezROS, imu_feedback_enabled: bool = False, ball2: bool = False):
         self.ball = None
+        self.ball2 = ball2
         self.imu_feedback_enabled = imu_feedback_enabled
         self.bez = bez
 
-        self.foot_step_planner = FootStepPlanner(self.bez.robot_model, self.bez.parameters, rospy.get_time, debug=False)
+        self.foot_step_planner = FootStepPlanner(self.bez.robot_model, self.bez.parameters, rospy.get_time, debug=False, ball=self.ball2)
         # TODO publish local odomtry from foot step planner
         self.rate = rospy.Rate(1 / self.foot_step_planner.DT)
         self.func_step = self.rate.sleep
 
         self.walk_pid = Stabilize(self.bez.parameters)
-        self.max_vel = 0.06
+        self.max_vel = 0.09
         self.nav_x_pid = PID(
             Kp=0.5,
             Kd=0,
@@ -76,8 +77,8 @@ class NavigatorRos(Navigator):
         angles = np.linspace(-np.pi, np.pi)
 
         while not rospy.is_shutdown():
-            # self.walk(self.ball, True)
-            self.walk(target_goal, False)
+            self.walk(self.ball, True)
+            # self.walk(target_goal, True)
             # for j in angles:
             #
             #     # print(f"POS: tf: {self.bez.sensors.get_height().position} gt:   {self.bez.sensors.get_global_height().position}")

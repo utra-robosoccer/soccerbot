@@ -12,7 +12,7 @@ from soccer_pycontrol.model.model_ros.sensors_ros import SensorsROS
 class BezROS(Bez):
     def __init__(self, ns: str = ""):
         self.ns = ns
-        self.robot_model = "assembly"  # rospy.get_param("robot_model", "assembly")
+        self.robot_model = "bez1"  # rospy.get_param("robot_model", "assembly")
 
         if rospy.get_param("/use_sim_time", False):
             sim = "_sim"

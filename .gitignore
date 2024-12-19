@@ -12,7 +12,7 @@ __pycache__/
 soccer_webots/protos/*.cache
 soccer_webots/protos/Soccerbot_meshes/*.cache
 soccer_webots/worlds/*.wbproj
-soccer_webots/worlds/.kid.wbproj
+external/hlvs_webots/soccer_webots/worlds/.kid.wbproj
 cmake-build-debug
 
 /soccer_strategy/game_controller/robocup_extension_pb2.py

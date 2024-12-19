@@ -49,7 +49,7 @@
 <!--        <arg name="robot_model" value="$(arg robot_model)" />-->
 <!--    </include>-->
 
-    <include file="$(find soccerbot)/launch/modules/communication.launch" if="$(arg simulation)" />
+<!--     <include file="$(find soccerbot)/launch/modules/communication.launch" if="$(arg simulation)" /> -->
 
     <node pkg="soccer_strategy" type="game_controller_receiver.py" name="game_controller_receiver" output="screen" />
 

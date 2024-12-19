@@ -88,7 +88,7 @@ WORKDIR /home/robosoccer/catkin_ws
 # Build Python ROS Packages
 RUN source /opt/ros/noetic/setup.bash && catkin config --cmake-args -DCMAKE_BUILD_TYPE=Debug
 RUN source /opt/ros/noetic/setup.bash && catkin build --no-status soccerbot
-RUN echo "source /home/robosoccer/ca/opt/ros/noetic/lib/python3/dist-packagestkin_ws/devel/setup.bash" >> ~/.bashrc
+RUN echo "source /opt/ros/noetic/lib/python3/dist-packages" >> ~/.bashrc
 
 # TODO need another stage for dev or maybe another docker
 RUN sudo cp -a /home/robosoccer/catkin_ws/devel/lib/python3/dist-packages/soccer_msgs  /opt/ros/noetic/lib/python3/dist-packages/

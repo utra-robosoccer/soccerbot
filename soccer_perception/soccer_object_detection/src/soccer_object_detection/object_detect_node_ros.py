@@ -51,7 +51,7 @@ class ObjectDetectionNodeRos(ObjectDetectionNode):
         self.br2 = tf.TransformBroadcaster()
 
         # ROS
-        self.pub_ball = rospy.Publisher("/robot1/ball", PoseStamped)
+        self.pub_ball = rospy.Publisher("/robot1/ball", PoseStamped, queue_size=1)
         self.pub_detection = rospy.Publisher("/robot1/detection_image", Image, queue_size=1, latch=True)
         self.pub_boundingbox = rospy.Publisher("/robot1/object_bounding_boxes", BoundingBoxes, queue_size=1, latch=True)
         self.image_subscriber = rospy.Subscriber(

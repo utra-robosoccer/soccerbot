@@ -12,19 +12,23 @@ x-simulator: &simulator
   cap_add:
     - SYS_PTRACE
   pid: "host"
-  command: bash -c "webots --batch --sysinfo --log-performance=performance.log ./hlvs_webots/worlds/robocup.wbt"
+  command:
+    /bin/bash -c "export ROS_MASTER_URI=http://localhost:11311 && export ROS_IP=127.0.0.1 && export PYTHONPATH=$PYTHONPATH:$WEBOTS_HOME/lib/controller/python38 && export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$WEBOTS_HOME/lib/controller &&  source ~/catkin_ws/devel/setup.bash &&
+    roslaunch soccer_webots webots.launch  __ns:=robot1 || sleep infinity"
   volumes:
     - /tmp/.X11-unix:/tmp/.X11-unix:rw
     - /dev/dri:/dev/dri:rw
     - /dev/snd:/dev/snd:rw
-    - /home/$USER/catkin_ws/src/soccerbot/external/hlvs_webots/worlds:/usr/local/hlvs_webots/worlds:rw
-    - /home/$USER/catkin_ws/src/soccerbot/external/hlvs_webots/controllers/referee/:/usr/local/hlvs_webots/controllers/referee/:rw
-    - /home/$USER/catkin_ws/src/soccerbot/external/hlvs_webots/protos/:/usr/local/hlvs_webots/protos/:rw
+    - /home/$USER/catkin_ws/src/soccerbot/external/hlvs_webots/worlds:/home/robosoccer/catkin_ws/src/soccerbot/external/hlvs_webots/worlds:rw
+    - /home/$USER/catkin_ws/src/soccerbot/external/hlvs_webots/controllers/referee/:/home/robosoccer/catkin_ws/src/soccerbot/external/hlvs_webots/controllers/referee/:rw
+    - /home/$USER/catkin_ws/src/soccerbot/external/hlvs_webots/protos/:/home/robosoccer/catkin_ws/src/soccerbot/external/hlvs_webots/protos/:rw
+    #    - /home/$USER/catkin_ws/src/soccerbot/external/hlvs_webots/soccer_webots/:/home/robosoccer/catkin_ws/src/soccerbot/external/hlvs_webots/soccer_webots/:rw
     - /var/run/docker.sock:/var/run/docker.sock
     - /dev:/dev
 
 services:
   simulator:
+    user: "1000"
     <<: *simulator
     environment:
       PYTHONUNBUFFERED: 1

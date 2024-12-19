@@ -17,7 +17,7 @@ x-soccerbot: &soccerbot
   security_opt:
     - seccomp:unconfined
   command:
-    /bin/bash -c "export ROS_MASTER_URI=http://$$(hostname -i):11311 && export ROS_IP=$$(hostname -i) &&
+    /bin/bash -c "export ROS_MASTER_URI=http://localhost:11311 && export ROS_IP=127.0.0.1 &&
     bash ./src/soccerbot/soccerbot/scripts/start_competition.sh robot$$ROBOCUP_ROBOT_ID"
   volumes:
     - /home/$USER/catkin_ws/src/soccerbot:/home/robosoccer/catkin_ws/src/soccerbot
@@ -34,9 +34,9 @@ services:
       ROBOCUP_ROBOT_ID: 1 # (see start_competition.sh for positions), not 1 https://discord.com/channels/462951096374132736/798238127588114462/954388600290685008
       ROBOT_MODEL: bez1
       ROBOCUP_TEAM_COLOR: "red"
-      ROBOCUP_SIMULATOR_ADDR: "simulator:10001"
-      ROBOCUP_GAMECONTROLLER_IP: "simulator"
-      ROBOCUP_MIRROR_SERVER_IP: "simulator"
+      #      ROBOCUP_SIMULATOR_ADDR: "simulator:10001"
+      #      ROBOCUP_GAMECONTROLLER_IP: "simulator"
+      #      ROBOCUP_MIRROR_SERVER_IP: "simulator"
       ROBOCUP_TEAM_ID: 16
       PYTHONUNBUFFERED: 1
       DISPLAY: unix$DISPLAY
@@ -57,9 +57,9 @@ services:
       ROBOCUP_ROBOT_ID: 1 # (see start_competition.sh for positions), not 1 https://discord.com/channels/462951096374132736/798238127588114462/954388600290685008
       ROBOT_MODEL: bez1
       ROBOCUP_TEAM_COLOR: "red"
-      ROBOCUP_SIMULATOR_ADDR: "simulator:10001"
-      ROBOCUP_GAMECONTROLLER_IP: "simulator"
-      ROBOCUP_MIRROR_SERVER_IP: "simulator"
+      #      ROBOCUP_SIMULATOR_ADDR: "simulator:10001"
+      #      ROBOCUP_GAMECONTROLLER_IP: "simulator"
+      #      ROBOCUP_MIRROR_SERVER_IP: "simulator"
       ROBOCUP_TEAM_ID: 16
       PYTHONUNBUFFERED: 1
       DISPLAY: unix$DISPLAY

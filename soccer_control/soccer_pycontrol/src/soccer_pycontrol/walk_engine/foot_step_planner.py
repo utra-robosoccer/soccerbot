@@ -85,7 +85,7 @@ class FootStepPlanner:
         joints_task = self.solver.add_joints_task()
         if self.ball:
             self.look_at_ball = self.solver.add_axisalign_task("camera", np.array([1.0, 0.0, 0.0]), np.array([1.0, 0.0, 0.0]))
-            self.look_at_ball.configure("look_ball", "soft", 1)  # TODO replace with a function that remove_task
+            self.look_at_ball.configure("look_ball", "soft", 0.5)  # TODO replace with a function that remove_task
             if self.robot_model == "bez2" or self.robot_model == "assembly":
                 joints_task.set_joints(
                     {
