@@ -226,11 +226,14 @@ class Navigator:
         # self.foot_step_planner.head_movement([1, 1, 0])
         if self.imu_feedback_enabled and self.bez.sensors.imu_ready:
             [_, pitch, roll] = self.bez.sensors.get_imu()
+            print(pitch,"  ", roll)
             self.stabilize_walk(pitch, roll)
-        self.bez.motor_control.configuration_offset["left_hip_pitch"] = 0.2
-        self.bez.motor_control.configuration_offset["right_hip_pitch"] = 0.2
+        # self.bez.motor_control.configuration_offset["left_hip_pitch"] = 0.15
+        # self.bez.motor_control.configuration_offset["right_hip_pitch"] = 0.15
         self.bez.motor_control.configuration["left_elbow"] = 1.57
         self.bez.motor_control.configuration["right_elbow"] = 1.57
+        self.bez.motor_control.configuration["left_shoulder_roll"] = 0.1
+        self.bez.motor_control.configuration["right_shoulder_roll"] = 0.1
         self.bez.motor_control.set_motor()
 
         self.t = self.foot_step_planner.step(self.t)
@@ -296,7 +299,7 @@ class Navigator:
         error_pitch = self.walk_pid.walking_pitch_pid.update(pitch)
         self.bez.motor_control.set_leg_joint_3_target_angle(error_pitch)  # TODO retune
         pass
-        error_roll = self.walk_pid.walking_pitch_pid.update(roll)  # TODO retune
+        error_roll = self.walk_pid.walking_roll_pid.update(roll)  # TODO retune
         self.bez.motor_control.set_leg_joint_2_target_angle(error_roll)
 
     def set_angles_from_placo(self, planner) -> None:

@@ -85,7 +85,9 @@ class FirmwareInterface:
                 # print(data_h[0], data_l[0], angle)
 
                 data = self.serial.read(size=2 + 2 * 20 + 12)
-
+                # s = time.time()
+                # data = self.serial.read(size=2 + 2 * 20 + 12)
+                # print(1.0 / (time.time() - s))
                 self.pub_joint_state(data)
 
                 self.pub_imu(data)
@@ -125,8 +127,9 @@ class FirmwareInterface:
 
     def pub_imu(self, data):
         imu = Imu()
-        imu.header.stamp = rospy.Time.now()
 
+        imu.header.stamp = rospy.Time.now()
+        imu.header.frame_id = "imu_link"
         imu_data = data[2 + 2 * 20: 2 + 2 * 20 + 12]
 
         # https://www.mouser.com/datasheet/2/783/BST_BMI088_DS001-1509549.pdf
@@ -140,24 +143,24 @@ class FirmwareInterface:
         ay = int.from_bytes(imu_data[2:4], byteorder="big", signed=True) / ACC_RANGE * G
         az = int.from_bytes(imu_data[4:6], byteorder="big", signed=True) / ACC_RANGE * G
 
-        ax, ay = ay, ax  # flip pitch and roll
+        # ax, ay = ay, ax  # flip pitch and roll
 
-        imu.linear_acceleration.x = ax
-        imu.linear_acceleration.y = ay
-        imu.linear_acceleration.z = az
+        imu.linear_acceleration.x = az
+        imu.linear_acceleration.y = ax
+        imu.linear_acceleration.z = ay
 
         vx = int.from_bytes(imu_data[6:8], byteorder="big", signed=True) / IMU_GY_RANGE
         vy = int.from_bytes(imu_data[8:10], byteorder="big", signed=True) / IMU_GY_RANGE
         vz = int.from_bytes(imu_data[10:12], byteorder="big", signed=True) / IMU_GY_RANGE
 
-        vx, vy = vy, vx  # flip pitch and roll
+        # vx, vy = vy, vx  # flip pitch and roll
 
-        print(f"a {ax} {ay} {az}")
-        print(f"v {vx:10.3f} {vy:10.3f} {vz:10.3f}")
+        # print(f"a {ax} {ay} {az}")
+        # print(f"v {vx:10.3f} {vy:10.3f} {vz:10.3f}")
 
-        imu.angular_velocity.x = vx
-        imu.angular_velocity.y = vy
-        imu.angular_velocity.z = vz
+        imu.angular_velocity.x = vz
+        imu.angular_velocity.y = -vx
+        imu.angular_velocity.z = vy
 
         self.imu_publisher.publish(imu)
 
@@ -222,7 +225,7 @@ class FirmwareInterface:
             self.last_motor_publish_time_real = rospy.Time.now()
             self.last_motor_publish_time = joint_state.header.stamp
             t3 = time.time()
-            rospy.loginfo(
+            rospy.logerr_throttle(1,
                 f"Time Lag : {(rospy.Time.now() - joint_state.header.stamp).to_sec()}  Bytes Written: {bytes_to_write} Time Take {t2-t1} {t3-t1}"
             )
 

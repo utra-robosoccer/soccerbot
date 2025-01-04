@@ -32,7 +32,7 @@ void update()
       read_motors(txBuf);
 
       // get current linear Acceleration and Rotational speed
-      read_imu(txBuf);
+     read_imu(txBuf);
 
       CDC_Transmit_FS((uint8_t *) txBuf, sizeof(txBuf));
       HAL_GPIO_TogglePin(GPIOA, GREEN_LED_Pin);
@@ -137,9 +137,12 @@ void command_motors() {
       motorPorts[i]->currMotor = idx + 1;
     }
 
-    HAL_Delay(1); // delay enough for motors to have time to respond
 
-    if(doneWithAllMotors) return; // all motors serviced, peace out
+    if(doneWithAllMotors)  {
+    	//HAL_Delay(1); // delay enough for motors to have time to respond
+    return; // all motors serviced, peace out
+    }
+
   }
 }
 
@@ -192,14 +195,14 @@ void read_motors(uint8_t *rxBuf) {
     }
 
     if (protocol == 1) { // expect different length based on protocol
-      motor_torque_en_p1(p, motorId, 1);
-      HAL_Delay(1);
+//      motor_torque_en_p1(p, motorId, 1);
+//      HAL_Delay(1);
       p->rxPacketLen = 8;
       HAL_UART_Receive_DMA(p->huart, p->rxBuffer, p->rxPacketLen);
       read_motor_present_position_p1(p, motorId);
     } else {
-      motor_torque_en_p2(p, motorId, 1);
-      HAL_Delay(1);
+//      motor_torque_en_p2(p, motorId, 1);
+//      HAL_Delay(1);
       p->rxPacketLen = 15;
       HAL_UART_Receive_DMA(p->huart, p->rxBuffer, p->rxPacketLen);
       read_motor_present_position_p2(p, motorId);

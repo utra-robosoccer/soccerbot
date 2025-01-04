@@ -9,7 +9,7 @@ arm_1_center: 2.512
 # merge_fixed_links: true
 
 # STABILIZE
-walking_pitch_kp: 0 #2.3  1
+walking_pitch_kp: -0.1 #2.3  1
 walking_pitch_kd: 0 #1
 walking_pitch_ki: 0.000
 walking_pitch_setpoint: -0.0
@@ -25,22 +25,22 @@ walking_roll_offset: 0.0
 # Walk parameters - if double_support_ratio is not set to 0, should be greater than replan_frequency
 # Timing parameters
 control_frequency: 0.005
-single_support_duration: 0.3 # Duration of single support phase [s]
+single_support_duration: 0.2 # Duration of single support phase [s]
 single_support_timesteps: 10 # Number of planning timesteps per single support phase
-double_support_ratio: 0.0 # Ratio of double support (0.0 to 1.0)
-startend_double_support_ratio: 1 # Ratio duration of supports for starting and stopping walk
+double_support_ratio: 0.1 # Ratio of double support (0.0 to 1.0)
+startend_double_support_ratio: 2.0 # Ratio duration of supports for starting and stopping walk
 planned_timesteps: 48 # Number of timesteps planned ahead
 replan_timesteps: 10 # Replanning each n timesteps
 
 # Posture parameters
 walk_com_height: 0.23 # Constant height for the CoM [m]
 walk_foot_height: 0.04 # Height of foot rising while walking [m]
-walk_trunk_pitch: 0.0 # Trunk pitch angle [rad]
+walk_trunk_pitch: 0.15 # Trunk pitch angle [rad]
 walk_foot_rise_ratio: 0.2 # Time ratio for the foot swing plateau (0.0 to 1.0)
 
 # Feet parameters
-foot_length: 0.1576 # Foot length [m]
-foot_width: 0.092 # Foot width [m]
+foot_length: 0.1200 # Foot length [m]
+foot_width: 0.072 # Foot width [m]
 feet_spacing: 0.122 # Lateral feet spacing [m]
 zmp_margin: 0.02 # ZMP margin [m]
 foot_zmp_target_x: 0.0 # Reference target ZMP position in the foot [m]

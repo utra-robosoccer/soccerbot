@@ -78,6 +78,11 @@ class NavigatorRos(Navigator):
         while not rospy.is_shutdown():
             # self.walk(self.ball, True)
             self.walk(target_goal, False)
+            # if self.bez.sensors.imu_ready:
+            #     [_, pitch, roll] = self.bez.sensors.get_imu()
+            #     print(pitch, "  ", roll)
+            #     self.stabilize_walk(pitch, roll)
+            #     self.bez.motor_control.set_motor()
             # for j in angles:
             #
             #     # print(f"POS: tf: {self.bez.sensors.get_height().position} gt:   {self.bez.sensors.get_global_height().position}")
