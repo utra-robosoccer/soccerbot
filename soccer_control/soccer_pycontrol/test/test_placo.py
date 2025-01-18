@@ -1,3 +1,4 @@
+import logging
 import os
 import unittest
 from os.path import expanduser
@@ -25,7 +26,7 @@ class TestPlaco(unittest.TestCase):
 
     def test_bez1(self):
         src_path = expanduser("~") + "/catkin_ws/src/soccerbot/soccer_perception/"
-        model_path = src_path + "soccer_object_detection/models/half_5.pt"
+        model_path = src_path + "soccer_object_detection/models/yolov8s_detect_best.pt"
 
         detect = ObjectDetectionNode(model_path)
 
@@ -51,7 +52,7 @@ class TestPlaco(unittest.TestCase):
                 img = self.bez.sensors.get_camera_image()
                 img = cv2.resize(img, dsize=(640, 480))
                 # detect.camera.pose.orientation_euler = [0, np.pi / 8, 0]
-                dimg, bbs_msg = detect.get_model_output(img)
+                dimg, bbs_msg = detect.get_model_output_v8(img)
                 for box in bbs_msg.bounding_boxes:
                     if box.Class == "0":
                         detect.camera.pose.position = [0, 0, self.bez.sensors.get_pose(link=2).position[2]]
@@ -62,7 +63,8 @@ class TestPlaco(unittest.TestCase):
                         kicked = False
                         ball_pos = self.bez.sensors.get_ball()
                         print(
-                            f"floor pos: {detect.camera.calculate_ball_from_bounding_boxes(boundingBoxes).position}  ball: {self.bez.sensors.get_ball().position}"
+                            f"floor pos: {detect.camera.calculate_ball_from_bounding_boxes(boundingBoxes).position}  ball: {self.bez.sensors.get_ball().position}",
+                            flush=True,
                         )
                         # pos = [box.xbase, box.ybase]
                         # # detect.camera.pose.position = self.bez.sensors.get_pose(link=2).position
@@ -74,6 +76,15 @@ class TestPlaco(unittest.TestCase):
                         # ball_pos = Transformation(position=floor_coordinate_robot)
                         # temp = self.bez.sensors.get_pose().rotation_matrix @ self.bez.sensors.get_ball().position + self.bez.sensors.get_pose().position
                         # print(f"pos2: {temp} ball: {self.bez.sensors.get_ball_global().position}")
+                        temp1 = detect.camera.calculate_ball_from_bounding_boxes(boundingBoxes).position
+                        temp2 = self.bez.sensors.get_ball().position
+                font = cv2.FONT_HERSHEY_DUPLEX
+                color = (255, 255, 255)  # red
+                fontsize = 255
+                text = "test"
+                position = (10, 10)
+
+                cv2.putText(dimg, text, position, font, fontsize, color=color)
                 if "DISPLAY" in os.environ:
                     cv2.imshow("CVT Color2", dimg)
                     cv2.waitKey(1)
@@ -99,6 +110,62 @@ class TestPlaco(unittest.TestCase):
             #     target_goal = Transformation(position=[x, y, 0], euler=[theta, 0, 0])
             #     walk.reset_walk()
             self.world.step()
+
+    def test_camera(self):
+        src_path = expanduser("~") + "/catkin_ws/src/soccerbot/soccer_perception/"
+        model_path = src_path + "soccer_object_detection/models/yolov8s_detect_best.pt"
+
+        detect = ObjectDetectionNode(model_path)
+
+        cap = cv2.VideoCapture(2)
+        if not cap.isOpened():
+            print("Cannot open camera")
+            exit()
+
+        # self.world = PybulletWorld(
+        #     camera_yaw=90,
+        #     real_time=REAL_TIME,
+        #     rate=200,
+        # )
+        # self.bez = Bez(robot_model="assembly", pose=Transformation())
+        # tm = TrajectoryManagerSim(self.world, self.bez, "bez2_sim", "getupfront")
+
+        # self.bez = Bez(robot_model="bez1", pose=Transformation())
+        # walk = Navigator(self.world, self.bez, imu_feedback_enabled=False, ball=True)
+        # walk.ready()
+        # walk.wait(100)
+        target_goal = [0.05, 0, 0.0, 10, 500]
+        # target_goal = Transformation(position=[0, 0, 0], euler=[0, 0, 0])
+        print("STARTING WALK")
+        ball_pos = Transformation(position=[0, 0, 0], euler=[0, 0, 0])
+        kicked = False
+        while True:
+            # img = self.bez.sensors.get_camera_image()
+            ret, frame = cap.read()
+            if not ret:
+                print("Can't receive frame (stream end?). Exiting ...")
+                break
+            img = cv2.resize(frame, dsize=(640, 480))
+            # detect.camera.pose.orientation_euler = [0, np.pi / 8, 0]
+            dimg, bbs_msg = detect.get_model_output_v8(img)
+            for box in bbs_msg.bounding_boxes:
+                if box.Class == "0":
+                    detect.camera.pose.position = [0, 0, 0.6]
+                    # detect.camera.pose.orientation_euler = self.bez.sensors.get_pose(link=2).orientation_euler
+                    detect.camera.pose.orientation_euler = [-0.029378, -0.11132, 0.063983]
+                    # detect.camera.pose = self.bez.sensors.get_pose(link=2)
+                    boundingBoxes = [[box.xmin, box.ymin], [box.xmax, box.ymax]]
+                    # print(detect.camera.calculate_ball_from_bounding_boxes(boundingBoxes).position)
+                    # kicked = False
+                    # ball_pos = self.bez.sensors.get_ball()
+                    print(f"floor pos: {detect.camera.calculate_ball_from_bounding_boxes(boundingBoxes).position}", flush=True)
+                    # print(detect.camera.pose.orientation_euler)
+
+            if "DISPLAY" in os.environ:
+                cv2.imshow("CVT Color2", dimg)
+                cv2.waitKey(1)
+
+        # self.world.step()
 
     def test_bez1_walk(self):
 

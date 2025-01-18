@@ -5,46 +5,597 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1718606a-6ea1-4edd-a178-2f51136d492a" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/external/hlvs_webots/soccer_webots/CMakeLists.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/external/hlvs_webots/soccer_webots/config/teams.cfg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/external/hlvs_webots/soccer_webots/package.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/external/hlvs_webots/soccer_webots/setup.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/external/hlvs_webots/soccer_webots/src/soccer_webots/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/external/hlvs_webots/soccer_webots/src/soccer_webots/bridge_ground_truth.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/external/hlvs_webots/soccer_webots/src/soccer_webots/bridge_webots.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/external/hlvs_webots/soccer_webots/src/soccer_webots/messages.proto" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/external/hlvs_webots/soccer_webots/src/soccer_webots/messages_pb2.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_6_1_24,_4_25_PM_[Changes]/shelved.patch" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/external/webots" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/external/yolov5" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_object_localization/images/fieldlines/img0_-0.6805418953941712_-0.19657546078618005_-1.049088190788794.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_object_localization/images/fieldlines/img10_0.8641847711947435_0.18866567631476938_1.5249962322470259.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_object_localization/images/fieldlines/img11_0.0425320918554577_1.629702800190004_-2.915223713456875.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_object_localization/images/fieldlines/img12_1.109509427721366_2.330417857677584_-0.15655553984103276.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_object_localization/images/fieldlines/img13_-1.0020274648257552_-0.168873476816235_1.9748205753546078.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_object_localization/images/fieldlines/img14_-0.4107905429521215_2.4511358573282696_-0.8450607115290163.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_object_localization/images/fieldlines/img15_-1.4659361337858274_-0.5816355306389931_-0.502654929457147.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_object_localization/images/fieldlines/img16_-0.7853100428576383_-1.5254301032646078_-2.984049153805578.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_object_localization/images/fieldlines/img1_0.031962395374173_-0.8891447062075253_-2.658362073693127.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_object_localization/images/fieldlines/img2_-0.19940776631633783_0.9547434357596831_0.22595902027652404.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_object_localization/images/fieldlines/img2_-1.170645594381017_1.6704487675687467_-1.7207161315253598.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_object_localization/images/fieldlines/img3_-0.22778119664751917_0.7841084784936343_-0.3400951076777976.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_object_localization/images/fieldlines/img4_1.4594846269094557_1.495115016609354_-0.5027702268566427.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_object_localization/images/fieldlines/img5_-0.9405160632232356_-2.003114586611703_2.5573300113397712.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_object_localization/images/fieldlines/img6_-1.1265115856779753_-0.9692340250080882_-0.04040952933386244.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_object_localization/images/fieldlines/img7_-0.5656089451711844_-1.973872686616836_-2.1962339783923808.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_object_localization/images/fieldlines/img8_1.1242042670726646_0.5160025182546568_1.0373781171521408.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_object_localization/images/fieldlines/img9_-0.09214002310303626_-0.4566688643207222_-0.38770547262037836.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_object_localization/images/img0_-0.6805418953941712_-0.19657546078618005_-1.049088190788794.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_object_localization/images/img10_0.8641847711947435_0.18866567631476938_1.5249962322470259.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_object_localization/images/img11_0.0425320918554577_1.629702800190004_-2.915223713456875.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_object_localization/images/img12_1.109509427721366_2.330417857677584_-0.15655553984103276.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_object_localization/images/img13_-1.0020274648257552_-0.168873476816235_1.9748205753546078.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_object_localization/images/img14_-0.4107905429521215_2.4511358573282696_-0.8450607115290163.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_object_localization/images/img15_-1.4659361337858274_-0.5816355306389931_-0.502654929457147.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_object_localization/images/img16_-0.7853100428576383_-1.5254301032646078_-2.984049153805578.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_object_localization/images/img1_0.031962395374173_-0.8891447062075253_-2.658362073693127.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_object_localization/images/img2_-0.19940776631633783_0.9547434357596831_0.22595902027652404.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_object_localization/images/img2_-1.170645594381017_1.6704487675687467_-1.7207161315253598.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_object_localization/images/img3_-0.22778119664751917_0.7841084784936343_-0.3400951076777976.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_object_localization/images/img4_1.4594846269094557_1.495115016609354_-0.5027702268566427.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_object_localization/images/img5_-0.9405160632232356_-2.003114586611703_2.5573300113397712.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_object_localization/images/img6_-1.1265115856779753_-0.9692340250080882_-0.04040952933386244.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_object_localization/images/img7_-0.5656089451711844_-1.973872686616836_-2.1962339783923808.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_object_localization/images/img8_1.1242042670726646_0.5160025182546568_1.0373781171521408.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_object_localization/images/img9_-0.09214002310303626_-0.4566688643207222_-0.38770547262037836.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/images/00000_img_fake_cam_026198.PNG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/images/00001_img_fake_cam_022112.PNG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/images/00002_img_fake_cam_020233.PNG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/images/00003_img_fake_cam_019716.PNG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/images/00004_img_fake_cam_006163.PNG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/images/00005_img_fake_cam_007393.PNG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/images/00006_img_fake_cam_018126.PNG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/images/00007_img_fake_cam_011978.PNG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/images/00008_img_fake_cam_020294.PNG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/images/00009_img_fake_cam_015044.PNG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/images/00010_img_fake_cam_025713.PNG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/images/00012_img_fake_cam_009150.PNG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/images/00013_img_fake_cam_018909.PNG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/images/00014_img_fake_cam_024929.PNG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/images/00016_img_fake_cam_007134.PNG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/images/00017_img_fake_cam_002134.PNG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/images/00018_img_fake_cam_004616.PNG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/images/00019_img_fake_cam_002658.PNG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/images/00020_img_fake_cam_009480.PNG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/images/00021_img_fake_cam_027907.PNG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/images/00022_img_fake_cam_026974.PNG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/images/00023_img_fake_cam_029849.PNG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/images/00024_img_fake_cam_014622.PNG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/images/00025_img_fake_cam_003997.PNG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/images/00026_img_fake_cam_003891.PNG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/images/00027_img_fake_cam_017352.PNG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/images/00028_img_fake_cam_003392.PNG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/images/00029_img_fake_cam_012219.PNG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/images/00031_img_fake_cam_008965.PNG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/images/00032_img_fake_cam_011523.PNG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/images/00033_img_fake_cam_002601.PNG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/images/00034_img_fake_cam_007095.PNG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/images/00035_img_fake_cam_024541.PNG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/images/00037_img_fake_cam_024008.PNG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/images/00038_img_fake_cam_003512.PNG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/images/00039_img_fake_cam_025939.PNG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/images/00040_img_fake_cam_023335.PNG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/images/00041_img_fake_cam_006293.PNG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/images/00042_img_fake_cam_005941.PNG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/images/00043_img_fake_cam_005947.PNG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/images/00044_img_fake_cam_015138.PNG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/images/00045_img_fake_cam_013483.PNG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/images/00046_img_fake_cam_007985.PNG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/images/00047_img_fake_cam_014566.PNG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/images/00048_img_fake_cam_024707.PNG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/images/00049_img_fake_cam_026260.PNG" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/labels/00000_img_fake_cam_026198.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/labels/00001_img_fake_cam_022112.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/labels/00002_img_fake_cam_020233.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/labels/00003_img_fake_cam_019716.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/labels/00004_img_fake_cam_006163.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/labels/00005_img_fake_cam_007393.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/labels/00006_img_fake_cam_018126.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/labels/00007_img_fake_cam_011978.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/labels/00008_img_fake_cam_020294.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/labels/00009_img_fake_cam_015044.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/labels/00010_img_fake_cam_025713.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/labels/00012_img_fake_cam_009150.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/labels/00013_img_fake_cam_018909.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/labels/00014_img_fake_cam_024929.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/labels/00016_img_fake_cam_007134.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/labels/00017_img_fake_cam_002134.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/labels/00018_img_fake_cam_004616.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/labels/00019_img_fake_cam_002658.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/labels/00020_img_fake_cam_009480.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/labels/00021_img_fake_cam_027907.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/labels/00022_img_fake_cam_026974.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/labels/00023_img_fake_cam_029849.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/labels/00024_img_fake_cam_014622.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/labels/00025_img_fake_cam_003997.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/labels/00026_img_fake_cam_003891.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/labels/00027_img_fake_cam_017352.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/labels/00028_img_fake_cam_003392.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/labels/00029_img_fake_cam_012219.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/labels/00031_img_fake_cam_008965.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/labels/00032_img_fake_cam_011523.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/labels/00033_img_fake_cam_002601.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/labels/00034_img_fake_cam_007095.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/labels/00035_img_fake_cam_024541.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/labels/00037_img_fake_cam_024008.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/labels/00038_img_fake_cam_003512.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/labels/00039_img_fake_cam_025939.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/labels/00040_img_fake_cam_023335.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/labels/00041_img_fake_cam_006293.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/labels/00042_img_fake_cam_005941.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/labels/00043_img_fake_cam_005947.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/labels/00044_img_fake_cam_015138.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/labels/00045_img_fake_cam_013483.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/labels/00046_img_fake_cam_007985.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/labels/00047_img_fake_cam_014566.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/labels/00048_img_fake_cam_024707.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/images/simulation/labels/00049_img_fake_cam_026260.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/models/yolov8s_detect.pt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/models/yolov8s_detect_best.pt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/src/yolov8/runs/segment/train/args.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/src/yolov8/runs/segment/train2/args.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/src/yolov8/runs/segment/train2/events.out.tfevents.1731791909.anthonykpinson-LOQ-15IRH8.6643.0" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/src/yolov8/runs/segment/train2/labels.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/src/yolov8/runs/segment/train2/labels_correlogram.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/src/yolov8/runs/segment/train2/train_batch0.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/src/yolov8/runs/segment/train2/train_batch1.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/src/yolov8/runs/segment/train2/train_batch2.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/src/yolov8/runs/segment/train3/args.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/src/yolov8/runs/segment/train3/events.out.tfevents.1731791961.anthonykpinson-LOQ-15IRH8.7289.0" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/src/yolov8/runs/segment/train3/labels.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/src/yolov8/runs/segment/train3/labels_correlogram.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/src/yolov8/yolov8n-seg.pt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/src/yolov8/yolov8n.pt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/fieldlines/img0_-0.6805418953941712_-0.19657546078618005_-1.049088190788794.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/fieldlines/img10_0.8641847711947435_0.18866567631476938_1.5249962322470259.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/fieldlines/img11_0.0425320918554577_1.629702800190004_-2.915223713456875.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/fieldlines/img12_1.109509427721366_2.330417857677584_-0.15655553984103276.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/fieldlines/img13_-1.0020274648257552_-0.168873476816235_1.9748205753546078.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/fieldlines/img14_-0.4107905429521215_2.4511358573282696_-0.8450607115290163.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/fieldlines/img15_-1.4659361337858274_-0.5816355306389931_-0.502654929457147.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/fieldlines/img16_-0.7853100428576383_-1.5254301032646078_-2.984049153805578.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/fieldlines/img1_0.031962395374173_-0.8891447062075253_-2.658362073693127.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/fieldlines/img2_-0.19940776631633783_0.9547434357596831_0.22595902027652404.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/fieldlines/img2_-1.170645594381017_1.6704487675687467_-1.7207161315253598.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/fieldlines/img3_-0.22778119664751917_0.7841084784936343_-0.3400951076777976.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/fieldlines/img4_1.4594846269094557_1.495115016609354_-0.5027702268566427.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/fieldlines/img5_-0.9405160632232356_-2.003114586611703_2.5573300113397712.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/fieldlines/img6_-1.1265115856779753_-0.9692340250080882_-0.04040952933386244.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/fieldlines/img7_-0.5656089451711844_-1.973872686616836_-2.1962339783923808.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/fieldlines/img8_1.1242042670726646_0.5160025182546568_1.0373781171521408.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/fieldlines/img9_-0.09214002310303626_-0.4566688643207222_-0.38770547262037836.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img0_2.392288305963447_3.15_-0.7246104310987069.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img100_3.8491069313334174_-3.15_2.0785068119680052.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img101_3.686841068270307_3.15_-0.9735298221271014.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img102_3.79319649478355_-3.15_0.6286392867451649.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img103_-2.475080242508519_3.15_-1.9601088650078757.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img104_-0.03179549816147986_3.15_-0.8006601560405588.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img105_1.662047060458928_3.15_-1.8418885011022794.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img106_-1.2379097397003749_-3.15_0.7772080495003795.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img107_0.7595634738657155_-3.15_1.0664190387422205.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img108_-3.1532687908975463_3.15_-0.6293972511983441.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img109_-1.821622030723546_3.15_-0.8062774170297218.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img10_-3.149220383257993_3.15_-0.9919373264932096.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img110_-2.3487949487146285_-3.15_2.1070769357616292.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img111_-1.3916395332939393_-3.15_0.7150856931865806.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img112_-0.41875470380857927_-3.15_0.7058033686959577.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img113_0.5996152242058139_3.15_-1.0712369225993712.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img113_2.102493360582497_-3.15_2.233582655298388.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img114_-3.365457523866369_3.15_-1.6601806175530485.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img115_-1.5133035554286343_3.15_-2.3378254450226192.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img116_0.6686068543835839_-3.15_2.0658071676776837.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img117_-2.223031549541324_3.15_-1.4335727500190447.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img118_-0.047346871387758505_-3.15_1.50273662652096.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img119_-1.951273959319777_-3.15_1.9002718642775822.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img11_1.0025474853392282_-3.15_2.3247372905027115.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img120_0.7503264002154433_3.15_-1.5803463635634543.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img121_1.865966425816044_3.15_-2.054363800386528.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img122_-1.9819829144116925_3.15_-1.8887864905067726.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img123_-1.3423674409423745_-3.15_1.356357419649681.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img124_-3.8533290959105804_-3.15_2.0266759199862414.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img125_0.5464497177387351_3.15_-1.1487084756210157.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img126_3.09553633687106_3.15_-0.9755114195932737.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img127_-2.098846698770422_-3.15_0.9165253304586098.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img128_-1.5709608781200908_-3.15_1.1286322577314143.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img129_0.3817022993440009_3.15_-2.029055598696444.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img12_-1.5016853348623354_-3.15_1.503321640979243.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img130_1.321786172261218_3.15_-1.9452190773418159.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img131_-1.1207160145125892_-3.15_0.7537316870150998.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img132_0.2383469829409277_-3.15_1.641218065668143.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img133_-3.922167931240221_-3.15_0.6357475492009517.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img134_0.2658685688466518_-3.15_1.7906536689266932.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img135_-3.7649024525028496_3.15_-1.1608099638225116.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img136_3.3333000379167306_3.15_-1.6802690032775125.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img137_-2.390808699652818_-3.15_2.0978149661345906.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img138_-1.9966743056562164_-3.15_0.8984224364118905.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img139_0.5721566636493041_3.15_-2.079113765844721.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img13_2.5747424136229045_-3.15_1.0632848962635293.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img140_-0.2441731536153684_-3.15_2.085819322959815.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img141_-2.9771529353848925_3.15_-0.8620670589894652.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img142_1.9589339517218143_3.15_-1.527777434783418.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img143_-1.5038586665052627_3.15_-2.1548098926789634.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img144_-3.7810364418483866_-3.15_1.4202306889264131.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img145_0.20217078652671017_-3.15_2.3357964922865304.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img146_0.735811995863247_-3.15_1.160649057172725.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img147_1.79479872876795_-3.15_1.4793595494207474.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img148_-1.6519611200321034_-3.15_1.1605135745801431.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img149_-0.25588893639662835_3.15_-1.9243641026532143.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img14_-3.2924717437103874_-3.15_1.6955431540653485.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img150_1.7086477947412062_-3.15_1.8709866382969178.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img151_-0.6587517062366217_3.15_-0.7612857914582787.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img152_-0.4693931886793763_-3.15_2.3455165197570613.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img153_-1.7611497371779246_-3.15_0.9882544302171066.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img154_1.8702354117315627_3.15_-1.0751542473197282.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img154_2.3966687759439047_-3.15_2.3916341170077144.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img155_-2.7369732420763064_-3.15_2.3738233695441053.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img156_-3.3546554443018133_-3.15_1.032715960595225.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img157_3.9749695331225245_3.15_-0.85942885881314.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img158_-3.8257069057195165_3.15_-1.690535141905181.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img158_3.9689802331496606_-3.15_1.22987684318304.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img159_3.2019919947918396_-3.15_2.5011307224587833.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img15_-0.005262693884229286_3.15_-2.3751884565148753.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img160_-1.452993567956688_-3.15_0.7763055830612666.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img161_-2.7367120235622604_3.15_-0.9829224013289621.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img162_-2.7872842647786236_3.15_-0.8680694344771853.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img163_1.5738514380540671_3.15_-1.6294038992087878.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img164_1.9400822011201022_-3.15_0.8592407297055029.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img165_3.3437520206390197_-3.15_2.0925221293187795.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img166_3.782218125534021_-3.15_0.7834050561805685.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img167_-1.2710436986241591_3.15_-2.103369538413588.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img168_2.5741265866934304_-3.15_2.4641693873243016.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img169_-3.323375527708767_3.15_-0.8707434517204407.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img16_3.0809239413137535_3.15_-0.9008829181162532.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img170_-3.5568676271887796_3.15_-1.9385634985441431.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img171_-1.7150969259301885_3.15_-1.5620478453283568.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img171_0.2055679214238868_3.15_-0.6313350166465777.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img172_-1.4737009014822995_3.15_-1.5499569970982334.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img173_-0.852141317992289_3.15_-1.7125376246657054.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img174_-3.185939010676175_3.15_-1.9297160974036693.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img175_-0.6753937915627821_3.15_-0.7100162308500528.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img176_-3.2266182473408165_3.15_-2.416261334838085.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img177_0.8007838247993133_-3.15_0.9145155284510493.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img178_2.451639437200484_-3.15_2.112842474150738.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img179_3.710077236590765_-3.15_1.5280934561100645.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img17_-3.8480280226689674_-3.15_1.5860068115632215.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img180_-1.7055619951373924_3.15_-2.1382669289753875.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img181_-2.6251402960640204_3.15_-2.418097444915899.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img182_-3.789109594009976_3.15_-1.1450155290240775.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img183_2.420213972449801_-3.15_0.594754076546125.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img184_0.9494145100042877_-3.15_0.9939496048668148.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img185_2.203808195420156_3.15_-0.6837880952384388.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img186_1.1373037131560197_-3.15_2.337927337709033.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img187_-1.7032720522594165_3.15_-2.4812605184759904.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img188_2.6642284456374146_3.15_-2.492394506058321.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img189_-2.2277576122765907_-3.15_2.29207646865218.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img18_1.678370956682663_3.15_-1.2084499387829146.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img190_2.166877510756793_3.15_-1.8330801994889292.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img191_-0.8672556568909968_-3.15_1.2427180238403053.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img191_0.8749827570388957_-3.15_1.299590273370219.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img192_-0.17872349869089899_-3.15_1.8619234981654558.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img193_-0.876224418330577_3.15_-0.8390167685852028.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img194_0.9707977717871259_3.15_-2.335318936387421.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img195_-3.7745272823111007_-3.15_1.893820587100298.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img196_0.5906955321527994_-3.15_2.165972130658664.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img197_-3.1267040952600427_-3.15_1.1228815843846018.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img198_-3.3624268153908394_-3.15_1.3987564442609979.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img199_-1.0903986853545664_-3.15_1.7308714601615651.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img19_-0.6537702656802731_-3.15_1.436339812819942.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img1_1.6096531922054265_3.15_-1.24283917497135.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img200_-3.244580639038147_3.15_-2.438152831003783.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img201_-2.4815782591048325_3.15_-1.458023256363875.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img202_3.5828178617029467_-3.15_1.3712499798559907.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img203_2.611231056351234_-3.15_2.465458889283954.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img204_3.56689966646167_-3.15_0.9035239177436205.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img205_-3.920539604306219_3.15_-1.9149010565534255.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img206_1.335313340364869_3.15_-1.476976563149624.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img207_-1.276314934759454_-3.15_1.9441280513300545.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img208_0.5195646439925685_3.15_-2.009308818765495.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img209_-2.7060179430671267_3.15_-1.3633085276451746.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img20_1.7975844767757447_-3.15_2.0357797098023513.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img210_-3.9665875593632762_-3.15_1.270534024853584.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img211_-3.2241616341244432_-3.15_2.250359212231665.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img212_3.237707434461287_-3.15_1.7083417188848127.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img213_2.176852901341343_-3.15_2.517572802620758.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img214_-0.778345502052308_3.15_-2.0354318116937087.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img215_2.024025974570872_-3.15_0.7606642779681556.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img216_-2.4365584140854537_-3.15_0.7313226413867484.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img217_-2.6378996469023956_-3.15_1.1415861990777392.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img218_-1.3907611019627568_3.15_-1.197814049838742.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img219_0.09864398537174157_3.15_-2.211020276903316.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img21_-1.5321855908408413_3.15_-2.2649549535447706.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img220_-0.7528664398606759_3.15_-0.5857963431954474.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img221_-2.0377828985869195_-3.15_0.7080517549845629.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img222_2.1113399624114066_-3.15_2.069698900007035.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img223_2.950648212212826_3.15_-1.3479796997911226.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img224_-3.503201876519336_-3.15_2.02192046507176.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img225_0.44001789583072526_3.15_-0.7082067204564526.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img226_3.765054446982048_3.15_-2.4636439662329526.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img227_2.3123477932291996_-3.15_1.3910700639995737.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img228_-2.6909053458755396_-3.15_0.7619964711966882.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img229_-1.434812032323098_3.15_-1.3712677577636019.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img22_3.640437226658964_-3.15_1.753359480439378.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img230_2.216347415315213_3.15_-1.3729780315174935.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img231_1.254232356948596_-3.15_1.0323115244342909.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img232_-1.635676384730992_3.15_-1.9423048519750923.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img233_3.3281332883574546_-3.15_1.4643550159936112.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img234_2.010268613786552_3.15_-1.290378141809758.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img235_-2.1658992508330677_3.15_-2.26527506382579.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img236_1.4089909560357299_3.15_-2.529370565057294.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img237_-1.9660958097415886_3.15_-1.0816999738303656.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img238_-2.041663916354734_3.15_-1.7566480266088322.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img238_2.894157344564439_-3.15_1.4355202146664048.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img239_-2.196452252913949_3.15_-1.1660014939303258.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img23_3.541126066968297_3.15_-1.4998759999768851.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img240_-0.828840332509917_-3.15_1.1910911267916133.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img241_3.785627526889945_3.15_-2.175788690030358.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img242_-2.9961641161080435_3.15_-0.8766216112414074.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img243_0.5773395388410103_-3.15_1.3640809968804686.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img244_-0.4331099847007778_3.15_-0.7691807607713952.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img245_-1.6447620753159793_3.15_-1.777857865558624.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img246_-0.7746455874570657_3.15_-1.0222193387030791.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img247_-3.169831310128302_3.15_-0.807209301081873.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img248_-2.663528138187088_3.15_-1.0188103638242874.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img249_-2.6902471157383996_-3.15_1.1175700741395695.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img24_-0.6736971339773641_-3.15_1.7517633728837148.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img250_2.068116410646944_3.15_-2.4823815582449664.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img251_1.0764476716396256_-3.15_1.4725942013112834.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img252_0.9799808564654331_3.15_-1.08606030898286.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img253_0.2745399104536501_3.15_-1.8890293622447443.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img254_3.7703457949295016_-3.15_2.027623281235135.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img255_-1.1012460006051263_-3.15_0.9649068449717644.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img256_-3.019770684041484_-3.15_1.9913407460675276.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img257_-0.7813409122419381_3.15_-1.1655287458978976.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img258_-3.006641646799661_3.15_-1.4914206226838191.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img259_3.736236064349357_3.15_-2.337254782557121.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img25_-1.920844143660804_3.15_-2.2372063345018756.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img260_2.4400209857984843_3.15_-1.2877676710412798.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img261_-3.3144905095265456_-3.15_1.719951627318664.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img262_-3.6804403090019395_-3.15_2.230653930050072.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img263_-2.702422438875118_3.15_-1.1789576647388513.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img264_-2.3188649937823866_3.15_-2.4314796917921306.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img265_1.3237533315886916_-3.15_2.1052258858605777.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img266_-1.0391493838288808_-3.15_2.1857772599900716.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img267_-3.915443928719524_-3.15_0.5865790303030964.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img268_2.569765266842089_-3.15_1.5945394256119245.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img269_3.36155875842352_3.15_-2.1634391057451574.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img26_1.8540895531136412_-3.15_0.9075870947480127.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img270_2.6922004214576267_3.15_-0.993415837095728.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img271_3.3371153520569496_3.15_-0.6615204880160108.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img272_-1.8768420814888405_-3.15_2.1048342151830304.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img273_-1.3517598562949882_3.15_-1.740347761466678.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img274_0.20446260648219194_-3.15_1.4036408121471988.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img275_-3.796258326240274_-3.15_2.3818850831054563.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img276_1.6137554206374256_3.15_-0.8383154676012361.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img277_-2.1974542351366573_3.15_-0.7819422395202493.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img278_2.36157019730312_3.15_-1.0021157722563954.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img279_2.2307996217895614_-3.15_1.6503515432449.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img27_3.0303650085355462_-3.15_1.6684466836952325.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img280_-3.1733553809267114_-3.15_1.4973932247345678.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img281_3.588749432166118_3.15_-2.528922705698382.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img282_0.760223678488817_3.15_-0.6098541810162836.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img283_-3.8869654410213528_-3.15_2.56665754514888.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img283_1.1044568976140843_3.15_-1.3773532410858265.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img284_-0.4787580526800639_-3.15_1.9094914975225528.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img285_-2.6440094733033446_3.15_-0.672501912654144.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img286_-1.965941625055656_3.15_-0.8683124687919876.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img287_-1.4889398879482503_3.15_-1.7890790757096688.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img288_-3.4550479737859217_3.15_-1.1083567768727443.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img289_2.466788730642852_3.15_-2.289124460948474.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img28_-1.9367574463536945_3.15_-1.9961778668985681.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img290_-3.978661097099941_3.15_-1.961178985021844.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img291_2.2380770794754987_3.15_-1.3858671853040723.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img292_-1.4384685699864121_-3.15_2.3423467181896065.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img293_0.3501378647091915_3.15_-1.9177578066817365.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img294_1.2281728493028679_-3.15_2.3427826073595712.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img295_-1.3748315786410084_-3.15_2.2874786503027345.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img296_1.8192792256363717_-3.15_1.6829668061995318.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img297_1.1306522157458492_-3.15_1.068468294889057.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img298_-2.606048085008359_3.15_-2.482603394492826.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img299_1.2061296130307442_3.15_-2.1917467683616714.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img29_3.167969858997009_-3.15_0.8894623748707029.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img2_-3.4807471722717933_-3.15_1.9612307794687176.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img300_-0.2883548228569994_-3.15_1.0146637830561924.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img301_0.4777420414789244_3.15_-1.9700415566813367.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img302_-3.1014268024332985_3.15_-1.9221938564920336.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img303_3.8075603213337965_-3.15_2.4018653714627844.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img304_3.354907238696053_-3.15_1.4210427173788696.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img305_3.9797337998304654_3.15_-1.962492634549582.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img306_3.608758105182427_3.15_-0.915191746996852.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img307_-3.2572902745512824_3.15_-0.6605364919003205.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img308_0.38482346825759084_-3.15_1.1438782890566837.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img309_-2.324810043139996_-3.15_1.3112598727665021.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img30_0.2669155531918417_3.15_-2.290210345473439.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img310_3.6692177083789037_-3.15_1.5560902291135343.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img311_-1.3431704563777451_3.15_-1.0316770460783866.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img312_3.4475113469662606_3.15_-0.7382022204580048.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img313_-2.959440581213479_-3.15_2.305916052014333.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img314_1.2460519049069747_3.15_-0.6124650433346119.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img315_0.6025147899691508_-3.15_2.1258989914557542.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img316_-2.787799954346422_-3.15_0.80615738847334.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img317_-2.9061694479654694_-3.15_0.9518003433481956.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img318_1.458115287327768_-3.15_2.3754313519636283.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img319_-0.13062787837407885_3.15_-0.8955374663109807.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img31_-0.9830014647208998_-3.15_0.9441797102820462.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img320_-1.4487148880349867_-3.15_1.0601755792131748.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img321_3.290793640713944_3.15_-1.4991979426860085.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img322_-1.5641991564012638_3.15_-1.290509729014321.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img323_-0.6200437908379604_3.15_-2.4108895124496574.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img324_1.3540502566534283_-3.15_1.1519786987322445.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img325_-1.3372303544336654_3.15_-1.820416185678918.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img326_1.3058141333496573_3.15_-1.189810638045462.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img327_0.7598258563005196_3.15_-1.118865347002059.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img328_-2.171176469185138_-3.15_1.9325232991214745.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img329_-1.9410263178427627_-3.15_1.2017079951274898.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img329_0.19338591782083725_-3.15_1.2941981220022334.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img32_-2.162346682752756_-3.15_0.8790931021867514.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img330_-1.8263461206509026_3.15_-1.7139134162925576.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img331_2.4256620557313653_3.15_-1.4879458653297173.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img332_2.29265332366141_-3.15_1.5013270751529026.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img333_3.032597508378055_-3.15_1.6091657174839238.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img334_0.5382670459657835_-3.15_1.8797937102730675.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img335_-1.3333185351433459_-3.15_2.026984632532047.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img336_1.4570565217395615_-3.15_2.251346782916114.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img337_1.4589493111239538_-3.15_0.9087254989468692.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img338_-2.262700968878166_3.15_-2.409205152783395.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img339_-3.601824519157505_3.15_-1.966029212054869.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img33_-0.37515562178961037_-3.15_1.593323415684649.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img340_-1.8125276560463632_-3.15_2.5243317255307307.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img341_0.960470105738711_-3.15_1.3585673890175494.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img342_3.804342338621698_3.15_-0.8883926650834744.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img343_-2.8256052051053544_3.15_-2.1485720431187323.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img344_0.38920632348782824_3.15_-1.7900073008846202.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img345_3.7396294667171572_-3.15_2.1808022953992516.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img346_-1.0650633413570176_-3.15_2.200939815018657.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img347_-0.9117529131398516_3.15_-1.8391215826779994.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img348_3.9446758299257176_3.15_-1.0357070070454766.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img349_-2.085532031801378_-3.15_2.500325967128828.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img34_0.0951633556012732_3.15_-0.7291020833971404.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img350_1.3674287461278345_-3.15_1.23097261169343.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img351_-0.16993284180128665_3.15_-1.8449672916783924.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img352_2.217325951031463_-3.15_1.4381630181362959.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img353_3.473020094399149_-3.15_0.8594290970942107.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img354_2.7378124311153966_3.15_-0.9372412546216884.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img355_2.1648860980567672_3.15_-0.6150160830738998.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img356_1.9605354017631607_3.15_-1.0085998184194485.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img357_3.4013033354570403_3.15_-1.8420596166260974.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img358_-1.8608588749803179_3.15_-1.5867576022791927.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img359_-0.49194493884366164_3.15_-1.6349138602577198.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img35_-0.5759595388243026_3.15_-1.9256556126380053.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img360_-2.1115062040773704_-3.15_0.7665310714322102.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img361_-3.7663320758305288_3.15_-1.0990213499165042.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img362_-0.672205195715514_-3.15_2.2186886679451225.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img363_-3.2313178063891606_3.15_-1.3920305503646209.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img364_3.74283466263459_3.15_-1.734239124276071.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img365_1.2937708458465558_3.15_-1.5847242458597388.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img366_2.164950499807249_-3.15_2.3823206310631164.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img367_1.5359465845880775_3.15_-1.0106722231943928.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img368_0.6957834450868736_3.15_-1.0751981438029545.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img369_-2.7502599146848974_-3.15_2.54047265611151.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img36_-2.5767619465389062_3.15_-2.0205854910791974.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img370_-2.2681861595908543_-3.15_2.1666307058499266.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img371_3.420163091210382_3.15_-2.4490798223004457.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img372_0.9385499848702317_3.15_-0.9013764892019449.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img373_1.3207028541579753_-3.15_0.580888039007897.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img374_-2.056426164639004_-3.15_0.8248605235004096.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img375_-1.0103577356703841_-3.15_2.554113738408427.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img375_-2.365362578569033_3.15_-2.4508382843435896.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img376_2.845599701531989_-3.15_2.3211467988926815.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img377_-2.1950531629647045_3.15_-1.2116450402624617.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img378_-1.3922294222626581_-3.15_0.9145854563933995.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img379_3.580226259270537_-3.15_2.181652265839814.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img37_3.9012952292410317_3.15_-2.0181922590570816.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img380_1.828842907837056_3.15_-1.840741072952247.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img381_-3.1978645336782296_-3.15_2.468679477788531.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img382_1.1028003609892183_3.15_-1.032380020259282.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img383_2.891401136000052_3.15_-2.1601833317609094.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img384_0.8920901489718087_-3.15_1.3537867416331837.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img385_2.640675706196122_3.15_-1.718398147423321.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img386_-1.949739563604214_3.15_-2.3381807178961305.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img387_3.0091645843129378_3.15_-2.5243906888586407.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img388_-0.7008309746314554_-3.15_1.4104469667949164.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img389_0.614844139643755_-3.15_1.8021234972359899.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img38_-2.986241734911454_-3.15_2.0988639389949872.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img390_2.142891387886441_3.15_-2.1148476299545953.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img391_0.008576734926706742_-3.15_1.5718273703353807.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img392_-1.5453134981902874_3.15_-0.9332124146652847.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img393_3.4070798309010257_-3.15_1.1869603253461811.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img394_1.430261956421238_-3.15_2.322765615391294.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img395_-1.495697954929759_-3.15_1.3103128141212883.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img396_1.2141233952763537_-3.15_2.141592703113256.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img397_-2.449789255461612_-3.15_1.430875611049649.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img398_3.0330393747929145_-3.15_0.8554269981073819.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img399_0.146613856857293_-3.15_1.651685151144423.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img39_-1.8636416075214344_3.15_-0.7275314099671233.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img3_2.9293804350266024_-3.15_1.1884940608899108.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img400_-3.7576847301583003_3.15_-1.2192544136747132.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img401_-0.6114264732365111_-3.15_1.026136683709701.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img402_-0.0395141633739291_-3.15_1.6158748089089086.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img403_2.7197193028956965_-3.15_1.996961150114965.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img404_-0.0843037466965102_-3.15_0.9452822719158629.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img405_-0.5610137395681338_-3.15_2.141057388727252.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img40_-2.549757014468108_3.15_-0.8675484045668611.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img40_0.2846036866131145_-3.15_0.8267990192391272.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img41_3.4133810629973063_3.15_-1.470502035814812.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img42_2.2608146656359107_-3.15_2.534863183309813.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img43_2.5076008803714904_-3.15_2.563808871082455.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img44_-0.5125671737849462_-3.15_0.6913650071473996.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img45_-1.2905998095670634_-3.15_1.1474340737622133.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img46_3.2302180868870662_-3.15_1.1827930918963931.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img47_1.5344576387443043_3.15_-2.2349583721771022.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img48_3.5620211693620094_-3.15_1.888739750418216.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img49_-1.4633826644568746_-3.15_2.308427955659706.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img4_0.4216617864064611_3.15_-1.200667265034441.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img50_3.2711148640745327_-3.15_1.1218285838243973.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img51_3.320832637855247_-3.15_2.3142712153132257.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img52_1.2315764136318919_-3.15_1.44622540396502.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img53_-2.3910690340367298_3.15_-2.1968132777074323.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img54_1.180845857676898_3.15_-2.0716613946912092.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img55_-0.8729161839426984_-3.15_2.325726476060252.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img56_-2.9973668691203716_3.15_-1.227049156548995.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img57_-0.8160802717810469_3.15_-1.5126250329318975.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img58_0.32029102476606486_3.15_-1.298637136600348.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img59_-1.03377101469402_-3.15_0.8059481154458401.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img5_-1.6782742339090069_3.15_-1.1712430340216515.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img60_2.2278570817593364_-3.15_2.4897128559239006.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img61_1.6324827585887123_3.15_-2.142275359051874.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img62_-3.597679970715797_-3.15_1.266802406029402.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img63_0.5008476180242889_-3.15_0.8779305007202471.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img64_-0.2750058941217386_-3.15_0.9016441768851797.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img65_-2.139329340360441_3.15_-2.229701180435878.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img66_2.2575190240388485_-3.15_2.4813159305330856.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img67_-1.3463404052098396_3.15_-2.421706057778472.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img68_1.4965489068906805_-3.15_0.9790188063590286.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img69_1.574367582589189_3.15_-0.5950647347957705.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img6_-0.8199435874055414_-3.15_1.9691899620865176.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img70_-3.9264504070681605_3.15_-1.0731270713445453.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img71_3.3468140694363644_3.15_-1.8045272564196635.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img72_2.8820588158749194_-3.15_2.1052356605791953.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img73_-3.399863124577477_-3.15_1.6765354757401913.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img74_-1.1152018546805538_3.15_-0.6635204684847225.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img75_-3.911225331925353_-3.15_1.6024049252940815.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img76_-0.6399460688939529_3.15_-1.9336819032746522.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img77_0.08706690727194388_3.15_-1.6471874779544928.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img78_-3.8062111711060593_-3.15_0.6107489559822044.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img78_3.2956692469768356_-3.15_1.6628086353147704.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img79_2.1777707362880596_-3.15_1.9015346502457642.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img7_-3.5022890267304634_-3.15_1.893758489131622.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img80_3.4156564690081916_3.15_-1.442451136870102.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img81_-1.3771538658644422_-3.15_1.7929788888034666.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img82_2.382146188716895_3.15_-1.507343881496263.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img83_3.4756102363424155_-3.15_1.0711952819506276.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img84_0.6366329406686697_3.15_-1.778298163717135.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img85_-3.2751103562607504_3.15_-1.5890151673444377.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img86_3.233452300730379_-3.15_1.6975155147880705.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img87_0.37232308164723715_3.15_-0.9166091306949906.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img88_-1.1046879182870901_3.15_-2.120661636455739.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img89_-1.4941014703568118_3.15_-1.1793914644135313.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img8_2.1917005061584263_-3.15_2.4965040761196082.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img90_1.4774609225094766_-3.15_1.312886873673124.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img91_-3.7382600387602114_-3.15_0.9338908159355412.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img92_-0.09173360682849108_-3.15_1.6832174833276903.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img93_-2.1783277415513487_-3.15_2.1406157768237053.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img94_-1.1270378753525048_-3.15_1.3949573343832464.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img95_1.2938725300526759_-3.15_1.1365130758093411.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img96_-2.8227116764589226_3.15_-1.2033929090900433.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img97_0.22401599013761864_3.15_-0.7095061734854282.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img98_0.045483695827403636_3.15_-1.7486829871038572.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img99_-1.9623637127550504_-3.15_0.9250733028887086.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/images/goal_net/img9_-2.6322157021518713_-3.15_1.6497865574290926.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/soccerbot.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/soccerbot.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/compose.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/external/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/external/Dockerfile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/external/hlvs_webots" beforeDir="false" afterPath="$PROJECT_DIR$/external/hlvs_webots" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/external/hlvs_webots/protos/Utra/BezRobocup/postures.json" beforeDir="false" afterPath="$PROJECT_DIR$/external/hlvs_webots/protos/Utra/BezRobocup/postures.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/external/hlvs_webots/worlds/.robocup.wbproj" beforeDir="false" afterPath="$PROJECT_DIR$/external/hlvs_webots/worlds/.robocup.wbproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/src/soccer_pycontrol/model/model_ros/bez_ros.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/src/soccer_pycontrol/model/model_ros/bez_ros.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/src/soccer_pycontrol/pybullet_usage/pybullet_load_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/src/soccer_pycontrol/pybullet_usage/pybullet_load_model.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/src/soccer_pycontrol/walk_engine/foot_step_planner.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/src/soccer_pycontrol/walk_engine/foot_step_planner.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/src/soccer_pycontrol/walk_engine/navigator.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/src/soccer_pycontrol/walk_engine/navigator.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/src/soccer_pycontrol/walk_engine/walk_engine_ros/navigator_ros.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/src/soccer_pycontrol/walk_engine/walk_engine_ros/navigator_ros.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test/test_walk_ros.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test/test_walk_ros.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/src/soccer_object_detection/object_detect_node_ros.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/src/soccer_object_detection/object_detect_node_ros.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_webots/CMakeLists.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_webots/config/teams.cfg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_webots/package.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_webots/setup.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_webots/src/soccer_webots/__init__.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_webots/src/soccer_webots/bridge_ground_truth.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_webots/src/soccer_webots/bridge_webots.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_webots/src/soccer_webots/messages.proto" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_webots/src/soccer_webots/messages_pb2.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccerbot/launch/modules/webots.launch" beforeDir="false" afterPath="$PROJECT_DIR$/soccerbot/launch/modules/webots.launch" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccerbot/launch/soccerbot.launch" beforeDir="false" afterPath="$PROJECT_DIR$/soccerbot/launch/soccerbot.launch" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccerbot/scripts/start_competition.sh" beforeDir="false" afterPath="$PROJECT_DIR$/soccerbot/scripts/start_competition.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tools/docker/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/tools/docker/Dockerfile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tools/docker/compose.autonomy.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/tools/docker/compose.autonomy.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tools/docker/compose.simulation.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/tools/docker/compose.simulation.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test/test_placo.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test/test_placo.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/src/soccer_object_detection/object_detect_node.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/src/soccer_object_detection/object_detect_node.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/test/test_object_detection.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/test/test_object_detection.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,8 +621,16 @@
     </option>
   </component>
   <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="js_strat" />
+      </map>
+    </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
     <option name="ROOT_SYNC" value="DONT_SYNC" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 6
@@ -87,12 +646,17 @@
     "Python tests.pytest for test_firmware_interface.test_firmware_interface.executor": "Run",
     "Python tests.pytest for test_firmware_interface.test_firmware_interface_single_motor_range.executor": "Run",
     "Python tests.pytest for test_object_detection.TestObjectDetection.test_object_detection.executor": "Run",
+    "Python tests.pytest for test_object_detection.TestObjectDetection.test_object_detection_node_cam.executor": "Run",
     "Python tests.pytest for test_object_detection.TestObjectDetection.test_object_detection_vid.executor": "Run",
     "Python tests.pytest for test_object_localization.TestObjectLocalization.test_fieldline_detection_vid.executor": "Run",
     "Python tests.pytest for test_placo.TestPlaco.test_bez1.executor": "Run",
     "Python tests.pytest for test_placo.TestPlaco.test_bez1_auto.executor": "Run",
+    "Python tests.pytest for test_placo.TestPlaco.test_bez1_console_output.executor": "Run",
+    "Python tests.pytest for test_placo.TestPlaco.test_bez1_kick.executor": "Run",
     "Python tests.pytest for test_placo.TestPlaco.test_bez1_start_stop.executor": "Run",
+    "Python tests.pytest for test_placo.TestPlaco.test_bez1_walk.executor": "Run",
     "Python tests.pytest for test_placo.TestPlaco.test_bez_motor_range_single.executor": "Run",
+    "Python tests.pytest for test_placo.TestPlaco.test_camera.executor": "Run",
     "Python tests.pytest for test_pybullet.TestPybullet.test_bez_motor_range.executor": "Run",
     "Python tests.pytest for test_pybullet.TestPybullet.test_bez_motor_range_single.executor": "Run",
     "Python tests.pytest for test_pybullet.TestPybullet.test_cam.executor": "Run",
@@ -109,8 +673,9 @@
     "Python.dgfs.executor": "Run",
     "Python.fsf.executor": "Run",
     "Python.motor_control.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "js__strat",
+    "git-widget-placeholder": "akp__object__localization",
     "last_opened_file_path": "/home/manx52/catkin_ws/src/soccerbot/external/hlvs_webots/soccer_webots/launch",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -135,7 +700,25 @@
       <recent name="$PROJECT_DIR$/soccer_control/soccer_trajectories/trajectories/bez2" />
     </key>
   </component>
-  <component name="RunManager" selected="Python tests.pytest for test_walk_ros.TestPybullet.test_walk_ros_webots">
+  <component name="RunManager" selected="Python tests.pytest for test_placo.TestPlaco.test_camera">
+    <configuration name="pytest for test_object_detection.TestObjectDetection.test_object_detection_node_cam" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
+      <module name="soccerbot" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/soccer_perception/soccer_object_detection/test" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="_new_keywords" value="&quot;&quot;" />
+      <option name="_new_parameters" value="&quot;&quot;" />
+      <option name="_new_additionalArguments" value="&quot;-s&quot;" />
+      <option name="_new_target" value="&quot;test_object_detection.TestObjectDetection.test_object_detection_node_cam&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <method v="2" />
+    </configuration>
     <configuration name="pytest for test_placo.TestPlaco.test_bez1" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
       <module name="soccerbot" />
       <option name="ENV_FILES" value="" />
@@ -149,12 +732,12 @@
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="_new_keywords" value="&quot;&quot;" />
       <option name="_new_parameters" value="&quot;&quot;" />
-      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_additionalArguments" value="&quot;-s&quot;" />
       <option name="_new_target" value="&quot;test_placo.TestPlaco.test_bez1&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="pytest for test_placo.TestPlaco.test_bez1_auto" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
+    <configuration name="pytest for test_placo.TestPlaco.test_bez1_console_output" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
       <module name="soccerbot" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -168,29 +751,11 @@
       <option name="_new_keywords" value="&quot;&quot;" />
       <option name="_new_parameters" value="&quot;&quot;" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_placo.TestPlaco.test_bez1_auto&quot;" />
+      <option name="_new_target" value="&quot;test_placo.TestPlaco.test_bez1_console_output&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="pytest for test_trajectory.test_trajectory_sim" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
-      <module name="soccerbot" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/soccer_control/soccer_trajectories/test" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="_new_keywords" value="&quot;&quot;" />
-      <option name="_new_parameters" value="&quot;&quot;" />
-      <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_trajectory.test_trajectory_sim&quot;" />
-      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
-      <method v="2" />
-    </configuration>
-    <configuration name="pytest for test_walk_ros.TestPybullet.test_walk_ros_local" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
+    <configuration name="pytest for test_placo.TestPlaco.test_bez1_walk" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
       <module name="soccerbot" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -204,11 +769,11 @@
       <option name="_new_keywords" value="&quot;&quot;" />
       <option name="_new_parameters" value="&quot;&quot;" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_walk_ros.TestPybullet.test_walk_ros_local&quot;" />
+      <option name="_new_target" value="&quot;test_placo.TestPlaco.test_bez1_walk&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="pytest for test_walk_ros.TestPybullet.test_walk_ros_webots" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
+    <configuration name="pytest for test_placo.TestPlaco.test_camera" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
       <module name="soccerbot" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -222,31 +787,31 @@
       <option name="_new_keywords" value="&quot;&quot;" />
       <option name="_new_parameters" value="&quot;&quot;" />
       <option name="_new_additionalArguments" value="&quot;-s&quot;" />
-      <option name="_new_target" value="&quot;test_walk_ros.TestPybullet.test_walk_ros_webots&quot;" />
+      <option name="_new_target" value="&quot;test_placo.TestPlaco.test_camera&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Python tests.pytest for test_placo.TestPlaco.test_bez1_auto" />
-      <item itemvalue="Python tests.pytest for test_walk_ros.TestPybullet.test_walk_ros_webots" />
+      <item itemvalue="Python tests.pytest for test_placo.TestPlaco.test_camera" />
+      <item itemvalue="Python tests.pytest for test_placo.TestPlaco.test_bez1_console_output" />
+      <item itemvalue="Python tests.pytest for test_object_detection.TestObjectDetection.test_object_detection_node_cam" />
       <item itemvalue="Python tests.pytest for test_placo.TestPlaco.test_bez1" />
-      <item itemvalue="Python tests.pytest for test_walk_ros.TestPybullet.test_walk_ros_local" />
-      <item itemvalue="Python tests.pytest for test_trajectory.test_trajectory_sim" />
+      <item itemvalue="Python tests.pytest for test_placo.TestPlaco.test_bez1_walk" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python tests.pytest for test_walk_ros.TestPybullet.test_walk_ros_webots" />
+        <item itemvalue="Python tests.pytest for test_placo.TestPlaco.test_camera" />
         <item itemvalue="Python tests.pytest for test_placo.TestPlaco.test_bez1" />
-        <item itemvalue="Python tests.pytest for test_placo.TestPlaco.test_bez1_auto" />
-        <item itemvalue="Python tests.pytest for test_trajectory.test_trajectory_sim" />
-        <item itemvalue="Python tests.pytest for test_walk_ros.TestPybullet.test_walk_ros_local" />
+        <item itemvalue="Python tests.pytest for test_object_detection.TestObjectDetection.test_object_detection_node_cam" />
+        <item itemvalue="Python tests.pytest for test_placo.TestPlaco.test_bez1_console_output" />
+        <item itemvalue="Python tests.pytest for test_placo.TestPlaco.test_bez1_walk" />
       </list>
     </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-e768b9ed790e-JavaScript-PY-243.21565.199" />
+        <option value="bundled-python-sdk-5a2391486177-2887949eec09-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-233.13763.11" />
       </set>
     </attachedChunks>
   </component>
@@ -282,6 +847,16 @@
       <workItem from="1733440895045" duration="25947000" />
       <workItem from="1733589354509" duration="18997000" />
       <workItem from="1733884917209" duration="9958000" />
+      <workItem from="1736781879625" duration="7000" />
+      <workItem from="1736798512248" duration="71000" />
+      <workItem from="1736798588754" duration="2630000" />
+      <workItem from="1736881014696" duration="2264000" />
+      <workItem from="1736993511574" duration="813000" />
+      <workItem from="1737036844954" duration="8816000" />
+      <workItem from="1737063889565" duration="5678000" />
+      <workItem from="1737212094570" duration="1609000" />
+      <workItem from="1737225623687" duration="2793000" />
+      <workItem from="1737228623799" duration="543000" />
     </task>
     <servers />
   </component>
@@ -296,18 +871,9 @@
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/soccer_perception/soccer_object_detection/test/test_object_detection.py</url>
-          <option name="timeStamp" value="4" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/soccer_perception/soccer_object_detection/src/soccer_object_detection/camera/camera_calculations.py</url>
           <line>164</line>
           <option name="timeStamp" value="11" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/soccer_control/soccer_pycontrol/src/soccer_pycontrol/model/sensors.py</url>
-          <line>48</line>
-          <option name="timeStamp" value="14" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/soccer_control/soccer_pycontrol/src/soccer_pycontrol/walk_engine/walk_engine_ros/navigator_ros.py</url>
@@ -324,35 +890,50 @@
           <line>38</line>
           <option name="timeStamp" value="42" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/soccer_perception/soccer_object_detection/test/test_object_detection.py</url>
+          <line>127</line>
+          <option name="timeStamp" value="47" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/soccer_control/soccer_pycontrol/test/test_placo.py</url>
+          <line>87</line>
+          <option name="timeStamp" value="49" />
+        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_object_localization_TestObjectLocalization_test_fieldline_detection_vid.coverage" NAME="pytest for test_object_localization.TestObjectLocalization.test_fieldline_detection_vid Coverage Results" MODIFIED="1733177322454" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_perception/soccer_object_localization/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_trajectory_test_traj_ros.coverage" NAME="pytest for test_trajectory.test_traj_ros Coverage Results" MODIFIED="1733895651085" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_trajectories/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_pybullet_camera_TestPybullet_test_cam.coverage" NAME="pytest for test_pybullet_camera.TestPybullet.test_cam Coverage Results" MODIFIED="1733341716195" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_perception/soccer_object_detection/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_pybullet_TestPybullet_test_cam.coverage" NAME="pytest for test_pybullet.TestPybullet.test_cam Coverage Results" MODIFIED="1733339971514" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_firmware_interface_test_firmware_interface_single_motor_range.coverage" NAME="pytest for test_firmware_interface.test_firmware_interface_single_motor_range Coverage Results" MODIFIED="1732408905335" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_hardware/soccer_firmware_interface/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_camera_TestCamera_test_camera_find_camera_coordinate.coverage" NAME="pytest for test_camera.TestCamera.test_camera_find_camera_coordinate Coverage Results" MODIFIED="1733345010797" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_perception/soccer_object_detection/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_pybullet_camera_TestPybullet_test_ball_localization2.coverage" NAME="pytest for test_pybullet_camera.TestPybullet.test_ball_localization2 Coverage Results" MODIFIED="1733348082263" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_perception/soccer_object_detection/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_pybullet_TestPybullet_test_imu.coverage" NAME="pytest for test_pybullet.TestPybullet.test_imu Coverage Results" MODIFIED="1733163515329" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_placo_TestPlaco_test_bez_motor_range_single.coverage" NAME="pytest for test_placo.TestPlaco.test_bez_motor_range_single Coverage Results" MODIFIED="1733523977555" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_trajectory_TestTrajectory_test_trajectory.coverage" NAME="pytest for test_trajectory.TestTrajectory.test_trajectory Coverage Results" MODIFIED="1733176109562" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_trajectories/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_placo_TestPlaco_test_bez1_auto.coverage" NAME="pytest for test_placo.TestPlaco.test_bez1_auto Coverage Results" MODIFIED="1734575868794" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_walk_ros_TestPybullet_test_walk_ros_webots.coverage" NAME="pytest for test_walk_ros.TestPybullet.test_walk_ros_webots Coverage Results" MODIFIED="1734591598396" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_object_detection_TestObjectDetection_test_object_detection_node_cam.coverage" NAME="pytest for test_object_detection.TestObjectDetection.test_object_detection_node_cam Coverage Results" MODIFIED="1737217604089" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_perception/soccer_object_detection/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_placo_TestPlaco_test_bez1.coverage" NAME="pytest for test_placo.TestPlaco.test_bez1 Coverage Results" MODIFIED="1737225654050" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_firmware_interface_test_firmware_interface.coverage" NAME="pytest for test_firmware_interface.test_firmware_interface Coverage Results" MODIFIED="1733895856176" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_hardware/soccer_firmware_interface/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_placo_TestPlaco_test_bez1_console_output.coverage" NAME="pytest for test_placo.TestPlaco.test_bez1_console_output Coverage Results" MODIFIED="1737083269038" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$dgfs.coverage" NAME="dgfs Coverage Results" MODIFIED="1730141845344" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tools/setup" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_walk_ros_TestPybullet_test_walk_ros_local.coverage" NAME="pytest for test_walk_ros.TestPybullet.test_walk_ros_local Coverage Results" MODIFIED="1733895869881" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
     <SUITE FILE_PATH="coverage/soccerbot$fsf.coverage" NAME="fsf Coverage Results" MODIFIED="1733336572304" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/src/soccer_pycontrol/pybullet_usage" />
     <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_placo_TestPlaco_test_bez1_start_stop.coverage" NAME="pytest for test_placo.TestPlaco.test_bez1_start_stop Coverage Results" MODIFIED="1733527560495" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_walk_ros_TestPybullet_test_walk_ros_webots.coverage" NAME="pytest for test_walk_ros.TestPybullet.test_walk_ros_webots Coverage Results" MODIFIED="1734591598396" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_camera_TestCamera_test_camera_find_camera_coordinate.coverage" NAME="pytest for test_camera.TestCamera.test_camera_find_camera_coordinate Coverage Results" MODIFIED="1733345010797" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_perception/soccer_object_detection/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_trajectory_test_trajectory_sim.coverage" NAME="pytest for test_trajectory.test_trajectory_sim Coverage Results" MODIFIED="1733896006274" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_trajectories/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_object_detection_TestObjectDetection_test_object_detection.coverage" NAME="pytest for test_object_detection.TestObjectDetection.test_object_detection Coverage Results" MODIFIED="1733338878669" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_perception/soccer_object_detection/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_placo_TestPlaco_test_bez1_walk.coverage" NAME="pytest for test_placo.TestPlaco.test_bez1_walk Coverage Results" MODIFIED="1737063935834" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
     <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_pybullet_camera_TestPybullet_test_detection.coverage" NAME="pytest for test_pybullet_camera.TestPybullet.test_detection Coverage Results" MODIFIED="1733341814899" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_perception/soccer_object_detection/test" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_object_detection_TestObjectDetection_test_object_detection_vid.coverage" NAME="pytest for test_object_detection.TestObjectDetection.test_object_detection_vid Coverage Results" MODIFIED="1733177240556" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_perception/soccer_object_detection/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_placo_TestPlaco_test_bez1_kick.coverage" NAME="pytest for test_placo.TestPlaco.test_bez1_kick Coverage Results" MODIFIED="1736630729700" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
     <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_pybullet_TestPybullet_test_bez_motor_range_single.coverage" NAME="pytest for test_pybullet.TestPybullet.test_bez_motor_range_single Coverage Results" MODIFIED="1733013152155" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
     <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_pybullet_camera_TestPybullet_test_ball_localization.coverage" NAME="pytest for test_pybullet_camera.TestPybullet.test_ball_localization Coverage Results" MODIFIED="1733348570876" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_perception/soccer_object_detection/test" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_placo_TestPlaco_test_bez1_auto.coverage" NAME="pytest for test_placo.TestPlaco.test_bez1_auto Coverage Results" MODIFIED="1734575868794" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_pybullet_camera_TestPybullet_test_ball_localization2.coverage" NAME="pytest for test_pybullet_camera.TestPybullet.test_ball_localization2 Coverage Results" MODIFIED="1733348082263" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_perception/soccer_object_detection/test" />
-    <SUITE FILE_PATH="coverage/soccerbot$dgfs.coverage" NAME="dgfs Coverage Results" MODIFIED="1730141845344" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tools/setup" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_firmware_interface_test_firmware_interface_single_motor_range.coverage" NAME="pytest for test_firmware_interface.test_firmware_interface_single_motor_range Coverage Results" MODIFIED="1732408905335" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_hardware/soccer_firmware_interface/test" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_object_detection_TestObjectDetection_test_object_detection.coverage" NAME="pytest for test_object_detection.TestObjectDetection.test_object_detection Coverage Results" MODIFIED="1733338878669" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_perception/soccer_object_detection/test" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_trajectory_TestTrajectory_test_trajectory.coverage" NAME="pytest for test_trajectory.TestTrajectory.test_trajectory Coverage Results" MODIFIED="1733176109562" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_trajectories/test" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_firmware_interface_test_firmware_interface.coverage" NAME="pytest for test_firmware_interface.test_firmware_interface Coverage Results" MODIFIED="1733895856176" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_hardware/soccer_firmware_interface/test" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_object_localization_TestObjectLocalization_test_fieldline_detection_vid.coverage" NAME="pytest for test_object_localization.TestObjectLocalization.test_fieldline_detection_vid Coverage Results" MODIFIED="1733177322454" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_perception/soccer_object_localization/test" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_pybullet_TestPybullet_test_imu.coverage" NAME="pytest for test_pybullet.TestPybullet.test_imu Coverage Results" MODIFIED="1733163515329" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_pybullet_camera_TestPybullet_test_cam.coverage" NAME="pytest for test_pybullet_camera.TestPybullet.test_cam Coverage Results" MODIFIED="1733341716195" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_perception/soccer_object_detection/test" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_trajectory_test_trajectory_sim.coverage" NAME="pytest for test_trajectory.test_trajectory_sim Coverage Results" MODIFIED="1733896006274" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_trajectories/test" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_placo_TestPlaco_test_bez_motor_range_single.coverage" NAME="pytest for test_placo.TestPlaco.test_bez_motor_range_single Coverage Results" MODIFIED="1733523977555" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_placo_TestPlaco_test_bez1.coverage" NAME="pytest for test_placo.TestPlaco.test_bez1 Coverage Results" MODIFIED="1734576993651" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_placo_TestPlaco_test_camera.coverage" NAME="pytest for test_placo.TestPlaco.test_camera Coverage Results" MODIFIED="1737227450623" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
     <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_pybullet_TestPybullet_test_bez_motor_range.coverage" NAME="pytest for test_pybullet.TestPybullet.test_bez_motor_range Coverage Results" MODIFIED="1733015016961" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_trajectory_test_traj_ros.coverage" NAME="pytest for test_trajectory.test_traj_ros Coverage Results" MODIFIED="1733895651085" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_trajectories/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_object_detection_TestObjectDetection_test_object_detection_vid.coverage" NAME="pytest for test_object_detection.TestObjectDetection.test_object_detection_vid Coverage Results" MODIFIED="1733177240556" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_perception/soccer_object_detection/test" />
     <SUITE FILE_PATH="coverage/soccerbot$motor_control.coverage" NAME="motor_control Coverage Results" MODIFIED="1733514993668" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/src/soccer_pycontrol/model" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_pybullet_TestPybullet_test_cam.coverage" NAME="pytest for test_pybullet.TestPybullet.test_cam Coverage Results" MODIFIED="1733339971514" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_walk_ros_TestPybullet_test_walk_ros_local.coverage" NAME="pytest for test_walk_ros.TestPybullet.test_walk_ros_local Coverage Results" MODIFIED="1733895869881" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
   </component>
 </project>
