@@ -33,7 +33,7 @@ planned_timesteps: 48 # Number of timesteps planned ahead
 replan_timesteps: 10 # Replanning each n timesteps
 
 # Posture parameters
-walk_com_height: 0.23 # Constant height for the CoM [m]
+walk_com_height: 0.24 # Constant height for the CoM [m]
 walk_foot_height: 0.04 # Height of foot rising while walking [m]
 walk_trunk_pitch: 0.15 # Trunk pitch angle [rad]
 walk_foot_rise_ratio: 0.2 # Time ratio for the foot swing plateau (0.0 to 1.0)

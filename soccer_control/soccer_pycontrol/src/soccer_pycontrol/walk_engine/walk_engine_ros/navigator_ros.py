@@ -11,34 +11,35 @@ from soccer_msgs.msg import BoundingBoxes
 
 
 class NavigatorRos(Navigator):
-    def __init__(self, bez: BezROS, imu_feedback_enabled: bool = False):
+    def __init__(self, bez: BezROS, imu_feedback_enabled: bool = False, ball2: bool = False):
         self.ball = None
+        self.ball2 = ball2
         self.imu_feedback_enabled = imu_feedback_enabled
         self.bez = bez
 
-        self.foot_step_planner = FootStepPlanner(self.bez.robot_model, self.bez.parameters, rospy.get_time, debug=False)
+        self.foot_step_planner = FootStepPlanner(self.bez.robot_model, self.bez.parameters, rospy.get_time, debug=False, ball=self.ball2)
         # TODO publish local odomtry from foot step planner
         self.rate = rospy.Rate(1 / self.foot_step_planner.DT)
         self.func_step = self.rate.sleep
 
         self.walk_pid = Stabilize(self.bez.parameters)
-        self.max_vel = 0.06
+        self.max_vel = 0.03
         self.nav_x_pid = PID(
-            Kp=0.5,
+            Kp=0.0,
             Kd=0,
             Ki=0,
             setpoint=0,
             output_limits=(-self.max_vel, self.max_vel),
         )
         self.nav_y_pid = PID(  # TODO properly tune later
-            Kp=0.5,
+            Kp=0.0,
             Kd=0,
             Ki=0,
             setpoint=0,
             output_limits=(-0.05, 0.05),
         )  # TODO could also mod if balance is decreasing
         self.nav_yaw_pid = PID(
-            Kp=0.2,
+            Kp=0.0,
             Kd=0,
             Ki=0,
             setpoint=0,
@@ -76,8 +77,15 @@ class NavigatorRos(Navigator):
         angles = np.linspace(-np.pi, np.pi)
 
         while not rospy.is_shutdown():
-            # self.walk(self.ball, True)
-            self.walk(target_goal, False)
+            # self.bez.motor_control.set_single_motor("head_pitch", 0.7)
+            # self.bez.motor_control.set_single_motor("head_yaw", 0.0)
+            # self.bez.motor_control.set_motor()
+            self.walk(self.ball, True)
+            # print(f"Height rotation: {self.bez.sensors.get_height().orientation_euler}")
+            # print(f"Height position: {self.bez.sensors.get_height().position}")
+
+            # self.walk(target_goal, False)
+            # self.walk(target_goal, True)
             # if self.bez.sensors.imu_ready:
             #     [_, pitch, roll] = self.bez.sensors.get_imu()
             #     print(pitch, "  ", roll)
@@ -90,6 +98,9 @@ class NavigatorRos(Navigator):
             #     f"Eul: tf: {self.bez.sensors.get_height().orientation_euler} gt:   {self.bez.sensors.get_global_height().orientation_euler}")
             # self.bez.motor_control.configuration["head_yaw"] = -1.57
             # self.bez.motor_control.configuration["head_pitch"] = 1.57
+            # self.bez.motor_control.set_right_leg_target_angles([0,0,0,0,0,0])
+            # self.bez.motor_control.set_left_leg_target_angles([0, 0, 0, 0, 0, 0])
+            # set_right_leg_target_angles
             # self.bez.motor_control.set_motor()
             # if i % 1000 == 0:
             #     walk.reset_walk()

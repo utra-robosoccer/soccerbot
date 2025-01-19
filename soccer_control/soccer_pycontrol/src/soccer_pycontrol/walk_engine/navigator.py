@@ -18,12 +18,13 @@ from soccer_common import PID, Transformation
 # TODO could make it more modular by passing in pybullet stuff or have it at one layer higher so we can reuse code
 # TODO change to trajectory controller
 class Navigator:
-    def __init__(self, world: PybulletWorld, bez: Bez, imu_feedback_enabled: bool = False, record_walking_metrics: bool = True):
+    def __init__(self, world: PybulletWorld, bez: Bez, imu_feedback_enabled: bool = False, ball: bool = False, record_walking_metrics: bool = True):
         self.world = world
         self.bez = bez
         self.imu_feedback_enabled = imu_feedback_enabled
         self.func_step = self.world.step
-        self.foot_step_planner = FootStepPlanner(self.bez.robot_model, self.bez.parameters, time.time)
+        self.foot_step_planner = FootStepPlanner(self.bez.robot_model, self.bez.parameters, time.time, ball=ball)
+        self.ball2 = ball
         self.kick_planner = KickPlanner(self.bez.robot_model, self.bez.parameters, time.time)
         self.walk_pid = Stabilize(self.bez.parameters)
         self.max_vel = 0.1
@@ -186,7 +187,8 @@ class Navigator:
         ):
             # target_goal = self.bez.sensors.get_ball()
             # print(target_goal.position)
-            self.foot_step_planner.head_movement(target_goal.position)
+            if self.ball2:
+                self.foot_step_planner.head_movement(target_goal.position)
 
             self.nav_x_pid.setpoint = target_goal.position[0]
             self.nav_y_pid.setpoint = target_goal.position[1]
@@ -234,6 +236,10 @@ class Navigator:
         self.bez.motor_control.configuration["right_elbow"] = 1.57
         self.bez.motor_control.configuration["left_shoulder_roll"] = 0.1
         self.bez.motor_control.configuration["right_shoulder_roll"] = 0.1
+        # self.bez.motor_control.configuration["head_pitch"] = 0.7
+        # self.bez.motor_control.set_single_motor("head_yaw", 0.0)
+        self.bez.motor_control.set_right_leg_target_angles([0, 0, 0, 0, 0, 0])
+        self.bez.motor_control.set_left_leg_target_angles([0, 0, 0, 0, 0, 0])
         self.bez.motor_control.set_motor()
 
         self.t = self.foot_step_planner.step(self.t)

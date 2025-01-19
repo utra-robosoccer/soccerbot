@@ -18,7 +18,7 @@ class CameraCalculationsRos(CameraCalculations):
         self.pose_base_link_straight = Transformation()  #: Pose of the camera
 
         self.robot_name = robot_name  #: Name of the robot
-        self.camera_info_subscriber = Subscriber("/" + robot_name + "/camera/camera_info", CameraInfo, self.camera_info_callback)
+        self.camera_info_subscriber = Subscriber("/camera/camera_info", CameraInfo, self.camera_info_callback)
 
         self.tf_listener = TransformListener()
 
@@ -43,10 +43,12 @@ class CameraCalculationsRos(CameraCalculations):
         """
         try:
 
-            time_stamp1 = self.tf_listener.getLatestCommonTime("robot1/left_foot", "robot1/head")
+            time_stamp1 = self.tf_listener.getLatestCommonTime("left_foot_v10_1", "head_v4_1")
 
-            (trans1, rot) = self.tf_listener.lookupTransform("robot1/left_foot", "robot1/head", time_stamp1)
-            self.pose = Transformation(position=trans1, quaternion=rot)
+            (trans1, rot) = self.tf_listener.lookupTransform("left_foot_v10_1", "head_v4_1", time_stamp1)
+
+            self.pose = Transformation(position=[0,0,trans1[2]], quaternion=rot)
+            self.pose.orientation_euler = -1 * self.pose.orientation_euler
         except (
             tf2_py.LookupException,
             tf.LookupException,

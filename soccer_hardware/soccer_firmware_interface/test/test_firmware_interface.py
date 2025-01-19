@@ -82,8 +82,8 @@ def test_firmware_interface():
         ]
         # j.position = [math.sin(i / 180 * math.pi) * 0.1, math.cos(i / 180 * math.pi) * 0.1]
 
-        if True:  # test
-            ang = 0.0
+        if False:  # test
+            ang = 0.
         else:
             ang = abs(math.sin(i / 180 * math.pi) * 0.2)
         j.position = [ang] * 20
@@ -131,9 +131,9 @@ def test_firmware_interface_single_motor_range(motor_name: str = "left_knee"):
 
         j.position = [0.0] * 20
         t = "knee"
-        j.position[j.name.index("right_" + t)] = i
-        # j.position[j.name.index("left_hip_pitch")] = i
-        j.position[j.name.index("left_"+t)] = i
+        # j.position[j.name.index("right_" + t)] = i
+        j.position[j.name.index("left_shoulder_pitch")] = i
+        # j.position[j.name.index("left_"+t)] = i
         # j.position[j.name.index("head_pitch")] = i
 
 

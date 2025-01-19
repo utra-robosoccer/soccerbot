@@ -41,10 +41,11 @@ class FirmwareInterface:
         # self._imu_filt_zi = np.zeros((len(self._IMU_FILT_B) - 1, 3))
 
         # Start the thread
-        serial_thread = threading.Thread(target=self.firmware_update_loop)
-        serial_thread.start()
+        # serial_thread = threading.Thread(target=self.firmware_update_loop)
+        # serial_thread.start()
 
         self._lock = threading.Lock()
+        self._read_lock = threading.Lock()
 
 
     def reconnect_serial_port(self):
@@ -60,7 +61,9 @@ class FirmwareInterface:
             rospy.logerr_throttle(10, "Unable to connect to any serial port /dev/ttyACM0-10")
 
     def firmware_update_loop(self):
+        r = rospy.Rate(200)
         while not rospy.is_shutdown():
+            self._read_lock.acquire(blocking=True)
             try:
                 self.reconnect_serial_port()
 
@@ -91,10 +94,13 @@ class FirmwareInterface:
                 self.pub_joint_state(data)
 
                 self.pub_imu(data)
-
             except Exception as ex:
                 rospy.logerr_throttle(10, f"Lost connection to serial port {type(ex)} {ex}, retrying...")
                 pass
+            self._read_lock.release()
+            r.sleep()
+
+
 
     def pub_joint_state(self, data):
         # Publish the Joint State
@@ -118,11 +124,7 @@ class FirmwareInterface:
                 motor_angle_radian = -motor_angle_radian
             j.name.append(motor_name)
 
-            # TODO debug head motor angles
-            if "head" in motor_name:
-                j.position.append(0)
-            else:
-                j.position.append(motor_angle_radian)
+            j.position.append(motor_angle_radian)
         self.joint_state_publisher.publish(j)
 
     def pub_imu(self, data):

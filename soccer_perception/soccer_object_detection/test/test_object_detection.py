@@ -102,12 +102,11 @@ class TestObjectDetection(TestCase):
                 cv2.waitKey(24)  # TODO why is this one so much faster
         cv2.destroyAllWindows()
 
-    @pytest.mark.skip(reason="Only run locally")
+    # @pytest.mark.skip(reason="Only run locally")
     def test_object_detection_node_cam(self):
-
         src_path = os.path.dirname(os.path.realpath(__file__))
 
-        model_path = src_path + "/../models/half_5.pt"
+        model_path = src_path + "/../models/yolov8s_detect_best.pt"  # yolov8s_detect_best
 
         n = ObjectDetectionNode(model_path=model_path)
 
@@ -124,11 +123,11 @@ class TestObjectDetection(TestCase):
             img = cv2.resize(frame, dsize=(640, 480))
 
             n.camera.pose.orientation_euler = [0, np.pi / 8, 0]
-            detection_image, bbs_msg = n.get_model_output(img)  # 0.01
-
-            if "DISPLAY" in os.environ and PLOT:
-                cv2.imshow("Image", detection_image)
-                cv2.waitKey(24)  # TODO why is this one so much faster
+            detection_image, bbs_msg = n.get_model_output_v8(img)  # 0.01
+            print(bbs_msg)
+            # if "DISPLAY" in os.environ and PLOT:
+            #     cv2.imshow("Image", detection_image) # detection_image
+            #     cv2.waitKey(24)  # TODO why is this one so much faster
         cv2.destroyAllWindows()
 
     @pytest.mark.skip(reason="Only run locally")

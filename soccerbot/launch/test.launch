@@ -52,12 +52,12 @@
         </node>
 
 
-<!--        <node pkg="soccer_object_localization" type="detector_fieldline_ros.py" name="ball_detector" output="screen">-->
-<!--            <rosparam file="$(find soccer_object_localization)/config/$(arg param_file_name).yaml" command="load" />-->
-<!--        </node>-->
-<!--        <node name="object_detector" pkg="soccer_object_detection" type="object_detect_node_ros.py" output="screen" args="&#45;&#45;model $(find soccer_object_detection)/models/half_5.pt">-->
-<!--            <rosparam file="$(find soccer_object_detection)/config/$(arg param_file_name).yaml" command="load" />-->
-<!--        </node>-->
+<!--        <node pkg="soccer_object_localization" type="detector_fieldline_ros.py" name="ball_detector" output="screen">--> -->
+<!--            <rosparam file="$(find soccer_object_localization)/config/$(arg param_file_name).yaml" command="load" />--> -->
+<!--        </node>--> -->
+<!--        <node name="object_detector" pkg="soccer_object_detection" type="object_detect_node_ros.py" output="screen" args="&#45;&#45;model $(find soccer_object_detection)/models/half_5.pt">--> -->
+<!--            <rosparam file="$(find soccer_object_detection)/config/$(arg param_file_name).yaml" command="load" />--> -->
+<!--        </node>--> -->
 
     </group>
 

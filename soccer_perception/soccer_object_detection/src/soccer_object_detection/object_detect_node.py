@@ -6,6 +6,7 @@ import numpy as np
 import torch
 from cv2 import Mat
 from soccer_object_detection.camera.camera_calculations import CameraCalculations
+from ultralytics import YOLO
 
 from soccer_msgs.msg import BoundingBox, BoundingBoxes
 
@@ -51,6 +52,7 @@ class ObjectDetectionNode:
             lambda a, b, c: True
         )  # https://discuss.pytorch.org/t/help-for-http-error-403-rate-limit-exceeded/125907
         self.model = torch.hub.load("ultralytics/yolov5", "custom", path=model_path)
+        # self.model = YOLO(model_path)
 
         # ROS
         if torch.cuda.is_available():
@@ -111,6 +113,72 @@ class ObjectDetectionNode:
             # TODO needed for cover horizon but that might not be needed
             detection_image = np.concatenate((np.zeros((h + 1, self.camera.camera_info.width, 3), detection_image.dtype), detection_image))
             detection_image = detection_image[..., ::-1]
+
+
+
+            return detection_image, bbs_msg
+
+    def get_model_output_v8(self, image: Mat) -> [Mat, BoundingBoxes]:
+        # webots: 480x640x4pixels
+
+        # cover horizon to help robot ignore things outside field
+        # TODO do we need a cover horizon?
+        # h = max(self.camera.calculate_horizon_cover_area() - self.cover_horizon_up_threshold, 0)
+        h = 0
+        if image is not None:
+            # 1. preprocess image
+            img = image[:, :, :3]  # get rid of alpha channel
+            # img = img[..., ::-1]  # convert bgr to rgb
+            # img = img[max(0, h + 1) :, :]
+            # 2. inference
+
+            results = self.model(img)
+
+            # TODO should be a func
+            boxes = results[0].boxes.xyxy.tolist()
+            classes = results[0].boxes.cls.tolist()
+            names = results[0].names
+            confidences = results[0].boxes.conf.tolist()
+
+            bbs_msg = BoundingBoxes()
+            id = 0
+            for box, cls, conf in zip(boxes, classes, confidences):
+                x1, y1, x2, y2 = box
+                confidence = conf
+                img_class = cls
+                y1 += h + 1
+                y2 += h + 1
+                if img_class in [label.value for label in Label] and confidence > self.CONFIDENCE_THRESHOLD:
+                    bb_msg = BoundingBox()
+                    bb_msg.xmin = round(x1)  # top left of bounding box
+                    bb_msg.ymin = round(y1)
+                    bb_msg.xmax = round(x2)  # bottom right of bounding box
+                    bb_msg.ymax = round(y2)
+                    bb_msg.probability = confidence
+                    bb_msg.id = id
+                    bb_msg.Class = str(int(img_class))
+                    # TODO Joanne look the pixels of the image in addition to the bounding box,
+                    #  calculate likely foot coordinate xy
+                    if bb_msg.Class == "2" or bb_msg.Class == "0" or bb_msg.Class == "1":
+
+                        # --- simple version just draw the box in bottom ratio of box to detect feet position---
+                        # only look at bottom 1/3 of bounding box (assumption: bounding box is of a standing robot)
+                        # Calculate ymin value to start checking for black pixels
+                        if bb_msg.ymax < self.camera.resolution_y - 5:
+                            temp_ymin = round(bb_msg.ymax * 0.85 + bb_msg.ymin * 0.15)
+                            midpoint = [(bb_msg.xmax + bb_msg.xmin) / 2, (bb_msg.ymax + temp_ymin) / 2]
+                            bb_msg.ybase = round(midpoint[1])
+                            bb_msg.xbase = round(midpoint[0])
+                            bb_msg.obstacle_detected = True
+                    bbs_msg.bounding_boxes.append(bb_msg)
+                    id += 1
+
+            # detection_image = np.squeeze(results.render())
+            # # TODO needed for cover horizon but that might not be needed
+            # detection_image = np.concatenate((np.zeros((h + 1, self.camera.camera_info.width, 3), detection_image.dtype), detection_image))
+            # detection_image = detection_image[..., ::-1]
+
+            detection_image = results[0].plot()
 
             return detection_image, bbs_msg
 

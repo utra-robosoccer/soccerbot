@@ -48,7 +48,7 @@ typedef struct {
   uint16_t dirPinNum; // pin for setting buffer read/write direction
 
   uint8_t rxPacketLen; // received packet length should be smaller then max buffer size
-  uint8_t rxBuffer[100]; // 100bytes is enough to store packets from Dynamixel
+  uint8_t rxBuffer[1500]; // 100bytes is enough to store packets from Dynamixel
   bool dmaDoneReading;
   bool readRequestSent;
   bool motorServiced;

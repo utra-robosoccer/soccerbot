@@ -105,6 +105,9 @@ class MotorControl:
             forces=self.max_forces,
         )
 
+    def set_single_motor(self,name,  target_angle: float) -> None:
+        self.configuration[name] = target_angle
+
     def set_head_target_angles(self, target_angles: np.ndarray) -> None:
         self.configuration["head_yaw":"head_pitch"] = target_angles
 

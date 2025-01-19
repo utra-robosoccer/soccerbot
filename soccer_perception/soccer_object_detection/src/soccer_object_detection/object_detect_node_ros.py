@@ -51,11 +51,11 @@ class ObjectDetectionNodeRos(ObjectDetectionNode):
         self.br2 = tf.TransformBroadcaster()
 
         # ROS
-        self.pub_ball = rospy.Publisher("/robot1/ball", PoseStamped)
+        self.pub_ball = rospy.Publisher("/robot1/ball", PoseStamped, queue_size=1)
         self.pub_detection = rospy.Publisher("/robot1/detection_image", Image, queue_size=1, latch=True)
         self.pub_boundingbox = rospy.Publisher("/robot1/object_bounding_boxes", BoundingBoxes, queue_size=1, latch=True)
         self.image_subscriber = rospy.Subscriber(
-            "/robot1/camera/image_raw", Image, self.callback, queue_size=1, buff_size=DEFAULT_BUFF_SIZE * 64
+            "/camera/image_raw", Image, self.callback, queue_size=1, buff_size=DEFAULT_BUFF_SIZE * 64
         )  # Large buff size (https://answers.ros.org/question/220502/image-subscriber-lag-despite-queue-1/)
 
     #     self.game_state_subscriber = rospy.Subscriber("gamestate", GameState, self.game_state_callback)
@@ -94,6 +94,7 @@ class ObjectDetectionNodeRos(ObjectDetectionNode):
             for box in bbs_msg.bounding_boxes:
                 if box.Class == "0":
                     boundingBoxes = [[box.xmin, box.ymin], [box.xmax, box.ymax]]
+
                     # print(detect.camera.calculate_ball_from_bounding_boxes(boundingBoxes).position)
                     ball_pos = self.camera.calculate_ball_from_bounding_boxes(boundingBoxes)
                     # print(
@@ -103,6 +104,8 @@ class ObjectDetectionNodeRos(ObjectDetectionNode):
                     pose_msg.header.stamp = msg.header.stamp
                     pose_msg.header.frame_id = msg.header.frame_id
                     pose_msg.pose = ball_pos.pose
+                    # pose_msg.pose.position.z = 0.04
+                    # pose_msg.pose.position.y = -pose_msg.pose.position.y
                     self.pub_ball.publish(pose_msg)
 
             # TODO

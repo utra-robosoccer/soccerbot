@@ -14,8 +14,8 @@ if __name__ == "__main__":
     rospy.loginfo("Starting Firmware")
     r = rospy.Rate(1/200.0)
     try:
-        rospy.spin()
-        # f.firmware_update_loop()
+        # rospy.spin()
+        f.firmware_update_loop()
         # r.sleep()
     except rospy.exceptions.ROSException as ex:
         exit(0)
