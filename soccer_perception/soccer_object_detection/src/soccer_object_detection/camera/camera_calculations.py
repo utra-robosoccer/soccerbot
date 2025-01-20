@@ -212,5 +212,5 @@ class CameraCalculations(CameraBase):
 
         tr = Transformation([ball_x, -ball_y, -ball_z])
         tr_cam = self.pose @ tr
-
+        # print(tr) # TODO could use for head control
         return tr_cam  # tr

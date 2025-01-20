@@ -9,7 +9,7 @@ from geometry_msgs.msg import PoseStamped
 from rospy.impl.tcpros_base import DEFAULT_BUFF_SIZE
 from soccer_object_detection.camera.camera_calculations_ros import CameraCalculationsRos
 from soccer_object_detection.object_detect_node import ObjectDetectionNode, bcolors
-
+from std_msgs.msg import Float32MultiArray
 from soccer_common import Transformation
 
 if "ROS_NAMESPACE" not in os.environ:
@@ -52,6 +52,7 @@ class ObjectDetectionNodeRos(ObjectDetectionNode):
 
         # ROS
         self.pub_ball = rospy.Publisher("/robot1/ball", PoseStamped, queue_size=1)
+        self.pub_ball_pixel = rospy.Publisher("/robot1/ball_pixel", Float32MultiArray, queue_size=1)
         self.pub_detection = rospy.Publisher("/robot1/detection_image", Image, queue_size=1, latch=True)
         self.pub_boundingbox = rospy.Publisher("/robot1/object_bounding_boxes", BoundingBoxes, queue_size=1, latch=True)
         self.image_subscriber = rospy.Subscriber(
@@ -95,6 +96,9 @@ class ObjectDetectionNodeRos(ObjectDetectionNode):
                 if box.Class == "0":
                     boundingBoxes = [[box.xmin, box.ymin], [box.xmax, box.ymax]]
 
+                    ball_pixel = Float32MultiArray()
+                    ball_pixel.data = [(box.xmin+ box.xmax)/2.0, (box.ymin+ box.ymax)/2.0]
+                    self.pub_ball_pixel.publish(ball_pixel)
                     # print(detect.camera.calculate_ball_from_bounding_boxes(boundingBoxes).position)
                     ball_pos = self.camera.calculate_ball_from_bounding_boxes(boundingBoxes)
                     # print(

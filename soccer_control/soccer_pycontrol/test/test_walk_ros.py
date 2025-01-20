@@ -29,21 +29,44 @@ class TestPybullet(unittest.TestCase):
         bez = BezROS()
         walker = NavigatorRos(bez, imu_feedback_enabled= True, ball2=True)
         # walker.wait(50)
-        # walker.ready()
-        bez.motor_control.set_single_motor("head_pitch", 0.7)
-        bez.motor_control.set_motor()
+        walker.ready()
+        # bez.motor_control.set_single_motor("head_pitch", 0.7)
+        # bez.motor_control.set_motor()
         walker.wait(50)
         # walker.goal_callback(PoseStamped())
         # walker.walk(d_x=0.04, t_goal=10)
         # target_goal = Transformation(position=[1, 0, 0], euler=[0, 0, 0])
         # walker.walk(target_goal)
-        target_goal = [0.03, 0.0, 0, 10, 500]
+        # target_goal = [0.03     , 0.0, 0, 10, 500]
         target_goal = Transformation(position=[0, 0, 0], euler=[0, 0, 0])
         # walker.walk(target_goal)
         walker.run(target_goal)
 
         walker.wait(100)
 
+    def test_ready_ros_local(self):
+        robot_ns = os.environ["ROS_NAMESPACE"]
+        # os.system(
+        #     f"/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill {robot_ns}/soccer_strategy {robot_ns}/soccer_pycontrol {robot_ns}/soccer_trajectories'"
+        # )
+
+        rospy.init_node("soccer_control")
+
+        bez = BezROS()
+        walker = NavigatorRos(bez, imu_feedback_enabled= True, ball2=True)
+        # walker.wait(50)
+        walker.ready()
+        walker.wait(50)
+        # walker.goal_callback(PoseStamped())
+        # walker.walk(d_x=0.04, t_goal=10)
+        # target_goal = Transformation(position=[1, 0, 0], euler=[0, 0, 0])
+        # walker.walk(target_goal)
+        # target_goal = [0.03, 0.0, 0, 10, 500]
+        # target_goal = Transformation(position=[0, 0, 0], euler=[0, 0, 0])
+        # # walker.walk(target_goal)
+        # walker.run(target_goal)
+
+        walker.wait(100)
     def test_camera2(self):
         robot_ns = os.environ["ROS_NAMESPACE"]
 

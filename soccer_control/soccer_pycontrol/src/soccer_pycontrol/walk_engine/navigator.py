@@ -19,6 +19,8 @@ from soccer_common import PID, Transformation
 # TODO change to trajectory controller
 class Navigator:
     def __init__(self, world: PybulletWorld, bez: Bez, imu_feedback_enabled: bool = False, ball: bool = False, record_walking_metrics: bool = True):
+        self.ball_dx = 0
+        self.ball_dy = 0.7
         self.world = world
         self.bez = bez
         self.imu_feedback_enabled = imu_feedback_enabled
@@ -50,7 +52,7 @@ class Navigator:
             setpoint=0,
             output_limits=(-1, 1),
         )
-
+        self.last_ball = [0,0]
         self.error_tol = 0.03  # in m TODO add as a param and in the ros version
 
         # joints
@@ -65,6 +67,22 @@ class Navigator:
         self.reset_walk()
         self.t2 = 0
 
+        self.ball_x_pid = PID(
+            Kp=0.00001,
+            Kd=0,
+            Ki=0,
+            setpoint=320,
+            output_limits=(-1.5707963267948966, 1.5707963267948966),
+        )
+
+        self.ball_y_pid = PID(
+            Kp=-0.0,
+            Kd=0,
+            Ki=0,
+            setpoint=240,
+            output_limits=(0, 1),
+        )
+
     def reset_walk(self):
         self.t = -1
         self.enable_walking = True
@@ -78,11 +96,11 @@ class Navigator:
         self.t2 = self.kick_planner.step(self.t2)
 
     # TODO could make input a vector
-    def walk(self, target_goal: Union[Transformation, List], ball_mode: bool = False, display_metrics: bool = False):
+    def walk(self, target_goal: Union[Transformation, List],ball_pixel: list = (), ball_mode: bool = False, display_metrics: bool = False):
         if self.enable_walking:
             if isinstance(target_goal, Transformation):
                 if ball_mode:
-                    self.walk_ball(target_goal)
+                    self.walk_ball(target_goal, ball_pixel)
                 else:
                     self.walk_pose(target_goal)
             elif isinstance(target_goal, list):  # [d_x: float = 0.0, d_y: float = 0.0, d_theta: float = 0.0, nb_steps: int = 10, t_goal: float = 10]
@@ -162,9 +180,12 @@ class Navigator:
             self.ready()
             self.enable_walking = False
 
-    def walk_ball(self, target_goal: Transformation):
+    def walk_ball(self, target_goal: Transformation, ball_pixel: list):
         if self.t < 0:
             self.walk_pid.reset_imus()
+            self.ball_x_pid.reset()
+            self.ball_y_pid.reset()
+
             self.nav_x_pid.reset()
             self.nav_x_pid.setpoint = target_goal.position[0]
 
@@ -187,8 +208,7 @@ class Navigator:
         ):
             # target_goal = self.bez.sensors.get_ball()
             # print(target_goal.position)
-            if self.ball2:
-                self.foot_step_planner.head_movement(target_goal.position)
+
 
             self.nav_x_pid.setpoint = target_goal.position[0]
             self.nav_y_pid.setpoint = target_goal.position[1]
@@ -205,10 +225,10 @@ class Navigator:
             # print(round(dx, 3), " ", round(dy, 3), " ", round(dtheta, 3), " ", round(x_error, 3), " ", round(y_error, 3), " ", round(head_error, 3))
             self.foot_step_planner.configure_planner(dx, dy, dtheta)
 
-            self.walk_loop()
-        else:
-            self.ready()
-            self.enable_walking = False
+            self.walk_loop(ball_pixel=ball_pixel)
+        # else:
+        #     self.ready()
+        #     self.enable_walking = False
 
     def walk_time(self, target_goal: list):
         if self.t < 0:
@@ -222,14 +242,24 @@ class Navigator:
             self.ready()
             self.enable_walking = False
 
-    def walk_loop(self):
+    def walk_loop(self, ball_pixel: list = ()):
         self.foot_step_planner.plan_steps(self.t)
         self.set_angles_from_placo(self.foot_step_planner)
         # self.foot_step_planner.head_movement([1, 1, 0])
         if self.imu_feedback_enabled and self.bez.sensors.imu_ready:
             [_, pitch, roll] = self.bez.sensors.get_imu()
-            print(pitch,"  ", roll)
+            # print(pitch,"  ", roll)
             self.stabilize_walk(pitch, roll)
+
+        if self.ball2 and ball_pixel != self.last_ball:
+            # self.foot_step_planner.head_movement(target_goal.position)
+
+            self.last_ball = ball_pixel
+            self.ball_dx = self.ball_x_pid.update(3.2 - ball_pixel[0]/100.0)
+            self.ball_dy = self.ball_y_pid.update(ball_pixel[1]/100.0)
+            # print(f"{ball_pixel}, {self.ball_dx}, {self.ball_dy}")
+        self.bez.motor_control.configuration["head_yaw"] = self.ball_dx
+        self.bez.motor_control.configuration["head_pitch"] = self.ball_dy
         # self.bez.motor_control.configuration_offset["left_hip_pitch"] = 0.15
         # self.bez.motor_control.configuration_offset["right_hip_pitch"] = 0.15
         self.bez.motor_control.configuration["left_elbow"] = 1.57
@@ -238,8 +268,8 @@ class Navigator:
         self.bez.motor_control.configuration["right_shoulder_roll"] = 0.1
         # self.bez.motor_control.configuration["head_pitch"] = 0.7
         # self.bez.motor_control.set_single_motor("head_yaw", 0.0)
-        self.bez.motor_control.set_right_leg_target_angles([0, 0, 0, 0, 0, 0])
-        self.bez.motor_control.set_left_leg_target_angles([0, 0, 0, 0, 0, 0])
+        # self.bez.motor_control.set_right_leg_target_angles([0, 0, .82, -1.5, 0.82, -0.1])
+        # self.bez.motor_control.set_left_leg_target_angles([0, 0, 0.82, -1.5, 0.82, -0.1])
         self.bez.motor_control.set_motor()
 
         self.t = self.foot_step_planner.step(self.t)
@@ -295,7 +325,11 @@ class Navigator:
         self.foot_step_planner.setup_tasks()
 
         self.set_angles_from_placo(self.foot_step_planner)
+        self.bez.motor_control.configuration["left_shoulder_roll"] = 0.1
+        self.bez.motor_control.configuration["right_shoulder_roll"] = 0.1
 
+        self.bez.motor_control.set_single_motor("head_yaw", self.ball_dx)
+        self.bez.motor_control.set_single_motor("head_pitch", self.ball_dy)
         self.bez.motor_control.set_motor()
 
     def wait(self, step: int) -> None:

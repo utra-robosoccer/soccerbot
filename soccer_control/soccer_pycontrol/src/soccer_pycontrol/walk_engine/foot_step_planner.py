@@ -142,14 +142,14 @@ class FootStepPlanner:
         joints_task.configure("joints", "soft", 1.0)
 
         # Placing the robot in the initial position
-        print("Placing the robot in the initial position...")
+        # print("Placing the robot in the initial position...")
         self.tasks.reach_initial_pose(
             np.eye(4),
             self.parameters.feet_spacing,
             self.parameters.walk_com_height,
             self.parameters.walk_trunk_pitch,
         )
-        print("Initial position reached")
+        # print("Initial position reached")
 
     def configure_planner(self, d_x: float = 0.0, d_y: float = 0.0, d_theta: float = 0.0, nb_steps: int = 10):
         # Configure the FootstepsPlanner
@@ -187,7 +187,7 @@ class FootStepPlanner:
         # TODO clean up and add a cone or it breaks walking
         ball = np.array(target)
         camera_pos = self.robot.get_T_world_frame("camera")[:3, 3]
-        ball[2] -= camera_pos[2] # TODO tune later
+        # ball[2] -= camera_pos[2] # TODO tune later
         ball[1] = -ball[1]
 
         self.look_at_ball.targetAxis_world = ball

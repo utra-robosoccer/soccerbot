@@ -48,10 +48,11 @@ typedef struct {
   uint16_t dirPinNum; // pin for setting buffer read/write direction
 
   uint8_t rxPacketLen; // received packet length should be smaller then max buffer size
-  uint8_t rxBuffer[1500]; // 100bytes is enough to store packets from Dynamixel
+  uint8_t rxBuffer[150]; // 100bytes is enough to store packets from Dynamixel
   bool dmaDoneReading;
   bool readRequestSent;
   bool motorServiced;
+  bool motorWrite;
   uint16_t timeout;
 
   uint8_t currMotor; // for keeping track of which motor to write to
@@ -59,6 +60,7 @@ typedef struct {
   uint8_t numMotors; // how many motors connected to this uart port?
   uint8_t motorIds[10]; // support at most 10 motors
   uint8_t protocol[10];
+  uint16_t angles[10];
   uint16_t currMotorPositions[10];
 } MotorPort;
 

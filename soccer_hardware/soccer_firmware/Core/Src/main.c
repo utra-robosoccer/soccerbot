@@ -102,7 +102,7 @@ void init_ports() {
 	.currMotor  = 0,
 	.currReadMotor  = 0,
     .numMotors      = 5,
-    .motorIds       = {0, 1, 18, 16, 17}, // left arm chain + bottom neck motor
+    .motorIds       = {16, 17,0, 1, 18}, // left arm chain + bottom neck motor
     .protocol       = {2, 2, 2, 2, 2}
   };
 
