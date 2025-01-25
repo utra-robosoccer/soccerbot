@@ -98,6 +98,9 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define ButtonReset_Pin GPIO_PIN_13
+#define ButtonReset_GPIO_Port GPIOC
+#define ButtonReset_EXTI_IRQn EXTI15_10_IRQn
 #define USART4_DIR_Pin GPIO_PIN_3
 #define USART4_DIR_GPIO_Port GPIOC
 #define USART2_DIR_Pin GPIO_PIN_4
