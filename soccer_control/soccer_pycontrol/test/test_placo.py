@@ -21,14 +21,15 @@ class TestPlaco(unittest.TestCase):
             real_time=REAL_TIME,
             rate=200,
         )
-        self.bez = Bez(robot_model="bez1", pose=Transformation())
-        walk = Navigator(self.world, self.bez)
+        self.bez = Bez(robot_model="assembly", pose=Transformation())
+        walk = Navigator(self.world, self.bez, imu_feedback_enabled=False)
         # walk.ready()
         # self.bez.motor_control.set_motor()
         # walk.wait(50)
-        target_goal = [0.08, 0, 0, 3, 500]
+        target_goal = [1, 0, 0.0, 10, 500]
         # target_goal = Transformation(position=[1, 0, 0], euler=[0, 0, 0])
-        walk.walk(target_goal)
+        print("STARTING WALK")
+        walk.walk(target_goal, display_metrics=False)
         # walk.wait(1000)
 
     # TODO fix

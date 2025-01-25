@@ -16,10 +16,13 @@ services:
       service: simulator
 
   soccerbot_no_cuda:
+    image: utrarobosoccer/soccerbot:no_cuda
     network_mode: host
     extends:
       file: tools/docker/compose.autonomy.yaml
       service: soccerbot_no_cuda
+    environment:
+      PYTHONPATH: $$PYTHONPATH:/home/robosoccer/.local/lib/python3.8/site-packages:/opt/ros/noetic/lib/python3/dist-packages:/home/robosoccer/catkin_ws/devel/lib/python3/dist-packages
 
   soccerbot:
     <<: *gpu

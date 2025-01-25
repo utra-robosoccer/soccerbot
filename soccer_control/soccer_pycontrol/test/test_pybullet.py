@@ -8,7 +8,7 @@ from soccer_pycontrol.pybullet_usage.pybullet_world import PybulletWorld
 
 from soccer_common import Transformation
 
-REAL_TIME = False
+REAL_TIME = True
 
 
 class TestPybullet(unittest.TestCase):
@@ -19,10 +19,10 @@ class TestPybullet(unittest.TestCase):
 
     def test_imu(self):
         self.world = PybulletWorld(camera_yaw=45, real_time=REAL_TIME, rate=100)
-        # pose = Transformation()
-        pose = Transformation(position=[0, 0, 0.070], euler=[0, -1.57, 0])
-        pose = Transformation(position=[0, 0, 0.070], euler=[0, 1.57, 0])
-        self.bez = Bez(robot_model="bez2", pose=pose)
+        pose = Transformation()
+        # pose = Transformation(position=[0, 0, 0.070], euler=[0, -1.57, 0])
+        # pose = Transformation(position=[0, 0, 0.070], euler=[0, 1.57, 0])
+        self.bez = Bez(robot_model="assembly", pose=pose)
         self.world.wait(100)
         for i in range(100):
             [_, pitch, roll] = self.bez.sensors.get_imu()
@@ -38,8 +38,8 @@ class TestPybullet(unittest.TestCase):
         # TODO add more and fuix the link location
 
     def test_bez_motor_range(self):
-        self.world = PybulletWorld(path="", camera_yaw=90, real_time=REAL_TIME, rate=1000)
-        self.bez = Bez(robot_model="bez2", fixed_base=True, pose=Transformation())
+        self.world = PybulletWorld(path="", camera_yaw=45, real_time=REAL_TIME, rate=1000)
+        self.bez = Bez(robot_model="assembly", fixed_base=True, pose=Transformation())
         self.world.wait(50)
         angles = np.linspace(-np.pi, np.pi)
         for i in range(self.bez.motor_control.numb_of_motors):
@@ -59,15 +59,18 @@ class TestPybullet(unittest.TestCase):
         self.world.wait(100)
 
     def test_bez_motor_range_single(self):
-        self.world = PybulletWorld(path="", camera_yaw=90, real_time=REAL_TIME, rate=500)
+        self.world = PybulletWorld(path="", camera_yaw=45, real_time=REAL_TIME, rate=500)
         self.bez = Bez(robot_model="bez1", fixed_base=True, pose=Transformation())
+        # self.bez = Bez(robot_model="assembly", fixed_base=True, pose=Transformation())
         self.world.wait(50)
         angles = np.linspace(-np.pi, np.pi)
 
         for j in angles:
             x = [0.0] * self.bez.motor_control.numb_of_motors
-            x[self.bez.motor_control.motor_names.index("left_ankle_roll")] = j
-            x[self.bez.motor_control.motor_names.index("right_ankle_roll")] = j
+            t = "elbow"
+            x[self.bez.motor_control.motor_names.index("head_pitch")] = j
+            # x[self.bez.motor_control.motor_names.index("right_"+t)] = j
+            # x[self.bez.motor_control.motor_names.index("left_"+t)] = j
 
             pb.setJointMotorControlArray(
                 bodyIndex=self.bez.model.body,

@@ -7,7 +7,7 @@ left_hip_yaw:
 
 left_hip_roll:
   id: 5
-  type: "xm430"
+  type: "mx64"
   angle_zero: 180
   angle_max: 360
   angle_min: 0
@@ -15,7 +15,7 @@ left_hip_roll:
 
 left_hip_pitch:
   id: 6
-  type: "xm430"
+  type: "mx64"
   angle_zero: 180
   angle_max: 360
   angle_min: 0
@@ -53,14 +53,14 @@ right_hip_yaw:
 
 right_hip_roll:
   id: 11
-  type: "xm430"
+  type: "mx64"
   angle_zero: 180
   angle_max: 360
   angle_min: 0
 
 right_hip_pitch:
   id: 12
-  type: "xm430"
+  type: "mx64"
   angle_zero: 180
   angle_max: 360
   angle_min: 0
@@ -90,7 +90,7 @@ right_ankle_roll:
 
 left_shoulder_pitch:
   id: 18
-  type: "mx28"
+  type: "xm430"
   angle_zero: 180
   angle_max: 360
   angle_min: 0
@@ -98,14 +98,14 @@ left_shoulder_pitch:
 
 left_shoulder_roll:
   id: 0
-  type: "mx28"
+  type: "xm430"
   angle_zero: 180
   angle_max: 360
   angle_min: 0
 
 left_elbow:
   id: 1
-  type: "mx28"
+  type: "xm430"
   angle_zero: 180
   angle_max: 360
   angle_min: 0
@@ -113,14 +113,14 @@ left_elbow:
 
 right_shoulder_pitch: # Checked
   id: 19
-  type: "mx28"
+  type: "xm430"
   angle_zero: 180
   angle_max: 360
   angle_min: 0
 
 right_shoulder_roll:
   id: 2
-  type: "mx28"
+  type: "xm430"
   angle_zero: 180
   angle_max: 360
   angle_min: 0
@@ -128,7 +128,7 @@ right_shoulder_roll:
 
 right_elbow:
   id: 3
-  type: "mx28"
+  type: "xm430"
   angle_zero: 180
   angle_max: 360
   angle_min: 0

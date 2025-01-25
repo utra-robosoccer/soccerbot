@@ -4,7 +4,7 @@ x-exclude: &exclude
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.5.0
+    rev: v5.0.0
     hooks:
       - id: check-symlinks
         <<: *exclude
@@ -18,7 +18,7 @@ repos:
       - id: prettier
         <<: *exclude
   - repo: https://github.com/psf/black
-    rev: 24.3.0
+    rev: 22.3.0
     hooks:
       - id: black
         <<: *exclude
@@ -34,7 +34,7 @@ repos:
           - black
         <<: *exclude
   - repo: https://github.com/PyCQA/flake8
-    rev: 7.0.0
+    rev: 7.1.1
     hooks:
       - id: flake8
         <<: *exclude
@@ -57,5 +57,5 @@ repos:
 #    rev: ''  # Use the sha / tag you want to point at
 #    hooks:
 #      - id: mypy
-#        exclude: "cmake-build-debug|setup.py|external"
+#        exclude: "cmake-build-debug|setup.py|external|soccer_strategy|soccer_common|soccer_msgs|soccer_localization|soccer_description|soccer_webots|test_integration.py"
 #        args: ["--config-file","pyproject.toml"]

@@ -2,29 +2,22 @@
 <module type="PYTHON_MODULE" version="4">
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
-      <sourceFolder url="file://$MODULE_DIR$/soccer_common/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/soccer_control/soccer_pycontrol/src" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/soccer_control/soccer_trajectories/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/soccer_hardware/soccer_firmware_interface/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/soccer_strategy/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/soccer_control/soccer_trajectories/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/soccer_common/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/soccer_perception/soccer_localization/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/soccer_perception/soccer_object_detection/src" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/soccer_strategy/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/soccer_perception/soccer_object_localization/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/soccer_webots/src" isTestSource="false" />
     </content>
-    <orderEntry type="jdk" jdkName="Remote Python 3.8.10 Docker Compose (soccerbot)" jdkType="Python SDK" />
+    <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="PyDocumentationSettings">
     <option name="format" value="PLAIN" />
     <option name="myDocStringFormat" value="Plain" />
-  </component>
-  <component name="TemplatesService">
-    <option name="TEMPLATE_CONFIGURATION" value="Jinja2" />
-    <option name="TEMPLATE_FOLDERS">
-      <list>
-        <option value="$MODULE_DIR$/external/webots/resources/templates" />
-      </list>
-    </option>
   </component>
   <component name="TestRunnerService">
     <option name="PROJECT_TEST_RUNNER" value="py.test" />

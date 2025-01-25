@@ -27,10 +27,10 @@ class TrajectoryManagerSim(TrajectoryManager):
         self.sim = PybulletSetup(robot_model=robot_model, real_time=real_time, pose=pose, camera_yaw=camera_yaw)
 
     def read_joint_state(self) -> JointState:
-        return JointState(name=self.sim.motor_names, position=[0.0] * 20)
+        return JointState(name=self.sim.motor_names, position=[0.0] * self.sim.numb_of_motors)
 
     def send_joint_msg(self, timestamp: float) -> None:
-        states = [0.0] * 20
+        states = [0.0] * self.sim.numb_of_motors
         joints, angles = self.trajectory.create_joint_states(timestamp)
         for i, joint in enumerate(joints):
             states[self.sim.motor_names.index(joint)] = angles[i]

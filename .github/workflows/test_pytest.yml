@@ -52,9 +52,9 @@ jobs:
         run: |
           cd $HOME/catkin_ws/src/soccerbot
           source /opt/ros/noetic/setup.bash
-          pip3 install pyOpenSSL==23.0.0
+          pip install pyOpenSSL==23.0.0
           python3 -m pip install -U --user pip
-          pip3 install -r requirements.txt -f https://download.pytorch.org/whl/torch/ -f https://download.pytorch.org/whl/torchvision/
+          pip install -r tools/setup/requirements.txt
       - name: Build Soccerbot
         run: |
           cd $HOME/catkin_ws

@@ -1,7 +1,3 @@
-[submodule "external/webots"]
-	path = external/webots
-	url = git@github.com:utra-robosoccer/webots.git
-	branch = R2022b
 [submodule "external/GameController"]
 	path = external/GameController
 	url = git@github.com:RoboCup-Humanoid-TC/GameController.git
