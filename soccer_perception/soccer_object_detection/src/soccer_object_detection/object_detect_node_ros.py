@@ -106,7 +106,7 @@ class ObjectDetectionNodeRos(ObjectDetectionNode):
                     # )
                     pose_msg = PoseStamped()
                     pose_msg.header.stamp = msg.header.stamp
-                    pose_msg.header.frame_id = msg.header.frame_id
+                    pose_msg.header.frame_id = "base_link"#msg.header.frame_id
                     pose_msg.pose = ball_pos.pose
                     # pose_msg.pose.position.z = 0.04
                     # pose_msg.pose.position.y = -pose_msg.pose.position.y

@@ -66,9 +66,9 @@ class SensorsROS(Sensors):
         # return Transformation(pose=self.odom_msg.pose.pose)
         try:
 
-            time_stamp1 = self.tf_listener.getLatestCommonTime("left_foot_v10_1", "base_link")
+            time_stamp1 = self.tf_listener.getLatestCommonTime("left_foot", "base_link")
 
-            (trans1, rot) = self.tf_listener.lookupTransform("left_foot_v10_1", "base_link", time_stamp1)
+            (trans1, rot) = self.tf_listener.lookupTransform("left_foot", "base_link", time_stamp1)
             return Transformation(position=[0,0,trans1[2]], quaternion=rot)
         except (
             tf2_py.LookupException,
@@ -102,11 +102,11 @@ class SensorsROS(Sensors):
     def get_height(self):
         try:
 
-            time_stamp1 = self.tf_listener.getLatestCommonTime("left_foot_v10_1", "head_v4_1")
+            time_stamp1 = self.tf_listener.getLatestCommonTime("left_foot", "head")
 
-            (trans1, rot) = self.tf_listener.lookupTransform("left_foot_v10_1", "head_v4_1", time_stamp1)
+            (trans1, rot) = self.tf_listener.lookupTransform("left_foot", "head", time_stamp1)
             temp = Transformation(position=[0, 0, trans1[2]], quaternion=rot)
-            temp.orientation_euler = -1*temp.orientation_euler
+            temp.orientation_euler = 1*temp.orientation_euler
             return temp
         except (
             tf2_py.LookupException,

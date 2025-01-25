@@ -4,7 +4,7 @@
 <xacro:include filename="$(find bez2_description)/urdf/materials.xacro" />
 <xacro:include filename="$(find bez2_description)/urdf/bez2.trans" />
 <xacro:include filename="$(find bez2_description)/urdf/bez2.gazebo" />
-<link name="trunk">
+<link name="torso">
   <inertial>
     <origin xyz="-2.6182166493521018e-05 0.0037391632790891283 -0.07310917852477573" rpy="0 0 0"/>
     <mass value="1.62191101903404"/>

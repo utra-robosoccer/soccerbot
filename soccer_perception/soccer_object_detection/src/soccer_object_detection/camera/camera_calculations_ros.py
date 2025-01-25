@@ -43,12 +43,12 @@ class CameraCalculationsRos(CameraCalculations):
         """
         try:
 
-            time_stamp1 = self.tf_listener.getLatestCommonTime("left_foot_v10_1", "head_v4_1")
+            time_stamp1 = self.tf_listener.getLatestCommonTime("left_foot", "head")
 
-            (trans1, rot) = self.tf_listener.lookupTransform("left_foot_v10_1", "head_v4_1", time_stamp1)
+            (trans1, rot) = self.tf_listener.lookupTransform("left_foot", "head", time_stamp1)
 
             self.pose = Transformation(position=[0,0,trans1[2]], quaternion=rot)
-            self.pose.orientation_euler = -1 * self.pose.orientation_euler
+            self.pose.orientation_euler = 1 * self.pose.orientation_euler
         except (
             tf2_py.LookupException,
             tf.LookupException,

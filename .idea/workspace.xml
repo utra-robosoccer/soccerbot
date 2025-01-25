@@ -62,50 +62,50 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python tests.pytest for test_camera.TestCamera.test_camera_find_camera_coordinate.executor": "Run",
-    "Python tests.pytest for test_firmware_interface.test_firmware_interface.executor": "Run",
-    "Python tests.pytest for test_firmware_interface.test_firmware_interface_single_motor_range.executor": "Run",
-    "Python tests.pytest for test_object_detection.TestObjectDetection.test_object_detection.executor": "Run",
-    "Python tests.pytest for test_object_detection.TestObjectDetection.test_object_detection_vid.executor": "Run",
-    "Python tests.pytest for test_object_localization.TestObjectLocalization.test_fieldline_detection_vid.executor": "Run",
-    "Python tests.pytest for test_placo.TestPlaco.test_bez1.executor": "Run",
-    "Python tests.pytest for test_placo.TestPlaco.test_bez1_start_stop.executor": "Run",
-    "Python tests.pytest for test_placo.TestPlaco.test_bez1_walk.executor": "Run",
-    "Python tests.pytest for test_placo.TestPlaco.test_bez_motor_range_single.executor": "Run",
-    "Python tests.pytest for test_placo.TestPlaco.test_camera.executor": "Run",
-    "Python tests.pytest for test_pybullet.TestPybullet.test_bez_motor_range.executor": "Run",
-    "Python tests.pytest for test_pybullet.TestPybullet.test_bez_motor_range_single.executor": "Run",
-    "Python tests.pytest for test_pybullet.TestPybullet.test_cam.executor": "Run",
-    "Python tests.pytest for test_pybullet.TestPybullet.test_imu.executor": "Debug",
-    "Python tests.pytest for test_pybullet_camera.TestPybullet.test_ball_localization.executor": "Run",
-    "Python tests.pytest for test_pybullet_camera.TestPybullet.test_ball_localization2.executor": "Run",
-    "Python tests.pytest for test_pybullet_camera.TestPybullet.test_cam.executor": "Run",
-    "Python tests.pytest for test_pybullet_camera.TestPybullet.test_detection.executor": "Run",
-    "Python tests.pytest for test_trajectory.TestTrajectory.test_trajectory.executor": "Run",
-    "Python tests.pytest for test_trajectory.test_traj_ros.executor": "Run",
-    "Python tests.pytest for test_trajectory.test_trajectory_sim.executor": "Run",
-    "Python tests.pytest for test_walk_ros.TestPybullet.test_camera.executor": "Run",
-    "Python tests.pytest for test_walk_ros.TestPybullet.test_camera2.executor": "Run",
-    "Python tests.pytest for test_walk_ros.TestPybullet.test_ready_ros_local.executor": "Run",
-    "Python tests.pytest for test_walk_ros.TestPybullet.test_walk_ros_local.executor": "Run",
-    "Python tests.pytest for test_walk_ros.TestPybullet.test_walk_ros_webots.executor": "Run",
-    "Python.dgfs.executor": "Run",
-    "Python.fsf.executor": "Run",
-    "Python.motor_control.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "js__new",
-    "last_opened_file_path": "/home/manx52/catkin_ws/src/soccerbot/soccer_hardware/soccer_firmware",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "editor.preferences.fonts.default",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python tests.pytest for test_camera.TestCamera.test_camera_find_camera_coordinate.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_firmware_interface.test_firmware_interface.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_firmware_interface.test_firmware_interface_single_motor_range.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_object_detection.TestObjectDetection.test_object_detection.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_object_detection.TestObjectDetection.test_object_detection_vid.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_object_localization.TestObjectLocalization.test_fieldline_detection_vid.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_placo.TestPlaco.test_bez1.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_placo.TestPlaco.test_bez1_start_stop.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_placo.TestPlaco.test_bez1_walk.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_placo.TestPlaco.test_bez_motor_range_single.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_placo.TestPlaco.test_camera.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_pybullet.TestPybullet.test_bez_motor_range.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_pybullet.TestPybullet.test_bez_motor_range_single.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_pybullet.TestPybullet.test_cam.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_pybullet.TestPybullet.test_imu.executor&quot;: &quot;Debug&quot;,
+    &quot;Python tests.pytest for test_pybullet_camera.TestPybullet.test_ball_localization.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_pybullet_camera.TestPybullet.test_ball_localization2.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_pybullet_camera.TestPybullet.test_cam.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_pybullet_camera.TestPybullet.test_detection.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_trajectory.TestTrajectory.test_trajectory.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_trajectory.test_traj_ros.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_trajectory.test_trajectory_sim.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_walk_ros.TestPybullet.test_camera.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_walk_ros.TestPybullet.test_camera2.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_walk_ros.TestPybullet.test_ready_ros_local.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_walk_ros.TestPybullet.test_walk_ros_local.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_walk_ros.TestPybullet.test_walk_ros_webots.executor&quot;: &quot;Run&quot;,
+    &quot;Python.dgfs.executor&quot;: &quot;Run&quot;,
+    &quot;Python.fsf.executor&quot;: &quot;Run&quot;,
+    &quot;Python.motor_control.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;js__new&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/manx52/catkin_ws/src/soccerbot/soccer_hardware/soccer_firmware&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.fonts.default&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/soccer_perception/soccer_object_detection/models" />
@@ -210,10 +210,10 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Python tests.pytest for test_walk_ros.TestPybullet.test_ready_ros_local" />
+      <item itemvalue="Python tests.pytest for test_firmware_interface.test_firmware_interface" />
       <item itemvalue="Python tests.pytest for test_placo.TestPlaco.test_bez1_walk" />
       <item itemvalue="Python tests.pytest for test_walk_ros.TestPybullet.test_camera" />
-      <item itemvalue="Python tests.pytest for test_firmware_interface.test_firmware_interface" />
+      <item itemvalue="Python tests.pytest for test_walk_ros.TestPybullet.test_ready_ros_local" />
       <item itemvalue="Python tests.pytest for test_walk_ros.TestPybullet.test_walk_ros_local" />
     </list>
     <recent_temporary>

@@ -9,9 +9,9 @@ arm_1_center: 2.512
 # merge_fixed_links: true
 
 # STABILIZE
-walking_pitch_kp: -0.275 #0.275
+walking_pitch_kp: -0.25 #0.275
 walking_pitch_kd: 0.0 #1
-walking_pitch_ki: -0.00
+walking_pitch_ki: -0.00001
 walking_pitch_setpoint: -0.0
 walking_pitch_offset: 0.0
 

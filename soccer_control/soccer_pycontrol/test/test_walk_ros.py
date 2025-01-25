@@ -111,7 +111,7 @@ class TestPybullet(unittest.TestCase):
         rospy.init_node("soccer_control")
         bez = BezROS()
 
-
+        walker = NavigatorRos(bez, imu_feedback_enabled=True, ball2=True)
         src_path = expanduser("~") + "/catkin_ws/src/soccerbot/soccer_perception/"
         model_path = src_path + "soccer_object_detection/models/yolov8s_detect_best.pt"
         model_path = src_path + "soccer_object_detection/models/half_5.pt"
@@ -144,7 +144,8 @@ class TestPybullet(unittest.TestCase):
         kicked = False
         while  not rospy.is_shutdown():
             # img = self.bez.sensors.get_camera_image()
-            bez.motor_control.set_single_motor("head_pitch", 0.7)
+            # bez.motor_control.set_single_motor("head_pitch", 0.7)
+            walker.ready()
             bez.motor_control.set_motor()
             ret, frame = cap.read()
             if not ret:

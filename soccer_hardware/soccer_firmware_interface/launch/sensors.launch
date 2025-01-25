@@ -24,7 +24,7 @@
 
     <param name="robot_description" command="xacro '$(find assembly_description)/urdf/assembly.xacro'
             robot_name:=$(arg robot_name)
-            model_type:=dae
+            model_type:=stl
             file_path:=package://assembly_description
             has_base_footprint:=false
             tf_prefix:=$(arg robot_name)

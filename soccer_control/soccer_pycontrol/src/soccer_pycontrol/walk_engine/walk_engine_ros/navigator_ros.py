@@ -28,7 +28,7 @@ class NavigatorRos(Navigator):
         self.walk_pid = Stabilize(self.bez.parameters)
         self.max_vel = 0.03
         self.nav_x_pid = PID(
-            Kp=-0.1,
+            Kp=0.1,
             Kd=0,
             Ki=0,
             setpoint=0,
@@ -42,7 +42,7 @@ class NavigatorRos(Navigator):
             output_limits=(-self.max_vel, self.max_vel),
         )  # TODO could also mod if balance is decreasing
         self.nav_yaw_pid = PID(
-            Kp=0.01,
+            Kp= 0.01,
             Kd=0,
             Ki=0,
             setpoint=0,
@@ -73,7 +73,7 @@ class NavigatorRos(Navigator):
             Kd=0,
             Ki=-0.03,
             setpoint=2.4,
-            output_limits=(0.4, 1.2),
+            output_limits=(0.4, 1.3),
         )
     def check_request_timeout(self, nsecs: int = 500000000):
         return (rospy.Time.now() - self.last_req) < rospy.Duration(secs=1, nsecs=nsecs)

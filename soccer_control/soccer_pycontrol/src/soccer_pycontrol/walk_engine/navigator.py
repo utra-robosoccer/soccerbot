@@ -267,7 +267,7 @@ class Navigator:
         self.bez.motor_control.configuration["left_shoulder_roll"] = 0.1
         self.bez.motor_control.configuration["right_shoulder_roll"] = 0.1
         # self.bez.motor_control.configuration["head_pitch"] = 0.7
-        # self.bez.motor_control.set_single_motor("head_yaw", 0.0)
+        # self.bez.motor_control.set_single_motor("head_yaw", 0.7)
         # self.bez.motor_control.set_right_leg_target_angles([0, 0, .82, -1.5, 0.82, -0.1])
         # self.bez.motor_control.set_left_leg_target_angles([0, 0, 0.82, -1.5, 0.82, -0.1])
         self.bez.motor_control.set_motor()

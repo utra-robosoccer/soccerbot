@@ -19,7 +19,7 @@ class TrajectoryManager(ABC):
         self.trajectory = Trajectory(trajectory_path + traj_name + ".csv", mirror=mirror)
 
     def process_trajectory(self, traj_name: str, mirror: bool):
-        self.trajectory.trajectory_path = self.trajectory_path + traj_name + ".csv"
+        # self.trajectory.trajectory_path = self.trajectory_path + traj_name + ".csv"
         self.trajectory.mirror = mirror
         self.trajectory.reset()
 
