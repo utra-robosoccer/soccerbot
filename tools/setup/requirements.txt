@@ -691,7 +691,7 @@ wcwidth==0.2.13
     # via
     #   prompt-toolkit
     #   soccerbot (pyproject.toml)
-werkzeug==3.0.4
+werkzeug==3.0.6
     # via
     #   dash
     #   flask
