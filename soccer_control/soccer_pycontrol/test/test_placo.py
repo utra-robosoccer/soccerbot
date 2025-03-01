@@ -47,6 +47,7 @@ class TestPlaco(unittest.TestCase):
         print("STARTING WALK")
         ball_pos = Transformation(position=[0, 0, 0], euler=[0, 0, 0])
         kicked = False
+        ball_pixel =[0,0]
         for i in range(10000):
             if i % 10 == 0:
                 img = self.bez.sensors.get_camera_image()
@@ -59,6 +60,7 @@ class TestPlaco(unittest.TestCase):
                         detect.camera.pose.orientation_euler = self.bez.sensors.get_pose(link=2).orientation_euler
                         # detect.camera.pose = self.bez.sensors.get_pose(link=2)
                         boundingBoxes = [[box.xmin, box.ymin], [box.xmax, box.ymax]]
+                        ball_pixel = [(box.xmin + box.xmax) / 2.0, (box.ymin + box.ymax) / 2.0]
                         # print(detect.camera.calculate_ball_from_bounding_boxes(boundingBoxes).position)
                         kicked = False
                         ball_pos = self.bez.sensors.get_ball()
@@ -89,19 +91,21 @@ class TestPlaco(unittest.TestCase):
                     cv2.imshow("CVT Color2", dimg)
                     cv2.waitKey(1)
 
-            # if 0 < np.linalg.norm(ball_pos.position[:2]) < 0.2 and not kicked:
-            #     walk.ready()
-            #     walk.wait(100)
-            #     tm.send_trajectory("rightkick")
-            #     kicked = True
-            #     # walk.kick_ready()
-            #     # walk.kick()
-            #
-            #     walk.reset_walk()
-            # else:
-            #     walk.walk(ball_pos, True)
-            print(f"Height rotation: {self.bez.sensors.get_height().orientation_euler}", flush=True)
-            print(f"Height position: {self.bez.sensors.get_height().position}", flush=True)
+            if 0 < np.linalg.norm(ball_pos.position[:2]) < 0.2 and not kicked:
+                walk.ready()
+                walk.wait(100)
+                tm.send_trajectory("rightkick")
+                kicked = True
+                # walk.kick_ready()
+                # walk.kick()
+
+                walk.reset_walk()
+            else:
+
+
+                walk.walk(ball_pos, ball_pixel,True)
+            # print(f"Height rotation: {self.bez.sensors.get_height().orientation_euler}", flush=True)
+            # print(f"Height position: {self.bez.sensors.get_height().position}", flush=True)
 
             # walk.walk(target_goal, display_metrics=False)
             # if not walk.enable_walking:
@@ -179,8 +183,8 @@ class TestPlaco(unittest.TestCase):
             real_time=REAL_TIME,
             rate=200,
         )
-        self.bez = Bez(robot_model="assembly", pose=Transformation())
-        # self.bez = Bez(robot_model="bez1", pose=Transformation())
+        # self.bez = Bez(robot_model="assembly", pose=Transformation())
+        self.bez = Bez(robot_model="bez1", pose=Transformation())
         walk = Navigator(self.world, self.bez, imu_feedback_enabled=False)
         walk.ready()
         walk.wait(100)

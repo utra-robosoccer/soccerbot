@@ -126,3 +126,5 @@ class Sensors:
         # seg_opengl = np.reshape(images[4], [width, height]) * 1. / 255.
 
         return img
+    def get_height(self):
+        return

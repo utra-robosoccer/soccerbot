@@ -9,14 +9,18 @@ from placo_utils.visualization import footsteps_viz, frame_viz, line_viz, robot_
 
 
 class FootStepPlanner:
-    def __init__(self, robot_model: str, parameters: dict, funct_time, debug: bool = True, ball: bool = False):
+    def __init__(self, robot_model: str, parameters: dict, funct_time, debug: bool = True, ball: bool = False, sim:bool = True):
         self.ball = ball
         self.funct_time = funct_time
         self.DT = parameters["control_frequency"]
 
         self.debug = debug
         self.robot_model = robot_model
-        model_filename = expanduser("~") + f"/catkin_ws/src/soccerbot/soccer_description/{robot_model}_description/urdf/robot.urdf"
+        if sim and self.robot_model == "assembly":
+            model_filename = expanduser("~") + f"/catkin_ws/src/soccerbot/soccer_description/{robot_model}_description/urdf/robot.urdf"
+
+        else:
+            model_filename = expanduser("~") + f"/catkin_ws/src/soccerbot/soccer_description/{robot_model}_description/urdf/robot1.urdf"
         self.parameters = self.walk_parameters(parameters)
 
         self.last_replan = 0

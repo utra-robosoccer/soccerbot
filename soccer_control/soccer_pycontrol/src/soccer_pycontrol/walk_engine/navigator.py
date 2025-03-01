@@ -18,14 +18,14 @@ from soccer_common import PID, Transformation
 # TODO could make it more modular by passing in pybullet stuff or have it at one layer higher so we can reuse code
 # TODO change to trajectory controller
 class Navigator:
-    def __init__(self, world: PybulletWorld, bez: Bez, imu_feedback_enabled: bool = False, ball: bool = False, record_walking_metrics: bool = True):
+    def __init__(self, world: PybulletWorld, bez: Bez, imu_feedback_enabled: bool = False, ball: bool = False, record_walking_metrics: bool = True,sim:bool = True):
         self.ball_dx = 0
         self.ball_dy = 0.7
         self.world = world
         self.bez = bez
         self.imu_feedback_enabled = imu_feedback_enabled
         self.func_step = self.world.step
-        self.foot_step_planner = FootStepPlanner(self.bez.robot_model, self.bez.parameters, time.time, ball=ball)
+        self.foot_step_planner = FootStepPlanner(self.bez.robot_model, self.bez.parameters, time.time, ball=ball, sim=sim)
         self.ball2 = ball
         self.kick_planner = KickPlanner(self.bez.robot_model, self.bez.parameters, time.time)
         self.walk_pid = Stabilize(self.bez.parameters)
@@ -257,7 +257,7 @@ class Navigator:
             self.last_ball = ball_pixel
             self.ball_dx = self.ball_x_pid.update(3.2 - ball_pixel[0]/100.0)
             self.ball_dy = self.ball_y_pid.update(ball_pixel[1]/100.0)
-            # print(f"{ball_pixel}, {self.ball_dx}, {self.ball_dy}")
+            print(f"{ball_pixel}, {self.ball_dx}, {self.ball_dy}")
         self.bez.motor_control.configuration["head_yaw"] = self.ball_dx
         self.bez.motor_control.configuration["head_pitch"] = self.ball_dy
         # self.bez.motor_control.configuration_offset["left_hip_pitch"] = 0.15
