@@ -23,10 +23,14 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "BMI088.h"
+#include "stm32f4xx_hal.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
+
+// LCD commands
+
 
 /* USER CODE END PTD */
 
@@ -41,6 +45,9 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
+ADC_HandleTypeDef hadc1;
+ADC_HandleTypeDef hadc2;
+
 I2C_HandleTypeDef hi2c1;
 
 UART_HandleTypeDef huart4;
@@ -70,6 +77,17 @@ uint8_t usbRxBuffer[100];
 
 MotorPort* motorPorts[6];
 MotorPort port1, port2, port3, port4, port5, port6;
+
+Voltage* voltage[2];
+Voltage adc_1,adc_2;
+
+//ZSM STUFF*/
+uint16_t readValue;
+float v_bat_read; //IN 8
+float v_shunt_read;//IN 7
+float intensity_shunt; // intensity
+
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -83,6 +101,8 @@ static void MX_USART2_UART_Init(void);
 static void MX_USART3_UART_Init(void);
 static void MX_USART6_UART_Init(void);
 static void MX_I2C1_Init(void);
+static void MX_ADC1_Init(void);
+static void MX_ADC2_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -90,6 +110,25 @@ static void MX_I2C1_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 // test various functionalities
+//ZSM stuff
+void init_voltage(){
+	adc_1 = (Voltage){
+		.hadc = &hadc1,
+		.readValue = 0,
+		.v_read = 0,
+		.intensity = 0 // intensity
+	};
+	adc_2 = (Voltage){
+		.hadc = &hadc2,
+		.readValue = 0,
+		.v_read = 0,
+		.intensity = 0 // intensity
+	};
+
+	voltage[0] = &adc_1;
+	voltage[1] = &adc_2;
+}
+
 void init_ports() {
   // port1 => UART1 ==> J2 on new PCB
   port1 = (MotorPort){
@@ -207,7 +246,6 @@ void init_motors() {
   // slowly bring motors to zero position
   }
 }
-
 /* USER CODE END 0 */
 
 /**
@@ -247,6 +285,8 @@ int main(void)
   MX_USART3_UART_Init();
   MX_USART6_UART_Init();
   MX_I2C1_Init();
+  MX_ADC1_Init();
+  MX_ADC2_Init();
   /* USER CODE BEGIN 2 */
   // give some time for motors to power on and initialize, before we try to talk to them
   HAL_Delay(1000);
@@ -258,9 +298,13 @@ int main(void)
   BMI088 imu;
   BMI088_Init(&imu, &hi2c1);
 
+  HAL_ADC_Start(&hadc1); //IN8
+  HAL_ADC_Start(&hadc2); // IN7
+
 //  uint16_t angle = 0;
 //  uint16_t angle_lo = 0;
 //  uint16_t angle_hi = 0;
+
 
   /* USER CODE END 2 */
 
@@ -269,7 +313,7 @@ int main(void)
   while (1)
   {
 
-      update();
+      //update();
 
 //    angle += 1;
 //    angle %= 0x3FF;
@@ -328,14 +372,66 @@ int main(void)
     // test Dynamixel 1.0
 //    test_motor_sweep1(&port2, 13);
 //    _motor_ping_p1(&port6, 13);
-//	  HAL_GPIO_TogglePin(GPIOA, GREEN_LED_Pin);
-//	  HAL_Delay(50);
+	  HAL_GPIO_TogglePin(GPIOA, GREEN_LED_Pin);
+	  HAL_Delay(50);
+
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+
+
+	 /* //while (1)
+	  //{
+		  //ZSM CODE
+		    // HAL_ADC_Start(&hadc1);
+		  hadc1.Instance->CR2 |= (uint32_t)ADC_CR2_SWSTART;// |= allows the continuous display
+
+		  //Commands the start of the continuous display
+		  //ZSM stuff
+		 	  // HAL_ADC_PollForConversion(&hadc1,1000); // The poll takes the value but does not allow to see the continuous variable change
+		 	  readValue = HAL_ADC_GetValue(&hadc1); // Reads the value from the ADC
+		 	  v_bat_read = (float)readValue/4095*3.3;//3.3; //4095*16.5;  // values toogle between each other between
+
+			  //HAL_Delay(100); // time between each change
+
+		 hadc2.Instance->CR2 |= (uint32_t)ADC_CR2_SWSTART;// |= allows the continuous display
+
+		 	  readValue = HAL_ADC_GetValue(&hadc2); // Reads the value from the ADC
+		 	  v_shunt_read= (float)readValue/4095*3.3;
+
+		 	  intensity_shunt = (float)v_shunt_read/(20)/0.01;  //3.3; //4095*16.5;
+		 	  HAL_Delay(100); // time between each change
+	  //}*/
+	//while(1){
+		update_voltage();
+		v_bat_read = voltage[0]->v_read; //IN 8
+		if (isnan(v_bat_read)){
+			printf("error from v_bat_read");
+			exit(1);
+		  }
+		v_shunt_read = voltage[1]->v_read; //IN 7
+
+		if (isnan(v_shunt_read)){
+			printf("error from v_shunt_read");
+			exit(1);
+		}
+		intensity_shunt = voltage[1]->intensity;// intensity
+		if(isnan(intensity_shunt)){
+			printf("error from v_bat_read");
+			exit(1);
+		}
+		 // printf("v_bat_read: %f, v_shunt_read: %f, intensity_shunt: %f\n", v_bat_read, v_shunt_read, intensity_shunt);
+
+	//  }*/
+
+
+	  }
+
   }
+
   /* USER CODE END 3 */
-}
+
 
 /**
   * @brief System Clock Configuration
@@ -381,6 +477,110 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
+}
+
+/**
+  * @brief ADC1 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_ADC1_Init(void)
+{
+
+  /* USER CODE BEGIN ADC1_Init 0 */
+
+  /* USER CODE END ADC1_Init 0 */
+
+  ADC_ChannelConfTypeDef sConfig = {0};
+
+  /* USER CODE BEGIN ADC1_Init 1 */
+
+  /* USER CODE END ADC1_Init 1 */
+
+  /** Configure the global features of the ADC (Clock, Resolution, Data Alignment and number of conversion)
+  */
+  hadc1.Instance = ADC1;
+  hadc1.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV2;
+  hadc1.Init.Resolution = ADC_RESOLUTION_12B;
+  hadc1.Init.ScanConvMode = DISABLE;
+  hadc1.Init.ContinuousConvMode = DISABLE;
+  hadc1.Init.DiscontinuousConvMode = DISABLE;
+  hadc1.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
+  hadc1.Init.ExternalTrigConv = ADC_SOFTWARE_START;
+  hadc1.Init.DataAlign = ADC_DATAALIGN_RIGHT;
+  hadc1.Init.NbrOfConversion = 1;
+  hadc1.Init.DMAContinuousRequests = DISABLE;
+  hadc1.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
+  if (HAL_ADC_Init(&hadc1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.
+  */
+  sConfig.Channel = ADC_CHANNEL_8;
+  sConfig.Rank = 1;
+  sConfig.SamplingTime = ADC_SAMPLETIME_3CYCLES;
+  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN ADC1_Init 2 */
+
+  /* USER CODE END ADC1_Init 2 */
+
+}
+
+/**
+  * @brief ADC2 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_ADC2_Init(void)
+{
+
+  /* USER CODE BEGIN ADC2_Init 0 */
+
+  /* USER CODE END ADC2_Init 0 */
+
+  ADC_ChannelConfTypeDef sConfig = {0};
+
+  /* USER CODE BEGIN ADC2_Init 1 */
+
+  /* USER CODE END ADC2_Init 1 */
+
+  /** Configure the global features of the ADC (Clock, Resolution, Data Alignment and number of conversion)
+  */
+  hadc2.Instance = ADC2;
+  hadc2.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV2;
+  hadc2.Init.Resolution = ADC_RESOLUTION_12B;
+  hadc2.Init.ScanConvMode = DISABLE;
+  hadc2.Init.ContinuousConvMode = DISABLE;
+  hadc2.Init.DiscontinuousConvMode = DISABLE;
+  hadc2.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
+  hadc2.Init.ExternalTrigConv = ADC_SOFTWARE_START;
+  hadc2.Init.DataAlign = ADC_DATAALIGN_RIGHT;
+  hadc2.Init.NbrOfConversion = 1;
+  hadc2.Init.DMAContinuousRequests = DISABLE;
+  hadc2.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
+  if (HAL_ADC_Init(&hadc2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.
+  */
+  sConfig.Channel = ADC_CHANNEL_7;
+  sConfig.Rank = 1;
+  sConfig.SamplingTime = ADC_SAMPLETIME_3CYCLES;
+  if (HAL_ADC_ConfigChannel(&hadc2, &sConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN ADC2_Init 2 */
+
+  /* USER CODE END ADC2_Init 2 */
+
 }
 
 /**
@@ -713,11 +913,28 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
+  /*Configure GPIO pin : PB14 */
+  GPIO_InitStruct.Pin = GPIO_PIN_14;
+  GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  GPIO_InitStruct.Alternate = GPIO_AF15_EVENTOUT;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : PC9 */
+  GPIO_InitStruct.Pin = GPIO_PIN_9;
+  GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+  GPIO_InitStruct.Alternate = GPIO_AF9_QSPI;
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
 /* USER CODE BEGIN MX_GPIO_Init_2 */
 /* USER CODE END MX_GPIO_Init_2 */
 }
 
 /* USER CODE BEGIN 4 */
+
 
 /* USER CODE END 4 */
 
