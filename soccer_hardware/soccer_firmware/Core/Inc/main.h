@@ -34,6 +34,7 @@ extern "C" {
 #include <stdbool.h>
 
 extern I2C_HandleTypeDef hi2c1;
+extern ADC_HandleTypeDef hadc;
 
 extern uint8_t usb_received;
 extern uint32_t usbRxBufferCount;
@@ -46,7 +47,7 @@ typedef struct {
   DMA_HandleTypeDef *hdma_uart_rx;
   GPIO_TypeDef *pinPort;
   uint16_t dirPinNum; // pin for setting buffer read/write direction
-
+  //ADC_HandleTypeDef *hadc;
   uint8_t rxPacketLen; // received packet length should be smaller then max buffer size
   uint8_t rxBuffer[100]; // 100bytes is enough to store packets from Dynamixel
   bool dmaDoneReading;
@@ -62,8 +63,20 @@ typedef struct {
   uint16_t currMotorPositions[10];
 } MotorPort;
 
+typedef struct {
+	ADC_HandleTypeDef *hadc; // ADC configuration for pins
+	uint16_t readValue;
+	float v_read; //IN 8
+	//float v_read;//IN 7
+	float intensity; // intensity
+}Voltage;
+
 extern MotorPort* motorPorts[6];
 extern MotorPort port1, port2, port3, port4, port5, port6;
+
+extern Voltage* voltage[2];
+extern Voltage adc_1,adc_2;
+
 
 typedef enum
 {
@@ -102,6 +115,10 @@ void Error_Handler(void);
 #define USART4_DIR_GPIO_Port GPIOC
 #define USART2_DIR_Pin GPIO_PIN_4
 #define USART2_DIR_GPIO_Port GPIOA
+#define V_shunt_read_Pin GPIO_PIN_7
+#define V_shunt_read_GPIO_Port GPIOA
+#define V_bat_read_Pin GPIO_PIN_0
+#define V_bat_read_GPIO_Port GPIOB
 #define USART3_DIR_Pin GPIO_PIN_2
 #define USART3_DIR_GPIO_Port GPIOB
 #define USART6_DIR_Pin GPIO_PIN_15
