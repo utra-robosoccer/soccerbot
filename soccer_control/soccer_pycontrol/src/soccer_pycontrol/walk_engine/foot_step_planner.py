@@ -191,8 +191,8 @@ class FootStepPlanner:
         # TODO clean up and add a cone or it breaks walking
         ball = np.array(target)
         camera_pos = self.robot.get_T_world_frame("camera")[:3, 3]
-        # ball[2] -= camera_pos[2] # TODO tune later
-        ball[1] = -ball[1]
+        ball[2] -= camera_pos[2] # TODO tune later
+        # ball[1] = -ball[1]
 
         self.look_at_ball.targetAxis_world = ball
 

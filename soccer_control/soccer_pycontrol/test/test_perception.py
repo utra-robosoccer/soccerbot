@@ -17,7 +17,7 @@ class TestSensors(unittest.TestCase):
             rate=200,
         )
 
-        self.robot_model = "bez2"
+        self.robot_model = "assembly"
         self.bez = Bez(robot_model=self.robot_model, pose=Transformation())
 
     def tearDown(self):

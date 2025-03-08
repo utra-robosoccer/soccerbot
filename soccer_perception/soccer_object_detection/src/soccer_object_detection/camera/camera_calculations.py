@@ -26,7 +26,7 @@ class CameraCalculations(CameraBase):
         (r, h) = self.world_to_image_frame(0, -d)
         return int(min(max(0, h), self.resolution_y))
 
-    def reset_position(self, from_world_frame=False, camera_frame="/camera", skip_if_not_found=False):
+    def reset_position(self, camera_z_pose = 0.46, camera_orientation = (0, 0, 0, 1)):
         """
         Resets the position of the camera, it uses a series of methods that fall back on each other to get the location of the camera
 
@@ -37,14 +37,9 @@ class CameraCalculations(CameraBase):
         """
 
         # same hardcoded values
-        if from_world_frame:
-            trans = [0, 0, 0.46]
-            rot = [0, 0, 0, 1]
-            self.pose = Transformation(trans, rot)
-        else:
-            trans = [0, 0, 0.46]  # TODO find init height
-            rot = [0, 0, 0, 1]
-            self.pose = Transformation(trans, rot)
+        self.pose.position = [0, 0, camera_z_pose]
+        self.pose.orientation = camera_orientation
+
 
     # TODO maybe in localization
     def find_floor_coordinate(self, pos: [int]) -> [int]:

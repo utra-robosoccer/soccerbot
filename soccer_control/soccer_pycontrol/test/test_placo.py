@@ -6,6 +6,8 @@ from random import uniform
 import cv2
 import numpy as np
 import pybullet as pb
+from soccer_msgs.msg import BoundingBoxes, BoundingBox
+
 from soccer_object_detection.object_detect_node import ObjectDetectionNode
 from soccer_pycontrol.model.bez import Bez
 from soccer_pycontrol.pybullet_usage.pybullet_world import PybulletWorld
@@ -47,6 +49,8 @@ class TestPlaco(unittest.TestCase):
         print("STARTING WALK")
         ball_pos = Transformation(position=[0, 0, 0], euler=[0, 0, 0])
         kicked = False
+        ball_found = False
+
         ball_pixel =[0,0]
         for i in range(10000):
             if i % 10 == 0:
@@ -54,44 +58,68 @@ class TestPlaco(unittest.TestCase):
                 img = cv2.resize(img, dsize=(640, 480))
                 # detect.camera.pose.orientation_euler = [0, np.pi / 8, 0]
                 dimg, bbs_msg = detect.get_model_output(img)
+
+                ball_found = False
                 for box in bbs_msg.bounding_boxes:
                     if box.Class == "0":
-                        detect.camera.pose.position = [0, 0, self.bez.sensors.get_pose(link=2).position[2]]
-                        detect.camera.pose.orientation_euler = self.bez.sensors.get_pose(link=2).orientation_euler
-                        # detect.camera.pose = self.bez.sensors.get_pose(link=2)
-                        boundingBoxes = [[box.xmin, box.ymin], [box.xmax, box.ymax]]
-                        ball_pixel = [(box.xmin + box.xmax) / 2.0, (box.ymin + box.ymax) / 2.0]
-                        # print(detect.camera.calculate_ball_from_bounding_boxes(boundingBoxes).position)
-                        kicked = False
-                        ball_pos = self.bez.sensors.get_ball()
-                        print(
-                            f"floor pos: {detect.camera.calculate_ball_from_bounding_boxes(boundingBoxes).position}  ball: {self.bez.sensors.get_ball().position}",
-                            flush=True,
-                        )
-                        # pos = [box.xbase, box.ybase]
-                        # # detect.camera.pose.position = self.bez.sensors.get_pose(link=2).position
-                        # detect.camera.pose.position = [0, 0, self.bez.sensors.get_pose(link=2).position[2]]
-                        # detect.camera.pose.orientation_euler = self.bez.sensors.get_pose(link=2).orientation_euler
-                        # floor_coordinate_robot = detect.camera.find_floor_coordinate(pos)
-                        # print(f"floor pos: {floor_coordinate_robot}  ball: {self.bez.sensors.get_ball().position}")
-                        #
-                        # ball_pos = Transformation(position=floor_coordinate_robot)
-                        # temp = self.bez.sensors.get_pose().rotation_matrix @ self.bez.sensors.get_ball().position + self.bez.sensors.get_pose().position
-                        # print(f"pos2: {temp} ball: {self.bez.sensors.get_ball_global().position}")
-                        temp1 = detect.camera.calculate_ball_from_bounding_boxes(boundingBoxes).position
-                        temp2 = self.bez.sensors.get_ball().position
-                font = cv2.FONT_HERSHEY_DUPLEX
-                color = (255, 255, 255)  # red
-                fontsize = 255
-                text = "test"
-                position = (10, 10)
+                        ball_found = True
+
+                if ball_found:
+                    ball_pos = detect.get_ball_position(bbs_msg,
+                                             self.bez.sensors.get_pose(link=2).position[2],
+                                             self.bez.sensors.get_pose(link=2).orientation_euler)
+                    # ball_pos = Transformation(position=ball_pos_euler, euler=[0, 0, 0])
+                    ball_pos_actual = self.bez.sensors.get_ball()
+                    print(
+                        f"bounding box: {bbs_msg}"
+                        f"camera height {self.bez.sensors.get_pose(link=2).position[2]}"
+                        f"camera orientation {self.bez.sensors.get_pose(link=2).orientation_euler}"
+                        f"floor pos: {ball_pos.position}  "
+                        f"ball: {ball_pos_actual.position}",
+                        flush=True,
+                    )
+                # ball_pos = self.bez.sensors.get_ball()
+                # for box in bbs_msg.bounding_boxes:
+                #     if box.Class == "0":
+                #         detect.camera.pose.position = [0, 0, self.bez.sensors.get_pose(link=2).position[2]]
+                #         detect.camera.pose.orientation_euler = self.bez.sensors.get_pose(link=2).orientation_euler
+                #         # detect.camera.pose = self.bez.sensors.get_pose(link=2)
+                #         boundingBoxes = [[box.xmin, box.ymin], [box.xmax, box.ymax]]
+                #         ball_pixel = [(box.xmin + box.xmax) / 2.0, (box.ymin + box.ymax) / 2.0]
+                #         # print(detect.camera.calculate_ball_from_bounding_boxes(boundingBoxes).position)
+                #         kicked = False
+                #         ball_pos = self.bez.sensors.get_ball()
+                #         print(
+                #             f"floor pos: {detect.camera.calculate_ball_from_bounding_boxes(boundingBoxes).position}  ball: {self.bez.sensors.get_ball().position}",
+                #             flush=True,
+                #         )
+                #         # pos = [box.xbase, box.ybase]
+                #         # # detect.camera.pose.position = self.bez.sensors.get_pose(link=2).position
+                #         # detect.camera.pose.position = [0, 0, self.bez.sensors.get_pose(link=2).position[2]]
+                #         # detect.camera.pose.orientation_euler = self.bez.sensors.get_pose(link=2).orientation_euler
+                #         # floor_coordinate_robot = detect.camera.find_floor_coordinate(pos)
+                #         # print(f"floor pos: {floor_coordinate_robot}  ball: {self.bez.sensors.get_ball().position}")
+                #         #
+                #         # ball_pos = Transformation(position=floor_coordinate_robot)
+                #         # temp = self.bez.sensors.get_pose().rotation_matrix @ self.bez.sensors.get_ball().position + self.bez.sensors.get_pose().position
+                #         # print(f"pos2: {temp} ball: {self.bez.sensors.get_ball_global().position}")
+                #         temp1 = detect.camera.calculate_ball_from_bounding_boxes(boundingBoxes).position
+                #         temp2 = self.bez.sensors.get_ball().position
+                # font = cv2.FONT_HERSHEY_DUPLEX
+                # color = (255, 255, 255)  # red
+                # fontsize = 255
+                # text = "test"
+                # position = (10, 10)
 
                 # cv2.putText(dimg, text, position, font, fontsize, color=color)
                 if "DISPLAY" in os.environ:
                     cv2.imshow("CVT Color2", dimg)
                     cv2.waitKey(1)
 
-            if 0 < np.linalg.norm(ball_pos.position[:2]) < 0.2 and not kicked:
+            # if ball_found == False:
+            #     continue
+
+            if 0 < np.linalg.norm(ball_pos.position[:2]) < 0.2 and not kicked and ball_found:
                 walk.ready()
                 walk.wait(100)
                 tm.send_trajectory("rightkick")
@@ -100,10 +128,9 @@ class TestPlaco(unittest.TestCase):
                 # walk.kick()
 
                 walk.reset_walk()
-            else:
 
-
-                walk.walk(ball_pos, ball_pixel,True)
+            elif ball_found:
+                walk.walk(ball_pos_actual, ball_pixel,True)
             # print(f"Height rotation: {self.bez.sensors.get_height().orientation_euler}", flush=True)
             # print(f"Height position: {self.bez.sensors.get_height().position}", flush=True)
 
@@ -117,6 +144,56 @@ class TestPlaco(unittest.TestCase):
             #     target_goal = Transformation(position=[x, y, 0], euler=[theta, 0, 0])
             #     walk.reset_walk()
             self.world.step()
+
+    def test_ball_localization(self):
+        # check test_camera and the assertion
+        self.world = PybulletWorld(
+            camera_yaw=90,
+            real_time=REAL_TIME,
+            rate=200,
+        )
+        self.bez = Bez(robot_model="assembly", pose=Transformation())
+
+        src_path = expanduser("~") + "/catkin_ws/src/soccerbot/soccer_perception/"
+        model_path = src_path + "soccer_object_detection/models/yolov8s_detect_best.pt"
+        model_path = src_path + "soccer_object_detection/models/half_5.pt"
+
+        detect = ObjectDetectionNode(model_path)
+
+        bbs_msg = BoundingBoxes()
+        bbs_msg.bounding_boxes.append(BoundingBox())
+        bbs_msg.bounding_boxes[0].xmin = 289
+        bbs_msg.bounding_boxes[0].ymin = 153
+        bbs_msg.bounding_boxes[0].xmax = 333
+        bbs_msg.bounding_boxes[0].ymax = 197
+        bbs_msg.bounding_boxes[0].Class = "0"
+        bbs_msg.bounding_boxes[0].probability = 0.9100908
+        bbs_msg.bounding_boxes[0].xbase = 311
+        bbs_msg.bounding_boxes[0].ybase = 194
+
+        camera_z_height = 0.48848283290863037
+        camera_orientation = [0.051347,      0.61632,     0.04393]
+
+        ball_estim = [     1.4448,    0.027018,     0.69474]
+        ball_actual = [    0.98048,    0.056295,     -0.2648]
+
+
+        ball_found = False
+        for box in bbs_msg.bounding_boxes:
+            if box.Class == "0":
+                ball_found = True
+
+        if ball_found:
+            ball_pos = detect.get_ball_position(bbs_msg,
+                                                camera_z_height,
+                                                camera_orientation)
+            # ball_pos = Transformation(position=ball_pos_euler, euler=[0, 0, 0])
+            print(
+                f"floor pos: {ball_pos.position}  "
+                f"ball: {ball_estim}",
+                flush=True,
+            )
+
 
     def test_camera(self):
         src_path = expanduser("~") + "/catkin_ws/src/soccerbot/soccer_perception/"
@@ -183,8 +260,8 @@ class TestPlaco(unittest.TestCase):
             real_time=REAL_TIME,
             rate=200,
         )
-        # self.bez = Bez(robot_model="assembly", pose=Transformation())
-        self.bez = Bez(robot_model="bez1", pose=Transformation())
+        self.bez = Bez(robot_model="assembly", pose=Transformation())
+        # self.bez = Bez(robot_model="bez1", pose=Transformation())
         walk = Navigator(self.world, self.bez, imu_feedback_enabled=False)
         walk.ready()
         walk.wait(100)

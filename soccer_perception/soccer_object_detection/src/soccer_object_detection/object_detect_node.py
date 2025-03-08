@@ -59,7 +59,7 @@ class ObjectDetectionNode:
             self.model.cuda()  # TODO does this do anything
 
         self.camera = CameraCalculations()
-        self.camera.reset_position()
+        # self.camera.reset_position()
 
     def get_model_output(self, image: Mat) -> [Mat, BoundingBoxes]:
         # webots: 480x640x4pixels
@@ -182,6 +182,13 @@ class ObjectDetectionNode:
 
             return detection_image, bbs_msg
 
+    def get_ball_position(self, bbs_msg, camera_z_pose, camera_orientation):
+        for box in bbs_msg.bounding_boxes:
+            if box.Class == "0":
+                self.camera.reset_position(camera_z_pose, camera_orientation)
+                bounding_boxes = [[box.xmin, box.ymin], [box.xmax, box.ymax]]
+                ball_pos_estim = self.camera.calculate_ball_from_bounding_boxes(bounding_boxes) # .position
+        return ball_pos_estim
 
 if __name__ == "__main__":
     pass
