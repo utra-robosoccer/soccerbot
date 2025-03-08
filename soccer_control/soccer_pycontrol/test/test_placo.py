@@ -6,8 +6,6 @@ from random import uniform
 import cv2
 import numpy as np
 import pybullet as pb
-from soccer_msgs.msg import BoundingBoxes, BoundingBox
-
 from soccer_object_detection.object_detect_node import ObjectDetectionNode
 from soccer_pycontrol.model.bez import Bez
 from soccer_pycontrol.pybullet_usage.pybullet_world import PybulletWorld
@@ -15,6 +13,7 @@ from soccer_pycontrol.walk_engine.navigator import Navigator
 from soccer_trajectories.trajectory_manager_sim import TrajectoryManagerSim
 
 from soccer_common import Transformation
+from soccer_msgs.msg import BoundingBox, BoundingBoxes
 
 REAL_TIME = True
 
@@ -51,7 +50,7 @@ class TestPlaco(unittest.TestCase):
         kicked = False
         ball_found = False
 
-        ball_pixel =[0,0]
+        ball_pixel = [0, 0]
         for i in range(10000):
             if i % 10 == 0:
                 img = self.bez.sensors.get_camera_image()
@@ -65,9 +64,9 @@ class TestPlaco(unittest.TestCase):
                         ball_found = True
 
                 if ball_found:
-                    ball_pos = detect.get_ball_position(bbs_msg,
-                                             self.bez.sensors.get_pose(link=2).position[2],
-                                             self.bez.sensors.get_pose(link=2).orientation_euler)
+                    ball_pos = detect.get_ball_position(
+                        bbs_msg, self.bez.sensors.get_pose(link=2).position[2], self.bez.sensors.get_pose(link=2).orientation_euler
+                    )
                     # ball_pos = Transformation(position=ball_pos_euler, euler=[0, 0, 0])
                     ball_pos_actual = self.bez.sensors.get_ball()
                     print(
@@ -130,7 +129,7 @@ class TestPlaco(unittest.TestCase):
                 walk.reset_walk()
 
             elif ball_found:
-                walk.walk(ball_pos_actual, ball_pixel,True)
+                walk.walk(ball_pos_actual, ball_pixel, True)
             # print(f"Height rotation: {self.bez.sensors.get_height().orientation_euler}", flush=True)
             # print(f"Height position: {self.bez.sensors.get_height().position}", flush=True)
 
@@ -172,11 +171,10 @@ class TestPlaco(unittest.TestCase):
         bbs_msg.bounding_boxes[0].ybase = 194
 
         camera_z_height = 0.48848283290863037
-        camera_orientation = [0.051347,      0.61632,     0.04393]
+        camera_orientation = [0.051347, 0.61632, 0.04393]
 
-        ball_estim = [     1.4448,    0.027018,     0.69474]
-        ball_actual = [    0.98048,    0.056295,     -0.2648]
-
+        ball_estim = [1.4448, 0.027018, 0.69474]
+        ball_actual = [0.98048, 0.056295, -0.2648]
 
         ball_found = False
         for box in bbs_msg.bounding_boxes:
@@ -184,16 +182,12 @@ class TestPlaco(unittest.TestCase):
                 ball_found = True
 
         if ball_found:
-            ball_pos = detect.get_ball_position(bbs_msg,
-                                                camera_z_height,
-                                                camera_orientation)
+            ball_pos = detect.get_ball_position(bbs_msg, camera_z_height, camera_orientation)
             # ball_pos = Transformation(position=ball_pos_euler, euler=[0, 0, 0])
             print(
-                f"floor pos: {ball_pos.position}  "
-                f"ball: {ball_estim}",
+                f"floor pos: {ball_pos.position}  " f"ball: {ball_estim}",
                 flush=True,
             )
-
 
     def test_camera(self):
         src_path = expanduser("~") + "/catkin_ws/src/soccerbot/soccer_perception/"

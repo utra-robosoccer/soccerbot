@@ -18,7 +18,15 @@ from soccer_common import PID, Transformation
 # TODO could make it more modular by passing in pybullet stuff or have it at one layer higher so we can reuse code
 # TODO change to trajectory controller
 class Navigator:
-    def __init__(self, world: PybulletWorld, bez: Bez, imu_feedback_enabled: bool = False, ball: bool = False, record_walking_metrics: bool = True,sim:bool = True):
+    def __init__(
+        self,
+        world: PybulletWorld,
+        bez: Bez,
+        imu_feedback_enabled: bool = False,
+        ball: bool = False,
+        record_walking_metrics: bool = True,
+        sim: bool = True,
+    ):
         self.ball_dx = 0
         self.ball_dy = 0.7
         self.world = world
@@ -52,7 +60,7 @@ class Navigator:
             setpoint=0,
             output_limits=(-1, 1),
         )
-        self.last_ball = [0,0]
+        self.last_ball = [0, 0]
         self.error_tol = 0.03  # in m TODO add as a param and in the ros version
 
         # joints
@@ -96,7 +104,7 @@ class Navigator:
         self.t2 = self.kick_planner.step(self.t2)
 
     # TODO could make input a vector
-    def walk(self, target_goal: Union[Transformation, List],ball_pixel: list = (), ball_mode: bool = False, display_metrics: bool = False):
+    def walk(self, target_goal: Union[Transformation, List], ball_pixel: list = (), ball_mode: bool = False, display_metrics: bool = False):
         if self.enable_walking:
             if isinstance(target_goal, Transformation):
                 if ball_mode:
@@ -209,7 +217,6 @@ class Navigator:
             # target_goal = self.bez.sensors.get_ball()
             # print(target_goal.position)
 
-
             self.nav_x_pid.setpoint = target_goal.position[0]
             self.nav_y_pid.setpoint = target_goal.position[1]
             x_error = target_goal.position[0]
@@ -253,7 +260,6 @@ class Navigator:
 
         self.foot_step_planner.head_movement(target_goal.position)
 
-
         # self.bez.motor_control.configuration["head_yaw"] = self.ball_dx
         # self.bez.motor_control.configuration["head_pitch"] = self.ball_dy
         # self.bez.motor_control.configuration_offset["left_hip_pitch"] = 0.15
@@ -265,11 +271,11 @@ class Navigator:
         # self.bez.motor_control.configuration["head_pitch"] = 0.7
         # self.bez.motor_control.set_single_motor("head_yaw", 0.7)
         self.bez.motor_control.set_right_leg_target_angles(
-            [0.031498273770675496, 0.13013599705387854, 0.8763616115800654, -1.4338038100846235, 0.5569438675976406,
-             -0.09870240716415977])
+            [0.031498273770675496, 0.13013599705387854, 0.8763616115800654, -1.4338038100846235, 0.5569438675976406, -0.09870240716415977]
+        )
         self.bez.motor_control.set_left_leg_target_angles(
-            [-0.031396938877692564, 0.07407130663246327, 0.8245393702946127, -1.3833448587348056, 0.5583100126857369,
-             -0.10550492155783667])
+            [-0.031396938877692564, 0.07407130663246327, 0.8245393702946127, -1.3833448587348056, 0.5583100126857369, -0.10550492155783667]
+        )
         self.bez.motor_control.set_motor()
 
         self.t = self.foot_step_planner.step(self.t)

@@ -114,8 +114,6 @@ class ObjectDetectionNode:
             detection_image = np.concatenate((np.zeros((h + 1, self.camera.camera_info.width, 3), detection_image.dtype), detection_image))
             detection_image = detection_image[..., ::-1]
 
-
-
             return detection_image, bbs_msg
 
     def get_model_output_v8(self, image: Mat) -> [Mat, BoundingBoxes]:
@@ -187,8 +185,9 @@ class ObjectDetectionNode:
             if box.Class == "0":
                 self.camera.reset_position(camera_z_pose, camera_orientation)
                 bounding_boxes = [[box.xmin, box.ymin], [box.xmax, box.ymax]]
-                ball_pos_estim = self.camera.calculate_ball_from_bounding_boxes(bounding_boxes) # .position
+                ball_pos_estim = self.camera.calculate_ball_from_bounding_boxes(bounding_boxes)  # .position
         return ball_pos_estim
+
 
 if __name__ == "__main__":
     pass

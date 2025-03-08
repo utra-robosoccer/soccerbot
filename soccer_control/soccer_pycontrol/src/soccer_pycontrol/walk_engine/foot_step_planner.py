@@ -9,7 +9,7 @@ from placo_utils.visualization import footsteps_viz, frame_viz, line_viz, robot_
 
 
 class FootStepPlanner:
-    def __init__(self, robot_model: str, parameters: dict, funct_time, debug: bool = True, ball: bool = False, sim:bool = True):
+    def __init__(self, robot_model: str, parameters: dict, funct_time, debug: bool = True, ball: bool = False, sim: bool = True):
         self.ball = ball
         self.funct_time = funct_time
         self.DT = parameters["control_frequency"]
@@ -191,7 +191,7 @@ class FootStepPlanner:
         # TODO clean up and add a cone or it breaks walking
         ball = np.array(target)
         camera_pos = self.robot.get_T_world_frame("camera")[:3, 3]
-        ball[2] -= camera_pos[2] # TODO tune later
+        ball[2] -= camera_pos[2]  # TODO tune later
         # ball[1] = -ball[1]
 
         self.look_at_ball.targetAxis_world = ball

@@ -1,12 +1,15 @@
 import unittest
+
 import matplotlib.pyplot as plt
 from soccer_pycontrol.model.bez import Bez  # Import the Bez class
-from soccer_pycontrol.pybullet_usage.pybullet_world import PybulletWorld  # Import the PybulletWorld class
+from soccer_pycontrol.pybullet_usage.pybullet_world import (
+    PybulletWorld,  # Import the PybulletWorld class
+)
+
 from soccer_common import Transformation
 
 
 class TestSensors(unittest.TestCase):
-
     def setUp(self):
         """
         Set up the PyBullet environment and the robot with sensors.
@@ -38,9 +41,10 @@ class TestSensors(unittest.TestCase):
 
         # Display the captured image
         plt.imshow(image)
-        plt.title('Captured Camera Image')
-        plt.axis('off')
+        plt.title("Captured Camera Image")
+        plt.axis("off")
         plt.show()
+
 
 if __name__ == "__main__":
     unittest.main()
