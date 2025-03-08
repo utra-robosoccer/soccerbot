@@ -35,19 +35,19 @@ class TestPlaco(unittest.TestCase):
             real_time=REAL_TIME,
             rate=200,
         )
-        self.bez = Bez(robot_model="assembly", pose=Transformation())
+        self.bez = Bez(robot_model="assembly", pose=Transformation(), fixed_base=False)
         tm = TrajectoryManagerSim(self.world, self.bez, "bez2_sim", "getupfront")
 
         # self.bez = Bez(robot_model="bez1", pose=Transformation())
         walk = Navigator(self.world, self.bez, imu_feedback_enabled=False, ball=True)
-        # walk.ready()
-        # walk.wait(100)
+        walk.ready()
+        self.world.wait(100)
         target_goal = [0.05, 0, 0.0, 10, 500]
         # target_goal = Transformation(position=[0, 0, 0], euler=[0, 0, 0])
         print("STARTING WALK")
         ball_pos = Transformation(position=[0, 0, 0], euler=[0, 0, 0])
         kicked = False
-        ball_pixel =[0,0]
+        ball_pixel = [0, 0]
         for i in range(10000):
             if i % 10 == 0:
                 img = self.bez.sensors.get_camera_image()
@@ -65,21 +65,21 @@ class TestPlaco(unittest.TestCase):
                         kicked = False
                         ball_pos = self.bez.sensors.get_ball()
                         print(
-                            f"floor pos: {detect.camera.calculate_ball_from_bounding_boxes(boundingBoxes).position}  ball: {self.bez.sensors.get_ball().position}",
+                            f"floor pos: {detect.camera.calculate_ball_from_bounding_boxes(boundingBoxes).position}   ball: {self.bez.sensors.get_ball().position}",
                             flush=True,
                         )
-                        # pos = [box.xbase, box.ybase]
-                        # # detect.camera.pose.position = self.bez.sensors.get_pose(link=2).position
-                        # detect.camera.pose.position = [0, 0, self.bez.sensors.get_pose(link=2).position[2]]
-                        # detect.camera.pose.orientation_euler = self.bez.sensors.get_pose(link=2).orientation_euler
-                        # floor_coordinate_robot = detect.camera.find_floor_coordinate(pos)
-                        # print(f"floor pos: {floor_coordinate_robot}  ball: {self.bez.sensors.get_ball().position}")
-                        #
+                        pos = [box.xbase, box.ybase]
+                        # detect.camera.pose.position = self.bez.sensors.get_pose(link=2).position
+                        detect.camera.pose.position = [0, 0, self.bez.sensors.get_pose(link=2).position[2]]
+                        detect.camera.pose.orientation_euler = self.bez.sensors.get_pose(link=2).orientation_euler
+                        floor_coordinate_robot = detect.camera.find_floor_coordinate(pos)
+                        print(f"floor pos2: {floor_coordinate_robot}  ball: {self.bez.sensors.get_ball().position}")
+                        # print(f"z: {self.bez.sensors.get_pose(link=2).position}  eul: {self.bez.sensors.get_pose(link=2).orientation_euler}  motor: {self.bez.motor_control.configuration["head_yaw"]}")
                         # ball_pos = Transformation(position=floor_coordinate_robot)
                         # temp = self.bez.sensors.get_pose().rotation_matrix @ self.bez.sensors.get_ball().position + self.bez.sensors.get_pose().position
                         # print(f"pos2: {temp} ball: {self.bez.sensors.get_ball_global().position}")
-                        temp1 = detect.camera.calculate_ball_from_bounding_boxes(boundingBoxes).position
-                        temp2 = self.bez.sensors.get_ball().position
+                        # temp1 = detect.camera.calculate_ball_from_bounding_boxes(boundingBoxes).position
+                        # temp2 = self.bez.sensors.get_ball().position
                 font = cv2.FONT_HERSHEY_DUPLEX
                 color = (255, 255, 255)  # red
                 fontsize = 255
@@ -102,8 +102,8 @@ class TestPlaco(unittest.TestCase):
                 walk.reset_walk()
             else:
 
-
-                walk.walk(ball_pos, ball_pixel,True)
+                pass
+                walk.walk(ball_pos, ball_pixel, True)
             # print(f"Height rotation: {self.bez.sensors.get_height().orientation_euler}", flush=True)
             # print(f"Height position: {self.bez.sensors.get_height().position}", flush=True)
 
@@ -320,8 +320,8 @@ class TestPlaco(unittest.TestCase):
             rate=200,
         )
         # TODO should bez be init in walk_engine
-        self.bez = Bez(robot_model="bez1", pose=Transformation())
+        self.bez = Bez(robot_model="assembly", pose=Transformation())
         walk = Navigator(self.world, self.bez)
         walk.ready()
         walk.world.step()
-        walk.wait(100)
+        self.world.wait(100)

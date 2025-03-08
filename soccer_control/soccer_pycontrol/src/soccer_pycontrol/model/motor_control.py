@@ -105,7 +105,7 @@ class MotorControl:
             forces=self.max_forces,
         )
 
-    def set_single_motor(self,name,  target_angle: float) -> None:
+    def set_single_motor(self, name, target_angle: float) -> None:
         self.configuration[name] = target_angle
 
     def set_head_target_angles(self, target_angles: np.ndarray) -> None:
@@ -138,3 +138,7 @@ class MotorControl:
     def set_leg_joint_6_target_angle(self, target: float) -> None:
         self.configuration_offset["left_ankle_roll"] -= target
         self.configuration_offset["right_ankle_roll"] += target
+
+    def set_angles_from_placo(self, planner) -> None:
+        for joint in self.motor_names:
+            self.configuration[joint] = planner.get_joint(joint)

@@ -8,9 +8,15 @@ import numpy as np
 import scipy
 from soccer_pycontrol.model.bez import Bez
 from soccer_pycontrol.pybullet_usage.pybullet_world import PybulletWorld
+from soccer_pycontrol.walk_engine.error_calc import (
+    find_new_vel,
+    heading_error,
+    position_error,
+)
 from soccer_pycontrol.walk_engine.foot_step_planner import FootStepPlanner
-from soccer_pycontrol.walk_engine.kick_planner import KickPlanner
 from soccer_pycontrol.walk_engine.stabilize import Stabilize
+from soccer_pycontrol.walk_engine.walker import Walker
+from torch.distributed.checkpoint import planner
 
 from soccer_common import PID, Transformation
 
@@ -18,17 +24,22 @@ from soccer_common import PID, Transformation
 # TODO could make it more modular by passing in pybullet stuff or have it at one layer higher so we can reuse code
 # TODO change to trajectory controller
 class Navigator:
-    def __init__(self, world: PybulletWorld, bez: Bez, imu_feedback_enabled: bool = False, ball: bool = False, record_walking_metrics: bool = True,sim:bool = True):
-        self.ball_dx = 0
-        self.ball_dy = 0.7
+    def __init__(
+        self,
+        world: PybulletWorld,
+        bez: Bez,
+        imu_feedback_enabled: bool = False,
+        ball: bool = False,
+        record_walking_metrics: bool = True,
+        sim: bool = True,
+    ):
         self.world = world
         self.bez = bez
         self.imu_feedback_enabled = imu_feedback_enabled
-        self.func_step = self.world.step
+
         self.foot_step_planner = FootStepPlanner(self.bez.robot_model, self.bez.parameters, time.time, ball=ball, sim=sim)
-        self.ball2 = ball
-        self.kick_planner = KickPlanner(self.bez.robot_model, self.bez.parameters, time.time)
-        self.walk_pid = Stabilize(self.bez.parameters)
+        self.walker = Walker(bez, self.foot_step_planner, imu_feedback_enabled=imu_feedback_enabled)
+
         self.max_vel = 0.1
         self.nav_x_pid = PID(
             Kp=0.5,
@@ -52,55 +63,23 @@ class Navigator:
             setpoint=0,
             output_limits=(-1, 1),
         )
-        self.last_ball = [0,0]
+        self.last_ball = [0, 0]
         self.error_tol = 0.03  # in m TODO add as a param and in the ros version
 
         # joints
         self.left_ankle_index = self.bez.motor_control.motor_names["left_ankle_roll"]
         self.right_ankle_index = self.bez.motor_control.motor_names["right_ankle_roll"]
-        # self.torso_index = self.bez.motor_control.body.
+        # self.walker.torso_index = self.bez.motor_control.body.
 
         self.record_walking_metrics = record_walking_metrics
         self.walking_data = defaultdict(list)
-        self.t = None
-        self.enable_walking = None
-        self.reset_walk()
-        self.t2 = 0
-
-        # self.ball_x_pid = PID(
-        #     Kp=0.00001,
-        #     Kd=0,
-        #     Ki=0,
-        #     setpoint=320,
-        #     output_limits=(-1.5707963267948966, 1.5707963267948966),
-        # )
-        #
-        # self.ball_y_pid = PID(
-        #     Kp=-0.0,
-        #     Kd=0,
-        #     Ki=0,
-        #     setpoint=240,
-        #     output_limits=(0, 1),
-        # )
-
-    def reset_walk(self):
-        self.t = -1
-        self.enable_walking = True
-
-    def kick(self):
-        self.kick_planner.plan_kick(self.t2)
-        self.set_angles_from_placo(self.kick_planner)
-
-        self.bez.motor_control.set_motor()
-
-        self.t2 = self.kick_planner.step(self.t2)
 
     # TODO could make input a vector
-    def walk(self, target_goal: Union[Transformation, List],ball_pixel: list = (), ball_mode: bool = False, display_metrics: bool = False):
-        if self.enable_walking:
+    def walk(self, target_goal: Union[Transformation, List], ball_mode: bool = False, display_metrics: bool = False):
+        if self.walker.enable_walking:
             if isinstance(target_goal, Transformation):
                 if ball_mode:
-                    self.walk_ball(target_goal, ball_pixel)
+                    self.walk_ball(target_goal)
                 else:
                     self.walk_pose(target_goal)
             elif isinstance(target_goal, list):  # [d_x: float = 0.0, d_y: float = 0.0, d_theta: float = 0.0, nb_steps: int = 10, t_goal: float = 10]
@@ -110,27 +89,11 @@ class Navigator:
         #     self.display_walking_metrics(show_targets=isinstance(target_goal, Transformation))
         # self.ready()
 
-    def find_new_vel(self, goal_loc: list, curr_loc: list = (0, 0)):
-        x_error = abs(goal_loc[0] - curr_loc[0])
-        y_error = abs(goal_loc[1] - curr_loc[1])
-
-        if x_error > y_error:
-            dx = self.max_vel
-            dy = dx * (y_error / x_error)
-        elif x_error < y_error:
-            dy = self.max_vel
-            dx = dy * (x_error / y_error)
-        else:
-            dx = self.max_vel
-            dy = self.max_vel
-
-        return math.copysign(dx, goal_loc[0]), math.copysign(dy, goal_loc[1])
-
     def walk_pose(self, target_goal: Transformation):
         pose = self.bez.sensors.get_pose()  # can use self.foot_step_planner.trajectory.get_p_world_CoM(t)
 
-        if self.t < 0:
-            self.walk_pid.reset_imus()
+        if self.walker.t < 0:
+            self.walker.pid.reset_imus()
             self.nav_x_pid.reset()
             self.nav_x_pid.setpoint = target_goal.position[0]
 
@@ -140,18 +103,18 @@ class Navigator:
             self.nav_yaw_pid.reset()
             self.nav_yaw_pid.setpoint = target_goal.orientation_euler[0]
 
-            dx, dy = self.find_new_vel(goal_loc=target_goal.position[:2])
+            dx, dy = find_new_vel(goal_loc=target_goal.position[:2])
             # he = self.heading_error(target_goal.orientation_euler[0], pose.orientation_euler[0])
             # dtheta = math.copysign(0.5, he)
             self.foot_step_planner.setup_walk(dx, dy)
-            self.t = 0
+            self.walker.t = 0
             # TODO fix and add to a nav could add a funct for pybullet or python
             # TODO could have a balancing mode by default could use the COM
             # TODO for ball could just remove
 
         if (
-            self.position_error(pose.position[:2], target_goal.position[:2]) > self.error_tol
-            or abs(self.heading_error(target_goal.orientation_euler[0], pose.orientation_euler[0])) > self.error_tol
+            position_error(pose.position[:2], target_goal.position[:2]) > self.error_tol
+            or abs(heading_error(target_goal.orientation_euler[0], pose.orientation_euler[0])) > self.error_tol
         ):  # self.bez.sensors.get_pose() #TODO about 20% or 40% error
             pose = (
                 self.bez.sensors.get_pose()
@@ -165,7 +128,7 @@ class Navigator:
             # print(goal.position , pose.position)
             x_error = target_goal.position[0] - pose.position[0]
             y_error = target_goal.position[1] - pose.position[1]
-            head_error = self.heading_error(target_goal.orientation_euler[0], pose.orientation_euler[0])
+            head_error = heading_error(target_goal.orientation_euler[0], pose.orientation_euler[0])
             # TODO replace with pure pursuit
             # TODO make  a 2d unit test
             self.nav_x_pid.setpoint = goal.position[0]
@@ -175,16 +138,14 @@ class Navigator:
             dtheta = self.nav_yaw_pid.update(pose.orientation_euler[0])
             print(round(dx, 3), " ", round(dy, 3), " ", round(dtheta, 3), " ", round(x_error, 3), " ", round(y_error, 3), " ", round(head_error, 3))
             self.foot_step_planner.configure_planner(dx, dy, dtheta)
-            self.walk_loop()  # TODO move main loop out of here
+            self.walker.walk_loop()  # TODO move main loop out of here
         else:
             self.ready()
-            self.enable_walking = False
+            self.walker.enable_walking = False
 
-    def walk_ball(self, target_goal: Transformation, ball_pixel: list):
-        if self.t < 0:
-            self.walk_pid.reset_imus()
-            self.ball_x_pid.reset()
-            self.ball_y_pid.reset()
+    def walk_ball(self, target_goal: Transformation):
+        if self.walker.t < 0:
+            self.walker.pid.reset_imus()
 
             self.nav_x_pid.reset()
             self.nav_x_pid.setpoint = target_goal.position[0]
@@ -195,26 +156,19 @@ class Navigator:
             self.nav_yaw_pid.reset()
             self.nav_yaw_pid.setpoint = 0  # TODO add  yaw modes
 
-            dx, dy = self.find_new_vel(goal_loc=target_goal.position[:2])
-            # dx, dy = 0, 0
+            dx, dy = find_new_vel(goal_loc=target_goal.position[:2])
             self.foot_step_planner.setup_walk(dx, dy)
-            self.t = 0
+            self.walker.t = 0
             # TODO fix and add to a nav could add a funct for pybullet or python
             # TODO could have a balancing mode by default could use the COM
             # TODO for ball could just remove
         if (
-            self.position_error(target_goal.position[:2]) > self.error_tol
-            or abs(self.heading_error(target_goal.orientation_euler[0], self.bez.sensors.get_pose().orientation_euler[0])) > self.error_tol
+            position_error(target_goal.position[:2]) > self.error_tol
+            or abs(heading_error(target_goal.orientation_euler[0], self.bez.sensors.get_pose().orientation_euler[0])) > self.error_tol
         ):
-            # target_goal = self.bez.sensors.get_ball()
-            # print(target_goal.position)
-
-
             self.nav_x_pid.setpoint = target_goal.position[0]
             self.nav_y_pid.setpoint = target_goal.position[1]
-            x_error = target_goal.position[0]
-            y_error = target_goal.position[1]
-            head_error = self.heading_error(target_goal.orientation_euler[0], self.bez.sensors.get_pose().orientation_euler[0])
+
             # TODO replace with pure pursuit
             # TODO make  a 2d unit test
 
@@ -225,122 +179,33 @@ class Navigator:
             # print(round(dx, 3), " ", round(dy, 3), " ", round(dtheta, 3), " ", round(x_error, 3), " ", round(y_error, 3), " ", round(head_error, 3))
             self.foot_step_planner.configure_planner(dx, dy, dtheta)
 
-            self.walk_loop(target_goal)
+            self.walker.walk_loop(target_goal.position)
         # else:
         #     self.ready()
-        #     self.enable_walking = False
+        #     self.walker.enable_walking = False
 
     def walk_time(self, target_goal: list):
-        if self.t < 0:
+        if self.walker.t < 0:
             self.foot_step_planner.setup_walk(target_goal[0], target_goal[1], target_goal[2], target_goal[3])
-            self.walk_pid.reset_imus()
-            self.t = 0
+            self.walker.pid.reset_imus()
+            self.walker.t = 0
 
-        if self.t < target_goal[4]:
-            self.walk_loop()
-        elif target_goal[4] <= self.t:
+        if self.walker.t < target_goal[4]:
+            self.walker.walk_loop()
+        elif target_goal[4] <= self.walker.t:
             self.ready()
-            self.enable_walking = False
-
-    def walk_loop(self, target_goal: Transformation):
-        self.foot_step_planner.plan_steps(self.t)
-        self.set_angles_from_placo(self.foot_step_planner)
-        # self.foot_step_planner.head_movement([1, 1, 0])
-        if self.imu_feedback_enabled and self.bez.sensors.imu_ready:
-            [_, pitch, roll] = self.bez.sensors.get_imu()
-            # print(pitch,"  ", roll)
-            self.stabilize_walk(pitch, roll)
-
-        self.foot_step_planner.head_movement(target_goal.position)
-
-
-        # self.bez.motor_control.configuration["head_yaw"] = self.ball_dx
-        # self.bez.motor_control.configuration["head_pitch"] = self.ball_dy
-        # self.bez.motor_control.configuration_offset["left_hip_pitch"] = 0.15
-        # self.bez.motor_control.configuration_offset["right_hip_pitch"] = 0.15
-        self.bez.motor_control.configuration["left_elbow"] = 1.57
-        self.bez.motor_control.configuration["right_elbow"] = 1.57
-        self.bez.motor_control.configuration["left_shoulder_roll"] = 0.1
-        self.bez.motor_control.configuration["right_shoulder_roll"] = 0.1
-        # self.bez.motor_control.configuration["head_pitch"] = 0.7
-        # self.bez.motor_control.set_single_motor("head_yaw", 0.7)
-        # self.bez.motor_control.set_right_leg_target_angles([0, 0, .82, -1.5, 0.82, -0.1])
-        # self.bez.motor_control.set_left_leg_target_angles([0, 0, 0.82, -1.5, 0.82, -0.1])
-        self.bez.motor_control.set_motor()
-
-        self.t = self.foot_step_planner.step(self.t)
-
-        # update joints in control # TODO investigate it has an effect but not sure how much also with step time
-        # for joint in self.bez.motor_control.motor_names:
-        #     self.foot_step_planner.robot.set_joint(joint,
-        #                                            self.bez.motor_control.configuration
-        #                                            [self.bez.motor_control.motor_names.index(joint)])
-        # T = self.foot_step_planner.robot.get_T_world_fbase()
-        # T[0:3,0:3] = self.bez.sensors.get_pose().rotation_matrix
-        # self.foot_step_planner.robot.set_T_world_fbase(T)
-        # self.foot_step_planner.robot.update_kinematics()
-
-        # if self.record_walking_metrics:
-        #     self.update_walking_metrics(t)
-
-    @staticmethod
-    def heading_error(theta_desired: float, theta_current: float) -> float:
-        """
-        Calculates the position and orientation error between a current pose and a desired pose.
-
-        :return: A tuple of (position_error, desired_yaw, heading_error) representing the errors.
-        """
-
-        head_error = theta_desired - theta_current
-
-        # Normalize the heading error to be between -pi and pi.
-        heading_error_norm = math.atan2(math.sin(head_error), math.cos(head_error))
-
-        return heading_error_norm
-
-    # @staticmethod
-    # def desired_yaw(self) -> float:
-    #     # Calculate the desired yaw (angle of rotation) using the arctan2 function.
-    #     numerator = self.goal_loc[1] - self.curr_loc[1]
-    #     denominator = self.goal_loc[0] - self.curr_loc[0]
-    #     return float(np.arctan2(numerator, denominator))
-
-    @staticmethod
-    def position_error(goal_loc: np.ndarray, curr_loc: np.ndarray = (0, 0)):
-        return float(np.linalg.norm(goal_loc - curr_loc))
-
-    def kick_ready(self):
-        self.t2 = 0
-        self.kick_planner.setup_tasks()
-
-        self.set_angles_from_placo(self.kick_planner)
-
-        self.bez.motor_control.set_motor()
+            self.walker.enable_walking = False
 
     def ready(self):
         self.foot_step_planner.setup_tasks()
 
-        self.set_angles_from_placo(self.foot_step_planner)
+        self.bez.motor_control.set_angles_from_placo(self.foot_step_planner.robot)
         self.bez.motor_control.configuration["left_shoulder_roll"] = 0.1
         self.bez.motor_control.configuration["right_shoulder_roll"] = 0.1
 
-        self.bez.motor_control.set_single_motor("head_yaw", self.ball_dx)
-        self.bez.motor_control.set_single_motor("head_pitch", self.ball_dy)
+        # self.bez.motor_control.set_single_motor("head_yaw", 0)
+        # self.bez.motor_control.set_single_motor("head_pitch", 0.7)
         self.bez.motor_control.set_motor()
-
-    def wait(self, step: int) -> None:
-        self.world.wait(step)
-
-    def stabilize_walk(self, pitch: float, roll: float) -> None:
-        error_pitch = self.walk_pid.walking_pitch_pid.update(pitch)
-        self.bez.motor_control.set_leg_joint_3_target_angle(error_pitch)  # TODO retune
-        pass
-        error_roll = self.walk_pid.walking_roll_pid.update(roll)  # TODO retune
-        self.bez.motor_control.set_leg_joint_2_target_angle(error_roll)
-
-    def set_angles_from_placo(self, planner) -> None:
-        for joint in self.bez.motor_control.motor_names:
-            self.bez.motor_control.configuration[joint] = planner.robot.get_joint(joint)
 
     def display_walking_metrics(self, show_targets: bool = False) -> None:
         fig, (ax_imu0, ax_imu1, ax_imu2) = plt.subplots(3, 1, sharex=True)

@@ -1,12 +1,11 @@
 import numpy as np
 import rospy
 from geometry_msgs.msg import PoseStamped
-from std_msgs.msg import Float32MultiArray
-
 from soccer_pycontrol.model.model_ros.bez_ros import BezROS
 from soccer_pycontrol.walk_engine.foot_step_planner import FootStepPlanner
 from soccer_pycontrol.walk_engine.navigator import Navigator
 from soccer_pycontrol.walk_engine.stabilize import Stabilize
+from std_msgs.msg import Float32MultiArray
 
 from soccer_common import PID, Transformation
 from soccer_msgs.msg import BoundingBoxes
@@ -23,7 +22,7 @@ class NavigatorRos(Navigator):
         self.foot_step_planner = FootStepPlanner(self.bez.robot_model, self.bez.parameters, rospy.get_time, debug=False, ball=self.ball2)
         # TODO publish local odomtry from foot step planner
         self.rate = rospy.Rate(1 / self.foot_step_planner.DT)
-        self.func_step = self.rate.sleep
+        self.func_step = self.rate.sleep  # TODO is this needed?
 
         self.walk_pid = Stabilize(self.bez.parameters)
         self.max_vel = 0.03
@@ -42,7 +41,7 @@ class NavigatorRos(Navigator):
             output_limits=(-self.max_vel, self.max_vel),
         )  # TODO could also mod if balance is decreasing
         self.nav_yaw_pid = PID(
-            Kp= 0.01,
+            Kp=0.01,
             Kd=0,
             Ki=0,
             setpoint=0,
@@ -75,6 +74,7 @@ class NavigatorRos(Navigator):
             setpoint=2.4,
             output_limits=(0.4, 1.3),
         )
+
     def check_request_timeout(self, nsecs: int = 500000000):
         return (rospy.Time.now() - self.last_req) < rospy.Duration(secs=1, nsecs=nsecs)
 
@@ -97,10 +97,6 @@ class NavigatorRos(Navigator):
         self.goal = pose
         self.foot_step_planner.configure_planner(d_x=0.03)
 
-    def wait(self, steps: int):
-        for i in range(steps):
-            rospy.sleep(self.foot_step_planner.DT)
-
     def run(self, target_goal):
         angles = np.linspace(-np.pi, np.pi)
         ready = True
@@ -110,15 +106,14 @@ class NavigatorRos(Navigator):
             # self.bez.motor_control.set_motor()
 
             if isinstance(target_goal, Transformation):
-                if self.check_request_timeout() and  self.ball_pixel is not None:
+                if self.check_request_timeout() and self.ball_pixel is not None:
                     ready = False
                     self.walk(self.ball, self.ball_pixel, True)
                 elif not ready:
                     self.ready()
                     self.bez.motor_control.set_single_motor("head_pitch", 0.7)
                     ready = True
-            elif isinstance(target_goal,
-                            list):  # [d_x: float = 0.0, d_y: float = 0.0, d_theta: float = 0.0, nb_steps: int = 10, t_goal: float = 10]
+            elif isinstance(target_goal, list):  # [d_x: float = 0.0, d_y: float = 0.0, d_theta: float = 0.0, nb_steps: int = 10, t_goal: float = 10]
                 # if target_goal[:3] == [0.0,0.0,0]:
                 #     if self.imu_feedback_enabled and self.bez.sensors.imu_ready:
                 #         [_, pitch, roll] = self.bez.sensors.get_imu()
@@ -136,7 +131,6 @@ class NavigatorRos(Navigator):
                 #     self.bez.motor_control.set_motor()
                 # else:
                 self.walk_time(target_goal)
-
 
             # print(f"Height rotation: {self.bez.sensors.get_height().orientation_euler}")
             # print(f"Height position: {self.bez.sensors.get_height().position}")
