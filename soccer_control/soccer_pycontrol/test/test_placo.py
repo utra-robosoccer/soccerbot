@@ -219,7 +219,6 @@ class TestPlaco(unittest.TestCase):
         for i in range(100000):
             y, p, r = self.bez.sensors.get_imu()
             print(y, "  ", p, "  ", r)
-
             if p > 1.25:
                 print("getupfront")
                 tm.send_trajectory("getupfront")

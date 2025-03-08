@@ -54,7 +54,7 @@ class TestTrajectory(unittest.TestCase):
         self.assertEqual(angles, [0.0, 0.0, 0.0, 0.0, 0.564, 0.564, -1.176, -1.176, 0.613, 0.613, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
 
 
-@pytest.mark.parametrize("trajectory_name", ["getupsideleft"])  # getupside rightkick " getupback getupfront
+@pytest.mark.parametrize("trajectory_name", ["rightkick"])  # getupside rightkick " getupback getupfront
 @pytest.mark.parametrize("robot_model", ["assembly"])
 @pytest.mark.parametrize("real_time", [True])
 def test_trajectory_sim(trajectory_name: str, robot_model: str, real_time: bool):
@@ -84,7 +84,7 @@ def test_trajectory_sim(trajectory_name: str, robot_model: str, real_time: bool)
     )
     bez = Bez(robot_model=robot_model, pose=pose)
 
-    tm = TrajectoryManagerSim(world, bez, "bez2_sim", trajectory_name)
+    tm = TrajectoryManagerSim(world, bez, "bez2_sim", "getupfront")
     tm.send_trajectory(trajectory_name)
     tm.world.wait(10000)
     tm.world.close()

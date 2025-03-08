@@ -67,21 +67,21 @@ class Navigator:
         self.reset_walk()
         self.t2 = 0
 
-        self.ball_x_pid = PID(
-            Kp=0.00001,
-            Kd=0,
-            Ki=0,
-            setpoint=320,
-            output_limits=(-1.5707963267948966, 1.5707963267948966),
-        )
-
-        self.ball_y_pid = PID(
-            Kp=-0.0,
-            Kd=0,
-            Ki=0,
-            setpoint=240,
-            output_limits=(0, 1),
-        )
+        # self.ball_x_pid = PID(
+        #     Kp=0.00001,
+        #     Kd=0,
+        #     Ki=0,
+        #     setpoint=320,
+        #     output_limits=(-1.5707963267948966, 1.5707963267948966),
+        # )
+        #
+        # self.ball_y_pid = PID(
+        #     Kp=-0.0,
+        #     Kd=0,
+        #     Ki=0,
+        #     setpoint=240,
+        #     output_limits=(0, 1),
+        # )
 
     def reset_walk(self):
         self.t = -1
@@ -225,7 +225,7 @@ class Navigator:
             # print(round(dx, 3), " ", round(dy, 3), " ", round(dtheta, 3), " ", round(x_error, 3), " ", round(y_error, 3), " ", round(head_error, 3))
             self.foot_step_planner.configure_planner(dx, dy, dtheta)
 
-            self.walk_loop(ball_pixel=ball_pixel)
+            self.walk_loop(target_goal)
         # else:
         #     self.ready()
         #     self.enable_walking = False
@@ -242,7 +242,7 @@ class Navigator:
             self.ready()
             self.enable_walking = False
 
-    def walk_loop(self, ball_pixel: list = ()):
+    def walk_loop(self, target_goal: Transformation):
         self.foot_step_planner.plan_steps(self.t)
         self.set_angles_from_placo(self.foot_step_planner)
         # self.foot_step_planner.head_movement([1, 1, 0])
@@ -251,15 +251,11 @@ class Navigator:
             # print(pitch,"  ", roll)
             self.stabilize_walk(pitch, roll)
 
-        if self.ball2 and ball_pixel != self.last_ball:
-            # self.foot_step_planner.head_movement(target_goal.position)
+        self.foot_step_planner.head_movement(target_goal.position)
 
-            self.last_ball = ball_pixel
-            self.ball_dx = self.ball_x_pid.update(3.2 - ball_pixel[0]/100.0)
-            self.ball_dy = self.ball_y_pid.update(ball_pixel[1]/100.0)
-            print(f"{ball_pixel}, {self.ball_dx}, {self.ball_dy}")
-        self.bez.motor_control.configuration["head_yaw"] = self.ball_dx
-        self.bez.motor_control.configuration["head_pitch"] = self.ball_dy
+
+        # self.bez.motor_control.configuration["head_yaw"] = self.ball_dx
+        # self.bez.motor_control.configuration["head_pitch"] = self.ball_dy
         # self.bez.motor_control.configuration_offset["left_hip_pitch"] = 0.15
         # self.bez.motor_control.configuration_offset["right_hip_pitch"] = 0.15
         self.bez.motor_control.configuration["left_elbow"] = 1.57
