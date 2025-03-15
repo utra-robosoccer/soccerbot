@@ -151,7 +151,7 @@ class TestPlaco(unittest.TestCase):
             real_time=REAL_TIME,
             rate=200,
         )
-        self.bez = Bez(robot_model="assembly", pose=Transformation())
+        self.bez = Bez(robot_model="assembly", pose=Transformation(), fixed_base=True)
 
         src_path = expanduser("~") + "/catkin_ws/src/soccerbot/soccer_perception/"
         model_path = src_path + "soccer_object_detection/models/yolov8s_detect_best.pt"
@@ -185,9 +185,19 @@ class TestPlaco(unittest.TestCase):
             ball_pos = detect.get_ball_position(bbs_msg, camera_z_height, camera_orientation)
             # ball_pos = Transformation(position=ball_pos_euler, euler=[0, 0, 0])
             print(
-                f"floor pos: {ball_pos.position}  " f"ball: {ball_estim}",
+                f"floor pos: {np.round(ball_pos.position, 5).tolist()}  " f"ball: {ball_estim}",
                 flush=True,
             )
+            detected_ball_pos = np.round(ball_pos.position, 5).tolist()
+            self.assertAlmostEqual(detected_ball_pos[0], ball_estim[0], delta=0.001)
+            self.assertAlmostEqual(detected_ball_pos[1], ball_estim[1], delta=0.001)
+            self.assertAlmostEqual(detected_ball_pos[2], ball_estim[2], delta=0.001)
+
+    # new test class that is independent of pybullet teardown etc
+    # unit test for the walk function, passing different cases
+    # kick when close, in bez, might have to tell where the ball is, wont look down,
+    # bez model and pubulllet load model need a way to control where the ball gets spawned
+    # in navigator get rid of the fixed motor angles, use fixed base instead
 
     def test_camera(self):
         src_path = expanduser("~") + "/catkin_ws/src/soccerbot/soccer_perception/"
