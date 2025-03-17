@@ -36,7 +36,7 @@
         <rosparam file="$(find soccer_object_detection)/config/$(arg param_file_name).yaml" command="load" />
     </node>
 
-    <node name="camera" pkg="usb_cam" type="usb_cam_node" output="screen" respawn="true" respawn_delay="30"> -->
+    <node name="camera" pkg="usb_cam" type="usb_cam_node" output="screen" respawn="true" respawn_delay="30">
         <param name="video_device" value="/dev/video4" />
         <param name="image_width" value="640" />
         <param name="image_height" value="480" />

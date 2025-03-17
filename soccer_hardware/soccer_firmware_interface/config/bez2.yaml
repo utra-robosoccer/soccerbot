@@ -47,7 +47,7 @@ left_ankle_roll:
 right_hip_yaw:
   id: 10
   type: "xm430"
-  angle_zero: 175
+  angle_zero: 180
   angle_max: 360
   angle_min: 0
   flipped: "true"

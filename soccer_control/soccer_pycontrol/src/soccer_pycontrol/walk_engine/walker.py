@@ -26,7 +26,7 @@ class Walker:
 
     # TODO could make input a vector
 
-    def walk_loop(self, target_goal: List[float] = (1, 1, 0)):  # TODO set default to something better
+    def walk_loop(self, target_goal: List[float] = (0, 0, 0)):  # TODO set default to something better
         self.foot_step_planner.plan_steps(self.t)
         self.bez.motor_control.set_angles_from_placo(self.foot_step_planner.robot)
 
@@ -38,7 +38,7 @@ class Walker:
         self.foot_step_planner.head_movement(target_goal)
 
         # self.bez.motor_control.configuration["head_yaw"] = self.ball_dx
-        # self.bez.motor_control.configuration["head_pitch"] = self.ball_dy
+        # self.bez.motor_control.configuration["head_pitch"] = 0.7
         # self.bez.motor_control.configuration_offset["left_hip_pitch"] = 0.15
         # self.bez.motor_control.configuration_offset["right_hip_pitch"] = 0.15
         self.bez.motor_control.configuration["left_elbow"] = 1.57
@@ -47,12 +47,12 @@ class Walker:
         self.bez.motor_control.configuration["right_shoulder_roll"] = 0.1
         # self.bez.motor_control.configuration["head_pitch"] = 0.7
         # self.bez.motor_control.set_single_motor("head_yaw", 0.7)
-        self.bez.motor_control.set_right_leg_target_angles(
-            [0.031498273770675496, 0.13013599705387854, 0.8763616115800654, -1.4338038100846235, 0.5569438675976406, -0.09870240716415977]
-        )
-        self.bez.motor_control.set_left_leg_target_angles(
-            [-0.031396938877692564, 0.07407130663246327, 0.8245393702946127, -1.3833448587348056, 0.5583100126857369, -0.10550492155783667]
-        )
+        # self.bez.motor_control.set_right_leg_target_angles(
+        #     [0.031498273770675496, 0.13013599705387854, 0.8763616115800654, -1.4338038100846235, 0.5569438675976406, -0.09870240716415977]
+        # )
+        # self.bez.motor_control.set_left_leg_target_angles(
+        #     [-0.031396938877692564, 0.07407130663246327, 0.8245393702946127, -1.3833448587348056, 0.5583100126857369, -0.10550492155783667]
+        # )
         self.bez.motor_control.set_right_leg_target_angles([0, 0, 0, 0, 0, 0])
         self.bez.motor_control.set_left_leg_target_angles([0, 0, 0, 0, 0, 0])
         # self.bez.motor_control.set_head_target_angles(

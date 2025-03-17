@@ -6,7 +6,6 @@ from os.path import expanduser
 import cv2
 import rospy
 from geometry_msgs.msg import PoseStamped
-
 from soccer_object_detection.object_detect_node import ObjectDetectionNode
 from soccer_pycontrol.model.model_ros.bez_ros import BezROS
 from soccer_pycontrol.walk_engine.walk_engine_ros.navigator_ros import NavigatorRos
@@ -27,7 +26,7 @@ class TestPybullet(unittest.TestCase):
         rospy.init_node("soccer_control")
 
         bez = BezROS()
-        walker = NavigatorRos(bez, imu_feedback_enabled= True, ball2=True)
+        walker = NavigatorRos(bez, imu_feedback_enabled=True, ball2=True)
         # walker.wait(50)
         walker.ready()
         # bez.motor_control.set_single_motor("head_pitch", 0.7)
@@ -53,7 +52,7 @@ class TestPybullet(unittest.TestCase):
         rospy.init_node("soccer_control")
 
         bez = BezROS()
-        walker = NavigatorRos(bez, imu_feedback_enabled= True, ball2=True)
+        walker = NavigatorRos(bez, imu_feedback_enabled=True, ball2=True)
         # walker.wait(50)
         walker.ready()
         walker.wait(50)
@@ -61,20 +60,18 @@ class TestPybullet(unittest.TestCase):
         # walker.walk(d_x=0.04, t_goal=10)
         # target_goal = Transformation(position=[1, 0, 0], euler=[0, 0, 0])
         # walker.walk(target_goal)
-        # target_goal = [0.03, 0.0, 0, 10, 500]
+        target_goal = [0.03, 0.0, 0, 10, 500]
         # target_goal = Transformation(position=[0, 0, 0], euler=[0, 0, 0])
         # # walker.walk(target_goal)
-        # walker.run(target_goal)
+        walker.run(target_goal)
 
         walker.wait(100)
+
     def test_camera2(self):
         robot_ns = os.environ["ROS_NAMESPACE"]
 
-
         rospy.init_node("soccer_control")
         bez = BezROS()
-
-
 
         # self.world = PybulletWorld(
         #     camera_yaw=90,
@@ -142,7 +139,7 @@ class TestPybullet(unittest.TestCase):
 
         ball_pos = Transformation(position=[0, 0, 0], euler=[0, 0, 0])
         kicked = False
-        while  not rospy.is_shutdown():
+        while not rospy.is_shutdown():
             # img = self.bez.sensors.get_camera_image()
             # bez.motor_control.set_single_motor("head_pitch", 0.7)
             walker.ready()
@@ -158,7 +155,7 @@ class TestPybullet(unittest.TestCase):
             for box in bbs_msg.bounding_boxes:
                 if box.Class == "0":
                     detect.camera.pose.position = [0, 0, 0.6]
-                    detect.camera.pose.position = [0, 0,bez.sensors.get_height().position[2]]
+                    detect.camera.pose.position = [0, 0, bez.sensors.get_height().position[2]]
                     # detect.camera.pose.orientation_euler = self.bez.sensors.get_pose(link=2).orientation_euler
                     detect.camera.pose.orientation_euler = [-0.029378, -0.11132, 0.063983]
                     detect.camera.pose.orientation_euler = bez.sensors.get_height().orientation_euler
