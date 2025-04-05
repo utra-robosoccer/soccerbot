@@ -18,7 +18,6 @@ void write_goal_position_p1(MotorPort *port, uint8_t id, uint16_t angle) {
   //TODO: handle status packet
 }
 
-
 /*
  * Dynamixel 1.0
  * https://emanual.robotis.com/docs/en/dxl/ax/ax-12a/

@@ -251,10 +251,6 @@ void read_motors(uint8_t *rxBuf) {
 }
 //ZSM code
 void update_voltage(void){
-    Voltage* v_19;
-    v_19 = &voltage[0];
-
-    Voltage* v_13 = voltage[0];
 	Voltage *v_1 = &voltage[0];
 	Voltage *v_2 = &voltage[1];
 
@@ -266,57 +262,31 @@ void update_voltage(void){
 	if(HAL_ADC_Init(v_2->hadc) != HAL_OK){
 			printf("error from initialization v_2");
 			exit(1);
-		}
-
-	v_1->hadc->Instance->CR2 |= (uint32_t)ADC_CR2_CONT;
-	v_2->hadc->Instance->CR2 |= (uint32_t)ADC_CR2_CONT;
-	uint16_t readValue_1;
+	}
+	//uint16_t readValue_1;
 	uint16_t readValue_2;
+	uint16_t readValue;
 
-	//uint16_t hadHAL_ADC_GetValue(ADC_HandleTypeDef* hadc);
-	//ADC_HandleTypeDef hadc1 = v_1-> hadc;
-	// #uint32_t hadc1 = v_1-> hadc;
-	//HAL_ADC_Start(&hadc1); //IN8
-	//HAL_ADC_Start(&hadc2); // IN7
+	//float v_bat; //IN 8
+	//float v_shunt_read;// = v_2->v_read; //IN 7
+	//float intensity_shunt;// = v_2->intensity;// intensity
 
-	float v_bat_read; //IN 8
-	float v_shunt_read;// = v_2->v_read; //IN 7
-	float intensity_shunt;// = v_2->intensity;// intensity
+		(*v_1->hadc).Instance->CR2 |= (uint32_t)ADC_CR2_SWSTART;// |= allows the continuous display
 
-  while(1){
-	    // HAL_ADC_Start(&hadc1);
-	  (*v_1->hadc).Instance->CR2 |= (uint32_t)ADC_CR2_SWSTART;// |= allows the continuous display
+		readValue = HAL_ADC_GetValue(&(*v_1->hadc)); // Reads the value from the ADC
+		voltage[0]->v_read = (float)readValue/4095*3.3;
+		//voltage[0]->v_read = v_bat;
 
-	  //Commands the start of the continuous display
-	  //ZSM stuff
-	 	  // HAL_ADC_PollForConversion(&hadc1,1000); // The poll takes the value but does not allow to see the continuous variable change
-	  readValue_1 = HAL_ADC_GetValue(&(*v_1->hadc)); // Reads the value from the ADC
-	  v_bat_read = (float)readValue_1 / 4095 * 3.3;
+		(*v_2->hadc).Instance->CR2 |= (uint32_t)ADC_CR2_SWSTART;// |= allows the continuous display
 
-	 	 //v_1 -> v_read = 3;
-		 //v_bat_read = 3;
-	 			  //(float)readValue_1/4095*3.3;//3.3; //4095*16.5;  // values toogle between each other between
-	 	  //printf('%f',v_bat_read);
-	 	  // = v_bat_read;
-	 	  //printf('%f', v_1->v_read);
-		  //HAL_Delay(100); // time between each change
+		readValue_2 = HAL_ADC_GetValue(&(*v_2->hadc)); // Reads the value from the ADC
+		voltage[1]-> v_read = (float)readValue_2/4095*3.3;
+		//voltage[1]-> v_read = v_shunt_read;
 
-	  (*v_2->hadc).Instance->CR2 |= (uint32_t)ADC_CR2_SWSTART;// |= allows the continuous display
-	  readValue_2 = HAL_ADC_GetValue(&(*v_2->hadc));
-	  v_shunt_read = (float)readValue_2 / 4095 * 3.3;
-	  intensity_shunt = (float)v_shunt_read / (20) / 0.01;
+		voltage[1]-> intensity = (float)(voltage[1]-> v_read)/(20)/0.01;  //3.3; //4095*16.5;
+		//= intensity_shunt;
 
-	  //readValue_2 = HAL_ADC_GetValue(&(*v_2->hadc)); // Reads the value from the ADC
-	 	 // v_shunt_read= (float)readValue_2/4095*3.3;
-	 	  //v_1->v_read = v_shunt_read;
+		HAL_Delay(100); // time between each change
 
-	  v_1->v_read = v_bat_read;
-	  v_2->v_read = v_shunt_read;
-	  v_2->intensity = intensity_shunt;
-
-
-
-	  HAL_Delay(100); // time between each change
 }
- // return v_bat_read, v_shunt_read, intensity_shunt;
-}
+

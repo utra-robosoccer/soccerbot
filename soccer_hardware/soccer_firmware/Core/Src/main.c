@@ -381,19 +381,11 @@ int main(void)
     /* USER CODE BEGIN 3 */
 
 
-	 /* //while (1)
-	  //{
-		  //ZSM CODE
-		    // HAL_ADC_Start(&hadc1);
+	/* //while (1)
+	 // {
 		  hadc1.Instance->CR2 |= (uint32_t)ADC_CR2_SWSTART;// |= allows the continuous display
-
-		  //Commands the start of the continuous display
-		  //ZSM stuff
-		 	  // HAL_ADC_PollForConversion(&hadc1,1000); // The poll takes the value but does not allow to see the continuous variable change
 		 	  readValue = HAL_ADC_GetValue(&hadc1); // Reads the value from the ADC
 		 	  v_bat_read = (float)readValue/4095*3.3;//3.3; //4095*16.5;  // values toogle between each other between
-
-			  //HAL_Delay(100); // time between each change
 
 		 hadc2.Instance->CR2 |= (uint32_t)ADC_CR2_SWSTART;// |= allows the continuous display
 
@@ -403,29 +395,10 @@ int main(void)
 		 	  intensity_shunt = (float)v_shunt_read/(20)/0.01;  //3.3; //4095*16.5;
 		 	  HAL_Delay(100); // time between each change
 	  //}*/
-	//while(1){
-		update_voltage();
-		v_bat_read = voltage[0]->v_read; //IN 8
-		if (isnan(v_bat_read)){
-			printf("error from v_bat_read");
-			exit(1);
-		  }
-		v_shunt_read = voltage[1]->v_read; //IN 7
-
-		if (isnan(v_shunt_read)){
-			printf("error from v_shunt_read");
-			exit(1);
-		}
-		intensity_shunt = voltage[1]->intensity;// intensity
-		if(isnan(intensity_shunt)){
-			printf("error from v_bat_read");
-			exit(1);
-		}
-		 // printf("v_bat_read: %f, v_shunt_read: %f, intensity_shunt: %f\n", v_bat_read, v_shunt_read, intensity_shunt);
-
-	//  }*/
-
-
+	while (1){
+	  init_voltage();
+	  update_voltage();
+	}
 	  }
 
   }

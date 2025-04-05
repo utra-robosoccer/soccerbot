@@ -10,7 +10,7 @@ uint8_t BMI088_Init(BMI088 *imu, I2C_HandleTypeDef *m_i2c_handle) {
   /* Store interface parameters in struct */
   imu->m_i2c_handle    = m_i2c_handle;
 
-  /* Clear DMA flags */
+  /* Clear DMA flags ---> Direct Memory Access  direction of a transfer  */
   imu->readingAcc = 0;
   imu->readingGyr = 0;
 
