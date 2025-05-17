@@ -3,8 +3,9 @@ import unittest
 from unittest.mock import MagicMock
 
 import pytest
-import rospy
-from sensor_msgs.msg import JointState
+
+# import rospy
+# from sensor_msgs.msg import JointState
 from soccer_pycontrol.model.bez import Bez
 from soccer_pycontrol.pybullet_usage.pybullet_world import PybulletWorld
 from soccer_trajectories.trajectory import Trajectory
@@ -105,7 +106,7 @@ def run_real_trajectory(robot_model: str, trajectory_name: str, real_time: bool)
     set_rosparam_from_yaml_file(param_path=config_path)
     rospy.set_param("robot_model", robot_model)
 
-    c = TrajectoryManagerRos(robot_model,trajectory_name )
+    c = TrajectoryManagerRos(robot_model, trajectory_name)
     rospy.init_node("test")
     msg = FixedTrajectoryCommand()
     msg.trajectory_name = trajectory_name

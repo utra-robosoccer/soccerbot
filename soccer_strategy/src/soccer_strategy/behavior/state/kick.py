@@ -2,25 +2,17 @@ from soccer_pycontrol.model.bez import BezStatusEnum
 
 from soccer_common.transformation import Transformation
 from soccer_strategy.behavior import Behavior
-from soccer_strategy.behavior.state.kick import Kick
 
 
-class Walk(Behavior):
-    def __init__(self, target_goal: Transformation):
-        super().__init__()
-        self._target_goal = target_goal
-
+class Kick(Behavior):
     def action(self) -> None:
-        self.bez.status = BezStatusEnum.WALK
+        self.nav.kick_ready()
 
     def run_algorithim(self) -> None:
         # enable walking, essentially adding the unit test from test_placo into here, which we can then call in test_placto
         # behavior_context may have issues with the objects defined in the beginning
         # read: https://refactoring.guru/design-patterns/state
-        self.nav.walk(self._target_goal)
-        if not self.nav.enable_walking:
-            self.nav.wait(200)
-            self.context.transition_to(Kick())
+        self.nav.kick()
 
     def ready_to_switch_to(self) -> bool:
         return True

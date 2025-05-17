@@ -2,11 +2,12 @@ import unittest
 from os.path import expanduser
 
 import numpy as np
-
 from soccer_object_detection.object_detect_node import ObjectDetectionNode
+
 from soccer_msgs.msg import BoundingBox, BoundingBoxes
 
 REAL_TIME = True
+
 
 class TestBallLocalization(unittest.TestCase):
     def test_ball_localization(self):

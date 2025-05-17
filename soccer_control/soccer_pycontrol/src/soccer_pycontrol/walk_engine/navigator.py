@@ -112,6 +112,7 @@ class Navigator:
                 else:
                     self.walk_pose(target_goal)
             elif isinstance(target_goal, list):  # [d_x: float = 0.0, d_y: float = 0.0, d_theta: float = 0.0, nb_steps: int = 10, t_goal: float = 10]
+                print("reached")
                 self.walk_time(target_goal)
 
         # if self.record_walking_metrics and display_metrics:
@@ -183,7 +184,7 @@ class Navigator:
             dtheta = self.nav_yaw_pid.update(pose.orientation_euler[0])
             print(round(dx, 3), " ", round(dy, 3), " ", round(dtheta, 3), " ", round(x_error, 3), " ", round(y_error, 3), " ", round(head_error, 3))
             self.foot_step_planner.configure_planner(dx, dy, dtheta)
-            self.walk_loop()  # TODO move main loop out of here
+            self.walk_loop(target_goal)  # TODO move main loop out of here
         else:
             self.ready()
             self.enable_walking = False
@@ -244,7 +245,7 @@ class Navigator:
             self.t = 0
 
         if self.t < target_goal[4]:
-            self.walk_loop()
+            self.walk_loop(target_goal)
         elif target_goal[4] <= self.t:
             self.ready()
             self.enable_walking = False
@@ -258,7 +259,7 @@ class Navigator:
             # print(pitch,"  ", roll)
             self.stabilize_walk(pitch, roll)
 
-        self.foot_step_planner.head_movement(target_goal.position)
+        # self.foot_step_planner.head_movement(target_goal.position)
 
         # self.bez.motor_control.configuration["head_yaw"] = self.ball_dx
         # self.bez.motor_control.configuration["head_pitch"] = self.ball_dy

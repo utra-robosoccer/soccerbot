@@ -6,6 +6,7 @@ from random import uniform
 import cv2
 import numpy as np
 import pybullet as pb
+import pytest
 from soccer_object_detection.object_detect_node import ObjectDetectionNode
 from soccer_pycontrol.model.bez import Bez
 from soccer_pycontrol.pybullet_usage.pybullet_world import PybulletWorld
@@ -194,10 +195,122 @@ class TestPlaco(unittest.TestCase):
             self.assertAlmostEqual(detected_ball_pos[2], ball_estim[2], delta=0.001)
 
     # new test class that is independent of pybullet teardown etc
-    # unit test for the walk function, passing different cases
+
+    # unit test for the walk function, passing different cases, can just do visual test
+
     # kick when close, in bez, might have to tell where the ball is, wont look down,
+
     # bez model and pubulllet load model need a way to control where the ball gets spawned
+
     # in navigator get rid of the fixed motor angles, use fixed base instead
+
+    # @pytest.mark.parametrize("test_list", [1]) # test list
+    # @pytest.mark.parametrize("test transformation", "test2")
+    # @pytest.mark.parametrize("test time", "test3")
+    def test_walk_pose(self):
+        self.world = PybulletWorld(
+            camera_yaw=90,
+            real_time=REAL_TIME,
+            rate=200,
+        )
+        self.bez = Bez(robot_model="assembly", pose=Transformation())
+
+        walk = Navigator(
+            self.world, self.bez, imu_feedback_enabled=False, ball=True
+        )  # note that ball=True if not foot_step_planner.head_movement fails
+        target_goal = Transformation(position=[0.5, 0, 0], euler=[0, 0, 0])  # half a square in front
+
+        for i in range(10000):
+
+            walk.walk(target_goal)
+            self.world.step()
+
+    def test_walk_ball(self):  # leave as a behaviour
+        src_path = expanduser("~") + "/catkin_ws/src/soccerbot/soccer_perception/"
+        model_path = src_path + "soccer_object_detection/models/yolov8s_detect_best.pt"
+        model_path = src_path + "soccer_object_detection/models/half_5.pt"
+
+        detect = ObjectDetectionNode(model_path)
+
+        self.world = PybulletWorld(
+            camera_yaw=90,
+            real_time=REAL_TIME,
+            rate=200,
+        )
+        self.bez = Bez(robot_model="assembly", pose=Transformation())
+        tm = TrajectoryManagerSim(self.world, self.bez, "bez2_sim", "getupfront")
+
+        # self.bez = Bez(robot_model="bez1", pose=Transformation())
+        walk = Navigator(self.world, self.bez, imu_feedback_enabled=False, ball=True)
+        # walk.ready()
+        # walk.wait(100)
+        target_goal = [0.05, 0, 0.0, 10, 500]
+        # target_goal = Transformation(position=[0, 0, 0], euler=[0, 0, 0])
+        print("STARTING WALK")
+        ball_pos = Transformation(position=[0, 0, 0], euler=[0, 0, 0])
+        kicked = False
+        ball_found = False
+
+        ball_pixel = [0, 0]
+        for i in range(10000):
+            if i % 10 == 0:
+                img = self.bez.sensors.get_camera_image()
+                img = cv2.resize(img, dsize=(640, 480))
+                dimg, bbs_msg = detect.get_model_output(img)
+
+                ball_found = False
+                for box in bbs_msg.bounding_boxes:
+                    if box.Class == "0":
+                        ball_found = True
+
+                if ball_found:
+                    ball_pos = detect.get_ball_position(
+                        bbs_msg, self.bez.sensors.get_pose(link=2).position[2], self.bez.sensors.get_pose(link=2).orientation_euler
+                    )
+                    # ball_pos = Transformation(position=ball_pos_euler, euler=[0, 0, 0])
+                    ball_pos_actual = self.bez.sensors.get_ball()
+                    print(
+                        f"bounding box: {bbs_msg}"
+                        f"camera height {self.bez.sensors.get_pose(link=2).position[2]}"
+                        f"camera orientation {self.bez.sensors.get_pose(link=2).orientation_euler}"
+                        f"floor pos: {ball_pos.position}  "
+                        f"ball: {ball_pos_actual.position}",
+                        flush=True,
+                    )
+
+                if "DISPLAY" in os.environ:
+                    cv2.imshow("CVT Color2", dimg)
+                    cv2.waitKey(1)
+
+            if 0 < np.linalg.norm(ball_pos.position[:2]) < 0.2 and not kicked and ball_found:
+                walk.ready()
+                walk.wait(100)
+                tm.send_trajectory("rightkick")
+                kicked = True
+
+                walk.reset_walk()
+
+            elif ball_found:
+                walk.walk(ball_pos_actual, ball_pixel, True)
+
+            self.world.step()
+
+    def test_walk_time(self):
+        self.world = PybulletWorld(
+            camera_yaw=90,
+            real_time=REAL_TIME,
+            rate=200,
+        )
+        self.bez = Bez(robot_model="assembly", pose=Transformation())
+
+        walk = Navigator(
+            self.world, self.bez, imu_feedback_enabled=False, ball=True
+        )  # note that ball=True if not foot_step_planner.head_movement fails
+        target_goal = [10.0, 0.0, 0.0, 10, 10]
+
+        for i in range(10000):
+            walk.walk(target_goal)
+            self.world.step()
 
     def test_camera(self):
         src_path = expanduser("~") + "/catkin_ws/src/soccerbot/soccer_perception/"

@@ -11,8 +11,9 @@
       <sourceFolder url="file://$MODULE_DIR$/soccer_perception/soccer_object_detection/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/soccer_perception/soccer_object_localization/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/soccer_webots/src" isTestSource="false" />
+      <excludeFolder url="file://$MODULE_DIR$/venv" />
     </content>
-    <orderEntry type="inheritedJdk" />
+    <orderEntry type="jdk" jdkName="Python 3.10" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="PyDocumentationSettings">
