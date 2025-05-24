@@ -9,6 +9,5 @@ int64 ymax
 int64 xbase
 int64 ybase
 bool obstacle_detected
-
 int16 id
-string Class
+string data
