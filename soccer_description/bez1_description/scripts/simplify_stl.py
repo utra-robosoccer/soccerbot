@@ -11,8 +11,8 @@ print("Simplifying meshes in Open3D...")
 
 # iterate over files in
 # that directory
-directory = home + "/catkin_ws/src/soccerbot/bez1_description/meshes"
-new_dir = home + "/catkin_ws/src/soccerbot/bez1_description/Bez1_meshes"
+directory = home + "/ros2_ws/src/soccerbot/bez1_description/meshes"
+new_dir = home + "/ros2_ws/src/soccerbot/bez1_description/Bez1_meshes"
 if not os.path.exists(new_dir):
     os.mkdir(new_dir)
     print(f"----------------------- creating {new_dir}")

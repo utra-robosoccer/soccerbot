@@ -22,8 +22,8 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Install catkin_lint
-        run: sudo apt update && sudo apt install catkin-lint
+      - name: Install ros2_lint
+        run: sudo apt update && sudo apt install ros2-lint
 
-      - name: Run catkin_lint
-        run: catkin_lint ${{github.workspace}}
+      - name: Run ros2_lint
+        run: ros2_lint ${{github.workspace}}

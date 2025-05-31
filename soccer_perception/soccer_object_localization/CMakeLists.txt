@@ -8,7 +8,7 @@ set(PKG_DEPS
 )
 
 find_package(
-    catkin
+    ros2
     REQUIRED
     COMPONENTS ${PKG_DEPS}
 )
@@ -18,5 +18,5 @@ find_package(
     REQUIRED
 )
 
-catkin_package(CATKIN_DEPENDS ${PKG_DEPS})
-catkin_python_setup()
+ros2_package(CATKIN_DEPENDS ${PKG_DEPS})
+ros2_python_setup()

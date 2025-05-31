@@ -9,7 +9,7 @@ find_package(
 )
 
 find_package(
-    catkin
+    ros2
     REQUIRED
     COMPONENTS dynamic_reconfigure
                tf2_ros
@@ -20,8 +20,8 @@ find_package(
                std_msgs
 )
 
-catkin_python_setup()
-catkin_package(
+ros2_python_setup()
+ros2_package(
     CATKIN_DEPENDS
     dynamic_reconfigure
     tf2_ros
@@ -32,7 +32,7 @@ catkin_package(
     std_msgs
 )
 
-include_directories(${catkin_INCLUDE_DIRS})
+include_directories(${ros2_INCLUDE_DIRS})
 
 protobuf_generate_python(PROTO_PY src/soccer_webots/messages.proto)
 add_custom_target(robocup_api_proto ALL DEPENDS ${PROTO_PY})

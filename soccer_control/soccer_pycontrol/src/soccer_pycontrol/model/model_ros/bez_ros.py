@@ -32,7 +32,7 @@ class BezROS(Bez):
     # TODO fix dupe
     def get_motor_names(self):
         urdf_model_path = (
-            expanduser("~") + f"/catkin_ws/src/soccerbot/soccer_description/{self.robot_model}" f"_description/urdf/{self.robot_model}.urdf"
+            expanduser("~") + f"/ros2_ws/src/soccerbot/soccer_description/{self.robot_model}" f"_description/urdf/{self.robot_model}.urdf"
         )
 
         model = pinocchio.buildModelFromUrdf(urdf_model_path)
@@ -52,7 +52,7 @@ class BezROS(Bez):
 
     def get_parameters(self, sim: str) -> dict:
         with open(
-            expanduser("~") + f"/catkin_ws/src/soccerbot/soccer_control/soccer_pycontrol/config/{self.robot_model}/{self.robot_model}{sim}.yaml", "r"
+            expanduser("~") + f"/ros2_ws/src/soccerbot/soccer_control/soccer_pycontrol/config/{self.robot_model}/{self.robot_model}{sim}.yaml", "r"
         ) as file:
             parameters = yaml.safe_load(file)
             file.close()

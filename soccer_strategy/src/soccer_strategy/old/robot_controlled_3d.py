@@ -328,3 +328,4 @@ class RobotControlled3D(RobotControlled):
         self.kicking_range_publisher.publish(r)
 
         return super().can_kick(*args, **kwargs)
+`

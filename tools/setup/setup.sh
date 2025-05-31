@@ -66,7 +66,7 @@ setup_ros(){
             -c 'echo "deb http://packages.ros.org/ros/ubuntu `lsb_release -sc` main" \
                 > /etc/apt/sources.list.d/ros-latest.list'
         wget http://packages.ros.org/ros.key -O - | sudo apt-key add -
-        sudo apt-get update && sudo apt-get install -y python3-catkin-tools
+        sudo apt-get update && sudo apt-get install -y python3-ros2-tools
 
 
    else
@@ -78,9 +78,9 @@ setup_ros(){
 setup_repo(){
    if (( has_sudo )); then
         echo "Setting up Repo ..."
-        mkdir -p ~/catkin_ws/src && cd ~/catkin_ws
-        catkin init
-        catkin config --cmake-args -DCMAKE_BUILD_TYPE=Debug # For Debug builds
+        mkdir -p ~/ros2_ws/src && cd ~/ros2_ws
+        ros2 init
+        ros2 config --cmake-args -DCMAKE_BUILD_TYPE=Debug # For Debug builds
         cd src
         git clone --recurse-submodules git@github.com:utra-robosoccer/soccerbot.git
         cd soccerbot
@@ -90,7 +90,7 @@ setup_repo(){
         git-lfs pull
         git submodule foreach git-lfs pull
 
-        cd ~/catkin_ws/src/soccerbot/
+        cd ~/ros2_ws/src/soccerbot/
         sudo apt-get install -y $(cat tools/setup/rosdep.txt)
         pip3 install --upgrade pip
         pip3 install -U setuptools[core]
@@ -103,21 +103,21 @@ setup_repo(){
 
         if (( wants_webots ))  ; then
           # Building the webots controllers
-          cd ~/catkin_ws/src/soccerbot/external/hlvs_webots
+          cd ~/ros2_ws/src/soccerbot/external/hlvs_webots
           pip install -r controllers/referee/requirements.txt
           sudo apt-get install protobuf-compiler libprotobuf-dev ant
           make
 
           # Building GameController # TODO add to /usr/local/webots/lib/controller/python38  (added by user) pycharm
-          cd ~/catkin_ws/src/soccerbot/external/GameController
+          cd ~/ros2_ws/src/soccerbot/external/GameController
           ant
         fi
 
         mkdir -p /home/$USER/.ros/config && cd /home/$USER/.ros/config
         ln -s /opt/ros/noetic/etc/ros/python_logging.conf
 
-        catkin build soccerbot
-        echo "source /home/$USER/catkin_ws/devel/setup.bash" >> ~/.bashrc && source ~/.bashrc
+        ros2 build soccerbot
+        echo "source /home/$USER/ros2_ws/devel/setup.bash" >> ~/.bashrc && source ~/.bashrc
 
         # Fixing ros logging in pytests
         mkdir -p /home/$USER/.ros/config && cd /home/$USER/.ros/config

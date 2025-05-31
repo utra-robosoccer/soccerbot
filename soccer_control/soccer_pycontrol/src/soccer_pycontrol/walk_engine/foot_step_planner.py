@@ -17,10 +17,10 @@ class FootStepPlanner:
         self.debug = debug
         self.robot_model = robot_model
         if sim and self.robot_model == "assembly":
-            model_filename = expanduser("~") + f"/catkin_ws/src/soccerbot/soccer_description/{robot_model}_description/urdf/robot.urdf"
+            model_filename = expanduser("~") + f"/ros2_ws/src/soccerbot/soccer_description/{robot_model}_description/urdf/robot.urdf"
 
         else:
-            model_filename = expanduser("~") + f"/catkin_ws/src/soccerbot/soccer_description/{robot_model}_description/urdf/robot1.urdf"
+            model_filename = expanduser("~") + f"/ros2_ws/src/soccerbot/soccer_description/{robot_model}_description/urdf/robot1.urdf"
         self.parameters = self.walk_parameters(parameters)
 
         self.last_replan = 0

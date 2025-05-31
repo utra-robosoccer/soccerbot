@@ -26,7 +26,7 @@ class TestPlaco(unittest.TestCase):
         del self.world
 
     def test_bez1(self):
-        src_path = expanduser("~") + "/catkin_ws/src/soccerbot/soccer_perception/"
+        src_path = expanduser("~") + "/ros2_ws/src/soccerbot/soccer_perception/"
         model_path = src_path + "soccer_object_detection/models/yolov8s_detect_best.pt"
         model_path = src_path + "soccer_object_detection/models/half_5.pt"
 
@@ -154,7 +154,7 @@ class TestPlaco(unittest.TestCase):
         )
         self.bez = Bez(robot_model="assembly", pose=Transformation(), fixed_base=True)
 
-        src_path = expanduser("~") + "/catkin_ws/src/soccerbot/soccer_perception/"
+        src_path = expanduser("~") + "/ros2_ws/src/soccerbot/soccer_perception/"
         model_path = src_path + "soccer_object_detection/models/yolov8s_detect_best.pt"
         model_path = src_path + "soccer_object_detection/models/half_5.pt"
 
@@ -306,14 +306,14 @@ class TestPlaco(unittest.TestCase):
         walk = Navigator(
             self.world, self.bez, imu_feedback_enabled=False, ball=True
         )  # note that ball=True if not foot_step_planner.head_movement fails
-        target_goal = [10.0, 0.0, 0.0, 10, 10]
+        target_goal = [0.0, 0.0, 0.0, 10, 10]
 
         for i in range(10000):
             walk.walk(target_goal)
             self.world.step()
 
     def test_camera(self):
-        src_path = expanduser("~") + "/catkin_ws/src/soccerbot/soccer_perception/"
+        src_path = expanduser("~") + "/ros2_ws/src/soccerbot/soccer_perception/"
         model_path = src_path + "soccer_object_detection/models/yolov8s_detect_best.pt"
         model_path = src_path + "soccer_object_detection/models/half_5.pt"
         detect = ObjectDetectionNode(model_path)

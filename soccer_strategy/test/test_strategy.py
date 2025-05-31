@@ -11,6 +11,7 @@ from soccer_object_detection.object_detect_node import ObjectDetectionNode
 from soccer_pycontrol.model.bez import Bez, BezStatusEnum
 from soccer_pycontrol.pybullet_usage.pybullet_world import PybulletWorld
 from soccer_pycontrol.walk_engine.navigator import Navigator
+from soccer_strategy.behavior.state.balance import Balance
 from soccer_trajectories.trajectory_manager_sim import TrajectoryManagerSim
 
 from soccer_common import Transformation
@@ -55,6 +56,32 @@ class TestStrategy(unittest.TestCase):
             self.world.step()
 
         self.assertTrue(True, "Completed the walk state without issues.")
+
+    def testbalance(self):
+        self.world = PybulletWorld(
+            camera_yaw=90,
+            real_time=REAL_TIME,
+            rate=200,
+        )
+        self.bez = Bez(robot_model="assembly", pose=Transformation())
+        nav = Navigator(self.world, self.bez, imu_feedback_enabled=False, ball=True)
+        tm = TrajectoryManagerSim(self.world, self.bez, "bez2_sim", "getupfront")
+
+        detect = None
+
+        context = BehaviorContext(self.world, self.bez, nav, tm, detect, sim=True)
+
+        target_goal = [0.0, 0.0, 0.0, 10, 10]
+
+        balance_state = Balance(target_goal)
+
+        context.state = balance_state
+
+        for i in range(1000):
+            context.run_state_algorithim()  # calls balance_state.run_algorithim()
+            self.world.step()
+
+        self.assertTrue(True, "Completed the balance state without issues.")
 
     def testcontextswitch(self):
         self.world = PybulletWorld(

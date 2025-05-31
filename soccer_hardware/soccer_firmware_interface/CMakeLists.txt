@@ -2,11 +2,11 @@ cmake_minimum_required(VERSION 3.0.2)
 project(soccer_firmware_interface)
 
 find_package(
-    catkin
+    ros2
     REQUIRED
     COMPONENTS rospy std_msgs sensor_msgs geometry_msgs control_msgs
 )
-catkin_package(
+ros2_package(
     CATKIN_DEPENDS
     rospy
     std_msgs
@@ -14,4 +14,4 @@ catkin_package(
     geometry_msgs
     control_msgs
 )
-catkin_python_setup()
+ros2_python_setup()

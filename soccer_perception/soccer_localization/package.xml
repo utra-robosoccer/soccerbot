@@ -6,7 +6,7 @@
     <maintainer email="jiashen.wang@mail.utoronto.ca">Jason</maintainer>
     <license>BSD</license>
 
-    <buildtool_depend>catkin</buildtool_depend>
+    <buildtool_depend>ros2</buildtool_depend>
     <depend>rospy</depend>
     <depend>soccer_common</depend>
 

@@ -4,15 +4,15 @@ project(soccer_trajectories)
 add_compile_options(-std=c++11)
 
 find_package(
-    catkin
+    ros2
     REQUIRED
     COMPONENTS dynamic_reconfigure tf2_ros rospy sensor_msgs rosgraph_msgs
                std_msgs
 )
 
-catkin_python_setup()
+ros2_python_setup()
 
-catkin_package(
+ros2_package(
     CATKIN_DEPENDS
     dynamic_reconfigure
     tf2_ros
@@ -22,4 +22,4 @@ catkin_package(
     std_msgs
 )
 
-include_directories(${catkin_INCLUDE_DIRS})
+include_directories(${ros2_INCLUDE_DIRS})

@@ -22,7 +22,7 @@ class KickPlanner:
 
         self.debug = debug
         self.robot_model = robot_model
-        model_filename = expanduser("~") + f"/catkin_ws/src/soccerbot/soccer_description/{robot_model}_description/urdf/robot.urdf"
+        model_filename = expanduser("~") + f"/ros2_ws/src/soccerbot/soccer_description/{robot_model}_description/urdf/robot.urdf"
 
         self.start_t = self.funct_time()
         # TODO is there too many global var
