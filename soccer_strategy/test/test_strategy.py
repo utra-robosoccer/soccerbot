@@ -7,6 +7,8 @@ import cv2
 import numpy as np
 import pybullet as pb
 import pytest
+from cv2 import rotate
+
 from soccer_object_detection.object_detect_node import ObjectDetectionNode
 from soccer_pycontrol.model.bez import Bez, BezStatusEnum
 from soccer_pycontrol.pybullet_usage.pybullet_world import PybulletWorld
@@ -18,6 +20,7 @@ from soccer_common import Transformation
 from soccer_strategy.behavior.behavior_context import BehaviorContext
 from soccer_strategy.behavior.state.get_up import GetUp
 from soccer_strategy.behavior.state.walk import Walk
+from soccer_strategy.behavior.state.rotate import Rotate
 
 # from soccer_msgs.msg import BoundingBox, BoundingBoxes
 
@@ -82,6 +85,33 @@ class TestStrategy(unittest.TestCase):
             self.world.step()
 
         self.assertTrue(True, "Completed the balance state without issues.")
+
+    def testRotate(self):
+        self.world = PybulletWorld(
+            camera_yaw=90,
+            real_time=REAL_TIME,
+            rate=200,
+        )
+        self.bez = Bez(robot_model="assembly", pose=Transformation())
+        nav = Navigator(self.world, self.bez, imu_feedback_enabled=False, ball=True)
+        tm = TrajectoryManagerSim(self.world, self.bez, "bez2_sim", "getupfront")
+
+        detect = None
+
+        context = BehaviorContext(self.world, self.bez, nav, tm, detect, sim=True)
+        
+        # rotate clockwise
+        clockwise = False
+
+        rotate_state = Rotate(clockwise)
+
+        context.state = rotate_state
+
+        for i in range(1000):
+            context.run_state_algorithim()  # calls balance_state.run_algorithim()
+            self.world.step()
+
+        self.assertTrue(True, "Rotated robot clockwise without issues.")
 
     def testcontextswitch(self):
         self.world = PybulletWorld(
