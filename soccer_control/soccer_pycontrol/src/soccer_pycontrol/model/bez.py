@@ -14,6 +14,7 @@ class BezStatusEnum(enum.IntEnum):
     FIND_BALL = 1
     WALK = 2
     FALLEN = 3
+    ROTATING = 4
 
 
 class Bez:
@@ -33,6 +34,8 @@ class Bez:
         self.robot_model = robot_model
         self.parameters = self.get_parameters()
         self._status = status
+        self._body_status = status
+        self._head_status = status
 
         self.model = LoadModel(self.robot_model, self.parameters["walking_torso_height"], pose, fixed_base)
 
@@ -47,6 +50,22 @@ class Bez:
     @status.setter
     def status(self, status: BezStatusEnum) -> None:
         self._status = status
+
+    @property
+    def head_status(self) -> BezStatusEnum:
+        return self._head_status
+
+    @head_status.setter
+    def head_status(self, status: BezStatusEnum) -> None:
+        self._head_status = status
+
+    @property
+    def body_status(self) -> BezStatusEnum:
+        return self._body_status
+
+    @body_status.setter
+    def body_status(self, status: BezStatusEnum) -> None:
+        self._body_status = status
 
     def get_parameters(self) -> dict:
         with open(
