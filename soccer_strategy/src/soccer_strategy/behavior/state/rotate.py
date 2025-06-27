@@ -14,21 +14,43 @@ class Rotate(Behavior):
 
     def action(self) -> None:
         self.bez.status = BezStatusEnum.BALANCE
+        self.nav.reset_walk()
 
     def run_algorithim(self) -> None:
-        # rotate +- 90 degrees
+        pose = self.bez.sensors.get_pose()
+        pos = pose.position
 
+        # rotate +- 90 degrees from current pos
         if self._clockwise:
             # yaw=-90°, pitch=0, roll=0
-            target_goal = Transformation(position=[0, 0, 0], euler=[-np.pi / 2, 0, 0])
+            target_goal = Transformation(pos, euler=[-np.pi / 2, 0, 0])
         else:
-            target_goal = Transformation(position=[0, 0, 0], euler=[np.pi / 2, 0, 0])
+            target_goal = Transformation(pos, euler=[np.pi / 2, 0, 0])
+
 
         self.nav.walk(target_goal)
 
-        if not self.nav.enable_walking:
-            self.nav.wait(200)
-            # self.context.transition_to(Kick())  # should we transition to walk from balance?
+        # simulating finding the ball (if ball still not found, rotate again)
+        if self.nav.t > 5 and self.bez.found_ball == False:
+            self.context.transition_to(Rotate(clockwise=True))
+
+        elif self.bez.found_ball:
+            self.bez.head_status = BezStatusEnum.WALK
+            # TODO: where to walk after finding the ball
+
+        # check if fallen
+        from soccer_strategy.behavior.state.get_up import GetUp
+        y, p, r = self.bez.sensors.get_imu()
+
+        if p > 1.25:
+            self.context.transition_to(GetUp("getupfront"))
+        elif p < -1.25:
+            print("getupback: ")
+            self.context.transition_to(GetUp("getupback"))
+        elif r < -1.54:
+            self.context.transition_to(GetUp("getupsideleft"))
+        elif r > 1.54:
+            self.context.transition_to(GetUp("getupsideright"))
 
     def ready_to_switch_to(self) -> bool:
         return True

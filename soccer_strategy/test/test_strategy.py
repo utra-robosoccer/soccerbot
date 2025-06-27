@@ -140,6 +140,33 @@ class TestStrategy(unittest.TestCase):
 
         self.assertTrue(True, "Completed the walk state without issues.")
 
+    def testFindingBall(self):
+        self.world = PybulletWorld(
+            camera_yaw=90,
+            real_time=REAL_TIME,
+            rate=200,
+        )
+        self.bez = Bez(robot_model="assembly", pose=Transformation())
+        nav = Navigator(self.world, self.bez, imu_feedback_enabled=False, ball=True)
+        tm = TrajectoryManagerSim(self.world, self.bez, "bez2_sim", "getupfront")
+
+        detect = None
+
+        context = BehaviorContext(self.world, self.bez, nav, tm, detect, sim=True)
+
+        target_goal = [0.0, 0.0, 0.0, 10, 10]
+
+        balance_state = Balance(target_goal)
+
+        context.state = balance_state
+
+        for i in range(10000):
+            # can simulate behavior exec by checking is fallen on every iteration, testplaco auto
+            context.run_state_algorithim()
+            self.world.step()
+
+        self.assertTrue(True, "Searched for the ball without issues.")
+
     def testforfall(self):
         self.world = PybulletWorld(
             camera_yaw=90,

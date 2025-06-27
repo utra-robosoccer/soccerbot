@@ -187,6 +187,8 @@ class KickPlanner:
             point_viz("com", self.robot.com_world(), radius=0.025, color=0xAAAAAA)
             point_viz("ball", ball, radius=0.05, color=0xDDDDDD)
 
+    def is_done(self, t: float) -> bool:
+        return t >= 0.4
 
 # if __name__ == "__main__":
 #     walk = FootStepPlanner("bez1", time.time, debug=True)

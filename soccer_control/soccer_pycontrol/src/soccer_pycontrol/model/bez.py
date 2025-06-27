@@ -30,12 +30,14 @@ class Bez:
         pose: Transformation = Transformation(),
         fixed_base: bool = False,
         status: BezStatusEnum = BezStatusEnum.BALANCE,
+        found_ball: bool = False,
     ):
         self.robot_model = robot_model
         self.parameters = self.get_parameters()
         self._status = status
         self._body_status = status
         self._head_status = status
+        self._found_ball = found_ball
 
         self.model = LoadModel(self.robot_model, self.parameters["walking_torso_height"], pose, fixed_base)
 
@@ -66,6 +68,14 @@ class Bez:
     @body_status.setter
     def body_status(self, status: BezStatusEnum) -> None:
         self._body_status = status
+
+    @property
+    def found_ball(self) -> bool:
+        return self._found_ball
+
+    @found_ball.setter
+    def found_ball(self, status: bool) -> None:
+        self._found_ball = status
 
     def get_parameters(self) -> dict:
         with open(

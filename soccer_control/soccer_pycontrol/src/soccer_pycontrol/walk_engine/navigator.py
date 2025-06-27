@@ -103,6 +103,9 @@ class Navigator:
 
         self.t2 = self.kick_planner.step(self.t2)
 
+    def kick_finished(self):
+        return self.kick_planner.is_done(self.t2)
+
     # TODO could make input a vector
     def walk(self, target_goal: Union[Transformation, List], ball_pixel: list = (), ball_mode: bool = False, display_metrics: bool = False):
         if self.enable_walking:
