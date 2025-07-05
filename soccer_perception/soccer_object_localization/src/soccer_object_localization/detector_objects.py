@@ -10,7 +10,7 @@
 #
 # from soccer_msgs.msg import RobotState
 #
-# import rospy
+# import rclpy
 # from geometry_msgs.msg import Pose2D
 # from sensor_msgs.msg import JointState
 # from soccer_object_localization.detector import Detector
@@ -27,9 +27,9 @@
 # class DetectorObjects(Detector):
 #     def __init__(self):
 #         super().__init__()
-#         # self.bounding_boxes_sub = rospy.Subscriber("object_bounding_boxes", BoundingBoxes, self.objectDetectorCallback,
+#         # self.bounding_boxes_sub = self.create_subscription("object_bounding_boxes", BoundingBoxes, self.objectDetectorCallback,
 #         #                                            queue_size=1)
-#         # self.ball_pixel_publisher = rospy.Publisher("ball_pixel", Pose2D, queue_size=1)
+#         # self.ball_pixel_create_publisher = self.create_publisher("ball_pixel", Pose2D, queue_size=1)
 #
 #         self.last_ball_pose = None
 #         self.last_ball_pose_counter = 0
@@ -42,7 +42,7 @@
 #         # Exclude weirdly shaped balls
 #         ratio = (box.ymax - box.ymin) / (box.xmax - box.xmin)
 #         if ratio > 2 or ratio < 0.5:
-#             # rospy.logwarn_throttle(1,
+#             # self.logwarn_throttle(1,
 #             #                        f"Excluding weirdly shaped ball {box.ymax - box.ymin} x {box.xmax - box.xmin}")
 #             return True
 #
@@ -53,7 +53,7 @@
 #         camera_to_ball = np.linalg.inv(self.camera.pose) @ ball_pose
 #         detection_size = (box.ymax - box.ymin) * (box.xmax - box.xmin)
 #
-#         # rospy.loginfo_throttle(
+#         # self.get_logger().error(
 #         #     5,
 #         #     f"Candidate Ball Position {candidate_ball_counter}: {ball_pose.position[0]} {ball_pose.position[1]}, detection_size {detection_size}",
 #         # )
@@ -65,8 +65,8 @@
 #
 #         # If it is the first ball, we need high confidence
 #         if self.last_ball_pose is None:
-#             if box.probability < rospy.get_param("~first_ball_detection_confidence_threshold", 0.78):
-#                 # rospy.logwarn_throttle(0.5,
+#             if box.probability < self.get_param("~first_ball_detection_confidence_threshold", 0.78):
+#                 # self.logwarn_throttle(0.5,
 #                 #                        f"Ignoring first pose of ball with low confidence threshold {box.probability}")
 #                 return True
 #
@@ -76,7 +76,7 @@
 #                 pass
 #             elif np.linalg.norm(ball_pose.position[0:2] - self.last_ball_pose.position[
 #                                                           0:2]) > 3:  # meters from previous position
-#                 # rospy.logwarn_throttle(
+#                 # self.logwarn_throttle(
 #                 #     0.5,
 #                 #     f"Detected a ball too far away ({self.last_ball_pose_counter}), Last Location {self.last_ball_pose.position[0:2]} Detected Location {ball_pose.position[0:2]}",
 #                 # )
@@ -109,7 +109,7 @@
 #         self.camera.reset_position(timestamp=msg.header.stamp, from_world_frame=True, skip_if_not_found=True)
 #         # e = time.time()
 #         # if e - s > 1:
-#         #     rospy.logerr_throttle(1, f"Resetting camera position took longer than usual ({e - s}) seconds")
+#         #     self.get_logger().error(1, f"Resetting camera position took longer than usual ({e - s}) seconds")
 #
 #         # Ball
 #         self.max_detection_size = 0
@@ -140,12 +140,12 @@
 #                         #     self.robot_name + f"/obstacle_{obstacle_counter}",
 #                         #     self.robot_name + "/camera",
 #                         # )
-#                         # rospy.loginfo(f"Obstacle {obstacle_counter} detected at [{pos}] {floor_coordinate_robot} {camera_to_obstacle.position}")
+#                         # self.loginfo(f"Obstacle {obstacle_counter} detected at [{pos}] {floor_coordinate_robot} {camera_to_obstacle.position}")
 #                         obstacle_counter += 1
 #
 #         if self.final_camera_to_ball is not None:
 #             pass
-#             # self.ball_pixel_publisher.publish(final_ball_pixel)
+#             # self.ball_pixel_create_publisher.publish(final_ball_pixel)
 #             # self.br.sendTransform(
 #             #     self.final_camera_to_ball.position,
 #             #     self.final_camera_to_ball.quaternion,
@@ -153,13 +153,13 @@
 #             #     self.robot_name + "/ball",
 #             #     self.robot_name + "/camera",
 #             # )
-#             # rospy.loginfo_throttle(
+#             # self.get_logger().error(
 #             #     1,
 #             #     f"\u001b[1m\u001b[34mBall detected [{self.last_ball_pose.position[0]:.3f}, {self.last_ball_pose.position[1]:.3f}] \u001b[0m",
 #             # )
 #         return final_ball_pixel, camera_to_obstacle, obstacle_counter
 #
 # # if __name__ == "__main__":
-# # rospy.init_node("ball_detector")
+# # self.init_node("ball_detector")
 # # ball_detector = DetectorObjects()
-# # rospy.spin()
+# # self.spin()

@@ -4,21 +4,38 @@ from soccer_pycontrol.model.bez import Bez
 from soccer_pycontrol.walk_engine.foot_step_planner import FootStepPlanner
 from soccer_pycontrol.walk_engine.stabilize import Stabilize
 
-from soccer_common import Transformation
+from soccer_common import Transformation, PID
 
 
 # TODO could make it more modular by passing in pybullet stuff or have it at one layer higher so we can reuse code
 # TODO change to trajectory controller
 class Walker:
     def __init__(self, bez: Bez, planner: FootStepPlanner, imu_feedback_enabled: bool = False):
+        self.ball_dx = 0
+        self.ball_dy = 0.7
         self.bez = bez
         self.imu_feedback_enabled = imu_feedback_enabled
         self.foot_step_planner = planner
         self.pid = Stabilize(self.bez.parameters)
-
+        self.last_ball = [0, 0]
         self.t = None
         self.enable_walking = None
         self.reset_walk()
+        self.ball_x_pid = PID(
+            Kp=0.05,
+            Kd=0,
+            Ki=0.03,
+            setpoint=0,
+            output_limits=(-1.57, 1.57),
+        )
+
+        self.ball_y_pid = PID(
+            Kp=-0.05,
+            Kd=0,
+            Ki=-0.03,
+            setpoint=2.4,
+            output_limits=(0.4, 1.3),
+        )
 
     def reset_walk(self):
         self.t = -1
@@ -26,7 +43,7 @@ class Walker:
 
     # TODO could make input a vector
 
-    def walk_loop(self, target_goal: List[float] = (0, 0, 0)):  # TODO set default to something better
+    def walk_loop(self, target_goal,ball_pixel):  # TODO set default to something better
         self.foot_step_planner.plan_steps(self.t)
         self.bez.motor_control.set_angles_from_placo(self.foot_step_planner.robot)
 
@@ -35,7 +52,16 @@ class Walker:
             # print(pitch,"  ", roll)
             self.stabilize_walk(pitch, roll)
 
-        self.foot_step_planner.head_movement(target_goal)
+        # self.foot_step_planner.head_movement(target_goal)
+        if ball_pixel != self.last_ball:
+            # self.foot_step_planner.head_movement(target_goal.position)
+
+            self.last_ball = ball_pixel
+            self.ball_dx = self.ball_x_pid.update(3.2 - ball_pixel[0]/100.0)
+            self.ball_dy = self.ball_y_pid.update(ball_pixel[1]/100.0)
+        # print(f"{ball_pixel}, {self.ball_dx}, {self.ball_dy}")
+        self.bez.motor_control.configuration["head_yaw"] = self.ball_dx
+        self.bez.motor_control.configuration["head_pitch"] = self.ball_dy
 
         # self.bez.motor_control.configuration["head_yaw"] = self.ball_dx
         # self.bez.motor_control.configuration["head_pitch"] = 0.7
@@ -48,13 +74,24 @@ class Walker:
         # self.bez.motor_control.configuration["head_pitch"] = 0.7
         # self.bez.motor_control.set_single_motor("head_yaw", 0.7)
         # self.bez.motor_control.set_right_leg_target_angles(
-        #     [0.031498273770675496, 0.13013599705387854, 0.8763616115800654, -1.4338038100846235, 0.5569438675976406, -0.09870240716415977]
+        #     [-0.04679783928424319,
+        #      0.08362236855709071,
+        #      0.6283185307179586,
+        #      -1.3172440991974792,
+        #      0.7664105154911365,
+        #      -0.1051033439662521]
         # )
         # self.bez.motor_control.set_left_leg_target_angles(
-        #     [-0.031396938877692564, 0.07407130663246327, 0.8245393702946127, -1.3833448587348056, 0.5583100126857369, -0.10550492155783667]
+        #     [-0.04679783928424319,
+        #      0.08362236855709071,
+        #      0.6283185307179586,
+        #      -1.3172440991974792,
+        #      0.7664105154911365,
+        #      -0.1051033439662521]
         # )
-        self.bez.motor_control.set_right_leg_target_angles([0, 0, 0, 0, 0, 0])
-        self.bez.motor_control.set_left_leg_target_angles([0, 0, 0, 0, 0, 0])
+        # self.bez.motor_control.set_single_motor("head_pitch", 0.99)
+        # self.bez.motor_control.set_right_leg_target_angles([0, 0, 0, 0, 0, 0])
+        # self.bez.motor_control.set_left_leg_target_angles([0, 0, 0, 0, 0, 0])
         # self.bez.motor_control.set_head_target_angles(
         #     [0, 0])
         self.bez.motor_control.set_motor()

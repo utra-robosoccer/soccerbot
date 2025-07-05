@@ -3,15 +3,15 @@ import os
 
 if "ROS_NAMESPACE" not in os.environ:
     os.environ["ROS_NAMESPACE"] = "/robot1"
-import rospy
+import rclpy
 
 from soccer_strategy.old.game_engine_3d import GameEngine3D
 
 if __name__ == "__main__":
-    rospy.init_node("soccer_strategy")
+    self.init_node("soccer_strategy")
     g = GameEngine3D()
     try:
         g.run()
-    except (rospy.exceptions.ROSException, KeyboardInterrupt) as ex:
+    except (self.exceptions.ROSException, KeyboardInterrupt) as ex:
         print(ex)
         exit(0)

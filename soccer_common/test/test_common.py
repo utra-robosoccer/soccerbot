@@ -1,7 +1,7 @@
 from unittest import TestCase
 
 import numpy as np
-import rospy
+import rclpy
 from sensor_msgs.msg import CameraInfo
 
 from soccer_common.transformation import Transformation

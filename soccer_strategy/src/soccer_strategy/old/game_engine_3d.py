@@ -1,7 +1,7 @@
 import os
 from typing import Union
 
-import rospy
+import rclpy
 
 from soccer_msgs.msg import GameState
 from soccer_strategy.old.ball import Ball
@@ -41,7 +41,7 @@ def decide_next_strategy(strategy, gameState: GameState, this_robot):
         elif this_robot.status == Robot.Status.DETERMINING_SIDE:
             new_strategy = StrategyDetermineSide
         elif this_robot.role != Robot.Role.UNASSIGNED:
-            if rospy.get_param("skip_ready_strategy", False):
+            if self.get_param("skip_ready_strategy", False):
                 new_strategy = StrategyDummy
             else:
                 new_strategy = StrategyReady
@@ -99,9 +99,9 @@ class GameEngine3D:
         """
         Initializes the game engine information
         """
-        self.robot_id = rospy.get_param("robot_id", 1)
+        self.robot_id = self.get_param("robot_id", 1)
         team_id = int(os.getenv("ROBOCUP_TEAM_ID", "16"))
-        rospy.loginfo(f"Initializing strategy with robot id: {self.robot_id},  team id:  {team_id}")
+        self.loginfo(f"Initializing strategy with robot id: {self.robot_id},  team id:  {team_id}")
 
         robots: [Union[RobotObserved, RobotControlled3D]] = []
         for i in range(1, 5):
@@ -124,7 +124,7 @@ class GameEngine3D:
         # GameState
         self.gameState = GameState()
         self.gameState.gameState = GameState.GAMESTATE_READY
-        self.game_state_subscriber = rospy.Subscriber("gamestate", GameState, self.gamestate_callback)
+        self.game_state_create_subscription = self.create_subscription("gamestate", GameState, self.gamestate_callback)
 
     @property
     def this_robot(self) -> RobotControlled3D:
@@ -162,7 +162,7 @@ class GameEngine3D:
         Main loop for the strategy execution
         """
 
-        while not rospy.is_shutdown():
+        while not self.is_shutdown():
 
             # Decide what strategy to run
             new_strategy = decide_next_strategy(strategy=self.strategy, gameState=self.gameState, this_robot=self.this_robot)
@@ -172,10 +172,10 @@ class GameEngine3D:
             # Log information about the strategy and run the strategy in the step_strategy function
             penalize_str = f"(P{self.gameState.penalty} - {self.gameState.secondsTillUnpenalized})" if self.gameState.penalty != 0 else ""
             print(
-                f"\033[1mRobot {self.robot_id} Running {str(type(self.strategy))} ({self.strategy.iteration}) | Game State: {GameEngine3D.GAMESTATE_LOOKUP[self.gameState.gameState]}, Secondary State: {GameEngine3D.SECONDARY_STATE_LOOKUP[self.gameState.secondaryState]}, Secondary State Mode: {GameEngine3D.SECONDARY_STATE_MODE_LOOKUP[self.gameState.secondaryStateMode]} {penalize_str} [{rospy.Time.now().secs}.{rospy.Time.now().nsecs}]\033[0m"
+                f"\033[1mRobot {self.robot_id} Running {str(type(self.strategy))} ({self.strategy.iteration}) | Game State: {GameEngine3D.GAMESTATE_LOOKUP[self.gameState.gameState]}, Secondary State: {GameEngine3D.SECONDARY_STATE_LOOKUP[self.gameState.secondaryState]}, Secondary State Mode: {GameEngine3D.SECONDARY_STATE_MODE_LOOKUP[self.gameState.secondaryStateMode]} {penalize_str} [{self.get_clock().now().secs}.{self.get_clock().now().nsecs}]\033[0m"
             )
             self.team1.log()
             self.strategy.step_strategy(self.team1, self.team2, self.gameState)
 
             # Sleep for a determined period of time decided by the strategy
-            rospy.sleep(self.strategy.update_frequency)
+            self.sleep(self.strategy.update_frequency)

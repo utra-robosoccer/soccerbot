@@ -1,4 +1,6 @@
 <?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format2.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+
 <package format="3">
     <name>soccer_trajectories</name>
     <version>0.0.0</version>
@@ -8,13 +10,16 @@
 
     <license>BSD</license>
 
-    <buildtool_depend>catkin</buildtool_depend>
-    <depend>dynamic_reconfigure</depend>
-    <depend>ros_control</depend>
-    <depend>python3-scipy</depend>
+    <depend>rclpy</depend>
+
+<!--    <depend>python3-scipy</depend>-->
     <depend>tf2_ros</depend>
     <depend>sensor_msgs</depend>
     <depend>rosgraph_msgs</depend>
     <depend>std_msgs</depend>
-    <depend>rospy</depend>
+
+
+    <export>
+        <build_type>ament_python</build_type>
+    </export>
 </package>

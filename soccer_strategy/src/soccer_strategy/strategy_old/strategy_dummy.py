@@ -1,7 +1,7 @@
 import math
 
 import numpy as np
-import rospy
+import rclpy
 
 from soccer_common.utils import wrapTo2Pi
 from soccer_msgs.msg import GameState
@@ -21,7 +21,7 @@ class StrategyDummy(Strategy):
     """
 
     def __init__(self):
-        self.time_of_end_of_action = rospy.Time.now()
+        self.time_of_end_of_action = self.get_clock().now()
         self.update_frequency = 1
         super(StrategyDummy, self).__init__()
 
@@ -48,7 +48,7 @@ class StrategyDummy(Strategy):
             Robot.Status.FALLEN_SIDE,
             Robot.Status.GETTING_BACK_UP,
         ]:
-            self.time_of_end_of_action = rospy.Time.now()
+            self.time_of_end_of_action = self.get_clock().now()
             return
 
         # If the ball has been seen in the last 2 seconds
@@ -78,11 +78,11 @@ class StrategyDummy(Strategy):
                     # Initial kick off
                     if game_state.secondary_seconds_remaining != 0:
                         if not game_state.hasKickOff:
-                            rospy.loginfo_throttle(15, f"Team {this_robot.team.name} waiting for other team to kickoff")
+                            self.get_logger().error(15, f"Team {this_robot.team.name} waiting for other team to kickoff")
                             return
 
                     # Ball localized, move to ball
-                    if (rospy.Time.now() - this_robot.robot_focused_on_ball_time) < rospy.Duration(2):
+                    if (self.get_clock().now() - this_robot.robot_focused_on_ball_time) < self.Duration(2):
                         blocked_position = Utility.is_obstacle_blocking(this_robot, this_robot.position[0:2], ball.position)
                         if blocked_position is not None:
                             optimal_pos = Utility.optimal_position_to_navigate_if_blocking(
@@ -90,7 +90,7 @@ class StrategyDummy(Strategy):
                             )
                             Utility.navigate_to_position_with_offset(this_robot, optimal_pos, np.array(ball.position[0:2]), 0)
                         else:
-                            rospy.loginfo("Navigation to ball")
+                            self.loginfo("Navigation to ball")
                             blocked_position = Utility.is_obstacle_blocking(this_robot, ball.position, goal_position)
                             if blocked_position is not None:
                                 optimal_pos = Utility.optimal_position_to_navigate_if_blocking(
@@ -99,7 +99,7 @@ class StrategyDummy(Strategy):
                                 Utility.navigate_to_position_with_offset(this_robot, np.array(ball.position[0:2]), optimal_pos)
                             else:
                                 Utility.navigate_to_scoring_position(this_robot, np.array(ball.position[0:2]), goal_position)
-                    elif this_robot.observed_ball is None or (rospy.Time.now() - this_robot.observed_ball.last_observed_time_stamp) > rospy.Duration(
+                    elif this_robot.observed_ball is None or (self.get_clock().now() - this_robot.observed_ball.last_observed_time_stamp) > self.Duration(
                         2
                     ):
                         # Other robot sees the ball but this robot is not seeing the ball, then turn to face the ball
@@ -107,7 +107,7 @@ class StrategyDummy(Strategy):
                         player_position = this_robot.position[0:2]
 
                         # Haven't seen the ball timeout
-                        rospy.loginfo(f"Player {this_robot.robot_id}: Rotating to locate ball that other robot found {ball.position}")
+                        self.loginfo(f"Player {this_robot.robot_id}: Rotating to locate ball that other robot found {ball.position}")
                         robot_to_ball = ball.position - player_position
                         angle = np.arctan2(robot_to_ball[1], robot_to_ball[0])
 
@@ -120,15 +120,15 @@ class StrategyDummy(Strategy):
         # If the ball hasn't been seen in 10 seconds
         elif (
             friendly_team.observed_ball is None
-            or rospy.Time.now() - friendly_team.observed_ball.last_observed_time_stamp
-            > rospy.Duration(rospy.get_param("delay_before_rotate_to_search_ball", 10))
-        ) and rospy.Time.now() - self.time_of_end_of_action > rospy.Duration(rospy.get_param("delay_before_rotate_to_search_ball", 10)):
+            or self.get_clock().now() - friendly_team.observed_ball.last_observed_time_stamp
+            > self.Duration(self.get_param("delay_before_rotate_to_search_ball", 10))
+        ) and self.get_clock().now() - self.time_of_end_of_action > self.Duration(self.get_param("delay_before_rotate_to_search_ball", 10)):
             if this_robot.status not in [Robot.Status.WALKING, Robot.Status.KICKING]:
                 player_angle = this_robot.position[2]
                 player_position = this_robot.position[0:2]
 
                 # Haven't seen the ball timeout
-                rospy.loginfo(
+                self.loginfo(
                     f"Player {this_robot.robot_id}: Rotating to locate ball. Time of End of Action {self.time_of_end_of_action}, Last Observed Time Stamp {friendly_team.observed_ball.last_observed_time_stamp if friendly_team.observed_ball is not None else 0}"
                 )
 

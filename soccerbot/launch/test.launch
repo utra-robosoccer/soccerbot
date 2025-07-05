@@ -37,7 +37,7 @@
         />
         <include file="$(find soccerbot)/launch/modules/communication.launch" if="$(arg simulation)" />
 
-        <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" />
+        <node pkg="robot_state_create_publisher" type="robot_state_create_publisher" name="robot_state_create_publisher" />
 
 <!--        <include file="$(find soccerbot)/launch/modules/control.launch">-->
 <!--            <arg name="simulation" value="$(arg simulation)" />-->

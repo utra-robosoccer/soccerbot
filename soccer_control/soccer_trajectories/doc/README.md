@@ -37,7 +37,7 @@ Control
             f"/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill {robot_ns}/soccer_strategy {robot_ns}/soccer_pycontrol {robot_ns}/soccer_trajectories'"
         )
 
-        rospy.init_node("soccer_control")
+        self.init_node("soccer_control")
 
         bez = BezROS()
         walker = NavigatorRos(bez)

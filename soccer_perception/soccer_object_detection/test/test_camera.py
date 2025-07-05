@@ -50,7 +50,7 @@ class TestCamera(TestCase):
         self.assertAlmostEqual(p3[1], 240 / 2, delta=0.5)
 
     def test_calculate_bounding_boxes_from_ball(self):
-        # rospy.init_node("test")
+        # self.init_node("test")
 
         for cam_angle in [0, 0.1, -0.1]:
 

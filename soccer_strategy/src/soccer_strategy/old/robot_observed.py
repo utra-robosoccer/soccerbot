@@ -1,5 +1,5 @@
 import numpy as np
-import rospy
+import rclpy
 import tf
 import tf.transformations
 
@@ -12,7 +12,7 @@ class RobotObserved(Robot):
     def __init__(self, robot_id=0, team=Robot.Team.UNKNOWN, role=Robot.Role.UNASSIGNED, status=Robot.Status.DISCONNECTED):
         super().__init__(robot_id=robot_id, team=team, role=role, status=status)
 
-        self.robot_state_subscriber = rospy.Subscriber("/robot" + str(self.robot_id) + "/state", RobotState, self.robot_state_callback)
+        self.robot_state_create_subscription = self.create_subscription("/robot" + str(self.robot_id) + "/state", RobotState, self.robot_state_callback)
 
     def robot_state_callback(self, r: RobotState):
         """

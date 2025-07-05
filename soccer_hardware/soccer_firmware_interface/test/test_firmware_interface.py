@@ -10,8 +10,8 @@ import logging
 import math
 import time
 
-import rosparam
-import rospy
+
+import rclpy
 import serial
 import yaml
 from sensor_msgs.msg import JointState
@@ -50,11 +50,8 @@ def test_send_command():
 
 
 def test_firmware_interface():
-    rospy.init_node("firmware_interface")
-    rospy.set_param("motor_mapping", os.path.dirname(os.path.realpath(__file__)) + "/../config/bez2.yaml")
-    rospy.set_param("motor_types", os.path.dirname(os.path.realpath(__file__)) + "/../config/motor_types.yaml")
-
-    f = FirmwareInterface()
+    f = FirmwareInterface(os.path.dirname(os.path.realpath(__file__)) + "/../config/motor_types.yaml",
+                          os.path.dirname(os.path.realpath(__file__)) + "/../config/bez2.yaml")
 
     for i in range(50000):
         j = JointState()
@@ -92,18 +89,16 @@ def test_firmware_interface():
         # j.position[0] = ang
         # j.position[1] = ang
 
-        j.header.stamp = rospy.Time.now()
+        j.header.stamp = f.get_clock().now()
 
         f.joint_command_callback(j)
 
         time.sleep(0.01)
 
 def test_firmware_interface_single_motor_range(motor_name: str = "left_knee"):
-    rospy.init_node("firmware_interface")
-    rospy.set_param("motor_mapping", os.path.dirname(os.path.realpath(__file__)) + "/../config/bez2.yaml")
-    rospy.set_param("motor_types", os.path.dirname(os.path.realpath(__file__)) + "/../config/motor_types.yaml")
-
-    f = FirmwareInterface()
+    f = FirmwareInterface(os.path.dirname(os.path.realpath(__file__)) + "/../config/motor_types.yaml",
+                          os.path.dirname(os.path.realpath(__file__)) + "/../config/bez2.yaml")
+    x = f.create_rate(1/0.1, f.get_clock())
     motor_range = np.linspace(-np.pi,np.pi)
     for i in motor_range:
         j = JointState()
@@ -138,10 +133,10 @@ def test_firmware_interface_single_motor_range(motor_name: str = "left_knee"):
         # j.position[j.name.index("head_pitch")] = i
 
 
-        j.header.stamp = rospy.Time.now()
+        j.header.stamp = f.get_clock().now()
 
         f.joint_command_callback(j)
-        rospy.sleep(0.1)
+        x.sleep()
         time.sleep(0.1)
 
     for i in range(100):
@@ -179,7 +174,7 @@ def test_firmware_interface_single_motor_range(motor_name: str = "left_knee"):
         # j.position[0] = ang
         # j.position[1] = ang
 
-        j.header.stamp = rospy.Time.now()
+        j.header.stamp = f.get_clock().now()
 
         f.joint_command_callback(j)
 
@@ -187,14 +182,14 @@ def test_firmware_interface_single_motor_range(motor_name: str = "left_knee"):
 
 
 def test_firmware_interface_normal():
-    rospy.init_node("firmware_interface")
-    rospy.set_param("motor_mapping", os.path.dirname(os.path.realpath(__file__)) + "/../../config/bez2.yaml")
-    rospy.set_param("motor_types", os.path.dirname(os.path.realpath(__file__)) + "/../../config/motor_types.yaml")
+    self.init_node("firmware_interface")
+    self.set_param("motor_mapping", os.path.dirname(os.path.realpath(__file__)) + "/../../config/bez2.yaml")
+    self.set_param("motor_types", os.path.dirname(os.path.realpath(__file__)) + "/../../config/motor_types.yaml")
 
-    rospy.loginfo("Initializing Soccer Firmware")
+    self.loginfo("Initializing Soccer Firmware")
     f = FirmwareInterface()
-    rospy.loginfo("Starting Firmware")
+    self.loginfo("Starting Firmware")
     try:
-        rospy.spin()
-    except rospy.exceptions.ROSException as ex:
+        self.spin()
+    except self.exceptions.ROSException as ex:
         exit(0)

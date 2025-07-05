@@ -33,6 +33,7 @@ class Navigator:
         record_walking_metrics: bool = True,
         sim: bool = True,
     ):
+
         self.world = world
         self.bez = bez
         self.imu_feedback_enabled = imu_feedback_enabled
@@ -74,12 +75,13 @@ class Navigator:
         self.record_walking_metrics = record_walking_metrics
         self.walking_data = defaultdict(list)
 
+
     # TODO could make input a vector
-    def walk(self, target_goal: Union[Transformation, List], ball_mode: bool = False, display_metrics: bool = False):
+    def walk(self, target_goal: Union[Transformation, List],ball_pixel, ball_mode: bool = False, display_metrics: bool = False):
         if self.walker.enable_walking:
             if isinstance(target_goal, Transformation):
                 if ball_mode:
-                    self.walk_ball(target_goal)
+                    self.walk_ball(target_goal, ball_pixel)
                 else:
                     self.walk_pose(target_goal)
             elif isinstance(target_goal, list):  # [d_x: float = 0.0, d_y: float = 0.0, d_theta: float = 0.0, nb_steps: int = 10, t_goal: float = 10]
@@ -143,7 +145,7 @@ class Navigator:
             self.ready()
             self.walker.enable_walking = False
 
-    def walk_ball(self, target_goal: Transformation):
+    def walk_ball(self, target_goal: Transformation, ball_pixel):
         if self.walker.t < 0:
             self.walker.pid.reset_imus()
 
@@ -179,7 +181,7 @@ class Navigator:
             # print(round(dx, 3), " ", round(dy, 3), " ", round(dtheta, 3), " ", round(x_error, 3), " ", round(y_error, 3), " ", round(head_error, 3))
             self.foot_step_planner.configure_planner(dx, dy, dtheta)
 
-            self.walker.walk_loop(target_goal.position)
+            self.walker.walk_loop(target_goal.position,ball_pixel)
         # else:
         #     self.ready()
         #     self.walker.enable_walking = False
@@ -203,8 +205,8 @@ class Navigator:
         self.bez.motor_control.configuration["left_shoulder_roll"] = 0.1
         self.bez.motor_control.configuration["right_shoulder_roll"] = 0.1
 
-        # self.bez.motor_control.set_single_motor("head_yaw", 0)
-        # self.bez.motor_control.set_single_motor("head_pitch", 0.7)
+        self.bez.motor_control.set_single_motor("head_yaw", self.walker.ball_dx)
+        self.bez.motor_control.set_single_motor("head_pitch", 0.7)
         self.bez.motor_control.set_motor()
 
     def display_walking_metrics(self, show_targets: bool = False) -> None:

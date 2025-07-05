@@ -15,19 +15,19 @@ import os
 if "ROS_NAMESPACE" not in os.environ:
     os.environ["ROS_NAMESPACE"] = "/robot1"
 import numpy as np
-import rospy
+import rclpy
 
 np.set_printoptions(precision=3)
 
 
 if __name__ == "__main__":
-    rospy.init_node("soccer_control")
-    rospy.loginfo("Initializing Soccer Control")
+    self.init_node("soccer_control")
+    self.loginfo("Initializing Soccer Control")
     ns = "/robot1/"
     bez = BezROS(ns=ns)
     walker = NavigatorRos(bez)
-    rospy.loginfo("Starting Control Loop")
+    self.loginfo("Starting Control Loop")
     try:
         walker.walk(d_x=0.00, t_goal=10)
-    except rospy.exceptions.ROSException as ex:
+    except self.exceptions.ROSException as ex:
         exit(0)

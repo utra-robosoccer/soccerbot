@@ -1,7 +1,7 @@
 import os
 
 import numpy as np
-import rospy
+import rclpy
 import tf
 import tf2_py
 from nav_msgs.msg import Odometry
@@ -16,10 +16,10 @@ class SensorsROS(Sensors):
         # TODO rework later
         self.imu_msg = None
         self.odom_msg = None
-        self.imu_subscriber = rospy.Subscriber(ns + "imu_filtered", Imu, self.imu_callback, queue_size=1)
+        self.imu_create_subscription = self.create_subscription(ns + "imu_filtered", Imu, self.imu_callback, queue_size=1)
         self.imu_ready = False
         self.tf_listener = tf.TransformListener()
-        self.pose_subscriber = rospy.Subscriber(ns + "base_pose_ground_truth", Odometry, self.odom_callback, queue_size=1)
+        self.pose_create_subscription = self.create_subscription(ns + "base_pose_ground_truth", Odometry, self.odom_callback, queue_size=1)
 
     def imu_callback(self, msg: Imu):
         """
@@ -77,7 +77,7 @@ class SensorsROS(Sensors):
             tf.ExtrapolationException,
             tf2_py.TransformException,
         ) as ex:
-            rospy.logerr_throttle(5, "Unable to find transformation from world to ")
+            self.get_logger().error(5, "Unable to find transformation from world to ")
             pass
 
     def get_ball(self):
@@ -96,7 +96,7 @@ class SensorsROS(Sensors):
             tf.ExtrapolationException,
             tf2_py.TransformException,
         ) as ex:
-            rospy.logerr_throttle(5, "Unable to find transformation from world to ")
+            self.get_logger().error(5, "Unable to find transformation from world to ")
             pass
 
     def get_height(self):
@@ -115,7 +115,7 @@ class SensorsROS(Sensors):
             tf.ExtrapolationException,
             tf2_py.TransformException,
         ) as ex:
-            rospy.logerr_throttle(5, "Unable to find transformation from world to ")
+            self.get_logger().error(5, "Unable to find transformation from world to ")
             return Transformation()
 
     def get_global_height(self):
@@ -131,5 +131,5 @@ class SensorsROS(Sensors):
             tf.ExtrapolationException,
             tf2_py.TransformException,
         ) as ex:
-            rospy.logerr_throttle(5, "Unable to find transformation from world to ")
+            self.get_logger().error(5, "Unable to find transformation from world to ")
             pass

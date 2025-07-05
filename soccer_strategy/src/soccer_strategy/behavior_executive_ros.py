@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import os
 
-import rospy
+import rclpy
 from evtol_behavior.autopilot_context_ros import AutoPilotContextRos
 from evtol_behavior.behavior.state.land import Land
 from evtol_behavior.behavior_context_ros import BehaviorContextRos
@@ -20,13 +20,13 @@ class BehaviorExecutiveRos:
 
     def __init__(self):
         # Initialize node
-        rospy.init_node("evtol_behavior")
+        self.init_node("evtol_behavior")
 
         # Initialize attributes
         # TODO tests fail if 30 hz, that shouldnt hapen
-        self.rate = rospy.Rate(rospy.get_param("/evtol_nav/rate", 20))
-        self.sim = rospy.get_param("/simulation", os.environ.get("SIM", False))
-        self.last_req = rospy.Time.now()
+        self.rate = self.Rate(self.get_param("/evtol_nav/rate", 20))
+        self.sim = self.get_param("/simulation", os.environ.get("SIM", False))
+        self.last_req = self.get_clock().now()
 
         self._drone = DroneRos()
         # TODO limit drone nand path to pass from here during loop
@@ -34,13 +34,13 @@ class BehaviorExecutiveRos:
         self._autopilot = AutoPilotContextRos(self._behavior)
         self._health_system = HealthSystem()
 
-        # Publisher
-        self._drone_status_pub = rospy.Publisher("evtol_behavior/drone_status", DroneStatus, queue_size=10)
+        # create_publisher
+        self._drone_status_pub = self.create_publisher("evtol_behavior/drone_status", DroneStatus, queue_size=10)
 
         # TODO add uwb to sim
         if not self.sim:
-            rospy.wait_for_service("/evtol_sensors/uwb/enable")
-            self.srv = rospy.ServiceProxy("evtol_sensors/uwb/enable", SetBool)
+            self.wait_for_service("/evtol_sensors/uwb/enable")
+            self.srv = self.ServiceProxy("evtol_sensors/uwb/enable", SetBool)
 
     # Main communication node for ground control
     def run(self):
@@ -51,7 +51,7 @@ class BehaviorExecutiveRos:
         """
 
         # Main loop to follow waypoints
-        while not rospy.is_shutdown():
+        while not self.is_shutdown():
             # Behaviour Executive
             # TODO pass drone & path harder then previously thought might be possible but not worth time rigth now
             self._behavior.run_state_algorithim()
@@ -60,7 +60,7 @@ class BehaviorExecutiveRos:
             if self._health_system.check_health(self._drone.z - self._drone.disarm_height):
                 if not self.sim:
                     self.srv.call(SetBoolRequest(data=True))
-                    rospy.loginfo_throttle(1, "switching to uwb")
+                    self.get_logger().error(1, "switching to uwb")
                 self._behavior.state = Land()
 
             # AutoPilot
@@ -68,7 +68,7 @@ class BehaviorExecutiveRos:
             self._autopilot.check_autopilot()
 
             # TODO put in drone maybe?
-            msg = DroneStatus(header=Header(stamp=rospy.Time.now(), frame_id="map"), data=self._drone.status)
+            msg = DroneStatus(header=Header(stamp=self.get_clock().now(), frame_id="map"), data=self._drone.status)
             self._drone_status_pub.publish(msg)
 
             self.rate.sleep()

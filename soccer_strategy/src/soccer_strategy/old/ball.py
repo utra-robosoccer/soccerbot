@@ -1,5 +1,5 @@
 import numpy as np
-import rospy
+import rclpy
 
 
 class Ball:
@@ -12,6 +12,6 @@ class Ball:
 
     def __init__(self, position=np.array([0, 0])):
         self.position: np.ndarray = position
-        self.last_observed_time_stamp = rospy.Time(0)
+        self.last_observed_time_stamp = self.Time(0)
         self.velocity = np.array([0, 0])
         self.kick_timeout = 0

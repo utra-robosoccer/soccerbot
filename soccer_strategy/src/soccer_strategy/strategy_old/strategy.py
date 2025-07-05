@@ -1,7 +1,7 @@
 import math
 
 import numpy as np
-import rospy
+import rclpy
 
 from soccer_common import Transformation
 from soccer_msgs.msg import GameState
@@ -93,7 +93,7 @@ class Strategy:
         self.update_frequency = 1  #: Indicates the frequency to run this strategy update
         self.iteration = 0  #: The number of times the strategy has been run
         self.complete = False  # Used to indicate that we can transition into a new strategy
-        self.time_strategy_started = rospy.Time.now()
+        self.time_strategy_started = self.get_clock().now()
 
     def step_strategy(self, friendly_team: Team, opponent_team: Team, game_state: GameState):
         """

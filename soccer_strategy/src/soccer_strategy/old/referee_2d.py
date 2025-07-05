@@ -2,7 +2,7 @@ import os
 
 import controller
 import numpy as np
-import rospy
+import rclpy
 from geometry import distance2
 from referee import Referee
 from rosgraph_msgs.msg import Clock
@@ -90,7 +90,7 @@ class Referee2D(Referee):
                     Referee2D.MockSolid(robot_game_engine_2d, 3),
                 ]  # TODO use the 2 corners
 
-        self.clock_publisher = rospy.Publisher("/clock", Clock, queue_size=1)
+        self.clock_create_publisher = self.create_publisher("/clock", Clock, queue_size=1)
 
     def progress_milliseconds_and_publish_clock(self, milliseconds):
         self.progress_ms_original(milliseconds)
@@ -101,7 +101,7 @@ class Referee2D(Referee):
         msg.clock.secs = int(ms // 1000)
         msg.clock.nsecs = int((ms % 1000) * 1e6)
 
-        self.clock_publisher.publish(msg)
+        self.clock_create_publisher.publish(msg)
         pass
 
     def list_player_solids(self, *args, **kwargs):

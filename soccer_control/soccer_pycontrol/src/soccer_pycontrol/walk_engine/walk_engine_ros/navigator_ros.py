@@ -1,5 +1,5 @@
 import numpy as np
-import rospy
+import rclpy
 from geometry_msgs.msg import PoseStamped
 from soccer_pycontrol.model.model_ros.bez_ros import BezROS
 from soccer_pycontrol.walk_engine.foot_step_planner import FootStepPlanner
@@ -9,7 +9,7 @@ from soccer_pycontrol.walk_engine.walker import Walker
 from std_msgs.msg import Float32MultiArray
 
 from soccer_common import PID, Transformation
-from soccer_msgs.msg import BoundingBoxes
+from soccer_msgs.msg import BoundingBoxes, FixedTrajectoryCommand
 
 
 class NavigatorRos(Navigator):
@@ -20,9 +20,9 @@ class NavigatorRos(Navigator):
         self.imu_feedback_enabled = imu_feedback_enabled
         self.bez = bez
 
-        self.foot_step_planner = FootStepPlanner(self.bez.robot_model, self.bez.parameters, rospy.get_time, debug=False, ball=self.ball2, sim=False)
+        self.foot_step_planner = FootStepPlanner(self.bez.robot_model, self.bez.parameters, self.get_time, debug=False, ball=self.ball2, sim=False)
         # TODO publish local odomtry from foot step planner
-        self.rate = rospy.Rate(1 / self.foot_step_planner.DT)
+        self.rate = self.Rate(1 / self.foot_step_planner.DT)
         self.func_step = self.rate.sleep  # TODO is this needed?
         self.walker = Walker(bez, self.foot_step_planner, imu_feedback_enabled=imu_feedback_enabled)
 
@@ -52,15 +52,15 @@ class NavigatorRos(Navigator):
         self.ball_dx = 0
         self.ball_dy = 0.7
         self.error_tol = 0.05  # in m TODO add as a param and in the ros version
-        self.position_subscriber = rospy.Subscriber(self.bez.ns + "goal", PoseStamped, self.goal_callback)
+        self.position_create_subscription = self.create_subscription(self.bez.ns + "goal", PoseStamped, self.goal_callback)
         self.goal = PoseStamped()
         self.t = None
         self.enable_walking = None
         self.walker.reset_walk()
-        self.sub_boundingbox = rospy.Subscriber("/robot1/ball", PoseStamped, self.box_callback)
-        self.sub_ball_pixel = rospy.Subscriber("/robot1/ball_pixel", Float32MultiArray, self.pixel_callback)
+        self.sub_boundingbox = self.create_subscription("/robot1/ball", PoseStamped, self.box_callback)
+        self.sub_ball_pixel = self.create_subscription("/robot1/ball_pixel", Float32MultiArray, self.pixel_callback)
         self.last_ball = [0, 0]
-        self.last_req = rospy.Time.from_sec(0)
+        self.last_req = self.Time.from_sec(0)
         self.ball_x_pid = PID(
             Kp=0.05,
             Kd=0,
@@ -76,15 +76,17 @@ class NavigatorRos(Navigator):
             setpoint=2.4,
             output_limits=(0.4, 1.3),
         )
+        self.pub_all_motor = self.create_publisher("command", FixedTrajectoryCommand, queue_size=2)
+
 
     def check_request_timeout(self, nsecs: int = 500000000):
-        return (rospy.Time.now() - self.last_req) < rospy.Duration(secs=1, nsecs=nsecs)
+        return (self.get_clock().now() - self.last_req) < self.Duration(secs=1, nsecs=nsecs)
 
     def pixel_callback(self, data):
         self.ball_pixel = data.data
 
     def box_callback(self, data):
-        self.last_req = rospy.Time.now()
+        self.last_req = self.get_clock().now()
         self.ball = Transformation(pose=data.pose)
 
     def goal_callback(self, pose: PoseStamped) -> None:
@@ -101,24 +103,39 @@ class NavigatorRos(Navigator):
 
     def wait(self, steps: int):
         for i in range(steps):
-            rospy.sleep(self.foot_step_planner.DT)
+            self.sleep(self.foot_step_planner.DT)
 
     def run(self, target_goal):
         angles = np.linspace(-np.pi, np.pi)
         ready = True
-        while not rospy.is_shutdown():
+        kicked = False
+
+        while not self.is_shutdown():
             # self.bez.motor_control.set_single_motor("head_pitch", 0.7)
             # self.bez.motor_control.set_single_motor("head_yaw", 0.0)
             # self.bez.motor_control.set_motor()
 
             if isinstance(target_goal, Transformation):
-                if self.check_request_timeout():
-                    ready = False
-                    self.walk(self.ball, True)
-                # elif not ready:
-                #     self.ready()
-                #     self.bez.motor_control.set_single_motor("head_pitch", 0.7)
-                #     ready = True
+                if self.ball is not None:
+                    if 0.0 < np.linalg.norm(self.ball.position[:2]) < 0.05 and kicked == False:
+                        print(self.ball.position)
+                        print(np.linalg.norm(self.ball.position[:2]))
+                        self.ready()
+                        msg = FixedTrajectoryCommand()
+                        msg.trajectory_name = "rightkick"
+                        msg.mirror = True
+                        self.pub_all_motor.publish(msg)
+                        kicked = True
+                        self.walker.reset_walk()
+                        self.ready()
+                    elif not kicked:
+                        if self.check_request_timeout():
+                            ready = False
+                            self.walk(self.ball,self.ball_pixel, ball_mode=True)
+                        elif not ready:
+                            self.ready()
+                            self.bez.motor_control.set_single_motor("head_pitch", 0.7)
+                            ready = True
             elif isinstance(target_goal, list):  # [d_x: float = 0.0, d_y: float = 0.0, d_theta: float = 0.0, nb_steps: int = 10, t_goal: float = 10]
                 # if target_goal[:3] == [0.0,0.0,0]:
                 #     if self.imu_feedback_enabled and self.bez.sensors.imu_ready:

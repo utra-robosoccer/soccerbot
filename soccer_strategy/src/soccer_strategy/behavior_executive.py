@@ -2,7 +2,7 @@
 import os
 from os.path import expanduser
 
-import rospy
+import rclpy
 from soccer_object_detection.object_detect_node import ObjectDetectionNode
 from soccer_pycontrol.model.bez import Bez
 from soccer_pycontrol.pybullet_usage.pybullet_world import PybulletWorld
@@ -49,7 +49,7 @@ class BehaviorExecutive:
         """
 
         # Main loop to follow waypoints
-        while not rospy.is_shutdown():
+        while not self.is_shutdown():
             # Behaviour Executive
             # TODO pass drone & path harder then previously thought might be possible but not worth time rigth now
             # self.behavior.run_state_algorithim()

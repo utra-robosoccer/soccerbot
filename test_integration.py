@@ -5,7 +5,7 @@ import sys
 from unittest import TestCase
 
 import numpy as np
-import rospy
+import rclpy
 import tf
 import tf2_py as tf2
 import tf2_ros
@@ -68,15 +68,15 @@ class IntegrationTest(TestCase):
         else:
             os.system("bash $HOME/catkin_ws/src/soccerbot/soccerbot/scripts/start_competition.sh robot$ROBOCUP_ROBOT_ID &")
 
-        rospy.init_node("integration_test")
-        rospy.wait_for_message("/clock", Clock, 40)
+        self.init_node("integration_test")
+        self.wait_for_message("/clock", Clock, 40)
         self.camera = CameraCalculationsRos("robot1")
         self.tf_listener = tf.TransformListener()
-        self.bounding_boxes_detector = rospy.Subscriber("/robot1/object_bounding_boxes", BoundingBoxes, self.bounding_boxes_callback)
+        self.bounding_boxes_detector = self.create_subscription("/robot1/object_bounding_boxes", BoundingBoxes, self.bounding_boxes_callback)
         self.bounding_boxes = None
 
-        self.clock_sub = rospy.Subscriber("/clock", Clock, self.clock_callback)
-        self.clock_pub = rospy.Publisher("/clock_test", Clock, queue_size=1)
+        self.clock_sub = self.create_subscription("/clock", Clock, self.clock_callback)
+        self.clock_pub = self.create_publisher("/clock_test", Clock, queue_size=1)
 
     def clock_callback(self, c: Clock):
         c.clock.secs += 1
@@ -86,9 +86,9 @@ class IntegrationTest(TestCase):
         self.bounding_boxes = b
 
     def set_robot_pose(self, x, y, theta):
-        resetPublisher = rospy.Publisher("/robot1/reset_robot", PoseStamped, queue_size=1, latch=True)
+        resetcreate_publisher = self.create_publisher("/robot1/reset_robot", PoseStamped, queue_size=1, latch=True)
         p = PoseStamped()
-        p.header.stamp = rospy.Time.now()
+        p.header.stamp = self.get_clock().now()
         p.header.frame_id = "world"
         p.pose.position.x = x
         p.pose.position.y = y
@@ -102,29 +102,29 @@ class IntegrationTest(TestCase):
         p.pose.orientation.z = q[2]
         p.pose.orientation.w = q[3]
 
-        resetPublisher.publish(p)
+        resetcreate_publisher.publish(p)
 
     def set_ball_pose(self, x, y):
-        ballPublisher = rospy.Publisher("/reset_ball", PoseStamped, queue_size=1, latch=True)
+        ballcreate_publisher = self.create_publisher("/reset_ball", PoseStamped, queue_size=1, latch=True)
         p = PoseStamped()
-        p.header.stamp = rospy.Time.now()
+        p.header.stamp = self.get_clock().now()
         p.header.frame_id = "world"
         p.pose.position.x = x
         p.pose.position.y = y
         p.pose.position.z = 0
 
-        ballPublisher.publish(p)
+        ballcreate_publisher.publish(p)
 
     def set_head_angle(self, theta):
-        jointPublisher = rospy.Publisher("/robot1/joint_command", JointState, queue_size=1, latch=True)
+        jointcreate_publisher = self.create_publisher("/robot1/joint_command", JointState, queue_size=1, latch=True)
         p = JointState()
-        p.header.stamp = rospy.Time.now()
+        p.header.stamp = self.get_clock().now()
         p.header.frame_id = "world"
 
         p.name.append("head_motor_1")
         p.position.append(theta)
 
-        jointPublisher.publish(p)
+        jointcreate_publisher.publish(p)
 
     def get_ball_pose(self, gt=False):
         try:
@@ -136,7 +136,7 @@ class IntegrationTest(TestCase):
             ball_pose = self.tf_listener.lookupTransform("world", frame, last_observed_time_stamp)
             return np.array([ball_pose[0][0], ball_pose[0][1], ball_pose[0][2]])
         except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException, tf2.TransformException):
-            rospy.logwarn_throttle(30, "Unable to locate ball in TF tree")
+            self.logwarn_throttle(30, "Unable to locate ball in TF tree")
             return None
 
     def setUp(self) -> None:
@@ -165,11 +165,11 @@ class IntegrationTestInitial(IntegrationTest):
             coords = self.team.formations["ready"][data.role]
             self.distance = np.linalg.norm([coords[0] - data.pose.position.x, coords[1] - data.pose.position.y])
 
-        rospy.Subscriber("/robot1/state", RobotState, processMsg)
+        self.create_subscription("/robot1/state", RobotState, processMsg)
 
-        while not rospy.is_shutdown():
+        while not self.is_shutdown():
             printlog(f"Distance to destination: {self.distance}")
-            rospy.sleep(1)
+            self.sleep(1)
             if self.distance < 1:
                 break
         printlog("Goal reached")
@@ -183,9 +183,9 @@ class IntegrationTestPlaying(IntegrationTest):
     def test_kick_right(self):
         self.set_robot_pose(4.0, 0.0, 0)
         self.set_ball_pose(4.16, -0.04)
-        while not rospy.is_shutdown():
+        while not self.is_shutdown():
             if self.bounding_boxes is None:
-                rospy.sleep(0.1)
+                self.sleep(0.1)
                 continue
 
             gt_ball_pose = self.get_ball_pose(gt=False)
@@ -198,15 +198,15 @@ class IntegrationTestPlaying(IntegrationTest):
             else:
                 printlog("Ball not found")
 
-            rospy.sleep(2)
+            self.sleep(2)
 
     @timeout_decorator.timeout(60 * 15)
     def test_walk_and_kick_right(self):
         self.set_robot_pose(3.5, 0.0, 0)
         self.set_ball_pose(4.16, -0.04)
-        while not rospy.is_shutdown():
+        while not self.is_shutdown():
             if self.bounding_boxes is None:
-                rospy.sleep(0.1)
+                self.sleep(0.1)
                 continue
 
             gt_ball_pose = self.get_ball_pose(gt=False)
@@ -218,7 +218,7 @@ class IntegrationTestPlaying(IntegrationTest):
             else:
                 printlog("Ball not found")
 
-            rospy.sleep(2)
+            self.sleep(2)
 
     # Run this to generate many ball and robot locations and test that the localization are correct
     # 1. Run roslaunch soccerbot soccerbot_multi.launch competition:=false fake_localization:=true
@@ -231,7 +231,7 @@ class IntegrationTestPlaying(IntegrationTest):
 
         import cv2
         import numpy as np
-        import rospy
+        import rclpy
         import tf
         from cv_bridge import CvBridge
         from sensor_msgs.msg import Image
@@ -269,7 +269,7 @@ class IntegrationTestPlaying(IntegrationTest):
         field_height = 1.5
         ball_radius = 0.07
 
-        while not rospy.is_shutdown() and not self.camera.ready():
+        while not self.is_shutdown() and not self.camera.ready():
             print("Waiting for camera info")
 
         tf_listener = TransformListener()
@@ -298,7 +298,7 @@ class IntegrationTestPlaying(IntegrationTest):
             self.set_head_angle(1)
             time.sleep(0.5)
             # Calculate the frame in the camera
-            image_msg = rospy.wait_for_message("/robot1/camera/image_raw", Image)
+            image_msg = self.wait_for_message("/robot1/camera/image_raw", Image)
 
             # Save the image
             rgb_image = CvBridge().imgmsg_to_cv2(image_msg, desired_encoding="rgb8")
@@ -309,10 +309,10 @@ class IntegrationTestPlaying(IntegrationTest):
             # Annotate the image automatically
             # Set the camera
             try:
-                if tf_listener.waitForTransform("world", "robot1/ball_gt", image_msg.header.stamp, rospy.Duration(1)):
+                if tf_listener.waitForTransform("world", "robot1/ball_gt", image_msg.header.stamp, self.Duration(1)):
                     (ball_position, rot) = tf_listener.lookupTransform("world", "robot1/ball_gt", image_msg.header.stamp)
             except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException, tf2_ros.TransformException):
-                rospy.logwarn_throttle(2, "Cannot find ball transform")
+                self.logwarn_throttle(2, "Cannot find ball transform")
                 continue
 
             self.camera.reset_position(from_world_frame=True, camera_frame="/camera_gt", timestamp=image_msg.header.stamp)
@@ -388,7 +388,7 @@ class IntegrationTestPlaying(IntegrationTest):
 
         import cv2
         import numpy as np
-        import rospy
+        import rclpy
         from cv_bridge import CvBridge
         from sensor_msgs.msg import Image
 
@@ -413,7 +413,7 @@ class IntegrationTestPlaying(IntegrationTest):
 
         self.camera = CameraCalculationsRos("robot1")
 
-        while not rospy.is_shutdown() and not self.camera.ready():
+        while not self.is_shutdown() and not self.camera.ready():
             print("Waiting for camera info")
 
         for i in range(num_samples):
@@ -430,7 +430,7 @@ class IntegrationTestPlaying(IntegrationTest):
             self.set_robot_pose(robot_position[0], robot_position[1], robot_theta)
             time.sleep(0.5)
             # Calculate the frame in the camera
-            image_msg = rospy.wait_for_message("/robot1/camera/image_raw", Image)
+            image_msg = self.wait_for_message("/robot1/camera/image_raw", Image)
 
             # Save the image
             rgb_image = CvBridge().imgmsg_to_cv2(image_msg, desired_encoding="rgb8")

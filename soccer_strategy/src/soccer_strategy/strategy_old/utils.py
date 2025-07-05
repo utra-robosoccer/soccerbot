@@ -1,7 +1,7 @@
 import math
 
 import numpy as np
-import rospy
+import rclpy
 
 from soccer_common.utils import wrapToPi
 from soccer_strategy.old.robot import Robot
@@ -80,7 +80,7 @@ class Utility:
         if case_1:
             target_position = np.array([goal_position[0], target_position_y])
 
-            rospy.loginfo(f"Case 1: Target Position {target_position}")
+            self.loginfo(f"Case 1: Target Position {target_position}")
             Utility.navigate_to_position_with_offset(robot, ball_position, target_position, offset=0.168)
         elif case_2:
             target_position = np.array([goal_position[0], ball_position[1]])
@@ -88,15 +88,15 @@ class Utility:
             difficult_for_player_to_navigate = abs(ball_position[0]) - 0.1 < abs(player_position[0])
 
             if difficult_for_player_to_navigate:
-                rospy.loginfo(f"Case 2a: Target Position {target_position}")
+                self.loginfo(f"Case 2a: Target Position {target_position}")
                 Utility.navigate_to_position_with_offset(robot, ball_position, target_position, offset=0.3)
             else:
-                rospy.loginfo(f"Case 2b: Target Position {target_position}")
+                self.loginfo(f"Case 2b: Target Position {target_position}")
                 Utility.navigate_to_position_with_offset(robot, ball_position, target_position)
         else:
             target_position = goal_position
 
-            rospy.loginfo(f"Case 3a: Target Position {target_position}")
+            self.loginfo(f"Case 3a: Target Position {target_position}")
             Utility.navigate_to_position_with_offset(robot, ball_position, target_position)
 
     @staticmethod
@@ -153,7 +153,7 @@ class Utility:
                 destination_position_biased[2] = diff_angle
 
         np.set_printoptions(precision=3)
-        rospy.loginfo("Player {}: Navigation | Destination position biased {}".format(robot.robot_id, destination_position_biased))
+        self.loginfo("Player {}: Navigation | Destination position biased {}".format(robot.robot_id, destination_position_biased))
         robot.set_navigation_position(destination_position_biased)
 
     @staticmethod

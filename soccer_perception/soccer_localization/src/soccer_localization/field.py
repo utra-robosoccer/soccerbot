@@ -7,7 +7,7 @@ from typing import Dict, List, Optional, Tuple, Union
 
 import matplotlib.pyplot as plt
 import numpy as np
-import rospy
+import rclpy
 import scipy
 from matplotlib.collections import PathCollection
 
@@ -37,15 +37,15 @@ class Field:
     def __init__(self):
         # Dimensions given here https://cdn.robocup.org/hl/wp/2021/06/V-HL21_Rules_v4.pdf
 
-        self.distance_point_threshold = rospy.get_param("distance_point_threshold", 5)
-        self.min_points_threshold = rospy.get_param("min_points_threshold", 40)
-        self.max_detected_line_parallel_offset_error = rospy.get_param("max_detected_line_parallel_offset_error", 0.1)
-        self.max_detected_line_perpendicular_offset_error = rospy.get_param("max_detected_line_perpendicular_offset_error", 0.3)
-        self.offset_movement_limit = rospy.get_param("offset_movement_limit", 0.2)
+        self.distance_point_threshold = self.get_param("distance_point_threshold", 5)
+        self.min_points_threshold = self.get_param("min_points_threshold", 40)
+        self.max_detected_line_parallel_offset_error = self.get_param("max_detected_line_parallel_offset_error", 0.1)
+        self.max_detected_line_perpendicular_offset_error = self.get_param("max_detected_line_perpendicular_offset_error", 0.3)
+        self.offset_movement_limit = self.get_param("offset_movement_limit", 0.2)
 
-        self.max_detected_line_parallel_offset_error_localizing = rospy.get_param("max_detected_line_parallel_offset_error_localizing", 0.5)
-        self.max_detected_line_perpendicular_offset_error_localizing = rospy.get_param("max_detected_line_perpendicular_offset_error", 0.5)
-        self.offset_movement_limit_localizing = rospy.get_param("offset_movement_limit", 0.5)
+        self.max_detected_line_parallel_offset_error_localizing = self.get_param("max_detected_line_parallel_offset_error_localizing", 0.5)
+        self.max_detected_line_perpendicular_offset_error_localizing = self.get_param("max_detected_line_perpendicular_offset_error", 0.5)
+        self.offset_movement_limit_localizing = self.get_param("offset_movement_limit", 0.5)
 
         self.path_plots: Dict[str, PathCollection] = {}
         self.path_points: Dict[str, list] = {}
@@ -284,8 +284,8 @@ class Field:
         transform_confidence = [confidence_x, confidence_y, max(confidence_x, confidence_y)]
 
         end = time.time()
-        rospy.loginfo_throttle(60, f"Match Points with Map rate (s) :  {(end - start)}")
-        rospy.loginfo_throttle(1, f"Transform Confidence :  {transform_confidence} Ratio Meet Distance Threshold: {ratio_meets_distance_threshold}")
+        self.get_logger().error(60, f"Match Points with Map rate (s) :  {(end - start)}")
+        self.get_logger().error(1, f"Transform Confidence :  {transform_confidence} Ratio Meet Distance Threshold: {ratio_meets_distance_threshold}")
         return offset_transform, transform_confidence
 
     def drawPointsOnMap(self, current_transform: Transformation, point_cloud_array: np.array, label: str, color: str):

@@ -1,7 +1,7 @@
 import copy
 import time
 
-import rospy
+import rclpy
 
 from soccer_msgs.msg import GameState
 from soccer_strategy.old.game_engine_2d import GameEngine2D
@@ -26,10 +26,10 @@ class GameEngine2DWithReferee(GameEngine2D):
 
         super().__init__(*args, **kwargs)
 
-        self.game_state_subscribers = {}
+        self.game_state_create_subscriptions = {}
         self.individual_robot_gamestates = {}
         self.individual_robot_last_strategy_update_time = {}
-        self.last_display_update_time = rospy.Time.now()
+        self.last_display_update_time = self.get_clock().now()
 
         for team in [self.team1, self.team2]:
             for robot in team.robots:
@@ -39,11 +39,11 @@ class GameEngine2DWithReferee(GameEngine2D):
                     team_id = 5
                 robot_id = robot.robot_id
 
-                self.game_state_subscribers[(team, robot)] = rospy.Subscriber(
+                self.game_state_create_subscriptions[(team, robot)] = self.create_subscription(
                     f"/team_{team_id}/robot{robot_id}/gamestate", GameState, self.gamestate_callback_robot, robot
                 )
                 self.individual_robot_gamestates[robot] = copy.deepcopy(self.gameState)
-                self.individual_robot_last_strategy_update_time[robot] = rospy.Time.now()
+                self.individual_robot_last_strategy_update_time[robot] = self.get_clock().now()
 
     def run(self):
 
@@ -51,7 +51,7 @@ class GameEngine2DWithReferee(GameEngine2D):
             for i in range(10):
                 self.scene.update(self.team1.robots + self.team2.robots, self.ball)
 
-        while not rospy.is_shutdown():
+        while not self.is_shutdown():
             t_start = time.time()
 
             self.update_estimated_physics(self.team1.robots + self.team2.robots, self.ball)
@@ -67,21 +67,21 @@ class GameEngine2DWithReferee(GameEngine2D):
                     new_strategy = decide_next_strategy(strategy=strategy, gameState=gameState, this_robot=robot)
                     # if type(strategy) != new_strategy: TODO fix maybe
                     #     self.robot_strategies[(robot.team, robot.robot_id)] = new_strategy()
-                    #     rospy.loginfo(f"Team {robot.team} Robot {robot.robot_id} transitioned to strategy {str(new_strategy.__name__)}")
+                    #     self.loginfo(f"Team {robot.team} Robot {robot.robot_id} transitioned to strategy {str(new_strategy.__name__)}")
 
-                    if rospy.Time.now() - self.individual_robot_last_strategy_update_time[robot] > rospy.Duration(strategy.update_frequency):
+                    if self.get_clock().now() - self.individual_robot_last_strategy_update_time[robot] > self.Duration(strategy.update_frequency):
 
                         robot.active = True
                         strategy.step_strategy(teama, teamb, gameState)
                         robot.active = False
-                        self.individual_robot_last_strategy_update_time[robot] = rospy.Time.now()
+                        self.individual_robot_last_strategy_update_time[robot] = self.get_clock().now()
 
             t2 = time.time()
 
             self.scene.update(self.team1.robots + self.team2.robots, self.ball)
-            self.last_display_update_time = rospy.Time.now()
+            self.last_display_update_time = self.get_clock().now()
 
-            rospy.loginfo_throttle(5, f"Physics Update Time {t1 - t_start} Strategy Update Time {t2 - t1}")
+            self.get_logger().error(5, f"Physics Update Time {t1 - t_start} Strategy Update Time {t2 - t1}")
 
         return
 

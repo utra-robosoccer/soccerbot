@@ -6,8 +6,8 @@
     <maintainer email="namnam.nguyen@mail.utoronto.ca">Nam</maintainer>
     <license>BSD</license>
 
-    <buildtool_depend>catkin</buildtool_depend>
-    <depend>rospy</depend>
+
+    <depend>rclpy</depend>
     <depend>soccer_common</depend>
 
 </package>

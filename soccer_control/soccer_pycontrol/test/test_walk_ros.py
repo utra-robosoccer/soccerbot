@@ -4,7 +4,7 @@ import unittest
 from os.path import expanduser
 
 import cv2
-import rospy
+import rclpy
 from geometry_msgs.msg import PoseStamped
 from soccer_object_detection.object_detect_node import ObjectDetectionNode
 from soccer_pycontrol.model.model_ros.bez_ros import BezROS
@@ -23,7 +23,7 @@ class TestPybullet(unittest.TestCase):
         #     f"/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill {robot_ns}/soccer_strategy {robot_ns}/soccer_pycontrol {robot_ns}/soccer_trajectories'"
         # )
 
-        rospy.init_node("soccer_control")
+        self.init_node("soccer_control")
 
         bez = BezROS()
         walker = NavigatorRos(bez, imu_feedback_enabled=True, ball2=True)
@@ -49,7 +49,7 @@ class TestPybullet(unittest.TestCase):
         #     f"/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill {robot_ns}/soccer_strategy {robot_ns}/soccer_pycontrol {robot_ns}/soccer_trajectories'"
         # )
 
-        rospy.init_node("soccer_control")
+        self.init_node("soccer_control")
 
         bez = BezROS()
         walker = NavigatorRos(bez, imu_feedback_enabled=True, ball2=True)
@@ -70,7 +70,7 @@ class TestPybullet(unittest.TestCase):
     def test_camera2(self):
         robot_ns = os.environ["ROS_NAMESPACE"]
 
-        rospy.init_node("soccer_control")
+        self.init_node("soccer_control")
         bez = BezROS()
 
         # self.world = PybulletWorld(
@@ -86,16 +86,16 @@ class TestPybullet(unittest.TestCase):
         # walk.ready()
         # walk.wait(100)
         bez.motor_control.set_single_motor("head_yaw", 0)
-        rospy.sleep(0.5)
+        self.sleep(0.5)
         bez.motor_control.set_motor()
-        rospy.sleep(0.5)
-        rospy.sleep(1)
+        self.sleep(0.5)
+        self.sleep(1)
         print(f"Height rotation: {bez.sensors.get_height().orientation_euler}")
         print(f"Height position: {bez.sensors.get_height().position}")
         bez.motor_control.set_single_motor("head_yaw", 1)
-        rospy.sleep(0.5)
+        self.sleep(0.5)
         bez.motor_control.set_motor()
-        rospy.sleep(0.5)
+        self.sleep(0.5)
         print(f"Height rotation2: {bez.sensors.get_height().orientation_euler}")
         print(f"Height position2: {bez.sensors.get_height().position}")
 
@@ -105,7 +105,7 @@ class TestPybullet(unittest.TestCase):
         #     f"/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill {robot_ns}/soccer_strategy {robot_ns}/soccer_pycontrol {robot_ns}/soccer_trajectories'"
         # )
 
-        rospy.init_node("soccer_control")
+        self.init_node("soccer_control")
         bez = BezROS()
 
         walker = NavigatorRos(bez, imu_feedback_enabled=True, ball2=True)
@@ -139,7 +139,7 @@ class TestPybullet(unittest.TestCase):
 
         ball_pos = Transformation(position=[0, 0, 0], euler=[0, 0, 0])
         kicked = False
-        while not rospy.is_shutdown():
+        while not self.is_shutdown():
             # img = self.bez.sensors.get_camera_image()
             # bez.motor_control.set_single_motor("head_pitch", 0.7)
             walker.ready()
@@ -187,11 +187,11 @@ class TestPybullet(unittest.TestCase):
         os.system(
             f"/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill {robot_ns}/soccer_strategy {robot_ns}/soccer_pycontrol {robot_ns}/soccer_trajectories'"
         )
-        rospy.init_node("soccer_control")
+        self.init_node("soccer_control")
         ns = "/robot1/"
         bez = BezROS(ns=ns)
-        tmp = rospy.Publisher(ns + "reset_robot", PoseStamped)
-        # tmp = rospy.Publisher(ns + "reset_robot", PoseStamped)
+        tmp = self.create_publisher(ns + "reset_robot", PoseStamped)
+        # tmp = self.create_publisher(ns + "reset_robot", PoseStamped)
         walker = NavigatorRos(bez, ball2=True)
         walker.bez.motor_control.configuration.reset()
         walker.bez.motor_control.set_motor()
@@ -209,5 +209,5 @@ class TestPybullet(unittest.TestCase):
         # target_goal = [0.0, 0, 0, 10, 500]
         # walker.walk(target_goal)
         print("cm/s: ", 100 / (time.time() - start))
-        # walker.bez.sensors.get_ball(rospy.Time.now())
+        # walker.bez.sensors.get_ball(self.get_clock().now())
         walker.wait(1000000)

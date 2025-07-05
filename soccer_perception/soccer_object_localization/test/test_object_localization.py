@@ -110,7 +110,7 @@ class TestObjectLocalization(TestCase):
     #     download_dataset("https://drive.google.com/uc?id=11nN58j8_PBoLNRAzOEdk7fMe1UK1diCc", folder_path=test_path)
     #
     #     # ROS
-    #     # rospy.init_node("test")
+    #     # self.init_node("test")
     #
     #     Camera.reset_position = MagicMock()
     #

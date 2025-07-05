@@ -5,7 +5,7 @@ import random
 from typing import Optional
 
 import numpy as np
-import rospy
+import rclpy
 
 from soccer_common import Transformation
 from soccer_common.utils import wrapTo2Pi
@@ -45,8 +45,8 @@ class GameEngine2D:
         :param team_2_strategy: What strategy the team 2 will use
         :param game_duration: How long to run the game (in minutes)
         """
-        rospy.set_param("/use_sim_time", True)
-        rospy.rostime._set_rostime(rospy.Time(0))
+        self.set_param("/use_sim_time", True)
+        self.rostime._set_rostime(self.Time(0))
 
         self.display = display
         self.game_duration = game_duration
@@ -223,12 +223,12 @@ class GameEngine2D:
                 self.scene.update(self.team1.robots + self.team2.robots, self.ball)
 
             # Step the ros time manually
-            rospy.rostime._rostime_current += rospy.Duration(1)
+            self.rostime._rostime_current += self.Duration(1)
 
         print("----------------------------------------------------------------------")
         print(f"Game Finished: Friendly: {friendly_points}, Opponent: {opponent_points}")
-        rospy.set_param("/use_sim_time", False)
-        rospy.rostime._rostime_current = None
+        self.set_param("/use_sim_time", False)
+        self.rostime._rostime_current = None
         return friendly_points, opponent_points
 
     def update_estimated_physics(self, robots: [RobotControlled2D], ball: Ball):

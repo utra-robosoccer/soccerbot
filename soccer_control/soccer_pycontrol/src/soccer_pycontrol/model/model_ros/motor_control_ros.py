@@ -1,6 +1,6 @@
 from typing import List
 
-import rospy
+import rclpy
 from rospy import ROSException
 from sensor_msgs.msg import JointState
 from soccer_pycontrol.model.motor_control import MotorControl, MotorData
@@ -22,7 +22,7 @@ class MotorControlROS(MotorControl):
         # TODO should separate config to current and target
 
         # TODo fix namespace
-        self.pub_all_motor = rospy.Publisher(ns + "joint_command", JointState, queue_size=1)
+        self.pub_all_motor = self.create_publisher(ns + "joint_command", JointState, queue_size=1)
 
     def set_motor(self) -> None:
         """
@@ -30,7 +30,7 @@ class MotorControlROS(MotorControl):
         """
         js = JointState()
         js.name = []
-        js.header.stamp = rospy.Time.now()
+        js.header.stamp = self.get_clock().now()
         js.position = []
         js.effort = []
         angles = self.get_angles()
@@ -38,8 +38,8 @@ class MotorControlROS(MotorControl):
             js.name.append(joint)
             js.position.append(angles[self.motor_names[joint][0]])
         try:
-            rospy.loginfo_once("Started Publishing Motors")
+            self.loginfo_once("Started Publishing Motors")
             self.pub_all_motor.publish(js)
-        except rospy.exceptions.ROSException as ex:
+        except self.exceptions.ROSException as ex:
             print(ex)
             exit(0)

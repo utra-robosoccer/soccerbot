@@ -4,7 +4,7 @@ import os
 from typing import Optional
 
 import numpy as np
-import rospy
+import rclpy
 
 from soccer_strategy.old.ball import Ball
 from soccer_strategy.old.robot import Robot
@@ -88,7 +88,7 @@ class Team:
         for robot in self.robots:
             if robot.observed_ball is not None:
                 distance = np.linalg.norm(robot.position[0:2] - robot.observed_ball.position)
-                if distance < closest_distance and rospy.Time.now() - robot.observed_ball.last_observed_time_stamp < rospy.Duration(2):
+                if distance < closest_distance and self.get_clock().now() - robot.observed_ball.last_observed_time_stamp < self.Duration(2):
                     closest_location = robot.observed_ball
                     closest_distance = distance
 
@@ -97,12 +97,12 @@ class Team:
             return True
 
         # Use the last ball seen (for balls seen in the last 10 seconds)
-        closest_duration_since_last_ball_seen = rospy.Duration(10000000)
+        closest_duration_since_last_ball_seen = self.Duration(10000000)
         closest_location = None
         for robot in self.robots:
             if robot.observed_ball is not None:
-                duration_since_last_ball_seen = rospy.Time.now() - robot.observed_ball.last_observed_time_stamp
-                if duration_since_last_ball_seen < closest_duration_since_last_ball_seen and duration_since_last_ball_seen < rospy.Duration(10):
+                duration_since_last_ball_seen = self.get_clock().now() - robot.observed_ball.last_observed_time_stamp
+                if duration_since_last_ball_seen < closest_duration_since_last_ball_seen and duration_since_last_ball_seen < self.Duration(10):
                     closest_location = robot.observed_ball
                     closest_duration_since_last_ball_seen = duration_since_last_ball_seen
 

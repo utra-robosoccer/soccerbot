@@ -43,7 +43,7 @@ class Trajectory:
                 else:
                     joint_values = list(map(float, row[1:]))
 
-                    # last_pose_value = float(rospy.get_param(f"motor_mapping/{joint_name}/initial_state", 0))
+                    # last_pose_value = float(self.get_param(f"motor_mapping/{joint_name}/initial_state", 0))
                     init_pose_value = 0
                     if joint_name in init_joint_state.name:
                         init_pose_value = init_joint_state.position[init_joint_state.name.index(joint_name)]

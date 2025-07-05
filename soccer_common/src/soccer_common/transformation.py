@@ -241,7 +241,7 @@ class Transformation(np.ndarray):
         The transformation represented in the PoseStamped format
         """
         t = PoseStamped()
-        # t.header.stamp = rospy.Time.now()
+        # t.header.stamp = self.get_clock().now()
         t.header.frame_id = "world"
         t.pose = self.pose
         return t
@@ -256,7 +256,7 @@ class Transformation(np.ndarray):
         The transformation represented in the PoseStamped format
         """
         p = PoseWithCovarianceStamped()
-        # p.header.stamp = rospy.Time.now()
+        # p.header.stamp = self.get_clock().now()
         p.header.frame_id = "world"
         p.pose.pose = self.pose
         p.pose.covariance = list(self.pose_covariance)

@@ -16,10 +16,14 @@ class TrajectoryManager(ABC):
         trajectory_path = expanduser("~") + f"/catkin_ws/src/soccerbot/soccer_control/soccer_trajectories/trajectories/{robot_model}/"
 
         self.trajectory_path = trajectory_path
+        # print(trajectory_path)
+        # print(traj_name)
         self.trajectory = Trajectory(trajectory_path + traj_name + ".csv", mirror=mirror)
 
     def process_trajectory(self, traj_name: str, mirror: bool):
-        self.trajectory.trajectory_path = self.trajectory_path + traj_name + ".csv"
+        print(self.trajectory_path)
+        print(traj_name)
+        self.trajectory.trajectory_path = traj_name
         self.trajectory.mirror = mirror
         self.trajectory.reset()
 

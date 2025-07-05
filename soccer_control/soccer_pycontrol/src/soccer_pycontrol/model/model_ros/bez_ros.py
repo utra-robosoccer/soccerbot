@@ -2,7 +2,7 @@ from os.path import expanduser
 
 import numpy as np
 import pinocchio
-import rospy
+import rclpy
 import yaml
 from soccer_pycontrol.model.bez import Bez
 from soccer_pycontrol.model.model_ros.motor_control_ros import MotorControlROS
@@ -12,9 +12,9 @@ from soccer_pycontrol.model.model_ros.sensors_ros import SensorsROS
 class BezROS(Bez):
     def __init__(self, ns: str = ""):
         self.ns = ns
-        self.robot_model = "assembly"  # rospy.get_param("robot_model", "assembly")
+        self.robot_model = "assembly"  # self.get_param("robot_model", "assembly")
 
-        if rospy.get_param("/use_sim_time", False):
+        if self.get_param("/use_sim_time", False):
             sim = "_sim"
         else:
             sim = ""

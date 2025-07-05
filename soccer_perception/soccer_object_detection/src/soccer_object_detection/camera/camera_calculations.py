@@ -31,7 +31,7 @@ class CameraCalculations(CameraBase):
         Resets the position of the camera, it uses a series of methods that fall back on each other to get the location of the camera
 
         :param from_world_frame: If this is set to true, the camera position transformation will be from the world instead of the robot odom frame
-        :param timestamp: What time do we want the camera tf frame, rospy.Time(0) if get the latest transform
+        :param timestamp: What time do we want the camera tf frame, self.Time(0) if get the latest transform
         :param camera_frame: The name of the camera frame
         :param skip_if_not_found: If set to true, then will not wait if it cannot find the camera transform after the specified duration (1 second), it will just return
         """

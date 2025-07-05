@@ -3,7 +3,7 @@ import unittest
 from unittest.mock import MagicMock
 
 import pytest
-import rospy
+import rclpy
 from sensor_msgs.msg import JointState
 from soccer_pycontrol.model.bez import Bez
 from soccer_pycontrol.pybullet_usage.pybullet_world import PybulletWorld
@@ -94,7 +94,7 @@ def test_trajectory_sim(trajectory_name: str, robot_model: str, real_time: bool)
 
 def run_real_trajectory(robot_model: str, trajectory_name: str, real_time: bool):
     # TODO clean up
-    rospy.init_node("test")
+    self.init_node("test")
     # os.system(
     #     "/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_strategy "
     #     "/robot1/soccer_pycontrol /robot1/soccer_trajectories'"
@@ -103,17 +103,17 @@ def run_real_trajectory(robot_model: str, trajectory_name: str, real_time: bool)
     file_path = os.path.dirname(os.path.abspath(__file__))
     config_path = f"{file_path}/../../../{robot_model}_description/config/motor_mapping.yaml"
     set_rosparam_from_yaml_file(param_path=config_path)
-    rospy.set_param("robot_model", robot_model)
+    self.set_param("robot_model", robot_model)
 
     c = TrajectoryManagerRos(robot_model,trajectory_name )
-    rospy.init_node("test")
+    self.init_node("test")
     msg = FixedTrajectoryCommand()
     msg.trajectory_name = trajectory_name
     msg.mirror = False
 
     joint_state = MagicMock()
     joint_state.position = [0.0] * 20
-    rospy.wait_for_message = MagicMock(return_value=joint_state)
+    self.wait_for_message = MagicMock(return_value=joint_state)
 
     c.command_callback(command=msg)
     c.send_trajectory(real_time=real_time)
