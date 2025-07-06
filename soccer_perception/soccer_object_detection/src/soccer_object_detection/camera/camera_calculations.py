@@ -208,3 +208,70 @@ class CameraCalculations(CameraBase):
         tr_cam = self.pose @ tr
         # print(tr) # TODO could use for head control
         return tr_cam  # tr
+
+    def calculate_ball_from_bounding_boxes_cam_frame(self, bounding_boxes: [float] = [], ball_radius: float = 0.07) -> Transformation:
+        """
+        Reverse function for  :func:`~soccer_common.Camera.calculateBoundingBoxesFromBall`, takes the bounding boxes
+        of the ball as seen on the camera and return the 3D position of the ball assuming that the ball is on the ground
+
+        :param ball_radius: The radius of the ball in meters
+        :param bounding_boxes: The bounding boxes of the ball on the camera in the format [[x1,y1], [x1,y1]] which are the top left and bottom right of the bounding box respectively
+        :return: 3D coordinates of the ball stored in the :class:`Transformation` format
+        """
+
+        # bounding boxes [(y1, z1), (y2, z2)]
+        r = ball_radius
+
+        y1 = bounding_boxes[0][0]
+        z1 = bounding_boxes[0][1]
+        y2 = bounding_boxes[1][0]
+        z2 = bounding_boxes[1][1]
+
+        # Assuming the ball is a sphere, the bounding box must be a square, averaging the borders
+        ym = (y1 + y2) / 2
+        zm = (z1 + z2) / 2
+        length = z2 - z1
+        width = y2 - y1
+        y1 = ym - (width / 2)
+        z1 = zm - (length / 2)
+        y2 = ym + (width / 2)
+        z2 = zm + (length / 2)
+
+        y1w, z1w = self.image_to_world_frame(y1, z1)
+        y2w, z2w = self.image_to_world_frame(y2, z2)
+        y1w = -y1w
+        z1w = -z1w
+        y2w = -y2w
+        z2w = -z2w
+
+        f = self.focal_length
+
+        theta_y1 = math.atan2(y1w, f)
+        theta_y2 = math.atan2(y2w, f)
+
+        theta_yy = (theta_y2 - theta_y1) / 2
+        theta_y = theta_y1 + theta_yy
+
+        dy = r / math.sin(theta_yy)
+
+        xy = (math.cos(theta_y) * dy, math.sin(theta_y) * dy)
+
+        theta_z1 = math.atan2(z1w, f)
+        theta_z2 = math.atan2(z2w, f)
+
+        theta_zz = (theta_z2 - theta_z1) / 2
+        theta_z = theta_z1 + theta_zz
+
+        dz = r / math.sin(theta_zz)
+
+        xz = (math.cos(theta_z) * dz, math.sin(theta_z) * dz)
+
+        ball_x = xy[0]
+        ball_y = xy[1]
+        ball_z = xz[1]
+
+        tr = Transformation([ball_x, -ball_y, -ball_z])
+
+        print("Focal length:", self.focal_length)
+
+        return tr

@@ -10,6 +10,7 @@ from soccer_trajectories.trajectory_manager_sim import TrajectoryManagerSim
 
 from soccer_strategy.behavior import Behavior
 from soccer_strategy.behavior.state.balance import Balance
+from soccer_strategy.behavior.head_state.find_ball import FindBall
 
 
 class BehaviorContext:
@@ -26,7 +27,7 @@ class BehaviorContext:
     """
 
     def __init__(
-        self, world: PybulletWorld, bez: Bez, nav: Navigator, tm: TrajectoryManagerSim, detect: ObjectDetectionNode, sim: bool = True
+        self, world: PybulletWorld, bez: Bez, nav: Navigator, tm: TrajectoryManagerSim, detect: ObjectDetectionNode, sim: bool = True, head_state: bool = True
     ) -> None:
         self.world = world
         self.bez = bez
@@ -35,7 +36,10 @@ class BehaviorContext:
         self.detect = detect
 
         self.sim = sim  # TODO clean up
-        self.transition_to(Balance())  # Has to be last. setting context for current state
+        if head_state:
+            self.transition_to(FindBall())
+        else:
+            self.transition_to(Balance())  # Has to be last. setting context for current state
 
     @property
     def state(self) -> Behavior:
