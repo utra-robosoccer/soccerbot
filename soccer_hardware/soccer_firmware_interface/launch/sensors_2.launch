@@ -14,5 +14,4 @@
         <param name ="motor_mapping" value="$(var motor_mapping)" />
     </node>
 
-
     </launch>

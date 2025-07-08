@@ -50,8 +50,10 @@ def test_send_command():
 
 
 def test_firmware_interface():
+    rclpy.init()
     f = FirmwareInterface(os.path.dirname(os.path.realpath(__file__)) + "/../config/motor_types.yaml",
                           os.path.dirname(os.path.realpath(__file__)) + "/../config/bez2.yaml")
+
 
     for i in range(50000):
         j = JointState()
@@ -79,7 +81,7 @@ def test_firmware_interface():
         ]
         # j.position = [math.sin(i / 180 * math.pi) * 0.1, math.cos(i / 180 * math.pi) * 0.1]
 
-        if True:  # test
+        if False:  # test
             ang = 0.
         else:
             ang = abs(math.sin(i / 180 * math.pi) * 0.2)
@@ -89,13 +91,14 @@ def test_firmware_interface():
         # j.position[0] = ang
         # j.position[1] = ang
 
-        j.header.stamp = f.get_clock().now()
+        j.header.stamp = f.get_clock().now().to_msg()
 
         f.joint_command_callback(j)
 
         time.sleep(0.01)
 
 def test_firmware_interface_single_motor_range(motor_name: str = "left_knee"):
+    rclpy.init()
     f = FirmwareInterface(os.path.dirname(os.path.realpath(__file__)) + "/../config/motor_types.yaml",
                           os.path.dirname(os.path.realpath(__file__)) + "/../config/bez2.yaml")
     x = f.create_rate(1/0.1, f.get_clock())
@@ -128,16 +131,16 @@ def test_firmware_interface_single_motor_range(motor_name: str = "left_knee"):
         j.position = [0.0] * 20
         t = "knee"
         # j.position[j.name.index("right_" + t)] = i
-        j.position[j.name.index("right_shoulder_pitch")] = i
+        j.position[j.name.index("left_knee")] = i
         # j.position[j.name.index("left_"+t)] = i
         # j.position[j.name.index("head_pitch")] = i
 
 
-        j.header.stamp = f.get_clock().now()
+        j.header.stamp = f.get_clock().now().to_msg()
 
         f.joint_command_callback(j)
-        x.sleep()
-        time.sleep(0.1)
+        # x.sleep()
+        time.sleep(0.2)
 
     for i in range(100):
         j = JointState()
@@ -174,7 +177,7 @@ def test_firmware_interface_single_motor_range(motor_name: str = "left_knee"):
         # j.position[0] = ang
         # j.position[1] = ang
 
-        j.header.stamp = f.get_clock().now()
+        j.header.stamp = f.get_clock().now().to_msg()
 
         f.joint_command_callback(j)
 

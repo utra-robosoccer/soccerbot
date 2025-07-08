@@ -5,107 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1718606a-6ea1-4edd-a178-2f51136d492a" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/soccerbot.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/soccerbot.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/external/hlvs_webots" beforeDir="false" afterPath="$PROJECT_DIR$/external/hlvs_webots" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/external/hlvs_webots/worlds/.robocup.wbproj" beforeDir="false" afterPath="$PROJECT_DIR$/external/hlvs_webots/worlds/.robocup.wbproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_common/package.xml" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_common/package.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_common/src/soccer_common/transformation.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_common/src/soccer_common/transformation.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_common/src/soccer_common/utils_rosparam.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_common/src/soccer_common/utils_rosparam.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_common/test/test_common.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_common/test/test_common.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/package.xml" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/package.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/src/soccer_pycontrol/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/src/soccer_pycontrol/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/src/soccer_pycontrol/model/model_ros/bez_ros.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/src/soccer_pycontrol/model/model_ros/bez_ros.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/src/soccer_pycontrol/model/model_ros/motor_control_ros.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/src/soccer_pycontrol/model/model_ros/motor_control_ros.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/src/soccer_pycontrol/model/model_ros/sensors_ros.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/src/soccer_pycontrol/model/model_ros/sensors_ros.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/src/soccer_pycontrol/walk_engine/navigator.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/src/soccer_pycontrol/walk_engine/navigator.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/src/soccer_pycontrol/walk_engine/walk_engine_ros/navigator_ros.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/src/soccer_pycontrol/walk_engine/walk_engine_ros/navigator_ros.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/src/soccer_pycontrol/walk_engine/walker.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/src/soccer_pycontrol/walk_engine/walker.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test/test_walk_ros.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test/test_walk_ros.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_trajectories/CMakeLists.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_trajectories/doc/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_trajectories/doc/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_trajectories/package.xml" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_trajectories/package.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_trajectories/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_trajectories/setup.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_trajectories/src/soccer_trajectories/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_trajectories/soccer_trajectories/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_trajectories/src/soccer_trajectories/trajectory.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_trajectories/soccer_trajectories/trajectory.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_trajectories/src/soccer_trajectories/trajectory_manager.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_trajectories/soccer_trajectories/trajectory_manager.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_trajectories/src/soccer_trajectories/trajectory_manager_ros.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_trajectories/soccer_trajectories/trajectory_manager_ros.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_trajectories/src/soccer_trajectories/trajectory_manager_sim.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_trajectories/soccer_trajectories/trajectory_manager_sim.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_trajectories/test/test_trajectory.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_trajectories/test/test_trajectory.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_trajectories/trajectories/bez2/rightkick.csv" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_trajectories/trajectories/bez2/rightkick.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_description/assembly_description/launch/controller.launch" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_description/assembly_description/launch/controller.launch" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_description/assembly_description/launch/display.launch" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_description/assembly_description/launch/display.launch" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_description/assembly_description/package.xml" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_description/assembly_description/package.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_description/bez1_description/launch/controller.launch" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_description/bez1_description/launch/controller.launch" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_description/bez1_description/launch/display.launch" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_description/bez1_description/launch/display.launch" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_description/bez1_description/launch/rviz.launch" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_description/bez1_description/launch/rviz.launch" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_description/bez1_description/package.xml" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_description/bez1_description/package.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_description/bez2_description/launch/controller.launch" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_description/bez2_description/launch/controller.launch" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_description/bez2_description/launch/display.launch" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_description/bez2_description/launch/display.launch" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_description/bez2_description/package.xml" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_description/bez2_description/package.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_hardware/soccer_firmware_interface/CMakeLists.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_hardware/soccer_firmware_interface/config/bez2.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_hardware/soccer_firmware_interface/config/bez2.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_hardware/soccer_firmware_interface/config/motor_types.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_hardware/soccer_firmware_interface/config/motor_types.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/soccer_hardware/soccer_firmware_interface/launch/sensors.launch" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_hardware/soccer_firmware_interface/launch/sensors.launch" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_hardware/soccer_firmware_interface/package.xml" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_hardware/soccer_firmware_interface/package.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_hardware/soccer_firmware_interface/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_hardware/soccer_firmware_interface/setup.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_hardware/soccer_firmware_interface/src/soccer_firmware_interface/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_hardware/soccer_firmware_interface/soccer_firmware_interface/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_hardware/soccer_firmware_interface/src/soccer_firmware_interface/firmware_interface.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_hardware/soccer_firmware_interface/soccer_firmware_interface/firmware_interface.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_hardware/soccer_firmware_interface/src/soccer_firmware_interface/main.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_hardware/soccer_firmware_interface/test/test_firmware_interface.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_hardware/soccer_firmware_interface/test/test_firmware_interface.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_perception/soccer_localization/package.xml" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_perception/soccer_localization/package.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_perception/soccer_localization/src/soccer_localization/field.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_perception/soccer_localization/src/soccer_localization/field.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_perception/soccer_localization/src/soccer_localization/field_lines_ukf.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_perception/soccer_localization/src/soccer_localization/field_lines_ukf.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_perception/soccer_localization/src/soccer_localization/field_lines_ukf_ros.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_perception/soccer_localization/src/soccer_localization/field_lines_ukf_ros.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_perception/soccer_localization/src/soccer_localization/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_perception/soccer_localization/src/soccer_localization/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_perception/soccer_localization/src/soccer_localization/test_localization.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_perception/soccer_localization/src/soccer_localization/test_localization.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/package.xml" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/package.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/src/soccer_object_detection/camera/camera_calculations.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/src/soccer_object_detection/camera/camera_calculations.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/src/soccer_object_detection/camera/camera_calculations_ros.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/src/soccer_object_detection/camera/camera_calculations_ros.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/src/soccer_object_detection/object_detect_node_ros.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/src/soccer_object_detection/object_detect_node_ros.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/test/test_camera.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/test/test_camera.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/package.xml" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/package.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/src/soccer_object_localization/detector_fieldline_ros.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/src/soccer_object_localization/detector_fieldline_ros.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/src/soccer_object_localization/detector_objects.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/src/soccer_object_localization/detector_objects.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/test/test_object_localization.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/test/test_object_localization.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_strategy/package.xml" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_strategy/package.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_strategy/src/soccer_strategy/autopilot_context_ros.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_strategy/src/soccer_strategy/autopilot_context_ros.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_strategy/src/soccer_strategy/behavior_context_ros.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_strategy/src/soccer_strategy/behavior_context_ros.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_strategy/src/soccer_strategy/behavior_executive.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_strategy/src/soccer_strategy/behavior_executive.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_strategy/src/soccer_strategy/behavior_executive_ros.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_strategy/src/soccer_strategy/behavior_executive_ros.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_strategy/src/soccer_strategy/communication/game_controller_receiver.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_strategy/src/soccer_strategy/communication/game_controller_receiver.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_strategy/src/soccer_strategy/communication/team_communication.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_strategy/src/soccer_strategy/communication/team_communication.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_strategy/src/soccer_strategy/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_strategy/src/soccer_strategy/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_strategy/src/soccer_strategy/old/ball.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_strategy/src/soccer_strategy/old/ball.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_strategy/src/soccer_strategy/old/game_engine_2d.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_strategy/src/soccer_strategy/old/game_engine_2d.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_strategy/src/soccer_strategy/old/game_engine_2d_with_referee.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_strategy/src/soccer_strategy/old/game_engine_2d_with_referee.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_strategy/src/soccer_strategy/old/game_engine_3d.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_strategy/src/soccer_strategy/old/game_engine_3d.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_strategy/src/soccer_strategy/old/referee_2d.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_strategy/src/soccer_strategy/old/referee_2d.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_strategy/src/soccer_strategy/old/robot_controlled.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_strategy/src/soccer_strategy/old/robot_controlled.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_strategy/src/soccer_strategy/old/robot_controlled_2d.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_strategy/src/soccer_strategy/old/robot_controlled_2d.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_strategy/src/soccer_strategy/old/robot_controlled_3d.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_strategy/src/soccer_strategy/old/robot_controlled_3d.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_strategy/src/soccer_strategy/old/robot_observed.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_strategy/src/soccer_strategy/old/robot_observed.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_strategy/src/soccer_strategy/old/team.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_strategy/src/soccer_strategy/old/team.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_strategy/src/soccer_strategy/old_strategy/strategy.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_strategy/src/soccer_strategy/old_strategy/strategy.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_strategy/src/soccer_strategy/old_strategy/strategy_determine_side.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_strategy/src/soccer_strategy/old_strategy/strategy_determine_side.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_strategy/src/soccer_strategy/old_strategy/strategy_dummy.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_strategy/src/soccer_strategy/old_strategy/strategy_dummy.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_strategy/src/soccer_strategy/old_strategy/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_strategy/src/soccer_strategy/old_strategy/utils.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_strategy/src/soccer_strategy/strategy_old/strategy.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_strategy/src/soccer_strategy/strategy_old/strategy.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_strategy/src/soccer_strategy/strategy_old/strategy_determine_side.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_strategy/src/soccer_strategy/strategy_old/strategy_determine_side.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_strategy/src/soccer_strategy/strategy_old/strategy_dummy.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_strategy/src/soccer_strategy/strategy_old/strategy_dummy.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_strategy/src/soccer_strategy/strategy_old/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_strategy/src/soccer_strategy/strategy_old/utils.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_strategy/test/test_game_engine_2d.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_strategy/test/test_game_engine_2d.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_webots/package.xml" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_webots/package.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_webots/src/soccer_webots/bridge_ground_truth.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_webots/src/soccer_webots/bridge_ground_truth.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_webots/src/soccer_webots/bridge_webots.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_webots/src/soccer_webots/bridge_webots.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccerbot/config/rosconsole.conf" beforeDir="false" afterPath="$PROJECT_DIR$/soccerbot/config/rosconsole.conf" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccerbot/launch/modules/sensors.launch" beforeDir="false" afterPath="$PROJECT_DIR$/soccerbot/launch/modules/sensors.launch" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccerbot/launch/soccerbot.launch" beforeDir="false" afterPath="$PROJECT_DIR$/soccerbot/launch/soccerbot.launch" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccerbot/launch/test.launch" beforeDir="false" afterPath="$PROJECT_DIR$/soccerbot/launch/test.launch" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccerbot/package.xml" beforeDir="false" afterPath="$PROJECT_DIR$/soccerbot/package.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test_integration.py" beforeDir="false" afterPath="$PROJECT_DIR$/test_integration.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tools/setup/rosdep.txt" beforeDir="false" afterPath="$PROJECT_DIR$/tools/setup/rosdep.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -179,7 +82,7 @@
     "Python.motor_control.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "js__new",
-    "last_opened_file_path": "/home/manx52/ros2_ws/install/soccer_msgs/local/lib/python3.10/dist-packages",
+    "last_opened_file_path": "/home/manx52/ros2_ws/src/soccerbot",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -370,6 +273,7 @@
       <workItem from="1746902371603" duration="599000" />
       <workItem from="1751742016029" duration="12759000" />
       <workItem from="1751754789158" duration="979000" />
+      <workItem from="1751758066119" duration="1612000" />
     </task>
     <servers />
   </component>

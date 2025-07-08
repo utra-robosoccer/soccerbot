@@ -4,8 +4,8 @@ import os
 from sensor_msgs.msg import JointState
 from soccer_trajectories.trajectory_manager import TrajectoryManager
 
-if "ROS_NAMESPACE" not in os.environ:
-    os.environ["ROS_NAMESPACE"] = "/robot1"
+# if "ROS_NAMESPACE" not in os.environ:
+#     os.environ["ROS_NAMESPACE"] = "/robot1"
 
 import rclpy
 from rclpy.executors import ExternalShutdownException
@@ -22,8 +22,9 @@ class TrajectoryManagerRos(TrajectoryManager, Node):
     def __init__(self, robot_model: str = "bez2", trajectory_name: str ="rightkick"):
         Node.__init__(self, "soccer_trajectories")
 
-
-        use_sim_time_prefix = "_sim" if self.get_param("use_sim_time", "false") == "true" else ""
+        self.declare_parameter('use_sim_time', os.environ.get("SIM", False))
+        sim =self.get_parameter("use_sim_time").get_parameter_value().bool_value
+        use_sim_time_prefix = "_sim" if sim == "true" else ""
         # TODO fix
         path = (
             self.get_param_cached(
@@ -36,13 +37,12 @@ class TrajectoryManagerRos(TrajectoryManager, Node):
 
         self.terminate = False
         self.period = 100
-        self.rate = self.Rate(self.period)
 
-        self.command_create_subscription = self.create_subscription("command", FixedTrajectoryCommand, self.command_callback, queue_size=1)
-        self.robot_state_create_subscription = self.create_subscription("state", RobotState, self.robot_state_callback, queue_size=1)
+        self.command_create_subscription = self.create_subscription(FixedTrajectoryCommand,"command",  self.command_callback, qos_profile=10)
+        self.robot_state_create_subscription = self.create_subscription(RobotState,"state",  self.robot_state_callback, qos_profile=10)
 
-        self.pub_all_motor = self.create_publisher("joint_command", JointState, queue_size=2)
-        self.finish_trajectory_create_publisher = self.create_publisher("action_complete", Empty, queue_size=1)
+        self.pub_all_motor = self.create_publisher(JointState,"joint_command", qos_profile=10)
+        self.finish_trajectory_create_publisher = self.create_publisher(Empty,"action_complete",  qos_profile=10)
 
     def robot_state_callback(self, state: RobotState):
         if state.status in [RobotState.STATUS_PENALIZED]:

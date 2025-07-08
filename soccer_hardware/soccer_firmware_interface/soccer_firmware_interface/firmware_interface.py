@@ -240,12 +240,12 @@ class FirmwareInterface(Node):
                 self.last_motor_publish_time_real = self.get_clock().now()
                 self.last_motor_publish_time = joint_state.header.stamp
                 t3 = time.time()
-                self.get_logger().info(1,
-                    f"Time Lag : {(self.get_clock().now() - joint_state.header.stamp)}  Bytes Written: {bytes_to_write} Time Take {t2-t1} {t3-t1}"
-                )
+                self.get_logger().info(
+                    f"Time Lag : {(self.get_clock().now().to_msg().nanosec - joint_state.header.stamp.nanosec)}  Bytes Written: {bytes_to_write} Time Take {t2-t1} {t3-t1}"
+                ,throttle_duration_sec=1)
 
             except Exception as ex:
-                self.get_logger().error(10, f"Lost connection to serial port {ex}, retrying...")
+                self.get_logger().error( f"Lost connection to serial port {ex}, retrying...", throttle_duration_sec=1)
                 self.serial = None
                 pass
 
