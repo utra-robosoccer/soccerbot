@@ -23,7 +23,7 @@
   -->
 
   <mujoco>
-    <compiler meshdir="/home/q2/catkin_ws/src/hip-rejoint_description/meshes" balanceinertia="true" discardvisual="false"/>
+    <compiler meshdir="../meshes" balanceinertia="true" discardvisual="false"/>
   </mujoco>
 
 <xacro:include filename="$(find hip-rejoint_description)/urdf/materials.xacro" />
@@ -1143,8 +1143,8 @@
   </collision>
 </link>
 
-<joint name="rootfloat" type="floating">
-  <origin xyz="0 0 0" rpy="0 0 0" />
+<joint name="rootfloat" type="fixed">
+  <origin xyz="0 0 0" rpy="1.57 0 1.57" />
   <parent link="root" />
   <child link="torso" />
 </joint>
