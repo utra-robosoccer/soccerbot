@@ -7,6 +7,8 @@
     - Fix inertias in the URDF with `%s/i\(\w\)\1="\-*0.0"/i\1\1="1E-06"/g`
     - Rename `base_link` to `trunk` in the URDF to accomodate placo
     - Rejoint `trunk` to a new root link with a `floating` joint in URDF (i.e. `<link name="root" /><joint name="root-float" type="floating"><child link="trunk" /><parent link="root" /></joint>`
+    - Fix servo masses based on enclosure (masses currently include all optional enclosures)
+    - Fix necessary placo names (left_foot, right_foot, trunk) which have `_1` or some other digit appended by Fusion unique ID system
     - Generate URDF from xacro via:
       - `conda activate py2; rosrun xacro xacro '/path/to/model.xacro' > '/path/to/model.urdf';`
     - Import to mujoco and save as XML
@@ -1683,14 +1685,14 @@
   <child link="25t-servo-hub_1"/>
 </joint>
 
-<joint name="Revolute 62" type="continuous">
+<joint name="head_yaw" type="continuous">
   <origin xyz="0.0 0.0 0.002794" rpy="0 0 0"/>
   <parent link="25t-servo-hub_1"/>
   <child link="neck_1"/>
   <axis xyz="-0.0 0.0 1.0"/>
 </joint>
 
-<joint name="Revolute 63" type="continuous">
+<joint name="head_pitch" type="continuous">
   <origin xyz="0.0 0.026187 0.033817" rpy="0 0 0"/>
   <parent link="neck_1"/>
   <child link="25t-servo-hub_2"/>
