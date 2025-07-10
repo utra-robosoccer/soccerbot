@@ -1,0 +1,29 @@
+<?xml version="1.0" ?>
+<robot name="hip-rejoint" xmlns:xacro="http://www.ros.org/wiki/xacro" >
+
+<material name="silver_default">
+  <color rgba="0.700 0.700 0.700 1.000"/>
+</material>
+<material name="steel_satin">
+  <color rgba="0.6274509803921569 0.6274509803921569 0.6274509803921569 1.0"/>
+</material>
+<material name="acrylic_red">
+  <color rgba="1.0 1.0 1.0 1.0"/>
+</material>
+<material name="aluminum_satin">
+  <color rgba="0.9607843137254902 0.9607843137254902 0.9647058823529412 1.0"/>
+</material>
+<material name="polystyrene">
+  <color rgba="1.0 1.0 1.0 1.0"/>
+</material>
+<material name="abs_white">
+  <color rgba="0.9647058823529412 0.9647058823529412 0.9529411764705882 1.0"/>
+</material>
+<material name="brass_polished">
+  <color rgba="0.37254901960784315 0.42745098039215684 0.6901960784313725 1.0"/>
+</material>
+<material name="plastic_matte_black">
+  <color rgba="0.09803921568627451 0.09803921568627451 0.09803921568627451 1.0"/>
+</material>
+
+</robot>
