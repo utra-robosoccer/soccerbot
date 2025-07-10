@@ -53,13 +53,13 @@ hip-rejoint:
     type: effort_controllers/JointPositionController
     joint: right_ankle_roll
     pid: {p: 100.0, i: 0.01, d: 10.0}
-  right_shoulder_position_controller:
+  right_shoulder_pitch_position_controller:
     type: effort_controllers/JointPositionController
-    joint: right_shoulder
+    joint: right_shoulder_pitch
     pid: {p: 100.0, i: 0.01, d: 10.0}
-  left_shoulder_position_controller:
+  left_shoulder_pitch_position_controller:
     type: effort_controllers/JointPositionController
-    joint: left_shoulder
+    joint: left_shoulder_pitch
     pid: {p: 100.0, i: 0.01, d: 10.0}
   right_elbow_position_controller:
     type: effort_controllers/JointPositionController
@@ -68,4 +68,12 @@ hip-rejoint:
   left_elbow_position_controller:
     type: effort_controllers/JointPositionController
     joint: left_elbow
+    pid: {p: 100.0, i: 0.01, d: 10.0}
+  Revolute 62_position_controller:
+    type: effort_controllers/JointPositionController
+    joint: Revolute 62
+    pid: {p: 100.0, i: 0.01, d: 10.0}
+  Revolute 63_position_controller:
+    type: effort_controllers/JointPositionController
+    joint: Revolute 63
     pid: {p: 100.0, i: 0.01, d: 10.0}

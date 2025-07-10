@@ -4,11 +4,11 @@
     Steps to generate model:
 
     - Joint and export in Fusion
+    - Fix inertias in the URDF with `%s/i\(\w\)\1="\-*0.0"/i\1\1="1E-06"/g`
+    - Rename `base_link` to `trunk` in the URDF to accomodate placo
+    - Rejoint `trunk` to a new root link with a `floating` joint in URDF (i.e. `<link name="root" /><joint name="root-float" type="floating"><child link="trunk" /><parent link="root" /></joint>`
     - Generate URDF from xacro via:
       - `conda activate py2; rosrun xacro xacro '/path/to/model.xacro' > '/path/to/model.urdf';`
-    - Fix inertias in the URDF with `%s/i\(\w\)\1="\-*0.0"/i\1\1="1E-06"/g`
-    - Rename `base_link` to `torso` in the URDF to accomodate placo
-    - Rejoint `torso` to a new root link with a `floating` joint in URDF (i.e. `<link name="root" /><joint name="root-float" type="floating"><child link="torso" /><parent link="root" /></joint>`
     - Import to mujoco and save as XML
     - Ensure left and right foot links exist
 
@@ -29,19 +29,18 @@
 <xacro:include filename="$(find hip-rejoint_description)/urdf/materials.xacro" />
 <xacro:include filename="$(find hip-rejoint_description)/urdf/hip-rejoint.trans" />
 <xacro:include filename="$(find hip-rejoint_description)/urdf/hip-rejoint.gazebo" />
-<link name="root" />
-<link name="torso">
+<link name="base_link">
   <inertial>
-    <origin xyz="-0.17198470578696426 -0.024251867789563585 -0.021093953275271887" rpy="0 0 0"/>
-    <mass value="0.19337373769234342"/>
-    <inertia ixx="4.6e-05" iyy="0.000538" izz="0.000494" ixy="0.0" iyz="-0.0" ixz="0.0"/>
+    <origin xyz="0.005 0.005 0.005" rpy="0 0 0"/>
+    <mass value="0.00106"/>
+    <inertia ixx="1E-06" iyy="1E-06" izz="1E-06" ixy="0.0" iyz="0.0" ixz="0.0"/>
   </inertial>
   <visual>
     <origin xyz="0 0 0" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
     </geometry>
-    <material name="acrylic_red"/>
+    <material name="abs_white"/>
   </visual>
   <collision>
     <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -53,19 +52,19 @@
 
 <link name="R8-2RS_Bearing_1">
   <inertial>
-    <origin xyz="2.942129484623246e-07 -0.003968361583188348 4.67247281074612e-08" rpy="0 0 0"/>
+    <origin xyz="4.85722573273506e-17 1.6393830737371218e-13 -0.003969249999999997" rpy="0 0 0"/>
     <mass value="0.03206594861680248"/>
-    <inertia ixx="2e-06" iyy="4e-06" izz="2e-06" ixy="-0.0" iyz="-0.0" ixz="0.0"/>
+    <inertia ixx="2e-06" iyy="2e-06" izz="4e-06" ixy="-0.0" iyz="-0.0" ixz="-0.0"/>
   </inertial>
   <visual>
-    <origin xyz="0.117785 0.019449 0.021094" rpy="0 0 0"/>
+    <origin xyz="0.025 -0.0592 -0.009763" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/R8-2RS_Bearing_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="steel_satin"/>
   </visual>
   <collision>
-    <origin xyz="0.117785 0.019449 0.021094" rpy="0 0 0"/>
+    <origin xyz="0.025 -0.0592 -0.009763" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/R8-2RS_Bearing_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -74,19 +73,19 @@
 
 <link name="R8-2RS_Bearing_2">
   <inertial>
-    <origin xyz="2.9421294850395796e-07 0.003969138416811653 4.672472811093065e-08" rpy="0 0 0"/>
+    <origin xyz="5.551115123125783e-17 1.6397300184323171e-13 0.003968250000000005" rpy="0 0 0"/>
     <mass value="0.03206594861680248"/>
-    <inertia ixx="2e-06" iyy="4e-06" izz="2e-06" ixy="-0.0" iyz="0.0" ixz="-0.0"/>
+    <inertia ixx="2e-06" iyy="2e-06" izz="4e-06" ixy="0.0" iyz="-0.0" ixz="0.0"/>
   </inertial>
   <visual>
-    <origin xyz="0.117785 0.019449 0.021094" rpy="0 0 0"/>
+    <origin xyz="0.025 -0.0592 -0.009763" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/R8-2RS_Bearing_2.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="steel_satin"/>
   </visual>
   <collision>
-    <origin xyz="0.117785 0.019449 0.021094" rpy="0 0 0"/>
+    <origin xyz="0.025 -0.0592 -0.009763" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/R8-2RS_Bearing_2.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -95,19 +94,19 @@
 
 <link name="R8-2RS_Bearing_3">
   <inertial>
-    <origin xyz="2.9421294739373494e-07 -0.0039683615831883345 4.6724728045011155e-08" rpy="0 0 0"/>
+    <origin xyz="-3.469446951953614e-18 1.6287665660641437e-13 -0.003968249999999989" rpy="0 0 0"/>
     <mass value="0.03206594861680248"/>
-    <inertia ixx="2e-06" iyy="4e-06" izz="2e-06" ixy="0.0" iyz="-0.0" ixz="0.0"/>
+    <inertia ixx="2e-06" iyy="2e-06" izz="4e-06" ixy="0.0" iyz="0.0" ixz="-0.0"/>
   </inertial>
   <visual>
-    <origin xyz="0.226185 0.019449 0.021094" rpy="0 0 0"/>
+    <origin xyz="0.025 0.0492 -0.009762" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/R8-2RS_Bearing_3.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="steel_satin"/>
   </visual>
   <collision>
-    <origin xyz="0.226185 0.019449 0.021094" rpy="0 0 0"/>
+    <origin xyz="0.025 0.0492 -0.009762" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/R8-2RS_Bearing_3.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -116,19 +115,19 @@
 
 <link name="R8-2RS_Bearing_4">
   <inertial>
-    <origin xyz="2.9421294750475724e-07 0.003969138416811662 4.6724728045011155e-08" rpy="0 0 0"/>
+    <origin xyz="-3.469446951953614e-18 1.6298074001497298e-13 0.00396825000000001" rpy="0 0 0"/>
     <mass value="0.03206594861680248"/>
-    <inertia ixx="2e-06" iyy="4e-06" izz="2e-06" ixy="0.0" iyz="-0.0" ixz="0.0"/>
+    <inertia ixx="2e-06" iyy="2e-06" izz="4e-06" ixy="0.0" iyz="-0.0" ixz="-0.0"/>
   </inertial>
   <visual>
-    <origin xyz="0.226185 0.019449 0.021094" rpy="0 0 0"/>
+    <origin xyz="0.025 0.0492 -0.009763" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/R8-2RS_Bearing_4.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="steel_satin"/>
   </visual>
   <collision>
-    <origin xyz="0.226185 0.019449 0.021094" rpy="0 0 0"/>
+    <origin xyz="0.025 0.0492 -0.009763" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/R8-2RS_Bearing_4.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -137,19 +136,19 @@
 
 <link name="Component2_2">
   <inertial>
-    <origin xyz="2.942126966776204e-07 0.006598864666209372 4.672472816297235e-08" rpy="0 0 0"/>
+    <origin xyz="9.020562075079397e-17 -8.781170235394598e-14 0.006597976249397723" rpy="0 0 0"/>
     <mass value="0.043046314847355716"/>
-    <inertia ixx="9e-06" iyy="1.6e-05" izz="9e-06" ixy="0.0" iyz="0.0" ixz="0.0"/>
+    <inertia ixx="9e-06" iyy="9e-06" izz="1.6e-05" ixy="0.0" iyz="0.0" ixz="0.0"/>
   </inertial>
   <visual>
-    <origin xyz="0.117785 0.019449 0.021094" rpy="0 0 0"/>
+    <origin xyz="0.025 -0.0592 -0.009763" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/Component2_2.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="aluminum_satin"/>
   </visual>
   <collision>
-    <origin xyz="0.117785 0.019449 0.021094" rpy="0 0 0"/>
+    <origin xyz="0.025 -0.0592 -0.009763" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/Component2_2.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -158,19 +157,19 @@
 
 <link name="Component2_1">
   <inertial>
-    <origin xyz="2.9421269573393083e-07 0.006598864666209387 4.672472808317507e-08" rpy="0 0 0"/>
+    <origin xyz="2.0816681711721685e-17 -8.87900863943969e-14 0.0065989762493977346" rpy="0 0 0"/>
     <mass value="0.043046314847355716"/>
-    <inertia ixx="9e-06" iyy="1.6e-05" izz="9e-06" ixy="0.0" iyz="0.0" ixz="0.0"/>
+    <inertia ixx="9e-06" iyy="9e-06" izz="1.6e-05" ixy="0.0" iyz="0.0" ixz="0.0"/>
   </inertial>
   <visual>
-    <origin xyz="0.226185 0.019449 0.021094" rpy="0 0 0"/>
+    <origin xyz="0.025 0.0492 -0.009762" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/Component2_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="aluminum_satin"/>
   </visual>
   <collision>
-    <origin xyz="0.226185 0.019449 0.021094" rpy="0 0 0"/>
+    <origin xyz="0.025 0.0492 -0.009762" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/Component2_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -179,19 +178,19 @@
 
 <link name="91590A121_External_Retaining_Ring_v1_2">
   <inertial>
-    <origin xyz="0.00028649178236625494 0.0003178884168116656 4.6724729946268084e-08" rpy="0 0 0"/>
+    <origin xyz="1.8943180357666733e-15 0.000286197569581724 0.0003170000000000117" rpy="0 0 0"/>
     <mass value="0.00024760918611349786"/>
-    <inertia ixx="1E-06" iyy="1E-06" izz="1E-06" ixy="-0.0" iyz="-0.0" ixz="0.0"/>
+    <inertia ixx="1E-06" iyy="1E-06" izz="1E-06" ixy="0.0" iyz="0.0" ixz="-0.0"/>
   </inertial>
   <visual>
-    <origin xyz="0.226185 0.008494 0.021094" rpy="0 0 0"/>
+    <origin xyz="0.025 0.0492 -0.020718" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/91590A121_External_Retaining_Ring_v1_2.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="steel_satin"/>
   </visual>
   <collision>
-    <origin xyz="0.226185 0.008494 0.021094" rpy="0 0 0"/>
+    <origin xyz="0.025 0.0492 -0.020718" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/91590A121_External_Retaining_Ring_v1_2.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -200,19 +199,19 @@
 
 <link name="2025K9_303_Stainless_Steel_Rotary_Shaft_with_Retaining_Ring_Grooves_v1_1">
   <inertial>
-    <origin xyz="2.9421339503565846e-07 -0.02344973289915206 4.672469118213729e-08" rpy="0 0 0"/>
+    <origin xyz="-3.686981275841106e-14 6.104977634535658e-13 -0.023450621315963708" rpy="0 0 0"/>
     <mass value="0.07269824555688346"/>
-    <inertia ixx="3.6e-05" iyy="1e-06" izz="3.6e-05" ixy="0.0" iyz="0.0" ixz="-0.0"/>
+    <inertia ixx="3.6e-05" iyy="3.6e-05" izz="1e-06" ixy="-0.0" iyz="0.0" ixz="0.0"/>
   </inertial>
   <visual>
-    <origin xyz="0.226185 0.007859 0.021094" rpy="0 0 0"/>
+    <origin xyz="0.025 0.0492 -0.021353" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/2025K9_303_Stainless_Steel_Rotary_Shaft_with_Retaining_Ring_Grooves_v1_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="steel_satin"/>
   </visual>
   <collision>
-    <origin xyz="0.226185 0.007859 0.021094" rpy="0 0 0"/>
+    <origin xyz="0.025 0.0492 -0.021353" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/2025K9_303_Stainless_Steel_Rotary_Shaft_with_Retaining_Ring_Grooves_v1_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -221,19 +220,19 @@
 
 <link name="91590A121_External_Retaining_Ring_v1_3">
   <inertial>
-    <origin xyz="-0.0002859033567979563 0.00031748841681164194 4.672472619232648e-08" rpy="0 0 0"/>
+    <origin xyz="-1.8561541192951836e-15 -0.00028619756958252196 0.00031759999999999026" rpy="0 0 0"/>
     <mass value="0.00024760918611349786"/>
-    <inertia ixx="1E-06" iyy="1E-06" izz="1E-06" ixy="0.0" iyz="0.0" ixz="0.0"/>
+    <inertia ixx="1E-06" iyy="1E-06" izz="1E-06" ixy="0.0" iyz="-0.0" ixz="-0.0"/>
   </inertial>
   <visual>
-    <origin xyz="0.226185 0.030109 0.021094" rpy="0 0 0"/>
+    <origin xyz="0.025 0.0492 0.000898" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/91590A121_External_Retaining_Ring_v1_3.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="steel_satin"/>
   </visual>
   <collision>
-    <origin xyz="0.226185 0.030109 0.021094" rpy="0 0 0"/>
+    <origin xyz="0.025 0.0492 0.000898" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/91590A121_External_Retaining_Ring_v1_3.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -242,19 +241,19 @@
 
 <link name="91590A121_External_Retaining_Ring_v1_1">
   <inertial>
-    <origin xyz="-0.0002859033567979563 -0.00031771158318838477 4.672472619232648e-08" rpy="0 0 0"/>
+    <origin xyz="-1.8561541192951836e-15 -0.000286197569582515 -0.0003176000000000255" rpy="0 0 0"/>
     <mass value="0.00024760918611349786"/>
     <inertia ixx="1E-06" iyy="1E-06" izz="1E-06" ixy="0.0" iyz="0.0" ixz="0.0"/>
   </inertial>
   <visual>
-    <origin xyz="0.226185 0.041234 0.021094" rpy="0 0 0"/>
+    <origin xyz="0.025 0.0492 0.012023" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/91590A121_External_Retaining_Ring_v1_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="steel_satin"/>
   </visual>
   <collision>
-    <origin xyz="0.226185 0.041234 0.021094" rpy="0 0 0"/>
+    <origin xyz="0.025 0.0492 0.012023" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/91590A121_External_Retaining_Ring_v1_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -263,19 +262,19 @@
 
 <link name="Component39_1">
   <inertial>
-    <origin xyz="4.012993808366616e-07 0.007256391231184128 -0.004453611325866483" rpy="0 0 0"/>
+    <origin xyz="-0.004453658050594535 1.0708659631264439e-07 0.007256502814372477" rpy="0 0 0"/>
     <mass value="0.015364690334044086"/>
-    <inertia ixx="1e-06" iyy="1e-06" izz="2e-06" ixy="0.0" iyz="-0.0" ixz="-0.0"/>
+    <inertia ixx="2e-06" iyy="1e-06" izz="1e-06" ixy="-0.0" iyz="0.0" ixz="-0.0"/>
   </inertial>
   <visual>
-    <origin xyz="0.226261 0.089331 0.052744" rpy="0 0 0"/>
+    <origin xyz="0.05665 0.049276 0.06012" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/Component39_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="aluminum_satin"/>
   </visual>
   <collision>
-    <origin xyz="0.226261 0.089331 0.052744" rpy="0 0 0"/>
+    <origin xyz="0.05665 0.049276 0.06012" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/Component39_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -284,19 +283,19 @@
 
 <link name="JX_servo_v80_3">
   <inertial>
-    <origin xyz="-0.00014277640071522213 -0.01667057760210608 -0.032810682562249185" rpy="0 0 0"/>
     <mass value="0.2114"/>
-    <inertia ixx="0.001903" iyy="0.001012" izz="0.001692" ixy="-0.0" iyz="-4.9e-05" ixz="-1e-06"/>
+    <origin xyz="-0.03281072928697727 -0.00014307061349972533 -0.016670466018917744" rpy="0 0 0"/>
+    <inertia ixx="0.001692" iyy="0.001903" izz="0.001012" ixy="-1e-06" iyz="-0.0" ixz="-4.9e-05"/>
   </inertial>
   <visual>
-    <origin xyz="0.226261 0.089331 0.065444" rpy="0 0 0"/>
+    <origin xyz="0.06935 0.049276 0.06012" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/JX_servo_v80_3.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="polystyrene"/>
   </visual>
   <collision>
-    <origin xyz="0.226261 0.089331 0.065444" rpy="0 0 0"/>
+    <origin xyz="0.06935 0.049276 0.06012" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/JX_servo_v80_3.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -305,19 +304,19 @@
 
 <link name="Component9__1__1">
   <inertial>
-    <origin xyz="-0.00843870704729241 -0.0002762815006513153 0.03333634353861456" rpy="0 0 0"/>
+    <origin xyz="0.03333629681388652 -0.008439001260076934 -0.00027616991746298725" rpy="0 0 0"/>
     <mass value="0.13759034791983457"/>
-    <inertia ixx="5.4e-05" iyy="6.2e-05" izz="1e-05" ixy="0.0" iyz="0.0" ixz="-0.0"/>
+    <inertia ixx="1e-05" iyy="5.4e-05" izz="6.2e-05" ixy="-0.0" iyz="0.0" ixz="0.0"/>
   </inertial>
   <visual>
-    <origin xyz="0.217911 0.144931 0.077944" rpy="0 0 0"/>
+    <origin xyz="0.08185 0.040926 0.11572" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/Component9__1__1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="steel_satin"/>
   </visual>
   <collision>
-    <origin xyz="0.217911 0.144931 0.077944" rpy="0 0 0"/>
+    <origin xyz="0.08185 0.040926 0.11572" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/Component9__1__1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -326,19 +325,19 @@
 
 <link name="Component4_1">
   <inertial>
-    <origin xyz="2.9421258293527153e-07 -0.0027447847308813556 4.672472811093065e-08" rpy="0 0 0"/>
+    <origin xyz="4.5102810375396984e-17 -2.0160956237802452e-13 -0.0027446731476930067" rpy="0 0 0"/>
     <mass value="0.011955695388392617"/>
-    <inertia ixx="1e-06" iyy="2e-06" izz="1e-06" ixy="0.0" iyz="-0.0" ixz="0.0"/>
+    <inertia ixx="1e-06" iyy="1e-06" izz="2e-06" ixy="0.0" iyz="0.0" ixz="0.0"/>
   </inertial>
   <visual>
-    <origin xyz="0.226185 0.041869 0.021094" rpy="0 0 0"/>
+    <origin xyz="0.025 0.0492 0.012658" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/Component4_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="aluminum_satin"/>
   </visual>
   <collision>
-    <origin xyz="0.226185 0.041869 0.021094" rpy="0 0 0"/>
+    <origin xyz="0.025 0.0492 0.012658" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/Component4_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -347,19 +346,19 @@
 
 <link name="Component32_1">
   <inertial>
-    <origin xyz="-7.76893528999234e-05 -0.016749806336665382 0.00046218653518774466" rpy="0 0 0"/>
+    <origin xyz="0.0004621398104596615 -7.798356568446824e-05 -0.016749694753477054" rpy="0 0 0"/>
     <mass value="0.11550269835963742"/>
-    <inertia ixx="9.9e-05" iyy="9.4e-05" izz="4.9e-05" ixy="0.0" iyz="-0.0" ixz="-0.0"/>
+    <inertia ixx="4.9e-05" iyy="9.9e-05" izz="9.4e-05" ixy="-0.0" iyz="0.0" ixz="-0.0"/>
   </inertial>
   <visual>
-    <origin xyz="0.226185 0.047181 0.021094" rpy="0 0 0"/>
+    <origin xyz="0.025 0.0492 0.01797" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/Component32_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="aluminum_satin"/>
   </visual>
   <collision>
-    <origin xyz="0.226185 0.047181 0.021094" rpy="0 0 0"/>
+    <origin xyz="0.025 0.0492 0.01797" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/Component32_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -368,19 +367,19 @@
 
 <link name="15T-horn_v13_1">
   <inertial>
-    <origin xyz="6.445217540576587e-05 -0.0012005190897811545 4.672472825317797e-08" rpy="0 0 0"/>
+    <origin xyz="2.0469737016526324e-16 6.415796262119328e-05 -0.00120040750659281" rpy="0 0 0"/>
     <mass value="0.004179712167666874"/>
-    <inertia ixx="1E-06" iyy="1E-06" izz="1E-06" ixy="0.0" iyz="-0.0" ixz="0.0"/>
+    <inertia ixx="1E-06" iyy="1E-06" izz="1E-06" ixy="-0.0" iyz="0.0" ixz="-0.0"/>
   </inertial>
   <visual>
-    <origin xyz="0.226185 -0.006823 0.021094" rpy="0 0 0"/>
+    <origin xyz="0.025 0.0492 -0.036034" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/15T-horn_v13_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="aluminum_satin"/>
   </visual>
   <collision>
-    <origin xyz="0.226185 -0.006823 0.021094" rpy="0 0 0"/>
+    <origin xyz="0.025 0.0492 -0.036034" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/15T-horn_v13_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -389,19 +388,19 @@
 
 <link name="JX_servo_v80_1">
   <inertial>
-    <origin xyz="0.0166706602317018 0.03901071770378921 -0.00014313097538535408" rpy="0 0 0"/>
+    <origin xyz="-0.0001431777001134303 0.01667036601891729 0.039010829286977536" rpy="0 0 0"/>
     <mass value="0.2114"/>
-    <inertia ixx="0.001012" iyy="0.001692" izz="0.001903" ixy="-4.9e-05" iyz="1e-06" ixz="0.0"/>
+    <inertia ixx="0.001903" iyy="0.001012" izz="0.001692" ixy="0.0" iyz="-4.9e-05" ixz="1e-06"/>
   </inertial>
   <visual>
-    <origin xyz="0.226185 -0.006923 0.021094" rpy="0 0 0"/>
+    <origin xyz="0.025 0.0492 -0.036134" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/JX_servo_v80_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="polystyrene"/>
   </visual>
   <collision>
-    <origin xyz="0.226185 -0.006923 0.021094" rpy="0 0 0"/>
+    <origin xyz="0.025 0.0492 -0.036134" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/JX_servo_v80_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -410,19 +409,19 @@
 
 <link name="JX_servo_v80_2">
   <inertial>
-    <origin xyz="-0.015338469413624434 0.03892942239789397 0.008506669024614683" rpy="0 0 0"/>
     <mass value="0.379197"/>
-    <inertia ixx="0.001692" iyy="0.001012" izz="0.001903" ixy="4.9e-05" iyz="-0.0" ixz="1e-06"/>
+    <origin xyz="0.008506622299886635 -0.015338763626409006 0.03892953398108233" rpy="0 0 0"/>
+    <inertia ixx="0.001903" iyy="0.001692" izz="0.001012" ixy="1e-06" iyz="4.9e-05" ixz="-0.0"/>
   </inertial>
   <visual>
-    <origin xyz="0.213561 0.144931 0.029343" rpy="0 0 0"/>
+    <origin xyz="0.033249 0.036576 0.11572" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/JX_servo_v80_2.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="polystyrene"/>
   </visual>
   <collision>
-    <origin xyz="0.213561 0.144931 0.029343" rpy="0 0 0"/>
+    <origin xyz="0.033249 0.036576 0.11572" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/JX_servo_v80_2.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -431,19 +430,19 @@
 
 <link name="91590A121_External_Retaining_Ring_v1_4">
   <inertial>
-    <origin xyz="-0.0002859033567972208 -0.00031771158318838477 4.672472627212376e-08" rpy="0 0 0"/>
+    <origin xyz="-1.8006429680639258e-15 -0.0002861975695817448 -0.0003176000000000342" rpy="0 0 0"/>
     <mass value="0.00024760918611349786"/>
     <inertia ixx="1E-06" iyy="1E-06" izz="1E-06" ixy="0.0" iyz="0.0" ixz="0.0"/>
   </inertial>
   <visual>
-    <origin xyz="0.117785 0.041234 0.021094" rpy="0 0 0"/>
+    <origin xyz="0.025 -0.0592 0.012023" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/91590A121_External_Retaining_Ring_v1_4.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="steel_satin"/>
   </visual>
   <collision>
-    <origin xyz="0.117785 0.041234 0.021094" rpy="0 0 0"/>
+    <origin xyz="0.025 -0.0592 0.012023" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/91590A121_External_Retaining_Ring_v1_4.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -452,19 +451,19 @@
 
 <link name="Component4_2">
   <inertial>
-    <origin xyz="2.9421258371242764e-07 -0.0027447847308813625 4.6724728190727927e-08" rpy="0 0 0"/>
+    <origin xyz="1.1796119636642288e-16 -2.0084628404859473e-13 -0.002744673147693012" rpy="0 0 0"/>
     <mass value="0.011955695388392617"/>
-    <inertia ixx="1e-06" iyy="2e-06" izz="1e-06" ixy="0.0" iyz="0.0" ixz="0.0"/>
+    <inertia ixx="1e-06" iyy="1e-06" izz="2e-06" ixy="0.0" iyz="0.0" ixz="0.0"/>
   </inertial>
   <visual>
-    <origin xyz="0.117785 0.041869 0.021094" rpy="0 0 0"/>
+    <origin xyz="0.025 -0.0592 0.012658" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/Component4_2.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="aluminum_satin"/>
   </visual>
   <collision>
-    <origin xyz="0.117785 0.041869 0.021094" rpy="0 0 0"/>
+    <origin xyz="0.025 -0.0592 0.012658" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/Component4_2.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -473,19 +472,19 @@
 
 <link name="Component32_2">
   <inertial>
-    <origin xyz="-7.768935289907686e-05 -0.016749806336665243 0.00046218653518772385" rpy="0 0 0"/>
+    <origin xyz="0.00046213981045967883 -7.798356568361475e-05 -0.016749694753476874" rpy="0 0 0"/>
     <mass value="0.11550269835963742"/>
-    <inertia ixx="9.9e-05" iyy="9.4e-05" izz="4.9e-05" ixy="0.0" iyz="-0.0" ixz="-0.0"/>
+    <inertia ixx="4.9e-05" iyy="9.9e-05" izz="9.4e-05" ixy="-0.0" iyz="0.0" ixz="-0.0"/>
   </inertial>
   <visual>
-    <origin xyz="0.117785 0.047181 0.021094" rpy="0 0 0"/>
+    <origin xyz="0.025 -0.0592 0.01797" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/Component32_2.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="aluminum_satin"/>
   </visual>
   <collision>
-    <origin xyz="0.117785 0.047181 0.021094" rpy="0 0 0"/>
+    <origin xyz="0.025 -0.0592 0.01797" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/Component32_2.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -494,19 +493,19 @@
 
 <link name="Component39_2">
   <inertial>
-    <origin xyz="4.012993817387178e-07 0.007256391231184323 -0.004453611325866379" rpy="0 0 0"/>
+    <origin xyz="-0.004453658050594431 1.0708659720082281e-07 0.0072565028143726645" rpy="0 0 0"/>
     <mass value="0.015364690334044086"/>
-    <inertia ixx="1e-06" iyy="1e-06" izz="2e-06" ixy="0.0" iyz="-0.0" ixz="-0.0"/>
+    <inertia ixx="2e-06" iyy="1e-06" izz="1e-06" ixy="-0.0" iyz="0.0" ixz="-0.0"/>
   </inertial>
   <visual>
-    <origin xyz="0.117861 0.089331 0.052744" rpy="0 0 0"/>
+    <origin xyz="0.05665 -0.059124 0.06012" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/Component39_2.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="aluminum_satin"/>
   </visual>
   <collision>
-    <origin xyz="0.117861 0.089331 0.052744" rpy="0 0 0"/>
+    <origin xyz="0.05665 -0.059124 0.06012" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/Component39_2.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -515,19 +514,19 @@
 
 <link name="JX_servo_v80_5">
   <inertial>
-    <origin xyz="-0.00014277640071438946 -0.016670577602105885 -0.03281068256224917" rpy="0 0 0"/>
+    <origin xyz="-0.03281072928697726 -0.00014307061349891348 -0.016670466018917536" rpy="0 0 0"/>
     <mass value="0.2114"/>
-    <inertia ixx="0.001903" iyy="0.001012" izz="0.001692" ixy="-0.0" iyz="-4.9e-05" ixz="-1e-06"/>
+    <inertia ixx="0.001692" iyy="0.001903" izz="0.001012" ixy="-1e-06" iyz="-0.0" ixz="-4.9e-05"/>
   </inertial>
   <visual>
-    <origin xyz="0.117861 0.089331 0.065444" rpy="0 0 0"/>
+    <origin xyz="0.06935 -0.059124 0.06012" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/JX_servo_v80_5.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="polystyrene"/>
   </visual>
   <collision>
-    <origin xyz="0.117861 0.089331 0.065444" rpy="0 0 0"/>
+    <origin xyz="0.06935 -0.059124 0.06012" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/JX_servo_v80_5.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -536,19 +535,19 @@
 
 <link name="JX_servo_v80_7">
   <inertial>
-    <origin xyz="-0.010060727987577997 0.03892942239789415 -0.008506975575158279" rpy="0 0 0"/>
     <mass value="0.379197"/>
-    <inertia ixx="0.001692" iyy="0.001012" izz="0.001903" ixy="-4.9e-05" iyz="0.0" ixz="1e-06"/>
+    <origin xyz="-0.00850702229988633 -0.010061022200362549 0.03892953398108248" rpy="0 0 0"/>
+    <inertia ixx="0.001903" iyy="0.001692" izz="0.001012" ixy="1e-06" iyz="-4.9e-05" ixz="0.0"/>
   </inertial>
   <visual>
-    <origin xyz="0.105161 0.144931 0.012343" rpy="0 0 0"/>
+    <origin xyz="0.016249 -0.071824 0.11572" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/JX_servo_v80_7.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="polystyrene"/>
   </visual>
   <collision>
-    <origin xyz="0.105161 0.144931 0.012343" rpy="0 0 0"/>
+    <origin xyz="0.016249 -0.071824 0.11572" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/JX_servo_v80_7.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -557,19 +556,19 @@
 
 <link name="Component9__1__2">
   <inertial>
-    <origin xyz="-0.008438707047291494 -0.00027628150065114876 0.0333363435386146" rpy="0 0 0"/>
+    <origin xyz="0.03333629681388656 -0.008439001260075997 -0.00027616991746280684" rpy="0 0 0"/>
     <mass value="0.13759034791983457"/>
-    <inertia ixx="5.4e-05" iyy="6.2e-05" izz="1e-05" ixy="0.0" iyz="0.0" ixz="-0.0"/>
+    <inertia ixx="1e-05" iyy="5.4e-05" izz="6.2e-05" ixy="-0.0" iyz="0.0" ixz="0.0"/>
   </inertial>
   <visual>
-    <origin xyz="0.109511 0.144931 0.077944" rpy="0 0 0"/>
+    <origin xyz="0.08185 -0.067474 0.11572" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/Component9__1__2.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="steel_satin"/>
   </visual>
   <collision>
-    <origin xyz="0.109511 0.144931 0.077944" rpy="0 0 0"/>
+    <origin xyz="0.08185 -0.067474 0.11572" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/Component9__1__2.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -578,19 +577,19 @@
 
 <link name="91590A121_External_Retaining_Ring_v1_5">
   <inertial>
-    <origin xyz="-0.000285903356797082 0.00031748841681159337 4.672472627559321e-08" rpy="0 0 0"/>
+    <origin xyz="-1.8006429680639258e-15 -0.000286197569581606 0.00031759999999995026" rpy="0 0 0"/>
     <mass value="0.00024760918611349786"/>
-    <inertia ixx="1E-06" iyy="1E-06" izz="1E-06" ixy="0.0" iyz="0.0" ixz="0.0"/>
+    <inertia ixx="1E-06" iyy="1E-06" izz="1E-06" ixy="0.0" iyz="0.0" ixz="-0.0"/>
   </inertial>
   <visual>
-    <origin xyz="0.117785 0.030109 0.021094" rpy="0 0 0"/>
+    <origin xyz="0.025 -0.0592 0.000898" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/91590A121_External_Retaining_Ring_v1_5.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="steel_satin"/>
   </visual>
   <collision>
-    <origin xyz="0.117785 0.030109 0.021094" rpy="0 0 0"/>
+    <origin xyz="0.025 -0.0592 0.000898" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/91590A121_External_Retaining_Ring_v1_5.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -599,19 +598,19 @@
 
 <link name="91590A121_External_Retaining_Ring_v1_6">
   <inertial>
-    <origin xyz="0.0002864917823671709 0.00031788841681165 4.6724730026065364e-08" rpy="0 0 0"/>
+    <origin xyz="1.9463597400459776e-15 0.00028619756958262604 0.0003180000000000058" rpy="0 0 0"/>
     <mass value="0.00024760918611349786"/>
     <inertia ixx="1E-06" iyy="1E-06" izz="1E-06" ixy="0.0" iyz="0.0" ixz="0.0"/>
   </inertial>
   <visual>
-    <origin xyz="0.117785 0.008494 0.021094" rpy="0 0 0"/>
+    <origin xyz="0.025 -0.0592 -0.020717" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/91590A121_External_Retaining_Ring_v1_6.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="steel_satin"/>
   </visual>
   <collision>
-    <origin xyz="0.117785 0.008494 0.021094" rpy="0 0 0"/>
+    <origin xyz="0.025 -0.0592 -0.020717" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/91590A121_External_Retaining_Ring_v1_6.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -620,19 +619,19 @@
 
 <link name="2025K9_303_Stainless_Steel_Rotary_Shaft_with_Retaining_Ring_Grooves_v1_2">
   <inertial>
-    <origin xyz="2.9421339585444795e-07 -0.02344973289915206 4.672469127234291e-08" rpy="0 0 0"/>
+    <origin xyz="-3.676572934985245e-14 6.113304307220346e-13 -0.023450621315963708" rpy="0 0 0"/>
     <mass value="0.07269824555688346"/>
-    <inertia ixx="3.6e-05" iyy="1e-06" izz="3.6e-05" ixy="0.0" iyz="0.0" ixz="0.0"/>
+    <inertia ixx="3.6e-05" iyy="3.6e-05" izz="1e-06" ixy="0.0" iyz="0.0" ixz="0.0"/>
   </inertial>
   <visual>
-    <origin xyz="0.117785 0.007859 0.021094" rpy="0 0 0"/>
+    <origin xyz="0.025 -0.0592 -0.021353" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/2025K9_303_Stainless_Steel_Rotary_Shaft_with_Retaining_Ring_Grooves_v1_2.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="steel_satin"/>
   </visual>
   <collision>
-    <origin xyz="0.117785 0.007859 0.021094" rpy="0 0 0"/>
+    <origin xyz="0.025 -0.0592 -0.021353" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/2025K9_303_Stainless_Steel_Rotary_Shaft_with_Retaining_Ring_Grooves_v1_2.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -641,19 +640,19 @@
 
 <link name="Component6_2">
   <inertial>
-    <origin xyz="6.445217540662629e-05 -0.0012005190897811926 4.672472834685304e-08" rpy="0 0 0"/>
+    <origin xyz="2.6020852139652106e-16 6.415796262213003e-05 -0.0012004075065928446" rpy="0 0 0"/>
     <mass value="0.004179712167666874"/>
-    <inertia ixx="1E-06" iyy="1E-06" izz="1E-06" ixy="0.0" iyz="-0.0" ixz="-0.0"/>
+    <inertia ixx="1E-06" iyy="1E-06" izz="1E-06" ixy="-0.0" iyz="0.0" ixz="-0.0"/>
   </inertial>
   <visual>
-    <origin xyz="0.117785 -0.006823 0.021094" rpy="0 0 0"/>
+    <origin xyz="0.025 -0.0592 -0.036034" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/Component6_2.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="aluminum_satin"/>
   </visual>
   <collision>
-    <origin xyz="0.117785 -0.006823 0.021094" rpy="0 0 0"/>
+    <origin xyz="0.025 -0.0592 -0.036034" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/Component6_2.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -662,19 +661,19 @@
 
 <link name="JX_servo_v80_4">
   <inertial>
-    <origin xyz="-0.01667007180613264 0.03901071770378893 0.00014322442484144063" rpy="0 0 0"/>
+    <origin xyz="0.00014317770011336786 -0.01667036601891722 0.039010829286977286" rpy="0 0 0"/>
     <mass value="0.2114"/>
-    <inertia ixx="0.001012" iyy="0.001692" izz="0.001903" ixy="4.9e-05" iyz="-1e-06" ixz="0.0"/>
+    <inertia ixx="0.001903" iyy="0.001012" izz="0.001692" ixy="0.0" iyz="4.9e-05" ixz="-1e-06"/>
   </inertial>
   <visual>
-    <origin xyz="0.117785 -0.006923 0.021094" rpy="0 0 0"/>
+    <origin xyz="0.025 -0.0592 -0.036134" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/JX_servo_v80_4.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="polystyrene"/>
   </visual>
   <collision>
-    <origin xyz="0.117785 -0.006923 0.021094" rpy="0 0 0"/>
+    <origin xyz="0.025 -0.0592 -0.036134" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/JX_servo_v80_4.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -683,19 +682,19 @@
 
 <link name="Component5_Mirror__1">
   <inertial>
-    <origin xyz="-0.01579035602938142 -0.037242488618799974 0.008499846724729292" rpy="0 0 0"/>
+    <origin xyz="0.00849980000000125 -0.015790650242165985 -0.03724237703561162" rpy="0 0 0"/>
     <mass value="0.09281870151638756"/>
-    <inertia ixx="0.000101" iyy="0.000141" izz="0.000217" ixy="1e-06" iyz="0.0" ixz="0.0"/>
+    <inertia ixx="0.000217" iyy="0.000101" izz="0.000141" ixy="0.0" iyz="1e-06" ixz="0.0"/>
   </inertial>
   <visual>
-    <origin xyz="0.094386 0.304931 0.029493" rpy="0 0 0"/>
+    <origin xyz="0.033399 -0.082599 0.27572" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/Component5_Mirror__1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="abs_white"/>
   </visual>
   <collision>
-    <origin xyz="0.094386 0.304931 0.029493" rpy="0 0 0"/>
+    <origin xyz="0.033399 -0.082599 0.27572" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/Component5_Mirror__1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -704,19 +703,19 @@
 
 <link name="JX_servo_v46_Mirror__2">
   <inertial>
-    <origin xyz="-0.03684115468396337 0.015402012110690366 0.00028637358733015275" rpy="0 0 0"/>
+    <origin xyz="0.0002863268626021806 -0.03684144889674791 0.015402123693879166" rpy="0 0 0"/>
     <mass value="0.2114"/>
-    <inertia ixx="0.00038" iyy="0.000359" izz="0.000552" ixy="4.4e-05" iyz="-0.0" ixz="-6e-06"/>
+    <inertia ixx="0.000552" iyy="0.00038" izz="0.000359" ixy="-6e-06" iyz="4.4e-05" ixz="-0.0"/>
   </inertial>
   <visual>
-    <origin xyz="0.071986 0.388531 0.020993" rpy="0 0 0"/>
+    <origin xyz="0.024899 -0.104999 0.35932" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/JX_servo_v46_Mirror__2.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="polystyrene"/>
   </visual>
   <collision>
-    <origin xyz="0.071986 0.388531 0.020993" rpy="0 0 0"/>
+    <origin xyz="0.024899 -0.104999 0.35932" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/JX_servo_v46_Mirror__2.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -725,19 +724,19 @@
 
 <link name="L_Mirror__1">
   <inertial>
-    <origin xyz="-0.014975789884571725 -0.01091916282531652 -0.04257997285080964" rpy="0 0 0"/>
+    <origin xyz="-0.042580019575537656 -0.014976084097356332 -0.010919051242128275" rpy="0 0 0"/>
     <mass value="0.045500552100246464"/>
-    <inertia ixx="6.7e-05" iyy="4.1e-05" izz="4.6e-05" ixy="-0.0" iyz="-1.8e-05" ixz="-0.0"/>
+    <inertia ixx="4.6e-05" iyy="6.7e-05" izz="4.1e-05" ixy="-0.0" iyz="-0.0" ixz="-1.8e-05"/>
   </inertial>
   <visual>
-    <origin xyz="0.093686 0.332931 0.012493" rpy="0 0 0"/>
+    <origin xyz="0.016399 -0.083299 0.30372" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/L_Mirror__1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="abs_white"/>
   </visual>
   <collision>
-    <origin xyz="0.093686 0.332931 0.012493" rpy="0 0 0"/>
+    <origin xyz="0.016399 -0.083299 0.30372" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/L_Mirror__1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -746,19 +745,19 @@
 
 <link name="JX_servo_v46_Mirror__3">
   <inertial>
-    <origin xyz="-0.00878612556320428 -0.04019798788930984 -0.011241709258631494" rpy="0 0 0"/>
+    <origin xyz="-0.011241755983359566 -0.008786419775988846 -0.04019787630612176" rpy="0 0 0"/>
     <mass value="0.2114"/>
-    <inertia ixx="0.000552" iyy="0.000359" izz="0.00038" ixy="0.0" iyz="4.4e-05" ixz="6e-06"/>
+    <inertia ixx="0.00038" iyy="0.000552" izz="0.000359" ixy="6e-06" iyz="0.0" ixz="4.4e-05"/>
   </inertial>
   <visual>
-    <origin xyz="0.100186 0.333031 0.079493" rpy="0 0 0"/>
+    <origin xyz="0.083399 -0.076799 0.30382" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/JX_servo_v46_Mirror__3.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="polystyrene"/>
   </visual>
   <collision>
-    <origin xyz="0.100186 0.333031 0.079493" rpy="0 0 0"/>
+    <origin xyz="0.083399 -0.076799 0.30382" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/JX_servo_v46_Mirror__3.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -767,40 +766,40 @@
 
 <link name="left_foot">
   <inertial>
-    <origin xyz="0.008229282597750645 -0.03620820883926851 0.05767577474512388" rpy="0 0 0"/>
+    <origin xyz="0.05767572802039587 0.00822898838496594 -0.03620809725608026" rpy="0 0 0"/>
     <mass value="0.18549302395679304"/>
-    <inertia ixx="0.000496" iyy="0.000598" izz="0.000167" ixy="8e-06" iyz="2.3e-05" ixz="-8e-06"/>
+    <inertia ixx="0.000167" iyy="0.000496" izz="0.000598" ixy="-8e-06" iyz="8e-06" ixz="2.3e-05"/>
   </inertial>
   <visual>
-    <origin xyz="0.108686 0.388631 0.053893" rpy="0 0 0"/>
+    <origin xyz="0.057799 -0.068299 0.35942" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://hip-rejoint_description/meshes/Component8_Mirror__1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://hip-rejoint_description/meshes/left_foot_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="abs_white"/>
   </visual>
   <collision>
-    <origin xyz="0.108686 0.388631 0.053893" rpy="0 0 0"/>
+    <origin xyz="0.057799 -0.068299 0.35942" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://hip-rejoint_description/meshes/Component8_Mirror__1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://hip-rejoint_description/meshes/left_foot_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
 <link name="Component4__2__1">
   <inertial>
-    <origin xyz="-0.03836236384092319 -0.08477226287354095 0.003159966075554216" rpy="0 0 0"/>
+    <origin xyz="0.0031599193508261396 -0.03836265805370774 -0.08477215129035257" rpy="0 0 0"/>
     <mass value="0.15906974524164488"/>
-    <inertia ixx="0.000427" iyy="0.000271" izz="0.000652" ixy="1e-06" iyz="9e-06" ixz="0.0"/>
+    <inertia ixx="0.000652" iyy="0.000427" izz="0.000271" ixy="0.0" iyz="1e-06" ixz="9e-06"/>
   </inertial>
   <visual>
-    <origin xyz="0.072686 0.089331 0.020993" rpy="0 0 0"/>
+    <origin xyz="0.024899 -0.104299 0.06012" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/Component4__2__1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="abs_white"/>
   </visual>
   <collision>
-    <origin xyz="0.072686 0.089331 0.020993" rpy="0 0 0"/>
+    <origin xyz="0.024899 -0.104299 0.06012" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/Component4__2__1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -809,19 +808,19 @@
 
 <link name="JX_servo_v46_Mirror__1">
   <inertial>
-    <origin xyz="-0.0368411546839629 -0.015402435277067389 -0.0002866801378715554" rpy="0 0 0"/>
+    <origin xyz="-0.0002867268625995935 -0.03684144889674752 -0.015402323693878978" rpy="0 0 0"/>
     <mass value="0.2114"/>
-    <inertia ixx="0.00038" iyy="0.000359" izz="0.000552" ixy="-4.4e-05" iyz="-0.0" ixz="6e-06"/>
+    <inertia ixx="0.000552" iyy="0.00038" izz="0.000359" ixy="6e-06" iyz="-4.4e-05" ixz="-0.0"/>
   </inertial>
   <visual>
-    <origin xyz="0.072686 0.249331 0.020993" rpy="0 0 0"/>
+    <origin xyz="0.024899 -0.104299 0.22012" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/JX_servo_v46_Mirror__1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="polystyrene"/>
   </visual>
   <collision>
-    <origin xyz="0.072686 0.249331 0.020993" rpy="0 0 0"/>
+    <origin xyz="0.024899 -0.104299 0.22012" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/JX_servo_v46_Mirror__1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -830,19 +829,19 @@
 
 <link name="Component4_Mirror___1__1">
   <inertial>
-    <origin xyz="0.038363166439720375 -0.08477226287354125 0.0031599660755537856" rpy="0 0 0"/>
+    <origin xyz="0.0031599193508256886 0.038362872226935844 -0.0847721512903529" rpy="0 0 0"/>
     <mass value="0.15906974524164494"/>
-    <inertia ixx="0.000427" iyy="0.000271" izz="0.000652" ixy="-1e-06" iyz="9e-06" ixz="-0.0"/>
+    <inertia ixx="0.000652" iyy="0.000427" izz="0.000271" ixy="-0.0" iyz="-1e-06" ixz="9e-06"/>
   </inertial>
   <visual>
-    <origin xyz="0.271436 0.089331 0.020693" rpy="0 0 0"/>
+    <origin xyz="0.024599 0.094451 0.06012" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/Component4_Mirror___1__1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="abs_white"/>
   </visual>
   <collision>
-    <origin xyz="0.271436 0.089331 0.020693" rpy="0 0 0"/>
+    <origin xyz="0.024599 0.094451 0.06012" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/Component4_Mirror___1__1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -851,19 +850,19 @@
 
 <link name="JX_servo_v46_Mirror__9">
   <inertial>
-    <origin xyz="0.03684195728275985 -0.015402435277067333 0.00028637358732558696" rpy="0 0 0"/>
+    <origin xyz="0.00028632686260030016 0.03684166306997537 -0.015402323693878894" rpy="0 0 0"/>
     <mass value="0.2114"/>
-    <inertia ixx="0.00038" iyy="0.000359" izz="0.000552" ixy="4.4e-05" iyz="0.0" ixz="6e-06"/>
+    <inertia ixx="0.000552" iyy="0.00038" izz="0.000359" ixy="6e-06" iyz="4.4e-05" ixz="0.0"/>
   </inertial>
   <visual>
-    <origin xyz="0.271436 0.249331 0.020693" rpy="0 0 0"/>
+    <origin xyz="0.024599 0.094451 0.22012" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/JX_servo_v46_Mirror__9.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="polystyrene"/>
   </visual>
   <collision>
-    <origin xyz="0.271436 0.249331 0.020693" rpy="0 0 0"/>
+    <origin xyz="0.024599 0.094451 0.22012" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/JX_servo_v46_Mirror__9.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -872,19 +871,19 @@
 
 <link name="Component5_Mirror__Mirror__1">
   <inertial>
-    <origin xyz="0.015791158628178203 -0.03724248861880003 0.008499846724724949" rpy="0 0 0"/>
+    <origin xyz="0.00849979999999968 0.01579086441539357 -0.03724237703561162" rpy="0 0 0"/>
     <mass value="0.09281870151638758"/>
-    <inertia ixx="0.000101" iyy="0.000141" izz="0.000217" ixy="-1e-06" iyz="0.0" ixz="0.0"/>
+    <inertia ixx="0.000217" iyy="0.000101" izz="0.000141" ixy="0.0" iyz="-1e-06" ixz="0.0"/>
   </inertial>
   <visual>
-    <origin xyz="0.249736 0.304931 0.029193" rpy="0 0 0"/>
+    <origin xyz="0.033099 0.072751 0.27572" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/Component5_Mirror__Mirror__1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="abs_white"/>
   </visual>
   <collision>
-    <origin xyz="0.249736 0.304931 0.029193" rpy="0 0 0"/>
+    <origin xyz="0.033099 0.072751 0.27572" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/Component5_Mirror__Mirror__1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -893,19 +892,19 @@
 
 <link name="JX_servo_v46_Mirror__7">
   <inertial>
-    <origin xyz="0.03684195728276016 0.015402012110691143 -0.00028668013787922636" rpy="0 0 0"/>
+    <origin xyz="-0.0002867268626019111 0.03684166306997542 0.015402123693879555" rpy="0 0 0"/>
     <mass value="0.2114"/>
-    <inertia ixx="0.00038" iyy="0.000359" izz="0.000552" ixy="-4.4e-05" iyz="0.0" ixz="-6e-06"/>
+    <inertia ixx="0.000552" iyy="0.00038" izz="0.000359" ixy="-6e-06" iyz="-4.4e-05" ixz="0.0"/>
   </inertial>
   <visual>
-    <origin xyz="0.272136 0.388531 0.020693" rpy="0 0 0"/>
+    <origin xyz="0.024599 0.095151 0.35932" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/JX_servo_v46_Mirror__7.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="polystyrene"/>
   </visual>
   <collision>
-    <origin xyz="0.272136 0.388531 0.020693" rpy="0 0 0"/>
+    <origin xyz="0.024599 0.095151 0.35932" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/JX_servo_v46_Mirror__7.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -914,19 +913,19 @@
 
 <link name="L_Mirror__3">
   <inertial>
-    <origin xyz="0.015024210115428732 -0.010819162825315864 -0.04257997285081784" rpy="0 0 0"/>
+    <origin xyz="-0.042580019575540445 0.015023915902644375 -0.010819051242127342" rpy="0 0 0"/>
     <mass value="0.045500552100246464"/>
-    <inertia ixx="6.7e-05" iyy="4.1e-05" izz="4.6e-05" ixy="-0.0" iyz="-1.8e-05" ixz="-0.0"/>
+    <inertia ixx="4.6e-05" iyy="6.7e-05" izz="4.1e-05" ixy="-0.0" iyz="-0.0" ixz="-1.8e-05"/>
   </inertial>
   <visual>
-    <origin xyz="0.250436 0.332931 0.012193" rpy="0 0 0"/>
+    <origin xyz="0.016099 0.073451 0.30372" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/L_Mirror__3.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="abs_white"/>
   </visual>
   <collision>
-    <origin xyz="0.250436 0.332931 0.012193" rpy="0 0 0"/>
+    <origin xyz="0.016099 0.073451 0.30372" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/L_Mirror__3.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -935,19 +934,19 @@
 
 <link name="JX_servo_v46_Mirror__8">
   <inertial>
-    <origin xyz="-0.008786125563203712 0.035002012110691316 -0.011241709258639696" rpy="0 0 0"/>
+    <origin xyz="-0.011241755983362356 -0.008786419775988014 0.03500212369387967" rpy="0 0 0"/>
     <mass value="0.2114"/>
-    <inertia ixx="0.000552" iyy="0.000359" izz="0.00038" ixy="0.0" iyz="4.4e-05" ixz="6e-06"/>
+    <inertia ixx="0.00038" iyy="0.000552" izz="0.000359" ixy="6e-06" iyz="0.0" ixz="4.4e-05"/>
   </inertial>
   <visual>
-    <origin xyz="0.226936 0.408131 0.079193" rpy="0 0 0"/>
+    <origin xyz="0.083099 0.049951 0.37892" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/JX_servo_v46_Mirror__8.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="polystyrene"/>
   </visual>
   <collision>
-    <origin xyz="0.226936 0.408131 0.079193" rpy="0 0 0"/>
+    <origin xyz="0.083099 0.049951 0.37892" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/JX_servo_v46_Mirror__8.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -956,40 +955,40 @@
 
 <link name="right_foot">
   <inertial>
-    <origin xyz="-0.008228480213207129 -0.03620821077923492 0.05767579042820024" rpy="0 0 0"/>
+    <origin xyz="0.05767574370347767 -0.008228774425991459 -0.036208099196046395" rpy="0 0 0"/>
     <mass value="0.1854930080519705"/>
-    <inertia ixx="0.000496" iyy="0.000598" izz="0.000167" ixy="-8e-06" iyz="2.3e-05" ixz="8e-06"/>
+    <inertia ixx="0.000167" iyy="0.000496" izz="0.000598" ixy="8e-06" iyz="-8e-06" ixz="2.3e-05"/>
   </inertial>
   <visual>
-    <origin xyz="0.235436 0.388531 0.053593" rpy="0 0 0"/>
+    <origin xyz="0.057499 0.058451 0.35932" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://hip-rejoint_description/meshes/Component8_Mirror__Mirror__1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://hip-rejoint_description/meshes/right_foot_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="abs_white"/>
   </visual>
   <collision>
-    <origin xyz="0.235436 0.388531 0.053593" rpy="0 0 0"/>
+    <origin xyz="0.057499 0.058451 0.35932" rpy="0 0 0"/>
     <geometry>
-      <mesh filename="package://hip-rejoint_description/meshes/Component8_Mirror__Mirror__1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://hip-rejoint_description/meshes/right_foot_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
 <link name="Component65_1">
   <inertial>
-    <origin xyz="-0.005184097940403948 -0.031750411583187976 -0.05702757553439637" rpy="0 0 0"/>
+    <origin xyz="-0.057027622259124396 -0.005184392153188431 -0.031750299999999634" rpy="0 0 0"/>
     <mass value="0.550045164280725"/>
-    <inertia ixx="0.000783" iyy="0.002491" izz="0.002078" ixy="0.0" iyz="0.0" ixz="-0.0"/>
+    <inertia ixx="0.002078" iyy="0.000783" izz="0.002491" ixy="-0.0" iyz="0.0" ixz="0.0"/>
   </inertial>
   <visual>
-    <origin xyz="0.166785 -0.074023 0.036244" rpy="0 0 0"/>
+    <origin xyz="0.04015 -0.0102 -0.103234" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/Component65_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="abs_white"/>
   </visual>
   <collision>
-    <origin xyz="0.166785 -0.074023 0.036244" rpy="0 0 0"/>
+    <origin xyz="0.04015 -0.0102 -0.103234" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/Component65_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -998,19 +997,19 @@
 
 <link name="Component66_1">
   <inertial>
-    <origin xyz="2.9421278460728395e-07 -0.022700411583187953 0.023575046724728044" rpy="0 0 0"/>
-    <mass value="0.3199209891539212"/>
-    <inertia ixx="0.000104" iyy="0.000517" izz="0.000447" ixy="-0.0" iyz="-0.0" ixz="0.0"/>
+    <origin xyz="0.023575000000000013 1.7780915628762273e-16 -0.022700299999999646" rpy="0 0 0"/>
+    <mass value="0.3199209891539211"/>
+    <inertia ixx="0.000447" iyy="0.000104" izz="0.000517" ixy="-0.0" iyz="0.0" ixz="0.0"/>
   </inertial>
   <visual>
-    <origin xyz="0.171985 -0.074023 0.150394" rpy="0 0 0"/>
+    <origin xyz="0.1543 -0.005 -0.103234" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/Component66_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="brass_polished"/>
   </visual>
   <collision>
-    <origin xyz="0.171985 -0.074023 0.150394" rpy="0 0 0"/>
+    <origin xyz="0.1543 -0.005 -0.103234" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/Component66_1.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -1019,19 +1018,19 @@
 
 <link name="JX_servo_v46_Mirror__10">
   <inertial>
-    <origin xyz="-0.03684126177057695 -0.0154026352770667 -0.0002864801378689441" rpy="0 0 0"/>
+    <origin xyz="-0.00028652686259981325 -0.036841555983361404 -0.015402523693878463" rpy="0 0 0"/>
     <mass value="0.2114"/>
-    <inertia ixx="0.00038" iyy="0.000359" izz="0.000552" ixy="-4.4e-05" iyz="-0.0" ixz="6e-06"/>
+    <inertia ixx="0.000552" iyy="0.00038" izz="0.000359" ixy="6e-06" iyz="-4.4e-05" ixz="-0.0"/>
   </inertial>
   <visual>
-    <origin xyz="0.273585 -0.042273 0.036094" rpy="0 0 0"/>
+    <origin xyz="0.04 0.0966 -0.071484" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/JX_servo_v46_Mirror__10.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="polystyrene"/>
   </visual>
   <collision>
-    <origin xyz="0.273585 -0.042273 0.036094" rpy="0 0 0"/>
+    <origin xyz="0.04 0.0966 -0.071484" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/JX_servo_v46_Mirror__10.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -1040,19 +1039,19 @@
 
 <link name="JX_servo_v46_Mirror__11">
   <inertial>
-    <origin xyz="0.015141850196143947 -0.04019818788930868 0.008213519862116048" rpy="0 0 0"/>
+    <origin xyz="0.008213473137395816 0.015141555983359672 -0.04019807630612032" rpy="0 0 0"/>
     <mass value="0.2114"/>
-    <inertia ixx="0.00038" iyy="0.000359" izz="0.000552" ixy="-4.4e-05" iyz="0.0" ixz="-6e-06"/>
+    <inertia ixx="0.000552" iyy="0.00038" izz="0.000359" ixy="-6e-06" iyz="-4.4e-05" ixz="0.0"/>
   </inertial>
   <visual>
-    <origin xyz="0.331185 0.013427 0.044594" rpy="0 0 0"/>
+    <origin xyz="0.0485 0.1542 -0.015784" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/JX_servo_v46_Mirror__11.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="polystyrene"/>
   </visual>
   <collision>
-    <origin xyz="0.331185 0.013427 0.044594" rpy="0 0 0"/>
+    <origin xyz="0.0485 0.1542 -0.015784" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/JX_servo_v46_Mirror__11.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -1061,19 +1060,19 @@
 
 <link name="JX_servo_v46_Mirror__12">
   <inertial>
-    <origin xyz="0.036841850196146324 -0.015402635277066846 0.00028657358732495086" rpy="0 0 0"/>
+    <origin xyz="0.00028652686259972304 0.03684155598336175 -0.015402523693878518" rpy="0 0 0"/>
     <mass value="0.2114"/>
-    <inertia ixx="0.00038" iyy="0.000359" izz="0.000552" ixy="4.4e-05" iyz="0.0" ixz="6e-06"/>
+    <inertia ixx="0.000552" iyy="0.00038" izz="0.000359" ixy="6e-06" iyz="4.4e-05" ixz="0.0"/>
   </inertial>
   <visual>
-    <origin xyz="0.070385 -0.042273 0.036094" rpy="0 0 0"/>
+    <origin xyz="0.04 -0.1066 -0.071484" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/JX_servo_v46_Mirror__12.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="polystyrene"/>
   </visual>
   <collision>
-    <origin xyz="0.070385 -0.042273 0.036094" rpy="0 0 0"/>
+    <origin xyz="0.04 -0.1066 -0.071484" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/JX_servo_v46_Mirror__12.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -1082,19 +1081,19 @@
 
 <link name="JX_servo_v46_Mirror__13">
   <inertial>
-    <origin xyz="-0.015141261770573568 -0.0401981878893089 0.00878657358732133" rpy="0 0 0"/>
+    <origin xyz="0.008786526862586554 -0.015141555983359062 -0.04019807630612043" rpy="0 0 0"/>
     <mass value="0.2114"/>
-    <inertia ixx="0.00038" iyy="0.000359" izz="0.000552" ixy="4.4e-05" iyz="-0.0" ixz="-6e-06"/>
+    <inertia ixx="0.000552" iyy="0.00038" izz="0.000359" ixy="-6e-06" iyz="4.4e-05" ixz="-0.0"/>
   </inertial>
   <visual>
-    <origin xyz="0.012785 0.013427 0.044594" rpy="0 0 0"/>
+    <origin xyz="0.0485 -0.1642 -0.015784" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/JX_servo_v46_Mirror__13.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="polystyrene"/>
   </visual>
   <collision>
-    <origin xyz="0.012785 0.013427 0.044594" rpy="0 0 0"/>
+    <origin xyz="0.0485 -0.1642 -0.015784" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/JX_servo_v46_Mirror__13.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -1103,19 +1102,19 @@
 
 <link name="Component11_Mirror__2">
   <inertial>
-    <origin xyz="-0.0014997057872181974 -4.1158318753176104e-07 4.672472387473592e-08" rpy="0 0 0"/>
+    <origin xyz="1.174060848541103e-14 -0.0015000000000024716 -2.9999999917595943e-07" rpy="0 0 0"/>
     <mass value="0.003775795544427548"/>
-    <inertia ixx="1e-06" iyy="1E-06" izz="1E-06" ixy="0.0" iyz="-0.0" ixz="-0.0"/>
+    <inertia ixx="1E-06" iyy="1e-06" izz="1E-06" ixy="-0.0" iyz="-0.0" ixz="-0.0"/>
   </inertial>
   <visual>
-    <origin xyz="0.352885 0.069027 0.036094" rpy="0 0 0"/>
+    <origin xyz="0.04 0.1759 0.039816" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/Component11_Mirror__2.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="plastic_matte_black"/>
   </visual>
   <collision>
-    <origin xyz="0.352885 0.069027 0.036094" rpy="0 0 0"/>
+    <origin xyz="0.04 0.1759 0.039816" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/Component11_Mirror__2.stl" scale="0.001 0.001 0.001"/>
     </geometry>
@@ -1124,356 +1123,596 @@
 
 <link name="Component11_Mirror__3">
   <inertial>
-    <origin xyz="0.0015002942127881787 -4.115831874901277e-07 4.672473739170124e-08" rpy="0 0 0"/>
+    <origin xyz="-6.654399253847032e-15 0.0015000000000029712 -2.999999990996316e-07" rpy="0 0 0"/>
     <mass value="0.003775795544427548"/>
-    <inertia ixx="1e-06" iyy="1E-06" izz="1E-06" ixy="-0.0" iyz="0.0" ixz="-0.0"/>
+    <inertia ixx="1E-06" iyy="1e-06" izz="1E-06" ixy="-0.0" iyz="-0.0" ixz="0.0"/>
   </inertial>
   <visual>
-    <origin xyz="-0.008915 0.069027 0.036094" rpy="0 0 0"/>
+    <origin xyz="0.04 -0.1859 0.039816" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/Component11_Mirror__3.stl" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="plastic_matte_black"/>
   </visual>
   <collision>
-    <origin xyz="-0.008915 0.069027 0.036094" rpy="0 0 0"/>
+    <origin xyz="0.04 -0.1859 0.039816" rpy="0 0 0"/>
     <geometry>
       <mesh filename="package://hip-rejoint_description/meshes/Component11_Mirror__3.stl" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
-<joint name="rootfloat" type="fixed">
-  <origin xyz="0 0 0" rpy="1.57 0 1.57" />
-  <parent link="root" />
-  <child link="torso" />
-</joint>
+<link name="trunk">
+  <inertial>
+    <origin xyz="-0.024999999999999932 2.511766836188478e-13 -4.075620637523491e-05" rpy="0 0 0"/>
+    <mass value="0.19337373769234342"/>
+    <inertia ixx="0.000494" iyy="4.6e-05" izz="0.000538" ixy="0.0" iyz="0.0" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.0 -0.005 -0.005" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://hip-rejoint_description/meshes/trunk_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="acrylic_red"/>
+  </visual>
+  <collision>
+    <origin xyz="0.0 -0.005 -0.005" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://hip-rejoint_description/meshes/trunk_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="custom_servo_support__lower_neck__v2_1">
+  <inertial>
+    <origin xyz="-0.0001873462042440155 1.1439633962329054e-14 0.001965903992148993" rpy="0 0 0"/>
+    <mass value="0.0030444171650099846"/>
+    <inertia ixx="1E-06" iyy="1E-06" izz="1e-06" ixy="-0.0" iyz="-0.0" ixz="0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.09715 -0.005 -0.103234" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://hip-rejoint_description/meshes/custom_servo_support__lower_neck__v2_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="plastic_glossy_black"/>
+  </visual>
+  <collision>
+    <origin xyz="0.09715 -0.005 -0.103234" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://hip-rejoint_description/meshes/custom_servo_support__lower_neck__v2_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="gobilda-servo_1">
+  <inertial>
+    <origin xyz="-0.021069107694159497 -1.343324230497489e-09 0.019801967478668275" rpy="0 0 0"/>
+    <mass value="0.06058731126055281"/>
+    <inertia ixx="7e-06" iyy="1.4e-05" izz="1e-05" ixy="0.0" iyz="0.0" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.077 -0.005 -0.106214" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://hip-rejoint_description/meshes/gobilda-servo_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="plastic_glossy_grey"/>
+  </visual>
+  <collision>
+    <origin xyz="0.077 -0.005 -0.106214" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://hip-rejoint_description/meshes/gobilda-servo_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="25t-servo-hub_1">
+  <inertial>
+    <origin xyz="-4.778934504928722e-07 1.6215494579117223e-07 -0.0003424918529943699" rpy="0 0 0"/>
+    <mass value="0.005584850212079893"/>
+    <inertia ixx="1E-06" iyy="1E-06" izz="1E-06" ixy="-0.0" iyz="0.0" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.0883 -0.005 -0.147134" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://hip-rejoint_description/meshes/25t-servo-hub_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="aluminum_satin"/>
+  </visual>
+  <collision>
+    <origin xyz="0.0883 -0.005 -0.147134" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://hip-rejoint_description/meshes/25t-servo-hub_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="neck_1">
+  <inertial>
+    <origin xyz="2.761679773755077e-15 -0.001757162936255714 0.016322497824422827" rpy="0 0 0"/>
+    <mass value="0.015465374363363156"/>
+    <inertia ixx="1.1e-05" iyy="5e-06" izz="9e-06" ixy="-0.0" iyz="0.0" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.0883 -0.005 -0.149928" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://hip-rejoint_description/meshes/neck_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="abs_white"/>
+  </visual>
+  <collision>
+    <origin xyz="0.0883 -0.005 -0.149928" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://hip-rejoint_description/meshes/neck_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="25t-servo-hub_2">
+  <inertial>
+    <origin xyz="-4.778934504928722e-07 -0.0031361918529911464 7.907080462610239e-09" rpy="0 0 0"/>
+    <mass value="0.005584850212079893"/>
+    <inertia ixx="1E-06" iyy="1E-06" izz="1E-06" ixy="-0.0" iyz="-0.0" ixz="0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.0883 -0.031187 -0.183745" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://hip-rejoint_description/meshes/25t-servo-hub_2.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="aluminum_satin"/>
+  </visual>
+  <collision>
+    <origin xyz="0.0883 -0.031187 -0.183745" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://hip-rejoint_description/meshes/25t-servo-hub_2.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="gobilda-servo_2">
+  <inertial>
+    <origin xyz="0.009769107694159326 -0.021117732521328484 1.6871870181511817e-07" rpy="0 0 0"/>
+    <mass value="0.06058731126055281"/>
+    <inertia ixx="7e-06" iyy="1e-05" izz="1.4e-05" ixy="0.0" iyz="0.0" ixz="-0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.0883 -0.028393 -0.183745" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://hip-rejoint_description/meshes/gobilda-servo_2.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="plastic_glossy_grey"/>
+  </visual>
+  <collision>
+    <origin xyz="0.0883 -0.028393 -0.183745" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://hip-rejoint_description/meshes/gobilda-servo_2.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="head_1">
+  <inertial>
+    <origin xyz="0.019537949594635937 0.009180173124962852 0.00755420273403995" rpy="0 0 0"/>
+    <mass value="0.007653734054253099"/>
+    <inertia ixx="2e-06" iyy="3e-06" izz="3e-06" ixy="0.0" iyz="-0.0" ixz="0.0"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.0996 0.012527 -0.183745" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://hip-rejoint_description/meshes/head_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="abs_white"/>
+  </visual>
+  <collision>
+    <origin xyz="0.0996 0.012527 -0.183745" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://hip-rejoint_description/meshes/head_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
+<link name="camera_1">
+  <inertial>
+    <origin xyz="0.014184397326867326 -1.0758781820467342e-05 0.01921531813692287" rpy="0 0 0"/>
+    <mass value="0.094257141411043"/>
+    <inertia ixx="5.2e-05" iyy="4.3e-05" izz="6.9e-05" ixy="0.0" iyz="-0.0" ixz="-1.1e-05"/>
+  </inertial>
+  <visual>
+    <origin xyz="0.0863 -0.005493 -0.204745" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://hip-rejoint_description/meshes/camera_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+    <material name="plastic_glossy_black"/>
+  </visual>
+  <collision>
+    <origin xyz="0.0863 -0.005493 -0.204745" rpy="0 0 0"/>
+    <geometry>
+      <mesh filename="package://hip-rejoint_description/meshes/camera_1.stl" scale="0.001 0.001 0.001"/>
+    </geometry>
+  </collision>
+</link>
+
 <joint name="Rigid 2" type="fixed">
-  <origin xyz="-0.117785 -0.019449 -0.021094" rpy="0 0 0"/>
-  <parent link="torso"/>
+  <origin xyz="-0.025 0.0542 0.004763" rpy="0 0 0"/>
+  <parent link="trunk"/>
   <child link="R8-2RS_Bearing_1"/>
 </joint>
 
 <joint name="Rigid 3" type="fixed">
-  <origin xyz="-0.117785 -0.019449 -0.021094" rpy="0 0 0"/>
-  <parent link="torso"/>
+  <origin xyz="-0.025 0.0542 0.004763" rpy="0 0 0"/>
+  <parent link="trunk"/>
   <child link="R8-2RS_Bearing_2"/>
 </joint>
 
 <joint name="Rigid 4" type="fixed">
-  <origin xyz="-0.226185 -0.019449 -0.021094" rpy="0 0 0"/>
-  <parent link="torso"/>
+  <origin xyz="-0.025 -0.0542 0.004762" rpy="0 0 0"/>
+  <parent link="trunk"/>
   <child link="R8-2RS_Bearing_3"/>
 </joint>
 
 <joint name="Rigid 5" type="fixed">
-  <origin xyz="0.0 0.0 0.0" rpy="0 0 0"/>
+  <origin xyz="0.0 0.0 1e-06" rpy="0 0 0"/>
   <parent link="R8-2RS_Bearing_3"/>
   <child link="R8-2RS_Bearing_4"/>
 </joint>
 
 <joint name="Rigid 6" type="fixed">
-  <origin xyz="-0.117785 -0.019449 -0.021094" rpy="0 0 0"/>
-  <parent link="torso"/>
+  <origin xyz="-0.025 0.0542 0.004763" rpy="0 0 0"/>
+  <parent link="trunk"/>
   <child link="Component2_2"/>
 </joint>
 
 <joint name="Rigid 7" type="fixed">
-  <origin xyz="-0.226185 -0.019449 -0.021094" rpy="0 0 0"/>
-  <parent link="torso"/>
+  <origin xyz="-0.025 -0.0542 0.004762" rpy="0 0 0"/>
+  <parent link="trunk"/>
   <child link="Component2_1"/>
 </joint>
 
 <joint name="Rigid 8" type="fixed">
-  <origin xyz="0.0 0.010955 0.0" rpy="0 0 0"/>
+  <origin xyz="0.0 0.0 0.010956" rpy="0 0 0"/>
   <parent link="Component2_1"/>
   <child link="91590A121_External_Retaining_Ring_v1_2"/>
 </joint>
 
 <joint name="right_hip_yaw" type="continuous">
-  <origin xyz="0.0 0.000635 0.0" rpy="0 0 0"/>
+  <origin xyz="0.0 0.0 0.000635" rpy="0 0 0"/>
   <parent link="91590A121_External_Retaining_Ring_v1_2"/>
   <child link="2025K9_303_Stainless_Steel_Rotary_Shaft_with_Retaining_Ring_Grooves_v1_1"/>
-  <axis xyz="-0.0 -1.0 0.0"/>
+  <axis xyz="0.0 0.0 -1.0"/>
 </joint>
 
 <joint name="Rigid 10" type="fixed">
-  <origin xyz="0.0 -0.02225 0.0" rpy="0 0 0"/>
+  <origin xyz="0.0 0.0 -0.022251" rpy="0 0 0"/>
   <parent link="2025K9_303_Stainless_Steel_Rotary_Shaft_with_Retaining_Ring_Grooves_v1_1"/>
   <child link="91590A121_External_Retaining_Ring_v1_3"/>
 </joint>
 
 <joint name="Rigid 11" type="fixed">
-  <origin xyz="0.0 -0.033375 0.0" rpy="0 0 0"/>
+  <origin xyz="0.0 0.0 -0.033376" rpy="0 0 0"/>
   <parent link="2025K9_303_Stainless_Steel_Rotary_Shaft_with_Retaining_Ring_Grooves_v1_1"/>
   <child link="91590A121_External_Retaining_Ring_v1_1"/>
 </joint>
 
 <joint name="Rigid 12" type="fixed">
-  <origin xyz="-7.6e-05 -0.04215 -0.03165" rpy="0 0 0"/>
+  <origin xyz="-0.03165 -7.6e-05 -0.04215" rpy="0 0 0"/>
   <parent link="Component32_1"/>
   <child link="Component39_1"/>
 </joint>
 
 <joint name="right_hip_roll" type="continuous">
-  <origin xyz="0.0 0.0 -0.0127" rpy="0 0 0"/>
+  <origin xyz="-0.0127 0.0 0.0" rpy="0 0 0"/>
   <parent link="Component39_1"/>
   <child link="JX_servo_v80_3"/>
-  <axis xyz="0.0 0.0 1.0"/>
+  <axis xyz="1.0 0.0 0.0"/>
 </joint>
 
 <joint name="Rigid 15" type="fixed">
-  <origin xyz="0.00835 -0.0556 -0.0125" rpy="0 0 0"/>
+  <origin xyz="-0.0125 0.00835 -0.0556" rpy="0 0 0"/>
   <parent link="JX_servo_v80_3"/>
   <child link="Component9__1__1"/>
 </joint>
 
 <joint name="Rigid 16" type="fixed">
-  <origin xyz="0.0 -0.000635 0.0" rpy="0 0 0"/>
+  <origin xyz="0.0 0.0 -0.000635" rpy="0 0 0"/>
   <parent link="91590A121_External_Retaining_Ring_v1_1"/>
   <child link="Component4_1"/>
 </joint>
 
 <joint name="Rigid 17" type="fixed">
-  <origin xyz="0.0 -0.005312 0.0" rpy="0 0 0"/>
+  <origin xyz="0.0 0.0 -0.005312" rpy="0 0 0"/>
   <parent link="Component4_1"/>
   <child link="Component32_1"/>
 </joint>
 
 <joint name="Rigid 18" type="fixed">
-  <origin xyz="0.0 0.014682 0.0" rpy="0 0 0"/>
+  <origin xyz="0.0 0.0 0.014681" rpy="0 0 0"/>
   <parent link="2025K9_303_Stainless_Steel_Rotary_Shaft_with_Retaining_Ring_Grooves_v1_1"/>
   <child link="15T-horn_v13_1"/>
 </joint>
 
 <joint name="Rigid 19" type="fixed">
-  <origin xyz="0.0 0.0001 0.0" rpy="0 0 0"/>
+  <origin xyz="0.0 0.0 0.0001" rpy="0 0 0"/>
   <parent link="15T-horn_v13_1"/>
   <child link="JX_servo_v80_1"/>
 </joint>
 
 <joint name="Rigid 20" type="fixed">
-  <origin xyz="0.00435 0.0 0.048601" rpy="0 0 0"/>
+  <origin xyz="0.048601 0.00435 0.0" rpy="0 0 0"/>
   <parent link="Component9__1__1"/>
   <child link="JX_servo_v80_2"/>
 </joint>
 
 <joint name="Rigid 21" type="fixed">
-  <origin xyz="0.0 -0.033375 0.0" rpy="0 0 0"/>
+  <origin xyz="0.0 0.0 -0.033376" rpy="0 0 0"/>
   <parent link="2025K9_303_Stainless_Steel_Rotary_Shaft_with_Retaining_Ring_Grooves_v1_2"/>
   <child link="91590A121_External_Retaining_Ring_v1_4"/>
 </joint>
 
 <joint name="Rigid 22" type="fixed">
-  <origin xyz="0.0 -0.000635 0.0" rpy="0 0 0"/>
+  <origin xyz="0.0 0.0 -0.000635" rpy="0 0 0"/>
   <parent link="91590A121_External_Retaining_Ring_v1_4"/>
   <child link="Component4_2"/>
 </joint>
 
 <joint name="Rigid 23" type="fixed">
-  <origin xyz="0.0 -0.005312 0.0" rpy="0 0 0"/>
+  <origin xyz="0.0 0.0 -0.005312" rpy="0 0 0"/>
   <parent link="Component4_2"/>
   <child link="Component32_2"/>
 </joint>
 
 <joint name="Rigid 24" type="fixed">
-  <origin xyz="-7.6e-05 -0.04215 -0.03165" rpy="0 0 0"/>
+  <origin xyz="-0.03165 -7.6e-05 -0.04215" rpy="0 0 0"/>
   <parent link="Component32_2"/>
   <child link="Component39_2"/>
 </joint>
 
 <joint name="left_hip_roll" type="continuous">
-  <origin xyz="0.0 0.0 -0.0127" rpy="0 0 0"/>
+  <origin xyz="-0.0127 0.0 0.0" rpy="0 0 0"/>
   <parent link="Component39_2"/>
   <child link="JX_servo_v80_5"/>
-  <axis xyz="0.0 0.0 1.0"/>
+  <axis xyz="1.0 0.0 0.0"/>
 </joint>
 
 <joint name="Rigid 26" type="fixed">
-  <origin xyz="0.00435 0.0 0.065601" rpy="0 0 0"/>
+  <origin xyz="0.065601 0.00435 0.0" rpy="0 0 0"/>
   <parent link="Component9__1__2"/>
   <child link="JX_servo_v80_7"/>
 </joint>
 
 <joint name="Rigid 27" type="fixed">
-  <origin xyz="0.00835 -0.0556 -0.0125" rpy="0 0 0"/>
+  <origin xyz="-0.0125 0.00835 -0.0556" rpy="0 0 0"/>
   <parent link="JX_servo_v80_5"/>
   <child link="Component9__1__2"/>
 </joint>
 
 <joint name="Rigid 28" type="fixed">
-  <origin xyz="0.0 -0.02225 0.0" rpy="0 0 0"/>
+  <origin xyz="0.0 0.0 -0.022251" rpy="0 0 0"/>
   <parent link="2025K9_303_Stainless_Steel_Rotary_Shaft_with_Retaining_Ring_Grooves_v1_2"/>
   <child link="91590A121_External_Retaining_Ring_v1_5"/>
 </joint>
 
 <joint name="Rigid 29" type="fixed">
-  <origin xyz="0.0 0.010955 0.0" rpy="0 0 0"/>
+  <origin xyz="0.0 0.0 0.010954" rpy="0 0 0"/>
   <parent link="Component2_2"/>
   <child link="91590A121_External_Retaining_Ring_v1_6"/>
 </joint>
 
 <joint name="left_hip_yaw" type="continuous">
-  <origin xyz="0.0 0.000635 0.0" rpy="0 0 0"/>
+  <origin xyz="0.0 0.0 0.000636" rpy="0 0 0"/>
   <parent link="91590A121_External_Retaining_Ring_v1_6"/>
   <child link="2025K9_303_Stainless_Steel_Rotary_Shaft_with_Retaining_Ring_Grooves_v1_2"/>
-  <axis xyz="-0.0 -1.0 0.0"/>
+  <axis xyz="0.0 0.0 -1.0"/>
 </joint>
 
 <joint name="Rigid 31" type="fixed">
-  <origin xyz="0.0 0.014682 0.0" rpy="0 0 0"/>
+  <origin xyz="0.0 0.0 0.014681" rpy="0 0 0"/>
   <parent link="2025K9_303_Stainless_Steel_Rotary_Shaft_with_Retaining_Ring_Grooves_v1_2"/>
   <child link="Component6_2"/>
 </joint>
 
 <joint name="Rigid 32" type="fixed">
-  <origin xyz="0.0 0.0001 0.0" rpy="0 0 0"/>
+  <origin xyz="0.0 0.0 0.0001" rpy="0 0 0"/>
   <parent link="Component6_2"/>
   <child link="JX_servo_v80_4"/>
 </joint>
 
 <joint name="Rigid 35" type="fixed">
-  <origin xyz="-0.0217 -0.0556 -0.0085" rpy="0 0 0"/>
+  <origin xyz="-0.0085 -0.0217 -0.0556" rpy="0 0 0"/>
   <parent link="JX_servo_v46_Mirror__1"/>
   <child link="Component5_Mirror__1"/>
 </joint>
 
 <joint name="left_ankle_pitch" type="continuous">
-  <origin xyz="0.0224 -0.0836 0.0085" rpy="0 0 0"/>
+  <origin xyz="0.0085 0.0224 -0.0836" rpy="0 0 0"/>
   <parent link="Component5_Mirror__1"/>
   <child link="JX_servo_v46_Mirror__2"/>
-  <axis xyz="1.0 -0.0 -0.0"/>
+  <axis xyz="-0.0 1.0 -0.0"/>
 </joint>
 
 <joint name="Rigid 37" type="fixed">
-  <origin xyz="-0.0217 0.0556 0.0085" rpy="0 0 0"/>
+  <origin xyz="0.0085 -0.0217 0.0556" rpy="0 0 0"/>
   <parent link="JX_servo_v46_Mirror__2"/>
   <child link="L_Mirror__1"/>
 </joint>
 
 <joint name="Rigid 38" type="fixed">
-  <origin xyz="-0.0065 -0.0001 -0.067" rpy="0 0 0"/>
+  <origin xyz="-0.067 -0.0065 -0.0001" rpy="0 0 0"/>
   <parent link="L_Mirror__1"/>
   <child link="JX_servo_v46_Mirror__3"/>
 </joint>
 
 <joint name="left_ankle_roll" type="continuous">
-  <origin xyz="-0.0085 -0.0556 0.0256" rpy="0 0 0"/>
+  <origin xyz="0.0256 -0.0085 -0.0556" rpy="0 0 0"/>
   <parent link="JX_servo_v46_Mirror__3"/>
   <child link="left_foot"/>
-  <axis xyz="0.0 -0.0 1.0"/>
+  <axis xyz="1.0 0.0 -0.0"/>
 </joint>
 
 <joint name="left_hip_pitch" type="continuous">
-  <origin xyz="0.032475 0.0556 -0.00865" rpy="0 0 0"/>
+  <origin xyz="-0.00865 0.032475 0.0556" rpy="0 0 0"/>
   <parent link="JX_servo_v80_7"/>
   <child link="Component4__2__1"/>
-  <axis xyz="-1.0 0.0 -0.0"/>
+  <axis xyz="-0.0 -1.0 0.0"/>
 </joint>
 
 <joint name="left_knee" type="continuous">
-  <origin xyz="0.0 -0.16 0.0" rpy="0 0 0"/>
+  <origin xyz="0.0 0.0 -0.16" rpy="0 0 0"/>
   <parent link="Component4__2__1"/>
   <child link="JX_servo_v46_Mirror__1"/>
-  <axis xyz="1.0 -0.0 -0.0"/>
+  <axis xyz="-0.0 1.0 -0.0"/>
 </joint>
 
 <joint name="right_hip_pitch" type="continuous">
-  <origin xyz="-0.057875 0.0556 0.00865" rpy="0 0 0"/>
+  <origin xyz="0.00865 -0.057875 0.0556" rpy="0 0 0"/>
   <parent link="JX_servo_v80_2"/>
   <child link="Component4_Mirror___1__1"/>
-  <axis xyz="1.0 -0.0 0.0"/>
+  <axis xyz="0.0 1.0 -0.0"/>
 </joint>
 
 <joint name="right_knee" type="continuous">
-  <origin xyz="0.0 -0.16 0.0" rpy="0 0 0"/>
+  <origin xyz="0.0 0.0 -0.16" rpy="0 0 0"/>
   <parent link="Component4_Mirror___1__1"/>
   <child link="JX_servo_v46_Mirror__9"/>
-  <axis xyz="1.0 -0.0 0.0"/>
+  <axis xyz="0.0 1.0 -0.0"/>
 </joint>
 
 <joint name="Rigid 44" type="fixed">
-  <origin xyz="0.0217 -0.0556 -0.0085" rpy="0 0 0"/>
+  <origin xyz="-0.0085 0.0217 -0.0556" rpy="0 0 0"/>
   <parent link="JX_servo_v46_Mirror__9"/>
   <child link="Component5_Mirror__Mirror__1"/>
 </joint>
 
 <joint name="right_ankle_pitch" type="continuous">
-  <origin xyz="-0.0224 -0.0836 0.0085" rpy="0 0 0"/>
+  <origin xyz="0.0085 -0.0224 -0.0836" rpy="0 0 0"/>
   <parent link="Component5_Mirror__Mirror__1"/>
   <child link="JX_servo_v46_Mirror__7"/>
-  <axis xyz="1.0 -0.0 -0.0"/>
+  <axis xyz="-0.0 1.0 -0.0"/>
 </joint>
 
 <joint name="Rigid 46" type="fixed">
-  <origin xyz="0.0217 0.0556 0.0085" rpy="0 0 0"/>
+  <origin xyz="0.0085 0.0217 0.0556" rpy="0 0 0"/>
   <parent link="JX_servo_v46_Mirror__7"/>
   <child link="L_Mirror__3"/>
 </joint>
 
 <joint name="Rigid 47" type="fixed">
-  <origin xyz="0.0235 -0.0752 -0.067" rpy="0 0 0"/>
+  <origin xyz="-0.067 0.0235 -0.0752" rpy="0 0 0"/>
   <parent link="L_Mirror__3"/>
   <child link="JX_servo_v46_Mirror__8"/>
 </joint>
 
 <joint name="right_ankle_roll" type="continuous">
-  <origin xyz="-0.0085 0.0196 0.0256" rpy="0 0 0"/>
+  <origin xyz="0.0256 -0.0085 0.0196" rpy="0 0 0"/>
   <parent link="JX_servo_v46_Mirror__8"/>
   <child link="right_foot"/>
-  <axis xyz="0.0 -0.0 1.0"/>
+  <axis xyz="1.0 0.0 -0.0"/>
 </joint>
 
 <joint name="Rigid 50" type="fixed">
-  <origin xyz="0.0594 0.0671 -0.01515" rpy="0 0 0"/>
+  <origin xyz="-0.01515 0.0594 0.0671" rpy="0 0 0"/>
   <parent link="JX_servo_v80_1"/>
   <child link="Component65_1"/>
 </joint>
 
 <joint name="Rigid 51" type="fixed">
-  <origin xyz="-0.0052 0.0 -0.11415" rpy="0 0 0"/>
+  <origin xyz="-0.11415 -0.0052 0.0" rpy="0 0 0"/>
   <parent link="Component65_1"/>
   <child link="Component66_1"/>
 </joint>
 
-<joint name="right_shoulder" type="continuous">
-  <origin xyz="-0.1068 -0.03175 0.00015" rpy="0 0 0"/>
+<joint name="right_shoulder_pitch" type="continuous">
+  <origin xyz="0.00015 -0.1068 -0.03175" rpy="0 0 0"/>
   <parent link="Component65_1"/>
   <child link="JX_servo_v46_Mirror__10"/>
-  <axis xyz="-1.0 0.0 0.0"/>
+  <axis xyz="0.0 -1.0 -0.0"/>
 </joint>
 
 <joint name="Rigid 53" type="fixed">
-  <origin xyz="-0.0576 -0.0557 -0.0085" rpy="0 0 0"/>
+  <origin xyz="-0.0085 -0.0576 -0.0557" rpy="0 0 0"/>
   <parent link="JX_servo_v46_Mirror__10"/>
   <child link="JX_servo_v46_Mirror__11"/>
 </joint>
 
-<joint name="left_shoulder" type="continuous">
-  <origin xyz="0.0964 -0.03175 0.00015" rpy="0 0 0"/>
+<joint name="left_shoulder_pitch" type="continuous">
+  <origin xyz="0.00015 0.0964 -0.03175" rpy="0 0 0"/>
   <parent link="Component65_1"/>
   <child link="JX_servo_v46_Mirror__12"/>
-  <axis xyz="1.0 0.0 0.0"/>
+  <axis xyz="-0.0 1.0 0.0"/>
 </joint>
 
 <joint name="Rigid 55" type="fixed">
-  <origin xyz="0.0576 -0.0557 -0.0085" rpy="0 0 0"/>
+  <origin xyz="-0.0085 0.0576 -0.0557" rpy="0 0 0"/>
   <parent link="JX_servo_v46_Mirror__12"/>
   <child link="JX_servo_v46_Mirror__13"/>
 </joint>
 
 <joint name="right_elbow" type="continuous">
-  <origin xyz="-0.0217 -0.0556 0.0085" rpy="0 0 0"/>
+  <origin xyz="0.0085 -0.0217 -0.0556" rpy="0 0 0"/>
   <parent link="JX_servo_v46_Mirror__11"/>
   <child link="Component11_Mirror__2"/>
-  <axis xyz="-1.0 0.0 0.0"/>
+  <axis xyz="0.0 -1.0 0.0"/>
 </joint>
 
 <joint name="left_elbow" type="continuous">
-  <origin xyz="0.0217 -0.0556 0.0085" rpy="0 0 0"/>
+  <origin xyz="0.0085 0.0217 -0.0556" rpy="0 0 0"/>
   <parent link="JX_servo_v46_Mirror__13"/>
   <child link="Component11_Mirror__3"/>
-  <axis xyz="1.0 0.0 -0.0"/>
+  <axis xyz="-0.0 1.0 0.0"/>
+</joint>
+
+<joint name="Rigid 58" type="fixed">
+  <origin xyz="0.0 0.005 0.005" rpy="0 0 0"/>
+  <parent link="base_link"/>
+  <child link="trunk"/>
+</joint>
+
+<joint name="Rigid 59" type="fixed">
+  <origin xyz="-0.057 -0.0052 0.0" rpy="0 0 0"/>
+  <parent link="Component65_1"/>
+  <child link="custom_servo_support__lower_neck__v2_1"/>
+</joint>
+
+<joint name="Rigid 60" type="fixed">
+  <origin xyz="0.02015 0.0 0.00298" rpy="0 0 0"/>
+  <parent link="custom_servo_support__lower_neck__v2_1"/>
+  <child link="gobilda-servo_1"/>
+</joint>
+
+<joint name="Rigid 61" type="fixed">
+  <origin xyz="-0.0113 0.0 0.04092" rpy="0 0 0"/>
+  <parent link="gobilda-servo_1"/>
+  <child link="25t-servo-hub_1"/>
+</joint>
+
+<joint name="Revolute 62" type="continuous">
+  <origin xyz="0.0 0.0 0.002794" rpy="0 0 0"/>
+  <parent link="25t-servo-hub_1"/>
+  <child link="neck_1"/>
+  <axis xyz="-0.0 0.0 1.0"/>
+</joint>
+
+<joint name="Revolute 63" type="continuous">
+  <origin xyz="0.0 0.026187 0.033817" rpy="0 0 0"/>
+  <parent link="neck_1"/>
+  <child link="25t-servo-hub_2"/>
+  <axis xyz="-0.0 1.0 -0.0"/>
+</joint>
+
+<joint name="Rigid 64" type="fixed">
+  <origin xyz="0.0 -0.002794 0.0" rpy="0 0 0"/>
+  <parent link="25t-servo-hub_2"/>
+  <child link="gobilda-servo_2"/>
+</joint>
+
+<joint name="Rigid 65" type="fixed">
+  <origin xyz="-0.0113 -0.04092 0.0" rpy="0 0 0"/>
+  <parent link="gobilda-servo_2"/>
+  <child link="head_1"/>
+</joint>
+
+<joint name="Rigid 66" type="fixed">
+  <origin xyz="0.0133 0.01802 0.021" rpy="0 0 0"/>
+  <parent link="head_1"/>
+  <child link="camera_1"/>
 </joint>
 
 </robot>

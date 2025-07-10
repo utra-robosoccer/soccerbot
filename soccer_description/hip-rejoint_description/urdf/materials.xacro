@@ -25,5 +25,11 @@
 <material name="plastic_matte_black">
   <color rgba="0.09803921568627451 0.09803921568627451 0.09803921568627451 1.0"/>
 </material>
+<material name="plastic_glossy_black">
+  <color rgba="0.09803921568627451 0.09803921568627451 0.09803921568627451 1.0"/>
+</material>
+<material name="plastic_glossy_grey">
+  <color rgba="0.2901960784313726 0.2901960784313726 0.2901960784313726 1.0"/>
+</material>
 
 </robot>
