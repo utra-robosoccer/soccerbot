@@ -27,14 +27,14 @@
   <depend>robot_localization</depend>
   <depend>soccer_pycontrol</depend>
   <depend>soccer_localization</depend>
-  <depend>webots_ros</depend>
+  <!--depend>webots_ros</depend-->
   <exec_depend>amcl</exec_depend>
   <exec_depend>pointcloud_to_laserscan</exec_depend>
 
   <!-- Navigation-->
   <depend>soccer_trajectories</depend>
   <depend>soccer_firmware_interface</depend>
-  <depend>soccer_webots</depend>
+  <!--depend>soccer_webots</depend-->
   <depend>soccer_msgs</depend>
   <depend>python3-protobuf</depend>
 

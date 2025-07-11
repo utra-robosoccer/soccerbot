@@ -7,6 +7,7 @@ print(find_packages('src'))
 # fmt: off
 setup(
     packages=find_packages('src'),
+    version="0.0.0",
     scripts=[],
     package_dir={'': 'src/'}
 )

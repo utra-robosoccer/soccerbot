@@ -6,7 +6,7 @@ find_package(
     REQUIRED
     soccer_common
     soccer_msgs
-    soccer_webots
+    # soccer_webots
     soccer_trajectories
     soccer_object_detection
     bez1_description
@@ -22,7 +22,7 @@ find_package(
     map_server
     usb_cam
     imu_complementary_filter
-    webots_ros
+    # webots_ros
 )
 
 catkin_package(
@@ -34,5 +34,5 @@ catkin_package(
     map_server
     usb_cam
     imu_complementary_filter
-    webots_ros
+    # webots_ros
 )
