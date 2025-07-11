@@ -1,9 +1,11 @@
 <mujoco model="hip-rejoint">
+  <include file="/home/q2/dev/bez3robocup2024/rl/common.xml" />
+
   <visual>
     <scale framelength="0.3" framewidth="0.05"/>
   </visual>
 
-  <compiler angle="radian" meshdir="/home/q2/catkin_ws/src/hip-rejoint_description/meshes/"/>
+  <compiler angle="radian" meshdir="../meshes" />
   <asset>
     <mesh name="base_link" file="base_link.stl" scale="0.001 0.001 0.001"/>
     <mesh name="R8-2RS_Bearing_1" file="R8-2RS_Bearing_1.stl" scale="0.001 0.001 0.001"/>
@@ -60,80 +62,81 @@
     <mesh name="Component11_Mirror__3" file="Component11_Mirror__3.stl" scale="0.001 0.001 0.001"/>
   </asset>
   <worldbody>
-    <body name="torso" xyaxes="0 1 0 0 0 1">
+    <body name="torso" xyaxes="0 1 0 0 0 1" pos="0 0 0.45">
       <inertial pos="-0.171984 -0.0203186 -0.021094" quat="0.5 0.5 0.5 0.5" mass="0.408225" diaginertia="0.00121916 0.00116314 8.39841e-05"/>
       <joint name="rootfloat" type="free" limited="false" actuatorfrclimited="false"/>
       <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1" mesh="base_link"/>
-      <geom type="mesh" rgba="1 1 1 1" mesh="base_link"/>
+      <!-- geom type="mesh" rgba="1 1 1 1" mesh="base_link"/ -->
       <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.627451 0.627451 0.627451 1" mesh="R8-2RS_Bearing_1"/>
-      <geom type="mesh" rgba="0.627451 0.627451 0.627451 1" mesh="R8-2RS_Bearing_1"/>
+      <!-- geom type="mesh" rgba="0.627451 0.627451 0.627451 1" mesh="R8-2RS_Bearing_1"/ -->
       <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.627451 0.627451 0.627451 1" mesh="R8-2RS_Bearing_2"/>
-      <geom type="mesh" rgba="0.627451 0.627451 0.627451 1" mesh="R8-2RS_Bearing_2"/>
+      <!-- geom type="mesh" rgba="0.627451 0.627451 0.627451 1" mesh="R8-2RS_Bearing_2"/ -->
       <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.627451 0.627451 0.627451 1" mesh="R8-2RS_Bearing_3"/>
-      <geom type="mesh" rgba="0.627451 0.627451 0.627451 1" mesh="R8-2RS_Bearing_3"/>
+      <!-- geom type="mesh" rgba="0.627451 0.627451 0.627451 1" mesh="R8-2RS_Bearing_3"/ -->
       <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.627451 0.627451 0.627451 1" mesh="R8-2RS_Bearing_4"/>
-      <geom type="mesh" rgba="0.627451 0.627451 0.627451 1" mesh="R8-2RS_Bearing_4"/>
+      <!-- geom type="mesh" rgba="0.627451 0.627451 0.627451 1" mesh="R8-2RS_Bearing_4"/ -->
       <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.960784 0.960784 0.964706 1" mesh="Component2_2"/>
-      <geom type="mesh" rgba="0.960784 0.960784 0.964706 1" mesh="Component2_2"/>
+      <!-- geom type="mesh" rgba="0.960784 0.960784 0.964706 1" mesh="Component2_2"/ -->
       <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.627451 0.627451 0.627451 1" mesh="91590A121_External_Retaining_Ring_v1_6"/>
-      <geom type="mesh" rgba="0.627451 0.627451 0.627451 1" mesh="91590A121_External_Retaining_Ring_v1_6"/>
+      <!-- geom type="mesh" rgba="0.627451 0.627451 0.627451 1" mesh="91590A121_External_Retaining_Ring_v1_6"/ -->
       <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.960784 0.960784 0.964706 1" mesh="Component2_1"/>
-      <geom type="mesh" rgba="0.960784 0.960784 0.964706 1" mesh="Component2_1"/>
+      <!-- geom type="mesh" rgba="0.960784 0.960784 0.964706 1" mesh="Component2_1"/ -->
       <geom type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.627451 0.627451 0.627451 1" mesh="91590A121_External_Retaining_Ring_v1_2"/>
-      <geom type="mesh" rgba="0.627451 0.627451 0.627451 1" mesh="91590A121_External_Retaining_Ring_v1_2"/>
+      <!-- geom type="mesh" rgba="0.627451 0.627451 0.627451 1" mesh="91590A121_External_Retaining_Ring_v1_2"/ -->
       <site name="site_left_hip_yaw" xyaxes="0 0 -1 1 0 0" pos="-0.117785 -0.007859 -0.021094" /><body name="2025K9_303_Stainless_Steel_Rotary_Shaft_with_Retaining_Ring_Grooves_v1_2" pos="-0.117785 -0.007859 -0.021094">
         <inertial pos="-0.00818829 0.00383096 -0.00109143" quat="0.380883 0.594176 -0.402133 0.583243" mass="0.431596" diaginertia="0.00313567 0.00237611 0.00174681"/>
         <joint name="left_hip_yaw" pos="0 0 0" axis="0 -1 0" limited="false"/>
         <geom pos="0.117785 0.007859 0.021094" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.627451 0.627451 0.627451 1" mesh="2025K9_303_Stainless_Steel_Rotary_Shaft_with_Retaining_Ring_Grooves_v1_2"/>
-        <geom pos="0.117785 0.007859 0.021094" type="mesh" rgba="0.627451 0.627451 0.627451 1" mesh="2025K9_303_Stainless_Steel_Rotary_Shaft_with_Retaining_Ring_Grooves_v1_2"/>
+        <!-- geom pos="0.117785 0.007859 0.021094" type="mesh" rgba="0.627451 0.627451 0.627451 1" mesh="2025K9_303_Stainless_Steel_Rotary_Shaft_with_Retaining_Ring_Grooves_v1_2"/ -->
         <geom pos="0.117785 0.007859 0.021094" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.627451 0.627451 0.627451 1" mesh="91590A121_External_Retaining_Ring_v1_4"/>
-        <geom pos="0.117785 0.007859 0.021094" type="mesh" rgba="0.627451 0.627451 0.627451 1" mesh="91590A121_External_Retaining_Ring_v1_4"/>
+        <!-- geom pos="0.117785 0.007859 0.021094" type="mesh" rgba="0.627451 0.627451 0.627451 1" mesh="91590A121_External_Retaining_Ring_v1_4"/ -->
         <geom pos="0.117785 0.007859 0.021094" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.960784 0.960784 0.964706 1" mesh="Component4_2"/>
-        <geom pos="0.117785 0.007859 0.021094" type="mesh" rgba="0.960784 0.960784 0.964706 1" mesh="Component4_2"/>
+        <!-- geom pos="0.117785 0.007859 0.021094" type="mesh" rgba="0.960784 0.960784 0.964706 1" mesh="Component4_2"/ -->
         <geom pos="0.117785 0.007859 0.021094" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.960784 0.960784 0.964706 1" mesh="Component32_2"/>
-        <geom pos="0.117785 0.007859 0.021094" type="mesh" rgba="0.960784 0.960784 0.964706 1" mesh="Component32_2"/>
+        <!-- geom pos="0.117785 0.007859 0.021094" type="mesh" rgba="0.960784 0.960784 0.964706 1" mesh="Component32_2"/ -->
         <geom pos="0.117785 0.007859 0.021094" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.960784 0.960784 0.964706 1" mesh="Component39_2"/>
-        <geom pos="0.117785 0.007859 0.021094" type="mesh" rgba="0.960784 0.960784 0.964706 1" mesh="Component39_2"/>
+        <!-- geom pos="0.117785 0.007859 0.021094" type="mesh" rgba="0.960784 0.960784 0.964706 1" mesh="Component39_2"/ -->
         <geom pos="0.117785 0.007859 0.021094" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.627451 0.627451 0.627451 1" mesh="91590A121_External_Retaining_Ring_v1_5"/>
-        <geom pos="0.117785 0.007859 0.021094" type="mesh" rgba="0.627451 0.627451 0.627451 1" mesh="91590A121_External_Retaining_Ring_v1_5"/>
+        <!-- geom pos="0.117785 0.007859 0.021094" type="mesh" rgba="0.627451 0.627451 0.627451 1" mesh="91590A121_External_Retaining_Ring_v1_5"/ -->
         <geom pos="0.117785 0.007859 0.021094" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.960784 0.960784 0.964706 1" mesh="Component6_2"/>
-        <geom pos="0.117785 0.007859 0.021094" type="mesh" rgba="0.960784 0.960784 0.964706 1" mesh="Component6_2"/>
+        <!-- geom pos="0.117785 0.007859 0.021094" type="mesh" rgba="0.960784 0.960784 0.964706 1" mesh="Component6_2"/ -->
         <geom pos="0.117785 0.007859 0.021094" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1" mesh="JX_servo_v80_4"/>
-        <geom pos="0.117785 0.007859 0.021094" type="mesh" rgba="1 1 1 1" mesh="JX_servo_v80_4"/>
+        <!-- geom pos="0.117785 0.007859 0.021094" type="mesh" rgba="1 1 1 1" mesh="JX_servo_v80_4"/ -->
         <site name="site_left_hip_roll" xyaxes="1 0 0 0 1 0" pos="-7.6e-05 -0.081472 -0.04435" /><body name="JX_servo_v80_5" pos="-7.6e-05 -0.081472 -0.04435">
           <inertial pos="0.00131617 -0.0240785 0.0176337" quat="0.693486 0.720116 -0.000461754 -0.0225764" mass="0.728187" diaginertia="0.00463822 0.00377825 0.0028993"/>
           <joint name="left_hip_roll" pos="0 0 0" axis="0 0 1" limited="false"/>
           <geom pos="0.117861 0.089331 0.065444" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1" mesh="JX_servo_v80_5"/>
-          <geom pos="0.117861 0.089331 0.065444" type="mesh" rgba="1 1 1 1" mesh="JX_servo_v80_5"/>
+          <!-- geom pos="0.117861 0.089331 0.065444" type="mesh" rgba="1 1 1 1" mesh="JX_servo_v80_5"/ -->
           <geom pos="0.117861 0.089331 0.065444" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.627451 0.627451 0.627451 1" mesh="Component9__1__2"/>
-          <geom pos="0.117861 0.089331 0.065444" type="mesh" rgba="0.627451 0.627451 0.627451 1" mesh="Component9__1__2"/>
+          <!-- geom pos="0.117861 0.089331 0.065444" type="mesh" rgba="0.627451 0.627451 0.627451 1" mesh="Component9__1__2"/ -->
           <geom pos="0.117861 0.089331 0.065444" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1" mesh="JX_servo_v80_7"/>
-          <geom pos="0.117861 0.089331 0.065444" type="mesh" rgba="1 1 1 1" mesh="JX_servo_v80_7"/>
+          <!-- geom pos="0.117861 0.089331 0.065444" type="mesh" rgba="1 1 1 1" mesh="JX_servo_v80_7"/ -->
           <site name="site_left_hip_pitch" xyaxes="0 0 -1 0 1 0" pos="0.045175 0 0.044451" /><body name="Component4__2__1" pos="0.045175 0 0.044451">
             <inertial pos="-0.0383624 -0.0847723 0.00315997" quat="0.504309 0.495706 -0.492417 0.507418" mass="0.15907" diaginertia="0.000652212 0.000427006 0.000270781"/>
             <joint name="left_hip_pitch" pos="0 0 0" axis="-1 0 0" limited="false"/>
             <geom pos="0.072686 0.089331 0.020993" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.964706 0.964706 0.952941 1" mesh="Component4__2__1"/>
-            <geom pos="0.072686 0.089331 0.020993" type="mesh" rgba="0.964706 0.964706 0.952941 1" mesh="Component4__2__1"/>
+            <!-- geom pos="0.072686 0.089331 0.020993" type="mesh" rgba="0.964706 0.964706 0.952941 1" mesh="Component4__2__1"/ -->
             <site name="site_left_knee" xyaxes="0 0 -1 0 1 0" pos="0 -0.16 0" /><body name="JX_servo_v46_Mirror__1" pos="0 -0.16 0">
               <inertial pos="-0.0370392 -0.0390298 -0.000199259" quat="0.535484 0.472895 -0.524155 0.463562" mass="0.304219" diaginertia="0.00115595 0.000873411 0.0004943"/>
               <joint name="left_knee" pos="0 0 0" axis="1 0 0" limited="false"/>
               <geom pos="0.072686 0.249331 0.020993" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1" mesh="JX_servo_v46_Mirror__1"/>
-              <geom pos="0.072686 0.249331 0.020993" type="mesh" rgba="1 1 1 1" mesh="JX_servo_v46_Mirror__1"/>
+              <!-- geom pos="0.072686 0.249331 0.020993" type="mesh" rgba="1 1 1 1" mesh="JX_servo_v46_Mirror__1"/ -->
               <geom pos="0.072686 0.249331 0.020993" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.964706 0.964706 0.952941 1" mesh="Component5_Mirror__1"/>
-              <geom pos="0.072686 0.249331 0.020993" type="mesh" rgba="0.964706 0.964706 0.952941 1" mesh="Component5_Mirror__1"/>
+              <!-- geom pos="0.072686 0.249331 0.020993" type="mesh" rgba="0.964706 0.964706 0.952941 1" mesh="Component5_Mirror__1"/ -->
               <site name="site_left_ankle_pitch" xyaxes="0 0 1 0 -1 0" pos="0.0007 -0.1392 0" /><body name="JX_servo_v46_Mirror__2" pos="0.0007 -0.1392 0">
                 <inertial pos="-0.0368905 0.0182016 -0.0346647" quat="0.995929 0.0468144 0.00114625 0.077025" mass="0.468301" diaginertia="0.00155949 0.00127288 0.00101104"/>
                 <joint name="left_ankle_pitch" pos="0 0 0" axis="1 0 0" limited="false"/>
                 <geom pos="0.071986 0.388531 0.020993" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1" mesh="JX_servo_v46_Mirror__2"/>
-                <geom pos="0.071986 0.388531 0.020993" type="mesh" rgba="1 1 1 1" mesh="JX_servo_v46_Mirror__2"/>
+                <!-- geom pos="0.071986 0.388531 0.020993" type="mesh" rgba="1 1 1 1" mesh="JX_servo_v46_Mirror__2"/ -->
                 <geom pos="0.071986 0.388531 0.020993" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.964706 0.964706 0.952941 1" mesh="L_Mirror__1"/>
-                <geom pos="0.071986 0.388531 0.020993" type="mesh" rgba="0.964706 0.964706 0.952941 1" mesh="L_Mirror__1"/>
+                <!-- geom pos="0.071986 0.388531 0.020993" type="mesh" rgba="0.964706 0.964706 0.952941 1" mesh="L_Mirror__1"/ -->
                 <geom pos="0.071986 0.388531 0.020993" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1" mesh="JX_servo_v46_Mirror__3"/>
-                <geom pos="0.071986 0.388531 0.020993" type="mesh" rgba="1 1 1 1" mesh="JX_servo_v46_Mirror__3"/>
+                <!-- geom pos="0.071986 0.388531 0.020993" type="mesh" rgba="1 1 1 1" mesh="JX_servo_v46_Mirror__3"/ -->
                 <site name="site_left_ankle_roll" xyaxes="-1 0 0 0 -1 0" pos="-0.0367 -0.0001 -0.0329" /><body name="Component8_Mirror__1" pos="-0.0367 -0.0001 -0.0329">
                   <inertial pos="0.00822928 -0.0362082 0.0576758" quat="0.731848 0.0282937 -0.00892364 0.680822" mass="0.185493" diaginertia="0.000599776 0.000495662 0.000165562"/>
                   <joint name="left_ankle_roll" pos="0 0 0" axis="0 0 1" limited="false"/>
                   <geom pos="0.108686 0.388631 0.053893" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.964706 0.964706 0.952941 1" mesh="Component8_Mirror__1"/>
+                  <!-- LEFT ANKLE CONTACT -->
                   <geom pos="0.108686 0.388631 0.053893" type="mesh" rgba="0.964706 0.964706 0.952941 1" mesh="Component8_Mirror__1"/>
                 </body>
               </body>
@@ -145,59 +148,60 @@
         <inertial pos="0.0389341 0.0370028 -0.0568979" quat="0.696484 -0.0506059 -0.464105 0.544936" mass="1.30156" diaginertia="0.00861062 0.00751544 0.00468861"/>
         <joint name="right_hip_yaw" pos="0 0 0" axis="0 -1 0" limited="false"/>
         <geom pos="0.226185 0.007859 0.021094" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.627451 0.627451 0.627451 1" mesh="2025K9_303_Stainless_Steel_Rotary_Shaft_with_Retaining_Ring_Grooves_v1_1"/>
-        <geom pos="0.226185 0.007859 0.021094" type="mesh" rgba="0.627451 0.627451 0.627451 1" mesh="2025K9_303_Stainless_Steel_Rotary_Shaft_with_Retaining_Ring_Grooves_v1_1"/>
+        <!-- geom pos="0.226185 0.007859 0.021094" type="mesh" rgba="0.627451 0.627451 0.627451 1" mesh="2025K9_303_Stainless_Steel_Rotary_Shaft_with_Retaining_Ring_Grooves_v1_1"/ -->
         <geom pos="0.226185 0.007859 0.021094" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.627451 0.627451 0.627451 1" mesh="91590A121_External_Retaining_Ring_v1_3"/>
-        <geom pos="0.226185 0.007859 0.021094" type="mesh" rgba="0.627451 0.627451 0.627451 1" mesh="91590A121_External_Retaining_Ring_v1_3"/>
+        <!-- geom pos="0.226185 0.007859 0.021094" type="mesh" rgba="0.627451 0.627451 0.627451 1" mesh="91590A121_External_Retaining_Ring_v1_3"/ -->
         <geom pos="0.226185 0.007859 0.021094" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.627451 0.627451 0.627451 1" mesh="91590A121_External_Retaining_Ring_v1_1"/>
-        <geom pos="0.226185 0.007859 0.021094" type="mesh" rgba="0.627451 0.627451 0.627451 1" mesh="91590A121_External_Retaining_Ring_v1_1"/>
+        <!-- geom pos="0.226185 0.007859 0.021094" type="mesh" rgba="0.627451 0.627451 0.627451 1" mesh="91590A121_External_Retaining_Ring_v1_1"/ -->
         <geom pos="0.226185 0.007859 0.021094" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.960784 0.960784 0.964706 1" mesh="Component4_1"/>
-        <geom pos="0.226185 0.007859 0.021094" type="mesh" rgba="0.960784 0.960784 0.964706 1" mesh="Component4_1"/>
+        <!-- geom pos="0.226185 0.007859 0.021094" type="mesh" rgba="0.960784 0.960784 0.964706 1" mesh="Component4_1"/ -->
         <geom pos="0.226185 0.007859 0.021094" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.960784 0.960784 0.964706 1" mesh="Component32_1"/>
-        <geom pos="0.226185 0.007859 0.021094" type="mesh" rgba="0.960784 0.960784 0.964706 1" mesh="Component32_1"/>
+        <!-- geom pos="0.226185 0.007859 0.021094" type="mesh" rgba="0.960784 0.960784 0.964706 1" mesh="Component32_1"/ -->
         <geom pos="0.226185 0.007859 0.021094" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.960784 0.960784 0.964706 1" mesh="Component39_1"/>
-        <geom pos="0.226185 0.007859 0.021094" type="mesh" rgba="0.960784 0.960784 0.964706 1" mesh="Component39_1"/>
+        <!-- geom pos="0.226185 0.007859 0.021094" type="mesh" rgba="0.960784 0.960784 0.964706 1" mesh="Component39_1"/ -->
         <geom pos="0.226185 0.007859 0.021094" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.960784 0.960784 0.964706 1" mesh="15T-horn_v13_1"/>
-        <geom pos="0.226185 0.007859 0.021094" type="mesh" rgba="0.960784 0.960784 0.964706 1" mesh="15T-horn_v13_1"/>
+        <!-- geom pos="0.226185 0.007859 0.021094" type="mesh" rgba="0.960784 0.960784 0.964706 1" mesh="15T-horn_v13_1"/ -->
         <geom pos="0.226185 0.007859 0.021094" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1" mesh="JX_servo_v80_1"/>
-        <geom pos="0.226185 0.007859 0.021094" type="mesh" rgba="1 1 1 1" mesh="JX_servo_v80_1"/>
+        <!-- geom pos="0.226185 0.007859 0.021094" type="mesh" rgba="1 1 1 1" mesh="JX_servo_v80_1"/ -->
         <geom pos="0.226185 0.007859 0.021094" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.964706 0.964706 0.952941 1" mesh="Component65_1"/>
-        <geom pos="0.226185 0.007859 0.021094" type="mesh" rgba="0.964706 0.964706 0.952941 1" mesh="Component65_1"/>
+        <!-- geom pos="0.226185 0.007859 0.021094" type="mesh" rgba="0.964706 0.964706 0.952941 1" mesh="Component65_1"/ -->
         <geom pos="0.226185 0.007859 0.021094" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.372549 0.427451 0.690196 1" mesh="Component66_1"/>
-        <geom pos="0.226185 0.007859 0.021094" type="mesh" rgba="0.372549 0.427451 0.690196 1" mesh="Component66_1"/>
+        <!-- geom pos="0.226185 0.007859 0.021094" type="mesh" rgba="0.372549 0.427451 0.690196 1" mesh="Component66_1"/ -->
         <site name="site_right_hip_roll" xyaxes="1 0 0 0 1 0" pos="-7.6e-05 -0.081472 -0.04435" /><body name="JX_servo_v80_3" pos="-7.6e-05 -0.081472 -0.04435">
           <inertial pos="-0.00143217 -0.0240785 0.0176408" quat="0.693549 0.720093 0.00161261 0.0212891" mass="0.728187" diaginertia="0.0046383 0.00377819 0.00289937"/>
           <joint name="right_hip_roll" pos="0 0 0" axis="0 0 1" limited="false"/>
           <geom pos="0.226261 0.089331 0.065444" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1" mesh="JX_servo_v80_3"/>
-          <geom pos="0.226261 0.089331 0.065444" type="mesh" rgba="1 1 1 1" mesh="JX_servo_v80_3"/>
+          <!-- geom pos="0.226261 0.089331 0.065444" type="mesh" rgba="1 1 1 1" mesh="JX_servo_v80_3"/ -->
           <geom pos="0.226261 0.089331 0.065444" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.627451 0.627451 0.627451 1" mesh="Component9__1__1"/>
-          <geom pos="0.226261 0.089331 0.065444" type="mesh" rgba="0.627451 0.627451 0.627451 1" mesh="Component9__1__1"/>
+          <!-- geom pos="0.226261 0.089331 0.065444" type="mesh" rgba="0.627451 0.627451 0.627451 1" mesh="Component9__1__1"/ -->
           <geom pos="0.226261 0.089331 0.065444" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1" mesh="JX_servo_v80_2"/>
-          <geom pos="0.226261 0.089331 0.065444" type="mesh" rgba="1 1 1 1" mesh="JX_servo_v80_2"/>
+          <!-- geom pos="0.226261 0.089331 0.065444" type="mesh" rgba="1 1 1 1" mesh="JX_servo_v80_2"/ -->
           <site name="site_right_hip_pitch" xyaxes="0 0 1 0 1 0" pos="-0.045175 0 0.044751" /><body name="Component4_Mirror___1__1" pos="-0.045175 0 0.044751">
             <inertial pos="0.0383632 -0.0847723 0.00315997" quat="0.507418 0.492417 -0.495706 0.504309" mass="0.15907" diaginertia="0.000652212 0.000427006 0.000270781"/>
             <joint name="right_hip_pitch" pos="0 0 0" axis="1 0 0" limited="false"/>
             <geom pos="0.271436 0.089331 0.020693" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.964706 0.964706 0.952941 1" mesh="Component4_Mirror___1__1"/>
-            <geom pos="0.271436 0.089331 0.020693" type="mesh" rgba="0.964706 0.964706 0.952941 1" mesh="Component4_Mirror___1__1"/>
+            <!-- geom pos="0.271436 0.089331 0.020693" type="mesh" rgba="0.964706 0.964706 0.952941 1" mesh="Component4_Mirror___1__1"/ -->
             <site name="site_right_knee" xyaxes="0 0 1 0 1 0" pos="0 -0.16 0" /><body name="JX_servo_v46_Mirror__9" pos="0 -0.16 0">
               <inertial pos="0.03704 -0.0390298 0.000198953" quat="0.472895 0.535484 -0.463562 0.524155" mass="0.304219" diaginertia="0.00115595 0.000873411 0.0004943"/>
               <joint name="right_knee" pos="0 0 0" axis="1 0 0" limited="false"/>
               <geom pos="0.271436 0.249331 0.020693" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1" mesh="JX_servo_v46_Mirror__9"/>
-              <geom pos="0.271436 0.249331 0.020693" type="mesh" rgba="1 1 1 1" mesh="JX_servo_v46_Mirror__9"/>
+              <!-- geom pos="0.271436 0.249331 0.020693" type="mesh" rgba="1 1 1 1" mesh="JX_servo_v46_Mirror__9"/ -->
               <geom pos="0.271436 0.249331 0.020693" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.964706 0.964706 0.952941 1" mesh="Component5_Mirror__Mirror__1"/>
-              <geom pos="0.271436 0.249331 0.020693" type="mesh" rgba="0.964706 0.964706 0.952941 1" mesh="Component5_Mirror__Mirror__1"/>
+              <!-- geom pos="0.271436 0.249331 0.020693" type="mesh" rgba="0.964706 0.964706 0.952941 1" mesh="Component5_Mirror__Mirror__1"/ -->
               <site name="site_right_ankle_pitch" xyaxes="0 0 -1 0 -1 0" pos="-0.0007 -0.1392 0" /><body name="JX_servo_v46_Mirror__7" pos="-0.0007 -0.1392 0">
                 <inertial pos="0.0366373 0.0182565 -0.0349234" quat="0.995771 0.0481708 0.00272821 -0.0781809" mass="0.468301" diaginertia="0.00155137 0.00126437 0.00101107"/>
                 <joint name="right_ankle_pitch" pos="0 0 0" axis="1 0 0" limited="false"/>
                 <geom pos="0.272136 0.388531 0.020693" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1" mesh="JX_servo_v46_Mirror__7"/>
-                <geom pos="0.272136 0.388531 0.020693" type="mesh" rgba="1 1 1 1" mesh="JX_servo_v46_Mirror__7"/>
+                <!-- geom pos="0.272136 0.388531 0.020693" type="mesh" rgba="1 1 1 1" mesh="JX_servo_v46_Mirror__7"/ -->
                 <geom pos="0.272136 0.388531 0.020693" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.964706 0.964706 0.952941 1" mesh="L_Mirror__3"/>
-                <geom pos="0.272136 0.388531 0.020693" type="mesh" rgba="0.964706 0.964706 0.952941 1" mesh="L_Mirror__3"/>
+                <!-- geom pos="0.272136 0.388531 0.020693" type="mesh" rgba="0.964706 0.964706 0.952941 1" mesh="L_Mirror__3"/ -->
                 <geom pos="0.272136 0.388531 0.020693" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1" mesh="JX_servo_v46_Mirror__8"/>
-                <geom pos="0.272136 0.388531 0.020693" type="mesh" rgba="1 1 1 1" mesh="JX_servo_v46_Mirror__8"/>
+                <!-- geom pos="0.272136 0.388531 0.020693" type="mesh" rgba="1 1 1 1" mesh="JX_servo_v46_Mirror__8"/ -->
                 <site name="site_right_ankle_roll" xyaxes="-1 0 0 0 -1 0" pos="0.0367 0 -0.0329" /><body name="Component8_Mirror__Mirror__1" pos="0.0367 0 -0.0329">
                   <inertial pos="-0.00822848 -0.0362082 0.0576758" quat="0.680822 0.00892364 -0.0282937 0.731848" mass="0.185493" diaginertia="0.000599776 0.000495662 0.000165562"/>
                   <joint name="right_ankle_roll" pos="0 0 0" axis="0 0 1" limited="false"/>
                   <geom pos="0.235436 0.388531 0.053593" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.964706 0.964706 0.952941 1" mesh="Component8_Mirror__Mirror__1"/>
+                  <!-- RIGHT FOOT CONTACT -->
                   <geom pos="0.235436 0.388531 0.053593" type="mesh" rgba="0.964706 0.964706 0.952941 1" mesh="Component8_Mirror__Mirror__1"/>
                 </body>
               </body>
@@ -208,28 +212,28 @@
           <inertial pos="-0.0396497 -0.0556504 -0.00028648" quat="0.542811 0.453163 -0.542811 0.453163" mass="0.4228" diaginertia="0.00179222 0.00146953 0.00069669"/>
           <joint name="right_shoulder" pos="0 0 0" axis="-1 0 0" limited="false"/>
           <geom pos="0.273585 -0.042273 0.036094" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1" mesh="JX_servo_v46_Mirror__10"/>
-          <geom pos="0.273585 -0.042273 0.036094" type="mesh" rgba="1 1 1 1" mesh="JX_servo_v46_Mirror__10"/>
+          <!-- geom pos="0.273585 -0.042273 0.036094" type="mesh" rgba="1 1 1 1" mesh="JX_servo_v46_Mirror__10"/ -->
           <geom pos="0.273585 -0.042273 0.036094" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1" mesh="JX_servo_v46_Mirror__11"/>
-          <geom pos="0.273585 -0.042273 0.036094" type="mesh" rgba="1 1 1 1" mesh="JX_servo_v46_Mirror__11"/>
+          <!-- geom pos="0.273585 -0.042273 0.036094" type="mesh" rgba="1 1 1 1" mesh="JX_servo_v46_Mirror__11"/ -->
           <site name="site_right_elbow" xyaxes="0 0 -1 0 -1 0" pos="-0.0793 -0.1113 0" /><body name="Component11_Mirror__2" pos="-0.0793 -0.1113 0">
             <inertial pos="-0.00149971 -4.11583e-07 4.67247e-08" mass="0.0037758" diaginertia="1e-06 1e-06 1e-06"/>
             <joint name="right_elbow" pos="0 0 0" axis="-1 0 0" limited="false"/>
             <geom pos="0.352885 0.069027 0.036094" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.0980392 0.0980392 0.0980392 1" mesh="Component11_Mirror__2"/>
-            <geom pos="0.352885 0.069027 0.036094" type="mesh" rgba="0.0980392 0.0980392 0.0980392 1" mesh="Component11_Mirror__2"/>
+            <!-- geom pos="0.352885 0.069027 0.036094" type="mesh" rgba="0.0980392 0.0980392 0.0980392 1" mesh="Component11_Mirror__2"/ -->
           </body>
         </body>
         <site name="site_left_shoulder" xyaxes="0 0 1 0 1 0" pos="0.1558 0.050132 -0.015" /><body name="JX_servo_v46_Mirror__12" pos="0.1558 0.050132 -0.015">
           <inertial pos="0.0396503 -0.0556504 0.000286574" quat="0.453163 0.542811 -0.453163 0.542811" mass="0.4228" diaginertia="0.00179222 0.00146953 0.00069669"/>
           <joint name="left_shoulder" pos="0 0 0" axis="1 0 0" limited="false"/>
           <geom pos="0.070385 -0.042273 0.036094" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1" mesh="JX_servo_v46_Mirror__12"/>
-          <geom pos="0.070385 -0.042273 0.036094" type="mesh" rgba="1 1 1 1" mesh="JX_servo_v46_Mirror__12"/>
+          <!-- geom pos="0.070385 -0.042273 0.036094" type="mesh" rgba="1 1 1 1" mesh="JX_servo_v46_Mirror__12"/ -->
           <geom pos="0.070385 -0.042273 0.036094" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="1 1 1 1" mesh="JX_servo_v46_Mirror__13"/>
-          <geom pos="0.070385 -0.042273 0.036094" type="mesh" rgba="1 1 1 1" mesh="JX_servo_v46_Mirror__13"/>
+          <!-- geom pos="0.070385 -0.042273 0.036094" type="mesh" rgba="1 1 1 1" mesh="JX_servo_v46_Mirror__13"/ -->
           <site name="site_left_elbow" xyaxes="0 0 1 0 -1 0" pos="0.0793 -0.1113 0" /><body name="Component11_Mirror__3" pos="0.0793 -0.1113 0">
             <inertial pos="0.00150029 -4.11583e-07 4.67247e-08" mass="0.0037758" diaginertia="1e-06 1e-06 1e-06"/>
             <joint name="left_elbow" pos="0 0 0" axis="1 0 0" limited="false"/>
             <geom pos="-0.008915 0.069027 0.036094" type="mesh" contype="0" conaffinity="0" group="1" density="0" rgba="0.0980392 0.0980392 0.0980392 1" mesh="Component11_Mirror__3"/>
-            <geom pos="-0.008915 0.069027 0.036094" type="mesh" rgba="0.0980392 0.0980392 0.0980392 1" mesh="Component11_Mirror__3"/>
+            <!-- geom pos="-0.008915 0.069027 0.036094" type="mesh" rgba="0.0980392 0.0980392 0.0980392 1" mesh="Component11_Mirror__3"/ -->
           </body>
         </body>
       </body>
@@ -237,22 +241,22 @@
   </worldbody>
 
   <actuator>
-    <position kp="30" name="j_left_shoulder_pitch" joint="left_shoulder" />
-    <position kp="30" name="j_left_elbow" joint="left_elbow" />
-    <position kp="30" name="j_right_shoulder_pitch" joint="right_shoulder" />
-    <position kp="30" name="j_right_elbow" joint="right_elbow" />
-    <position kp="30" name="j_left_hip_yaw" joint="left_hip_yaw" />
-    <position kp="30" name="j_left_hip_roll" joint="left_hip_roll" />
-    <position kp="30" name="j_left_hip_pitch" joint="left_hip_pitch" />
-    <position kp="30" name="j_left_knee" joint="left_knee" />
-    <position kp="30" name="j_left_ankle_pitch" joint="left_ankle_pitch" />
-    <position kp="30" name="j_left_ankle_roll" joint="left_ankle_roll" />
-    <position kp="30" name="j_right_hip_yaw" joint="right_hip_yaw" />
-    <position kp="30" name="j_right_hip_roll" joint="right_hip_roll" />
-    <position kp="30" name="j_right_hip_pitch" joint="right_hip_pitch" />
-    <position kp="30" name="j_right_knee" joint="right_knee" />
-    <position kp="30" name="j_right_ankle_pitch" joint="right_ankle_pitch" />
-    <position kp="30" name="j_right_ankle_roll" joint="right_ankle_roll" />
+    <position kp="0.3" name="j_left_shoulder_pitch" joint="left_shoulder" />
+    <position kp="0.3" name="j_left_elbow" joint="left_elbow" />
+    <position kp="0.3" name="j_right_shoulder_pitch" joint="right_shoulder" />
+    <position kp="0.3" name="j_right_elbow" joint="right_elbow" />
+    <position kp="0.3" name="j_left_hip_yaw" joint="left_hip_yaw" />
+    <position kp="0.3" name="j_left_hip_roll" joint="left_hip_roll" />
+    <position kp="0.3" name="j_left_hip_pitch" joint="left_hip_pitch" />
+    <position kp="0.3" name="j_left_knee" joint="left_knee" />
+    <position kp="0.3" name="j_left_ankle_pitch" joint="left_ankle_pitch" />
+    <position kp="0.3" name="j_left_ankle_roll" joint="left_ankle_roll" />
+    <position kp="0.3" name="j_right_hip_yaw" joint="right_hip_yaw" />
+    <position kp="0.3" name="j_right_hip_roll" joint="right_hip_roll" />
+    <position kp="0.3" name="j_right_hip_pitch" joint="right_hip_pitch" />
+    <position kp="0.3" name="j_right_knee" joint="right_knee" />
+    <position kp="0.3" name="j_right_ankle_pitch" joint="right_ankle_pitch" />
+    <position kp="0.3" name="j_right_ankle_roll" joint="right_ankle_roll" />
     <!-- position kp="30" name="j_head_motor_0" joint="head_motor_0" / -->
     <!-- position kp="30" name="j_head_motor_1" joint="head_motor_1" / -->
   </actuator>
