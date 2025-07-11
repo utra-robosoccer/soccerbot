@@ -1,0 +1,9 @@
+<launch>
+
+<rosparam file="$(find hip-rejoint_description)/launch/controller.yaml" command="load"/>
+<node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" ns="hip-rejoint" args="right_hip_yaw_position_controller right_hip_roll_position_controller left_hip_roll_position_controller left_hip_yaw_position_controller left_ankle_pitch_position_controller left_ankle_roll_position_controller left_hip_pitch_position_controller left_knee_position_controller right_hip_pitch_position_controller right_knee_position_controller right_ankle_pitch_position_controller right_ankle_roll_position_controller right_shoulder_pitch_position_controller left_shoulder_pitch_position_controller right_elbow_position_controller left_elbow_position_controller Revolute 62_position_controller Revolute 63_position_controller joint_state_controller "/>
+<node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false" output="screen">
+  <remap from="/joint_states" to="/hip-rejoint/joint_states"/>
+</node>
+
+</launch>
