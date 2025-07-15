@@ -1,7 +1,6 @@
 from typing import List
 
 import rclpy
-from rospy import ROSException
 from sensor_msgs.msg import JointState
 from soccer_pycontrol.model.motor_control import MotorControl, MotorData
 
@@ -9,9 +8,11 @@ from soccer_pycontrol.model.motor_control import MotorControl, MotorData
 class MotorControlROS(MotorControl):
     def __init__(
         self,
+        node,
         motor_names,
         ns: str = "",
     ):
+        self.node = node
         self.motor_names = motor_names
         self.numb_of_motors = len(self.motor_names)
 
@@ -22,7 +23,7 @@ class MotorControlROS(MotorControl):
         # TODO should separate config to current and target
 
         # TODo fix namespace
-        self.pub_all_motor = self.create_publisher(ns + "joint_command", JointState, queue_size=1)
+        self.pub_all_motor = self.node.create_publisher(JointState, ns + "joint_command", qos_profile=10)
 
     def set_motor(self) -> None:
         """
@@ -30,7 +31,7 @@ class MotorControlROS(MotorControl):
         """
         js = JointState()
         js.name = []
-        js.header.stamp = self.get_clock().now()
+        js.header.stamp = self.node.get_clock().now().to_msg()
         js.position = []
         js.effort = []
         angles = self.get_angles()
@@ -38,8 +39,10 @@ class MotorControlROS(MotorControl):
             js.name.append(joint)
             js.position.append(angles[self.motor_names[joint][0]])
         try:
-            self.get_logger().info_once("Started Publishing Motors")
+            self.node.get_logger().info("Started Publishing Motors", throttle_duration_sec=1)
             self.pub_all_motor.publish(js)
-        except self.exceptions.ROSException as ex:
+        except Exception as ex:
             print(ex)
+            self.node.destroy_node()
+            rclpy.shutdown()
             exit(0)

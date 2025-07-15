@@ -25,8 +25,7 @@ class TestPybullet(unittest.TestCase):
 
         self.init_node("soccer_control")
 
-        bez = BezROS()
-        walker = NavigatorRos(bez, imu_feedback_enabled=True, ball2=True)
+        walker = NavigatorRos(imu_feedback_enabled=True, ball2=True)
         # walker.wait(50)
         walker.ready()
         # bez.motor_control.set_single_motor("head_pitch", 0.7)
@@ -49,10 +48,9 @@ class TestPybullet(unittest.TestCase):
         #     f"/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill {robot_ns}/soccer_strategy {robot_ns}/soccer_pycontrol {robot_ns}/soccer_trajectories'"
         # )
 
-        self.init_node("soccer_control")
+        rclpy.init()
 
-        bez = BezROS()
-        walker = NavigatorRos(bez, imu_feedback_enabled=True, ball2=True)
+        walker = NavigatorRos(imu_feedback_enabled=True, ball2=True)
         # walker.wait(50)
         walker.ready()
         walker.wait(50)

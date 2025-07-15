@@ -3,7 +3,14 @@ from typing import List
 import numpy as np
 import pybullet as pb
 
-from soccer_common.utils import wrapToPi
+
+def wrapToPi(num: float) -> float:
+    """
+    Wraps a angle to pi, etc -3pi -> pi
+    :param num: Angle in radians
+    """
+    rem = (num + np.pi) % (2 * np.pi) - np.pi
+    return rem
 
 
 class MotorData:

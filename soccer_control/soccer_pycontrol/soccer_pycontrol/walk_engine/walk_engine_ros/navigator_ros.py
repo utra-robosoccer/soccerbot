@@ -1,6 +1,11 @@
+import threading
+
 import numpy as np
 import rclpy
 from geometry_msgs.msg import PoseStamped
+from rclpy.duration import Duration
+from rclpy.executors import ExternalShutdownException
+from rclpy.node import Node
 from soccer_pycontrol.model.model_ros.bez_ros import BezROS
 from soccer_pycontrol.walk_engine.foot_step_planner import FootStepPlanner
 from soccer_pycontrol.walk_engine.navigator import Navigator
@@ -12,20 +17,24 @@ from soccer_common import PID, Transformation
 from soccer_msgs.msg import BoundingBoxes, FixedTrajectoryCommand
 
 
-class NavigatorRos(Navigator):
-    def __init__(self, bez: BezROS, imu_feedback_enabled: bool = False, ball2: bool = False):
+class NavigatorRos(Navigator, Node):
+    def __init__(self, imu_feedback_enabled: bool = False, ball2: bool = False):
+        Node.__init__(self, "soccer_control")
+        self.bez = BezROS(self)
         self.ball = None
         self.ball2 = ball2
         self.ball_pixel = None
         self.imu_feedback_enabled = imu_feedback_enabled
-        self.bez = bez
-
-        self.foot_step_planner = FootStepPlanner(self.bez.robot_model, self.bez.parameters, self.get_time, debug=False, ball=self.ball2, sim=False)
+        self.get_clock().now().seconds_nanoseconds()
+        self.foot_step_planner = FootStepPlanner(
+            self.bez.robot_model, self.bez.parameters, self.get_clock().now, debug=True, ball=self.ball2, sim=False
+        )
         # TODO publish local odomtry from foot step planner
-        self.rate = self.Rate(1 / self.foot_step_planner.DT)
-        self.func_step = self.rate.sleep  # TODO is this needed?
-        self.walker = Walker(bez, self.foot_step_planner, imu_feedback_enabled=imu_feedback_enabled)
 
+        # self.rate = self.Rate(1 / self.foot_step_planner.DT)
+        # self.func_step = self.rate.sleep  # TODO is this needed?
+        self.walker = Walker(self.bez, self.foot_step_planner, imu_feedback_enabled=imu_feedback_enabled)
+        self.rate = self.create_rate(1 / self.foot_step_planner.DT)
         self.walk_pid = Stabilize(self.bez.parameters)
         self.max_vel = 0.03
         self.nav_x_pid = PID(
@@ -52,15 +61,15 @@ class NavigatorRos(Navigator):
         self.ball_dx = 0
         self.ball_dy = 0.7
         self.error_tol = 0.05  # in m TODO add as a param and in the ros version
-        self.position_create_subscription = self.create_subscription(self.bez.ns + "goal", PoseStamped, self.goal_callback)
+        self.position_create_subscription = self.create_subscription(PoseStamped, "goal", self.goal_callback, qos_profile=10)
         self.goal = PoseStamped()
         self.t = None
         self.enable_walking = None
         self.walker.reset_walk()
-        self.sub_boundingbox = self.create_subscription("/robot1/ball", PoseStamped, self.box_callback)
-        self.sub_ball_pixel = self.create_subscription("/robot1/ball_pixel", Float32MultiArray, self.pixel_callback)
+        self.sub_boundingbox = self.create_subscription(PoseStamped, "/robot1/ball", self.box_callback, qos_profile=10)
+        self.sub_ball_pixel = self.create_subscription(Float32MultiArray, "/robot1/ball_pixel", self.pixel_callback, qos_profile=10)
         self.last_ball = [0, 0]
-        self.last_req = self.Time.from_sec(0)
+        self.last_req = self.get_clock().now()
         self.ball_x_pid = PID(
             Kp=0.05,
             Kd=0,
@@ -76,11 +85,14 @@ class NavigatorRos(Navigator):
             setpoint=2.4,
             output_limits=(0.4, 1.3),
         )
-        self.pub_all_motor = self.create_publisher("command", FixedTrajectoryCommand, queue_size=2)
-
+        self.pub_all_motor = self.create_publisher(FixedTrajectoryCommand, "command", qos_profile=10)
+        self.ready_ = True
+        self.kicked = False
+        thread = threading.Thread(target=rclpy.spin, args=(self,), daemon=True)
+        thread.start()
 
     def check_request_timeout(self, nsecs: int = 500000000):
-        return (self.get_clock().now() - self.last_req) < self.Duration(secs=1, nsecs=nsecs)
+        return (self.get_clock().now() - self.last_req) < Duration(seconds=1, nanoseconds=nsecs)
 
     def pixel_callback(self, data):
         self.ball_pixel = data.data
@@ -102,15 +114,18 @@ class NavigatorRos(Navigator):
         self.foot_step_planner.configure_planner(d_x=0.03)
 
     def wait(self, steps: int):
+        # self.get_logger().info("Walking took {} steps".format(self.foot_step_planner.DT))
         for i in range(steps):
-            self.sleep(self.foot_step_planner.DT)
+            # self.get_logger().info("sleep" +str(i))
+            self.rate.sleep()
+        # self.get_logger().info("Walking took {} steps".format(steps))
 
     def run(self, target_goal):
         angles = np.linspace(-np.pi, np.pi)
         ready = True
         kicked = False
 
-        while not self.is_shutdown():
+        while rclpy.ok():
             # self.bez.motor_control.set_single_motor("head_pitch", 0.7)
             # self.bez.motor_control.set_single_motor("head_yaw", 0.0)
             # self.bez.motor_control.set_motor()
@@ -131,7 +146,7 @@ class NavigatorRos(Navigator):
                     elif not kicked:
                         if self.check_request_timeout():
                             ready = False
-                            self.walk(self.ball,self.ball_pixel, ball_mode=True)
+                            self.walk(self.ball, self.ball_pixel, ball_mode=True)
                         elif not ready:
                             self.ready()
                             self.bez.motor_control.set_single_motor("head_pitch", 0.7)
@@ -179,4 +194,33 @@ class NavigatorRos(Navigator):
             # if i % 1000 == 0:
             #     walk.reset_walk()
 
-            self.func_step()
+            self.rate.sleep()
+
+
+def main():
+    rclpy.init()
+    node = NavigatorRos()
+    try:
+        # rclpy.spin(node)
+
+        node.ready()
+        node.wait(50)
+        # walker.goal_callback(PoseStamped())
+        # walker.walk(d_x=0.04, t_goal=10)
+        # target_goal = Transformation(position=[1, 0, 0], euler=[0, 0, 0])
+        # walker.walk(target_goal)
+        target_goal = [0.03, 0.0, 0, 10, 500]
+        # target_goal = Transformation(position=[0, 0, 0], euler=[0, 0, 0])
+        # # walker.walk(target_goal)
+        node.run(target_goal)
+
+        node.wait(100)
+    except (ExternalShutdownException, KeyboardInterrupt):
+        pass
+    finally:
+        node.destroy_node()
+        rclpy.shutdown()
+
+
+if __name__ == "__main__":
+    main()

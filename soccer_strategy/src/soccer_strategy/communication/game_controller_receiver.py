@@ -52,7 +52,7 @@ class GameStateReceiver:
                 data, peer = self.receiver_socket.recvfrom(GameState.sizeof())
                 self.on_new_gamestate(GameState.parse(data))
                 self.answer_to_gamecontroller(peer)
-                self.get_logger().info_once("\033[96mConnected to Game Controller\033[0m")
+                self.get_logger().info("\033[96mConnected to Game Controller\033[0m")
                 connected = True
 
             except AssertionError as ae:
@@ -62,7 +62,7 @@ class GameStateReceiver:
                     if self.get_time() > 5:
                         self.get_logger().error(10, "Socket Timeout, rebinding socket: " + str(s))
                     else:
-                        self.get_logger().info_once("Waiting for socket")
+                        self.get_logger().info("Waiting for socket")
                 else:
                     self.logwarn_throttle(10, "Socket Timeout, rebinding socket: " + str(s))
                 self.receiver_socket.close()

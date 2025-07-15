@@ -242,17 +242,17 @@ class FootStepPlanner:
     def update_meshcat(self, t: float):
         # Updating meshcat display periodically
         if self.debug:
-            if self.funct_time() - self.last_display > 0.03:
-                self.last_display = self.funct_time()
-                self.viz.display(self.robot.state.q)
+            # if self.funct_time(). - self.last_display > 0.03:
+            self.last_display = self.funct_time()
+            self.viz.display(self.robot.state.q)
 
-                frame_viz("left_foot_target", self.trajectory.get_T_world_left(t))
-                frame_viz("right_foot_target", self.trajectory.get_T_world_right(t))
+            frame_viz("left_foot_target", self.trajectory.get_T_world_left(t))
+            frame_viz("right_foot_target", self.trajectory.get_T_world_right(t))
 
-                T_world_trunk = np.eye(4)
-                T_world_trunk[:3, :3] = self.trajectory.get_R_world_trunk(t)
-                T_world_trunk[:3, 3] = self.trajectory.get_p_world_CoM(t)
-                frame_viz("trunk_target", T_world_trunk)
+            T_world_trunk = np.eye(4)
+            T_world_trunk[:3, :3] = self.trajectory.get_R_world_trunk(t)
+            T_world_trunk[:3, 3] = self.trajectory.get_p_world_CoM(t)
+            frame_viz("trunk_target", T_world_trunk)
 
 
 if __name__ == "__main__":

@@ -75,9 +75,12 @@ class Navigator:
         self.record_walking_metrics = record_walking_metrics
         self.walking_data = defaultdict(list)
 
+    def wait(self, steps: int):
+        for i in range(steps):
+            time.sleep(self.foot_step_planner.DT)
 
     # TODO could make input a vector
-    def walk(self, target_goal: Union[Transformation, List],ball_pixel, ball_mode: bool = False, display_metrics: bool = False):
+    def walk(self, target_goal: Union[Transformation, List], ball_pixel=[0, 0], ball_mode: bool = False, display_metrics: bool = False):
         if self.walker.enable_walking:
             if isinstance(target_goal, Transformation):
                 if ball_mode:
@@ -181,7 +184,7 @@ class Navigator:
             # print(round(dx, 3), " ", round(dy, 3), " ", round(dtheta, 3), " ", round(x_error, 3), " ", round(y_error, 3), " ", round(head_error, 3))
             self.foot_step_planner.configure_planner(dx, dy, dtheta)
 
-            self.walker.walk_loop(target_goal.position,ball_pixel)
+            self.walker.walk_loop(target_goal.position, ball_pixel)
         # else:
         #     self.ready()
         #     self.walker.enable_walking = False

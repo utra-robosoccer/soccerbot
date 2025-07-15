@@ -1,7 +1,6 @@
 from os import path
 from unittest.mock import MagicMock
 
-
 import rclpy
 import yaml
 

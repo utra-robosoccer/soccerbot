@@ -94,9 +94,9 @@ class RobotControlled3D(RobotControlled):
         # Get Ball Position from TF
         ground_truth = not bool(os.getenv("COMPETITION", True))
         if ground_truth:
-            self.get_logger().info_once("Using Ground Truth")
+            self.get_logger().info("Using Ground Truth")
         else:
-            self.get_logger().info_once("Using Actual Measurements")
+            self.get_logger().info("Using Actual Measurements")
 
         try:
             self.observed_ball = Ball()

@@ -20,7 +20,7 @@ class LoadModel:  # TODO Maybe rename to body
         self.walking_torso_height = walking_torso_height
 
         # if not fixed_base and (self.pose == Transformation()).all():  # TODO need way to have custom height
-        self.set_pose(pose)
+        self.set_pose(pose)  # TODO need to fix
         # self.ball = pb.loadURDF("soccerball.urdf", [0.12, 0.05, 0.1], globalScaling=0.14)
         # self.ball = pb.loadURDF("soccerball.urdf", [0.23, 0.07, 0.07], globalScaling=0.14)
         self.ball = pb.loadURDF("soccerball.urdf", [1, 0.07, 0.07], globalScaling=0.14)

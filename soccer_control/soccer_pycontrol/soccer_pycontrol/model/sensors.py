@@ -4,7 +4,7 @@ import cv2
 import numpy as np
 import pybullet as pb
 
-from soccer_common import Transformation
+from soccer_common.transformation import Transformation
 
 
 class Sensors:
@@ -126,5 +126,6 @@ class Sensors:
         # seg_opengl = np.reshape(images[4], [width, height]) * 1. / 255.
 
         return img
+
     def get_height(self):
         return

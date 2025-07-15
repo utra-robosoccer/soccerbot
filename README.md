@@ -103,7 +103,6 @@ uv pip install -r tools/setup/requirements.txt --python $(which python) --prefix
 
 colcon build --symlink-install --packages-up-to
 source ~/ros2_ws/install/setup.bash
-LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/ros/humble/lib:/home/manx52/ros2_ws/build
 /home/manx52/ros2_ws/install/soccer_msgs/local/lib/python3.10/dist-packages
 
 LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/ros/humble/lib:/home/manx52/ros2_ws/build/soccer_msgs

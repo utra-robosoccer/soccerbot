@@ -4,7 +4,7 @@ from soccer_pycontrol.model.bez import Bez
 from soccer_pycontrol.walk_engine.foot_step_planner import FootStepPlanner
 from soccer_pycontrol.walk_engine.stabilize import Stabilize
 
-from soccer_common import Transformation, PID
+from soccer_common import PID, Transformation
 
 
 # TODO could make it more modular by passing in pybullet stuff or have it at one layer higher so we can reuse code
@@ -43,7 +43,7 @@ class Walker:
 
     # TODO could make input a vector
 
-    def walk_loop(self, target_goal,ball_pixel):  # TODO set default to something better
+    def walk_loop(self, target_goal=[0, 0], ball_pixel=[0, 0]):  # TODO set default to something better
         self.foot_step_planner.plan_steps(self.t)
         self.bez.motor_control.set_angles_from_placo(self.foot_step_planner.robot)
 
@@ -57,8 +57,8 @@ class Walker:
             # self.foot_step_planner.head_movement(target_goal.position)
 
             self.last_ball = ball_pixel
-            self.ball_dx = self.ball_x_pid.update(3.2 - ball_pixel[0]/100.0)
-            self.ball_dy = self.ball_y_pid.update(ball_pixel[1]/100.0)
+            self.ball_dx = self.ball_x_pid.update(3.2 - ball_pixel[0] / 100.0)
+            self.ball_dy = self.ball_y_pid.update(ball_pixel[1] / 100.0)
         # print(f"{ball_pixel}, {self.ball_dx}, {self.ball_dy}")
         self.bez.motor_control.configuration["head_yaw"] = self.ball_dx
         self.bez.motor_control.configuration["head_pitch"] = self.ball_dy

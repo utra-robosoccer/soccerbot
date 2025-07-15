@@ -78,7 +78,7 @@ class ObjectDetectionNodeRos(ObjectDetectionNode):
         #
         # if self.game_state.gameState != GameState.GAMESTATE_PLAYING:
         #     return
-        self.get_logger().info_once("Object Detection Receiving image")
+        self.get_logger().info("Object Detection Receiving image")
         # width x height x channels (bgra8)
         image = self.br.imgmsg_to_cv2(msg)
         self.camera.reset_position(timestamp=msg.header.stamp)  # msg->image

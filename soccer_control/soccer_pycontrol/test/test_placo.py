@@ -183,8 +183,8 @@ class TestPlaco(unittest.TestCase):
             real_time=REAL_TIME,
             rate=200,
         )
-        # self.bez = Bez(robot_model="assembly", pose=Transformation())
-        self.bez = Bez(robot_model="bez1", pose=Transformation())
+        self.bez = Bez(robot_model="assembly", pose=Transformation())
+        # self.bez = Bez(robot_model="bez1", pose=Transformation())
         walk = Navigator(self.world, self.bez, imu_feedback_enabled=False)
         walk.ready()
         walk.wait(100)

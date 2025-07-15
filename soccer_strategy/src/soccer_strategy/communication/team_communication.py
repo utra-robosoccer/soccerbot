@@ -45,7 +45,7 @@ if __name__ == "__main__":
         m.ball_detected = robot_state.ball_detected
         m_str = m.SerializeToString()
         id_address = socket.gethostbyname(mirror_server_ip)
-        self.get_logger().info_once(f"\033[96mSending to 3737 on {id_address}\033[0m")
+        self.get_logger().info(f"\033[96mSending to 3737 on {id_address}\033[0m")
         s.sendto(m_str, (id_address, 3737))
 
     while not self.is_shutdown() and s is None:
@@ -78,7 +78,7 @@ if __name__ == "__main__":
             print("Nothing received")
             continue
 
-        self.get_logger().info_once("\033[96mReceiving Data Started\033[0m")
+        self.get_logger().info("\033[96mReceiving Data Started\033[0m")
         m = robot_state_pb2.Message()
         m.ParseFromString(msg)
         if m.player_id == player_id:

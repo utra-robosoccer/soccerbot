@@ -1,3 +1,4 @@
+import os
 from os.path import expanduser
 
 import numpy as np
@@ -10,11 +11,12 @@ from soccer_pycontrol.model.model_ros.sensors_ros import SensorsROS
 
 
 class BezROS(Bez):
-    def __init__(self, ns: str = ""):
-        self.ns = ns
+    def __init__(self, node: rclpy.node.Node):
+        self.node = node
         self.robot_model = "assembly"  # self.get_param("robot_model", "assembly")
-
-        if self.get_param("/use_sim_time", False):
+        self.node.declare_parameter("sim", os.environ.get("SIM", False))
+        _sim = self.node.get_parameter("sim").get_parameter_value().bool_value
+        if _sim:
             sim = "_sim"
         else:
             sim = ""
@@ -25,9 +27,9 @@ class BezROS(Bez):
 
         motor_names = list(motor_offsets.keys())[1:]
         del motor_offsets["universe"]
-        self.motor_control = MotorControlROS(motor_offsets, ns)
+        self.motor_control = MotorControlROS(self.node, motor_offsets)
 
-        self.sensors = SensorsROS(ns)
+        self.sensors = SensorsROS(self.node)
 
     # TODO fix dupe
     def get_motor_names(self):

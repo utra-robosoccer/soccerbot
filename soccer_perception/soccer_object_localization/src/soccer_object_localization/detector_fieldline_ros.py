@@ -68,7 +68,7 @@ class DetectorFieldlineRos(DetectorFieldline):
         else:
             self.camera.reset_position(timestamp=img.header.stamp)
         # Uncomment for ground truth
-        self.get_logger().info_once("Started Publishing Fieldlines")
+        self.get_logger().info("Started Publishing Fieldlines")
 
         image = CvBridge().imgmsg_to_cv2(img, desired_encoding="rgb8")
         lines_only = self.image_filter(image, debug)
