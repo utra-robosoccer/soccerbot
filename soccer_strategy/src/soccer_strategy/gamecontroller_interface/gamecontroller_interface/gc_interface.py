@@ -1,17 +1,20 @@
-import rclpy
 import os
-from rclpy.node import Node
-from soccer_msgs.msg import GameState as GameStateMsg
+
+import rclpy
 from gc_client import GameControllerClient
+from rclpy.node import Node
+
+from soccer_msgs.msg import GameState as GameStateMsg
+
 
 class GameControllerInterface(Node):
     def __init__(self):
-        super().__init__('gamecontroller_interface')
+        super().__init__("gamecontroller_interface")
 
         self.gc = GameControllerClient()
         self.team_id = int(os.getenv("ROBOCUP_TEAM_ID", 10))
         self.robot_id = self.declare_parameter("robot_id", 1).get_parameter_value().integer_value
-        self.pub = self.create_publisher(GameStateMsg, 'gamestate', 10)
+        self.pub = self.create_publisher(GameStateMsg, "gamestate", 10)
 
         self.create_timer(0.5, self.receive_and_publish)
 
@@ -61,4 +64,3 @@ class GameControllerInterface(Node):
 
         except Exception as e:
             self.get_logger().warn(f"GC receive error: {e}", throttle_duration_sec=5.0)
-

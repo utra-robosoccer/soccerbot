@@ -9,8 +9,8 @@ from soccer_pycontrol.walk_engine.navigator import Navigator
 from soccer_trajectories.trajectory_manager_sim import TrajectoryManagerSim
 
 from soccer_strategy.behavior import Behavior
-from soccer_strategy.behavior.state.balance import Balance
 from soccer_strategy.behavior.head_state.find_ball import FindBall
+from soccer_strategy.behavior.state.balance import Balance
 
 
 class BehaviorContext:
@@ -27,7 +27,14 @@ class BehaviorContext:
     """
 
     def __init__(
-        self, world: PybulletWorld, bez: Bez, nav: Navigator, tm: TrajectoryManagerSim, detect: ObjectDetectionNode, sim: bool = True, head_state: bool = True
+        self,
+        world: PybulletWorld,
+        bez: Bez,
+        nav: Navigator,
+        tm: TrajectoryManagerSim,
+        detect: ObjectDetectionNode,
+        sim: bool = True,
+        head_state: bool = True,
     ) -> None:
         self.world = world
         self.bez = bez

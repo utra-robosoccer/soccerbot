@@ -1,6 +1,12 @@
 import socket
-from construct import Container, ConstError
-from soccer_strategy.communication.gamestate import GameState, ReturnData, GAME_CONTROLLER_RESPONSE_VERSION
+
+from construct import ConstError, Container
+
+from soccer_strategy.communication.gamestate import (
+    GAME_CONTROLLER_RESPONSE_VERSION,
+    GameState,
+    ReturnData,
+)
 
 
 class GameControllerClient:
@@ -33,6 +39,7 @@ class GameControllerClient:
         )
         self.send_sock.sendto(ReturnData.build(response), (addr[0], self.send_port))
         print(f"Replied to GameController at {addr[0]}")
+
 
 if __name__ == "__main__":
     gc = GameControllerClient(team_id=10, robot_id=1)

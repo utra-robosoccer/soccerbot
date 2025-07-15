@@ -75,7 +75,7 @@ class TestPybullet(unittest.TestCase):
             # detect.camera.pose.orientation_euler = [0, np.pi / 8, 0]
             dimg, bbs_msg = detect.get_model_output(img)
             for box in bbs_msg.bounding_boxes:
-                if box.Class == "0":
+                if box.data == "0":
                     detect.camera.pose = self.bez.sensors.get_pose(link=2)
                     boundingBoxes = [[box.xmin, box.ymin], [box.xmax, box.ymax]]
                     print(detect.camera.calculate_ball_from_bounding_boxes(boundingBoxes).position)

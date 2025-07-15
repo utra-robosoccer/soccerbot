@@ -1,17 +1,16 @@
-import os
 import math
+import os
 import time
 
-from soccer_object_detection.object_detect_node import Label, ObjectDetectionNode
-
-import numpy as np
-
 import cv2
+import numpy as np
+from soccer_object_detection.object_detect_node import Label, ObjectDetectionNode
 from soccer_pycontrol.model.bez import BezStatusEnum
 
 from soccer_strategy.behavior import Behavior
 
 PLOT = True
+
 
 class TrackBall(Behavior):
     def __init__(self):
@@ -40,7 +39,7 @@ class TrackBall(Behavior):
 
                 dx, dy, dz = ball_pos
                 yaw = np.arctan2(dy, dx)
-                pitch = -np.arctan2(dz, np.sqrt(dx ** 2 + dy ** 2))
+                pitch = -np.arctan2(dz, np.sqrt(dx**2 + dy**2))
                 print("Yaw:", yaw, "Pitch:", pitch)
 
                 self.bez.motor_control.configuration["head_yaw"] = yaw

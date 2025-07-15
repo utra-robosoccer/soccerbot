@@ -1,18 +1,17 @@
-import os
 import math
+import os
 import time
 
-from soccer_object_detection.object_detect_node import Label, ObjectDetectionNode
-
-import numpy as np
-
 import cv2
+import numpy as np
+from soccer_object_detection.object_detect_node import Label, ObjectDetectionNode
 from soccer_pycontrol.model.bez import BezStatusEnum
 
 from soccer_strategy.behavior import Behavior
 from soccer_strategy.behavior.head_state.track_ball import TrackBall
 
 PLOT = True
+
 
 class FindBall(Behavior):
     def __init__(self):
