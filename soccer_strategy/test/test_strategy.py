@@ -21,6 +21,7 @@ from soccer_strategy.behavior.behavior_context import BehaviorContext
 from soccer_strategy.behavior.state.get_up import GetUp
 from soccer_strategy.behavior.state.walk import Walk
 from soccer_strategy.behavior.state.rotate import Rotate
+from soccer_strategy.behavior.head_state.localize import Localize
 
 # from soccer_msgs.msg import BoundingBox, BoundingBoxes
 
@@ -112,6 +113,33 @@ class TestStrategy(unittest.TestCase):
             self.world.step()
 
         self.assertTrue(True, "Rotated robot clockwise without issues.")
+
+    def test_localize(self):
+        self.world = PybulletWorld(
+            camera_yaw=90,
+            real_time=REAL_TIME,
+            rate=200,
+        )
+        self.bez = Bez(robot_model="assembly", pose=Transformation())
+        nav = Navigator(self.world, self.bez, imu_feedback_enabled=False, ball=True)
+        tm = TrajectoryManagerSim(self.world, self.bez, "bez2_sim", "getupfront")
+
+        src_path = expanduser("~") + "/ros2_ws/src/soccerbot/soccer_perception/"
+        model_path = src_path + "soccer_object_detection/models/half_5.pt"
+        detect = ObjectDetectionNode(model_path)
+
+        context = BehaviorContext(self.world, self.bez, nav, tm, detect, sim=True)
+        context.transition_to(Localize())
+
+        for i in range(1000):
+            if i % 10 == 0:
+                context.run_state_algorithim()
+
+                # Optional: log robot yaw
+                yaw = self.bez.sensors.get_pose(link=2).orientation_euler[0]
+                print(f"[Tick {i}] Yaw: {yaw:.1f}°")
+
+            self.world.step()
 
     def testcontextswitch(self):
         self.world = PybulletWorld(

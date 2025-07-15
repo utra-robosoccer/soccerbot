@@ -15,6 +15,7 @@ class BezStatusEnum(enum.IntEnum):
     WALK = 2
     FALLEN = 3
     ROTATING = 4
+    LOCALIZE = 5
 
 
 class Bez:
@@ -38,6 +39,8 @@ class Bez:
         self._body_status = status
         self._head_status = status
         self._found_ball = found_ball
+        self._found_home_side = False
+        self._home_side_yaw_positive = False
 
         self.model = LoadModel(self.robot_model, self.parameters["walking_torso_height"], pose, fixed_base)
 
@@ -76,6 +79,22 @@ class Bez:
     @found_ball.setter
     def found_ball(self, status: bool) -> None:
         self._found_ball = status
+
+    @property
+    def found_home_side(self) -> bool:
+        return self._found_home_side
+
+    @found_home_side.setter
+    def found_home_side(self, status: bool) -> None:
+        self._found_home_side = status
+
+    @property
+    def home_side_yaw_positive(self) -> bool:
+        return self._home_side_yaw_positive
+
+    @home_side_yaw_positive.setter
+    def home_side_yaw_positive(self, status: bool) -> None:
+        self._home_side_yaw_positive = status
 
     def get_parameters(self) -> dict:
         with open(

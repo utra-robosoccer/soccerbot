@@ -25,10 +25,13 @@ class Rotate(Behavior):
             # yaw=-90°, pitch=0, roll=0
             target_goal = Transformation(pos, euler=[-np.pi / 2, 0, 0])
         else:
-            target_goal = Transformation(pos, euler=[np.pi / 2, 0, 0])
+            target_goal = Transformation(pos, euler=[np.pi / 2 , 0, 0])
 
 
+        [y, p, r] = pose.orientation_euler
+        print("IMU YAW: ", y)
         self.nav.walk(target_goal)
+        print("IMU YAW: ", y)
 
         # simulating finding the ball (if ball still not found, rotate again)
         if self.nav.t > 5 and self.bez.found_ball == False:
