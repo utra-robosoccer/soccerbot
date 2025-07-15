@@ -63,7 +63,7 @@ services:
       - /etc/systemd/system:/etc/systemd/system
     # Command that runs when docker compose pull is executed
     command:
-      /bin/bash -c "source ~/catkin_ws/devel/setup.bash && sudo chmod +s /usr/bin/nice &&
+      /bin/bash -c "source ~/ros2_ws/devel/setup.bash && sudo chmod +s /usr/bin/nice &&
       roslaunch soccerbot soccerbot.launch simulation:=false __ns:=robot$$ROBOCUP_ROBOT_ID || sleep infinity"
 #    environment:
 #      ROS_MASTER_URI: ${ROS_MASTER_URI}
@@ -73,4 +73,4 @@ services:
 #      ROBOCUP_TEAM_COLOR: ${ROBOCUP_TEAM_COLOR:-"blue"}
 #      ROBOCUP_TEAM_ID: ${ROBOCUP_TEAM_ID:-10}
 #      PYTHONUNBUFFERED: 1
-#      PYTHONPATH: /home/robosoccer/catkin_ws/devel/lib/python3/dist-packages:/opt/ros/noetic/lib/python3/dist-packages:/home/robosoccer/.local/lib/python3.8/site-packages
+#      PYTHONPATH: /home/robosoccer/ros2_ws/devel/lib/python3/dist-packages:/opt/ros/noetic/lib/python3/dist-packages:/home/robosoccer/.local/lib/python3.8/site-packages

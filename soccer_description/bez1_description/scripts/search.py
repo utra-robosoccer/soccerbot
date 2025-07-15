@@ -3,8 +3,8 @@ from os.path import expanduser
 
 home = expanduser("~")
 
-input_file = home + "/catkin_ws/src/soccerbot/bez1_description/urdf/Bez1.proto"
-target_file = home + "/catkin_ws/src/soccerbot/bez1_description/urdf/Bez1.proto"
+input_file = home + "/ros2_ws/src/soccerbot/bez1_description/urdf/Bez1.proto"
+target_file = home + "/ros2_ws/src/soccerbot/bez1_description/urdf/Bez1.proto"
 text = ""
 key = "device"
 

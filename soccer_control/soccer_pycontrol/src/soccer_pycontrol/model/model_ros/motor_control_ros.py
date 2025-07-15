@@ -38,7 +38,7 @@ class MotorControlROS(MotorControl):
             js.name.append(joint)
             js.position.append(angles[self.motor_names[joint][0]])
         try:
-            self.loginfo_once("Started Publishing Motors")
+            self.get_logger().info_once("Started Publishing Motors")
             self.pub_all_motor.publish(js)
         except self.exceptions.ROSException as ex:
             print(ex)

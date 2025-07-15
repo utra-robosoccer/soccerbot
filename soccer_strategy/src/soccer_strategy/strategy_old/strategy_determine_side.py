@@ -68,7 +68,7 @@ class StrategyDetermineSide(Strategy):
                 )
                 print(f"Detected Goal Post Position {goal_post_position}, Orientation {goal_post_orientation}")
                 footprint_to_goal_post = Transformation(position=goal_post_position, quaternion=goal_post_orientation)
-                self.loginfo(f"Footprint to goal post: {footprint_to_goal_post.position}")
+                self.get_logger().info(f"Footprint to goal post: {footprint_to_goal_post.position}")
 
             except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
 
@@ -115,7 +115,7 @@ class StrategyDetermineSide(Strategy):
 
         position = np.array([translation[0], translation[1], rotation[3]])
         current_robot.position = position
-        self.loginfo(f"Robot Position Determined, Determining Roles, Position: {current_robot.position}")
+        self.get_logger().info(f"Robot Position Determined, Determining Roles, Position: {current_robot.position}")
         current_robot.reset_initial_position()
 
     def determine_side(self, current_robot, friendly_team, footprint_to_goal_post: Transformation, game_state: GameState) -> bool:
@@ -205,10 +205,10 @@ class StrategyDetermineSide(Strategy):
 
         # Set the location
         current_robot.position = closest_valid_robot_transform.pos_theta
-        self.loginfo(
+        self.get_logger().info(
             f"Estimated Robot position: {closest_valid_robot_transform.pos_theta} Written Robot Position: {written_robot_transforms[current_robot.robot_id].pos_theta}"
         )
-        self.loginfo(f"Robot Position Determined, Determining Roles, Position: {current_robot.position}")
+        self.get_logger().info(f"Robot Position Determined, Determining Roles, Position: {current_robot.position}")
         current_robot.reset_initial_position()
         return True
 

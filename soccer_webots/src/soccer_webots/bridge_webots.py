@@ -195,7 +195,7 @@ class GameControllerBridge:
         for message in messages:
             text = message.text
             if message.message_type == messages_pb2.Message.ERROR_MESSAGE:
-                self.logerr(f"RECEIVED ERROR: '{text}'", logger_name="rc_api")
+                self.get_logger().error(f"RECEIVED ERROR: '{text}'", logger_name="rc_api")
             elif message.message_type == messages_pb2.Message.WARNING_MESSAGE:
                 self.logwarn(f"RECEIVED WARNING: '{text}'", logger_name="rc_api")
             else:
@@ -282,7 +282,7 @@ class GameControllerBridge:
                 img_msg.data = image
                 self.pub_camera.publish(img_msg)
             else:
-                self.logerr(f"Unknown camera: '{name}'", logger_name="rc_api")
+                self.get_logger().error(f"Unknown camera: '{name}'", logger_name="rc_api")
 
     def publish_camera_info(self, height, width):
         camera_info_msg = CameraInfo()

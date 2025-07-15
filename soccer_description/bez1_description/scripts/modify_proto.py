@@ -4,10 +4,10 @@ from os.path import expanduser
 print("Modifying .proto file")
 home = expanduser("~")
 
-input_file = home + "/catkin_ws/src/soccerbot/bez1_description/urdf/Bez1.proto"
+input_file = home + "/ros2_ws/src/soccerbot/bez1_description/urdf/Bez1.proto"
 target_file = (
-    home + "/catkin_ws/src/soccerbot/bez1_description/urdf/Bez1.proto"
-)  # home + '/catkin_ws/src/soccerbot/soccer_webots/robocup/protos/Bez2.proto'
+    home + "/ros2_ws/src/soccerbot/bez1_description/urdf/Bez1.proto"
+)  # home + '/ros2_ws/src/soccerbot/soccer_webots/robocup/protos/Bez2.proto'
 text = ""
 with open(input_file, "r") as proto_file:
     text = proto_file.read()
@@ -30,7 +30,7 @@ PROTO Bez1 ["""
           metalness 0
         }
         geometry DEF torso Mesh {
-          url "/home/manx52/catkin_ws/src/soccerbot/bez1_description/bez1_description/meshes/torso.stl"
+          url "/home/manx52/ros2_ws/src/soccerbot/bez1_description/bez1_description/meshes/torso.stl"
         }
       }"""
 
@@ -84,7 +84,7 @@ PROTO Bez1 ["""
           metalness 0
         }
         geometry DEF torso Mesh {
-          url "/home/manx52/catkin_ws/src/soccerbot/bez1_description/bez1_description/meshes/torso.stl"
+          url "/home/manx52/ros2_ws/src/soccerbot/bez1_description/bez1_description/meshes/torso.stl"
         }
       }
             """
@@ -228,7 +228,7 @@ PROTO Bez1 ["""
                             Shape {
                               appearance USE steel_satin
                               geometry DEF camera_point_1 Mesh {
-                                url "/home/manx52/catkin_ws/src/soccerbot/bez2_description/meshes/camera_point_1.stl"
+                                url "/home/manx52/ros2_ws/src/soccerbot/bez2_description/meshes/camera_point_1.stl"
                               }
                             }
                           ]
@@ -304,7 +304,7 @@ PROTO Bez1 ["""
                 Shape {
                   appearance USE steel_satin
                   geometry DEF imu_1 Mesh {
-                    url "/home/manx52/catkin_ws/src/soccerbot/bez2_description/meshes/imu_1.stl"
+                    url "/home/manx52/ros2_ws/src/soccerbot/bez2_description/meshes/imu_1.stl"
                   }
                 }
               ]
@@ -413,7 +413,7 @@ PROTO Bez1 ["""
     text = text.replace(target_text, replace_text)
 
     # update STL paths
-    text = text.replace(home + "/catkin_ws/src/soccerbot/bez2_description/meshes/", "")
+    text = text.replace(home + "/ros2_ws/src/soccerbot/bez2_description/meshes/", "")
 
     # set hands
     target_text = """children [

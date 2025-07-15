@@ -34,7 +34,7 @@ https://github.com/utra-robosoccer/soccerbot/wiki/Onboarding
 roslaunch soccerbot sensors.launch __ns:=robot1
 ```
 
-cd ~/catkin_ws
+cd ~/ros2_ws
 source devel/setup.bash
 pytest src/soccerbot/soccer_trajectories/src/soccer_trajectories/test_trajectory.py::TestTrajectory::test_fixed_angles_trajectories
 
@@ -42,7 +42,7 @@ pytest src/soccerbot/soccer_trajectories/src/soccer_trajectories/test_trajectory
 
 pytest src/soccerbot/soccer_pycontrol/src/soccer_pycontrol/test_walking.py::TestWalking::test_walk_1_real_robot
 
-cd ~/catkin_ws
+cd ~/ros2_ws
 
 ```bash
 source devel/setup.bash
@@ -100,3 +100,10 @@ uv pip install -r tools/setup/requirements.txt --python $(which python) --prefix
 
 to compare
 uv pip install -r tools/setup/requirements.txt --python $(which python) --prefix $(python -m site --user-base) --no-cache-dir --force-reinstall
+
+colcon build --symlink-install --packages-up-to
+source ~/ros2_ws/install/setup.bash
+LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/ros/humble/lib:/home/manx52/ros2_ws/build
+/home/manx52/ros2_ws/install/soccer_msgs/local/lib/python3.10/dist-packages
+
+LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/ros/humble/lib:/home/manx52/ros2_ws/build/soccer_msgs

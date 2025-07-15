@@ -29,8 +29,8 @@ class GameStateReceiver:
         self.team_id = int(os.getenv("ROBOCUP_TEAM_ID", 16))
         self.robot_id = self.get_param("robot_id", 1)
 
-        self.loginfo("Listening to " + str(self.GAME_CONTROLLER_LISTEN_PORT) + " " + str(self.GAME_CONTROLLER_ANSWER_PORT))
-        self.loginfo(f"We are playing as player {self.robot_id} in team {self.team_id}")
+        self.get_logger().info("Listening to " + str(self.GAME_CONTROLLER_LISTEN_PORT) + " " + str(self.GAME_CONTROLLER_ANSWER_PORT))
+        self.get_logger().info(f"We are playing as player {self.robot_id} in team {self.team_id}")
 
         self.state_create_publisher = self.create_publisher("gamestate", GameStateMsg, queue_size=1)
 
@@ -52,7 +52,7 @@ class GameStateReceiver:
                 data, peer = self.receiver_socket.recvfrom(GameState.sizeof())
                 self.on_new_gamestate(GameState.parse(data))
                 self.answer_to_gamecontroller(peer)
-                self.loginfo_once("\033[96mConnected to Game Controller\033[0m")
+                self.get_logger().info_once("\033[96mConnected to Game Controller\033[0m")
                 connected = True
 
             except AssertionError as ae:
@@ -62,7 +62,7 @@ class GameStateReceiver:
                     if self.get_time() > 5:
                         self.get_logger().error(10, "Socket Timeout, rebinding socket: " + str(s))
                     else:
-                        self.loginfo_once("Waiting for socket")
+                        self.get_logger().info_once("Waiting for socket")
                 else:
                     self.logwarn_throttle(10, "Socket Timeout, rebinding socket: " + str(s))
                 self.receiver_socket.close()
@@ -75,7 +75,7 @@ class GameStateReceiver:
                 self.logwarn_throttle(10, c)
             except Exception as e:
                 self.get_logger().error(10, "Error")
-                self.logerr(e)
+                self.get_logger().error(e)
         self.receiver_socket.close()
         self.send_socket.close()
 
@@ -111,13 +111,15 @@ class GameStateReceiver:
             own_team = state.teams[1]
             rival_team = state.teams[0]
         else:
-            self.logerr("Team {} not playing, only {} and {}".format(self.team_id, state.teams[0].team_number, state.teams[1].team_number))
+            self.get_logger().error(
+                "Team {} not playing, only {} and {}".format(self.team_id, state.teams[0].team_number, state.teams[1].team_number)
+            )
             return
 
         try:
             me = own_team.players[self.robot_id - 1]
         except IndexError:
-            self.logerr("Robot {} not playing".format(self.robot_id))
+            self.get_logger().error("Robot {} not playing".format(self.robot_id))
             return
 
         msg = GameStateMsg()

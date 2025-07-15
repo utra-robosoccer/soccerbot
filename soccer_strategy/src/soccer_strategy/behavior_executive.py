@@ -31,7 +31,7 @@ class BehaviorExecutive:
         self.bez = Bez(robot_model="assembly", pose=Transformation())
         self.nav = Navigator(self.world, self.bez, imu_feedback_enabled=False)
 
-        src_path = expanduser("~") + "/catkin_ws/src/soccerbot/soccer_perception/"
+        src_path = expanduser("~") + "/ros2_ws/src/soccerbot/soccer_perception/"
         model_path = src_path + "soccer_object_detection/models/half_5.pt"
         self.detect = ObjectDetectionNode(model_path)  # TODO should have a switch
 

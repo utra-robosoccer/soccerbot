@@ -90,7 +90,7 @@ class StrategyDummy(Strategy):
                             )
                             Utility.navigate_to_position_with_offset(this_robot, optimal_pos, np.array(ball.position[0:2]), 0)
                         else:
-                            self.loginfo("Navigation to ball")
+                            self.get_logger().info("Navigation to ball")
                             blocked_position = Utility.is_obstacle_blocking(this_robot, ball.position, goal_position)
                             if blocked_position is not None:
                                 optimal_pos = Utility.optimal_position_to_navigate_if_blocking(
@@ -99,15 +99,15 @@ class StrategyDummy(Strategy):
                                 Utility.navigate_to_position_with_offset(this_robot, np.array(ball.position[0:2]), optimal_pos)
                             else:
                                 Utility.navigate_to_scoring_position(this_robot, np.array(ball.position[0:2]), goal_position)
-                    elif this_robot.observed_ball is None or (self.get_clock().now() - this_robot.observed_ball.last_observed_time_stamp) > self.Duration(
-                        2
-                    ):
+                    elif this_robot.observed_ball is None or (
+                        self.get_clock().now() - this_robot.observed_ball.last_observed_time_stamp
+                    ) > self.Duration(2):
                         # Other robot sees the ball but this robot is not seeing the ball, then turn to face the ball
                         player_angle = this_robot.position[2]
                         player_position = this_robot.position[0:2]
 
                         # Haven't seen the ball timeout
-                        self.loginfo(f"Player {this_robot.robot_id}: Rotating to locate ball that other robot found {ball.position}")
+                        self.get_logger().info(f"Player {this_robot.robot_id}: Rotating to locate ball that other robot found {ball.position}")
                         robot_to_ball = ball.position - player_position
                         angle = np.arctan2(robot_to_ball[1], robot_to_ball[0])
 
@@ -128,7 +128,7 @@ class StrategyDummy(Strategy):
                 player_position = this_robot.position[0:2]
 
                 # Haven't seen the ball timeout
-                self.loginfo(
+                self.get_logger().info(
                     f"Player {this_robot.robot_id}: Rotating to locate ball. Time of End of Action {self.time_of_end_of_action}, Last Observed Time Stamp {friendly_team.observed_ball.last_observed_time_stamp if friendly_team.observed_ball is not None else 0}"
                 )
 

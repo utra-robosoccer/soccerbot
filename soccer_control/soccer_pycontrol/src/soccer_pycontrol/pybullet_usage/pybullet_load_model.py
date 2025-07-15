@@ -15,7 +15,7 @@ class LoadModel:  # TODO Maybe rename to body
         self.pose = pose
         self.robot_model = robot_model
 
-        urdf_model_path = expanduser("~") + f"/catkin_ws/src/soccerbot/soccer_description/{robot_model}" f"_description/urdf/{robot_model}.urdf"
+        urdf_model_path = expanduser("~") + f"/ros2_ws/src/soccerbot/soccer_description/{robot_model}" f"_description/urdf/{robot_model}.urdf"
         self.body = self.load_urdf_pybullet(urdf_model_path, fixed_base)
         self.walking_torso_height = walking_torso_height
 

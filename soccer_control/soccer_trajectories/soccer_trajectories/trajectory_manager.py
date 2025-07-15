@@ -13,7 +13,7 @@ class TrajectoryManager(ABC):
     """
 
     def __init__(self, robot_model: str, traj_name: str, mirror: bool = False):
-        trajectory_path = expanduser("~") + f"/catkin_ws/src/soccerbot/soccer_control/soccer_trajectories/trajectories/{robot_model}/"
+        trajectory_path = expanduser("~") + f"/ros2_ws/src/soccerbot/soccer_control/soccer_trajectories/trajectories/{robot_model}/"
 
         self.trajectory_path = trajectory_path
         # print(trajectory_path)
@@ -23,7 +23,7 @@ class TrajectoryManager(ABC):
     def process_trajectory(self, traj_name: str, mirror: bool):
         print(self.trajectory_path)
         print(traj_name)
-        self.trajectory.trajectory_path = traj_name
+        self.trajectory.trajectory_path = self.trajectory_path + traj_name + ".csv"  # TODO fix this is weirdly complicasted
         self.trajectory.mirror = mirror
         self.trajectory.reset()
 

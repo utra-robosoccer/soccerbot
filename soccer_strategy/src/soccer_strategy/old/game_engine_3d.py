@@ -101,7 +101,7 @@ class GameEngine3D:
         """
         self.robot_id = self.get_param("robot_id", 1)
         team_id = int(os.getenv("ROBOCUP_TEAM_ID", "16"))
-        self.loginfo(f"Initializing strategy with robot id: {self.robot_id},  team id:  {team_id}")
+        self.get_logger().info(f"Initializing strategy with robot id: {self.robot_id},  team id:  {team_id}")
 
         robots: [Union[RobotObserved, RobotControlled3D]] = []
         for i in range(1, 5):

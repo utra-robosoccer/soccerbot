@@ -4,6 +4,9 @@ from unittest.mock import MagicMock
 
 import pytest
 import rclpy
+from rclpy.node import Node
+
+# import rclpy
 from sensor_msgs.msg import JointState
 from soccer_pycontrol.model.bez import Bez
 from soccer_pycontrol.pybullet_usage.pybullet_world import PybulletWorld
@@ -12,7 +15,8 @@ from soccer_trajectories.trajectory_manager_ros import TrajectoryManagerRos
 from soccer_trajectories.trajectory_manager_sim import TrajectoryManagerSim
 
 from soccer_common import Transformation
-from soccer_common.utils_rosparam import set_rosparam_from_yaml_file
+
+# from soccer_common.utils_rosparam import set_rosparam_from_yaml_file
 from soccer_msgs.msg import FixedTrajectoryCommand
 
 os.environ["ROS_NAMESPACE"] = "/robot1"
@@ -94,27 +98,23 @@ def test_trajectory_sim(trajectory_name: str, robot_model: str, real_time: bool)
 
 def run_real_trajectory(robot_model: str, trajectory_name: str, real_time: bool):
     # TODO clean up
-    self.init_node("test")
+    # self.init_node("test")
     # os.system(
     #     "/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_strategy "
     #     "/robot1/soccer_pycontrol /robot1/soccer_trajectories'"
     # )
 
-    file_path = os.path.dirname(os.path.abspath(__file__))
-    config_path = f"{file_path}/../../../{robot_model}_description/config/motor_mapping.yaml"
-    set_rosparam_from_yaml_file(param_path=config_path)
-    self.set_param("robot_model", robot_model)
-
-    c = TrajectoryManagerRos(robot_model,trajectory_name )
-    self.init_node("test")
+    rclpy.init()
+    c = TrajectoryManagerRos(robot_model, trajectory_name)
     msg = FixedTrajectoryCommand()
     msg.trajectory_name = trajectory_name
     msg.mirror = False
 
-    joint_state = MagicMock()
-    joint_state.position = [0.0] * 20
-    self.wait_for_message = MagicMock(return_value=joint_state)
-
+    # TODO needs to be mocked, but not sure how
+    # joint_state = MagicMock()
+    # joint_state.position = [0.0] * 20
+    # self.wait_for_message = MagicMock(return_value=joint_state)
+    # Node.validate_topic_name= MagicMock(return_value=True)
     c.command_callback(command=msg)
     c.send_trajectory(real_time=real_time)
 

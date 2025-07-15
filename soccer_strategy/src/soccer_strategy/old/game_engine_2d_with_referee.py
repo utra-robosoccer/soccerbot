@@ -67,7 +67,7 @@ class GameEngine2DWithReferee(GameEngine2D):
                     new_strategy = decide_next_strategy(strategy=strategy, gameState=gameState, this_robot=robot)
                     # if type(strategy) != new_strategy: TODO fix maybe
                     #     self.robot_strategies[(robot.team, robot.robot_id)] = new_strategy()
-                    #     self.loginfo(f"Team {robot.team} Robot {robot.robot_id} transitioned to strategy {str(new_strategy.__name__)}")
+                    #     self.get_logger().info(f"Team {robot.team} Robot {robot.robot_id} transitioned to strategy {str(new_strategy.__name__)}")
 
                     if self.get_clock().now() - self.individual_robot_last_strategy_update_time[robot] > self.Duration(strategy.update_frequency):
 

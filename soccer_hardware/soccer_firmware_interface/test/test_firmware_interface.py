@@ -189,9 +189,9 @@ def test_firmware_interface_normal():
     self.set_param("motor_mapping", os.path.dirname(os.path.realpath(__file__)) + "/../../config/bez2.yaml")
     self.set_param("motor_types", os.path.dirname(os.path.realpath(__file__)) + "/../../config/motor_types.yaml")
 
-    self.loginfo("Initializing Soccer Firmware")
+    self.get_logger().info("Initializing Soccer Firmware")
     f = FirmwareInterface()
-    self.loginfo("Starting Firmware")
+    self.get_logger().info("Starting Firmware")
     try:
         self.spin()
     except self.exceptions.ROSException as ex:

@@ -22,7 +22,7 @@ PLOT = True
 
 class TestObjectDetection(TestCase):
     def test_object_detection(self):
-        src_path = expanduser("~") + "/catkin_ws/src/soccerbot/soccer_perception/"
+        src_path = expanduser("~") + "/ros2_ws/src/soccerbot/soccer_perception/"
         test_path = src_path + "data/images/simulation"
 
         download_dataset("https://drive.google.com/uc?id=11nN58j8_PBoLNRAzOEdk7fMe1UK1diCc", folder_path=test_path)
@@ -73,7 +73,7 @@ class TestObjectDetection(TestCase):
                 cv2.destroyAllWindows()
 
     def test_object_detection_vid(self):
-        src_path = expanduser("~") + "/catkin_ws/src/soccerbot/soccer_perception/"
+        src_path = expanduser("~") + "/ros2_ws/src/soccerbot/soccer_perception/"
         test_path = src_path + "data/videos/robocup2023"
 
         download_dataset("https://drive.google.com/uc?id=1UTQ6Rz0yk8jpWwWoq3eSf7DOmG_j9An3", folder_path=test_path)
@@ -371,7 +371,7 @@ class TestObjectDetection(TestCase):
 
             return visible_posts
 
-        src_path = expanduser("~") + "/catkin_ws/src/soccerbot/soccer_perception/"
+        src_path = expanduser("~") + "/ros2_ws/src/soccerbot/soccer_perception/"
         test_path = src_path + "data/images/goal_net"
 
         download_dataset("https://drive.google.com/uc?id=17qdnW7egoopXHvakiNnUUufP2MOjyZ18", folder_path=test_path)

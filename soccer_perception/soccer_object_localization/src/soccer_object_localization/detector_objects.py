@@ -140,7 +140,7 @@
 #                         #     self.robot_name + f"/obstacle_{obstacle_counter}",
 #                         #     self.robot_name + "/camera",
 #                         # )
-#                         # self.loginfo(f"Obstacle {obstacle_counter} detected at [{pos}] {floor_coordinate_robot} {camera_to_obstacle.position}")
+#                         # self.get_logger().info(f"Obstacle {obstacle_counter} detected at [{pos}] {floor_coordinate_robot} {camera_to_obstacle.position}")
 #                         obstacle_counter += 1
 #
 #         if self.final_camera_to_ball is not None:

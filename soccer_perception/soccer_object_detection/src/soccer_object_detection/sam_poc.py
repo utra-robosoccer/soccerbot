@@ -35,7 +35,7 @@ def show_box(box, ax):
     ax.add_patch(plt.Rectangle((x0, y0), w, h, edgecolor="green", facecolor=(0, 0, 0, 0), lw=2))
 
 
-src_path = expanduser("~") + "/catkin_ws/src/soccerbot/soccer_perception/"
+src_path = expanduser("~") + "/ros2_ws/src/soccerbot/soccer_perception/"
 test_path = src_path + "data/images/simulation"
 model_path = src_path + "soccer_object_detection/models/half_5.pt"
 

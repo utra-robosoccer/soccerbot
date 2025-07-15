@@ -108,7 +108,7 @@ class FirmwareInterface(Node):
                     # print(1.0 / (time.time() - s))
                     self.pub_joint_state(data)
 
-                    self.pub_imu(data)
+                    self.pub_imu(data) # TODO the actual publishing should be in a timer that sets a dedicated freq, this is not bad.
                 except Exception as ex:
                     self.get_logger().error( f"Lost connection to serial port {type(ex)} {ex}, retrying...", throttle_duration_sec=1)
                     pass

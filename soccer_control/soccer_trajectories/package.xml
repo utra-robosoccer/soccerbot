@@ -6,7 +6,7 @@
     <version>0.0.0</version>
     <description>The soccer_trajectories package</description>
 
-    <maintainer email="arthur@allshire.org">Arthur Allshire</maintainer>
+    <maintainer email="jonathanspraggett@gmail.com">Jonathan Spraggett</maintainer>
 
     <license>BSD</license>
 
@@ -17,6 +17,7 @@
     <depend>sensor_msgs</depend>
     <depend>rosgraph_msgs</depend>
     <depend>std_msgs</depend>
+    <depend>soccer_msgs</depend>
 
 
     <export>

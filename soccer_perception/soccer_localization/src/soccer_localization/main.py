@@ -9,7 +9,7 @@ from soccer_localization.field_lines_ukf_ros import FieldLinesUKFROS
 
 if __name__ == "__main__":
     self.init_node("soccer_localization")
-    self.loginfo("Initializing Soccer Localization")
+    self.get_logger().info("Initializing Soccer Localization")
 
     f = FieldLinesUKFROS()
     self.spin()

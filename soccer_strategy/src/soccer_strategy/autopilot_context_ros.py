@@ -25,7 +25,7 @@ class AutoPilotContextRos(AutoPilotContext):
         """
         This function handles the hover test service.
         """
-        self.loginfo("hover")
+        self.get_logger().info("hover")
 
         self.autopilot = Hover(self.action)
         self.autopilot.inprogress = True
@@ -36,7 +36,7 @@ class AutoPilotContextRos(AutoPilotContext):
         """
         This function handles the hover test service.
         """
-        self.loginfo("hover kill")
+        self.get_logger().info("hover kill")
 
         self.autopilot = HoverKill(self.action)
         self.autopilot.inprogress = True
@@ -47,7 +47,7 @@ class AutoPilotContextRos(AutoPilotContext):
         """
         This function handles the hover test service.
         """
-        self.loginfo("hover uwb")
+        self.get_logger().info("hover uwb")
 
         self.autopilot = HoverUwb(self.action)
         self.autopilot.inprogress = True

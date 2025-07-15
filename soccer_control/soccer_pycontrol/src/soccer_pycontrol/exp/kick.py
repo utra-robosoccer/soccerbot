@@ -12,7 +12,7 @@ Sigmaban humanoid is moving its legs while looking at a moving ball.
 
 # Loading the robot
 robot_model = "assembly"
-model_filename = expanduser("~") + f"/catkin_ws/src/soccerbot/soccer_description/{robot_model}_description/urdf/robot.urdf"
+model_filename = expanduser("~") + f"/ros2_ws/src/soccerbot/soccer_description/{robot_model}_description/urdf/robot.urdf"
 robot = placo.HumanoidRobot(model_filename)
 
 # Placing the left foot in world origin

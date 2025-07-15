@@ -51,7 +51,7 @@ class Bez:
     def get_parameters(self) -> dict:
         with open(
             expanduser("~")
-            + f"/catkin_ws/src/soccerbot/soccer_control/soccer_pycontrol/config/{self.robot_model}/{self.robot_model}_sim_pybullet.yaml",
+            + f"/ros2_ws/src/soccerbot/soccer_control/soccer_pycontrol/config/{self.robot_model}/{self.robot_model}_sim_pybullet.yaml",
             "r",
         ) as file:
             parameters = yaml.safe_load(file)

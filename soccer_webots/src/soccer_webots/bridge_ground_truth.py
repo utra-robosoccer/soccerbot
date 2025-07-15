@@ -39,7 +39,7 @@ def reset_robot(pose: PoseStamped, robot: str):
         supervisor.step(1)
         print(f"{robot} reset to ({pose.pose.position.x}, {pose.pose.position.y})")
     else:
-        self.logerr("Reset robot failed")
+        self.get_logger().error("Reset robot failed")
 
 
 def reset_ball(pose: PoseStamped):
@@ -52,7 +52,7 @@ def reset_ball(pose: PoseStamped):
         supervisor.step(1)
         print(f"ball reset to ({pose.pose.position.x}, {pose.pose.position.y})")
     else:
-        self.logerr("Reset ball failed")
+        self.get_logger().error("Reset ball failed")
 
 
 def publish_ground_truth_messages(c: Clock):

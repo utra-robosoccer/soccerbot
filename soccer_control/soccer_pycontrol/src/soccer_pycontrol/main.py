@@ -22,11 +22,11 @@ np.set_printoptions(precision=3)
 
 if __name__ == "__main__":
     self.init_node("soccer_control")
-    self.loginfo("Initializing Soccer Control")
+    self.get_logger().info("Initializing Soccer Control")
     ns = "/robot1/"
     bez = BezROS(ns=ns)
     walker = NavigatorRos(bez)
-    self.loginfo("Starting Control Loop")
+    self.get_logger().info("Starting Control Loop")
     try:
         walker.walk(d_x=0.00, t_goal=10)
     except self.exceptions.ROSException as ex:

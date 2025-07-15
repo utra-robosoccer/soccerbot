@@ -5,9 +5,9 @@ home = expanduser("~")
 
 target_file = (
     home
-    + "/catkin_ws/src/soccerbot/bez1_description/urdf/Bez1Robocup.proto"
-    # home + "/catkin_ws/src/soccerbot/soccer_webots/robocup/protos/Bez1.proto"
-)  # home + '/catkin_ws/src/soccerbot/soccer_webots/robocup/protos/Bez2.proto'
+    + "/ros2_ws/src/soccerbot/bez1_description/urdf/Bez1Robocup.proto"
+    # home + "/ros2_ws/src/soccerbot/soccer_webots/robocup/protos/Bez1.proto"
+)  # home + '/ros2_ws/src/soccerbot/soccer_webots/robocup/protos/Bez2.proto'
 
 
 with open(target_file, "w") as proto_file:

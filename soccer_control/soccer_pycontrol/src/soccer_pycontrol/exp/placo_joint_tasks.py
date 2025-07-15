@@ -7,7 +7,7 @@ from ischedule import run_loop, schedule
 from placo_utils.visualization import point_viz, robot_frame_viz, robot_viz
 
 robot_model = "bez1"
-model_filename = expanduser("~") + f"/catkin_ws/src/soccerbot/soccer_description/{robot_model}_description/urdf/robot.urdf"
+model_filename = expanduser("~") + f"/ros2_ws/src/soccerbot/soccer_description/{robot_model}_description/urdf/robot.urdf"
 
 robot = placo.HumanoidRobot(model_filename)
 

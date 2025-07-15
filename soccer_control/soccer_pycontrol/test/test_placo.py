@@ -24,7 +24,7 @@ class TestPlaco(unittest.TestCase):
         del self.world
 
     def test_bez1(self):
-        src_path = expanduser("~") + "/catkin_ws/src/soccerbot/soccer_perception/"
+        src_path = expanduser("~") + "/ros2_ws/src/soccerbot/soccer_perception/"
         model_path = src_path + "soccer_object_detection/models/yolov8s_detect_best.pt"
         model_path = src_path + "soccer_object_detection/models/half_5.pt"
 
@@ -119,7 +119,7 @@ class TestPlaco(unittest.TestCase):
             self.world.step()
 
     def test_camera(self):
-        src_path = expanduser("~") + "/catkin_ws/src/soccerbot/soccer_perception/"
+        src_path = expanduser("~") + "/ros2_ws/src/soccerbot/soccer_perception/"
         model_path = src_path + "soccer_object_detection/models/yolov8s_detect_best.pt"
         model_path = src_path + "soccer_object_detection/models/half_5.pt"
         detect = ObjectDetectionNode(model_path)

@@ -6,7 +6,7 @@ from soccer_pycontrol.model.bez import Bez
 from soccer_pycontrol.pybullet_usage.pybullet_world import PybulletWorld
 from soccer_trajectories.trajectory_manager import TrajectoryManager
 
-from soccer_common import Transformation
+# from soccer_common import Transformation
 
 
 class TrajectoryManagerSim(TrajectoryManager):

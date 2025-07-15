@@ -10,6 +10,7 @@ from self.impl.tcpros_base import DEFAULT_BUFF_SIZE
 from soccer_object_detection.camera.camera_calculations_ros import CameraCalculationsRos
 from soccer_object_detection.object_detect_node import ObjectDetectionNode, bcolors
 from std_msgs.msg import Float32MultiArray
+
 from soccer_common import Transformation
 
 if "ROS_NAMESPACE" not in os.environ:
@@ -40,7 +41,7 @@ class ObjectDetectionNodeRos(ObjectDetectionNode):
         self.CONFIDENCE_THRESHOLD = self.get_param("~ball_confidence_threshold", 0.75)
 
         if torch.cuda.is_available():
-            self.loginfo(f"{bcolors.OKGREEN}Using CUDA for object detection{bcolors.ENDC}")
+            self.get_logger().info(f"{bcolors.OKGREEN}Using CUDA for object detection{bcolors.ENDC}")
 
         self.robot_name = self.get_namespace()[1:-1]  # remove '/'
         self.camera = CameraCalculationsRos(self.robot_name)
@@ -77,7 +78,7 @@ class ObjectDetectionNodeRos(ObjectDetectionNode):
         #
         # if self.game_state.gameState != GameState.GAMESTATE_PLAYING:
         #     return
-        self.loginfo_once("Object Detection Receiving image")
+        self.get_logger().info_once("Object Detection Receiving image")
         # width x height x channels (bgra8)
         image = self.br.imgmsg_to_cv2(msg)
         self.camera.reset_position(timestamp=msg.header.stamp)  # msg->image
@@ -97,7 +98,7 @@ class ObjectDetectionNodeRos(ObjectDetectionNode):
                     boundingBoxes = [[box.xmin, box.ymin], [box.xmax, box.ymax]]
 
                     ball_pixel = Float32MultiArray()
-                    ball_pixel.data = [(box.xmin+ box.xmax)/2.0, (box.ymin+ box.ymax)/2.0]
+                    ball_pixel.data = [(box.xmin + box.xmax) / 2.0, (box.ymin + box.ymax) / 2.0]
                     self.pub_ball_pixel.publish(ball_pixel)
                     # print(detect.camera.calculate_ball_from_bounding_boxes(boundingBoxes).position)
                     ball_pos = self.camera.calculate_ball_from_bounding_boxes(boundingBoxes)
@@ -106,7 +107,7 @@ class ObjectDetectionNodeRos(ObjectDetectionNode):
                     # )
                     pose_msg = PoseStamped()
                     pose_msg.header.stamp = msg.header.stamp
-                    pose_msg.header.frame_id = "base_link"#msg.header.frame_id
+                    pose_msg.header.frame_id = "base_link"  # msg.header.frame_id
                     pose_msg.pose = ball_pos.pose
                     # pose_msg.pose.position.z = 0.04
                     # pose_msg.pose.position.y = -pose_msg.pose.position.y
@@ -156,7 +157,7 @@ class ObjectDetectionNodeRos(ObjectDetectionNode):
 
 
 if __name__ == "__main__":
-    src_path = expanduser("~") + "/catkin_ws/src/soccerbot/soccer_perception/"
+    src_path = expanduser("~") + "/ros2_ws/src/soccerbot/soccer_perception/"
 
     model_path = src_path + "soccer_object_detection/models/half_5.pt"
 

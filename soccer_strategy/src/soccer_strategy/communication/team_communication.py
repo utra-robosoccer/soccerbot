@@ -16,7 +16,7 @@ Sends information between robots using a mirror port
 
 if __name__ == "__main__":
     self.init_node("team_communication")
-    self.loginfo("Initializing team_communication...", logger_name="team_comm")
+    self.get_logger().info("Initializing team_communication...", logger_name="team_comm")
 
     player_id = self.get_param("robot_id", 1)
     team_id = int(os.getenv("ROBOCUP_TEAM_ID", 16))
@@ -45,12 +45,12 @@ if __name__ == "__main__":
         m.ball_detected = robot_state.ball_detected
         m_str = m.SerializeToString()
         id_address = socket.gethostbyname(mirror_server_ip)
-        self.loginfo_once(f"\033[96mSending to 3737 on {id_address}\033[0m")
+        self.get_logger().info_once(f"\033[96mSending to 3737 on {id_address}\033[0m")
         s.sendto(m_str, (id_address, 3737))
 
     while not self.is_shutdown() and s is None:
         try:
-            self.loginfo("Binding to port 3737")
+            self.get_logger().info("Binding to port 3737")
             s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
             s.bind(("0.0.0.0", 3737))
         except self.exceptions.ROSInterruptException:
@@ -58,7 +58,7 @@ if __name__ == "__main__":
         except OSError as ex:
             print(ex)
             time.sleep(3)
-    self.loginfo("\033[96mBinded to Team Communication Port\033[0m")
+    self.get_logger().info("\033[96mBinded to Team Communication Port\033[0m")
 
     state_create_subscription = self.create_subscription("state", RobotState, robot_state_callback)
     state_create_publishers = {}
@@ -78,7 +78,7 @@ if __name__ == "__main__":
             print("Nothing received")
             continue
 
-        self.loginfo_once("\033[96mReceiving Data Started\033[0m")
+        self.get_logger().info_once("\033[96mReceiving Data Started\033[0m")
         m = robot_state_pb2.Message()
         m.ParseFromString(msg)
         if m.player_id == player_id:

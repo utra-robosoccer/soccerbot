@@ -27,7 +27,9 @@ class RobotControlled3D(RobotControlled):
         self.amcl_pose = None
         self.imu_create_subscription = self.create_subscription("imu_filtered", Imu, self.imu_callback)
         self.action_completed_create_subscription = self.create_subscription("action_complete", Empty, self.action_completed_callback, queue_size=1)
-        self.head_centered_on_ball_create_subscription = self.create_subscription("head_centered_on_ball", Empty, self.head_centered_on_ball_callback, queue_size=1)
+        self.head_centered_on_ball_create_subscription = self.create_subscription(
+            "head_centered_on_ball", Empty, self.head_centered_on_ball_callback, queue_size=1
+        )
         self.reset_robot_create_subscription = self.create_subscription("reset_robot", PoseStamped, self.reset_robot_callback, queue_size=1)
 
         # create_publishers
@@ -71,7 +73,7 @@ class RobotControlled3D(RobotControlled):
         p.pose.orientation.y = q[1]
         p.pose.orientation.z = q[2]
         p.pose.orientation.w = q[3]
-        self.loginfo("Sending New Goal: " + str(goal_position))
+        self.get_logger().info("Sending New Goal: " + str(goal_position))
         self.goal_position = goal_position
         self.goal_create_publisher.publish(p)
         return True
@@ -81,7 +83,7 @@ class RobotControlled3D(RobotControlled):
             [pose.pose.orientation.w, pose.pose.orientation.x, pose.pose.orientation.y, pose.pose.orientation.z]
         )
         self.position = np.array([pose.pose.position.x, pose.pose.position.y, q[2]])
-        self.loginfo(f"Robot Reset Called to {pose.pose.position.x} {pose.pose.position.y} {q[2]} (self.position = {self.position}")
+        self.get_logger().info(f"Robot Reset Called to {pose.pose.position.x} {pose.pose.position.y} {q[2]} (self.position = {self.position}")
         if self.role == Robot.Role.UNASSIGNED:
             self.role = Robot.Role.STRIKER
         self.localized = True
@@ -92,9 +94,9 @@ class RobotControlled3D(RobotControlled):
         # Get Ball Position from TF
         ground_truth = not bool(os.getenv("COMPETITION", True))
         if ground_truth:
-            self.loginfo_once("Using Ground Truth")
+            self.get_logger().info_once("Using Ground Truth")
         else:
-            self.loginfo_once("Using Actual Measurements")
+            self.get_logger().info_once("Using Actual Measurements")
 
         try:
             self.observed_ball = Ball()
@@ -179,7 +181,7 @@ class RobotControlled3D(RobotControlled):
             covariance_trace = np.sqrt(amcl_pose.pose.covariance[0] ** 2 + amcl_pose.pose.covariance[7] ** 2)
             self.logwarn_throttle(1, "Relocalizing, current cov trace: " + str(covariance_trace))
             if covariance_trace < self.relocalized_threshold:
-                self.loginfo("Relocalized")
+                self.get_logger().info("Relocalized")
                 if self.role != Robot.Role.UNASSIGNED and self.localized:
                     self.status = Robot.Status.READY
                 else:
@@ -213,7 +215,7 @@ class RobotControlled3D(RobotControlled):
             self.goal_position = None
             self.time_since_action_completed = self.get_clock().now()
         else:
-            self.logerr("Invalid Action Completed " + str(self.status))
+            self.get_logger().error("Invalid Action Completed " + str(self.status))
 
     def head_centered_on_ball_callback(self, data):
         self.robot_focused_on_ball_time = self.get_clock().now()
@@ -288,7 +290,7 @@ class RobotControlled3D(RobotControlled):
             self.status = Robot.Status.KICKING
         else:
             self.status = Robot.Status.GETTING_BACK_UP
-        self.loginfo(self.robot_name + " " + f.trajectory_name)
+        self.get_logger().info(self.robot_name + " " + f.trajectory_name)
 
     def get_detected_obstacles(self):
         # TODO know if they are friendly or enemy robot
