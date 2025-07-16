@@ -16,7 +16,7 @@ from sensor_msgs.msg import Imu, JointState
 
 
 class FirmwareInterface(Node):
-    def __init__(self, mtp:str="", mmp:str="" ):
+    def __init__(self, mtp:str=os.path.dirname(os.path.realpath(__file__)) + "/../config/motor_types.yaml", mmp:str=os.path.dirname(os.path.realpath(__file__)) + "/../config/bez2.yaml" ):
         Node.__init__(self, "firmware_interface")
 
         self.joint_command_create_subscription = self.create_subscription(JointState,"joint_command",  self.joint_command_callback, qos_profile=10)

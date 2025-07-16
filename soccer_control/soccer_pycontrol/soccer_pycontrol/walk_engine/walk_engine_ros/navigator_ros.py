@@ -25,7 +25,6 @@ class NavigatorRos(Navigator, Node):
         self.ball2 = ball2
         self.ball_pixel = None
         self.imu_feedback_enabled = imu_feedback_enabled
-        self.get_clock().now().seconds_nanoseconds()
         self.foot_step_planner = FootStepPlanner(
             self.bez.robot_model, self.bez.parameters, self.get_clock().now, debug=True, ball=self.ball2, sim=False
         )
