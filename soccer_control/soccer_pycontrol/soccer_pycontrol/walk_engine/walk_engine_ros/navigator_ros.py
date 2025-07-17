@@ -26,7 +26,7 @@ class NavigatorRos(Navigator, Node):
         self.ball_pixel = None
         self.imu_feedback_enabled = imu_feedback_enabled
         self.foot_step_planner = FootStepPlanner(
-            self.bez.robot_model, self.bez.parameters, self.get_clock().now, debug=True, ball=self.ball2, sim=False
+            self.bez.robot_model, self.bez.parameters, self.get_clock().now, debug=False, ball=self.ball2, sim=False
         )
         # TODO publish local odomtry from foot step planner
 

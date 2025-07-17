@@ -115,6 +115,7 @@ def run_real_trajectory(robot_model: str, trajectory_name: str, real_time: bool)
     # joint_state.position = [0.0] * 20
     # self.wait_for_message = MagicMock(return_value=joint_state)
     # Node.validate_topic_name= MagicMock(return_value=True)
+    c.rate.sleep()
     c.command_callback(command=msg)
     c.send_trajectory(real_time=real_time)
 
@@ -123,7 +124,7 @@ def run_real_trajectory(robot_model: str, trajectory_name: str, real_time: bool)
 
 
 @pytest.mark.parametrize("robot_model", ["bez2"])
-@pytest.mark.parametrize("trajectory_name", ["rightkick"])  # fix_angle_test    rightkick_2  getupback_old
+@pytest.mark.parametrize("trajectory_name", ["getupfront"])  # rightkick    rightkick_2  getupback_old
 @pytest.mark.parametrize("real_time", [True])
 @unittest.skipIf("DISPLAY" not in os.environ, "only local")
 def test_traj_ros(robot_model: str, trajectory_name: str, real_time: bool):

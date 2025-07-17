@@ -43,14 +43,14 @@ class TestPybullet(unittest.TestCase):
         walker.wait(100)
 
     def test_ready_ros_local(self):
-        robot_ns = os.environ["ROS_NAMESPACE"]
+        # robot_ns = os.environ["ROS_NAMESPACE"]
         # os.system(
         #     f"/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill {robot_ns}/soccer_strategy {robot_ns}/soccer_pycontrol {robot_ns}/soccer_trajectories'"
         # )
 
         rclpy.init()
 
-        walker = NavigatorRos(imu_feedback_enabled=True, ball2=True)
+        walker = NavigatorRos()
         # walker.wait(50)
         walker.ready()
         walker.wait(50)

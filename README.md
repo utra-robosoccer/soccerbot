@@ -105,5 +105,5 @@ colcon build --symlink-install --packages-up-to
 source ~/ros2_ws/install/setup.bash
 /home/manx52/ros2_ws/install/soccer_msgs/local/lib/python3.10/dist-packages
 
-LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/ros/humble/lib:/home/manx52/ros2_ws/build/soccer_msgs
+LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/ros/humble/lib:/home/manx52/ros2_ws/build/soccer_msgs:/home/manx52/ros2_ws/install/soccer_msgs/local/lib/python3.10/dist-packages
 pip3 install setuptools==61.0

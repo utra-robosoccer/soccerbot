@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import os
+import threading
 
 import rclpy
 from rclpy.duration import Duration
@@ -13,8 +14,6 @@ from soccer_msgs.msg import FixedTrajectoryCommand, RobotState
 
 # if "ROS_NAMESPACE" not in os.environ:
 #     os.environ["ROS_NAMESPACE"] = "/robot1"
-
-
 
 
 class TrajectoryManagerRos(TrajectoryManager, Node):
@@ -31,7 +30,7 @@ class TrajectoryManagerRos(TrajectoryManager, Node):
         sim = self.get_parameter("sim").get_parameter_value().bool_value
         use_sim_time_prefix = "_sim" if sim == "true" else ""
         # TODO fix with param later
-        path = os.path.join(os.path.dirname(__file__), "../../trajectories/") + "bez2" + use_sim_time_prefix
+        path = os.path.join(os.path.dirname(__file__), "../../trajectories/") + "bez2"  # + use_sim_time_prefix
 
         # TODO fix later
         super(TrajectoryManagerRos, self).__init__(robot_model, trajectory_name)
@@ -44,11 +43,18 @@ class TrajectoryManagerRos(TrajectoryManager, Node):
         self.joint_state_subscription = self.create_subscription(JointState, "joint_states", self.joint_callback, qos_profile=10)
         self.last_joint_state = JointState()
         self.last_joint_state_req = self.get_clock().now()
-
+        ns = ""
         self.pub_all_motor = self.create_publisher(JointState, "joint_command", qos_profile=10)
+        self.pub_all_motor2 = self.create_publisher(JointState, ns + "joint_command", qos_profile=10)
         self.finish_trajectory_create_publisher = self.create_publisher(Empty, "action_complete", qos_profile=10)
 
-        self._timer = self.create_timer(1 / self.period, self.run)
+        # self._timer = self.create_timer(1 / self.period, self.run)
+
+        self.rate = self.create_rate(150)
+        thread = threading.Thread(target=rclpy.spin, args=(self,), daemon=True)
+        thread.start()
+
+        # self.get_logger().info("fdfs")
 
     # def robot_state_callback(self, state: RobotState): # TODO reenable when at that part
     #     if state.status in [RobotState.STATUS_PENALIZED]:
@@ -92,14 +98,14 @@ class TrajectoryManagerRos(TrajectoryManager, Node):
         print(joints, angles)
         js.name = joints
         js.position = angles
-        self.pub_all_motor.publish(js)
+        self.pub_all_motor2.publish(js)
 
     def send_trajectory(self, real_time: bool = True) -> None:
         t: float = 0
         while rclpy.ok() and t <= self.trajectory.max_time and not self.terminate:
             try:
-                # if t % 0.5:
-                #     print(1)
+                if t % 0.5:
+                    self.get_logger().info("2")
                 self.send_joint_msg(t)
             except Exception as ex:  # TODO find a proper exepction
                 print(ex)
@@ -112,23 +118,37 @@ class TrajectoryManagerRos(TrajectoryManager, Node):
             # t += 0.01
             # if int(t + 0.01) != int(t):
             #     print(f"Trajectory at t={t}")
-
+            if real_time:
+                # self.get_logger().info("3")
+                self.rate.sleep()
+                # self.get_logger().info("4")
         self.get_logger().info("Finished Trajectory: " + self.trajectory.trajectory_path)
         self.finish_trajectory_create_publisher.publish(Empty())
         self.trajectory.reset()
 
     def run(self) -> None:
         # TODO could be in cmd with a spin
-        # while rclpy.ok():
-        if self.trajectory.max_time > 0:
-            self.send_trajectory()
+
+        while rclpy.ok():
+            if self.trajectory.max_time > 0:
+                self.send_trajectory()
+
+            self.rate.sleep()
 
 
 def main():
     rclpy.init()
     node = TrajectoryManagerRos()
+    msg = FixedTrajectoryCommand()
+    msg.trajectory_name = "getupback"
+    msg.trajectory_name = "getupfront"
+    msg.mirror = False
     try:
-        rclpy.spin(node)
+        # rclpy.spin(node)
+        # node.run()
+        node.rate.sleep()
+        node.command_callback(command=msg)
+        node.send_trajectory(real_time=True)
     except (ExternalShutdownException, KeyboardInterrupt):
         pass
     finally:

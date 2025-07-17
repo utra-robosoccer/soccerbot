@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format2.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>game_controller_interface</name>
+  <version>0.1.0</version>
+  <description>ROS 2 Game Controller Interface node</description>
+
+  <author email="pinsonanthony@gmail.com">Anthony Pinson</author>
+  <maintainer email="pinsonanthony@gmail.com">Anthony Pinson</maintainer>
+
+  <license>MIT</license>
+
+  <!-- Build tool -->
+  <buildtool_depend>ament_python</buildtool_depend>
+
+  <!-- Core runtime dependencies -->
+  <depend>rclpy</depend>
+  <depend>std_msgs</depend>
+  <depend>sensor_msgs</depend>
+  <depend>geometry_msgs</depend>
+  <depend>control_msgs</depend>
+  <depend>soccer_msgs</depend> <!-- required for GameStateMsg -->
+
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+</package>
