@@ -5,7 +5,7 @@ import numpy as np
 
 from soccer_common.transformation import Transformation
 
-# import pybullet as pb
+import pybullet as pb
 
 
 
