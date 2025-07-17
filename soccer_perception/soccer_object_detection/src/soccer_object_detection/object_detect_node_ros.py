@@ -5,10 +5,11 @@ from os.path import expanduser
 
 import numpy as np
 import tf
+from geometry_msgs.msg import PoseStamped
 from rospy.impl.tcpros_base import DEFAULT_BUFF_SIZE
 from soccer_object_detection.camera.camera_calculations_ros import CameraCalculationsRos
 from soccer_object_detection.object_detect_node import ObjectDetectionNode, bcolors
-
+from std_msgs.msg import Float32MultiArray
 from soccer_common import Transformation
 
 if "ROS_NAMESPACE" not in os.environ:
@@ -50,10 +51,12 @@ class ObjectDetectionNodeRos(ObjectDetectionNode):
         self.br2 = tf.TransformBroadcaster()
 
         # ROS
+        self.pub_ball = rospy.Publisher("/robot1/ball", PoseStamped, queue_size=1)
+        self.pub_ball_pixel = rospy.Publisher("/robot1/ball_pixel", Float32MultiArray, queue_size=1)
         self.pub_detection = rospy.Publisher("/robot1/detection_image", Image, queue_size=1, latch=True)
         self.pub_boundingbox = rospy.Publisher("/robot1/object_bounding_boxes", BoundingBoxes, queue_size=1, latch=True)
         self.image_subscriber = rospy.Subscriber(
-            "/robot1/camera/image_raw", Image, self.callback, queue_size=1, buff_size=DEFAULT_BUFF_SIZE * 64
+            "/camera/image_raw", Image, self.callback, queue_size=1, buff_size=DEFAULT_BUFF_SIZE * 64
         )  # Large buff size (https://answers.ros.org/question/220502/image-subscriber-lag-despite-queue-1/)
 
     #     self.game_state_subscriber = rospy.Subscriber("gamestate", GameState, self.game_state_callback)
@@ -88,43 +91,64 @@ class ObjectDetectionNodeRos(ObjectDetectionNode):
 
             if self.pub_boundingbox.get_num_connections() > 0 and len(bbs_msg.bounding_boxes) > 0:
                 self.pub_boundingbox.publish(bbs_msg)
-            # TODO
+
             for box in bbs_msg.bounding_boxes:
                 if box.Class == "0":
                     boundingBoxes = [[box.xmin, box.ymin], [box.xmax, box.ymax]]
-                    ball_pose = self.camera.calculate_ball_from_bounding_boxes(0.07, boundingBoxes)
-                    self.br2.sendTransform(
-                        ball_pose.position,
-                        ball_pose.quaternion,
-                        msg.header.stamp,
-                        "robot1" + "/ball",
-                        "robot1" + "/camera",
-                    )
-                    pos = [box.xbase, box.ybase]
-                    floor_coordinate_robot = self.camera.find_floor_coordinate(pos)
-                    world_to_obstacle = Transformation(position=floor_coordinate_robot)
-                    camera_to_obstacle = np.linalg.inv(self.camera.pose) @ world_to_obstacle
-                    self.br2.sendTransform(
-                        camera_to_obstacle.position,
-                        camera_to_obstacle.quaternion,
-                        msg.header.stamp,
-                        "robot1" + "/ball_2",
-                        "robot1" + "/camera",
-                    )
 
-                elif box.Class == "1":
-                    pos = [box.xbase, box.ybase]
+                    ball_pixel = Float32MultiArray()
+                    ball_pixel.data = [(box.xmin+ box.xmax)/2.0, (box.ymin+ box.ymax)/2.0]
+                    self.pub_ball_pixel.publish(ball_pixel)
+                    # print(detect.camera.calculate_ball_from_bounding_boxes(boundingBoxes).position)
+                    ball_pos = self.camera.calculate_ball_from_bounding_boxes(boundingBoxes)
+                    # print(
+                    #     f"floor pos: {ball_pos.position} "
+                    # )
+                    pose_msg = PoseStamped()
+                    pose_msg.header.stamp = msg.header.stamp
+                    pose_msg.header.frame_id = "base_link"#msg.header.frame_id
+                    pose_msg.pose = ball_pos.pose
+                    # pose_msg.pose.position.z = 0.04
+                    # pose_msg.pose.position.y = -pose_msg.pose.position.y
+                    self.pub_ball.publish(pose_msg)
 
-                    floor_coordinate_robot = self.camera.find_floor_coordinate(pos)
-                    world_to_obstacle = Transformation(position=floor_coordinate_robot)
-                    camera_to_obstacle = np.linalg.inv(self.camera.pose) @ world_to_obstacle
-                    self.br2.sendTransform(
-                        camera_to_obstacle.position,
-                        camera_to_obstacle.quaternion,
-                        msg.header.stamp,
-                        "robot1" + "/Goal_pose",
-                        "robot1" + "/camera",
-                    )
+            # TODO
+            # for box in bbs_msg.bounding_boxes:
+            #     if box.Class == "0":
+            #         boundingBoxes = [[box.xmin, box.ymin], [box.xmax, box.ymax]]
+            #         ball_pose = self.camera.calculate_ball_from_bounding_boxes(boundingBoxes)
+            #         self.br2.sendTransform(
+            #             ball_pose.position,
+            #             ball_pose.quaternion,
+            #             msg.header.stamp,
+            #             "robot1" + "/ball",
+            #             "robot1" + "/camera",
+            #         )
+            #         pos = [box.xbase, box.ybase]
+            #         floor_coordinate_robot = self.camera.find_floor_coordinate(pos)
+            #         world_to_obstacle = Transformation(position=floor_coordinate_robot)
+            #         camera_to_obstacle = np.linalg.inv(self.camera.pose) @ world_to_obstacle
+            #         self.br2.sendTransform(
+            #             camera_to_obstacle.position,
+            #             camera_to_obstacle.quaternion,
+            #             msg.header.stamp,
+            #             "robot1" + "/ball_2",
+            #             "robot1" + "/camera",
+            #         )
+            #
+            #     elif box.Class == "1":
+            #         pos = [box.xbase, box.ybase]
+            #
+            #         floor_coordinate_robot = self.camera.find_floor_coordinate(pos)
+            #         world_to_obstacle = Transformation(position=floor_coordinate_robot)
+            #         camera_to_obstacle = np.linalg.inv(self.camera.pose) @ world_to_obstacle
+            #         self.br2.sendTransform(
+            #             camera_to_obstacle.position,
+            #             camera_to_obstacle.quaternion,
+            #             msg.header.stamp,
+            #             "robot1" + "/Goal_pose",
+            #             "robot1" + "/camera",
+            #         )
 
         except ROSException as re:
             print(re)
@@ -132,7 +156,7 @@ class ObjectDetectionNodeRos(ObjectDetectionNode):
 
 
 if __name__ == "__main__":
-    src_path = expanduser("~") + "/catkin_ws/src/soccerbot/soccer_perception/"
+    src_path = expanduser("~") + "/ros2_ws/src/soccerbot/soccer_perception/"
 
     model_path = src_path + "soccer_object_detection/models/half_5.pt"
 

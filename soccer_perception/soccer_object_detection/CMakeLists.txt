@@ -2,12 +2,12 @@ cmake_minimum_required(VERSION 3.0.2)
 project(soccer_object_detection)
 
 find_package(
-    catkin
+    ros2
     REQUIRED
     COMPONENTS rospy
 )
 
-catkin_package(CATKIN_DEPENDS)
-catkin_python_setup()
+ros2_package(CATKIN_DEPENDS)
+ros2_python_setup()
 
-include_directories(${catkin_INCLUDE_DIRS})
+include_directories(${ros2_INCLUDE_DIRS})

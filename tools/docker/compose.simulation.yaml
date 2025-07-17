@@ -17,9 +17,9 @@ x-simulator: &simulator
     - /tmp/.X11-unix:/tmp/.X11-unix:rw
     - /dev/dri:/dev/dri:rw
     - /dev/snd:/dev/snd:rw
-    - /home/$USER/catkin_ws/src/soccerbot/external/hlvs_webots/worlds:/usr/local/hlvs_webots/worlds:rw
-    - /home/$USER/catkin_ws/src/soccerbot/external/hlvs_webots/controllers/referee/:/usr/local/hlvs_webots/controllers/referee/:rw
-    - /home/$USER/catkin_ws/src/soccerbot/external/hlvs_webots/protos/:/usr/local/hlvs_webots/protos/:rw
+    - /home/$USER/ros2_ws/src/soccerbot/external/hlvs_webots/worlds:/usr/local/hlvs_webots/worlds:rw
+    - /home/$USER/ros2_ws/src/soccerbot/external/hlvs_webots/controllers/referee/:/usr/local/hlvs_webots/controllers/referee/:rw
+    - /home/$USER/ros2_ws/src/soccerbot/external/hlvs_webots/protos/:/usr/local/hlvs_webots/protos/:rw
     - /var/run/docker.sock:/var/run/docker.sock
     - /dev:/dev
 

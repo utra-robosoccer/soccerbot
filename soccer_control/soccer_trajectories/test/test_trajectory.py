@@ -3,8 +3,11 @@ import unittest
 from unittest.mock import MagicMock
 
 import pytest
-import rospy
-from sensor_msgs.msg import JointState
+
+# import rospy
+# from sensor_msgs.msg import JointState
+from soccer_pycontrol.model.bez import Bez
+from soccer_pycontrol.pybullet_usage.pybullet_world import PybulletWorld
 from soccer_trajectories.trajectory import Trajectory
 from soccer_trajectories.trajectory_manager_ros import TrajectoryManagerRos
 from soccer_trajectories.trajectory_manager_sim import TrajectoryManagerSim
@@ -52,7 +55,7 @@ class TestTrajectory(unittest.TestCase):
         self.assertEqual(angles, [0.0, 0.0, 0.0, 0.0, 0.564, 0.564, -1.176, -1.176, 0.613, 0.613, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0])
 
 
-@pytest.mark.parametrize("trajectory_name", ["getupfront"])  # , "getupback_full", "rightkick", "getupfront"])
+@pytest.mark.parametrize("trajectory_name", ["getupsideleft"])  # getupside rightkick " getupback getupfront
 @pytest.mark.parametrize("robot_model", ["assembly"])
 @pytest.mark.parametrize("real_time", [True])
 def test_trajectory_sim(trajectory_name: str, robot_model: str, real_time: bool):
@@ -61,22 +64,31 @@ def test_trajectory_sim(trajectory_name: str, robot_model: str, real_time: bool)
     :return: None
     """
     # TODO update with pybullet updates
-    if trajectory_name == "getupfront":
+    camera = 0
+    if "getupfront" in trajectory_name:
         pose = Transformation(position=[0, 0, 0.070], euler=[0, 1.57, 0])
         camera = 0
     elif "getupback" in trajectory_name:
         pose = Transformation(position=[0, 0, 0.070], euler=[0, -1.57, 0])
         camera = 0
+    elif "getupside" in trajectory_name:
+        pose = Transformation(position=[0, 0, 0.13], euler=[0, 0, -1.57])
+        camera = 0
     else:
-        camera = 90
+        camera = 45
         pose = Transformation(position=[0, 0, 0.45], quaternion=[0.0, 0.0, 0.0, 1])
-    print(os.path.join(os.path.dirname(__file__), "../trajectories/bez2/" + trajectory_name + ".csv"))
-    tm = TrajectoryManagerSim(
-        os.path.join(os.path.dirname(__file__), "../trajectories/bez2/" + trajectory_name + ".csv"), pose, robot_model, real_time, camera_yaw=camera
+    print(os.path.join(os.path.dirname(__file__), "../trajectories/bez2_sim/" + trajectory_name + ".csv"))
+    world = PybulletWorld(
+        camera_yaw=camera,
+        real_time=real_time,
+        rate=200,
     )
-    tm.send_trajectory()
-    tm.sim.wait(100)
-    tm.sim.ramp.close()
+    bez = Bez(robot_model=robot_model, pose=pose)
+
+    tm = TrajectoryManagerSim(world, bez, "bez2_sim", trajectory_name)
+    tm.send_trajectory(trajectory_name)
+    tm.world.wait(10000)
+    tm.world.close()
     # TODO add more testing from pybullet so like the height will reach a threshold and it doesnt fall over for
     #  some time also maybe split it per trajectory type
 
@@ -84,17 +96,17 @@ def test_trajectory_sim(trajectory_name: str, robot_model: str, real_time: bool)
 def run_real_trajectory(robot_model: str, trajectory_name: str, real_time: bool):
     # TODO clean up
     rospy.init_node("test")
-    os.system(
-        "/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_strategy "
-        "/robot1/soccer_pycontrol /robot1/soccer_trajectories'"
-    )
+    # os.system(
+    #     "/bin/bash -c 'source /opt/ros/noetic/setup.bash && rosnode kill /robot1/soccer_strategy "
+    #     "/robot1/soccer_pycontrol /robot1/soccer_trajectories'"
+    # )
 
     file_path = os.path.dirname(os.path.abspath(__file__))
     config_path = f"{file_path}/../../../{robot_model}_description/config/motor_mapping.yaml"
     set_rosparam_from_yaml_file(param_path=config_path)
     rospy.set_param("robot_model", robot_model)
 
-    c = TrajectoryManagerRos()
+    c = TrajectoryManagerRos(robot_model, trajectory_name)
     rospy.init_node("test")
     msg = FixedTrajectoryCommand()
     msg.trajectory_name = trajectory_name
@@ -112,7 +124,7 @@ def run_real_trajectory(robot_model: str, trajectory_name: str, real_time: bool)
 
 
 @pytest.mark.parametrize("robot_model", ["bez2"])
-@pytest.mark.parametrize("trajectory_name", ["fix_angle_test"])  # getupback_full
+@pytest.mark.parametrize("trajectory_name", ["rightkick"])  # fix_angle_test    rightkick_2  getupback_old
 @pytest.mark.parametrize("real_time", [True])
 @unittest.skipIf("DISPLAY" not in os.environ, "only local")
 def test_traj_ros(robot_model: str, trajectory_name: str, real_time: bool):

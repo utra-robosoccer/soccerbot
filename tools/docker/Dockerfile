@@ -78,20 +78,20 @@ RUN mkdir -p /home/robosoccer/.cache/torch/hub/ &&  \
 
 
 FROM dependencies AS builder
-RUN mkdir -p /home/robosoccer/catkin_ws/src/soccerbot
-WORKDIR /home/robosoccer/catkin_ws/src/soccerbot
+RUN mkdir -p /home/robosoccer/ros2_ws/src/soccerbot
+WORKDIR /home/robosoccer/ros2_ws/src/soccerbot
 COPY --chown=robosoccer . .
 RUN sudo apt-get update && rosdep update --rosdistro noetic
 RUN apt-fast install -y --no-install-recommends $(rosdep install --from-paths . --ignore-src -r -s  | grep 'apt-get install' | awk '{print $5}' | sort)
-WORKDIR /home/robosoccer/catkin_ws
+WORKDIR /home/robosoccer/ros2_ws
 
 # Build Python ROS Packages
-RUN source /opt/ros/noetic/setup.bash && catkin config --cmake-args -DCMAKE_BUILD_TYPE=Debug
-RUN source /opt/ros/noetic/setup.bash && catkin build --no-status soccerbot
+RUN source /opt/ros/noetic/setup.bash && ros2 config --cmake-args -DCMAKE_BUILD_TYPE=Debug
+RUN source /opt/ros/noetic/setup.bash && ros2 build --no-status soccerbot
 RUN echo "source /home/robosoccer/ca/opt/ros/noetic/lib/python3/dist-packagestkin_ws/devel/setup.bash" >> ~/.bashrc
 
 # TODO need another stage for dev or maybe another docker
-RUN sudo cp -a /home/robosoccer/catkin_ws/devel/lib/python3/dist-packages/soccer_msgs  /opt/ros/noetic/lib/python3/dist-packages/
+RUN sudo cp -a /home/robosoccer/ros2_ws/devel/lib/python3/dist-packages/soccer_msgs  /opt/ros/noetic/lib/python3/dist-packages/
 RUN sudo cp -a /opt/ros/noetic/lib/python3/dist-packages/. /usr/local/lib/python3.8/dist-packages/
 
 ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/aarch64-linux-gnu/tegra:/usr/local/cuda/targets/aarch64-linux/lib/

@@ -7,7 +7,7 @@
   <license>BSD</license>
   <author email="vuwij@me.com">Jason Wang</author>
 
-  <buildtool_depend>catkin</buildtool_depend>
+  <buildtool_depend>ros2</buildtool_depend>
   <depend>urdf</depend>
   <depend>xacro</depend>
   <depend>dynamic_reconfigure</depend>

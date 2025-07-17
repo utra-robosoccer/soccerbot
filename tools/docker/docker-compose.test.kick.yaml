@@ -27,6 +27,6 @@ services:
     networks:
       soccer_network:
         ipv4_address: 172.18.0.2
-    command: /bin/bash -c "source $$HOME/catkin_ws/devel/setup.bash &&
-      export PYTHONPATH=$$PYTHONPATH:$$HOME/catkin_ws/src/soccerbot/soccer_pycontrol/src:$$HOME/catkin_ws/src/soccerbot/soccer_strategy/src:$$HOME/catkin_ws/src/soccerbot/soccer_common/src &&
-      pytest -s $$HOME/catkin_ws/src/soccerbot/test_integration.py::IntegrationTestPlaying::${TEST_NAME:-test_kick_right} || sleep infinity"
+    command: /bin/bash -c "source $$HOME/ros2_ws/devel/setup.bash &&
+      export PYTHONPATH=$$PYTHONPATH:$$HOME/ros2_ws/src/soccerbot/soccer_pycontrol/src:$$HOME/ros2_ws/src/soccerbot/soccer_strategy/src:$$HOME/ros2_ws/src/soccerbot/soccer_common/src &&
+      pytest -s $$HOME/ros2_ws/src/soccerbot/test_integration.py::IntegrationTestPlaying::${TEST_NAME:-test_kick_right} || sleep infinity"

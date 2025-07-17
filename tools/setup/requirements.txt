@@ -45,7 +45,7 @@ blinker==1.8.2
     # via
     #   flask
     #   soccerbot (pyproject.toml)
-catkin-pkg==0.5.2
+ros2-pkg==0.5.2
     # via
     #   rospkg
     #   soccerbot (pyproject.toml)
@@ -172,7 +172,7 @@ distro==1.9.0
     #   soccerbot (pyproject.toml)
 docutils==0.20.1
     # via
-    #   catkin-pkg
+    #   ros2-pkg
     #   soccerbot (pyproject.toml)
 eigenpy==3.5.1
     # via
@@ -359,7 +359,7 @@ nodeenv==1.9.1
     # via
     #   pre-commit
     #   soccerbot (pyproject.toml)
-numpy==1.24.4
+numpy==1.26
     # via
     #   cmeel-boost
     #   filterpy
@@ -501,7 +501,7 @@ pyopenssl==24.2.1
     #   twisted
 pyparsing==3.1.4
     # via
-    #   catkin-pkg
+    #   ros2-pkg
     #   matplotlib
     #   soccerbot (pyproject.toml)
 pyquaternion==0.9.9
@@ -516,7 +516,7 @@ pytest==7.4.4
     # via soccerbot (pyproject.toml)
 python-dateutil==2.9.0.post0
     # via
-    #   catkin-pkg
+    #   ros2-pkg
     #   matplotlib
     #   pandas
     #   soccerbot (pyproject.toml)
@@ -617,12 +617,12 @@ tomli==2.0.1
     #   incremental
     #   pytest
     #   soccerbot (pyproject.toml)
-torch @ https://download.pytorch.org/whl/cpu/torch-2.3.1%2Bcpu-cp38-cp38-linux_x86_64.whl; platform_machine == 'x86_64'
+#torch @ https://download.pytorch.org/whl/cpu/torch-2.3.1%2Bcpu-cp38-cp38-linux_x86_64.whl; platform_machine == 'x86_64'
     # via
     #   torchvision
     #   ultralytics
     #   ultralytics-thop
-torchvision @ https://download.pytorch.org/whl/cpu/torchvision-0.18.1%2Bcpu-cp38-cp38-linux_x86_64.whl ; platform_machine == 'x86_64'
+#torchvision @ https://download.pytorch.org/whl/cpu/torchvision-0.18.1%2Bcpu-cp38-cp38-linux_x86_64.whl ; platform_machine == 'x86_64'
     # via ultralytics
 tornado==6.4.1
     # via

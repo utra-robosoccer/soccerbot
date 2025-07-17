@@ -41,10 +41,11 @@ class FirmwareInterface:
         # self._imu_filt_zi = np.zeros((len(self._IMU_FILT_B) - 1, 3))
 
         # Start the thread
-        serial_thread = threading.Thread(target=self.firmware_update_loop)
-        serial_thread.start()
+        # serial_thread = threading.Thread(target=self.firmware_update_loop)
+        # serial_thread.start()
 
         self._lock = threading.Lock()
+        self._read_lock = threading.Lock()
 
 
     def reconnect_serial_port(self):
@@ -60,7 +61,9 @@ class FirmwareInterface:
             rospy.logerr_throttle(10, "Unable to connect to any serial port /dev/ttyACM0-10")
 
     def firmware_update_loop(self):
+        r = rospy.Rate(200)
         while not rospy.is_shutdown():
+            self._read_lock.acquire(blocking=True)
             try:
                 self.reconnect_serial_port()
 
@@ -85,14 +88,19 @@ class FirmwareInterface:
                 # print(data_h[0], data_l[0], angle)
 
                 data = self.serial.read(size=2 + 2 * 20 + 12)
-
+                # s = time.time()
+                # data = self.serial.read(size=2 + 2 * 20 + 12)
+                # print(1.0 / (time.time() - s))
                 self.pub_joint_state(data)
 
                 self.pub_imu(data)
-
             except Exception as ex:
                 rospy.logerr_throttle(10, f"Lost connection to serial port {type(ex)} {ex}, retrying...")
                 pass
+            self._read_lock.release()
+            r.sleep()
+
+
 
     def pub_joint_state(self, data):
         # Publish the Joint State
@@ -116,17 +124,14 @@ class FirmwareInterface:
                 motor_angle_radian = -motor_angle_radian
             j.name.append(motor_name)
 
-            # TODO debug head motor angles
-            if "head" in motor_name:
-                j.position.append(0)
-            else:
-                j.position.append(motor_angle_radian)
+            j.position.append(motor_angle_radian)
         self.joint_state_publisher.publish(j)
 
     def pub_imu(self, data):
         imu = Imu()
-        imu.header.stamp = rospy.Time.now()
 
+        imu.header.stamp = rospy.Time.now()
+        imu.header.frame_id = "imu_link"
         imu_data = data[2 + 2 * 20: 2 + 2 * 20 + 12]
 
         # https://www.mouser.com/datasheet/2/783/BST_BMI088_DS001-1509549.pdf
@@ -140,24 +145,24 @@ class FirmwareInterface:
         ay = int.from_bytes(imu_data[2:4], byteorder="big", signed=True) / ACC_RANGE * G
         az = int.from_bytes(imu_data[4:6], byteorder="big", signed=True) / ACC_RANGE * G
 
-        ax, ay = ay, ax  # flip pitch and roll
+        # ax, ay = ay, ax  # flip pitch and roll
 
-        imu.linear_acceleration.x = ax
-        imu.linear_acceleration.y = ay
-        imu.linear_acceleration.z = az
+        imu.linear_acceleration.x = az
+        imu.linear_acceleration.y = ax
+        imu.linear_acceleration.z = ay
 
         vx = int.from_bytes(imu_data[6:8], byteorder="big", signed=True) / IMU_GY_RANGE
         vy = int.from_bytes(imu_data[8:10], byteorder="big", signed=True) / IMU_GY_RANGE
         vz = int.from_bytes(imu_data[10:12], byteorder="big", signed=True) / IMU_GY_RANGE
 
-        vx, vy = vy, vx  # flip pitch and roll
+        # vx, vy = vy, vx  # flip pitch and roll
 
-        print(f"a {ax} {ay} {az}")
-        print(f"v {vx:10.3f} {vy:10.3f} {vz:10.3f}")
+        # print(f"a {ax} {ay} {az}")
+        # print(f"v {vx:10.3f} {vy:10.3f} {vz:10.3f}")
 
-        imu.angular_velocity.x = vx
-        imu.angular_velocity.y = vy
-        imu.angular_velocity.z = vz
+        imu.angular_velocity.x = vz
+        imu.angular_velocity.y = -vx
+        imu.angular_velocity.z = vy
 
         self.imu_publisher.publish(imu)
 
@@ -222,7 +227,7 @@ class FirmwareInterface:
             self.last_motor_publish_time_real = rospy.Time.now()
             self.last_motor_publish_time = joint_state.header.stamp
             t3 = time.time()
-            rospy.loginfo(
+            rospy.logerr_throttle(1,
                 f"Time Lag : {(rospy.Time.now() - joint_state.header.stamp).to_sec()}  Bytes Written: {bytes_to_write} Time Take {t2-t1} {t3-t1}"
             )
 

@@ -19,7 +19,7 @@ class TrajectoryManagerRos(TrajectoryManager):
     Interfaces with trajectory and manages interaction with ROS
     """
 
-    def __init__(self):
+    def __init__(self, robot_model: str, trajectory_name: str):
         use_sim_time_prefix = "_sim" if rospy.get_param("use_sim_time", "false") == "true" else ""
         # TODO fix
         path = (
@@ -29,11 +29,11 @@ class TrajectoryManagerRos(TrajectoryManager):
             + use_sim_time_prefix
         )
         # TODO fix later
-        super(TrajectoryManagerRos, self).__init__(path)
+        super(TrajectoryManagerRos, self).__init__(robot_model, trajectory_name)
 
         self.terminate = False
-
-        self.rate = rospy.Rate(100)
+        self.period = 100
+        self.rate = rospy.Rate(self.period)
 
         self.command_subscriber = rospy.Subscriber("command", FixedTrajectoryCommand, self.command_callback, queue_size=1)
         self.robot_state_subscriber = rospy.Subscriber("state", RobotState, self.robot_state_callback, queue_size=1)
@@ -84,14 +84,18 @@ class TrajectoryManagerRos(TrajectoryManager):
         t: float = 0
         while not rospy.is_shutdown() and t <= self.trajectory.max_time and not self.terminate:
             try:
+                if t % 0.5:
+                    print(1)
                 self.send_joint_msg(t)
             except ROSException as ex:
                 print(ex)
                 exit(0)
-            t += 0.01
-            if int(t + 0.01) != int(t):
+            t += 1.0 / self.period
+            if int(t + (1.0 / self.period)) != int(t):
                 print(f"Trajectory at t={t}")
-
+            # t += 0.01
+            # if int(t + 0.01) != int(t):
+            #     print(f"Trajectory at t={t}")
             if real_time:
                 self.rate.sleep()
 

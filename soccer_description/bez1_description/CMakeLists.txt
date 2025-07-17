@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.0.2)
 project(bez1_description)
 
 find_package(
-    catkin
+    ros2
     REQUIRED
     urdf
     xacro
@@ -12,7 +12,7 @@ find_package(
     rospy
 )
 
-catkin_package(
+ros2_package(
     CATKIN_DEPENDS
     urdf
     xacro

@@ -16,7 +16,8 @@ class CameraBase:
         #  then transformed into the world frame that would make it a lot less relient on
         #  knowledge of its global position
         self.camera_info = camera_info
-        self.horizontalFOV = 1.39626
+        self.horizontalFOV = 1.2290609
+        # self.horizontalFOV = 1.39626
         self.focal_length = 3.67  #: Focal length of the camera (meters) distance to the camera plane as projected in 3D
 
     def image_to_world_frame(self, pixel_x: int, pixel_y: int) -> tuple:
@@ -73,13 +74,14 @@ class CameraBase:
         The vertical field of vision of the camera.
         See `Field of View <https://en.wikipedia.org/wiki/Field_of_view>`_
         """
-        return 2 * math.atan(math.tan(self.horizontalFOV * 0.5) * (self.resolution_y / self.resolution_x))
+        return 0.7557276 # 2 * math.atan(math.tan(self.horizontalFOV * 0.5) * (self.resolution_y / self.resolution_x))
 
     @cached_property
     def image_sensor_height(self):
         """
         The height of the image sensor (m)
         """
+
         return math.tan(self.vertical_fov / 2.0) * 2.0 * self.focal_length
 
     @cached_property

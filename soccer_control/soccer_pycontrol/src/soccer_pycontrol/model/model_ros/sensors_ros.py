@@ -62,8 +62,23 @@ class SensorsROS(Sensors):
         pass
 
     def get_pose(self):
-        Transformation(pose=self.odom_msg.pose.pose)
-        return Transformation(pose=self.odom_msg.pose.pose)
+        # Transformation(pose=self.odom_msg.pose.pose)
+        # return Transformation(pose=self.odom_msg.pose.pose)
+        try:
+
+            time_stamp1 = self.tf_listener.getLatestCommonTime("left_foot", "base_link")
+
+            (trans1, rot) = self.tf_listener.lookupTransform("left_foot", "base_link", time_stamp1)
+            return Transformation(position=[0,0,trans1[2]], quaternion=rot)
+        except (
+            tf2_py.LookupException,
+            tf.LookupException,
+            tf.ConnectivityException,
+            tf.ExtrapolationException,
+            tf2_py.TransformException,
+        ) as ex:
+            rospy.logerr_throttle(5, "Unable to find transformation from world to ")
+            pass
 
     def get_ball(self):
         try:
@@ -74,6 +89,41 @@ class SensorsROS(Sensors):
             (trans2, rot) = self.tf_listener.lookupTransform("world", "robot1/ball_gt", time_stamp2)
             trans = (np.array(trans2) - np.array(trans1)).tolist()
             return Transformation(position=trans, orientation=rot)
+        except (
+            tf2_py.LookupException,
+            tf.LookupException,
+            tf.ConnectivityException,
+            tf.ExtrapolationException,
+            tf2_py.TransformException,
+        ) as ex:
+            rospy.logerr_throttle(5, "Unable to find transformation from world to ")
+            pass
+
+    def get_height(self):
+        try:
+
+            time_stamp1 = self.tf_listener.getLatestCommonTime("left_foot", "head")
+
+            (trans1, rot) = self.tf_listener.lookupTransform("left_foot", "head", time_stamp1)
+            temp = Transformation(position=[0, 0, trans1[2]], quaternion=rot)
+            temp.orientation_euler = 1*temp.orientation_euler
+            return temp
+        except (
+            tf2_py.LookupException,
+            tf.LookupException,
+            tf.ConnectivityException,
+            tf.ExtrapolationException,
+            tf2_py.TransformException,
+        ) as ex:
+            rospy.logerr_throttle(5, "Unable to find transformation from world to ")
+            return Transformation()
+
+    def get_global_height(self):
+        try:
+            time_stamp1 = self.tf_listener.getLatestCommonTime("robot1/base_footprint_gt", "robot1/camera_gt")
+
+            (trans1, rot) = self.tf_listener.lookupTransform("robot1/base_footprint_gt", "robot1/camera_gt", time_stamp1)
+            return Transformation(position=trans1, quaternion=rot)
         except (
             tf2_py.LookupException,
             tf.LookupException,

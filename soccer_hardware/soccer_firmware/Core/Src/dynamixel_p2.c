@@ -12,12 +12,6 @@
 /*
  * Dynamixel 2.0
  */
-void write_goal_position_p2(MotorPort *port, uint8_t id, uint16_t angle) {
-  uint8_t data[4] = {angle & 0xff, (angle>>8) & 0xff, 0, 0};
-  uint16_t dataLen = 4;
-  uint16_t addr = 116;
-  _motor_write_p2(port, id, addr, data, dataLen);
-}
 
 void write_min_position_limit_p2(MotorPort *port, uint8_t id, uint32_t limit) {
   uint8_t data[4] = {limit & 0xff, (limit>>8) & 0xff, 0, 0};
@@ -101,6 +95,14 @@ void read_motor_present_position_p2(MotorPort * p, uint8_t id) {
   _motor_read_p2(p, id, addr, dataLen);
 }
 
+void write_goal_position_p2(MotorPort *port, uint8_t id, uint16_t angle) {
+  uint8_t data[4] = {angle & 0xff, (angle>>8) & 0xff, 0, 0};
+  uint16_t dataLen = 4;
+  uint16_t addr = 116;
+  _motor_write_p2(port, id, addr, data, dataLen);
+}
+
+
 /*
  * Write to specified address. Will be used by most functions to interact with motors
  * https://emanual.robotis.com/docs/en/dxl/protocol2/
@@ -137,6 +139,8 @@ void _motor_write_p2(MotorPort *p, uint8_t id, uint16_t addr, uint8_t* data, uin
 
   HAL_GPIO_WritePin(p->pinPort, p->dirPinNum, BUFFER_READ);
 }
+
+
 
 
 /*
@@ -185,6 +189,116 @@ void _motor_read_p2(MotorPort *p, uint8_t id, uint16_t addr, uint16_t dataLen) {
 //  crc = _update_crc(0, p->rxBuffer, 13);
 //  p->dmaDoneReading = false;
 }
+
+void sync_read_motor_present_position_p2(MotorPort * p) {
+  uint16_t dataLen = 4;
+  uint16_t addr = 132;
+  _motor_sync_read_p2(p, addr, dataLen);
+}
+
+void _motor_sync_read_p2(MotorPort *p, uint16_t addr, uint16_t dataLen) {
+  // setup message packet
+  uint8_t packetLen = 8 + 4 + p->numMotors + 2;
+  uint8_t txBuf[50]; //set size to something much bigger than we will need
+  txBuf[0] = 0xFF;
+  txBuf[1] = 0xFF;
+  txBuf[2] = 0xFD;
+  txBuf[3] = 0x00;
+  txBuf[4] = 0xFE; // Packet ID (don't use 0xFE = broadcast, doesn't work for read instruction)
+
+  uint8_t length = 3 + 4 + p->numMotors;
+  txBuf[5] = length & 0xff; // length
+  txBuf[6] = (length >> 8) & 0xff;
+
+  txBuf[7] = 0x82; // read instruction
+
+  txBuf[8] = addr & 0xff;   // address
+  txBuf[9] = (addr>>8) & 0xff;
+
+  txBuf[10] = dataLen & 0xff; // data length
+  txBuf[11] = (dataLen >> 8) & 0xff;
+
+  for (uint8_t i = 0; i<p->numMotors; i++)
+      txBuf[12+i] = p->motorIds[i];
+
+  uint16_t crc = _update_crc(0, txBuf, 12 + p->numMotors);
+  txBuf[12 + p->numMotors] = crc & 0xff;
+  txBuf[13 + p->numMotors] = (crc >> 8) & 0xff;
+
+  HAL_GPIO_WritePin(p->pinPort, p->dirPinNum, BUFFER_WRITE);
+
+  HAL_UART_Transmit(p->huart, txBuf, packetLen, 1000);
+
+  HAL_GPIO_WritePin(p->pinPort, p->dirPinNum, BUFFER_READ);
+
+//  p->rxPacketLen = 11 + dataLen;
+//  HAL_UART_Receive_DMA(p->huart, p->rxBuffer, p->rxPacketLen);
+//
+//  uint32_t tLast = HAL_GetTick();
+//  uint32_t TIMEOUT = 10; // milliseconds
+//  while(p->dmaDoneReading == false && HAL_GetTick() - tLast < TIMEOUT){
+//  }
+//  crc = _update_crc(0, p->rxBuffer, 13);
+//  p->dmaDoneReading = false;
+}
+
+void sync_write_goal_position_p2(MotorPort *port) {
+
+  uint16_t dataLen = 4;
+  uint16_t addr = 116;
+  _motor_sync_write_p2(port, addr, dataLen);
+}
+
+
+/*
+ * Write to specified address. Will be used by most functions to interact with motors
+ * https://emanual.robotis.com/docs/en/dxl/protocol2/
+ */
+void _motor_sync_write_p2(MotorPort *p, uint16_t addr, uint16_t dataLen) {
+  // setup message packet
+  uint8_t packetLen = 8 + 4 + p->numMotors*(1+dataLen) + 2 ;
+  uint8_t txBuf[100]; //set size to something much bigger than we will need
+  txBuf[0] = 0xFF;
+  txBuf[1] = 0xFF;
+  txBuf[2] = 0xFD;
+  txBuf[3] = 0x00;
+  txBuf[4] = 0xFE; // Packet ID (0xFE = broadcast)
+
+  uint8_t length = 3 + 4 + p->numMotors*(1+dataLen);
+  txBuf[5] = length & 0xff; // length
+  txBuf[6] = (length >> 8) & 0xff;
+
+  txBuf[7] = 0x83; // write instruction
+
+  txBuf[8] = addr & 0xff;   // address
+  txBuf[9] = (addr>>8) & 0xff;
+
+  txBuf[10] = dataLen & 0xff; // data length
+  txBuf[11] = (dataLen >> 8) & 0xff;
+
+  //uint8_t data[4] = {angle & 0xff, (angle>>8) & 0xff, 0, 0};
+  for (uint8_t i = 0; i< p->numMotors; i++) {
+        txBuf[12+i*(1+dataLen)] = p->motorIds[i];
+  	    txBuf[13+i*(1+dataLen)] = p->angles[i]& 0xff;
+  	    txBuf[14+i*(1+dataLen)] = (p->angles[i]>>8) & 0xff;
+  	    txBuf[15+i*(1+dataLen)] = 0;
+  	    txBuf[16+i*(1+dataLen)] = 0;
+  }
+//
+//  for (uint8_t i = 0; i<dataLen; i++)
+//    txBuf[10+i] = data[i];
+
+  uint16_t crc = _update_crc(0, txBuf, packetLen - 2);
+  txBuf[packetLen-2] = crc & 0xff;
+  txBuf[packetLen-1] = (crc >> 8) & 0xff;
+
+  HAL_GPIO_WritePin(p->pinPort, p->dirPinNum, BUFFER_WRITE);
+
+  HAL_UART_Transmit(p->huart, txBuf, packetLen, 1000);
+
+  HAL_GPIO_WritePin(p->pinPort, p->dirPinNum, BUFFER_READ);
+}
+
 
 void wait_for_dma_read_p2(MotorPort *p) {
 

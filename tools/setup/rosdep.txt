@@ -1,7 +1,7 @@
 screen
 vim
 python3-pip
-python3-catkin-tools
+python3-ros2-tools
 python3-protobuf
 protobuf-compiler
 libprotobuf-dev

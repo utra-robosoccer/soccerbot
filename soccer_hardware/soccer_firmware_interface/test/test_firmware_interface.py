@@ -83,9 +83,10 @@ def test_firmware_interface():
         # j.position = [math.sin(i / 180 * math.pi) * 0.1, math.cos(i / 180 * math.pi) * 0.1]
 
         if True:  # test
-            ang = 0.0
+            ang = 0.
         else:
             ang = abs(math.sin(i / 180 * math.pi) * 0.2)
+
         j.position = [ang] * 20
 
         # j.position[0] = ang
@@ -103,7 +104,7 @@ def test_firmware_interface_single_motor_range(motor_name: str = "left_knee"):
     rospy.set_param("motor_types", os.path.dirname(os.path.realpath(__file__)) + "/../config/motor_types.yaml")
 
     f = FirmwareInterface()
-    motor_range = np.linspace(-np.pi, 0)
+    motor_range = np.linspace(-np.pi,np.pi)
     for i in motor_range:
         j = JointState()
         j.name = [
@@ -130,16 +131,59 @@ def test_firmware_interface_single_motor_range(motor_name: str = "left_knee"):
         ]
 
         j.position = [0.0] * 20
-        j.position[j.name.index(motor_name)] = i
-
+        t = "knee"
+        # j.position[j.name.index("right_" + t)] = i
+        j.position[j.name.index("right_shoulder_pitch")] = i
+        # j.position[j.name.index("left_"+t)] = i
+        # j.position[j.name.index("head_pitch")] = i
 
 
         j.header.stamp = rospy.Time.now()
 
         f.joint_command_callback(j)
-        rospy.sleep(1/10.0)
-        time.sleep(0.01)
+        rospy.sleep(0.1)
+        time.sleep(0.1)
 
+    for i in range(100):
+        j = JointState()
+        j.name = [
+            "left_shoulder_pitch",
+            "left_shoulder_roll",
+            "left_elbow",
+            "right_shoulder_pitch",
+            "right_shoulder_roll",
+            "right_elbow",
+            "right_hip_yaw",
+            "right_hip_roll",
+            "right_hip_pitch",
+            "right_knee",
+            "right_ankle_pitch",
+            "right_ankle_roll",
+            "left_hip_yaw",
+            "left_hip_roll",
+            "left_hip_pitch",
+            "left_knee",
+            "left_ankle_pitch",
+            "left_ankle_roll",
+            "head_yaw",
+            "head_pitch",
+        ]
+        # j.position = [math.sin(i / 180 * math.pi) * 0.1, math.cos(i / 180 * math.pi) * 0.1]
+
+        if True:  # test
+            ang = 0.0
+        else:
+            ang = abs(math.sin(i / 180 * math.pi) * 0.2)
+        j.position = [ang] * 20
+
+        # j.position[0] = ang
+        # j.position[1] = ang
+
+        j.header.stamp = rospy.Time.now()
+
+        f.joint_command_callback(j)
+
+        time.sleep(0.01)
 
 
 def test_firmware_interface_normal():

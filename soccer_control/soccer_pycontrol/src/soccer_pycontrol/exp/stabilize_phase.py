@@ -21,7 +21,7 @@ class StabilizePhase:
         robot_model: str = "bez1",
     ):
         with open(
-            expanduser("~") + f"/catkin_ws/src/soccerbot/soccer_control/soccer_pycontrol/config/{robot_model}/{robot_model}{sim}.yaml", "r"
+            expanduser("~") + f"/ros2_ws/src/soccerbot/soccer_control/soccer_pycontrol/config/{robot_model}/{robot_model}{sim}.yaml", "r"
         ) as file:
             parameters = yaml.safe_load(file)
             file.close()

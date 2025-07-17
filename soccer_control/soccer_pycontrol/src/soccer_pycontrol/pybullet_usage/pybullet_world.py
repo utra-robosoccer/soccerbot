@@ -32,17 +32,22 @@ class PybulletWorld:
         """
         self.rate = rate
         self.real_time = real_time
-
+        optionstring = "--width={} --height={} ".format(640, 480)
         assert pb.isConnected() == 0
         if display:
-            self.client_id = pb.connect(pb.GUI)
+            self.client_id = pb.connect(pb.GUI, optionstring)
         else:
             self.client_id = pb.connect(pb.DIRECT)
+        pb.setTimeStep(1.0 / rate)
+        # pb.setRealTimeSimulation(0)
 
         pb.setAdditionalSearchPath(pybullet_data.getDataPath())  # optionally
         pb.resetDebugVisualizerCamera(cameraDistance=1.0, cameraYaw=camera_yaw, cameraPitch=0, cameraTargetPosition=cameraTargetPosition)
         pb.setGravity(0, 0, -9.81)
         pb.configureDebugVisualizer(pb.COV_ENABLE_GUI, 0)
+        pb.configureDebugVisualizer(pb.COV_ENABLE_SEGMENTATION_MARK_PREVIEW, 0)
+        pb.configureDebugVisualizer(pb.COV_ENABLE_DEPTH_BUFFER_PREVIEW, 0)
+        pb.configureDebugVisualizer(pb.COV_ENABLE_RGB_BUFFER_PREVIEW, 0)
 
         if path != "":
             self.plane = pb.loadURDF(path, basePosition=position, baseOrientation=pb.getQuaternionFromEuler(orientation))

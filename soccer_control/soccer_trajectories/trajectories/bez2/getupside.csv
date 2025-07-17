@@ -17,3 +17,5 @@ right_shoulder_roll,0,0
 left_shoulder_roll,0,0
 head_yaw,0,0
 head_pitch,0,0
+right_shoulder_roll,0.05,0.05
+left_shoulder_roll,0.1,0.1

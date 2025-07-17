@@ -2,6 +2,10 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 
+from soccer_object_detection.object_detect_node import ObjectDetectionNode
+from soccer_pycontrol.model.bez import Bez
+from soccer_pycontrol.walk_engine.navigator import Navigator
+
 
 class Behavior(ABC):
     """
@@ -41,3 +45,19 @@ class Behavior(ABC):
     @state.setter
     def state(self, state) -> None:
         self._context.state = state
+
+    @property
+    def bez(self) -> Bez:
+        return self._context.bez  # type: ignore[no-any-return]
+
+    @property
+    def world(self) -> world:
+        return self._context.world  # type: ignore[no-any-return]
+
+    @property
+    def nav(self) -> Navigator:
+        return self._context.nav  # type: ignore[no-any-return]
+
+    @property
+    def detect(self) -> ObjectDetectionNode:
+        return self._context.detect  # type: ignore[no-any-return]

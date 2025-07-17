@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.0.2)
 project(soccerbot)
 
 find_package(
-    catkin
+    ros2
     REQUIRED
     soccer_common
     soccer_msgs
@@ -25,7 +25,7 @@ find_package(
     webots_ros
 )
 
-catkin_package(
+ros2_package(
     CATKIN_DEPENDS
     soccer_msgs
     soccer_object_detection

@@ -26,7 +26,7 @@ class CameraCalculations(CameraBase):
         (r, h) = self.world_to_image_frame(0, -d)
         return int(min(max(0, h), self.resolution_y))
 
-    def reset_position(self, from_world_frame=False, camera_frame="/camera", skip_if_not_found=False):
+    def reset_position(self, camera_z_pose=0.46, camera_orientation=(0, 0, 0, 1)):
         """
         Resets the position of the camera, it uses a series of methods that fall back on each other to get the location of the camera
 
@@ -37,14 +37,8 @@ class CameraCalculations(CameraBase):
         """
 
         # same hardcoded values
-        if from_world_frame:
-            trans = [0, 0, 0.46]
-            rot = [0, 0, 0, 1]
-            self.pose = Transformation(trans, rot)
-        else:
-            trans = [0, 0, 0.46]  # TODO find init height
-            rot = [0, 0, 0, 1]
-            self.pose = Transformation(trans, rot)
+        self.pose.position = [0, 0, camera_z_pose]
+        self.pose.orientation = camera_orientation
 
     # TODO maybe in localization
     def find_floor_coordinate(self, pos: [int]) -> [int]:
@@ -149,7 +143,7 @@ class CameraCalculations(CameraBase):
 
         return bounding_box
 
-    def calculate_ball_from_bounding_boxes(self, ball_radius: float = 0.07, bounding_boxes: [float] = []) -> Transformation:
+    def calculate_ball_from_bounding_boxes(self, bounding_boxes: [float] = [], ball_radius: float = 0.07) -> Transformation:
         """
         Reverse function for  :func:`~soccer_common.Camera.calculateBoundingBoxesFromBall`, takes the bounding boxes
         of the ball as seen on the camera and return the 3D position of the ball assuming that the ball is on the ground
@@ -212,5 +206,5 @@ class CameraCalculations(CameraBase):
 
         tr = Transformation([ball_x, -ball_y, -ball_z])
         tr_cam = self.pose @ tr
-
-        return tr
+        # print(tr) # TODO could use for head control
+        return tr_cam  # tr

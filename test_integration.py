@@ -53,7 +53,7 @@ class IntegrationTest(TestCase):
             subprocess.call(["/bin/bash", "-c", "killall python3 || echo 'No Python Executables running'"])
             subprocess.call(["/bin/bash", "-c", "killall /usr/bin/java || echo 'No Java Executables running'"])
             subprocess.call(["/bin/bash", "-c", "kill -9 $(pgrep webots) || echo 'No Webots running'"])
-            subprocess.call(["/bin/bash", "-c", "source ~/catkin_ws/devel/setup.bash && rosnode kill -a || echo 'No Nodes running"])
+            subprocess.call(["/bin/bash", "-c", "source ~/ros2_ws/devel/setup.bash && rosnode kill -a || echo 'No Nodes running"])
 
     def start_simulation(self):
         if RUN_LOCALLY:
@@ -62,11 +62,11 @@ class IntegrationTest(TestCase):
                 [
                     "/bin/bash",
                     "-c",
-                    f"export START_PLAY={self.START_PLAY} && export ROBOT_MODEL={self.ROBOT_MODEL} && source ~/catkin_ws/devel/setup.bash && roslaunch soccerbot soccerbot_multi.launch",
+                    f"export START_PLAY={self.START_PLAY} && export ROBOT_MODEL={self.ROBOT_MODEL} && source ~/ros2_ws/devel/setup.bash && roslaunch soccerbot soccerbot_multi.launch",
                 ]
             )
         else:
-            os.system("bash $HOME/catkin_ws/src/soccerbot/soccerbot/scripts/start_competition.sh robot$ROBOCUP_ROBOT_ID &")
+            os.system("bash $HOME/ros2_ws/src/soccerbot/soccerbot/scripts/start_competition.sh robot$ROBOCUP_ROBOT_ID &")
 
         rospy.init_node("integration_test")
         rospy.wait_for_message("/clock", Clock, 40)

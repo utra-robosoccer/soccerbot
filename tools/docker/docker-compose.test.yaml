@@ -27,8 +27,8 @@ x-soccerbot: &soccerbot
     /bin/bash -c "export ROS_MASTER_URI=http://$$(hostname -i):11311 && export ROS_IP=$$(hostname -i) &&
     bash ./src/soccerbot/soccerbot/scripts/start_competition.sh robot$$ROBOCUP_ROBOT_ID"
   volumes:
-    - .:/home/$USER/catkin_ws/src/soccerbot
-    - .:/home/robosoccer/catkin_ws/src/soccerbot
+    - .:/home/$USER/ros2_ws/src/soccerbot
+    - .:/home/robosoccer/ros2_ws/src/soccerbot
 
 services:
   simulator:
@@ -70,9 +70,9 @@ services:
       soccer_network:
         ipv4_address: 172.18.0.2
     command:
-      /bin/bash -c "export ROS_MASTER_URI=http://$$(hostname -i):11311 && export ROS_IP=$$(hostname -i) && source $$HOME/catkin_ws/devel/setup.bash &&
-      export PYTHONPATH=$$PYTHONPATH:$$HOME/catkin_ws/src/soccerbot/soccer_pycontrol/src:$$HOME/catkin_ws/src/soccerbot/soccer_strategy/src:$$HOME/catkin_ws/src/soccerbot/soccer_common/src &&
-      pytest -s $$HOME/catkin_ws/src/soccerbot/test_integration.py::IntegrationTestInitial::test_game_start"
+      /bin/bash -c "export ROS_MASTER_URI=http://$$(hostname -i):11311 && export ROS_IP=$$(hostname -i) && source $$HOME/ros2_ws/devel/setup.bash &&
+      export PYTHONPATH=$$PYTHONPATH:$$HOME/ros2_ws/src/soccerbot/soccer_pycontrol/src:$$HOME/ros2_ws/src/soccerbot/soccer_strategy/src:$$HOME/ros2_ws/src/soccerbot/soccer_common/src &&
+      pytest -s $$HOME/ros2_ws/src/soccerbot/test_integration.py::IntegrationTestInitial::test_game_start"
     ports:
       - 11311:11311
     environment:

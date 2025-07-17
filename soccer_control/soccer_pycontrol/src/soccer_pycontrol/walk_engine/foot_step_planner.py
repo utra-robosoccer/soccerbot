@@ -9,13 +9,18 @@ from placo_utils.visualization import footsteps_viz, frame_viz, line_viz, robot_
 
 
 class FootStepPlanner:
-    def __init__(self, robot_model: str, parameters: dict, funct_time, debug: bool = True):
+    def __init__(self, robot_model: str, parameters: dict, funct_time, debug: bool = True, ball: bool = False, sim: bool = True):
+        self.ball = ball
         self.funct_time = funct_time
         self.DT = parameters["control_frequency"]
 
         self.debug = debug
         self.robot_model = robot_model
-        model_filename = expanduser("~") + f"/catkin_ws/src/soccerbot/soccer_description/{robot_model}_description/urdf/robot.urdf"
+        if sim and self.robot_model == "assembly":
+            model_filename = expanduser("~") + f"/ros2_ws/src/soccerbot/soccer_description/{robot_model}_description/urdf/robot.urdf"
+
+        else:
+            model_filename = expanduser("~") + f"/ros2_ws/src/soccerbot/soccer_description/{robot_model}_description/urdf/robot1.urdf"
         self.parameters = self.walk_parameters(parameters)
 
         self.last_replan = 0
@@ -82,48 +87,73 @@ class FootStepPlanner:
         shoulder_roll = 0 * np.pi / 180
         shoulder_pitch = -0.45  # 20 * np.pi / 180
         joints_task = self.solver.add_joints_task()
-        if self.robot_model == "bez2" or self.robot_model == "assembly":
-            joints_task.set_joints(
-                {
-                    "left_shoulder_roll": shoulder_roll,
-                    "left_shoulder_pitch": shoulder_pitch,
-                    "left_elbow": elbow,
-                    "right_shoulder_roll": -shoulder_roll,
-                    "right_shoulder_pitch": shoulder_pitch,
-                    "right_elbow": elbow,
-                    "head_pitch": 0.0,
-                    "head_yaw": 0.0,
-                }
-            )
+        if self.ball:
+            self.look_at_ball = self.solver.add_axisalign_task("camera", np.array([1.0, 0.0, 0.0]), np.array([1.0, 0.0, 0.0]))
+            self.look_at_ball.configure("look_ball", "soft", 0.5)  # TODO replace with a function that remove_task
+            if self.robot_model == "bez2" or self.robot_model == "assembly":
+                joints_task.set_joints(
+                    {
+                        "left_shoulder_roll": shoulder_roll,
+                        "left_shoulder_pitch": shoulder_pitch,
+                        "left_elbow": elbow,
+                        "right_shoulder_roll": -shoulder_roll,
+                        "right_shoulder_pitch": shoulder_pitch,
+                        "right_elbow": elbow,
+                        # "head_pitch": 0.0,
+                        # "head_yaw": 0.0,
+                    }
+                )
+            else:
+                joints_task.set_joints(
+                    {
+                        # "left_shoulder_roll": shoulder_roll,
+                        "left_shoulder_pitch": shoulder_pitch,
+                        "left_elbow": elbow,
+                        # "right_shoulder_roll": -shoulder_roll,
+                        "right_shoulder_pitch": shoulder_pitch,
+                        "right_elbow": elbow,
+                        # "head_pitch": 0.0,
+                        # "head_yaw": 0.0,
+                    }
+                )
         else:
-            joints_task.set_joints(
-                {
-                    # "left_shoulder_roll": shoulder_roll,
-                    "left_shoulder_pitch": shoulder_pitch,
-                    "left_elbow": elbow,
-                    # "right_shoulder_roll": -shoulder_roll,
-                    "right_shoulder_pitch": shoulder_pitch,
-                    "right_elbow": elbow,
-                    "head_pitch": 0.0,
-                    "head_yaw": 0.0,
-                }
-            )
+            if self.robot_model == "bez2" or self.robot_model == "assembly":
+                joints_task.set_joints(
+                    {
+                        "left_shoulder_roll": shoulder_roll,
+                        "left_shoulder_pitch": shoulder_pitch,
+                        "left_elbow": elbow,
+                        "right_shoulder_roll": -shoulder_roll,
+                        "right_shoulder_pitch": shoulder_pitch,
+                        "right_elbow": elbow,
+                        "head_pitch": 0.0,
+                        "head_yaw": 0.0,
+                    }
+                )
+            else:
+                joints_task.set_joints(
+                    {
+                        # "left_shoulder_roll": shoulder_roll,
+                        "left_shoulder_pitch": shoulder_pitch,
+                        "left_elbow": elbow,
+                        # "right_shoulder_roll": -shoulder_roll,
+                        "right_shoulder_pitch": shoulder_pitch,
+                        "right_elbow": elbow,
+                        "head_pitch": 0.0,
+                        "head_yaw": 0.0,
+                    }
+                )
         joints_task.configure("joints", "soft", 1.0)
 
-        # self.look_at_ball = self.solver.add_axisalign_task(
-        #     "camera", np.array([1.0, 0.0, 0.0]), np.array([1.0, 0.0, 0.0])
-        # )
-        # self.look_at_ball.configure("look_ball", "soft", 1)
-
         # Placing the robot in the initial position
-        print("Placing the robot in the initial position...")
+        # print("Placing the robot in the initial position...")
         self.tasks.reach_initial_pose(
             np.eye(4),
             self.parameters.feet_spacing,
             self.parameters.walk_com_height,
             self.parameters.walk_trunk_pitch,
         )
-        print("Initial position reached")
+        # print("Initial position reached")
 
     def configure_planner(self, d_x: float = 0.0, d_y: float = 0.0, d_theta: float = 0.0, nb_steps: int = 10):
         # Configure the FootstepsPlanner
@@ -161,7 +191,9 @@ class FootStepPlanner:
         # TODO clean up and add a cone or it breaks walking
         ball = np.array(target)
         camera_pos = self.robot.get_T_world_frame("camera")[:3, 3]
-        ball[2] -= camera_pos[2]
+        ball[2] -= camera_pos[2]  # TODO tune later
+        # ball[1] = -ball[1]
+
         self.look_at_ball.targetAxis_world = ball
 
     def plan_steps(

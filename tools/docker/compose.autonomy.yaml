@@ -20,7 +20,7 @@ x-soccerbot: &soccerbot
     /bin/bash -c "export ROS_MASTER_URI=http://$$(hostname -i):11311 && export ROS_IP=$$(hostname -i) &&
     bash ./src/soccerbot/soccerbot/scripts/start_competition.sh robot$$ROBOCUP_ROBOT_ID"
   volumes:
-    - /home/$USER/catkin_ws/src/soccerbot:/home/robosoccer/catkin_ws/src/soccerbot
+    - /home/$USER/ros2_ws/src/soccerbot:/home/robosoccer/ros2_ws/src/soccerbot
     - /tmp/.X11-unix:/tmp/.X11-unix:rw
     - /dev/dri:/dev/dri:rw
     - /dev/snd:/dev/snd:rw

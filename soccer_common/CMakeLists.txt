@@ -8,15 +8,15 @@ set(PKG_DEPS
 )
 
 find_package(
-    catkin
+    ros2
     REQUIRED ${PKG_DEPS}
 )
 
-catkin_package(CATKIN_DEPENDS soccer_msgs ${PKG_DEPS})
+ros2_package(CATKIN_DEPENDS soccer_msgs ${PKG_DEPS})
 
 # ##############################################################################
 # Build ##
 # ##############################################################################
-include_directories(${catkin_INCLUDE_DIRS})
+include_directories(${ros2_INCLUDE_DIRS})
 
-catkin_python_setup()
+ros2_python_setup()
