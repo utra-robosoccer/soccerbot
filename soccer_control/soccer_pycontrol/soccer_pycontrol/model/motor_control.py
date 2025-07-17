@@ -1,7 +1,8 @@
 from typing import List
 
 import numpy as np
-import pybullet as pb
+
+# import pybullet as pb
 
 
 def wrapToPi(num: float) -> float:
@@ -61,7 +62,7 @@ class MotorControl:
     """
 
     # TODO update with the modified for pycontrol
-    def __init__(self, body: pb.loadURDF):
+    def __init__(self, body):
         self.body = body
 
         self.motor_names = self.find_motor_names()  # motorname : [pybullet index, array index]

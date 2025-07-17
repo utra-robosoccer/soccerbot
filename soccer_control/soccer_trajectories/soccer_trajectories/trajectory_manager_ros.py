@@ -6,10 +6,11 @@ import rclpy
 from rclpy.duration import Duration
 from rclpy.executors import ExternalShutdownException
 from rclpy.node import Node
-from sensor_msgs.msg import JointState
+from sensor_msgs.msg import Imu, JointState
 from soccer_trajectories.trajectory_manager import TrajectoryManager
-from std_msgs.msg import Empty
+from std_msgs.msg import Bool, Empty
 
+from soccer_common import Transformation
 from soccer_msgs.msg import FixedTrajectoryCommand, RobotState
 
 # if "ROS_NAMESPACE" not in os.environ:
@@ -34,6 +35,9 @@ class TrajectoryManagerRos(TrajectoryManager, Node):
 
         # TODO fix later
         super(TrajectoryManagerRos, self).__init__(robot_model, trajectory_name)
+        self.imu_msg = None
+        self.imu_ready = False
+        self.imu_create_subscription = self.create_subscription(Imu, "imu_filtered", self.imu_callback, qos_profile=10)
 
         self.terminate = False
         self.period = 100  # Maybe 200 Hz
@@ -53,7 +57,8 @@ class TrajectoryManagerRos(TrajectoryManager, Node):
         self.rate = self.create_rate(150)
         thread = threading.Thread(target=rclpy.spin, args=(self,), daemon=True)
         thread.start()
-
+        self.traj_in_progress = False
+        self.traj_prog = self.create_publisher(Bool, "traj_prog", qos_profile=10)
         # self.get_logger().info("fdfs")
 
     # def robot_state_callback(self, state: RobotState): # TODO reenable when at that part
@@ -63,8 +68,37 @@ class TrajectoryManagerRos(TrajectoryManager, Node):
     def joint_callback(self, msg: JointState):
         self.last_joint_state = msg
 
+    def imu_callback(self, msg: Imu):
+        """
+        Callback function for IMU information
+
+        :param msg: IMU Message
+        """
+        self.imu_msg = msg
+        self.imu_ready = True
+
+    def get_imu(self):
+        """
+        Gets the IMU at the IMU link location.
+
+        :return: calculated orientation of the center of the torso of the robot
+        """
+
+        assert self.imu_ready
+        return Transformation(
+            [0, 0, 0],
+            [
+                self.imu_msg.orientation.x,
+                self.imu_msg.orientation.y,
+                self.imu_msg.orientation.z,
+                self.imu_msg.orientation.w,
+            ],
+        ).orientation_euler
+
     def command_callback(self, command: FixedTrajectoryCommand):
         # TODO Maybe only dont interrupt for other reasons
+        self.traj_in_progress = True
+        self.traj_prog.publish(Bool(data=self.traj_in_progress))
         if self.trajectory.max_time > 0:
             return
 
@@ -103,6 +137,7 @@ class TrajectoryManagerRos(TrajectoryManager, Node):
     def send_trajectory(self, real_time: bool = True) -> None:
         t: float = 0
         while rclpy.ok() and t <= self.trajectory.max_time and not self.terminate:
+
             try:
                 if t % 0.5:
                     self.get_logger().info("2")
@@ -122,6 +157,8 @@ class TrajectoryManagerRos(TrajectoryManager, Node):
                 # self.get_logger().info("3")
                 self.rate.sleep()
                 # self.get_logger().info("4")
+        self.traj_in_progress = False
+        self.traj_prog.publish(Bool(data=self.traj_in_progress))
         self.get_logger().info("Finished Trajectory: " + self.trajectory.trajectory_path)
         self.finish_trajectory_create_publisher.publish(Empty())
         self.trajectory.reset()
@@ -130,8 +167,34 @@ class TrajectoryManagerRos(TrajectoryManager, Node):
         # TODO could be in cmd with a spin
 
         while rclpy.ok():
-            if self.trajectory.max_time > 0:
-                self.send_trajectory()
+            [_, p, r] = self.get_imu()
+
+            if p > 1.25:
+                print("getupfront")
+                msg = FixedTrajectoryCommand()
+                msg.trajectory_name = "getupfront_ori"
+                msg.mirror = False
+                self.command_callback(command=msg)
+                self.send_trajectory(real_time=True)
+            elif p < -1.25:
+                print("getupback: ")
+                msg = FixedTrajectoryCommand()
+                msg.trajectory_name = "getupback"
+                msg.mirror = False
+                self.command_callback(command=msg)
+                self.send_trajectory(real_time=True)
+            # elif r < -1.54 and -0.5 < p < -0.4:
+            #     tm.send_trajectory("getupsideleft")
+            # elif r > 1.54 and -0.5 < p < -0.4:
+            #     tm.send_trajectory("getupsideright")
+            # if self.trajectory.max_time > 0:
+            #     msg = FixedTrajectoryCommand()
+            #     msg.trajectory_name = "getupback"
+            #     # msg.trajectory_name = "getupside"
+            #     # msg.trajectory_name = "getupfront_ori"
+            #     msg.mirror = False
+
+            # self.send_trajectory()
 
             self.rate.sleep()
 
@@ -146,10 +209,10 @@ def main():
     msg.mirror = False
     try:
         # rclpy.spin(node)
-        # node.run()
-        node.rate.sleep()
-        node.command_callback(command=msg)
-        node.send_trajectory(real_time=True)
+        node.run()
+        # node.rate.sleep()
+        # node.command_callback(command=msg)
+        # node.send_trajectory(real_time=True)
     except (ExternalShutdownException, KeyboardInterrupt):
         pass
     finally:

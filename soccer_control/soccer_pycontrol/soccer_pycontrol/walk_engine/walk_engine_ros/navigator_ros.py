@@ -11,7 +11,7 @@ from soccer_pycontrol.walk_engine.foot_step_planner import FootStepPlanner
 from soccer_pycontrol.walk_engine.navigator import Navigator
 from soccer_pycontrol.walk_engine.stabilize import Stabilize
 from soccer_pycontrol.walk_engine.walker import Walker
-from std_msgs.msg import Float32MultiArray
+from std_msgs.msg import Bool, Float32MultiArray
 
 from soccer_common import PID, Transformation
 from soccer_msgs.msg import BoundingBoxes, FixedTrajectoryCommand
@@ -89,6 +89,11 @@ class NavigatorRos(Navigator, Node):
         self.kicked = False
         thread = threading.Thread(target=rclpy.spin, args=(self,), daemon=True)
         thread.start()
+        self.traj_in_progress = False
+        self.traj_prog = self.create_subscription(Bool, "traj_prog", self.traj, qos_profile=10)
+
+    def traj(self, data: Bool):
+        self.traj_prog = data.data
 
     def check_request_timeout(self, nsecs: int = 500000000):
         return (self.get_clock().now() - self.last_req) < Duration(seconds=1, nanoseconds=nsecs)
@@ -167,7 +172,8 @@ class NavigatorRos(Navigator, Node):
                 #
                 #     self.bez.motor_control.set_motor()
                 # else:
-                self.walk_time(target_goal)
+                if not self.traj_prog:
+                    self.walk_time(target_goal)
 
             # print(f"Height rotation: {self.bez.sensors.get_height().orientation_euler}")
             # print(f"Height position: {self.bez.sensors.get_height().position}")
