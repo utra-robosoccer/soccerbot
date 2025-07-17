@@ -129,7 +129,7 @@ def test_firmware_interface_single_motor_range(motor_name: str = "left_knee"):
         ]
 
         j.position = [0.0] * 20
-        t = "hip_pitch"
+        t = "hip_yaw"
         j.position[j.name.index("right_" + t)] = i
         # j.position[j.name.index("left_")] = i
         j.position[j.name.index("left_"+t)] = i

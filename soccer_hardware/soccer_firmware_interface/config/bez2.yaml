@@ -4,6 +4,7 @@ left_hip_yaw:
   angle_zero: 180
   angle_max: 360
   angle_min: 0
+  flipped: "true"
 
 left_hip_roll:
   id: 5
@@ -50,7 +51,7 @@ right_hip_yaw:
   angle_zero: 180
   angle_max: 360
   angle_min: 0
-  flipped: "true"
+  flipped: "false"
 
 right_hip_roll:
   id: 11

@@ -69,7 +69,7 @@ class TestPybullet(unittest.TestCase):
 
         for j in angles:
             # x = [0.0] * self.bez.motor_control.numb_of_motors
-            t = "shoulder_roll"
+            t = "hip_yaw"
             # x[self.bez.motor_control.motor_names.index("head_pitch")] = j
             self.bez.motor_control.configuration["right_" + t] = j
             self.bez.motor_control.configuration["left_" + t] = j

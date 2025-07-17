@@ -141,7 +141,8 @@ def main():
     node = TrajectoryManagerRos()
     msg = FixedTrajectoryCommand()
     msg.trajectory_name = "getupback"
-    msg.trajectory_name = "getupfront"
+    # msg.trajectory_name = "getupside"
+    # msg.trajectory_name = "getupfront_ori"
     msg.mirror = False
     try:
         # rclpy.spin(node)
