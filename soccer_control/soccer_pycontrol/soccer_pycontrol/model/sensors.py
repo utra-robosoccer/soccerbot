@@ -2,9 +2,11 @@ from typing import List
 
 import cv2
 import numpy as np
-import pybullet as pb
 
 from soccer_common.transformation import Transformation
+
+# import pybullet as pb
+
 
 
 class Sensors:
@@ -12,7 +14,7 @@ class Sensors:
     Interfaces with pybullet to extract sensor data.
     """
 
-    def __init__(self, body: pb.loadURDF, ball: pb.loadURDF):
+    def __init__(self, body, ball):
         # TODO does this need to be a class?
         self.body = body
         self.ball = ball
@@ -54,7 +56,7 @@ class Sensors:
         [ball_position, ball_quaternion] = pb.getBasePositionAndOrientation(self.ball)
         return Transformation(position=ball_position, quaternion=ball_quaternion)
 
-    def get_foot_pressure_sensors(self, floor: pb.loadURDF) -> List[bool]:
+    def get_foot_pressure_sensors(self, floor) -> List[bool]:
         """
         Checks if 4 corners of the each feet are in contact with ground #
         TODO fix docstring

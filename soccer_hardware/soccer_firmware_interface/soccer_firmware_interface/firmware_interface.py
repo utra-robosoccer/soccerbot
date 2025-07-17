@@ -160,9 +160,9 @@ class FirmwareInterface(Node):
 
         # ax, ay = ay, ax  # flip pitch and roll
 
-        imu.linear_acceleration.x = az
+        imu.linear_acceleration.x = -az
         imu.linear_acceleration.y = ax
-        imu.linear_acceleration.z = ay
+        imu.linear_acceleration.z = -ay
 
         vx = int.from_bytes(imu_data[6:8], byteorder="big", signed=True) / IMU_GY_RANGE
         vy = int.from_bytes(imu_data[8:10], byteorder="big", signed=True) / IMU_GY_RANGE
@@ -173,9 +173,9 @@ class FirmwareInterface(Node):
         # print(f"a {ax} {ay} {az}")
         # print(f"v {vx:10.3f} {vy:10.3f} {vz:10.3f}")
 
-        imu.angular_velocity.x = vz
-        imu.angular_velocity.y = -vx
-        imu.angular_velocity.z = vy
+        imu.angular_velocity.x = -vz
+        imu.angular_velocity.y = vx
+        imu.angular_velocity.z = -vy
         # print(imu)
         self.imu_create_publisher.publish(imu)
 

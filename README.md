@@ -112,3 +112,11 @@ sudo apt install ros-humble-imu-tools
 
 sudo apt install ros-humble-foxglove-bridge
 sudo apt install ros-humble-xacro
+
+pip install -U placo
+pip install -U scipy
+pip install -U scikit-learn
+pip install -U ultralytics
+pip install -U matplotlib
+pip install -U pybullet
+pip install -U cmeel-octomap

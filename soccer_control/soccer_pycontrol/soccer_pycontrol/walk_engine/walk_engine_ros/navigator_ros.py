@@ -198,7 +198,7 @@ class NavigatorRos(Navigator, Node):
 
 def main():
     rclpy.init()
-    node = NavigatorRos()
+    node = NavigatorRos(imu_feedback_enabled=True)
     try:
         # rclpy.spin(node)
 

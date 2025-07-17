@@ -46,7 +46,7 @@ class Walker:
     def walk_loop(self, target_goal=[0, 0], ball_pixel=[0, 0]):  # TODO set default to something better
         self.foot_step_planner.plan_steps(self.t)
         self.bez.motor_control.set_angles_from_placo(self.foot_step_planner.robot)
-
+        # print(pitch, "  ", roll)
         if self.imu_feedback_enabled and self.bez.sensors.imu_ready:
             [_, pitch, roll] = self.bez.sensors.get_imu()
             # print(pitch,"  ", roll)

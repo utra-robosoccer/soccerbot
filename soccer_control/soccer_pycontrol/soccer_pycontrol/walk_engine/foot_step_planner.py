@@ -4,7 +4,8 @@ from typing import List
 
 import numpy as np
 import placo
-import pybullet as p
+
+# import pybullet as p
 from placo_utils.visualization import footsteps_viz, frame_viz, line_viz, robot_viz
 
 
@@ -146,7 +147,7 @@ class FootStepPlanner:
         T_world_right = placo.flatten_on_floor(self.robot.get_T_world_right())
         footsteps = self.repetitive_footsteps_planner.plan(placo.HumanoidRobot_Side.left, T_world_left, T_world_right)
 
-        supports = placo.FootstepsPlanner.make_supports(footsteps, True, self.parameters.has_double_support(), True)
+        supports = placo.FootstepsPlanner.make_supports(footsteps, 0.0, True, self.parameters.has_double_support(), True)
 
         # Creating the pattern generator and making an initial plan
         self.trajectory = self.walk_pattern.plan(supports, self.robot.com_world(), 0.0)
@@ -199,10 +200,10 @@ class FootStepPlanner:
         self.update_meshcat(t)
 
     def replan(self, t: float):
-        self.last_replan = t
-        # Replanning footsteps from current trajectory
-        supports = self.walk_pattern.replan_supports(self.repetitive_footsteps_planner, self.trajectory, t)
 
+        # Replanning footsteps from current trajectory
+        supports = self.walk_pattern.replan_supports(self.repetitive_footsteps_planner, self.trajectory, t, self.last_replan)
+        self.last_replan = t
         # Replanning CoM trajectory, yielding a new trajectory we can switch to
         self.trajectory = self.walk_pattern.replan(supports, self.trajectory, t)
 
@@ -216,7 +217,7 @@ class FootStepPlanner:
 
         return t
 
-    def update_viz(self, supports: List[placo.Supports], trajectory: placo.WalkTrajectory):
+    def update_viz(self, supports: List[placo.Supports], trajectory):
         if self.debug:
             # Drawing footsteps
             footsteps_viz(supports)  # TODO look for step vis

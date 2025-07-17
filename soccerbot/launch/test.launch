@@ -66,9 +66,9 @@
         <param name ="motor_mapping" value="$(var motor_mapping)" />
     </node>
 
-<!--     <node pkg="soccer_pycontrol" name="soccer_pycontrol"  exec="soccer_walk" output="screen"> -->
-<!--          -->
-<!--     </node> -->
+    <node pkg="soccer_pycontrol" name="soccer_pycontrol"  exec="soccer_walk" output="screen" emulate_tty="true">
+
+    </node>
 <!--      -->
 <!--     <node pkg="soccer_trajectories" name="soccer_trajectories"  exec="soccer_traj" output="screen"> -->
 <!--          -->

@@ -1,4 +1,4 @@
-complementary_filter_gain_node:
+/**:
   ros__parameters:
     gain_acc: 0.02
     bias_alpha: 0.001
