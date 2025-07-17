@@ -8,9 +8,10 @@ import numpy as np
 
 
 class Rotate(Behavior):
-    def __init__(self, clockwise: bool = True):
+    def __init__(self, clockwise: bool = True, yaw: float = np.pi/2) -> None:
         super().__init__()
         self._clockwise = clockwise
+        self._yaw = yaw
 
     def action(self) -> None:
         self.bez.status = BezStatusEnum.BALANCE
@@ -23,9 +24,9 @@ class Rotate(Behavior):
         # rotate +- 90 degrees from current pos
         if self._clockwise:
             # yaw=-90°, pitch=0, roll=0
-            target_goal = Transformation(pos, euler=[-np.pi / 2, 0, 0])
+            target_goal = Transformation(pos, euler=[-self._yaw / 2, 0, 0])
         else:
-            target_goal = Transformation(pos, euler=[np.pi / 2 , 0, 0])
+            target_goal = Transformation(pos, euler=[self._yaw / 2 , 0, 0])
 
 
         [y, p, r] = pose.orientation_euler
@@ -40,6 +41,11 @@ class Rotate(Behavior):
         elif self.bez.found_ball:
             self.bez.head_status = BezStatusEnum.WALK
             # TODO: where to walk after finding the ball
+
+        # if in Localize state, go back to localize state after rotating
+        from soccer_strategy.behavior.head_state.localize import Localize
+        if self.bez.status == BezStatusEnum.LOCALIZE:
+            self.context.transition_to(Localize())
 
         # check if fallen
         from soccer_strategy.behavior.state.get_up import GetUp
