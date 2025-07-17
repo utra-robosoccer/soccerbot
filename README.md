@@ -107,3 +107,8 @@ source ~/ros2_ws/install/setup.bash
 
 LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/ros/humble/lib:/home/manx52/ros2_ws/build/soccer_msgs:/home/manx52/ros2_ws/install/soccer_msgs/local/lib/python3.10/dist-packages
 pip3 install setuptools==61.0
+
+sudo apt install ros-humble-imu-tools
+
+sudo apt install ros-humble-foxglove-bridge
+sudo apt install ros-humble-xacro

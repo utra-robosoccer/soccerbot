@@ -3,6 +3,7 @@
     <arg name="play_rosbag" default="false" />
     <arg name="record_rosbag" default="true" />
     <arg name="simulation" default="false" />
+     <arg name="robot_name" default="robot1" />
 
     <let name="motor_types" value="$(find-pkg-share soccer_firmware_interface)/config/motor_types.yaml" />
     <let name="motor_mapping" value="$(find-pkg-share soccer_firmware_interface)/config/$(var robot_model).yaml" />
@@ -13,5 +14,39 @@
         <param name="motor_types" value="$(var motor_types)" />
         <param name ="motor_mapping" value="$(var motor_mapping)" />
     </node>
+    <node pkg="imu_complementary_filter" type="complementary_filter_node" name="imu_complementary_filter" output="log">-->
+      <rosparam file="$(find soccerbot)/config/imu_complementary_filter.yaml" command="load" />-->
+      <remap from="imu/data_raw" to="imu_raw" />-->
+      <remap from="imu/data" to="imu_filtered" />-->
+   </node>-->
+    <include file="$(find foxglove_bridge)/launch/foxglove_bridge.launch">
+        <arg name="port" value="8765" />
+    </include>
+
+    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" />
+
+    <param name="robot_description" command="xacro '$(find assembly_description)/urdf/assembly.xacro'
+            robot_name:=$(arg robot_name)
+            model_type:=stl
+            file_path:=package://assembly_description
+            has_base_footprint:=false
+            tf_prefix:=$(arg robot_name)
+            "
+        />
+            <arg name="param_file_name" value="$(arg robot_model)" unless="$(arg simulation)" />
+
+<node name="object_detector" pkg="soccer_object_detection" type="object_detect_node_ros.py" output="screen" args="--model $(find soccer_object_detection)/models/half_5.pt">
+        <rosparam file="$(find soccer_object_detection)/config/$(arg param_file_name).yaml" command="load" />
+    </node>
+
+    <node name="camera" pkg="usb_cam" type="usb_cam_node" output="screen" respawn="true" respawn_delay="30">
+        <param name="video_device" value="/dev/video4" />
+        <param name="image_width" value="640" />
+        <param name="image_height" value="480" />
+        <param name="pixel_format" value="yuyv" />
+        <param name="camera_frame_id" value="camera" />
+        <param name="io_method" value="mmap" />
+    </node>
+
 
     </launch>
