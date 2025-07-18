@@ -122,3 +122,8 @@ pip install -U pybullet
 pip install -U cmeel-octomap
 
 ros2 run rqt_tf_tree rqt_tf_tree --force-discover
+
+sudo apt install ros-humble-usb-cam
+
+pip install -U pandas
+pip install setuptools==71

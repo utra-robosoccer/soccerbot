@@ -5,15 +5,38 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1718606a-6ea1-4edd-a178-2f51136d492a" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/launch/camera.launch.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/setup.cfg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/soccer_object_detection/camera/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/soccerbot.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/soccerbot.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/external/hlvs_webots" beforeDir="false" afterPath="$PROJECT_DIR$/external/hlvs_webots" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/external/hlvs_webots/protos/Utra/Bez2Robocup/Bez2_meshes/Bez2.proto" beforeDir="false" afterPath="$PROJECT_DIR$/external/hlvs_webots/protos/Utra/Bez2Robocup/Bez2_meshes/Bez2.proto" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/external/hlvs_webots/protos/Utra/Bez3Robocup/Bez3.proto" beforeDir="false" afterPath="$PROJECT_DIR$/external/hlvs_webots/protos/Utra/Bez3Robocup/Bez3.proto" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/external/hlvs_webots/worlds/.robocup.wbproj" beforeDir="false" afterPath="$PROJECT_DIR$/external/hlvs_webots/worlds/.robocup.wbproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/soccer_pycontrol/model/model_ros/sensors_ros.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/soccer_pycontrol/model/model_ros/sensors_ros.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_description/assembly_description/urdf/assembly.xacro" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_description/assembly_description/urdf/assembly.xacro" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_hardware/soccer_firmware_interface/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_hardware/soccer_firmware_interface/setup.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/CMakeLists.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/models/half_5.pt" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/models/half_5.pt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/package.xml" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/package.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/setup.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/src/soccer_object_detection/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/soccer_object_detection/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/src/soccer_object_detection/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/resource/soccer_object_detection" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/src/soccer_object_detection/camera/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/soccer_object_detection/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/src/soccer_object_detection/camera/camera_base.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/soccer_object_detection/camera/camera_base.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/src/soccer_object_detection/camera/camera_calculations.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/soccer_object_detection/camera/camera_calculations.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/src/soccer_object_detection/camera/camera_calculations_ros.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/soccer_object_detection/camera/camera_calculations_ros.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/src/soccer_object_detection/object_detect_node.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/soccer_object_detection/object_detect_node.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/src/soccer_object_detection/object_detect_node_ros.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/soccer_object_detection/object_detect_node_ros.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/src/soccer_object_detection/sam_poc.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/soccer_object_detection/sam_poc.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/src/soccer_object_detection/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/soccer_object_detection/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/src/yolov8/runs/segment/train/args.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/src/yolov8/runs/segment/train2/args.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/src/yolov8/runs/segment/train2/events.out.tfevents.1731791909.anthonykpinson-LOQ-15IRH8.6643.0" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/test/test_camera.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/test/test_camera.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/test/test_object_detection.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/test/test_object_detection.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/test/test_pybullet_camera.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/test/test_pybullet_camera.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/soccerbot/launch/test.launch" beforeDir="false" afterPath="$PROJECT_DIR$/soccerbot/launch/test.launch" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/soccerbot/package.xml" beforeDir="false" afterPath="$PROJECT_DIR$/soccerbot/package.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -296,7 +319,7 @@
       <workItem from="1752672934442" duration="29451000" />
       <workItem from="1752738091432" duration="6896000" />
       <workItem from="1752752057805" duration="25346000" />
-      <workItem from="1752834351520" duration="3601000" />
+      <workItem from="1752834351520" duration="6973000" />
     </task>
     <servers />
   </component>
@@ -408,7 +431,7 @@
           <option name="timeStamp" value="4" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/soccer_perception/soccer_object_detection/src/soccer_object_detection/camera/camera_calculations.py</url>
+          <url>file://$PROJECT_DIR$/soccer_perception/soccer_object_detection/soccer_object_detection/camera/camera_calculations.py</url>
           <line>164</line>
           <option name="timeStamp" value="11" />
         </line-breakpoint>
@@ -418,7 +441,7 @@
           <option name="timeStamp" value="14" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/soccer_perception/soccer_object_detection/src/soccer_object_detection/object_detect_node.py</url>
+          <url>file://$PROJECT_DIR$/soccer_perception/soccer_object_detection/soccer_object_detection/object_detect_node.py</url>
           <line>86</line>
           <option name="timeStamp" value="46" />
         </line-breakpoint>
@@ -455,6 +478,11 @@
           <url>file://$PROJECT_DIR$/soccer_control/soccer_pycontrol/soccer_pycontrol/model/motor_control.py</url>
           <line>106</line>
           <option name="timeStamp" value="56" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/soccer_perception/soccer_object_detection/soccer_object_detection/object_detect_node.py</url>
+          <line>2</line>
+          <option name="timeStamp" value="57" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

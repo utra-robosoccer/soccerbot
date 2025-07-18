@@ -4,13 +4,13 @@ from os.path import expanduser
 
 import cv2
 import numpy as np
-import pybullet as pb
-import pytest
-from soccer_object_detection.object_detect_node import ObjectDetectionNode
 from soccer_pycontrol.model.bez import Bez
 from soccer_pycontrol.pybullet_usage.pybullet_world import PybulletWorld
 
 from soccer_common import Transformation
+from soccer_perception.soccer_object_detection.soccer_object_detection.object_detect_node import (
+    ObjectDetectionNode,
+)
 
 REAL_TIME = True
 PLOT = True

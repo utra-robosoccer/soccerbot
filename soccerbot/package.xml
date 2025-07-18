@@ -36,7 +36,7 @@
   <!-- Navigation-->
   <depend>soccer_trajectories</depend>
   <depend>soccer_firmware_interface</depend>
-<!--  <depend>soccer_webots</depend>-->
+  <depend>soccer_object_detection</depend>
   <depend>soccer_msgs</depend>
   <depend>game_controller_interface</depend>
 <!--  <depend>python3-protobuf</depend>-->

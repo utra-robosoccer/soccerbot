@@ -1,7 +1,7 @@
 <launch>
 <!--     <arg name="single" default="true" /> -->
 <!--     <arg name="robot_model" default="$(env ROBOT_MODEL bez1)" /> -->
-    <arg name="simulation" default="false" />
+    <arg name="simulation" default="true" />
 <!--     <arg name="robot_id" default="$(env ROBOCUP_ROBOT_ID 1)" /> -->
 <!--     <arg name="robot_name" value="robot$(arg robot_id)" /> -->
     <arg name="map_name" default="robocup" />
@@ -77,6 +77,9 @@
     <node pkg="game_controller_interface" name="game_controller_interface"  exec="gc_interface" output="screen">
 
     </node>
+
+    <include file="$(find-pkg-share soccer_object_detection)/launch/camera.launch.py">
+    </include>
 
 <!--        <node pkg="soccer_object_localization" type="detector_fieldline_ros.py" name="ball_detector" output="screen">--> -->
 <!--            <rosparam file="$(find soccer_object_localization)/config/$(arg param_file_name).yaml" command="load" />--> -->
