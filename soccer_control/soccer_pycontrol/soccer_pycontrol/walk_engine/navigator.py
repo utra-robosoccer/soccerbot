@@ -16,9 +16,11 @@ from soccer_pycontrol.walk_engine.error_calc import (
 from soccer_pycontrol.walk_engine.foot_step_planner import FootStepPlanner
 from soccer_pycontrol.walk_engine.stabilize import Stabilize
 from soccer_pycontrol.walk_engine.walker import Walker
-from torch.distributed.checkpoint import planner
 
 from soccer_common import PID, Transformation
+
+# from torch.distributed.checkpoint import planner
+
 
 
 # TODO could make it more modular by passing in pybullet stuff or have it at one layer higher so we can reuse code

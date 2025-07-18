@@ -11,11 +11,11 @@ arm_1_center: 2.512
 # STABILIZE
 walking_pitch_kp: 0.25 #0.275
 walking_pitch_kd: 0.0 #1
-walking_pitch_ki: 0.00001
+walking_pitch_ki: 0.000
 walking_pitch_setpoint: -0.0
 walking_pitch_offset: 0.0
 
-walking_roll_kp: 0.3 #0.5
+walking_roll_kp: 0.0 #0.5
 walking_roll_kd: 0 #0.5
 walking_roll_ki: 0.0
 walking_roll_setpoint: -0.0
@@ -33,16 +33,16 @@ planned_timesteps: 48 # Number of timesteps planned ahead
 replan_timesteps: 10 # Replanning each n timesteps
 
 # Posture parameters
-walk_com_height: 0.24 # Constant height for the CoM [m]
+walk_com_height: 0.23 # Constant height for the CoM [m]
 walk_foot_height: 0.04 # Height of foot rising while walking [m]
-walk_trunk_pitch: 0.1 # Trunk pitch angle [rad]
+walk_trunk_pitch: 0.0 # Trunk pitch angle [rad]
 walk_foot_rise_ratio: 0.2 # Time ratio for the foot swing plateau (0.0 to 1.0)
 
 # Feet parameters
-foot_length: 0.1200 # Foot length [m]
-foot_width: 0.072 # Foot width [m]
+foot_length: 0.1576 # Foot length [m]
+foot_width: 0.092 # Foot width [m]
 feet_spacing: 0.122 # Lateral feet spacing [m]
-zmp_margin: 0.02 # ZMP margin [m]
+zmp_margin: 0.01 # ZMP margin [m]
 foot_zmp_target_x: 0.0 # Reference target ZMP position in the foot [m]
 foot_zmp_target_y: 0.0 # Reference target ZMP position in the foot [m]
 

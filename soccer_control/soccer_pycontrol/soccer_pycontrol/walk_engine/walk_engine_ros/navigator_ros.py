@@ -178,10 +178,12 @@ class NavigatorRos(Navigator, Node):
                 #
                 #     self.bez.motor_control.set_motor()
                 # else:
-                if not self.traj_in_progress and (self.gamestate.gamestate == 1 or self.gamestate.gamestate == 3) and self.gamestate.penalty == 0:
-                    self.walk_time(target_goal)
-                elif not self.traj_in_progress:
-                    self.ready()
+                self.walk_time(target_goal)
+                pass
+                # if not self.traj_in_progress and (self.gamestate.gamestate == 1 or self.gamestate.gamestate == 3) and self.gamestate.penalty == 0:
+                #     self.walk_time(target_goal)
+                # elif not self.traj_in_progress:
+                #     self.ready()
 
             # print(f"Height rotation: {self.bez.sensors.get_height().orientation_euler}")
             # print(f"Height position: {self.bez.sensors.get_height().position}")

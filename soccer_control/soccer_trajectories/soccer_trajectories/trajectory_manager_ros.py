@@ -54,7 +54,7 @@ class TrajectoryManagerRos(TrajectoryManager, Node):
 
         # self._timer = self.create_timer(1 / self.period, self.run)
 
-        self.rate = self.create_rate(150)
+        self.rate = self.create_rate(100)
         thread = threading.Thread(target=rclpy.spin, args=(self,), daemon=True)
         thread.start()
         self.traj_in_progress = False
@@ -172,7 +172,7 @@ class TrajectoryManagerRos(TrajectoryManager, Node):
             if p > 1.25:
                 print("getupfront")
                 msg = FixedTrajectoryCommand()
-                msg.trajectory_name = "getupfront"
+                msg.trajectory_name = "getupfront_ori"
                 msg.mirror = False
                 self.command_callback(command=msg)
                 self.send_trajectory(real_time=True)
@@ -215,7 +215,8 @@ def main():
     msg = FixedTrajectoryCommand()
     msg.trajectory_name = "getupback"
     # msg.trajectory_name = "getupside"
-    # msg.trajectory_name = "getupfront_ori"
+    msg.trajectory_name = "getupfront_ori"
+    msg.trajectory_name = "getupfront_ori"
     msg.mirror = False
     try:
         # rclpy.spin(node)

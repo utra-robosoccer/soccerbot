@@ -20,12 +20,12 @@
         <let name="address" value="192.168.55.1" unless="$(var simulation)"/>
     <let name="address" value="0.0.0.0" if="$(var simulation)"/>
 
-    <include file="$(find-pkg-share foxglove_bridge)/launch/foxglove_bridge_launch.xml">
-        <arg name="port" value="8765" />
-        <arg name="address" value="$(var address)" />
+<!--     <include file="$(find-pkg-share foxglove_bridge)/launch/foxglove_bridge_launch.xml"> -->
+<!--         <arg name="port" value="8765" /> -->
+<!--         <arg name="address" value="$(var address)" /> -->
 
-        <arg name="send_buffer_limit" value="1000000000" />
-    </include>
+<!--         <arg name="send_buffer_limit" value="1000000000" /> -->
+<!--     </include> -->
 
 <!--     <group ns="robot1"> -->
 <!--         <param name="robot_id" value="$(arg robot_id)" /> -->
