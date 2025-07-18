@@ -25,6 +25,7 @@ setup(
     entry_points={
         "console_scripts": [
             "soccer_firmware = soccer_firmware_interface.firmware_interface:main",
+            "soccer_tf = soccer_firmware_interface.transform:main",
         ],
     },
 )

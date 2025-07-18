@@ -69,7 +69,10 @@ class SensorsROS(Sensors):
         # return Transformation(pose=self.odom_msg.pose.pose)
         try:
             t = self.tf_buffer.lookup_transform("base_link", "left_foot", rclpy.time.Time())
-            return Transformation(position=[0, 0, t.transform.translation.z], quaternion=t.transform.rotation)
+            return Transformation(
+                position=[0, 0, t.transform.translation.z],
+                quaternion=[t.transform.rotation.x, t.transform.rotation.y, t.transform.rotation.z, t.transform.rotation.w],
+            )
         except TransformException as ex:
             self.node.get_logger().info(f'Could not transform {"base_link"} to {"left_foot"}: {ex}')
             return
@@ -90,7 +93,10 @@ class SensorsROS(Sensors):
 
         try:
             t = self.tf_buffer.lookup_transform("head", "left_foot", rclpy.time.Time())
-            temp = Transformation(position=[0, 0, t.transform.translation.z], quaternion=t.transform.rotation)
+            temp = Transformation(
+                position=[0, 0, t.transform.translation.z],
+                quaternion=[t.transform.rotation.x, t.transform.rotation.y, t.transform.rotation.z, t.transform.rotation.w],
+            )
             temp.orientation_euler = 1 * temp.orientation_euler
             return temp
         except TransformException as ex:
@@ -101,7 +107,8 @@ class SensorsROS(Sensors):
         try:
             t = self.tf_buffer.lookup_transform("robot1/camera_gt", "robot1/base_footprint_gt", rclpy.time.Time())
             return Transformation(
-                position=[t.transform.translation.x, t.transform.translation.y, t.transform.translation.z], quaternion=t.transform.rotation
+                position=[t.transform.translation.x, t.transform.translation.y, t.transform.translation.z],
+                quaternion=[t.transform.rotation.x, t.transform.rotation.y, t.transform.rotation.z, t.transform.rotation.w],
             )
         except TransformException as ex:
             self.node.get_logger().error(5, "Unable to find transformation from world to ")

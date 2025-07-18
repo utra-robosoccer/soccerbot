@@ -120,3 +120,5 @@ pip install -U ultralytics
 pip install -U matplotlib
 pip install -U pybullet
 pip install -U cmeel-octomap
+
+ros2 run rqt_tf_tree rqt_tf_tree --force-discover

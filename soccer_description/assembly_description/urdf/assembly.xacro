@@ -13,14 +13,14 @@
   <visual>
     <origin xyz="0 0 0" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/simplified/base_link.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/base_link.dae" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="silver_default"/>
   </visual>
   <collision>
     <origin xyz="0 0 0" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/simplified/base_link.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/base_link.dae" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
@@ -34,14 +34,14 @@
   <visual>
     <origin xyz="-0.016 -0.04125 0.1085" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/simplified/left_hip_side_v5_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/left_hip_side_v5_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="aluminum_satin"/>
   </visual>
   <collision>
     <origin xyz="-0.016 -0.04125 0.1085" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/simplified/left_hip_side_v5_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/left_hip_side_v5_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
@@ -55,14 +55,14 @@
   <visual>
     <origin xyz="0.054731 -0.04125 0.3685" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/simplified/left_foot_v10_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/left_foot_v10_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="abs_white"/>
   </visual>
   <collision>
     <origin xyz="0.054731 -0.04125 0.3685" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/simplified/left_foot_v10_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/left_foot_v10_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
@@ -76,14 +76,14 @@
   <visual>
     <origin xyz="-0.003 -0.084 -0.04475" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/simplified/left_shoulder_v5_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/left_shoulder_v5_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="aluminum_satin"/>
   </visual>
   <collision>
     <origin xyz="-0.003 -0.084 -0.04475" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/simplified/left_shoulder_v5_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/left_shoulder_v5_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
@@ -97,14 +97,14 @@
   <visual>
     <origin xyz="-0.022 -0.1143 -0.04475" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/simplified/left_bicep_v6_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/left_bicep_v6_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="silver_default"/>
   </visual>
   <collision>
     <origin xyz="-0.022 -0.1143 -0.04475" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/simplified/left_bicep_v6_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/left_bicep_v6_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
@@ -118,14 +118,14 @@
   <visual>
     <origin xyz="-0.001597 -0.133101 0.074391" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/simplified/left_forearm_v4_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/left_forearm_v4_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="abs_white"/>
   </visual>
   <collision>
     <origin xyz="-0.001597 -0.133101 0.074391" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/simplified/left_forearm_v4_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/left_forearm_v4_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
@@ -139,14 +139,14 @@
   <visual>
     <origin xyz="-0.0 -0.00025 -0.0725" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/simplified/neck_v6_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/neck_v6_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="abs_white"/>
   </visual>
   <collision>
     <origin xyz="-0.0 -0.00025 -0.0725" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/simplified/neck_v6_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/neck_v6_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
@@ -160,14 +160,14 @@
   <visual>
     <origin xyz="-0.0 0.01825 -0.0975" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/simplified/head_v4_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/head_v4_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="steel_satin"/>
   </visual>
   <collision>
     <origin xyz="-0.0 0.01825 -0.0975" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/simplified/head_v4_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/head_v4_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
@@ -181,14 +181,14 @@
   <visual>
     <origin xyz="-0.016 0.04125 0.1085" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/simplified/right_hip_side_v1_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/right_hip_side_v1_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="aluminum_satin"/>
   </visual>
   <collision>
     <origin xyz="-0.016 0.04125 0.1085" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/simplified/right_hip_side_v1_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/right_hip_side_v1_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
@@ -202,14 +202,14 @@
   <visual>
     <origin xyz="-0.0116 0.06475 0.3325" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/simplified/right_ankle_v2_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/right_ankle_v2_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="steel_satin"/>
   </visual>
   <collision>
     <origin xyz="-0.0116 0.06475 0.3325" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/simplified/right_ankle_v2_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/right_ankle_v2_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
@@ -223,14 +223,14 @@
   <visual>
     <origin xyz="0.0547 0.04125 0.3685" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/simplified/right_foot_v2_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/right_foot_v2_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="abs_white"/>
   </visual>
   <collision>
     <origin xyz="0.0547 0.04125 0.3685" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/simplified/right_foot_v2_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/right_foot_v2_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
@@ -244,14 +244,14 @@
   <visual>
     <origin xyz="-0.003 0.084 -0.04475" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/simplified/right_shoulder_v1_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/right_shoulder_v1_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="aluminum_satin"/>
   </visual>
   <collision>
     <origin xyz="-0.003 0.084 -0.04475" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/simplified/right_shoulder_v1_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/right_shoulder_v1_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
@@ -265,14 +265,14 @@
   <visual>
     <origin xyz="-0.022 0.1143 -0.04475" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/simplified/right_bicep_v2_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/right_bicep_v2_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="silver_default"/>
   </visual>
   <collision>
     <origin xyz="-0.022 0.1143 -0.04475" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/simplified/right_bicep_v2_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/right_bicep_v2_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
@@ -286,14 +286,14 @@
   <visual>
     <origin xyz="-0.002403 0.135101 0.074391" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/simplified/right_forearm_v1_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/right_forearm_v1_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="abs_white"/>
   </visual>
   <collision>
     <origin xyz="-0.002403 0.135101 0.074391" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/simplified/right_forearm_v1_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/right_forearm_v1_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
@@ -307,14 +307,14 @@
   <visual>
     <origin xyz="-0.011569 -0.06475 0.1725" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/simplified/left_thigh_v1_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/left_thigh_v1_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="aluminum_satin"/>
   </visual>
   <collision>
     <origin xyz="-0.011569 -0.06475 0.1725" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/simplified/left_thigh_v1_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/left_thigh_v1_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
@@ -328,14 +328,14 @@
   <visual>
     <origin xyz="-0.0116 0.06475 0.1725" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/simplified/right_thigh_v1_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/right_thigh_v1_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="aluminum_satin"/>
   </visual>
   <collision>
     <origin xyz="-0.0116 0.06475 0.1725" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/simplified/right_thigh_v1_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/right_thigh_v1_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
@@ -349,14 +349,14 @@
   <visual>
     <origin xyz="0.0547 -0.04125 0.1365" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/simplified/left_hip_front_v5_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/left_hip_front_v5_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="aluminum_satin"/>
   </visual>
   <collision>
     <origin xyz="0.0547 -0.04125 0.1365" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/simplified/left_hip_front_v5_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/left_hip_front_v5_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
@@ -370,14 +370,14 @@
   <visual>
     <origin xyz="-0.011569 -0.06475 0.2445" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/simplified/left_calve_v5_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/left_calve_v5_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="aluminum_satin"/>
   </visual>
   <collision>
     <origin xyz="-0.011569 -0.06475 0.2445" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/simplified/left_calve_v5_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/left_calve_v5_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
@@ -391,14 +391,14 @@
   <visual>
     <origin xyz="-0.011569 -0.06475 0.3325" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/simplified/left_ankle_v7_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/left_ankle_v7_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="steel_satin"/>
   </visual>
   <collision>
     <origin xyz="-0.011569 -0.06475 0.3325" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/simplified/left_ankle_v7_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/left_ankle_v7_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
@@ -412,14 +412,14 @@
   <visual>
     <origin xyz="0.0547 0.04125 0.1365" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/simplified/right_hip_front_v5_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/right_hip_front_v5_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="aluminum_satin"/>
   </visual>
   <collision>
     <origin xyz="0.0547 0.04125 0.1365" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/simplified/right_hip_front_v5_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/right_hip_front_v5_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
@@ -433,14 +433,14 @@
   <visual>
     <origin xyz="-0.0116 0.06475 0.2445" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/simplified/right_calve_v1_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/right_calve_v1_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="aluminum_satin"/>
   </visual>
   <collision>
     <origin xyz="-0.0116 0.06475 0.2445" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/simplified/right_calve_v1_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/right_calve_v1_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
