@@ -13,8 +13,8 @@ class GameControllerInterface(Node):
         super().__init__("gamecontroller_interface")
 
         self.gc = GameControllerClient()
-        self.team_id = int(os.getenv("ROBOCUP_TEAM_ID", 12))
-        self.robot_id = self.declare_parameter("robot_id", 4).get_parameter_value().integer_value
+        self.team_id = int(os.getenv("ROBOCUP_TEAM_ID", 10))
+        self.robot_id = self.declare_parameter("robot_id", 1).get_parameter_value().integer_value
         self.pub = self.create_publisher(GameStateMsg, "gamestate", 10)
 
         self.create_timer(0.5, self.receive_and_publish)

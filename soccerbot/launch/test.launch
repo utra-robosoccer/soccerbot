@@ -1,7 +1,7 @@
 <launch>
 <!--     <arg name="single" default="true" /> -->
 <!--     <arg name="robot_model" default="$(env ROBOT_MODEL bez1)" /> -->
-    <arg name="simulation" default="true" />
+    <arg name="simulation" default="false" />
 <!--     <arg name="robot_id" default="$(env ROBOCUP_ROBOT_ID 1)" /> -->
 <!--     <arg name="robot_name" value="robot$(arg robot_id)" /> -->
     <arg name="map_name" default="robocup" />
@@ -70,9 +70,9 @@
 
     </node>
 <!--      -->
-<!--     <node pkg="soccer_trajectories" name="soccer_trajectories"  exec="soccer_traj" output="screen"> -->
-<!--          -->
-<!--     </node> -->
+    <node pkg="soccer_trajectories" name="soccer_trajectories"  exec="soccer_traj" output="screen">
+
+    </node>
 
     <node pkg="game_controller_interface" name="game_controller_interface"  exec="gc_interface" output="screen">
 
@@ -86,15 +86,15 @@
 <!--        </node>--> -->
 
 <!--     </group> -->
-<!--     <node pkg="robot_state_publisher" exec="robot_state_publisher" name="robot_state_publisher" output="screen"> -->
-<!--         <param name='robot_description' value="$(command 'xacro $(find-pkg-share assembly_description)/urdf/assembly.xacro -->
-<!--         model_type:=stl -->
-<!--         file_path:=package://assembly_description -->
-<!--         has_base_footprint:=false -->
-<!--         tf_prefix:= -->
-<!--         ')" -->
+    <node pkg="robot_state_publisher" exec="robot_state_publisher" name="robot_state_publisher" output="screen">
+        <param name='robot_description' value="$(command 'xacro $(find-pkg-share assembly_description)/urdf/assembly.xacro
+        model_type:=stl
+        file_path:=package://assembly_description
+        has_base_footprint:=false
+        tf_prefix:=
+        ')"
 
-<!--         /> -->
-<!--     </node> -->
+        />
+    </node>
 
 </launch>

@@ -24,7 +24,7 @@ walking_roll_offset: 0.0
 ### WALK ENGINE
 # Walk parameters - if double_support_ratio is not set to 0, should be greater than replan_frequency
 # Timing parameters
-control_frequency: 0.005
+control_frequency: 0.01
 single_support_duration: 0.2 # Duration of single support phase [s]
 single_support_timesteps: 10 # Number of planning timesteps per single support phase
 double_support_ratio: 0.1 # Ratio of double support (0.0 to 1.0)
@@ -35,7 +35,7 @@ replan_timesteps: 10 # Replanning each n timesteps
 # Posture parameters
 walk_com_height: 0.24 # Constant height for the CoM [m]
 walk_foot_height: 0.04 # Height of foot rising while walking [m]
-walk_trunk_pitch: 0.15 # Trunk pitch angle [rad]
+walk_trunk_pitch: 0.1 # Trunk pitch angle [rad]
 walk_foot_rise_ratio: 0.2 # Time ratio for the foot swing plateau (0.0 to 1.0)
 
 # Feet parameters

@@ -35,8 +35,8 @@ class TrajectoryManagerRos(TrajectoryManager, Node):
 
         # TODO fix later
         super(TrajectoryManagerRos, self).__init__(robot_model, trajectory_name)
-        self.imu_msg = None
-        self.imu_ready = False
+        self.imu_msg = Imu()
+        self.imu_ready = True
         self.imu_create_subscription = self.create_subscription(Imu, "imu_filtered", self.imu_callback, qos_profile=10)
 
         self.terminate = False
@@ -139,8 +139,8 @@ class TrajectoryManagerRos(TrajectoryManager, Node):
         while rclpy.ok() and t <= self.trajectory.max_time and not self.terminate:
 
             try:
-                if t % 0.5:
-                    self.get_logger().info("2")
+                # if t % 0.5:
+                #     self.get_logger().info("2")
                 self.send_joint_msg(t)
             except Exception as ex:  # TODO find a proper exepction
                 print(ex)
@@ -172,7 +172,7 @@ class TrajectoryManagerRos(TrajectoryManager, Node):
             if p > 1.25:
                 print("getupfront")
                 msg = FixedTrajectoryCommand()
-                msg.trajectory_name = "getupfront_ori"
+                msg.trajectory_name = "getupfront"
                 msg.mirror = False
                 self.command_callback(command=msg)
                 self.send_trajectory(real_time=True)
@@ -183,10 +183,20 @@ class TrajectoryManagerRos(TrajectoryManager, Node):
                 msg.mirror = False
                 self.command_callback(command=msg)
                 self.send_trajectory(real_time=True)
-            # elif r < -1.54 and -0.5 < p < -0.4:
-            #     tm.send_trajectory("getupsideleft")
-            # elif r > 1.54 and -0.5 < p < -0.4:
-            #     tm.send_trajectory("getupsideright")
+            elif r < -1.54 and -0.5 < p < -0.4:
+                print("getupback: ")
+                msg = FixedTrajectoryCommand()
+                msg.trajectory_name = "getupside"
+                msg.mirror = False
+                self.command_callback(command=msg)
+                self.send_trajectory(real_time=True)
+                # tm.send_trajectory("getupsideleft")
+            elif r > 1.54 and -0.5 < p < -0.4:
+                msg = FixedTrajectoryCommand()
+                msg.trajectory_name = "getupside"
+                msg.mirror = False
+                self.command_callback(command=msg)
+                self.send_trajectory(real_time=True)
             # if self.trajectory.max_time > 0:
             #     msg = FixedTrajectoryCommand()
             #     msg.trajectory_name = "getupback"

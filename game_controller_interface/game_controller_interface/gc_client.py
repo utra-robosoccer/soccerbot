@@ -10,7 +10,7 @@ from game_controller_interface.gamestate import (
 
 
 class GameControllerClient:
-    def __init__(self, team_id=12, robot_id=4):
+    def __init__(self, team_id=10, robot_id=1):
         self.team_id = team_id
         self.robot_id = robot_id
         self.recv_port = 3838

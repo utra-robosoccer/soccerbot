@@ -15,6 +15,7 @@ from std_msgs.msg import Bool, Float32MultiArray
 
 from soccer_common import PID, Transformation
 from soccer_msgs.msg import BoundingBoxes, FixedTrajectoryCommand
+from soccer_msgs.msg import GameState as GameStateMsg
 
 
 class NavigatorRos(Navigator, Node):
@@ -90,10 +91,15 @@ class NavigatorRos(Navigator, Node):
         thread = threading.Thread(target=rclpy.spin, args=(self,), daemon=True)
         thread.start()
         self.traj_in_progress = False
+        self.gamestate = GameStateMsg()
         self.traj_prog = self.create_subscription(Bool, "traj_prog", self.traj, qos_profile=10)
+        self.game_sub = self.create_subscription(GameStateMsg, "gamestate", self.gamestate_callback, qos_profile=10)
 
     def traj(self, data: Bool):
-        self.traj_prog = data.data
+        self.traj_in_progress = data.data
+
+    def gamestate_callback(self, data: GameStateMsg):
+        self.gamestate = data
 
     def check_request_timeout(self, nsecs: int = 500000000):
         return (self.get_clock().now() - self.last_req) < Duration(seconds=1, nanoseconds=nsecs)
@@ -172,8 +178,10 @@ class NavigatorRos(Navigator, Node):
                 #
                 #     self.bez.motor_control.set_motor()
                 # else:
-                if not self.traj_prog:
+                if not self.traj_in_progress and (self.gamestate.gamestate == 1 or self.gamestate.gamestate == 3) and self.gamestate.penalty == 0:
                     self.walk_time(target_goal)
+                elif not self.traj_in_progress:
+                    self.ready()
 
             # print(f"Height rotation: {self.bez.sensors.get_height().orientation_euler}")
             # print(f"Height position: {self.bez.sensors.get_height().position}")
@@ -217,6 +225,7 @@ def main():
         target_goal = [0.03, 0.0, 0, 10, 500]
         # target_goal = Transformation(position=[0, 0, 0], euler=[0, 0, 0])
         # # walker.walk(target_goal)
+        node.wait(50)
         node.run(target_goal)
 
         node.wait(100)
