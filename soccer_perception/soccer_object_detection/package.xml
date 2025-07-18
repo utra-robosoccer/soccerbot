@@ -10,4 +10,7 @@
 
     <depend>rclpy</depend>
 
+    <export>
+        <build_type>ament_python</build_type>
+    </export>
 </package>

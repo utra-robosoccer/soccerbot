@@ -2,9 +2,11 @@ import math
 from unittest import TestCase
 
 from sensor_msgs.msg import CameraInfo
-from soccer_object_detection.camera.camera_calculations import CameraCalculations
 
 from soccer_common.transformation import Transformation
+from soccer_perception.soccer_object_detection.soccer_object_detection.camera.camera_calculations import (
+    CameraCalculations,
+)
 
 
 # TODO fix unit test

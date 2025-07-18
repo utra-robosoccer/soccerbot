@@ -11,11 +11,16 @@ import numpy as np
 import pytest
 import yaml
 from cv2 import Mat
-from soccer_object_detection.object_detect_node import Label, ObjectDetectionNode
-from soccer_object_detection.utils import check_bounding_box
 
 from soccer_common import Transformation
 from soccer_common.utils import download_dataset, wrapToPi
+from soccer_perception.soccer_object_detection.soccer_object_detection import (
+    check_bounding_box,
+)
+from soccer_perception.soccer_object_detection.soccer_object_detection.object_detect_node import (
+    Label,
+    ObjectDetectionNode,
+)
 
 PLOT = True
 
