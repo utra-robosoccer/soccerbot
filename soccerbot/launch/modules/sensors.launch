@@ -53,7 +53,7 @@
            </node>-->
 
 
-         <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" />
+         <node pkg="robot_state_create_publisher" type="robot_state_create_publisher" name="robot_state_create_publisher" />
             <node pkg="soccer_strategy" type="game_controller_receiver.py" name="game_controller_receiver" output="screen" />
            <node pkg="soccer_trajectories" type="trajectory_manager_ros.py" name="soccer_trajectories" output="screen">
         <param name="trajectory_path" value="$(find soccer_trajectories)/trajectories/$(arg param_file_name)" />

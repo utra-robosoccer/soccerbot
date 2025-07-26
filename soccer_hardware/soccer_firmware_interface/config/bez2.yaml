@@ -4,6 +4,7 @@ left_hip_yaw:
   angle_zero: 180
   angle_max: 360
   angle_min: 0
+  flipped: "true"
 
 left_hip_roll:
   id: 5
@@ -11,7 +12,7 @@ left_hip_roll:
   angle_zero: 180
   angle_max: 360
   angle_min: 0
-  flipped: "true"
+  flipped: "false"
 
 left_hip_pitch:
   id: 6
@@ -27,6 +28,7 @@ left_knee:
   angle_zero: 180
   angle_max: 360
   angle_min: 0
+  flipped: "true"
 
 left_ankle_pitch:
   id: 8
@@ -49,7 +51,7 @@ right_hip_yaw:
   angle_zero: 180
   angle_max: 360
   angle_min: 0
-  flipped: "true"
+  flipped: "false"
 
 right_hip_roll:
   id: 11
@@ -57,6 +59,7 @@ right_hip_roll:
   angle_zero: 180
   angle_max: 360
   angle_min: 0
+  flipped: "true"
 
 right_hip_pitch:
   id: 12
@@ -71,7 +74,7 @@ right_knee:
   angle_zero: 180
   angle_max: 360
   angle_min: 0
-  flipped: "true"
+  flipped: "false"
 
 right_ankle_pitch:
   id: 14
@@ -102,6 +105,7 @@ left_shoulder_roll:
   angle_zero: 180
   angle_max: 360
   angle_min: 0
+  flipped: "true"
 
 left_elbow:
   id: 1
@@ -124,7 +128,7 @@ right_shoulder_roll:
   angle_zero: 180
   angle_max: 360
   angle_min: 0
-  flipped: "true"
+  flipped: "false"
 
 right_elbow:
   id: 3

@@ -1,20 +1,18 @@
-<!-- Launches the sensors and darknet for the robot -->
 <launch>
     <arg name="robot_model" default="bez2" />
     <arg name="play_rosbag" default="false" />
     <arg name="record_rosbag" default="true" />
     <arg name="simulation" default="false" />
-    <param name="robot_model" value="$(arg robot_model)" />
-    <param name="/use_sim_time" value="$(arg simulation)" />
-    <param name="motor_mapping" value="$(find soccer_firmware_interface)/config/$(arg robot_model).yaml" />
-    <param name="motor_types" value="$(find soccer_firmware_interface)/config/motor_types.yaml" />
-    <node name="firmware_interface" pkg="soccer_firmware_interface" type="main.py" output="screen" unless="$(eval robot_model == 'bez1')" />
-<!--    <node pkg="imu_complementary_filter" type="complementary_filter_node" name="imu_complementary_filter" output="log">-->
-<!--       <rosparam file="$(find soccerbot)/config/imu_complementary_filter.yaml" command="load" />-->
-<!--       <remap from="imu/data_raw" to="imu_raw" />-->
-<!--       <remap from="imu/data" to="imu_filtered" />-->
-<!--    </node>-->
+
+    <let name="motor_types" value="$(find-pkg-share soccer_firmware_interface)/config/motor_types.yaml" />
+    <let name="motor_mapping" value="$(find-pkg-share soccer_firmware_interface)/config/$(var robot_model).yaml" />
+
+    <node pkg="soccer_firmware_interface" name="soccer_firmware_interface"  exec="soccer_firmware" output="screen" emulate_tty="true">
+        <param name="robot_model" value="$(var robot_model)" />
+<!--         <param name="/use_sim_time" value="$(arg simulation)" /> -->
+        <param name="motor_types" value="$(var motor_types)" />
+        <param name ="motor_mapping" value="$(var motor_mapping)" />
+    </node>
 
 
-
-</launch>
+    </launch>

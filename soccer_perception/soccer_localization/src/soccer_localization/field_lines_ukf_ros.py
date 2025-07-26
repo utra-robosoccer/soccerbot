@@ -5,7 +5,7 @@ from threading import Lock
 from typing import Optional
 
 import numpy as np
-import rospy
+import rclpy
 import scipy
 import sensor_msgs.point_cloud2 as pcl2
 import tf
@@ -25,11 +25,15 @@ class FieldLinesUKFROS(FieldLinesUKF):
         super().__init__()
         self.ukf_lock = Lock()
 
-        self.odom_subscriber = rospy.Subscriber("odom_combined", PoseWithCovarianceStamped, self.odom_callback, queue_size=1)
-        self.field_point_cloud_subscriber = rospy.Subscriber("field_point_cloud", PointCloud2, self.field_point_cloud_callback, queue_size=1)
-        self.field_point_cloud_transformed_publisher = rospy.Publisher("field_point_cloud_transformed", PointCloud2, queue_size=1)
-        self.initial_pose_subscriber = rospy.Subscriber("initialpose", PoseWithCovarianceStamped, self.initial_pose_callback, queue_size=1)
-        self.amcl_pose_publisher = rospy.Publisher("amcl_pose", PoseWithCovarianceStamped, queue_size=1)
+        self.odom_create_subscription = self.create_subscription("odom_combined", PoseWithCovarianceStamped, self.odom_callback, queue_size=1)
+        self.field_point_cloud_create_subscription = self.create_subscription(
+            "field_point_cloud", PointCloud2, self.field_point_cloud_callback, queue_size=1
+        )
+        self.field_point_cloud_transformed_create_publisher = self.create_publisher("field_point_cloud_transformed", PointCloud2, queue_size=1)
+        self.initial_pose_create_subscription = self.create_subscription(
+            "initialpose", PoseWithCovarianceStamped, self.initial_pose_callback, queue_size=1
+        )
+        self.amcl_pose_create_publisher = self.create_publisher("amcl_pose", PoseWithCovarianceStamped, queue_size=1)
         self.map = map
 
         self.initial_pose = Transformation(pos_theta=[0, 0, 0])
@@ -38,12 +42,12 @@ class FieldLinesUKFROS(FieldLinesUKF):
         self.odom_t_previous = None
 
         self.br = tf.TransformBroadcaster()
-        self.timestamp_last = rospy.Time(0)
+        self.timestamp_last = self.Time(0)
 
-        self.robot_state_subscriber = rospy.Subscriber("state", RobotState, self.robot_state_callback)
+        self.robot_state_create_subscription = self.create_subscription("state", RobotState, self.robot_state_callback)
         self.robot_state = RobotState()
 
-        rospy.loginfo("Soccer Localization UKF initiated")
+        self.get_logger().info("Soccer Localization UKF initiated")
 
     def robot_state_callback(self, robot_state: RobotState):
         with self.ukf_lock:
@@ -138,11 +142,11 @@ class FieldLinesUKFROS(FieldLinesUKF):
             "world",
         )
         point_cloud.header.frame_id = f"{os.environ.get('ROS_NAMESPACE', '/robot1').replace('/', '')}/odom_vo"
-        self.field_point_cloud_transformed_publisher.publish(point_cloud)
+        self.field_point_cloud_transformed_create_publisher.publish(point_cloud)
 
     def broadcast_tf_position(self, timestamp):
         if self.odom_t_previous is None:
-            rospy.logwarn_throttle(1, "Odom not published")
+            self.logwarn_throttle(1, "Odom not published")
             return
 
         # Prevent rebroadcasting same or older timestamp
@@ -164,7 +168,7 @@ class FieldLinesUKFROS(FieldLinesUKF):
     def publish_amcl_pose(self, timestamp):
         amcl_pose = Transformation(pos_theta=self.ukf.x, pose_theta_covariance_array=self.ukf.P).pose_with_covariance_stamped
         amcl_pose.header.stamp = timestamp
-        self.amcl_pose_publisher.publish(amcl_pose)
+        self.amcl_pose_create_publisher.publish(amcl_pose)
 
     def initial_pose_callback(self, pose_stamped: PoseWithCovarianceStamped):
         with self.ukf_lock:
@@ -172,5 +176,5 @@ class FieldLinesUKFROS(FieldLinesUKF):
             self.ukf.x = self.initial_pose.pos_theta
             self.ukf.P = self.initial_pose.pose_theta_covariance_array
             self.odom_t_previous = None
-            rospy.loginfo(f"Reinitialized with x = {self.ukf.x} and P = {np.diag(self.ukf.P)}")
+            self.get_logger().info(f"Reinitialized with x = {self.ukf.x} and P = {np.diag(self.ukf.P)}")
             self.broadcast_tf_position(pose_stamped.header.stamp)

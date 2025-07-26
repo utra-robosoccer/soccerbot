@@ -34,7 +34,7 @@ https://github.com/utra-robosoccer/soccerbot/wiki/Onboarding
 roslaunch soccerbot sensors.launch __ns:=robot1
 ```
 
-cd ~/catkin_ws
+cd ~/ros2_ws
 source devel/setup.bash
 pytest src/soccerbot/soccer_trajectories/src/soccer_trajectories/test_trajectory.py::TestTrajectory::test_fixed_angles_trajectories
 
@@ -42,7 +42,7 @@ pytest src/soccerbot/soccer_trajectories/src/soccer_trajectories/test_trajectory
 
 pytest src/soccerbot/soccer_pycontrol/src/soccer_pycontrol/test_walking.py::TestWalking::test_walk_1_real_robot
 
-cd ~/catkin_ws
+cd ~/ros2_ws
 
 ```bash
 source devel/setup.bash
@@ -100,3 +100,30 @@ uv pip install -r tools/setup/requirements.txt --python $(which python) --prefix
 
 to compare
 uv pip install -r tools/setup/requirements.txt --python $(which python) --prefix $(python -m site --user-base) --no-cache-dir --force-reinstall
+
+colcon build --symlink-install --packages-up-to
+source ~/ros2_ws/install/setup.bash
+/home/manx52/ros2_ws/install/soccer_msgs/local/lib/python3.10/dist-packages
+
+LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/ros/humble/lib:/home/manx52/ros2_ws/build/soccer_msgs:/home/manx52/ros2_ws/install/soccer_msgs/local/lib/python3.10/dist-packages
+pip3 install setuptools==61.0
+
+sudo apt install ros-humble-imu-tools
+
+sudo apt install ros-humble-foxglove-bridge
+sudo apt install ros-humble-xacro
+
+pip install -U placo
+pip install -U scipy
+pip install -U scikit-learn
+pip install -U ultralytics
+pip install -U matplotlib
+pip install -U pybullet
+pip install -U cmeel-octomap
+
+ros2 run rqt_tf_tree rqt_tf_tree --force-discover
+
+sudo apt install ros-humble-usb-cam
+
+pip install -U pandas
+pip install setuptools==71

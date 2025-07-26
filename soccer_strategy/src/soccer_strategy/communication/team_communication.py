@@ -5,7 +5,7 @@ import socket
 import struct
 import time
 
-import rospy
+import rclpy
 
 from soccer_msgs.msg import RobotState
 from soccer_strategy.communication import robot_state_pb2
@@ -15,10 +15,10 @@ Sends information between robots using a mirror port
 """
 
 if __name__ == "__main__":
-    rospy.init_node("team_communication")
-    rospy.loginfo("Initializing team_communication...", logger_name="team_comm")
+    self.init_node("team_communication")
+    self.get_logger().info("Initializing team_communication...", logger_name="team_comm")
 
-    player_id = rospy.get_param("robot_id", 1)
+    player_id = self.get_param("robot_id", 1)
     team_id = int(os.getenv("ROBOCUP_TEAM_ID", 16))
     mirror_server_ip = os.getenv("ROBOCUP_MIRROR_SERVER_IP", "127.0.0.1")
 
@@ -45,29 +45,29 @@ if __name__ == "__main__":
         m.ball_detected = robot_state.ball_detected
         m_str = m.SerializeToString()
         id_address = socket.gethostbyname(mirror_server_ip)
-        rospy.loginfo_once(f"\033[96mSending to 3737 on {id_address}\033[0m")
+        self.get_logger().info(f"\033[96mSending to 3737 on {id_address}\033[0m")
         s.sendto(m_str, (id_address, 3737))
 
-    while not rospy.is_shutdown() and s is None:
+    while not self.is_shutdown() and s is None:
         try:
-            rospy.loginfo("Binding to port 3737")
+            self.get_logger().info("Binding to port 3737")
             s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
             s.bind(("0.0.0.0", 3737))
-        except rospy.exceptions.ROSInterruptException:
+        except self.exceptions.ROSInterruptException:
             exit(0)
         except OSError as ex:
             print(ex)
             time.sleep(3)
-    rospy.loginfo("\033[96mBinded to Team Communication Port\033[0m")
+    self.get_logger().info("\033[96mBinded to Team Communication Port\033[0m")
 
-    state_subscriber = rospy.Subscriber("state", RobotState, robot_state_callback)
-    state_publishers = {}
+    state_create_subscription = self.create_subscription("state", RobotState, robot_state_callback)
+    state_create_publishers = {}
     for i in range(1, 5):
         if i is not player_id:
-            state_publishers[i] = rospy.Publisher("/robot" + str(i) + "/state", RobotState, queue_size=1)
+            state_create_publishers[i] = self.create_publisher("/robot" + str(i) + "/state", RobotState, queue_size=1)
 
-    rate = rospy.Rate(10)
-    while not rospy.is_shutdown():
+    rate = self.Rate(10)
+    while not self.is_shutdown():
         try:
             msg = s.recv(1024)
             if not msg:
@@ -78,7 +78,7 @@ if __name__ == "__main__":
             print("Nothing received")
             continue
 
-        rospy.loginfo_once("\033[96mReceiving Data Started\033[0m")
+        self.get_logger().info("\033[96mReceiving Data Started\033[0m")
         m = robot_state_pb2.Message()
         m.ParseFromString(msg)
         if m.player_id == player_id:
@@ -103,6 +103,6 @@ if __name__ == "__main__":
         r.ball_pose.x = m.ball_pose.x
         r.ball_pose.y = m.ball_pose.y
         r.ball_pose.theta = m.ball_pose.theta
-        state_publishers[r.player_id].publish(r)
+        state_create_publishers[r.player_id].publish(r)
 
         rate.sleep()

@@ -11,8 +11,14 @@
       <sourceFolder url="file://$MODULE_DIR$/soccer_perception/soccer_object_detection/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/soccer_perception/soccer_object_localization/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/soccer_webots/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/soccer_hardware/soccer_firmware_interface" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/soccer_control/soccer_trajectories" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/soccer_control/soccer_pycontrol" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/soccer_common" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/game_controller_interface" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/soccer_perception/soccer_object_detection" isTestSource="false" />
     </content>
-    <orderEntry type="inheritedJdk" />
+    <orderEntry type="jdk" jdkName="Python 3.10" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="PyDocumentationSettings">

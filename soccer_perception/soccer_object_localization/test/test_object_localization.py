@@ -14,9 +14,8 @@ PLOT = True
 
 # TODO fix unit test
 class TestObjectLocalization(TestCase):
-
     def test_fieldline_detection(self):
-        src_path = expanduser("~") + "/catkin_ws/src/soccerbot/soccer_perception/"
+        src_path = expanduser("~") + "/ros2_ws/src/soccerbot/soccer_perception/"
         test_path = src_path + "data/images/fieldlines"
 
         download_dataset("https://drive.google.com/uc?id=1nJX6ySks_a7mESvCm3sNllmJTNpm-x2_", folder_path=test_path)
@@ -72,7 +71,7 @@ class TestObjectLocalization(TestCase):
 
     def test_fieldline_detection_vid(self):
         d = DetectorFieldline()
-        src_path = expanduser("~") + "/catkin_ws/src/soccerbot/soccer_perception/"
+        src_path = expanduser("~") + "/ros2_ws/src/soccerbot/soccer_perception/"
         test_path = src_path + "data/videos/robocup2023"
 
         download_dataset("https://drive.google.com/uc?id=1UTQ6Rz0yk8jpWwWoq3eSf7DOmG_j9An3", folder_path=test_path)
@@ -104,13 +103,13 @@ class TestObjectLocalization(TestCase):
 
     # TODO this needs to be reworked
     # def test_robot_detection(self):
-    #     src_path = expanduser("~") + "/catkin_ws/src/soccerbot/soccer_perception/"
+    #     src_path = expanduser("~") + "/ros2_ws/src/soccerbot/soccer_perception/"
     #     test_path = src_path + "data/images/simulation"
     #
     #     download_dataset("https://drive.google.com/uc?id=11nN58j8_PBoLNRAzOEdk7fMe1UK1diCc", folder_path=test_path)
     #
     #     # ROS
-    #     # rospy.init_node("test")
+    #     # self.init_node("test")
     #
     #     Camera.reset_position = MagicMock()
     #

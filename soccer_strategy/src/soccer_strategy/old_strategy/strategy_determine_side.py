@@ -5,7 +5,7 @@ import os
 from typing import Optional
 
 import numpy as np
-import rospy
+import rclpy
 import tf
 
 from soccer_common import Transformation
@@ -64,19 +64,19 @@ class StrategyDetermineSide(Strategy):
                 goal_post_position, goal_post_orientation = self.tf_listener.lookupTransform(
                     os.environ["ROS_NAMESPACE"].replace("/", "") + "/base_footprint",
                     os.environ["ROS_NAMESPACE"].replace("/", "") + "/goal_post",
-                    rospy.Time(0),
+                    self.Time(0),
                 )
                 print(f"Detected Goal Post Position {goal_post_position}, Orientation {goal_post_orientation}")
                 footprint_to_goal_post = Transformation(position=goal_post_position, quaternion=goal_post_orientation)
-                rospy.loginfo(f"Footprint to goal post: {footprint_to_goal_post.position}")
+                self.get_logger().info(f"Footprint to goal post: {footprint_to_goal_post.position}")
 
             except (tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException):
 
-                rospy.logwarn_throttle(30, "Unable to get robot to camera pose")
+                self.logwarn_throttle(30, "Unable to get robot to camera pose")
 
-            determine_side_timeout = 0 if rospy.get_param("skip_determine_side", False) else 1
-            if (rospy.Time.now() - self.time_strategy_started) > rospy.Duration(determine_side_timeout):
-                rospy.logwarn("Timeout error, cannot determine side, determining side as from default")
+            determine_side_timeout = 0 if self.get_param("skip_determine_side", False) else 1
+            if (self.get_clock().now() - self.time_strategy_started) > self.Duration(determine_side_timeout):
+                self.logwarn("Timeout error, cannot determine side, determining side as from default")
                 self.determine_side_initial(current_robot, friendly_team, game_state)
                 current_robot.localized = True
             elif footprint_to_goal_post is not None:
@@ -89,7 +89,7 @@ class StrategyDetermineSide(Strategy):
         if current_robot.localized:
             for robot in friendly_team.robots:
                 if robot.status is Robot.Status.DETERMINING_SIDE and not robot.localized:
-                    rospy.logwarn_throttle(1, f"robot {robot.robot_id} has not determined position")
+                    self.logwarn_throttle(1, f"robot {robot.robot_id} has not determined position")
                     return
             self.determine_role(current_robot, friendly_team)
             current_robot.status = Robot.Status.READY
@@ -115,7 +115,7 @@ class StrategyDetermineSide(Strategy):
 
         position = np.array([translation[0], translation[1], rotation[3]])
         current_robot.position = position
-        rospy.loginfo(f"Robot Position Determined, Determining Roles, Position: {current_robot.position}")
+        self.get_logger().info(f"Robot Position Determined, Determining Roles, Position: {current_robot.position}")
         current_robot.reset_initial_position()
 
     def determine_side(self, current_robot, friendly_team, footprint_to_goal_post: Transformation, game_state: GameState) -> bool:
@@ -205,10 +205,10 @@ class StrategyDetermineSide(Strategy):
 
         # Set the location
         current_robot.position = closest_valid_robot_transform.pos_theta
-        rospy.loginfo(
+        self.get_logger().info(
             f"Estimated Robot position: {closest_valid_robot_transform.pos_theta} Written Robot Position: {written_robot_transforms[current_robot.robot_id].pos_theta}"
         )
-        rospy.loginfo(f"Robot Position Determined, Determining Roles, Position: {current_robot.position}")
+        self.get_logger().info(f"Robot Position Determined, Determining Roles, Position: {current_robot.position}")
         current_robot.reset_initial_position()
         return True
 

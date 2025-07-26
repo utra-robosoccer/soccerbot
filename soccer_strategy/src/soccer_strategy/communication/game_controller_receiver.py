@@ -4,7 +4,7 @@ import os
 import socket
 import time
 
-import rospy
+import rclpy
 from construct import ConstError, Container
 from std_msgs.msg import Empty
 
@@ -27,12 +27,12 @@ class GameStateReceiver:
 
     def __init__(self):
         self.team_id = int(os.getenv("ROBOCUP_TEAM_ID", 16))
-        self.robot_id = rospy.get_param("robot_id", 1)
+        self.robot_id = self.get_param("robot_id", 1)
 
-        rospy.loginfo("Listening to " + str(self.GAME_CONTROLLER_LISTEN_PORT) + " " + str(self.GAME_CONTROLLER_ANSWER_PORT))
-        rospy.loginfo(f"We are playing as player {self.robot_id} in team {self.team_id}")
+        self.get_logger().info("Listening to " + str(self.GAME_CONTROLLER_LISTEN_PORT) + " " + str(self.GAME_CONTROLLER_ANSWER_PORT))
+        self.get_logger().info(f"We are playing as player {self.robot_id} in team {self.team_id}")
 
-        self.state_publisher = rospy.Publisher("gamestate", GameStateMsg, queue_size=1)
+        self.state_create_publisher = self.create_publisher("gamestate", GameStateMsg, queue_size=1)
 
         self.receiver_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         self.receiver_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -47,24 +47,24 @@ class GameStateReceiver:
         """
 
         connected = False
-        while not rospy.is_shutdown():
+        while not self.is_shutdown():
             try:
                 data, peer = self.receiver_socket.recvfrom(GameState.sizeof())
                 self.on_new_gamestate(GameState.parse(data))
                 self.answer_to_gamecontroller(peer)
-                rospy.loginfo_once("\033[96mConnected to Game Controller\033[0m")
+                self.get_logger().info("\033[96mConnected to Game Controller\033[0m")
                 connected = True
 
             except AssertionError as ae:
-                rospy.logerr_throttle(10, ae)
+                self.get_logger().error(10, ae)
             except socket.timeout as s:
                 if not connected:
-                    if rospy.get_time() > 5:
-                        rospy.logerr_throttle(10, "Socket Timeout, rebinding socket: " + str(s))
+                    if self.get_time() > 5:
+                        self.get_logger().error(10, "Socket Timeout, rebinding socket: " + str(s))
                     else:
-                        rospy.loginfo_once("Waiting for socket")
+                        self.get_logger().info("Waiting for socket")
                 else:
-                    rospy.logwarn_throttle(10, "Socket Timeout, rebinding socket: " + str(s))
+                    self.logwarn_throttle(10, "Socket Timeout, rebinding socket: " + str(s))
                 self.receiver_socket.close()
                 self.receiver_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
                 self.receiver_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -72,10 +72,10 @@ class GameStateReceiver:
                 self.receiver_socket.settimeout(2)
                 self.receiver_socket.bind((self.DEFAULT_LISTENING_HOST, self.GAME_CONTROLLER_LISTEN_PORT))
             except ConstError as c:
-                rospy.logwarn_throttle(10, c)
+                self.logwarn_throttle(10, c)
             except Exception as e:
-                rospy.logerr_throttle(10, "Error")
-                rospy.logerr(e)
+                self.get_logger().error(10, "Error")
+                self.get_logger().error(e)
         self.receiver_socket.close()
         self.send_socket.close()
 
@@ -111,17 +111,19 @@ class GameStateReceiver:
             own_team = state.teams[1]
             rival_team = state.teams[0]
         else:
-            rospy.logerr("Team {} not playing, only {} and {}".format(self.team_id, state.teams[0].team_number, state.teams[1].team_number))
+            self.get_logger().error(
+                "Team {} not playing, only {} and {}".format(self.team_id, state.teams[0].team_number, state.teams[1].team_number)
+            )
             return
 
         try:
             me = own_team.players[self.robot_id - 1]
         except IndexError:
-            rospy.logerr("Robot {} not playing".format(self.robot_id))
+            self.get_logger().error("Robot {} not playing".format(self.robot_id))
             return
 
         msg = GameStateMsg()
-        msg.header.stamp = rospy.Time.now()
+        msg.header.stamp = self.get_clock().now()
         msg.gameState = state.game_state.intvalue
         msg.secondaryState = state.secondary_state.intvalue
         msg.firstHalf = state.first_half
@@ -141,10 +143,10 @@ class GameStateReceiver:
         msg.penaltyShot = own_team.penalty_shot
         msg.singleShots = own_team.single_shots
         msg.coach_message = own_team.coach_message
-        self.state_publisher.publish(msg)
+        self.state_create_publisher.publish(msg)
 
 
 if __name__ == "__main__":
-    rospy.init_node("game_controller_receiver")
+    self.init_node("game_controller_receiver")
     rec = GameStateReceiver()
     rec.receive_forever()

@@ -99,9 +99,10 @@ void init_ports() {
     .pinPort        = USART1_DIR_GPIO_Port,
     .dirPinNum      = USART1_DIR_Pin,
     .dmaDoneReading = false,
-    .currMotor      = 0,
+	.currMotor  = 0,
+	.currReadMotor  = 0,
     .numMotors      = 5,
-    .motorIds       = {0, 1, 18, 16, 17}, // left arm chain + bottom neck motor
+    .motorIds       = {16, 17,0, 1, 18}, // left arm chain + bottom neck motor
     .protocol       = {2, 2, 2, 2, 2}
   };
 
@@ -113,7 +114,8 @@ void init_ports() {
       .pinPort        = USART2_DIR_GPIO_Port,
       .dirPinNum      = USART2_DIR_Pin,
       .dmaDoneReading = false,
-      .currMotor      = 0,
+	  .currMotor  = 0,
+	  .currReadMotor  = 0,
       .numMotors      = 3,
       .motorIds       = {2, 3, 19}, // right arm chain + top neck motor
       .protocol       = {2, 2, 2}
@@ -127,6 +129,8 @@ void init_ports() {
       .pinPort        = USART3_DIR_GPIO_Port,
       .dirPinNum      = USART3_DIR_Pin,
       .dmaDoneReading = false,
+	  .currMotor  = 0,
+	  .currReadMotor  = 0,
       .numMotors      = 3,
       .motorIds       = {4, 5, 6}, // left hip
       .protocol       = {2, 2, 2}
@@ -140,6 +144,8 @@ void init_ports() {
       .pinPort        = USART4_DIR_GPIO_Port,
       .dirPinNum      = USART4_DIR_Pin,
       .dmaDoneReading = false,
+	  .currMotor  = 0,
+	  .currReadMotor  = 0,
       .numMotors      = 3,
       .motorIds       = {7, 8, 9}, // left leg
       .protocol       = {2, 2, 2}
@@ -153,6 +159,8 @@ void init_ports() {
       .pinPort        = USART5_DIR_GPIO_Port,
       .dirPinNum      = USART5_DIR_Pin,
       .dmaDoneReading = false,
+	  .currMotor  = 0,
+	  .currReadMotor  = 0,
       .numMotors      = 3,
       .motorIds       = {10, 11, 12}, // right hip
       .protocol       = {2,2,2}
@@ -166,8 +174,10 @@ void init_ports() {
       .pinPort        = USART6_DIR_GPIO_Port,
       .dirPinNum      = USART6_DIR_Pin,
       .dmaDoneReading = false,
+	  .currMotor  = 0,
+	  .currReadMotor  = 0,
       .numMotors      = 3,
-      .motorIds       = { 13, 14, 15}, // right leg
+      .motorIds       = {13, 14, 15}, // right leg
       .protocol       = {2, 2, 2}
     };
 
@@ -189,10 +199,8 @@ void init_motors() {
 	    uint8_t protocol = motorPorts[p]->protocol[m];
 
 		// Enable Torques
-		if(protocol == 1)
-		  motor_torque_en_p1(motorPorts[p], motorId, 1);
-		else
-		  motor_torque_en_p2(motorPorts[p], motorId, 1);
+
+	    motor_torque_en_p2(motorPorts[p], motorId, 1);
 
 		HAL_Delay(20);
 	  }

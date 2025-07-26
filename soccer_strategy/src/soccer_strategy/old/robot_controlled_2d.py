@@ -2,8 +2,8 @@ import math
 from typing import List, Optional
 
 import numpy as np
-import rospy
-from soccer_object_detection.camera import Camera
+import rclpy
+from soccer_perception.soccer_object_detection.src.soccer_object_detection.camera.camera_calculations import CameraCalculations
 from soccer_pycontrol import path
 
 from soccer_common.transformation import Transformation
@@ -16,7 +16,7 @@ from soccer_strategy.old.robot_controlled import RobotControlled
 
 class RobotControlled2D(RobotControlled):
     class ObservationConstants:
-        FOV = Camera.HORIZONTAL_FOV
+        FOV = 1.2290609
         VISION_RANGE = 3
 
     def __init__(
@@ -74,8 +74,8 @@ class RobotControlled2D(RobotControlled):
             if self.observed_ball is None:
                 self.observed_ball = Ball()
             self.observed_ball.position = ball_position
-            self.observed_ball.last_observed_time_stamp = rospy.Time.now()
-            self.robot_focused_on_ball_time = rospy.Time.now()
+            self.observed_ball.last_observed_time_stamp = self.get_clock().now()
+            self.robot_focused_on_ball_time = self.get_clock().now()
 
         # TODO can add noise here
 

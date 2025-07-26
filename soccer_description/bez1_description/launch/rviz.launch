@@ -9,8 +9,8 @@
         tf_prefix:=bez1
         "
     />
-    <node name="joint_state_publisher_gui" pkg="joint_state_publisher_gui" type="joint_state_publisher_gui" />
-    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+    <node name="joint_state_create_publisher_gui" pkg="joint_state_create_publisher_gui" type="joint_state_create_publisher_gui" />
+    <node name="robot_state_create_publisher" pkg="robot_state_create_publisher" type="robot_state_create_publisher" />
 
     <arg name="rvizconfig" default="$(find bez1_description)/rviz/bez1.rviz" />
     <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" />

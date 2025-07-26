@@ -5,29 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1718606a-6ea1-4edd-a178-2f51136d492a" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/soccerbot.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/soccerbot.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/src/soccer_pycontrol/pybullet_usage/pybullet_load_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/src/soccer_pycontrol/pybullet_usage/pybullet_load_model.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_trajectories/src/soccer_trajectories/pybullet_setup.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_trajectories/src/soccer_trajectories/pybullet_setup.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_trajectories/src/soccer_trajectories/trajectory_manager_sim.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_trajectories/src/soccer_trajectories/trajectory_manager_sim.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_trajectories/test/test_trajectory.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_trajectories/test/test_trajectory.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_trajectories/trajectories/bez1/getupfront.csv" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_trajectories/trajectories/bez1/getupfront.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_trajectories/trajectories/bez1/getupside.csv" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_trajectories/trajectories/bez1/getupside.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_trajectories/trajectories/bez1_sim/getupback.csv" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_trajectories/trajectories/bez1_sim/getupback.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_trajectories/trajectories/bez1_sim/getupback_real.csv" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_trajectories/trajectories/bez1_sim/getupback_real.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_trajectories/trajectories/bez1_sim/getupfront.csv" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_trajectories/trajectories/bez1_sim/getupfront.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_trajectories/trajectories/bez1_sim/getupside.csv" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_trajectories/trajectories/bez1_sim/getupside.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_trajectories/trajectories/bez1_sim/goalieleft.csv" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_trajectories/trajectories/bez1_sim/goalieleft.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_trajectories/trajectories/bez1_sim/goalieright.csv" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_trajectories/trajectories/bez1_sim/goalieright.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_trajectories/trajectories/bez1_sim/rightkick.csv" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_trajectories/trajectories/bez1_sim/rightkick.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_trajectories/trajectories/bez2_sim/fix_angle_test.csv" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_trajectories/trajectories/bez2_sim/fix_angle_test.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_trajectories/trajectories/bez2_sim/getupback.csv" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_trajectories/trajectories/bez2_sim/getupback.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_trajectories/trajectories/bez2_sim/getupback_real.csv" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_trajectories/trajectories/bez2_sim/getupback_real.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_trajectories/trajectories/bez2_sim/getupfront.csv" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_trajectories/trajectories/bez2_sim/getupfront.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_trajectories/trajectories/bez2_sim/getupside.csv" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_trajectories/trajectories/bez2_sim/getupside.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_trajectories/trajectories/bez2_sim/goalieleft.csv" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_trajectories/trajectories/bez2_sim/goalieleft.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_trajectories/trajectories/bez2_sim/goalieright.csv" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_trajectories/trajectories/bez2_sim/goalieright.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_trajectories/trajectories/bez2_sim/rightkick.csv" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_trajectories/trajectories/bez2_sim/rightkick.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/external/hlvs_webots" beforeDir="false" afterPath="$PROJECT_DIR$/external/hlvs_webots" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/external/hlvs_webots/protos/Utra/Bez2Robocup/Bez2_meshes/Bez2.proto" beforeDir="false" afterPath="$PROJECT_DIR$/external/hlvs_webots/protos/Utra/Bez2Robocup/Bez2_meshes/Bez2.proto" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/external/hlvs_webots/protos/Utra/Bez3Robocup/Bez3.proto" beforeDir="false" afterPath="$PROJECT_DIR$/external/hlvs_webots/protos/Utra/Bez3Robocup/Bez3.proto" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/external/hlvs_webots/worlds/.robocup.wbproj" beforeDir="false" afterPath="$PROJECT_DIR$/external/hlvs_webots/worlds/.robocup.wbproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/config/assembly/assembly.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/config/assembly/assembly.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/soccer_pycontrol/walk_engine/navigator.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/soccer_pycontrol/walk_engine/navigator.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/soccer_pycontrol/walk_engine/walk_engine_ros/navigator_ros.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/soccer_pycontrol/walk_engine/walk_engine_ros/navigator_ros.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_trajectories/soccer_trajectories/trajectory_manager_ros.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_trajectories/soccer_trajectories/trajectory_manager_ros.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_trajectories/trajectories/bez2/getupfront_ori.csv" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_trajectories/trajectories/bez2/getupfront_ori.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/soccerbot/launch/test.launch" beforeDir="false" afterPath="$PROJECT_DIR$/soccerbot/launch/test.launch" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,6 +42,7 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="ROOT_SYNC" value="DONT_SYNC" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 6
@@ -63,67 +52,108 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python tests.pytest for test_firmware_interface.test_firmware_interface.executor": "Run",
-    "Python tests.pytest for test_firmware_interface.test_firmware_interface_single_motor_range.executor": "Run",
-    "Python tests.pytest for test_object_detection.TestObjectDetection.test_object_detection.executor": "Run",
-    "Python tests.pytest for test_object_detection.TestObjectDetection.test_object_detection_vid.executor": "Run",
-    "Python tests.pytest for test_object_localization.TestObjectLocalization.test_fieldline_detection_vid.executor": "Run",
-    "Python tests.pytest for test_placo.TestPlaco.test_bez1.executor": "Run",
-    "Python tests.pytest for test_pybullet.TestPybullet.test_bez_motor_range.executor": "Run",
-    "Python tests.pytest for test_pybullet.TestPybullet.test_bez_motor_range_single.executor": "Run",
-    "Python tests.pytest for test_pybullet.TestPybullet.test_imu.executor": "Debug",
-    "Python tests.pytest for test_trajectory.TestTrajectory.test_trajectory.executor": "Run",
-    "Python tests.pytest for test_trajectory.test_trajectory_sim.executor": "Run",
-    "Python tests.pytest for test_walk_ros.TestPybullet.test_walk_ros_local.executor": "Run",
-    "Python.dgfs.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master",
-    "last_opened_file_path": "/home/manx52/catkin_ws/src/soccerbot/soccer_control/soccer_trajectories/trajectories/bez2",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "preferences.fileTypes",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python tests.pytest for test_camera.TestCamera.test_camera_find_camera_coordinate.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_firmware_interface.test_firmware_interface.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_firmware_interface.test_firmware_interface_single_motor_range.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_object_detection.TestObjectDetection.test_object_detection.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_object_detection.TestObjectDetection.test_object_detection_vid.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_object_localization.TestObjectLocalization.test_fieldline_detection_vid.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_perception.TestSensors.test_camera_image_capture.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_placo.TestPlaco.test_bez1.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_placo.TestPlaco.test_bez1_ready.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_placo.TestPlaco.test_bez1_start_stop.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_placo.TestPlaco.test_bez1_walk.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_placo.TestPlaco.test_bez_motor_range_single.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_placo.TestPlaco.test_camera.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_pybullet.TestPybullet.test_bez_motor_range.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_pybullet.TestPybullet.test_bez_motor_range_single.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_pybullet.TestPybullet.test_cam.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_pybullet.TestPybullet.test_imu.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_pybullet_camera.TestPybullet.test_ball_localization.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_pybullet_camera.TestPybullet.test_ball_localization2.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_pybullet_camera.TestPybullet.test_cam.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_pybullet_camera.TestPybullet.test_detection.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_trajectory.TestTrajectory.test_trajectory.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_trajectory.test_traj_ros.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_trajectory.test_trajectory_sim.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_walk_ros.TestPybullet.test_camera.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_walk_ros.TestPybullet.test_camera2.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_walk_ros.TestPybullet.test_ready_ros_local.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_walk_ros.TestPybullet.test_walk_ros_local.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_walk_ros.TestPybullet.test_walk_ros_webots.executor&quot;: &quot;Run&quot;,
+    &quot;Python.convert_stl2dae.executor&quot;: &quot;Run&quot;,
+    &quot;Python.dgfs.executor&quot;: &quot;Run&quot;,
+    &quot;Python.ff.executor&quot;: &quot;Run&quot;,
+    &quot;Python.fsf.executor&quot;: &quot;Run&quot;,
+    &quot;Python.motor_control.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowPanel.toolwindow.highlight.mappings&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowPanel.toolwindow.highlight.symlinks&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowPanel.toolwindow.show.date&quot;: &quot;false&quot;,
+    &quot;WebServerToolWindowPanel.toolwindow.show.permissions&quot;: &quot;false&quot;,
+    &quot;WebServerToolWindowPanel.toolwindow.show.size&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;js__new&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/manx52/ros2_ws/src/soccerbot/soccer_hardware/soccer_firmware_interface/soccer_firmware_interface&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/soccer_hardware/soccer_firmware_interface/soccer_firmware_interface" />
+      <recent name="$PROJECT_DIR$/soccer_description/assembly_description/meshes/simplified" />
+      <recent name="$PROJECT_DIR$/soccerbot/launch" />
       <recent name="$PROJECT_DIR$/soccer_control/soccer_trajectories/trajectories/bez2" />
-      <recent name="$PROJECT_DIR$/soccer_description/assembly_description/urdf" />
-      <recent name="$PROJECT_DIR$/soccer_control/soccer_pycontrol/config" />
-      <recent name="$PROJECT_DIR$/tools/setup" />
+      <recent name="$PROJECT_DIR$/game_controller_interface/game_controller_interface" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/soccer_common" />
+      <recent name="$PROJECT_DIR$/soccer_control/soccer_pycontrol" />
+      <recent name="$PROJECT_DIR$/soccer_control/soccer_trajectories" />
+      <recent name="$PROJECT_DIR$/soccer_control/soccer_trajectories/trajectories/bez2" />
     </key>
   </component>
-  <component name="RunManager" selected="Python tests.pytest for test_object_localization.TestObjectLocalization.test_fieldline_detection_vid">
-    <configuration name="pytest for test_object_detection.TestObjectDetection.test_object_detection" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="Python tests.pytest for test_firmware_interface.test_firmware_interface">
+    <configuration name="convert_stl2dae" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="soccerbot" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/soccer_perception/soccer_object_detection/test" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/soccer_description/assembly_description/meshes/simplified" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="_new_keywords" value="&quot;&quot;" />
-      <option name="_new_parameters" value="&quot;&quot;" />
-      <option name="_new_additionalArguments" value="&quot;-s&quot;" />
-      <option name="_new_target" value="&quot;test_object_detection.TestObjectDetection.test_object_detection&quot;" />
-      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/soccer_description/assembly_description/meshes/simplified/convert_stl2dae.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="pytest for test_object_detection.TestObjectDetection.test_object_detection_vid" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
+    <configuration name="pytest for test_firmware_interface.test_firmware_interface" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
       <module name="soccerbot" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="LD_LIBRARY_PATH" value="$LD_LIBRARY_PATH:/opt/ros/humble/lib:$PROJECT_DIR$/../../build/soccer_msgs " />
+      </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/soccer_perception/soccer_object_detection/test" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/soccer_hardware/soccer_firmware_interface/test" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
@@ -131,17 +161,20 @@
       <option name="_new_keywords" value="&quot;&quot;" />
       <option name="_new_parameters" value="&quot;&quot;" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_object_detection.TestObjectDetection.test_object_detection_vid&quot;" />
+      <option name="_new_target" value="&quot;test_firmware_interface.test_firmware_interface&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="pytest for test_object_localization.TestObjectLocalization.test_fieldline_detection_vid" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
+    <configuration name="pytest for test_firmware_interface.test_firmware_interface_single_motor_range" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
       <module name="soccerbot" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="LD_LIBRARY_PATH" value="$LD_LIBRARY_PATH:/opt/ros/humble/lib:$PROJECT_DIR$/../../build/soccer_msgs:$PROJECT_DIR$/../../install/soccer_msgs/local/lib/python3.10/dist-packages " />
+      </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/soccer_perception/soccer_object_localization/test" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/soccer_hardware/soccer_firmware_interface/test" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
@@ -149,17 +182,17 @@
       <option name="_new_keywords" value="&quot;&quot;" />
       <option name="_new_parameters" value="&quot;&quot;" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_object_localization.TestObjectLocalization.test_fieldline_detection_vid&quot;" />
+      <option name="_new_target" value="&quot;test_firmware_interface.test_firmware_interface_single_motor_range&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="pytest for test_trajectory.TestTrajectory.test_trajectory" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
+    <configuration name="pytest for test_placo.TestPlaco.test_bez1_walk" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
       <module name="soccerbot" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/soccer_control/soccer_trajectories/test" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
@@ -167,17 +200,17 @@
       <option name="_new_keywords" value="&quot;&quot;" />
       <option name="_new_parameters" value="&quot;&quot;" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_trajectory.TestTrajectory.test_trajectory&quot;" />
+      <option name="_new_target" value="&quot;test_placo.TestPlaco.test_bez1_walk&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="pytest for test_trajectory.test_trajectory_sim" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
+    <configuration name="pytest for test_pybullet.TestPybullet.test_bez_motor_range_single" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
       <module name="soccerbot" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/soccer_control/soccer_trajectories/test" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
@@ -185,32 +218,32 @@
       <option name="_new_keywords" value="&quot;&quot;" />
       <option name="_new_parameters" value="&quot;&quot;" />
       <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test_trajectory.test_trajectory_sim&quot;" />
+      <option name="_new_target" value="&quot;test_pybullet.TestPybullet.test_bez_motor_range_single&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Python tests.pytest for test_object_detection.TestObjectDetection.test_object_detection_vid" />
-      <item itemvalue="Python tests.pytest for test_object_localization.TestObjectLocalization.test_fieldline_detection_vid" />
-      <item itemvalue="Python tests.pytest for test_object_detection.TestObjectDetection.test_object_detection" />
-      <item itemvalue="Python tests.pytest for test_trajectory.TestTrajectory.test_trajectory" />
-      <item itemvalue="Python tests.pytest for test_trajectory.test_trajectory_sim" />
+      <item itemvalue="Python.convert_stl2dae" />
+      <item itemvalue="Python tests.pytest for test_pybullet.TestPybullet.test_bez_motor_range_single" />
+      <item itemvalue="Python tests.pytest for test_placo.TestPlaco.test_bez1_walk" />
+      <item itemvalue="Python tests.pytest for test_firmware_interface.test_firmware_interface_single_motor_range" />
+      <item itemvalue="Python tests.pytest for test_firmware_interface.test_firmware_interface" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python tests.pytest for test_object_localization.TestObjectLocalization.test_fieldline_detection_vid" />
-        <item itemvalue="Python tests.pytest for test_object_detection.TestObjectDetection.test_object_detection_vid" />
-        <item itemvalue="Python tests.pytest for test_object_detection.TestObjectDetection.test_object_detection" />
-        <item itemvalue="Python tests.pytest for test_trajectory.TestTrajectory.test_trajectory" />
-        <item itemvalue="Python tests.pytest for test_trajectory.test_trajectory_sim" />
+        <item itemvalue="Python tests.pytest for test_firmware_interface.test_firmware_interface" />
+        <item itemvalue="Python.convert_stl2dae" />
+        <item itemvalue="Python tests.pytest for test_firmware_interface.test_firmware_interface_single_motor_range" />
+        <item itemvalue="Python tests.pytest for test_pybullet.TestPybullet.test_bez_motor_range_single" />
+        <item itemvalue="Python tests.pytest for test_placo.TestPlaco.test_bez1_walk" />
       </list>
     </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-d6986cc7102b-e768b9ed790e-JavaScript-PY-243.21565.199" />
-        <option value="bundled-python-sdk-cab1f2013843-4ae2d6a61b08-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-243.21565.199" />
+        <option value="bundled-js-predefined-d6986cc7102b-09060db00ec0-JavaScript-PY-251.26927.90" />
+        <option value="bundled-python-sdk-41e8cd69c857-64d779b69b7a-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-251.26927.90" />
       </set>
     </attachedChunks>
   </component>
@@ -241,6 +274,38 @@
       <workItem from="1732997444701" duration="14964000" />
       <workItem from="1733019770661" duration="1047000" />
       <workItem from="1733035011319" duration="16229000" />
+      <workItem from="1733417385694" duration="9731000" />
+      <workItem from="1733433582533" duration="6655000" />
+      <workItem from="1733440895045" duration="25947000" />
+      <workItem from="1733589354509" duration="18997000" />
+      <workItem from="1733884917209" duration="9958000" />
+      <workItem from="1735766616753" duration="11718000" />
+      <workItem from="1736017988452" duration="15765000" />
+      <workItem from="1736620730256" duration="7811000" />
+      <workItem from="1737233667811" duration="33801000" />
+      <workItem from="1737314359646" duration="334000" />
+      <workItem from="1737314792582" duration="31227000" />
+      <workItem from="1739043592370" duration="5954000" />
+      <workItem from="1740856377353" duration="6771000" />
+      <workItem from="1743269083217" duration="7789000" />
+      <workItem from="1743879241832" duration="621000" />
+      <workItem from="1744698203780" duration="642000" />
+      <workItem from="1744814195554" duration="30000" />
+      <workItem from="1746902371603" duration="599000" />
+      <workItem from="1751742016029" duration="12759000" />
+      <workItem from="1751754789158" duration="979000" />
+      <workItem from="1751758066119" duration="1612000" />
+      <workItem from="1752581359738" duration="3954000" />
+      <workItem from="1752585334570" duration="65000" />
+      <workItem from="1752585414588" duration="486000" />
+      <workItem from="1752585933439" duration="6521000" />
+      <workItem from="1752603961217" duration="19421000" />
+      <workItem from="1752672934442" duration="29451000" />
+      <workItem from="1752738091432" duration="6896000" />
+      <workItem from="1752752057805" duration="25346000" />
+      <workItem from="1752834351520" duration="7274000" />
+      <workItem from="1752844992369" duration="11844000" />
+      <workItem from="1752871721935" duration="3314000" />
     </task>
     <servers />
   </component>
@@ -251,30 +316,223 @@
     <option featureType="dependencySupport" implementationName="executable:docker" />
     <option featureType="dependencySupport" implementationName="python:kafka-python" />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="OPEN_GENERIC_TABS">
+      <map>
+        <entry key="46a7b9f4-b6a4-4a33-9298-33d79893f10c" value="TOOL_WINDOW" />
+        <entry key="607a964e-c87a-4e24-be4b-ec1601f9362f" value="TOOL_WINDOW" />
+        <entry key="412f5d14-e652-4459-84d1-26b0afd7123c" value="TOOL_WINDOW" />
+        <entry key="9f828f1f-7ae8-4cb4-8a3e-8833617a99a4" value="TOOL_WINDOW" />
+      </map>
+    </option>
+    <option name="TAB_STATES">
+      <map>
+        <entry key="412f5d14-e652-4459-84d1-26b0afd7123c">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="HEAD" />
+                      </list>
+                    </value>
+                  </entry>
+                  <entry key="structure">
+                    <value>
+                      <list>
+                        <option value="dir:/home/manx52/ros2_ws/src/soccerbot/soccer_control/soccer_trajectories/trajectories" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+              <option name="SHOW_ONLY_AFFECTED_CHANGES" value="true" />
+            </State>
+          </value>
+        </entry>
+        <entry key="46a7b9f4-b6a4-4a33-9298-33d79893f10c">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="HEAD" />
+                      </list>
+                    </value>
+                  </entry>
+                  <entry key="structure">
+                    <value>
+                      <list>
+                        <option value="dir:/home/manx52/catkin_ws/src/soccerbot/soccer_hardware/soccer_firmware" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+              <option name="SHOW_ONLY_AFFECTED_CHANGES" value="true" />
+            </State>
+          </value>
+        </entry>
+        <entry key="607a964e-c87a-4e24-be4b-ec1601f9362f">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="HEAD" />
+                      </list>
+                    </value>
+                  </entry>
+                  <entry key="roots">
+                    <value>
+                      <list>
+                        <option value="$PROJECT_DIR$" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+              <option name="SHOW_ONLY_AFFECTED_CHANGES" value="true" />
+            </State>
+          </value>
+        </entry>
+        <entry key="9f828f1f-7ae8-4cb4-8a3e-8833617a99a4">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="HEAD" />
+                      </list>
+                    </value>
+                  </entry>
+                  <entry key="structure">
+                    <value>
+                      <list>
+                        <option value="dir:/home/manx52/ros2_ws/src/soccerbot/soccer_control/soccer_trajectories" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+              <option name="SHOW_ONLY_AFFECTED_CHANGES" value="true" />
+            </State>
+          </value>
+        </entry>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/soccer_control/soccer_pycontrol/test/test_pybullet.py</url>
-          <line>29</line>
-          <option name="timeStamp" value="1" />
+          <url>file://$PROJECT_DIR$/soccer_perception/soccer_object_detection/test/test_object_detection.py</url>
+          <option name="timeStamp" value="4" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/soccer_perception/soccer_object_detection/soccer_object_detection/camera/camera_calculations.py</url>
+          <line>164</line>
+          <option name="timeStamp" value="11" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/soccer_control/soccer_pycontrol/soccer_pycontrol/model/sensors.py</url>
+          <line>49</line>
+          <option name="timeStamp" value="14" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/soccer_perception/soccer_object_detection/soccer_object_detection/object_detect_node.py</url>
+          <line>86</line>
+          <option name="timeStamp" value="46" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/soccer_control/soccer_pycontrol/test/test_walk_ros.py</url>
+          <line>154</line>
+          <option name="timeStamp" value="47" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/soccer_control/soccer_pycontrol/test/test_walk_ros.py</url>
+          <line>93</line>
+          <option name="timeStamp" value="48" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/soccer_control/soccer_pycontrol/soccer_pycontrol/walk_engine/navigator.py</url>
+          <line>236</line>
+          <option name="timeStamp" value="49" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/soccer_control/soccer_trajectories/soccer_trajectories/trajectory_manager.py</url>
+          <line>1</line>
+          <option name="timeStamp" value="51" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/soccer_control/soccer_pycontrol/soccer_pycontrol/model/model_ros/motor_control_ros.py</url>
+          <option name="timeStamp" value="53" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/soccer_common/soccer_common/transformation2d.py</url>
+          <line>2</line>
+          <option name="timeStamp" value="55" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/soccer_control/soccer_pycontrol/soccer_pycontrol/model/motor_control.py</url>
+          <line>106</line>
+          <option name="timeStamp" value="56" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/soccer_perception/soccer_object_detection/soccer_object_detection/object_detect_node.py</url>
+          <line>2</line>
+          <option name="timeStamp" value="57" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_trajectory_TestTrajectory_test_trajectory.coverage" NAME="pytest for test_trajectory.TestTrajectory.test_trajectory Coverage Results" MODIFIED="1733176109562" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_trajectories/test" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_firmware_interface_test_firmware_interface.coverage" NAME="pytest for test_firmware_interface.test_firmware_interface Coverage Results" MODIFIED="1732408857959" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_hardware/soccer_firmware_interface/test" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_pybullet_TestPybullet_test_imu.coverage" NAME="pytest for test_pybullet.TestPybullet.test_imu Coverage Results" MODIFIED="1733163515329" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_object_localization_TestObjectLocalization_test_fieldline_detection_vid.coverage" NAME="pytest for test_object_localization.TestObjectLocalization.test_fieldline_detection_vid Coverage Results" MODIFIED="1733177322454" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_perception/soccer_object_localization/test" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_trajectory_test_trajectory_sim.coverage" NAME="pytest for test_trajectory.test_trajectory_sim Coverage Results" MODIFIED="1733175993565" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_trajectories/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_pybullet_camera_TestPybullet_test_ball_localization.coverage" NAME="pytest for test_pybullet_camera.TestPybullet.test_ball_localization Coverage Results" MODIFIED="1733348570876" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_perception/soccer_object_detection/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$convert_stl2dae.coverage" NAME="convert_stl2dae Coverage Results" MODIFIED="1752834676629" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_description/assembly_description/meshes/simplified" />
     <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_object_detection_TestObjectDetection_test_object_detection_vid.coverage" NAME="pytest for test_object_detection.TestObjectDetection.test_object_detection_vid Coverage Results" MODIFIED="1733177240556" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_perception/soccer_object_detection/test" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_pybullet_TestPybullet_test_bez_motor_range_single.coverage" NAME="pytest for test_pybullet.TestPybullet.test_bez_motor_range_single Coverage Results" MODIFIED="1733013152155" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_placo_TestPlaco_test_bez1.coverage" NAME="pytest for test_placo.TestPlaco.test_bez1 Coverage Results" MODIFIED="1733174628799" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_placo_TestPlaco_test_bez1_start_stop.coverage" NAME="pytest for test_placo.TestPlaco.test_bez1_start_stop Coverage Results" MODIFIED="1740859429993" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_trajectory_test_trajectory_sim.coverage" NAME="pytest for test_trajectory.test_trajectory_sim Coverage Results" MODIFIED="1752673018157" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_trajectories/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_object_detection_TestObjectDetection_test_object_detection.coverage" NAME="pytest for test_object_detection.TestObjectDetection.test_object_detection Coverage Results" MODIFIED="1733338878669" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_perception/soccer_object_detection/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_placo_TestPlaco_test_bez1_ready.coverage" NAME="pytest for test_placo.TestPlaco.test_bez1_ready Coverage Results" MODIFIED="1740859465979" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_placo_TestPlaco_test_bez_motor_range_single.coverage" NAME="pytest for test_placo.TestPlaco.test_bez_motor_range_single Coverage Results" MODIFIED="1733523977555" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_firmware_interface_test_firmware_interface.coverage" NAME="pytest for test_firmware_interface.test_firmware_interface Coverage Results" MODIFIED="1752849256664" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_hardware/soccer_firmware_interface/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_pybullet_camera_TestPybullet_test_ball_localization2.coverage" NAME="pytest for test_pybullet_camera.TestPybullet.test_ball_localization2 Coverage Results" MODIFIED="1733348082263" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_perception/soccer_object_detection/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_firmware_interface_test_firmware_interface_single_motor_range.coverage" NAME="pytest for test_firmware_interface.test_firmware_interface_single_motor_range Coverage Results" MODIFIED="1752766730170" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_hardware/soccer_firmware_interface/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_placo_TestPlaco_test_bez1.coverage" NAME="pytest for test_placo.TestPlaco.test_bez1 Coverage Results" MODIFIED="1740863112244" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_placo_TestPlaco_test_bez1_walk.coverage" NAME="pytest for test_placo.TestPlaco.test_bez1_walk Coverage Results" MODIFIED="1752762740137" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$ff.coverage" NAME="ff Coverage Results" MODIFIED="1751752072053" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_hardware/soccer_firmware_interface/soccer_firmware_interface" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_camera_TestCamera_test_camera_find_camera_coordinate.coverage" NAME="pytest for test_camera.TestCamera.test_camera_find_camera_coordinate Coverage Results" MODIFIED="1733345010797" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_perception/soccer_object_detection/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_pybullet_TestPybullet_test_imu.coverage" NAME="pytest for test_pybullet.TestPybullet.test_imu Coverage Results" MODIFIED="1740863652365" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$motor_control.coverage" NAME="motor_control Coverage Results" MODIFIED="1733514993668" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/src/soccer_pycontrol/model" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_pybullet_TestPybullet_test_bez_motor_range.coverage" NAME="pytest for test_pybullet.TestPybullet.test_bez_motor_range Coverage Results" MODIFIED="1752604970095" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_walk_ros_TestPybullet_test_ready_ros_local.coverage" NAME="pytest for test_walk_ros.TestPybullet.test_ready_ros_local Coverage Results" MODIFIED="1752675216881" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_trajectory_TestTrajectory_test_trajectory.coverage" NAME="pytest for test_trajectory.TestTrajectory.test_trajectory Coverage Results" MODIFIED="1733176109562" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_trajectories/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_placo_TestPlaco_test_camera.coverage" NAME="pytest for test_placo.TestPlaco.test_camera Coverage Results" MODIFIED="1752611314987" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_walk_ros_TestPybullet_test_walk_ros_webots.coverage" NAME="pytest for test_walk_ros.TestPybullet.test_walk_ros_webots Coverage Results" MODIFIED="1733529136484" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_perception_TestSensors_test_camera_image_capture.coverage" NAME="pytest for test_perception.TestSensors.test_camera_image_capture Coverage Results" MODIFIED="1740863541479" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_pybullet_TestPybullet_test_bez_motor_range_single.coverage" NAME="pytest for test_pybullet.TestPybullet.test_bez_motor_range_single Coverage Results" MODIFIED="1752766699750" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_trajectory_test_traj_ros.coverage" NAME="pytest for test_trajectory.test_traj_ros Coverage Results" MODIFIED="1752674998164" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_trajectories/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_pybullet_camera_TestPybullet_test_detection.coverage" NAME="pytest for test_pybullet_camera.TestPybullet.test_detection Coverage Results" MODIFIED="1733341814899" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_perception/soccer_object_detection/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_walk_ros_TestPybullet_test_camera2.coverage" NAME="pytest for test_walk_ros.TestPybullet.test_camera2 Coverage Results" MODIFIED="1737261475852" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_pybullet_TestPybullet_test_cam.coverage" NAME="pytest for test_pybullet.TestPybullet.test_cam Coverage Results" MODIFIED="1733339971514" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_walk_ros_TestPybullet_test_walk_ros_local.coverage" NAME="pytest for test_walk_ros.TestPybullet.test_walk_ros_local Coverage Results" MODIFIED="1740861410910" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$fsf.coverage" NAME="fsf Coverage Results" MODIFIED="1733336572304" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/src/soccer_pycontrol/pybullet_usage" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_walk_ros_TestPybullet_test_camera.coverage" NAME="pytest for test_walk_ros.TestPybullet.test_camera Coverage Results" MODIFIED="1737271899804" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_object_localization_TestObjectLocalization_test_fieldline_detection_vid.coverage" NAME="pytest for test_object_localization.TestObjectLocalization.test_fieldline_detection_vid Coverage Results" MODIFIED="1733177322454" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_perception/soccer_object_localization/test" />
     <SUITE FILE_PATH="coverage/soccerbot$dgfs.coverage" NAME="dgfs Coverage Results" MODIFIED="1730141845344" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tools/setup" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_pybullet_TestPybullet_test_bez_motor_range.coverage" NAME="pytest for test_pybullet.TestPybullet.test_bez_motor_range Coverage Results" MODIFIED="1733015016961" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_firmware_interface_test_firmware_interface_single_motor_range.coverage" NAME="pytest for test_firmware_interface.test_firmware_interface_single_motor_range Coverage Results" MODIFIED="1732408905335" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_hardware/soccer_firmware_interface/test" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_object_detection_TestObjectDetection_test_object_detection.coverage" NAME="pytest for test_object_detection.TestObjectDetection.test_object_detection Coverage Results" MODIFIED="1733177170818" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_perception/soccer_object_detection/test" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_walk_ros_TestPybullet_test_walk_ros_local.coverage" NAME="pytest for test_walk_ros.TestPybullet.test_walk_ros_local Coverage Results" MODIFIED="1733002179035" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_pybullet_camera_TestPybullet_test_cam.coverage" NAME="pytest for test_pybullet_camera.TestPybullet.test_cam Coverage Results" MODIFIED="1733341716195" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_perception/soccer_object_detection/test" />
   </component>
 </project>

@@ -1,0 +1,102 @@
+<launch>
+<!--     <arg name="single" default="true" /> -->
+<!--     <arg name="robot_model" default="$(env ROBOT_MODEL bez1)" /> -->
+    <arg name="simulation" default="true" />
+<!--     <arg name="robot_id" default="$(env ROBOCUP_ROBOT_ID 1)" /> -->
+<!--     <arg name="robot_name" value="robot$(arg robot_id)" /> -->
+    <arg name="map_name" default="robocup" />
+
+<!--     <arg name="param_file_name" value="$(arg robot_model)_sim" if="$(arg simulation)" /> -->
+<!--     <arg name="param_file_name" value="$(arg robot_model)" unless="$(arg simulation)" /> -->
+
+   <set_env name="ROSCONSOLE_FORMAT" value="[${severity}] [${time: %r}] [${node} ${function} ${line}]: ${message}" />
+    <set_env name="ROSCONSOLE_CONFIG_FILE" value="$(find-pkg-share soccerbot)/config/rosconsole.conf" />
+
+    <!-- The master simulator controller -->
+<!--     <include file="$(find soccerbot)/launch/modules/webots.launch"> -->
+<!--         <env name="ROBOT_MODEL" value="$(arg robot_model)" /> -->
+<!--         <arg name="single" value="$(arg single)" /> -->
+<!--     </include> -->
+        <let name="address" value="192.168.55.1" unless="$(var simulation)"/>
+    <let name="address" value="0.0.0.0" if="$(var simulation)"/>
+
+    <include file="$(find-pkg-share foxglove_bridge)/launch/foxglove_bridge_launch.xml">
+        <arg name="port" value="8765" />
+        <arg name="address" value="$(var address)" />
+
+        <arg name="send_buffer_limit" value="1000000000" />
+    </include>
+
+<!--     <group ns="robot1"> -->
+<!--         <param name="robot_id" value="$(arg robot_id)" /> -->
+<!--         <param name="/use_sim_time" value="$(arg simulation)" /> -->
+
+<!--         <param name="robot_description" if="$(eval robot_model == 'bez1')" command="xacro '$(find bez1_description)/urdf/bez1.xacro' -->
+<!--             robot_name:=$(arg robot_name) -->
+<!--             model_type:=dae -->
+<!--             file_path:=package://bez1_description -->
+<!--             has_base_footprint:=false -->
+<!--             tf_prefix:=$(arg robot_name) -->
+<!--             " -->
+<!--         /> -->
+<!--         <include file="$(find soccerbot)/launch/modules/communication.launch" if="$(arg simulation)" /> -->
+
+<!--         <node pkg="robot_state_create_publisher" type="robot_state_create_publisher" name="robot_state_create_publisher" /> -->
+
+<!--        <include file="$(find soccerbot)/launch/modules/control.launch">-->
+<!--            <arg name="simulation" value="$(arg simulation)" />-->
+<!--            <arg name="robot_model" value="$(arg robot_model)" />-->
+<!--        </include>-->
+
+<!--          --><!-- Complementary filter -->
+        <let name="config1" value="$(find-pkg-share soccerbot)/config/imu_complementary_filter.yaml"/>
+
+        <node pkg="imu_complementary_filter" exec="complementary_filter_node" name="imu_complementary_filter" output="log">
+            <param from="$(var config1)" />
+            <remap from="imu/data_raw" to="imu_raw" />
+            <remap from="imu/data" to="imu_filtered" />
+        </node>
+    <let name="motor_types" value="$(find-pkg-share soccer_firmware_interface)/config/motor_types.yaml" />
+    <let name="motor_mapping" value="$(find-pkg-share soccer_firmware_interface)/config/bez2.yaml" />
+
+<node pkg="soccer_firmware_interface" name="soccer_firmware_interface"  exec="soccer_firmware" output="screen" >
+<!--         <param name="robot_model" value="$(var robot_model)" /> -->
+<!--         <param name="/use_sim_time" value="$(arg simulation)" /> -->
+        <param name="motor_types" value="$(var motor_types)" />
+        <param name ="motor_mapping" value="$(var motor_mapping)" />
+    </node>
+    <node pkg="soccer_firmware_interface" name="soccer_tf2"  exec="soccer_tf" output="screen"/>
+
+
+<!--     <node pkg="soccer_pycontrol" name="soccer_pycontrol"  exec="soccer_walk" output="screen" emulate_tty="true"> -->
+
+<!--     </node> -->
+<!--      -->
+<!--     <node pkg="soccer_trajectories" name="soccer_trajectories"  exec="soccer_traj" output="screen"> -->
+
+<!--     </node> -->
+
+<!--     <node pkg="game_controller_interface" name="game_controller_interface"  exec="gc_interface" output="screen"> -->
+
+<!--     </node> -->
+
+<!--        <node pkg="soccer_object_localization" type="detector_fieldline_ros.py" name="ball_detector" output="screen">--> -->
+<!--            <rosparam file="$(find soccer_object_localization)/config/$(arg param_file_name).yaml" command="load" />--> -->
+<!--        </node>--> -->
+<!--        <node name="object_detector" pkg="soccer_object_detection" type="object_detect_node_ros.py" output="screen" args="&#45;&#45;model $(find soccer_object_detection)/models/half_5.pt">--> -->
+<!--            <rosparam file="$(find soccer_object_detection)/config/$(arg param_file_name).yaml" command="load" />--> -->
+<!--        </node>--> -->
+
+<!--     </group> -->
+    <node pkg="robot_state_publisher" exec="robot_state_publisher" name="robot_state_publisher" output="screen">
+        <param name='robot_description' value="$(command 'xacro $(find-pkg-share assembly_description)/urdf/assembly.xacro
+        model_type:=dae
+        file_path:=package://assembly_description
+        has_base_footprint:=false
+        tf_prefix:=
+        ')"
+
+        />
+    </node>
+
+</launch>

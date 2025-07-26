@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="ee927ed8-7dad-4c67-a9f7-4a76453b435e" name="jetson">
+        <fileTransfer rootFolder="/home/robot1" accessType="SFTP" host="192.168.55.1" port="22" sshConfigId="dfd65d12-460d-4696-b0dd-074a1960cd68" sshConfig="robot1@192.168.55.1:22 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" isUseRsync="true" isUseSudo="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

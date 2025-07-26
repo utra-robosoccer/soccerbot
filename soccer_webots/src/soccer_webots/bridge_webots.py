@@ -5,7 +5,7 @@ import socket
 import struct
 import time
 
-import rospy
+import rclpy
 from rosgraph_msgs.msg import Clock
 from sensor_msgs.msg import CameraInfo, Image, Imu, JointState
 from std_msgs.msg import Bool
@@ -17,7 +17,7 @@ from soccer_webots import messages_pb2
 
 class GameControllerBridge:
     def __init__(self):
-        rospy.init_node("game_controller_bridge")
+        self.init_node("game_controller_bridge")
         robot_name = os.environ["ROS_NAMESPACE"].replace("/", "")
         self.base_frame = robot_name
         self.MIN_FRAME_STEP = 16  # ms
@@ -67,15 +67,15 @@ class GameControllerBridge:
         ]
         self.sensor_names.extend(self.pressure_sensor_names)
 
-        self.pub_clock = rospy.Publisher("/clock", Clock, queue_size=1)
-        self.pub_server_time_clock = rospy.Publisher("/server_time_clock", Clock, queue_size=1)
-        self.pub_camera = rospy.Publisher("camera/image_raw", Image, queue_size=1)
-        self.pub_camera_info = rospy.Publisher("camera/camera_info", CameraInfo, queue_size=1, latch=True)
-        self.pub_imu = rospy.Publisher("imu_raw", Imu, queue_size=1)
+        self.pub_clock = self.create_publisher("/clock", Clock, queue_size=1)
+        self.pub_server_time_clock = self.create_publisher("/server_time_clock", Clock, queue_size=1)
+        self.pub_camera = self.create_publisher("camera/image_raw", Image, queue_size=1)
+        self.pub_camera_info = self.create_publisher("camera/camera_info", CameraInfo, queue_size=1, latch=True)
+        self.pub_imu = self.create_publisher("imu_raw", Imu, queue_size=1)
         self.pub_imu_first = 2
-        self.pressure_sensors_pub = {i: rospy.Publisher("foot_contact_{}".format(i), Bool, queue_size=10) for i in range(8)}
-        self.pub_joint_states = rospy.Publisher("joint_states", JointState, queue_size=1)
-        self.joint_command_subscriber = rospy.Subscriber("joint_command", JointState, self.joint_command_callback)
+        self.pressure_sensors_pub = {i: self.create_publisher("foot_contact_{}".format(i), Bool, queue_size=10) for i in range(8)}
+        self.pub_joint_states = self.create_publisher("joint_states", JointState, queue_size=1)
+        self.joint_command_create_subscription = self.create_subscription("joint_command", JointState, self.joint_command_callback)
 
         self.addr = os.getenv("ROBOCUP_SIMULATOR_ADDR", "127.0.0.1:10001")
 
@@ -97,7 +97,7 @@ class GameControllerBridge:
         return data
 
     def run(self):
-        while not rospy.is_shutdown():
+        while not self.is_shutdown():
             # Parse sensor
             try:
                 if self.socket is None:
@@ -176,7 +176,7 @@ class GameControllerBridge:
     def handle_time(self, time):
         # time stamp at which the measurements were performed expressed in [ms]
         secs = time / 1000
-        ros_time = rospy.Time.from_seconds(secs)
+        ros_time = self.Time.from_seconds(secs)
         self.stamp = ros_time
         msg = Clock()
         msg.clock.secs = ros_time.secs
@@ -195,11 +195,11 @@ class GameControllerBridge:
         for message in messages:
             text = message.text
             if message.message_type == messages_pb2.Message.ERROR_MESSAGE:
-                rospy.logerr(f"RECEIVED ERROR: '{text}'", logger_name="rc_api")
+                self.get_logger().error(f"RECEIVED ERROR: '{text}'", logger_name="rc_api")
             elif message.message_type == messages_pb2.Message.WARNING_MESSAGE:
-                rospy.logwarn(f"RECEIVED WARNING: '{text}'", logger_name="rc_api")
+                self.logwarn(f"RECEIVED WARNING: '{text}'", logger_name="rc_api")
             else:
-                rospy.logwarn(f"RECEIVED UNKNOWN MESSAGE: '{text}'", logger_name="rc_api")
+                self.logwarn(f"RECEIVED UNKNOWN MESSAGE: '{text}'", logger_name="rc_api")
 
     def handle_imu_data(self, accelerometers, gyros):
         # IMU
@@ -257,7 +257,7 @@ class GameControllerBridge:
         # TODO
         pass
         # for bumper in bumpers:
-        #     rospy.logwarn(f"Unknown bumper: '{bumper.name}'", logger_name="rc_api")
+        #     self.logwarn(f"Unknown bumper: '{bumper.name}'", logger_name="rc_api")
 
     def handle_camera_measurements(self, cameras):
         for camera in cameras:
@@ -282,7 +282,7 @@ class GameControllerBridge:
                 img_msg.data = image
                 self.pub_camera.publish(img_msg)
             else:
-                rospy.logerr(f"Unknown camera: '{name}'", logger_name="rc_api")
+                self.get_logger().error(f"Unknown camera: '{name}'", logger_name="rc_api")
 
     def publish_camera_info(self, height, width):
         camera_info_msg = CameraInfo()
@@ -304,15 +304,15 @@ class GameControllerBridge:
 
     def handle_force_measurements(self, forces):
         for force in forces:
-            rospy.logwarn(f"Unknown force measurement: '{force.name}'", logger_name="rc_api")
+            self.logwarn(f"Unknown force measurement: '{force.name}'", logger_name="rc_api")
 
     def handle_force3D_measurements(self, force3ds):
         for force3d in force3ds:
-            rospy.logwarn(f"Unknown force3d measurement: '{force3d.name}'", logger_name="rc_api")
+            self.logwarn(f"Unknown force3d measurement: '{force3d.name}'", logger_name="rc_api")
 
     def handle_force6D_measurements(self, force6ds):
         for force6d in force6ds:
-            rospy.logwarn(f"Unknown force6d measurement: '{force6d.name}'", logger_name="rc_api")
+            self.logwarn(f"Unknown force6d measurement: '{force6d.name}'", logger_name="rc_api")
 
     def handle_position_sensor_measurements(self, position_sensors):
         state_msg = JointState()

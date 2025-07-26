@@ -1,4 +1,4 @@
-import rospy
+import rclpy
 from std_srvs.srv import Empty, EmptyRequest, EmptyResponse
 
 
@@ -10,14 +10,14 @@ class AutoPilotContextRos(AutoPilotContext):
         """
         super(AutoPilotContextRos, self).__init__(AutoPilotActionsRos(behavior))
 
-        self._srv_hover = rospy.Service("evtol_behavior/test/hover", Empty, self.__callback_hover)
-        self._srv_hover_kill = rospy.Service("evtol_behavior/test/hover_kill", Empty, self.__callback_hover_kill)
-        self._srv_hover_uwb = rospy.Service("evtol_behavior/test/hover_uwb", Empty, self.__callback_hover_uwb)
-        self._srv_alt = rospy.Service("evtol_behavior/test/altitude", Empty, self.__callback_altitude)
-        self._srv_square_hover = rospy.Service("evtol_behavior/test/square_hover", Empty, self.__callback_square_hover)
-        self._srv_square_traj = rospy.Service("evtol_behavior/test/square_traj", Empty, self.__callback_square_traj)
-        self._srv_circle_traj = rospy.Service("evtol_behavior/test/circle_traj", Empty, self.__callback_circle_traj)
-        self._srv_lemniscate_traj = rospy.Service("evtol_behavior/test/lemniscate_traj", Empty, self.__callback_lemniscate_traj)
+        self._srv_hover = self.Service("evtol_behavior/test/hover", Empty, self.__callback_hover)
+        self._srv_hover_kill = self.Service("evtol_behavior/test/hover_kill", Empty, self.__callback_hover_kill)
+        self._srv_hover_uwb = self.Service("evtol_behavior/test/hover_uwb", Empty, self.__callback_hover_uwb)
+        self._srv_alt = self.Service("evtol_behavior/test/altitude", Empty, self.__callback_altitude)
+        self._srv_square_hover = self.Service("evtol_behavior/test/square_hover", Empty, self.__callback_square_hover)
+        self._srv_square_traj = self.Service("evtol_behavior/test/square_traj", Empty, self.__callback_square_traj)
+        self._srv_circle_traj = self.Service("evtol_behavior/test/circle_traj", Empty, self.__callback_circle_traj)
+        self._srv_lemniscate_traj = self.Service("evtol_behavior/test/lemniscate_traj", Empty, self.__callback_lemniscate_traj)
 
         # TODO can i add the same trick i used in behaviorcontextros
 
@@ -25,7 +25,7 @@ class AutoPilotContextRos(AutoPilotContext):
         """
         This function handles the hover test service.
         """
-        rospy.loginfo("hover")
+        self.get_logger().info("hover")
 
         self.autopilot = Hover(self.action)
         self.autopilot.inprogress = True
@@ -36,7 +36,7 @@ class AutoPilotContextRos(AutoPilotContext):
         """
         This function handles the hover test service.
         """
-        rospy.loginfo("hover kill")
+        self.get_logger().info("hover kill")
 
         self.autopilot = HoverKill(self.action)
         self.autopilot.inprogress = True
@@ -47,7 +47,7 @@ class AutoPilotContextRos(AutoPilotContext):
         """
         This function handles the hover test service.
         """
-        rospy.loginfo("hover uwb")
+        self.get_logger().info("hover uwb")
 
         self.autopilot = HoverUwb(self.action)
         self.autopilot.inprogress = True

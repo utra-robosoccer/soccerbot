@@ -2,7 +2,7 @@ import abc
 import math
 
 import numpy as np
-import rospy
+import rclpy
 
 from soccer_strategy.old.ball import Ball
 from soccer_strategy.old.robot import Robot
@@ -29,11 +29,11 @@ class RobotControlled(Robot):
         self.goal_position = None
 
         self.max_kick_speed = 2
-        self.robot_focused_on_ball_time = rospy.Time(0)
+        self.robot_focused_on_ball_time = self.Time(0)
         self.kick_with_right_foot = True
 
-        self.min_kick_distance = rospy.get_param("min_kick_distance", 0.20)
-        self.min_kick_angle = rospy.get_param("min_kick_angle", 0.4)
+        self.min_kick_distance = self.get_param("min_kick_distance", 0.20)
+        self.min_kick_angle = self.get_param("min_kick_angle", 0.4)
 
     def shorten_navigation_position(self, goal_position):
         """
@@ -42,7 +42,7 @@ class RobotControlled(Robot):
         :param goal_position: [x, y, theta] of the robot's goal position
         """
 
-        shorten_navigation_limit = rospy.get_param("shorten_navigation_limit", 2)
+        shorten_navigation_limit = self.get_param("shorten_navigation_limit", 2)
         distance_xy = np.linalg.norm(self.position[0:2] - goal_position[0:2])
         if distance_xy < shorten_navigation_limit:
             return goal_position
@@ -53,7 +53,7 @@ class RobotControlled(Robot):
 
         diff_angle = math.atan2(diff[1], diff[0])
         new_location = np.array([self.position[0] + diff_unit[0], self.position[1] + diff_unit[1], diff_angle])
-        rospy.loginfo(f"Shortened Navigation Path: Original {goal_position} New {new_location}")
+        self.get_logger().info(f"Shortened Navigation Path: Original {goal_position} New {new_location}")
 
         return new_location
 
@@ -65,10 +65,10 @@ class RobotControlled(Robot):
 
         if self.status == Robot.Status.WALKING:
             if self.goal_position is not None and np.linalg.norm(np.array(self.goal_position[0:2]) - np.array(goal_position[0:2])) < 0.05:
-                rospy.logwarn("New Goal too close to previous goal: New " + str(self.goal_position) + " Old " + str(goal_position))
+                self.logwarn("New Goal too close to previous goal: New " + str(self.goal_position) + " Old " + str(goal_position))
                 return False
             else:
-                rospy.logwarn("Updating Goal: New " + str(self.goal_position) + " Old " + str(goal_position))
+                self.logwarn("Updating Goal: New " + str(self.goal_position) + " Old " + str(goal_position))
 
         self.start_position = self.position
         self.goal_position = goal_position

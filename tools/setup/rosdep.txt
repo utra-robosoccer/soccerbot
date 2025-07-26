@@ -56,5 +56,5 @@ ros-noetic-urdf
 ros-noetic-usb-cam
 ros-noetic-webots-ros
 ros-noetic-xacro
-ros-noetic-robot-state-publisher
+ros-noetic-robot-state-create_publisher
 xterm

@@ -4,7 +4,7 @@ import os
 import time
 
 import numpy as np
-import rospy
+import rclpy
 import tf
 import transforms3d
 from controller import Node, Supervisor
@@ -39,7 +39,7 @@ def reset_robot(pose: PoseStamped, robot: str):
         supervisor.step(1)
         print(f"{robot} reset to ({pose.pose.position.x}, {pose.pose.position.y})")
     else:
-        rospy.logerr("Reset robot failed")
+        self.get_logger().error("Reset robot failed")
 
 
 def reset_ball(pose: PoseStamped):
@@ -52,7 +52,7 @@ def reset_ball(pose: PoseStamped):
         supervisor.step(1)
         print(f"ball reset to ({pose.pose.position.x}, {pose.pose.position.y})")
     else:
-        rospy.logerr("Reset ball failed")
+        self.get_logger().error("Reset ball failed")
 
 
 def publish_ground_truth_messages(c: Clock):
@@ -69,11 +69,11 @@ def publish_ground_truth_messages(c: Clock):
             quat_scalar_first = transforms3d.quaternions.axangle2quat(rotation_angleax[:3], rotation_angleax[3])
             rotation_quaternion = np.append(quat_scalar_first[1:], quat_scalar_first[0])
 
-            odom = rospy.Publisher("/" + name + "/base_pose_ground_truth", Odometry, queue_size=1)
+            odom = self.create_publisher("/" + name + "/base_pose_ground_truth", Odometry, queue_size=1)
             odometry = Odometry()
             odometry.header.frame_id = name + "/odom"
             odometry.child_frame_id = name + "/base_footprint"
-            odometry.header.stamp = rospy.Time.from_seconds(c.clock.secs)
+            odometry.header.stamp = self.Time.from_seconds(c.clock.secs)
             odometry.pose.pose.position.x = translation[0]
             odometry.pose.pose.position.y = translation[1]
             odometry.pose.pose.position.z = 0.0
@@ -156,16 +156,16 @@ def test_clock_callback(c: Clock):
 
 if __name__ == "__main__":
 
-    rospy.init_node("ground_truth_bridge")
+    self.init_node("ground_truth_bridge")
     transform_broadcaster = tf.TransformBroadcaster()
 
-    clock_subscriber = rospy.Subscriber("/clock", Clock, callback=publish_ground_truth_messages)
-    test_clock_subscriber = rospy.Subscriber("/clock_test", Clock, callback=test_clock_callback)
+    clock_create_subscription = self.create_subscription("/clock", Clock, callback=publish_ground_truth_messages)
+    test_clock_create_subscription = self.create_subscription("/clock_test", Clock, callback=test_clock_callback)
 
-    reset_robot_subscribers = []
+    reset_robot_create_subscriptions = []
     for robot in ROBOTS:
-        reset_robot_subscribers.append(rospy.Subscriber("/" + robot + "/reset_robot", PoseStamped, reset_robot, robot))
+        reset_robot_create_subscriptions.append(self.create_subscription("/" + robot + "/reset_robot", PoseStamped, reset_robot, robot))
 
-    reset_ball_subscriber = rospy.Subscriber("/reset_ball", PoseStamped, reset_ball)
+    reset_ball_create_subscription = self.create_subscription("/reset_ball", PoseStamped, reset_ball)
 
-    rospy.spin()
+    self.spin()

@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-import rospy
+import rclpy
 from mavros_msgs.srv import SetMode, SetModeRequest
 from std_srvs.srv import Empty, EmptyRequest, EmptyResponse
 
@@ -24,7 +24,7 @@ class BehaviorContextRos(BehaviorContext):
         self.transition_to(DisarmRos())
         # TODO add safe guards around manual safe switching
         # Services
-        self._srv_arm = rospy.Service("evtol_behavior/arm", Empty, self.__callback_arm)
+        self._srv_arm = self.Service("evtol_behavior/arm", Empty, self.__callback_arm)
 
     """
     The BehaviorContext delegates part of its behavior to the current State object.
@@ -37,8 +37,8 @@ class BehaviorContextRos(BehaviorContext):
         # TODO add a success condition
 
         if state_name in self.state_list:
-            rospy.wait_for_service("/evtol_nav/" + state_name)
-            rospy.ServiceProxy("evtol_nav/" + state_name, Empty).call(EmptyRequest())
+            self.wait_for_service("/evtol_nav/" + state_name)
+            self.ServiceProxy("evtol_nav/" + state_name, Empty).call(EmptyRequest())
 
     @staticmethod
     def check_disarm(next_state):

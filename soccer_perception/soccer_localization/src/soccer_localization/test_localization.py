@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pytest
 import rosbag
-import rospy
+import rclpy
 import sensor_msgs.point_cloud2 as pcl2
 from soccer_localization.field import Circle, Field, Line, Point
 from soccer_localization.field_lines_ukf import FieldLinesUKF
@@ -42,7 +42,7 @@ def retrieve_bag(url="https://drive.google.com/uc?id=1T_oyM1rZwWgUy6A6KlsJ7Oqn8J
 
 @pytest.mark.skipif("DISPLAY" not in os.environ, reason="Takes too long in CI")
 def test_points_correction_goalie():
-    rospy.init_node("test")
+    self.init_node("test")
 
     plt.figure("Localization")
 
@@ -61,7 +61,7 @@ def test_points_correction_goalie():
 
 @pytest.mark.skipif("DISPLAY" not in os.environ, reason="Takes too long in CI")
 def test_points_correction_striker():
-    rospy.init_node("test")
+    self.init_node("test")
 
     plt.figure("Localization")
 
@@ -261,7 +261,7 @@ def display_rosbag_map(bag, map, debug=False, pos_theta_start=[-4, -3.15, np.pi 
 
 
 def test_walk_forward():
-    rospy.init_node("test")
+    self.init_node("test")
 
     plt.figure("Localization")
 
@@ -275,7 +275,7 @@ def test_walk_forward():
 @pytest.mark.skip
 def test_walk_forward_striker():
 
-    rospy.init_node("test")
+    self.init_node("test")
 
     plt.figure("Localization")
 
@@ -287,7 +287,7 @@ def test_walk_forward_striker():
 
 def test_fall_relocalization():
 
-    rospy.init_node("test")
+    self.init_node("test")
 
     plt.figure("Localization")
 
@@ -315,8 +315,8 @@ class FreehicleField(Field):
 
 @pytest.mark.skip
 def test_freehicle_movement():
-    rospy.init_node("test")
-    rospy.set_param("distance_point_threshold", 2)
+    self.init_node("test")
+    self.set_param("distance_point_threshold", 2)
     plt.figure("Localization")
 
     map = FreehicleField()

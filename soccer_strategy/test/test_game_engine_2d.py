@@ -13,7 +13,7 @@ from unittest import TestCase
 from unittest.mock import MagicMock, patch
 
 import numpy as np
-import rospy
+import rclpy
 
 from soccer_strategy.old.game_engine_2d import GameEngine2D
 from soccer_strategy.old.robot import Robot
@@ -33,7 +33,7 @@ class TestGameEngine2D(TestCase):
             self.display = False
 
     def test_determine_side(self):
-        rospy.init_node("test")
+        self.init_node("test")
 
         FIELD_LENGTH = 9
         FIELD_WIDTH = 3.15
@@ -69,7 +69,7 @@ class TestGameEngine2D(TestCase):
         d.determine_side(current_robot, footprint_to_goal_post, game_state)
 
     def test_dummy_vs_stationary_strategy(self):
-        rospy.init_node("test")
+        self.init_node("test")
 
         g = GameEngine2D(display=self.display, team_1_strategy=StrategyDummy, team_2_strategy=StrategyStationary, game_duration=4)
         friendly_points, opponent_points = g.run()
@@ -77,14 +77,14 @@ class TestGameEngine2D(TestCase):
         assert not (friendly_points == 0 and opponent_points == 0)
 
     def test_dummy_vs_dummy_strategy(self):
-        rospy.init_node("test")
+        self.init_node("test")
 
         g = GameEngine2D(display=self.display, team_1_strategy=StrategyDummy, team_2_strategy=StrategyDummy, game_duration=6)
         friendly_points, opponent_points = g.run()
         print(f"Friendly: {friendly_points}, opponent: {opponent_points}")
 
     def test_obstacle_detection_between_ball_and_goal(self):
-        rospy.init_node("test")
+        self.init_node("test")
         team1 = Team(
             [
                 RobotControlled2D(
@@ -118,7 +118,7 @@ class TestGameEngine2D(TestCase):
         assert not (friendly_points == 0 and opponent_points == 0)
 
     def test_bump_into_ball_when_turning(self):
-        rospy.init_node("test")
+        self.init_node("test")
         team1 = Team(
             [
                 RobotControlled2D(
@@ -151,7 +151,7 @@ class TestGameEngine2D(TestCase):
         assert not (friendly_points == 0 and opponent_points == 0)
 
     def test_obstacle_detection_between_player_and_ball(self):
-        rospy.init_node("test")
+        self.init_node("test")
 
         team1 = Team(
             [
@@ -193,7 +193,7 @@ class TestGameEngine2D(TestCase):
         assert not (friendly_points == 0 and opponent_points == 0)
 
     def test_ball_on_goalline(self):
-        rospy.init_node("test")
+        self.init_node("test")
 
         team1 = Team(
             [
@@ -218,7 +218,7 @@ class TestGameEngine2D(TestCase):
         assert not (friendly_points == 0 and opponent_points == 0)
 
     def test_search_for_ball(self):
-        rospy.init_node("test")
+        self.init_node("test")
 
         team1 = Team(
             [
@@ -252,7 +252,7 @@ class TestGameEngine2D(TestCase):
         print(f"Friendly: {friendly_points}, opponent: {opponent_points}")
 
     def test_one_v_one(self):
-        rospy.init_node("test")
+        self.init_node("test")
 
         team1 = Team(
             [
@@ -286,7 +286,7 @@ class TestGameEngine2D(TestCase):
         print(f"Friendly: {friendly_points}, opponent: {opponent_points}")
 
     def test_obstacle_detection_when_ball_behind_kicker(self):
-        rospy.init_node("test")
+        self.init_node("test")
 
         team1 = Team(
             [
@@ -412,7 +412,7 @@ class TestGameEngine2D(TestCase):
 
     @patch("referee.Supervisor")
     def test_2d_with_referee(self, referee):
-        rospy.init_node("test")
+        self.init_node("test")
         os.chdir("../../external/hlvs_webots/controllers/referee")
 
         g = GameEngine2DWithReferee(
@@ -423,17 +423,17 @@ class TestGameEngine2D(TestCase):
         referee2d = Referee2D(game_engine_2d=g)
 
         # Game Controller receiver
-        publisher_init_orig = rospy.Publisher.__init__
+        create_publisher_init_orig = self.create_publisher.__init__
 
         game_controller_receivers = {}
         game_controller_receivers_threads = {}
         for team in [16, 5]:
             os.environ["ROBOCUP_TEAM_ID"] = str(team)
             for player in [1, 2, 3, 4]:
-                rospy.set_param("robot_id", player)
+                self.set_param("robot_id", player)
                 os.environ["ROS_NAMESPACE"] = f"robot{player}"
 
-                rospy.Publisher.__init__ = lambda self, name, *args, **kwargs: publisher_init_orig(
+                self.create_publisher.__init__ = lambda self, name, *args, **kwargs: create_publisher_init_orig(
                     self, f"team_{team}/robot{player}/{name}", *args, **kwargs
                 )
                 game_controller_receivers[(team, player)] = GameStateReceiver()
@@ -447,7 +447,7 @@ class TestGameEngine2D(TestCase):
 
         # Game running
         g.run()
-        rospy.spin()
+        self.spin()
 
         for gcrt in game_controller_receivers_threads.values():
             gcrt.join()

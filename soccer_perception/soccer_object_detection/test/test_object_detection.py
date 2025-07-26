@@ -11,18 +11,23 @@ import numpy as np
 import pytest
 import yaml
 from cv2 import Mat
-from soccer_object_detection.object_detect_node import Label, ObjectDetectionNode
-from soccer_object_detection.utils import check_bounding_box
 
 from soccer_common import Transformation
 from soccer_common.utils import download_dataset, wrapToPi
+from soccer_perception.soccer_object_detection.soccer_object_detection import (
+    check_bounding_box,
+)
+from soccer_perception.soccer_object_detection.soccer_object_detection.object_detect_node import (
+    Label,
+    ObjectDetectionNode,
+)
 
 PLOT = True
 
 
 class TestObjectDetection(TestCase):
     def test_object_detection(self):
-        src_path = expanduser("~") + "/catkin_ws/src/soccerbot/soccer_perception/"
+        src_path = expanduser("~") + "/ros2_ws/src/soccerbot/soccer_perception/"
         test_path = src_path + "data/images/simulation"
 
         download_dataset("https://drive.google.com/uc?id=11nN58j8_PBoLNRAzOEdk7fMe1UK1diCc", folder_path=test_path)
@@ -73,7 +78,7 @@ class TestObjectDetection(TestCase):
                 cv2.destroyAllWindows()
 
     def test_object_detection_vid(self):
-        src_path = expanduser("~") + "/catkin_ws/src/soccerbot/soccer_perception/"
+        src_path = expanduser("~") + "/ros2_ws/src/soccerbot/soccer_perception/"
         test_path = src_path + "data/videos/robocup2023"
 
         download_dataset("https://drive.google.com/uc?id=1UTQ6Rz0yk8jpWwWoq3eSf7DOmG_j9An3", folder_path=test_path)
@@ -102,12 +107,11 @@ class TestObjectDetection(TestCase):
                 cv2.waitKey(24)  # TODO why is this one so much faster
         cv2.destroyAllWindows()
 
-    @pytest.mark.skip(reason="Only run locally")
+    # @pytest.mark.skip(reason="Only run locally")
     def test_object_detection_node_cam(self):
-
         src_path = os.path.dirname(os.path.realpath(__file__))
 
-        model_path = src_path + "/../models/half_5.pt"
+        model_path = src_path + "/../models/yolov8s_detect_best.pt"  # yolov8s_detect_best
 
         n = ObjectDetectionNode(model_path=model_path)
 
@@ -124,11 +128,11 @@ class TestObjectDetection(TestCase):
             img = cv2.resize(frame, dsize=(640, 480))
 
             n.camera.pose.orientation_euler = [0, np.pi / 8, 0]
-            detection_image, bbs_msg = n.get_model_output(img)  # 0.01
-
-            if "DISPLAY" in os.environ and PLOT:
-                cv2.imshow("Image", detection_image)
-                cv2.waitKey(24)  # TODO why is this one so much faster
+            detection_image, bbs_msg = n.get_model_output_v8(img)  # 0.01
+            print(bbs_msg)
+            # if "DISPLAY" in os.environ and PLOT:
+            #     cv2.imshow("Image", detection_image) # detection_image
+            #     cv2.waitKey(24)  # TODO why is this one so much faster
         cv2.destroyAllWindows()
 
     @pytest.mark.skip(reason="Only run locally")
@@ -372,7 +376,7 @@ class TestObjectDetection(TestCase):
 
             return visible_posts
 
-        src_path = expanduser("~") + "/catkin_ws/src/soccerbot/soccer_perception/"
+        src_path = expanduser("~") + "/ros2_ws/src/soccerbot/soccer_perception/"
         test_path = src_path + "data/images/goal_net"
 
         download_dataset("https://drive.google.com/uc?id=17qdnW7egoopXHvakiNnUUufP2MOjyZ18", folder_path=test_path)

@@ -2,9 +2,11 @@ import math
 from unittest import TestCase
 
 from sensor_msgs.msg import CameraInfo
-from soccer_object_detection.camera.camera_calculations import CameraCalculations
 
 from soccer_common.transformation import Transformation
+from soccer_perception.soccer_object_detection.soccer_object_detection.camera.camera_calculations import (
+    CameraCalculations,
+)
 
 
 # TODO fix unit test
@@ -50,7 +52,7 @@ class TestCamera(TestCase):
         self.assertAlmostEqual(p3[1], 240 / 2, delta=0.5)
 
     def test_calculate_bounding_boxes_from_ball(self):
-        # rospy.init_node("test")
+        # self.init_node("test")
 
         for cam_angle in [0, 0.1, -0.1]:
 
@@ -68,9 +70,9 @@ class TestCamera(TestCase):
                     ball_pose = Transformation(position)
                     ball_radius = 0.07
 
-                    bounding_boxes = c.calculate_bounding_boxes_from_ball(ball_pose, ball_radius)
+                    bounding_boxes = c.calculate_bounding_boxes_from_ball(ball_pose, ball_radius)  # TODO fix return format
                     # [[135.87634651355825, 75.87634651355823], [224.12365348644175, 164.12365348644175]]
-                    position = c.calculate_ball_from_bounding_boxes(ball_radius, bounding_boxes)
+                    position = c.calculate_ball_from_bounding_boxes(bounding_boxes, ball_radius)
                     # TODO fix
                     # self.assertAlmostEqual(position.position[0], ball_pose.position[0], delta=0.001)
                     # self.assertAlmostEqual(position.position[1], ball_pose.position[1], delta=0.001)

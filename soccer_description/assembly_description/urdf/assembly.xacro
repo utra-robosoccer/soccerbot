@@ -6,583 +6,634 @@
 <xacro:include filename="$(find assembly_description)/urdf/assembly.gazebo" />
 <link name="base_link">
   <inertial>
-    <origin xyz="-0.02024929347181477 0.00329389202927954 -0.02671963219571571" rpy="0 0 0"/>
+    <origin xyz="-0.02024929347181477 0.00329389202927954 -0.02671963219571571" rpy="-1.57 0  0"/>
     <mass value="3.0429325287174738"/>
     <inertia ixx="0.009761" iyy="0.006663" izz="0.008082" ixy="7.9e-05" iyz="8.1e-05" ixz="-0.000195"/>
   </inertial>
   <visual>
-    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <origin xyz="0 0 0" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/base_link.dae" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="silver_default"/>
   </visual>
   <collision>
-    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <origin xyz="0 0 0" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/base_link.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/base_link.dae" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
-<link name="left_hip_side_v5_1">
+<link name="left_hip_side">
   <inertial>
-    <origin xyz="-0.0176303342104258 -2.8796409701214998e-15 -0.007188418776152797" rpy="0 0 0"/>
+    <origin xyz="-0.0176303342104258 -2.8796409701214998e-15 -0.007188418776152797" rpy="-1.57 0  0"/>
     <mass value="0.03929574358294283"/>
     <inertia ixx="7e-06" iyy="9.2e-05" izz="9e-05" ixy="0.0" iyz="0.0" ixz="4e-06"/>
   </inertial>
   <visual>
-    <origin xyz="-0.016 -0.04125 0.1085" rpy="0 0 0"/>
+    <origin xyz="-0.016 -0.04125 0.1085" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/left_hip_side_v5_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/left_hip_side_v5_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="aluminum_satin"/>
   </visual>
   <collision>
-    <origin xyz="-0.016 -0.04125 0.1085" rpy="0 0 0"/>
+    <origin xyz="-0.016 -0.04125 0.1085" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/left_hip_side_v5_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/left_hip_side_v5_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
-<link name="left_foot_v10_1">
+<link name="left_foot">
   <inertial>
-    <origin xyz="0.05312327716355333 0.01311710007932914 -0.017187548637288774" rpy="0 0 0"/>
+    <origin xyz="0.05312327716355333 0.01311710007932914 -0.017187548637288774" rpy="-1.57 0  0"/>
     <mass value="0.03929273129474386"/>
     <inertia ixx="2.6e-05" iyy="0.000124" izz="0.000144" ixy="2e-06" iyz="2e-06" ixz="-3e-06"/>
   </inertial>
   <visual>
-    <origin xyz="0.054731 -0.04125 0.3685" rpy="0 0 0"/>
+    <origin xyz="0.054731 -0.04125 0.3685" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/left_foot_v10_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/left_foot_v10_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="abs_white"/>
   </visual>
   <collision>
-    <origin xyz="0.054731 -0.04125 0.3685" rpy="0 0 0"/>
+    <origin xyz="0.054731 -0.04125 0.3685" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/left_foot_v10_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/left_foot_v10_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
-<link name="left_shoulder_v5_1">
+<link name="left_shoulder">
   <inertial>
-    <origin xyz="8.922688803092438e-11 0.007844026821939576 2.0192181260370035e-14" rpy="0 0 0"/>
+    <origin xyz="8.922688803092438e-11 0.007844026821939576 2.0192181260370035e-14" rpy="-1.57 0  0"/>
     <mass value="0.010592862408759271"/>
     <inertia ixx="1e-06" iyy="3e-06" izz="3e-06" ixy="0.0" iyz="-0.0" ixz="0.0"/>
   </inertial>
   <visual>
-    <origin xyz="-0.003 -0.084 -0.04475" rpy="0 0 0"/>
+    <origin xyz="-0.003 -0.084 -0.04475" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/left_shoulder_v5_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/left_shoulder_v5_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="aluminum_satin"/>
   </visual>
   <collision>
-    <origin xyz="-0.003 -0.084 -0.04475" rpy="0 0 0"/>
+    <origin xyz="-0.003 -0.084 -0.04475" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/left_shoulder_v5_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/left_shoulder_v5_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
-<link name="left_bicep_v6_1">
+<link name="left_bicep">
   <inertial>
-    <origin xyz="-0.019420473733666368 0.00010477857835172744 -0.06051458521988624" rpy="0 0 0"/>
+    <origin xyz="-0.019420473733666368 0.00010477857835172744 -0.06051458521988624" rpy="-1.57 0  0"/>
     <mass value="0.18636400760544294"/>
     <inertia ixx="0.000442" iyy="0.000444" izz="3.5e-05" ixy="0.0" iyz="3e-06" ixz="-1e-05"/>
   </inertial>
   <visual>
-    <origin xyz="-0.022 -0.1143 -0.04475" rpy="0 0 0"/>
+    <origin xyz="-0.022 -0.1143 -0.04475" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/left_bicep_v6_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/left_bicep_v6_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="silver_default"/>
   </visual>
   <collision>
-    <origin xyz="-0.022 -0.1143 -0.04475" rpy="0 0 0"/>
+    <origin xyz="-0.022 -0.1143 -0.04475" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/left_bicep_v6_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/left_bicep_v6_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
-<link name="left_forearm_v4_1">
+<link name="left_forearm">
   <inertial>
-    <origin xyz="0.0004904443113911659 -0.01970036030468776 -0.0814474917977369" rpy="0 0 0"/>
+    <origin xyz="0.0004904443113911659 -0.01970036030468776 -0.0814474917977369" rpy="-1.57 0  0"/>
     <mass value="0.05984540204112203"/>
     <inertia ixx="0.000124" iyy="0.000119" izz="2.1e-05" ixy="-0.0" iyz="-0.0" ixz="-0.0"/>
   </inertial>
   <visual>
-    <origin xyz="-0.001597 -0.133101 0.074391" rpy="0 0 0"/>
+    <origin xyz="-0.001597 -0.133101 0.074391" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/left_forearm_v4_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/left_forearm_v4_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="abs_white"/>
   </visual>
   <collision>
-    <origin xyz="-0.001597 -0.133101 0.074391" rpy="0 0 0"/>
+    <origin xyz="-0.001597 -0.133101 0.074391" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/left_forearm_v4_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/left_forearm_v4_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
-<link name="neck_v6_1">
+<link name="neck">
   <inertial>
-    <origin xyz="8.936969206796164e-11 0.0012409815706136025 0.012040454865583" rpy="0 0 0"/>
+    <origin xyz="8.936969206796164e-11 0.0012409815706136025 0.012040454865583" rpy="-1.57 0  0"/>
     <mass value="0.004247113386163016"/>
     <inertia ixx="2e-06" iyy="1e-06" izz="2e-06" ixy="-0.0" iyz="-0.0" ixz="0.0"/>
   </inertial>
   <visual>
-    <origin xyz="-0.0 -0.00025 -0.0725" rpy="0 0 0"/>
+    <origin xyz="-0.0 -0.00025 -0.0725" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/neck_v6_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/neck_v6_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="abs_white"/>
   </visual>
   <collision>
-    <origin xyz="-0.0 -0.00025 -0.0725" rpy="0 0 0"/>
+    <origin xyz="-0.0 -0.00025 -0.0725" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/neck_v6_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/neck_v6_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
-<link name="head_v4_1">
+<link name="head">
   <inertial>
-    <origin xyz="-0.0025761957912120003 0.01899177474904292 0.03300593624682499" rpy="0 0 0"/>
+    <origin xyz="-0.0025761957912120003 0.01899177474904292 0.03300593624682499" rpy="-1.57 0  0"/>
     <mass value="0.26433915470596575"/>
     <inertia ixx="0.000237" iyy="0.000239" izz="0.000166" ixy="-0.0" iyz="-2e-06" ixz="-5.6e-05"/>
   </inertial>
   <visual>
-    <origin xyz="-0.0 0.01825 -0.0975" rpy="0 0 0"/>
+    <origin xyz="-0.0 0.01825 -0.0975" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/head_v4_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/head_v4_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="steel_satin"/>
   </visual>
   <collision>
-    <origin xyz="-0.0 0.01825 -0.0975" rpy="0 0 0"/>
+    <origin xyz="-0.0 0.01825 -0.0975" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/head_v4_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/head_v4_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
-<link name="right_hip_side_v1_1">
+<link name="right_hip_side">
   <inertial>
-    <origin xyz="-0.017630334210425074 -2.7131075164277263e-15 -0.007188418776152866" rpy="0 0 0"/>
+    <origin xyz="-0.017630334210425074 -2.7131075164277263e-15 -0.007188418776152866" rpy="-1.57 0  0"/>
     <mass value="0.03929574358294283"/>
     <inertia ixx="7e-06" iyy="9.2e-05" izz="9e-05" ixy="0.0" iyz="0.0" ixz="4e-06"/>
   </inertial>
   <visual>
-    <origin xyz="-0.016 0.04125 0.1085" rpy="0 0 0"/>
+    <origin xyz="-0.016 0.04125 0.1085" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/right_hip_side_v1_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/right_hip_side_v1_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="aluminum_satin"/>
   </visual>
   <collision>
-    <origin xyz="-0.016 0.04125 0.1085" rpy="0 0 0"/>
+    <origin xyz="-0.016 0.04125 0.1085" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/right_hip_side_v1_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/right_hip_side_v1_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
-<link name="right_ankle_v2_1">
+<link name="right_ankle">
   <inertial>
-    <origin xyz="-0.019332548462524354 0.02355722240141854 -0.018170467896408804" rpy="0 0 0"/>
+    <origin xyz="-0.019332548462524354 0.02355722240141854 -0.018170467896408804" rpy="-1.57 0  0"/>
     <mass value="0.2722002973016189"/>
     <inertia ixx="0.000108" iyy="0.000229" izz="0.000189" ixy="-0.0" iyz="1e-06" ixz="-1.3e-05"/>
   </inertial>
   <visual>
-    <origin xyz="-0.0116 0.06475 0.3325" rpy="0 0 0"/>
+    <origin xyz="-0.0116 0.06475 0.3325" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/right_ankle_v2_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/right_ankle_v2_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="steel_satin"/>
   </visual>
   <collision>
-    <origin xyz="-0.0116 0.06475 0.3325" rpy="0 0 0"/>
+    <origin xyz="-0.0116 0.06475 0.3325" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/right_ankle_v2_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/right_ankle_v2_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
-<link name="right_foot_v2_1">
+<link name="right_foot">
   <inertial>
-    <origin xyz="0.053123527163554944 -0.01311710007932746 -0.017187548637289052" rpy="0 0 0"/>
+    <origin xyz="0.053123527163554944 -0.01311710007932746 -0.017187548637289052" rpy="-1.57 0  0"/>
     <mass value="0.03929273129474384"/>
     <inertia ixx="2.6e-05" iyy="0.000124" izz="0.000144" ixy="-2e-06" iyz="-2e-06" ixz="-3e-06"/>
   </inertial>
   <visual>
-    <origin xyz="0.0547 0.04125 0.3685" rpy="0 0 0"/>
+    <origin xyz="0.0547 0.04125 0.3685" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/right_foot_v2_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/right_foot_v2_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="abs_white"/>
   </visual>
   <collision>
-    <origin xyz="0.0547 0.04125 0.3685" rpy="0 0 0"/>
+    <origin xyz="0.0547 0.04125 0.3685" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/right_foot_v2_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/right_foot_v2_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
-<link name="right_shoulder_v1_1">
+<link name="right_shoulder">
   <inertial>
-    <origin xyz="8.958533047331851e-11 -0.007844026821937675 2.015054789694659e-14" rpy="0 0 0"/>
+    <origin xyz="8.958533047331851e-11 -0.007844026821937675 2.015054789694659e-14" rpy="-1.57 0  0"/>
     <mass value="0.010592862408759271"/>
     <inertia ixx="1e-06" iyy="3e-06" izz="3e-06" ixy="0.0" iyz="0.0" ixz="-0.0"/>
   </inertial>
   <visual>
-    <origin xyz="-0.003 0.084 -0.04475" rpy="0 0 0"/>
+    <origin xyz="-0.003 0.084 -0.04475" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/right_shoulder_v1_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/right_shoulder_v1_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="aluminum_satin"/>
   </visual>
   <collision>
-    <origin xyz="-0.003 0.084 -0.04475" rpy="0 0 0"/>
+    <origin xyz="-0.003 0.084 -0.04475" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/right_shoulder_v1_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/right_shoulder_v1_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
-<link name="right_bicep_v2_1">
+<link name="right_bicep">
   <inertial>
-    <origin xyz="-0.01907144993358056 -0.0012317079698353356 -0.06051458521988612" rpy="0 0 0"/>
+    <origin xyz="-0.01907144993358056 -0.0012317079698353356 -0.06051458521988612" rpy="-1.57 0  0"/>
     <mass value="0.18636400760544294"/>
     <inertia ixx="0.000443" iyy="0.000444" izz="3.5e-05" ixy="-0.0" iyz="-1.1e-05" ixz="-6e-06"/>
   </inertial>
   <visual>
-    <origin xyz="-0.022 0.1143 -0.04475" rpy="0 0 0"/>
+    <origin xyz="-0.022 0.1143 -0.04475" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/right_bicep_v2_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/right_bicep_v2_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="silver_default"/>
   </visual>
   <collision>
-    <origin xyz="-0.022 0.1143 -0.04475" rpy="0 0 0"/>
+    <origin xyz="-0.022 0.1143 -0.04475" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/right_bicep_v2_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/right_bicep_v2_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
-<link name="right_forearm_v1_1">
+<link name="right_forearm">
   <inertial>
-    <origin xyz="0.0004903254970113039 0.019700355234835765 -0.08144749179773612" rpy="0 0 0"/>
+    <origin xyz="0.0004903254970113039 0.019700355234835765 -0.08144749179773612" rpy="-1.57 0  0"/>
     <mass value="0.05984540204112203"/>
     <inertia ixx="0.000124" iyy="0.000119" izz="2.1e-05" ixy="-0.0" iyz="-0.0" ixz="-0.0"/>
   </inertial>
   <visual>
-    <origin xyz="-0.002403 0.135101 0.074391" rpy="0 0 0"/>
+    <origin xyz="-0.002403 0.135101 0.074391" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/right_forearm_v1_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/right_forearm_v1_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="abs_white"/>
   </visual>
   <collision>
-    <origin xyz="-0.002403 0.135101 0.074391" rpy="0 0 0"/>
+    <origin xyz="-0.002403 0.135101 0.074391" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/right_forearm_v1_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/right_forearm_v1_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
-<link name="left_thigh_v1_1">
+<link name="left_thigh">
   <inertial>
-    <origin xyz="-3.483251756527389e-07 -0.028961129249142487 -0.036619318233349435" rpy="0 0 0"/>
+    <origin xyz="-3.483251756527389e-07 -0.028961129249142487 -0.036619318233349435" rpy="-1.57 0  0"/>
     <mass value="0.02898284927838432"/>
     <inertia ixx="3.5e-05" iyy="2.1e-05" izz="1.7e-05" ixy="0.0" iyz="-0.0" ixz="0.0"/>
   </inertial>
   <visual>
-    <origin xyz="-0.011569 -0.06475 0.1725" rpy="0 0 0"/>
+    <origin xyz="-0.011569 -0.06475 0.1725" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/left_thigh_v1_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/left_thigh_v1_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="aluminum_satin"/>
   </visual>
   <collision>
-    <origin xyz="-0.011569 -0.06475 0.1725" rpy="0 0 0"/>
+    <origin xyz="-0.011569 -0.06475 0.1725" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/left_thigh_v1_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/left_thigh_v1_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
-<link name="right_thigh_v1_1">
+<link name="right_thigh">
   <inertial>
-    <origin xyz="9.832517461512424e-08 0.028961129249143854 -0.03661931823334971" rpy="0 0 0"/>
+    <origin xyz="9.832517461512424e-08 0.028961129249143854 -0.03661931823334971" rpy="-1.57 0  0"/>
     <mass value="0.02898284927838432"/>
     <inertia ixx="3.5e-05" iyy="2.1e-05" izz="1.7e-05" ixy="0.0" iyz="0.0" ixz="-0.0"/>
   </inertial>
   <visual>
-    <origin xyz="-0.0116 0.06475 0.1725" rpy="0 0 0"/>
+    <origin xyz="-0.0116 0.06475 0.1725" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/right_thigh_v1_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/right_thigh_v1_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="aluminum_satin"/>
   </visual>
   <collision>
-    <origin xyz="-0.0116 0.06475 0.1725" rpy="0 0 0"/>
+    <origin xyz="-0.0116 0.06475 0.1725" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/right_thigh_v1_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/right_thigh_v1_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
-<link name="left_hip_front_v5_1">
+<link name="left_hip_front">
   <inertial>
-    <origin xyz="0.04719163872713075 0.0001729815107887056 -0.01748011628225432" rpy="0 0 0"/>
+    <origin xyz="0.04719163872713075 0.0001729815107887056 -0.01748011628225432" rpy="-1.57 0  0"/>
     <mass value="0.2722002973016189"/>
     <inertia ixx="0.000107" iyy="0.000233" izz="0.000192" ixy="-1e-06" iyz="2e-06" ixz="1e-05"/>
   </inertial>
   <visual>
-    <origin xyz="0.0547 -0.04125 0.1365" rpy="0 0 0"/>
+    <origin xyz="0.0547 -0.04125 0.1365" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/left_hip_front_v5_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/left_hip_front_v5_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="aluminum_satin"/>
   </visual>
   <collision>
-    <origin xyz="0.0547 -0.04125 0.1365" rpy="0 0 0"/>
+    <origin xyz="0.0547 -0.04125 0.1365" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/left_hip_front_v5_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/left_hip_front_v5_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
-<link name="left_calve_v5_1">
+<link name="left_calve">
   <inertial>
-    <origin xyz="-5.272168187817235e-05 -0.023766836658218507 -0.023901439852959505" rpy="0 0 0"/>
+    <origin xyz="-5.272168187817235e-05 -0.023766836658218507 -0.023901439852959505" rpy="-1.57 0  0"/>
     <mass value="0.15898038946070936"/>
     <inertia ixx="0.000124" iyy="0.000107" izz="4.4e-05" ixy="0.0" iyz="-8e-06" ixz="-0.0"/>
   </inertial>
   <visual>
-    <origin xyz="-0.011569 -0.06475 0.2445" rpy="0 0 0"/>
+    <origin xyz="-0.011569 -0.06475 0.2445" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/left_calve_v5_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/left_calve_v5_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="aluminum_satin"/>
   </visual>
   <collision>
-    <origin xyz="-0.011569 -0.06475 0.2445" rpy="0 0 0"/>
+    <origin xyz="-0.011569 -0.06475 0.2445" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/left_calve_v5_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/left_calve_v5_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
-<link name="left_ankle_v7_1">
+<link name="left_ankle">
   <inertial>
-    <origin xyz="-0.01908804310535514 -0.023327010944413494 -0.018519883717742103" rpy="0 0 0"/>
+    <origin xyz="-0.01908804310535514 -0.023327010944413494 -0.018519883717742103" rpy="-1.57 0  0"/>
     <mass value="0.2722002973016189"/>
     <inertia ixx="0.000107" iyy="0.000233" izz="0.000192" ixy="-1e-06" iyz="-2e-06" ixz="-1e-05"/>
   </inertial>
   <visual>
-    <origin xyz="-0.011569 -0.06475 0.3325" rpy="0 0 0"/>
+    <origin xyz="-0.011569 -0.06475 0.3325" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/left_ankle_v7_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/left_ankle_v7_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="steel_satin"/>
   </visual>
   <collision>
-    <origin xyz="-0.011569 -0.06475 0.3325" rpy="0 0 0"/>
+    <origin xyz="-0.011569 -0.06475 0.3325" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/left_ankle_v7_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/left_ankle_v7_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
-<link name="right_hip_front_v5_1">
+<link name="right_hip_front">
   <inertial>
-    <origin xyz="0.04721220689744356 -0.0001729890555860411 -0.01748011628225596" rpy="0 0 0"/>
+    <origin xyz="0.04721220689744356 -0.0001729890555860411 -0.01748011628225596" rpy="-1.57 0  0"/>
     <mass value="0.2722002973016189"/>
     <inertia ixx="0.000107" iyy="0.000233" izz="0.000192" ixy="1e-06" iyz="-2e-06" ixz="1e-05"/>
   </inertial>
   <visual>
-    <origin xyz="0.0547 0.04125 0.1365" rpy="0 0 0"/>
+    <origin xyz="0.0547 0.04125 0.1365" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/right_hip_front_v5_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/right_hip_front_v5_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="aluminum_satin"/>
   </visual>
   <collision>
-    <origin xyz="0.0547 0.04125 0.1365" rpy="0 0 0"/>
+    <origin xyz="0.0547 0.04125 0.1365" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/right_hip_front_v5_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/right_hip_front_v5_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
 
-<link name="right_calve_v1_1">
+<link name="right_calve">
   <inertial>
-    <origin xyz="5.247168187765515e-05 0.02376683665821997 -0.023901439852960005" rpy="0 0 0"/>
+    <origin xyz="5.247168187765515e-05 0.02376683665821997 -0.023901439852960005" rpy="-1.57 0  0"/>
     <mass value="0.15898038946070936"/>
     <inertia ixx="0.000124" iyy="0.000107" izz="4.4e-05" ixy="0.0" iyz="8e-06" ixz="0.0"/>
   </inertial>
   <visual>
-    <origin xyz="-0.0116 0.06475 0.2445" rpy="0 0 0"/>
+    <origin xyz="-0.0116 0.06475 0.2445" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/right_calve_v1_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/right_calve_v1_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
     <material name="aluminum_satin"/>
   </visual>
   <collision>
-    <origin xyz="-0.0116 0.06475 0.2445" rpy="0 0 0"/>
+    <origin xyz="-0.0116 0.06475 0.2445" rpy="-1.57 0  0"/>
     <geometry>
-      <mesh filename="package://assembly_description/meshes/right_calve_v1_1.stl" scale="0.001 0.001 0.001"/>
+      <mesh filename="package://assembly_description/meshes/simplified/right_calve_v1_1.dae" scale="0.001 0.001 0.001"/>
     </geometry>
   </collision>
 </link>
+<joint name="head_yaw" type="revolute">
+    <origin rpy="0 0 0" xyz="0.0 0.00025 0.0725"/>
+    <parent link="base_link"/>
+    <child link="neck"/>
+    <axis xyz="-0.0 0.0 -1.0"/>
+    <dynamics damping="0" friction="0"/>
+    <limit effort="1.5" lower="-1.5707963267948966" upper="1.5707963267948966" velocity="6.39"/>
+  </joint>
+  <joint name="head_pitch" type="revolute">
+    <origin rpy="0 0 0" xyz="0.0 -0.0185 0.025"/>
+    <parent link="neck"/>
+    <child link="head"/>
+    <axis xyz="0.0 1.0 0.0"/>
+    <dynamics damping="0" friction="0"/>
+    <limit effort="1.5" lower="0" upper="1.5707963267948966" velocity="6.39"/>
+  </joint>
 
-<joint name="left_hip_yaw" type="continuous">
-  <origin xyz="0.016 0.04125 -0.1085" rpy="0 0 0"/>
-  <parent link="base_link"/>
-  <child link="left_hip_side_v5_1"/>
-  <axis xyz="-0.0 -0.0 -1.0"/>
-</joint>
+  <joint name="left_shoulder_pitch" type="revolute">
+    <origin rpy="0 0 0" xyz="0.003 0.084 0.04475"/>
+    <parent link="base_link"/>
+    <child link="left_shoulder"/>
+    <axis xyz="-0.0 -1.0 -0.0"/>
+    <dynamics damping="0" friction="0"/>
+    <limit effort="4.1" lower="-3.141592653589793" upper="3.9269908169872414" velocity="4.82"/>
+  </joint>
+  <joint name="left_shoulder_roll" type="revolute">
+    <origin rpy="0 0 0" xyz="0.019 0.0303 0.0"/>
+    <parent link="left_shoulder"/>
+    <child link="left_bicep"/>
+    <axis xyz="1.0 -0.0 0.0"/>
+    <dynamics damping="0" friction="0"/>
+    <limit effort="4.1" lower="0" upper="1.5707963267948966" velocity="4.82"/>
+  </joint>
+  <joint name="left_elbow" type="revolute">
+    <origin rpy="0 0 0" xyz="-0.020403 0.018801 -0.119141"/>
+    <parent link="left_bicep"/>
+    <child link="left_forearm"/>
+    <axis xyz="-0.0 -1.0 -0.0"/>
+    <dynamics damping="0" friction="0"/>
+    <limit effort="4.1" lower="0" upper="3.141592653589793" velocity="4.82"/>
+  </joint>
 
-<joint name="left_ankle_roll" type="continuous">
-  <origin xyz="-0.0663 -0.0235 -0.036" rpy="0 0 0"/>
-  <parent link="left_ankle_v7_1"/>
-  <child link="left_foot_v10_1"/>
-  <axis xyz="1.0 -0.0 0.0"/>
-</joint>
+  <joint name="left_hip_yaw" type="revolute">
+    <origin rpy="0 0 0" xyz="0.016 0.04125 -0.1085"/>
+    <parent link="base_link"/>
+    <child link="left_hip_side"/>
+    <axis xyz="-0.0 -0.0 -1.0"/>
+    <dynamics damping="0" friction="0"/>
+    <limit effort="4.1" lower="-1.309" upper="0.524" velocity="4.82"/>
+  </joint>
+  <joint name="left_hip_roll" type="revolute">
+    <origin rpy="0 0 0" xyz="-0.0707 0.0 -0.028"/>
+    <parent link="left_hip_side"/>
+    <child link="left_hip_front"/>
+    <axis xyz="1.0 -0.0 0.0"/>
+    <dynamics damping="0" friction="0"/>
+    <limit effort="6.0" lower="-0.7853981633974483" upper="1.5707963267948966" velocity="6.6"/>
+  </joint>
+  <joint name="left_hip_pitch" type="revolute">
+    <origin rpy="0 0 0" xyz="0.066269 0.0235 -0.036"/>
+    <parent link="left_hip_front"/>
+    <child link="left_thigh"/>
+    <axis xyz="-0.0 -1.0 0.0"/>
+    <dynamics damping="0" friction="0"/>
+    <limit effort="6.0" lower="-0.7853981633974483" upper="2.356194490192345" velocity="6.6"/>
+  </joint>
+  <joint name="left_knee" type="revolute">
+    <origin rpy="0 0 0" xyz="0.0 0.0 -0.072"/>
+    <parent link="left_thigh"/>
+    <child link="left_calve"/>
+    <axis xyz="0.0 -1.0 -0.0"/>
+    <dynamics damping="0" friction="0"/>
+    <limit effort="6.0" lower="-2.793" upper="0" velocity="6.6"/>
+  </joint>
+  <joint name="left_ankle_pitch" type="revolute">
+    <origin rpy="0 0 0" xyz="0.0 0.0 -0.088"/>
+    <parent link="left_calve"/>
+    <child link="left_ankle"/>
+    <axis xyz="0.0 -1.0 0.0"/>
+    <dynamics damping="0" friction="0"/>
+    <limit effort="6.0" lower="-0.7853981633974483" upper="1.5707963267948966" velocity="6.6"/>
+  </joint>
+  <joint name="left_ankle_roll" type="revolute">
+    <origin rpy="0 0 0" xyz="-0.0663 -0.0235 -0.036"/>
+    <parent link="left_ankle"/>
+    <child link="left_foot"/>
+    <axis xyz="1.0 -0.0 0.0"/>
+    <dynamics damping="0" friction="0"/>
+    <limit effort="6.0" lower="-0.7853981633974483" upper="0.7853981633974483" velocity="6.6"/>
+  </joint>
 
-<joint name="left_shoulder_pitch" type="continuous">
-  <origin xyz="0.003 0.084 0.04475" rpy="0 0 0"/>
-  <parent link="base_link"/>
-  <child link="left_shoulder_v5_1"/>
-  <axis xyz="-0.0 1.0 -0.0"/>
-</joint>
+  <joint name="right_shoulder_pitch" type="revolute">
+    <origin rpy="0 0 0" xyz="0.003 -0.084 0.04475"/>
+    <parent link="base_link"/>
+    <child link="right_shoulder"/>
+    <axis xyz="-0.0 -1.0 -0.0"/>
+    <dynamics damping="0" friction="0"/>
+    <limit effort="4.1" lower="-3.141592653589793" upper="3.9269908169872414" velocity="4.82"/>
+  </joint>
+  <joint name="right_shoulder_roll" type="revolute">
+    <origin rpy="0 0 0" xyz="0.019 -0.0303 0.0"/>
+    <parent link="right_shoulder"/>
+    <child link="right_bicep"/>
+    <axis xyz="-1.0 0.0 -0.0"/>
+    <dynamics damping="0" friction="0"/>
+    <limit effort="4.1" lower="0" upper="1.5707963267948966" velocity="4.82"/>
+  </joint>
+  <joint name="right_elbow" type="revolute">
+    <origin rpy="0 0 0" xyz="-0.019597 -0.020801 -0.119141"/>
+    <parent link="right_bicep"/>
+    <child link="right_forearm"/>
+    <axis xyz="-0.0 -1.0 0.0"/>
+    <dynamics damping="0" friction="0"/>
+    <limit effort="4.1" lower="0" upper="3.141592653589793" velocity="4.82"/>
+  </joint>
 
-<joint name="left_shoulder_roll" type="continuous">
-  <origin xyz="0.019 0.0303 0.0" rpy="0 0 0"/>
-  <parent link="left_shoulder_v5_1"/>
-  <child link="left_bicep_v6_1"/>
-  <axis xyz="-1.0 -0.0 0.0"/>
-</joint>
-
-<joint name="left_elbow" type="continuous">
-  <origin xyz="-0.020403 0.018801 -0.119141" rpy="0 0 0"/>
-  <parent link="left_bicep_v6_1"/>
-  <child link="left_forearm_v4_1"/>
-  <axis xyz="-0.0 1.0 -0.0"/>
-</joint>
-
-<joint name="head_yaw" type="continuous">
-  <origin xyz="0.0 0.00025 0.0725" rpy="0 0 0"/>
-  <parent link="base_link"/>
-  <child link="neck_v6_1"/>
-  <axis xyz="-0.0 0.0 1.0"/>
-</joint>
-
-<joint name="head_pitch" type="continuous">
-  <origin xyz="0.0 -0.0185 0.025" rpy="0 0 0"/>
-  <parent link="neck_v6_1"/>
-  <child link="head_v4_1"/>
-  <axis xyz="0.0 -1.0 0.0"/>
-</joint>
-
-<joint name="right_hip_yaw" type="continuous">
-  <origin xyz="0.016 -0.04125 -0.1085" rpy="0 0 0"/>
-  <parent link="base_link"/>
-  <child link="right_hip_side_v1_1"/>
-  <axis xyz="-0.0 0.0 -1.0"/>
-</joint>
-
-<joint name="right_ankle_pitch" type="continuous">
-  <origin xyz="0.0 0.0 -0.088" rpy="0 0 0"/>
-  <parent link="right_calve_v1_1"/>
-  <child link="right_ankle_v2_1"/>
-  <axis xyz="-0.0 1.0 0.0"/>
-</joint>
-
-<joint name="right_ankle_roll" type="continuous">
-  <origin xyz="-0.0663 0.0235 -0.036" rpy="0 0 0"/>
-  <parent link="right_ankle_v2_1"/>
-  <child link="right_foot_v2_1"/>
-  <axis xyz="1.0 -0.0 0.0"/>
-</joint>
-
-<joint name="right_shoulder_pitch" type="continuous">
-  <origin xyz="0.003 -0.084 0.04475" rpy="0 0 0"/>
-  <parent link="base_link"/>
-  <child link="right_shoulder_v1_1"/>
-  <axis xyz="-0.0 1.0 -0.0"/>
-</joint>
-
-<joint name="right_shoulder_roll" type="continuous">
-  <origin xyz="0.019 -0.0303 0.0" rpy="0 0 0"/>
-  <parent link="right_shoulder_v1_1"/>
-  <child link="right_bicep_v2_1"/>
-  <axis xyz="1.0 0.0 -0.0"/>
-</joint>
-
-<joint name="right_elbow" type="continuous">
-  <origin xyz="-0.019597 -0.020801 -0.119141" rpy="0 0 0"/>
-  <parent link="right_bicep_v2_1"/>
-  <child link="right_forearm_v1_1"/>
-  <axis xyz="-0.0 -1.0 0.0"/>
-</joint>
-
-<joint name="left_hip_pitch" type="continuous">
-  <origin xyz="0.066269 0.0235 -0.036" rpy="0 0 0"/>
-  <parent link="left_hip_front_v5_1"/>
-  <child link="left_thigh_v1_1"/>
-  <axis xyz="-0.0 -1.0 0.0"/>
-</joint>
-
-<joint name="right_hip_pitch" type="continuous">
-  <origin xyz="0.0663 -0.0235 -0.036" rpy="0 0 0"/>
-  <parent link="right_hip_front_v5_1"/>
-  <child link="right_thigh_v1_1"/>
-  <axis xyz="-0.0 1.0 0.0"/>
-</joint>
-
-<joint name="left_hip_roll" type="continuous">
-  <origin xyz="-0.0707 0.0 -0.028" rpy="0 0 0"/>
-  <parent link="left_hip_side_v5_1"/>
-  <child link="left_hip_front_v5_1"/>
-  <axis xyz="1.0 -0.0 0.0"/>
-</joint>
-
-<joint name="left_knee" type="continuous">
-  <origin xyz="0.0 0.0 -0.072" rpy="0 0 0"/>
-  <parent link="left_thigh_v1_1"/>
-  <child link="left_calve_v5_1"/>
-  <axis xyz="0.0 1.0 -0.0"/>
-</joint>
-
-<joint name="left_ankle_pitch" type="continuous">
-  <origin xyz="0.0 0.0 -0.088" rpy="0 0 0"/>
-  <parent link="left_calve_v5_1"/>
-  <child link="left_ankle_v7_1"/>
-  <axis xyz="0.0 -1.0 0.0"/>
-</joint>
-
-<joint name="right_hip_roll" type="continuous">
-  <origin xyz="-0.0707 0.0 -0.028" rpy="0 0 0"/>
-  <parent link="right_hip_side_v1_1"/>
-  <child link="right_hip_front_v5_1"/>
-  <axis xyz="1.0 -0.0 -0.0"/>
-</joint>
-
-<joint name="right_knee" type="continuous">
-  <origin xyz="0.0 0.0 -0.072" rpy="0 0 0"/>
-  <parent link="right_thigh_v1_1"/>
-  <child link="right_calve_v1_1"/>
-  <axis xyz="0.0 -1.0 -0.0"/>
-</joint>
-
+  <joint name="right_hip_yaw" type="revolute">
+    <origin rpy="0 0 0" xyz="0.016 -0.04125 -0.1085"/>
+    <parent link="base_link"/>
+    <child link="right_hip_side"/>
+    <axis xyz="-0.0 0.0 1.0"/>
+    <dynamics damping="0" friction="0"/>
+    <limit effort="4.1" lower="-1.309" upper="0.524" velocity="4.82"/>
+  </joint>
+  <joint name="right_hip_roll" type="revolute">
+    <origin rpy="0 0 0" xyz="-0.0707 0.0 -0.028"/>
+    <parent link="right_hip_side"/>
+    <child link="right_hip_front"/>
+    <axis xyz="-1.0 -0.0 -0.0"/>
+    <dynamics damping="0" friction="0"/>
+    <limit effort="6.0" lower="-0.7853981633974483" upper="1.5707963267948966" velocity="6.6"/>
+  </joint>
+  <joint name="right_hip_pitch" type="revolute">
+    <origin rpy="0 0 0" xyz="0.0663 -0.0235 -0.036"/>
+    <parent link="right_hip_front"/>
+    <child link="right_thigh"/>
+    <axis xyz="-0.0 -1.0 0.0"/>
+    <dynamics damping="0" friction="0"/>
+    <limit effort="6.0" lower="-0.7853981633974483" upper="2.356194490192345" velocity="6.6"/>
+  </joint>
+  <joint name="right_knee" type="revolute">
+    <origin rpy="0 0 0" xyz="0.0 0.0 -0.072"/>
+    <parent link="right_thigh"/>
+    <child link="right_calve"/>
+    <axis xyz="0.0 -1.0 -0.0"/>
+    <dynamics damping="0" friction="0"/>
+    <limit effort="6.0" lower="-2.793" upper="0" velocity="6.6"/>
+  </joint>
+  <joint name="right_ankle_pitch" type="revolute">
+    <origin rpy="0 0 0" xyz="0.0 0.0 -0.088"/>
+    <parent link="right_calve"/>
+    <child link="right_ankle"/>
+    <axis xyz="-0.0 -1.0 0.0"/>
+    <dynamics damping="0" friction="0"/>
+    <limit effort="6.0" lower="-0.7853981633974483" upper="1.5707963267948966" velocity="6.6"/>
+  </joint>
+  <joint name="right_ankle_roll" type="revolute">
+    <origin rpy="0 0 0" xyz="-0.0663 0.0235 -0.036"/>
+    <parent link="right_ankle"/>
+    <child link="right_foot"/>
+    <axis xyz="-1.0 -0.0 0.0"/>
+    <dynamics damping="0" friction="0"/>
+    <limit effort="6.0" lower="-0.7853981633974483" upper="0.7853981633974483" velocity="6.6"/>
+  </joint>
+  <link name="imu_link">
+    <inertial>
+      <mass value="0.01"/>
+      <origin rpy="0  0  0" xyz="0 0 0"/>
+      <inertia ixx="1e-9" ixy="0" ixz="0" iyy="1e-9" iyz="0" izz="1e-9"/>
+    </inertial>
+  </link>
+  <joint name="torso_imu" type="fixed">
+    <parent link="base_link"/>
+    <child link="imu_link"/>
+    <origin rpy="0 0 0" xyz="0.0 0 0.000"/>
+    <axis xyz="0 0 0"/>
+  </joint>
+  <link name="camera">
+    <inertial>
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+      <mass value="0.01"/>
+      <inertia ixx="1e-09" ixy="0.0" ixz="0.0" iyy="1e-09" iyz="0.0" izz="1e-09"/>
+    </inertial>
+  </link>
+  <joint name="camera_frame" type="fixed">
+    <origin xyz="0.015 0.00145 0.0474" rpy="0.0 0.0 0.0"/>
+    <axis xyz="0.0 0.0 0.0"/>
+    <parent link="head"/>
+    <child link="camera"/>
+    <limit effort="0.0" lower="0.0" upper="0.0" velocity="0.0"/>
+    <dynamics damping="0.01" friction="0.1"/>
+  </joint>
 </robot>

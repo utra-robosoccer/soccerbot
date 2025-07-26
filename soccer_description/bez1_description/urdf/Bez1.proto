@@ -2,7 +2,7 @@
 # license: Apache License 2.0
 # license url: http://www.apache.org/licenses/LICENSE-2.0
 # This is a proto file for Webots for the Bez1
-# Extracted from: /home/manx52/catkin_ws/src/soccerbot/bez1_description/urdf/bez1_simple.urdf
+# Extracted from: /home/manx52/ros2_ws/src/soccerbot/bez1_description/urdf/bez1_simple.urdf
 
 PROTO Bez1 [
   field  SFVec3f     translation     0 0 0
@@ -33,7 +33,7 @@ PROTO Bez1 [
           metalness 0
         }
         geometry DEF torso Mesh {
-          url "/home/manx52/catkin_ws/src/soccerbot/bez1_description/bez1_description/meshes/torso.stl"
+          url "/home/manx52/ros2_ws/src/soccerbot/bez1_description/bez1_description/meshes/torso.stl"
         }
       }
       GPS {
@@ -74,7 +74,7 @@ PROTO Bez1 [
                 metalness 0
               }
               geometry DEF left_bicep Mesh {
-                url "/home/manx52/catkin_ws/src/soccerbot/bez1_description/bez1_description/meshes/left_bicep.stl"
+                url "/home/manx52/ros2_ws/src/soccerbot/bez1_description/bez1_description/meshes/left_bicep.stl"
               }
             }
             HingeJoint {
@@ -105,7 +105,7 @@ PROTO Bez1 [
                       metalness 0
                     }
                     geometry DEF left_forearm Mesh {
-                      url "/home/manx52/catkin_ws/src/soccerbot/bez1_description/bez1_description/meshes/left_forearm.stl"
+                      url "/home/manx52/ros2_ws/src/soccerbot/bez1_description/bez1_description/meshes/left_forearm.stl"
                     }
                   }
                 ]
@@ -175,7 +175,7 @@ PROTO Bez1 [
             Shape {
               appearance USE white
               geometry DEF right_bicep Mesh {
-                url "/home/manx52/catkin_ws/src/soccerbot/bez1_description/bez1_description/meshes/right_bicep.stl"
+                url "/home/manx52/ros2_ws/src/soccerbot/bez1_description/bez1_description/meshes/right_bicep.stl"
               }
             }
             HingeJoint {
@@ -202,7 +202,7 @@ PROTO Bez1 [
                   Shape {
                     appearance USE purple
                     geometry DEF right_forearm Mesh {
-                      url "/home/manx52/catkin_ws/src/soccerbot/bez1_description/bez1_description/meshes/right_forearm.stl"
+                      url "/home/manx52/ros2_ws/src/soccerbot/bez1_description/bez1_description/meshes/right_forearm.stl"
                     }
                   }
                 ]
@@ -276,7 +276,7 @@ PROTO Bez1 [
                 metalness 0
               }
               geometry DEF left_hip_side Mesh {
-                url "/home/manx52/catkin_ws/src/soccerbot/bez1_description/bez1_description/meshes/left_hip_side.stl"
+                url "/home/manx52/ros2_ws/src/soccerbot/bez1_description/bez1_description/meshes/left_hip_side.stl"
               }
             }
             HingeJoint {
@@ -305,7 +305,7 @@ PROTO Bez1 [
                       metalness 0
                     }
                     geometry DEF left_hip_front Mesh {
-                      url "/home/manx52/catkin_ws/src/soccerbot/bez1_description/bez1_description/meshes/left_hip_front.stl"
+                      url "/home/manx52/ros2_ws/src/soccerbot/bez1_description/bez1_description/meshes/left_hip_front.stl"
                     }
                   }
                   HingeJoint {
@@ -335,7 +335,7 @@ PROTO Bez1 [
                             metalness 0
                           }
                           geometry DEF left_thigh Mesh {
-                            url "/home/manx52/catkin_ws/src/soccerbot/bez1_description/bez1_description/meshes/left_thigh.stl"
+                            url "/home/manx52/ros2_ws/src/soccerbot/bez1_description/bez1_description/meshes/left_thigh.stl"
                           }
                         }
                         HingeJoint {
@@ -369,7 +369,7 @@ PROTO Bez1 [
                                       metalness 0
                                     }
                                     geometry DEF left_calve Mesh {
-                                      url "/home/manx52/catkin_ws/src/soccerbot/bez1_description/bez1_description/meshes/left_calve.stl"
+                                      url "/home/manx52/ros2_ws/src/soccerbot/bez1_description/bez1_description/meshes/left_calve.stl"
                                     }
                                   }
                                 ]
@@ -399,7 +399,7 @@ PROTO Bez1 [
                                     Shape {
                                       appearance USE purple
                                       geometry DEF left_ankle Mesh {
-                                        url "/home/manx52/catkin_ws/src/soccerbot/bez1_description/bez1_description/meshes/left_ankle.stl"
+                                        url "/home/manx52/ros2_ws/src/soccerbot/bez1_description/bez1_description/meshes/left_ankle.stl"
                                       }
                                     }
                                     HingeJoint {
@@ -428,7 +428,7 @@ PROTO Bez1 [
                                               metalness 0
                                             }
                                             geometry DEF left_foot Mesh {
-                                              url "/home/manx52/catkin_ws/src/soccerbot/bez1_description/bez1_description/meshes/left_foot.stl"
+                                              url "/home/manx52/ros2_ws/src/soccerbot/bez1_description/bez1_description/meshes/left_foot.stl"
                                             }
                                           }
                                         ]
@@ -582,7 +582,7 @@ PROTO Bez1 [
             Shape {
               appearance USE cyan
               geometry DEF right_hip_side Mesh {
-                url "/home/manx52/catkin_ws/src/soccerbot/bez1_description/bez1_description/meshes/right_hip_side.stl"
+                url "/home/manx52/ros2_ws/src/soccerbot/bez1_description/bez1_description/meshes/right_hip_side.stl"
               }
             }
             HingeJoint {
@@ -608,7 +608,7 @@ PROTO Bez1 [
                   Shape {
                     appearance USE blue
                     geometry DEF right_hip_front Mesh {
-                      url "/home/manx52/catkin_ws/src/soccerbot/bez1_description/bez1_description/meshes/right_hip_front.stl"
+                      url "/home/manx52/ros2_ws/src/soccerbot/bez1_description/bez1_description/meshes/right_hip_front.stl"
                     }
                   }
                   HingeJoint {
@@ -634,7 +634,7 @@ PROTO Bez1 [
                         Shape {
                           appearance USE red
                           geometry DEF right_thigh Mesh {
-                            url "/home/manx52/catkin_ws/src/soccerbot/bez1_description/bez1_description/meshes/right_thigh.stl"
+                            url "/home/manx52/ros2_ws/src/soccerbot/bez1_description/bez1_description/meshes/right_thigh.stl"
                           }
                         }
                         HingeJoint {
@@ -664,7 +664,7 @@ PROTO Bez1 [
                                   Shape {
                                     appearance USE yellow
                                     geometry DEF right_calve Mesh {
-                                      url "/home/manx52/catkin_ws/src/soccerbot/bez1_description/bez1_description/meshes/right_calve.stl"
+                                      url "/home/manx52/ros2_ws/src/soccerbot/bez1_description/bez1_description/meshes/right_calve.stl"
                                     }
                                   }
                                 ]
@@ -694,7 +694,7 @@ PROTO Bez1 [
                                     Shape {
                                       appearance USE purple
                                       geometry DEF right_ankle Mesh {
-                                        url "/home/manx52/catkin_ws/src/soccerbot/bez1_description/bez1_description/meshes/right_ankle.stl"
+                                        url "/home/manx52/ros2_ws/src/soccerbot/bez1_description/bez1_description/meshes/right_ankle.stl"
                                       }
                                     }
                                     HingeJoint {
@@ -720,7 +720,7 @@ PROTO Bez1 [
                                           Shape {
                                             appearance USE green
                                             geometry DEF right_foot Mesh {
-                                              url "/home/manx52/catkin_ws/src/soccerbot/bez1_description/bez1_description/meshes/right_foot.stl"
+                                              url "/home/manx52/ros2_ws/src/soccerbot/bez1_description/bez1_description/meshes/right_foot.stl"
                                             }
                                           }
                                         ]
@@ -878,7 +878,7 @@ PROTO Bez1 [
                 metalness 0
               }
               geometry DEF neck Mesh {
-                url "/home/manx52/catkin_ws/src/soccerbot/bez1_description/bez1_description/meshes/neck.stl"
+                url "/home/manx52/ros2_ws/src/soccerbot/bez1_description/bez1_description/meshes/neck.stl"
               }
             }
             HingeJoint {
@@ -906,7 +906,7 @@ PROTO Bez1 [
                   Shape {
                     appearance USE silver
                     geometry DEF head Mesh {
-                      url "/home/manx52/catkin_ws/src/soccerbot/bez1_description/bez1_description/meshes/head.stl"
+                      url "/home/manx52/ros2_ws/src/soccerbot/bez1_description/bez1_description/meshes/head.stl"
                     }
                   }
                   Solid {
