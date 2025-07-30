@@ -41,6 +41,9 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
+ADC_HandleTypeDef hadc1;
+ADC_HandleTypeDef hadc2;
+
 I2C_HandleTypeDef hi2c1;
 
 UART_HandleTypeDef huart4;
@@ -70,6 +73,17 @@ uint8_t usbRxBuffer[100];
 
 MotorPort* motorPorts[6];
 MotorPort port1, port2, port3, port4, port5, port6;
+
+Voltage* voltage[2];
+Voltage adc_1,adc_2;
+
+//ZSM STUFF*/
+uint16_t readValue;
+float v_bat_read; //IN 8
+float v_shunt_read;//IN 7
+float intensity_shunt; // intensity
+
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -82,6 +96,8 @@ static void MX_USART1_UART_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_USART3_UART_Init(void);
 static void MX_USART6_UART_Init(void);
+static void MX_ADC1_Init(void);
+static void MX_ADC2_Init(void);
 static void MX_I2C1_Init(void);
 /* USER CODE BEGIN PFP */
 
@@ -90,6 +106,36 @@ static void MX_I2C1_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 // test various functionalities
+//ZSM stuff
+void init_voltage(){
+	adc_1 = (Voltage){
+		.hadc = &hadc1,
+		.readValue = 0,
+		.v_read = 0,
+		.intensity = 0 // intensity
+	};
+	adc_2 = (Voltage){
+		.hadc = &hadc2,
+		.readValue = 0,
+		.v_read = 0,
+		.intensity = 0 // intensity
+	};
+
+	voltage[0] = &adc_1;
+	voltage[1] = &adc_2;
+
+	if(HAL_ADC_Init(voltage[0]->hadc) != HAL_OK){
+			printf("error from initialization v_1");
+			exit(1);
+		}
+
+		if(HAL_ADC_Init(voltage[1]->hadc) != HAL_OK){
+				printf("error from initialization v_2");
+				exit(1);
+		}
+}
+
+
 void init_ports() {
   // port1 => UART1 ==> J2 on new PCB
   port1 = (MotorPort){
@@ -101,9 +147,9 @@ void init_ports() {
     .dmaDoneReading = false,
 	.currMotor  = 0,
 	.currReadMotor  = 0,
-    .numMotors      = 5,
-    .motorIds       = {16, 17,0, 1, 18}, // left arm chain + bottom neck motor
-    .protocol       = {2, 2, 2, 2, 2}
+    .numMotors      = 4,
+    .motorIds       = {16, 0, 1, 18}, // left arm chain + bottom neck motor
+    .protocol       = {2, 2, 2, 2}
   };
 
   // port2 => UART2 ==> J7 on new PCB
@@ -116,9 +162,9 @@ void init_ports() {
       .dmaDoneReading = false,
 	  .currMotor  = 0,
 	  .currReadMotor  = 0,
-      .numMotors      = 3,
-      .motorIds       = {2, 3, 19}, // right arm chain + top neck motor
-      .protocol       = {2, 2, 2}
+      .numMotors      = 4,
+      .motorIds       = {17, 2, 3, 19}, // right arm chain + top neck motor
+      .protocol       = {2, 2, 2, 2}
     };
 
   // port3 => UART3 ==> J12 on new PCB
@@ -254,21 +300,39 @@ int main(void)
   MX_USART2_UART_Init();
   MX_USART3_UART_Init();
   MX_USART6_UART_Init();
+  MX_ADC1_Init();
+  MX_ADC2_Init();
   MX_I2C1_Init();
   /* USER CODE BEGIN 2 */
+
+  //  char myText[] = "Robosoccer";
+//    char retVal;
+//    uint32_t lastTime;
+//    uint32_t startTime;
+//    uint32_t time;
+//    char myText[50];
+////
+//    ssd1306_Init(&hi2c1);
+//
+//    ssd1306_Fill(White);
+//    ssd1306_UpdateScreen();
+
+
+//    ssd1306_SetCursor(5,5);
   // give some time for motors to power on and initialize, before we try to talk to them
   HAL_Delay(1000);
 
   init_ports();
 //  MPU6050_init();
   init_motors();
+  init_voltage();
 
   BMI088 imu;
   BMI088_Init(&imu, &hi2c1);
 
-//  uint16_t angle = 0;
-//  uint16_t angle_lo = 0;
-//  uint16_t angle_hi = 0;
+  uint16_t angle = 0;
+  uint16_t angle_lo = 0;
+  uint16_t angle_hi = 0;
 
   /* USER CODE END 2 */
 
@@ -276,14 +340,53 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-
       update();
+//	  startTime = HAL_GetTick();
+//
+//	  HAL_Delay(1000);
+//
+//	  lastTime = HAL_GetTick();
+//
+//	  time = lastTime - startTime;
+//
+//	  memset(myText, '\0', sizeof(myText));  // Clear the array (set all elements to '\0')
+//	  sprintf(myText, "%d", time);  // Format lastTime into myText
+//
+//	  ssd1306_Fill(0x00);
+//	  ssd1306_SetCursor(5,5);
+//	  retVal = ssd1306_WriteString(myText, Font_7x10, 0x01);
+//	  ssd1306_UpdateScreen();
+
+//      update_voltage();
+//      //Read & Error Detection
+//      v_bat_read = voltage[0]->v_read; //IN 8
+//      if (isnan(v_bat_read)){
+//    	  printf("error from v_bat_read");
+//    	  exit(1);
+//      }
+//
+//      v_shunt_read = voltage[1]->v_read; //IN 7
+//      if (isnan(v_shunt_read)){
+//    	  printf("error from v_shunt_read");
+//    	  exit(1);
+//      }
+//
+//      intensity_shunt = voltage[1]->intensity;// intensity
+//      if(isnan(intensity_shunt)){
+//    	  printf("error from v_bat_read");
+//    	  exit(1);
+//      }
+//      printf("v_bat_read: %f, v_shunt_read: %f, intensity_shunt: %f\n", v_bat_read, v_shunt_read, intensity_shunt);
 
 //    angle += 1;
 //    angle %= 0x3FF;
 //    angle_lo = angle & 0xFF;
 //    angle_hi = (angle >> 8) & 0xFF;
 //
+//	  write_goal_position_p2(motorPorts[3], 7, angle);
+//	  write_goal_position_p2(motorPorts[3], 8, angle);
+//	  write_goal_position_p2(motorPorts[3], 9, angle);
+
 //    write_goal_position_p2(motorPorts[4], 1, angle);
 //    write_goal_position_p2(motorPorts[4], 32, angle);
 //    write_goal_position_p2(motorPorts[4], 27, angle);
@@ -309,9 +412,9 @@ int main(void)
 
 
 //    // test Dynamixel 2.0
-//    test_led_p2(&port6, 0x1);
+//    test_led_p2(&port4, 0x1);
 //    test_motor_sweep2(&port6);
-//    HAL_Delay(9000);
+//    HAL_Delay(1000);
 
 //    test_led_p2(&port4, 0x1);
 //    test_motor_sweep2(&port4);
@@ -334,10 +437,12 @@ int main(void)
 //    HAL_Delay(100);
 
     // test Dynamixel 1.0
-//    test_motor_sweep1(&port2, 13);
-//    _motor_ping_p1(&port6, 13);
+    //test_motor_sweep1(&port2, 13);
+   // _motor_ping_p1(&port6, 13);
+//	  char str[] = "STM32\nSerial Test\nTest\nTest\n";
+//	  CDC_Transmit_FS(str, strlen(str));
 //	  HAL_GPIO_TogglePin(GPIOA, GREEN_LED_Pin);
-//	  HAL_Delay(50);
+//	  HAL_Delay(500);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -389,6 +494,110 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
+}
+
+/**
+  * @brief ADC1 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_ADC1_Init(void)
+{
+
+  /* USER CODE BEGIN ADC1_Init 0 */
+
+  /* USER CODE END ADC1_Init 0 */
+
+  ADC_ChannelConfTypeDef sConfig = {0};
+
+  /* USER CODE BEGIN ADC1_Init 1 */
+
+  /* USER CODE END ADC1_Init 1 */
+
+  /** Configure the global features of the ADC (Clock, Resolution, Data Alignment and number of conversion)
+  */
+  hadc1.Instance = ADC1;
+  hadc1.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV2;
+  hadc1.Init.Resolution = ADC_RESOLUTION_12B;
+  hadc1.Init.ScanConvMode = DISABLE;
+  hadc1.Init.ContinuousConvMode = DISABLE;
+  hadc1.Init.DiscontinuousConvMode = DISABLE;
+  hadc1.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
+  hadc1.Init.ExternalTrigConv = ADC_SOFTWARE_START;
+  hadc1.Init.DataAlign = ADC_DATAALIGN_RIGHT;
+  hadc1.Init.NbrOfConversion = 1;
+  hadc1.Init.DMAContinuousRequests = DISABLE;
+  hadc1.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
+  if (HAL_ADC_Init(&hadc1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.
+  */
+  sConfig.Channel = ADC_CHANNEL_8;
+  sConfig.Rank = 1;
+  sConfig.SamplingTime = ADC_SAMPLETIME_3CYCLES;
+  if (HAL_ADC_ConfigChannel(&hadc1, &sConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN ADC1_Init 2 */
+
+  /* USER CODE END ADC1_Init 2 */
+
+}
+
+/**
+  * @brief ADC2 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_ADC2_Init(void)
+{
+
+  /* USER CODE BEGIN ADC2_Init 0 */
+
+  /* USER CODE END ADC2_Init 0 */
+
+  ADC_ChannelConfTypeDef sConfig = {0};
+
+  /* USER CODE BEGIN ADC2_Init 1 */
+
+  /* USER CODE END ADC2_Init 1 */
+
+  /** Configure the global features of the ADC (Clock, Resolution, Data Alignment and number of conversion)
+  */
+  hadc2.Instance = ADC2;
+  hadc2.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV2;
+  hadc2.Init.Resolution = ADC_RESOLUTION_12B;
+  hadc2.Init.ScanConvMode = DISABLE;
+  hadc2.Init.ContinuousConvMode = DISABLE;
+  hadc2.Init.DiscontinuousConvMode = DISABLE;
+  hadc2.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
+  hadc2.Init.ExternalTrigConv = ADC_SOFTWARE_START;
+  hadc2.Init.DataAlign = ADC_DATAALIGN_RIGHT;
+  hadc2.Init.NbrOfConversion = 1;
+  hadc2.Init.DMAContinuousRequests = DISABLE;
+  hadc2.Init.EOCSelection = ADC_EOC_SINGLE_CONV;
+  if (HAL_ADC_Init(&hadc2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.
+  */
+  sConfig.Channel = ADC_CHANNEL_7;
+  sConfig.Rank = 1;
+  sConfig.SamplingTime = ADC_SAMPLETIME_3CYCLES;
+  if (HAL_ADC_ConfigChannel(&hadc2, &sConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN ADC2_Init 2 */
+
+  /* USER CODE END ADC2_Init 2 */
+
 }
 
 /**
@@ -685,8 +894,8 @@ static void MX_GPIO_Init(void)
 /* USER CODE END MX_GPIO_Init_1 */
 
   /* GPIO Ports Clock Enable */
-  __HAL_RCC_GPIOH_CLK_ENABLE();
   __HAL_RCC_GPIOC_CLK_ENABLE();
+  __HAL_RCC_GPIOH_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
   __HAL_RCC_GPIOB_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
@@ -699,6 +908,12 @@ static void MX_GPIO_Init(void)
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOB, USART3_DIR_Pin|USART6_DIR_Pin|USART5_DIR_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pins : GPIO2_Pin GPIO1_Pin */
+  GPIO_InitStruct.Pin = GPIO2_Pin|GPIO1_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
   /*Configure GPIO pin : USART4_DIR_Pin */
   GPIO_InitStruct.Pin = USART4_DIR_Pin;

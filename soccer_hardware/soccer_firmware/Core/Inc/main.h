@@ -32,8 +32,10 @@ extern "C" {
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include <stdbool.h>
+#include "ssd1306_fonts.h"
 
 extern I2C_HandleTypeDef hi2c1;
+extern ADC_HandleTypeDef hadc;
 
 extern uint8_t usb_received;
 extern uint32_t usbRxBufferCount;
@@ -66,6 +68,17 @@ typedef struct {
 
 extern MotorPort* motorPorts[6];
 extern MotorPort port1, port2, port3, port4, port5, port6;
+
+typedef struct {
+	ADC_HandleTypeDef *hadc; // ADC configuration for pins
+	uint16_t readValue;
+	float v_read; //IN 8
+	//float v_read;//IN 7
+	float intensity; // intensity
+}Voltage;
+
+extern Voltage adc_1,adc_2;
+extern Voltage* voltage[2];
 
 typedef enum
 {
@@ -100,10 +113,18 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define GPIO2_Pin GPIO_PIN_14
+#define GPIO2_GPIO_Port GPIOC
+#define GPIO1_Pin GPIO_PIN_15
+#define GPIO1_GPIO_Port GPIOC
 #define USART4_DIR_Pin GPIO_PIN_3
 #define USART4_DIR_GPIO_Port GPIOC
 #define USART2_DIR_Pin GPIO_PIN_4
 #define USART2_DIR_GPIO_Port GPIOA
+#define v_shunt_read_Pin GPIO_PIN_7
+#define v_shunt_read_GPIO_Port GPIOA
+#define v_bat_read_Pin GPIO_PIN_0
+#define v_bat_read_GPIO_Port GPIOB
 #define USART3_DIR_Pin GPIO_PIN_2
 #define USART3_DIR_GPIO_Port GPIOB
 #define USART6_DIR_Pin GPIO_PIN_15

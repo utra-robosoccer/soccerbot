@@ -15,13 +15,20 @@
 
 #define UPDATE_PERIOD 1 // milliseconds
 
+#define UART_SEND 1000 //Send uart debug packet every one second
+
 BMI088 imu;
+
+extern Voltage* voltage[2];
 
 void update()
 {
   uint8_t txBuf[2 + 20 * 2 + 6 + 6] = {0}; // 20 motors * 2 bytes each + 6 bytes for IMU
   txBuf[0] = txBuf[1] = 0xfe;
   uint32_t lastTime = HAL_GetTick();
+  // Just for read sync debug
+//  uint32_t sync_debug_send = HAL_GetTick();
+
   while(1)
   {
     if(HAL_GetTick() - lastTime > UPDATE_PERIOD) // send IMU/ANGLES periodically back to main computer
@@ -29,7 +36,7 @@ void update()
       lastTime = HAL_GetTick();
 
       // we read want to read 1 motor position from each port
-      read_motors(txBuf);
+      read_motors(txBuf); //this is where should be changed
 //      read_motors_sync(txBuf);
 
       // get current linear Acceleration and Rotational speed
@@ -38,7 +45,23 @@ void update()
       CDC_Transmit_FS((uint8_t *) txBuf, sizeof(txBuf));
       HAL_GPIO_TogglePin(GPIOA, GREEN_LED_Pin);
     }
-
+///////////////// UART DEBUG
+//    if(HAL_GetTick() - sync_debug_send > UART_SEND){
+////    	char message[100];
+////    	uint32_t motor_angle = 0;
+////    	uint8_t motor_count = 0;
+////    	for (int i = 10; i < 22; i += 2){
+////    		motor_count ++;
+////    		motor_angle = txBuf[i] | (txBuf[i + 1] << 8);
+////    		sprintf(message, "Motor #%d: %d\n", motor_count, (int)(motor_angle * 0.088));
+////    		CDC_Transmit_FS(message, strlen(message));
+////
+////    	}
+//    	sync_debug_send = HAL_GetTick();
+//    	CDC_Transmit_FS((uint8_t *) txBuf, sizeof(txBuf));
+//    	HAL_GPIO_TogglePin(GPIOA, GREEN_LED_Pin);
+//    }
+////////////////
     if (usb_received) // when we receive USB packet, service it right away
     {
       // check for header packet
@@ -47,8 +70,8 @@ void update()
     	  continue;
       }
 
-//      command_motors();
-      command_motors_sync();
+      command_motors();
+//      command_motors_sync();
       usb_received = false;
 
 //      HAL_GPIO_TogglePin(GPIOA, GREEN_LED_Pin);
@@ -146,6 +169,9 @@ void command_motors() {
 }
 
 void command_motors_sync() {
+//	char dummy[5] = {0xff};
+//	CDC_Transmit_FS(dummy, 5);
+
 	for (uint8_t i = 0; i < 6; i++) {// reset variables
 	    motorPorts[i]->motorWrite = false;
 	  }
@@ -282,7 +308,6 @@ void read_motors_sync(uint8_t *rxBuf) {
         }
       }
     }
-
     if(numMotorsReceived == numMotorsRequested) return; // all motors serviced, peace out
   }
 }
@@ -356,5 +381,37 @@ void read_motors(uint8_t *rxBuf) {
 
     if(numMotorsReceived == numMotorsRequested) return; // all motors serviced, peace out
   }
+}
+
+void update_voltage(void){
+	Voltage *v_1 = voltage[0];
+	Voltage *v_2 = voltage[1];
+
+
+	//uint16_t readValue_1;
+	uint16_t readValue_2;
+	uint16_t readValue;
+
+	//float v_bat; //IN 8
+	//float v_shunt_read;// = v_2->v_read; //IN 7
+	//float intensity_shunt;// = v_2->intensity;// intensity
+	//(*v_1->hadc).Instance->CR2 |= (uint32_t)ADC_CR2_SWSTART;// |= allows the continuous display
+
+	HAL_ADC_Start(v_1->hadc);
+	if (HAL_ADC_PollForConversion(v_1->hadc, 10) == HAL_OK){
+		readValue = HAL_ADC_GetValue(v_1->hadc);
+		voltage[0]->v_read = (float)readValue/4095*3.3;
+	}
+
+	HAL_ADC_Start(v_2->hadc);
+	if (HAL_ADC_PollForConversion(v_2->hadc, 10) == HAL_OK){
+		readValue_2 = HAL_ADC_GetValue(v_2->hadc);
+		voltage[1]->v_read = (float)readValue_2/4095*3.3;
+		voltage[1]-> intensity = (float)(voltage[1]-> v_read)/(20)/0.01;  //3.3; //4095*16.5;
+
+	}
+
+	HAL_Delay(100); // time between each change
+
 }
 

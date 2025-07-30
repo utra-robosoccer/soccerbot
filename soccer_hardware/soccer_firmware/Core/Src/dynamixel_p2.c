@@ -225,6 +225,8 @@ void _motor_sync_read_p2(MotorPort *p, uint16_t addr, uint16_t dataLen) {
   txBuf[12 + p->numMotors] = crc & 0xff;
   txBuf[13 + p->numMotors] = (crc >> 8) & 0xff;
 
+
+
   HAL_GPIO_WritePin(p->pinPort, p->dirPinNum, BUFFER_WRITE);
 
   HAL_UART_Transmit(p->huart, txBuf, packetLen, 1000);
@@ -284,6 +286,8 @@ void _motor_sync_write_p2(MotorPort *p, uint16_t addr, uint16_t dataLen) {
   	    txBuf[15+i*(1+dataLen)] = 0;
   	    txBuf[16+i*(1+dataLen)] = 0;
   }
+
+  CDC_Transmit_FS(txBuf, sizeof(txBuf));
 //
 //  for (uint8_t i = 0; i<dataLen; i++)
 //    txBuf[10+i] = data[i];
