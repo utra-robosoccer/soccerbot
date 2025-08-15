@@ -1,0 +1,72 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "stlinkgdbtarget",
+      "request": "launch",
+      "name": "STM32Cube: STM32 Launch ST-Link GDB Server",
+      "origin": "snippet",
+      "cwd": "${workspaceFolder}",
+      "preBuild": "${command:st-stm32-ide-debug-launch.build}",
+      "runEntry": "main",
+      "imagesAndSymbols": [
+        {
+          "imageFileName": "${command:st-stm32-ide-debug-launch.get-projects-binary-from-context1}"
+        }
+      ]
+    },
+    {
+      "type": "stlinkgdbtarget",
+      "request": "launch",
+      "name": "STM32Cube: STM32 Launch ST-Link GDB Server (detailed)",
+      "origin": "snippet",
+      "cwd": "${workspaceFolder}",
+      "preBuild": "${command:st-stm32-ide-debug-launch.build}",
+      "program": "${command:st-stm32-ide-debug-launch.get-projects-binary-from-context1}",
+      "gdb": "${command:st-stm32-ide-debug-launch.get-gdb-executable}",
+      "serverExe": "ST-LINK_gdbserver",
+      "serverCubeProgPath": "${command:st-stm32-ide-debug-launch.get-programmer-path}",
+      "serverInterface": "SWD",
+      "serverInterfaceFrequency": "Auto",
+      "serverVerify": false,
+      "serverApID": "${command:st-stm32-ide-debug-launch.get-access-port}",
+      "serverReset": "Connect under reset",
+      "serverHost": "localhost",
+      "serverPort": "61234",
+      "serverCwd": "${command:st-stm32-ide-debug-launch.get-server-path}",
+      "runEntry": "main",
+      "imagesAndSymbols": [
+        {
+          "imageFileName": "${command:st-stm32-ide-debug-launch.get-projects-binary-from-context1}",
+          "imageOffset": "",
+          "symbolFileName": "${command:st-stm32-ide-debug-launch.get-projects-binary-from-context1}",
+          "symbolOffset": ""
+        }
+      ],
+      "faultDivByZero": true,
+      "faultUnalignedAccess": true,
+      "faultHaltOnException": true,
+      "verbose": true,
+      "openGdbConsole": false
+    },
+    {
+      "name": "C/C++ Runner: Debug Session",
+      "type": "cppdbg",
+      "request": "launch",
+      "args": [],
+      "stopAtEntry": false,
+      "externalConsole": true,
+      "cwd": "d:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/Core/Src",
+      "program": "d:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/Core/Src/build/Debug/outDebug",
+      "MIMode": "gdb",
+      "miDebuggerPath": "gdb",
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ]
+    }
+  ]
+}

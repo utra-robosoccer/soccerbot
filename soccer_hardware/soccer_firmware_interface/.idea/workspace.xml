@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="bbfdde8b-6d98-4a28-b2dd-ab441a50ab71" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/.cproject" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/.cproject" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/.mxproject" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/.mxproject" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/.settings/language.settings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/.settings/language.settings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/.settings/stm32cubeide.project.prefs" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/.settings/stm32cubeide.project.prefs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Core/Inc/main.h" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Core/Inc/main.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Core/Inc/stm32f4xx_hal_conf.h" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Core/Inc/stm32f4xx_hal_conf.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Core/Inc/stm32f4xx_it.h" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Core/Inc/stm32f4xx_it.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Core/Src/bringup_tests.c" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Core/Src/bringup_tests.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Core/Src/main.c" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Core/Src/main.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Core/Src/stm32f4xx_hal_msp.c" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Core/Src/stm32f4xx_hal_msp.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Core/Src/stm32f4xx_it.c" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Core/Src/stm32f4xx_it.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f446xx.h" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f446xx.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Drivers/CMSIS/Include/cmsis_armcc.h" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Drivers/CMSIS/Include/cmsis_armcc.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Drivers/CMSIS/Include/cmsis_armclang.h" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Drivers/CMSIS/Include/cmsis_armclang.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Drivers/CMSIS/Include/cmsis_compiler.h" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Drivers/CMSIS/Include/cmsis_compiler.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Drivers/CMSIS/Include/cmsis_gcc.h" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Drivers/CMSIS/Include/cmsis_gcc.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Drivers/CMSIS/Include/cmsis_iccarm.h" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Drivers/CMSIS/Include/cmsis_iccarm.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Drivers/CMSIS/Include/cmsis_version.h" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Drivers/CMSIS/Include/cmsis_version.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Drivers/CMSIS/Include/core_armv8mbl.h" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Drivers/CMSIS/Include/core_armv8mbl.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Drivers/CMSIS/Include/core_armv8mml.h" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Drivers/CMSIS/Include/core_armv8mml.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Drivers/CMSIS/Include/core_cm0.h" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Drivers/CMSIS/Include/core_cm0.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Drivers/CMSIS/Include/core_cm0plus.h" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Drivers/CMSIS/Include/core_cm0plus.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Drivers/CMSIS/Include/core_cm1.h" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Drivers/CMSIS/Include/core_cm1.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Drivers/CMSIS/Include/core_cm23.h" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Drivers/CMSIS/Include/core_cm23.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Drivers/CMSIS/Include/core_cm3.h" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Drivers/CMSIS/Include/core_cm3.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Drivers/CMSIS/Include/core_cm33.h" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Drivers/CMSIS/Include/core_cm33.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Drivers/CMSIS/Include/core_cm4.h" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Drivers/CMSIS/Include/core_cm4.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Drivers/CMSIS/Include/core_cm7.h" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Drivers/CMSIS/Include/core_cm7.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Drivers/CMSIS/Include/core_sc000.h" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Drivers/CMSIS/Include/core_sc000.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Drivers/CMSIS/Include/core_sc300.h" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Drivers/CMSIS/Include/core_sc300.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Drivers/CMSIS/Include/mpu_armv7.h" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Drivers/CMSIS/Include/mpu_armv7.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Drivers/CMSIS/Include/mpu_armv8.h" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Drivers/CMSIS/Include/mpu_armv8.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_cortex.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ex.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_flash_ramfunc.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_bus.h" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_bus.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_cortex.h" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_cortex.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_dma.h" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_dma.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_i2c.h" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_i2c.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_rcc.h" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_rcc.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usart.h" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usart.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_utils.h" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_utils.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.c" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_exti.c" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_exti.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.c" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.c" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ex.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.c" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_flash_ramfunc.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2c.c" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_i2c.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd.c" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd_ex.c" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pcd_ex.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.c" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.c" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.c" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_tim_ex.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_usb.c" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_ll_usb.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc/usbd_cdc.h" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Inc/usbd_cdc.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Middlewares/ST/STM32_USB_Device_Library/Class/CDC/Src/usbd_cdc.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_core.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/STM32F446RCTX_FLASH.ld" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/STM32F446RCTX_FLASH.ld" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/soccer_firmware Debug.launch" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/soccer_firmware Debug.launch" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../soccer_firmware/soccer_firmware.ioc" beforeDir="false" afterPath="$PROJECT_DIR$/../soccer_firmware/soccer_firmware.ioc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/soccer_firmware_interface/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/soccer_firmware_interface/main.py" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 7
+}</component>
+  <component name="ProjectId" id="2u36fDRHzzMfbsFWRZFQ475bPxI" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Python.main.executor": "Run",
+    "Python.read.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "master",
+    "last_opened_file_path": "D:/robosoccar",
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
+  }
+}]]></component>
+  <component name="RunManager">
+    <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="soccer_firmware_interface" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/src/soccer_firmware_interface" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/src/soccer_firmware_interface/main.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.main" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-python-sdk-50da183f06c8-d3b881c8e49f-com.jetbrains.pycharm.community.sharedIndexes.bundled-PC-233.13135.95" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="bbfdde8b-6d98-4a28-b2dd-ab441a50ab71" name="Changes" comment="" />
+      <created>1741465011321</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1741465011321</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/src/soccer_firmware_interface/main.py</url>
+          <line>9</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>

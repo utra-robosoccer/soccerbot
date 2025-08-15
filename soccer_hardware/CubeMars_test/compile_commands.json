@@ -1,0 +1,134 @@
+[
+{
+  "directory": "D:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test",
+  "command": "C:\\msys64\\ucrt64\\bin\\cc.exe -DDEBUG -DSTM32F446xx -DUSE_HAL_DRIVER -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Core/Inc -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/STM32F4xx_HAL_Driver/Inc -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32F4xx/Include -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/CMSIS/Include -g -std=gnu11 -o CMakeFiles\\CubeMars_test.dir\\Core\\Src\\main.c.obj -c D:\\RoboSoccer\\soccerbot\\soccer_hardware\\CubeMars_test\\Core\\Src\\main.c",
+  "file": "D:\\RoboSoccer\\soccerbot\\soccer_hardware\\CubeMars_test\\Core\\Src\\main.c",
+  "output": "CMakeFiles\\CubeMars_test.dir\\Core\\Src\\main.c.obj"
+},
+{
+  "directory": "D:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test",
+  "command": "C:\\msys64\\ucrt64\\bin\\cc.exe -DDEBUG -DSTM32F446xx -DUSE_HAL_DRIVER -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Core/Inc -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/STM32F4xx_HAL_Driver/Inc -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32F4xx/Include -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/CMSIS/Include -g -std=gnu11 -o CMakeFiles\\CubeMars_test.dir\\Core\\Src\\stm32f4xx_it.c.obj -c D:\\RoboSoccer\\soccerbot\\soccer_hardware\\CubeMars_test\\Core\\Src\\stm32f4xx_it.c",
+  "file": "D:\\RoboSoccer\\soccerbot\\soccer_hardware\\CubeMars_test\\Core\\Src\\stm32f4xx_it.c",
+  "output": "CMakeFiles\\CubeMars_test.dir\\Core\\Src\\stm32f4xx_it.c.obj"
+},
+{
+  "directory": "D:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test",
+  "command": "C:\\msys64\\ucrt64\\bin\\cc.exe -DDEBUG -DSTM32F446xx -DUSE_HAL_DRIVER -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Core/Inc -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/STM32F4xx_HAL_Driver/Inc -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32F4xx/Include -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/CMSIS/Include -g -std=gnu11 -o CMakeFiles\\CubeMars_test.dir\\Core\\Src\\stm32f4xx_hal_msp.c.obj -c D:\\RoboSoccer\\soccerbot\\soccer_hardware\\CubeMars_test\\Core\\Src\\stm32f4xx_hal_msp.c",
+  "file": "D:\\RoboSoccer\\soccerbot\\soccer_hardware\\CubeMars_test\\Core\\Src\\stm32f4xx_hal_msp.c",
+  "output": "CMakeFiles\\CubeMars_test.dir\\Core\\Src\\stm32f4xx_hal_msp.c.obj"
+},
+{
+  "directory": "D:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test",
+  "command": "C:\\msys64\\ucrt64\\bin\\cc.exe -DDEBUG -DSTM32F446xx -DUSE_HAL_DRIVER -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Core/Inc -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/STM32F4xx_HAL_Driver/Inc -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32F4xx/Include -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/CMSIS/Include -g -std=gnu11 -o CMakeFiles\\CubeMars_test.dir\\Core\\Src\\sysmem.c.obj -c D:\\RoboSoccer\\soccerbot\\soccer_hardware\\CubeMars_test\\Core\\Src\\sysmem.c",
+  "file": "D:\\RoboSoccer\\soccerbot\\soccer_hardware\\CubeMars_test\\Core\\Src\\sysmem.c",
+  "output": "CMakeFiles\\CubeMars_test.dir\\Core\\Src\\sysmem.c.obj"
+},
+{
+  "directory": "D:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test",
+  "command": "C:\\msys64\\ucrt64\\bin\\cc.exe -DDEBUG -DSTM32F446xx -DUSE_HAL_DRIVER -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Core/Inc -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/STM32F4xx_HAL_Driver/Inc -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32F4xx/Include -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/CMSIS/Include -g -std=gnu11 -o CMakeFiles\\CubeMars_test.dir\\Core\\Src\\syscalls.c.obj -c D:\\RoboSoccer\\soccerbot\\soccer_hardware\\CubeMars_test\\Core\\Src\\syscalls.c",
+  "file": "D:\\RoboSoccer\\soccerbot\\soccer_hardware\\CubeMars_test\\Core\\Src\\syscalls.c",
+  "output": "CMakeFiles\\CubeMars_test.dir\\Core\\Src\\syscalls.c.obj"
+},
+{
+  "directory": "D:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test",
+  "command": "C:\\msys64\\ucrt64\\bin\\cc.exe -DDEBUG -DSTM32F446xx -DUSE_HAL_DRIVER -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Core/Inc -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/STM32F4xx_HAL_Driver/Inc -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32F4xx/Include -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/CMSIS/Include -g -o CMakeFiles\\CubeMars_test.dir\\startup_stm32f446xx.s.obj -c D:\\RoboSoccer\\soccerbot\\soccer_hardware\\CubeMars_test\\startup_stm32f446xx.s",
+  "file": "D:\\RoboSoccer\\soccerbot\\soccer_hardware\\CubeMars_test\\startup_stm32f446xx.s",
+  "output": "CMakeFiles\\CubeMars_test.dir\\startup_stm32f446xx.s.obj"
+},
+{
+  "directory": "D:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test",
+  "command": "C:\\msys64\\ucrt64\\bin\\cc.exe -DDEBUG -DSTM32F446xx -DUSE_HAL_DRIVER -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Core/Inc -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/STM32F4xx_HAL_Driver/Inc -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32F4xx/Include -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/CMSIS/Include -g -std=gnu11 -o cmake\\stm32cubemx\\CMakeFiles\\STM32_Drivers.dir\\__\\__\\Core\\Src\\system_stm32f4xx.c.obj -c D:\\RoboSoccer\\soccerbot\\soccer_hardware\\CubeMars_test\\Core\\Src\\system_stm32f4xx.c",
+  "file": "D:\\RoboSoccer\\soccerbot\\soccer_hardware\\CubeMars_test\\Core\\Src\\system_stm32f4xx.c",
+  "output": "cmake\\stm32cubemx\\CMakeFiles\\STM32_Drivers.dir\\__\\__\\Core\\Src\\system_stm32f4xx.c.obj"
+},
+{
+  "directory": "D:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test",
+  "command": "C:\\msys64\\ucrt64\\bin\\cc.exe -DDEBUG -DSTM32F446xx -DUSE_HAL_DRIVER -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Core/Inc -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/STM32F4xx_HAL_Driver/Inc -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32F4xx/Include -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/CMSIS/Include -g -std=gnu11 -o cmake\\stm32cubemx\\CMakeFiles\\STM32_Drivers.dir\\__\\__\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_can.c.obj -c D:\\RoboSoccer\\soccerbot\\soccer_hardware\\CubeMars_test\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_can.c",
+  "file": "D:\\RoboSoccer\\soccerbot\\soccer_hardware\\CubeMars_test\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_can.c",
+  "output": "cmake\\stm32cubemx\\CMakeFiles\\STM32_Drivers.dir\\__\\__\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_can.c.obj"
+},
+{
+  "directory": "D:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test",
+  "command": "C:\\msys64\\ucrt64\\bin\\cc.exe -DDEBUG -DSTM32F446xx -DUSE_HAL_DRIVER -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Core/Inc -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/STM32F4xx_HAL_Driver/Inc -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32F4xx/Include -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/CMSIS/Include -g -std=gnu11 -o cmake\\stm32cubemx\\CMakeFiles\\STM32_Drivers.dir\\__\\__\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_rcc.c.obj -c D:\\RoboSoccer\\soccerbot\\soccer_hardware\\CubeMars_test\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_rcc.c",
+  "file": "D:\\RoboSoccer\\soccerbot\\soccer_hardware\\CubeMars_test\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_rcc.c",
+  "output": "cmake\\stm32cubemx\\CMakeFiles\\STM32_Drivers.dir\\__\\__\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_rcc.c.obj"
+},
+{
+  "directory": "D:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test",
+  "command": "C:\\msys64\\ucrt64\\bin\\cc.exe -DDEBUG -DSTM32F446xx -DUSE_HAL_DRIVER -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Core/Inc -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/STM32F4xx_HAL_Driver/Inc -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32F4xx/Include -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/CMSIS/Include -g -std=gnu11 -o cmake\\stm32cubemx\\CMakeFiles\\STM32_Drivers.dir\\__\\__\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_rcc_ex.c.obj -c D:\\RoboSoccer\\soccerbot\\soccer_hardware\\CubeMars_test\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_rcc_ex.c",
+  "file": "D:\\RoboSoccer\\soccerbot\\soccer_hardware\\CubeMars_test\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_rcc_ex.c",
+  "output": "cmake\\stm32cubemx\\CMakeFiles\\STM32_Drivers.dir\\__\\__\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_rcc_ex.c.obj"
+},
+{
+  "directory": "D:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test",
+  "command": "C:\\msys64\\ucrt64\\bin\\cc.exe -DDEBUG -DSTM32F446xx -DUSE_HAL_DRIVER -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Core/Inc -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/STM32F4xx_HAL_Driver/Inc -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32F4xx/Include -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/CMSIS/Include -g -std=gnu11 -o cmake\\stm32cubemx\\CMakeFiles\\STM32_Drivers.dir\\__\\__\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_flash.c.obj -c D:\\RoboSoccer\\soccerbot\\soccer_hardware\\CubeMars_test\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_flash.c",
+  "file": "D:\\RoboSoccer\\soccerbot\\soccer_hardware\\CubeMars_test\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_flash.c",
+  "output": "cmake\\stm32cubemx\\CMakeFiles\\STM32_Drivers.dir\\__\\__\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_flash.c.obj"
+},
+{
+  "directory": "D:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test",
+  "command": "C:\\msys64\\ucrt64\\bin\\cc.exe -DDEBUG -DSTM32F446xx -DUSE_HAL_DRIVER -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Core/Inc -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/STM32F4xx_HAL_Driver/Inc -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32F4xx/Include -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/CMSIS/Include -g -std=gnu11 -o cmake\\stm32cubemx\\CMakeFiles\\STM32_Drivers.dir\\__\\__\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_flash_ex.c.obj -c D:\\RoboSoccer\\soccerbot\\soccer_hardware\\CubeMars_test\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_flash_ex.c",
+  "file": "D:\\RoboSoccer\\soccerbot\\soccer_hardware\\CubeMars_test\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_flash_ex.c",
+  "output": "cmake\\stm32cubemx\\CMakeFiles\\STM32_Drivers.dir\\__\\__\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_flash_ex.c.obj"
+},
+{
+  "directory": "D:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test",
+  "command": "C:\\msys64\\ucrt64\\bin\\cc.exe -DDEBUG -DSTM32F446xx -DUSE_HAL_DRIVER -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Core/Inc -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/STM32F4xx_HAL_Driver/Inc -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32F4xx/Include -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/CMSIS/Include -g -std=gnu11 -o cmake\\stm32cubemx\\CMakeFiles\\STM32_Drivers.dir\\__\\__\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_flash_ramfunc.c.obj -c D:\\RoboSoccer\\soccerbot\\soccer_hardware\\CubeMars_test\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_flash_ramfunc.c",
+  "file": "D:\\RoboSoccer\\soccerbot\\soccer_hardware\\CubeMars_test\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_flash_ramfunc.c",
+  "output": "cmake\\stm32cubemx\\CMakeFiles\\STM32_Drivers.dir\\__\\__\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_flash_ramfunc.c.obj"
+},
+{
+  "directory": "D:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test",
+  "command": "C:\\msys64\\ucrt64\\bin\\cc.exe -DDEBUG -DSTM32F446xx -DUSE_HAL_DRIVER -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Core/Inc -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/STM32F4xx_HAL_Driver/Inc -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32F4xx/Include -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/CMSIS/Include -g -std=gnu11 -o cmake\\stm32cubemx\\CMakeFiles\\STM32_Drivers.dir\\__\\__\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_gpio.c.obj -c D:\\RoboSoccer\\soccerbot\\soccer_hardware\\CubeMars_test\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_gpio.c",
+  "file": "D:\\RoboSoccer\\soccerbot\\soccer_hardware\\CubeMars_test\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_gpio.c",
+  "output": "cmake\\stm32cubemx\\CMakeFiles\\STM32_Drivers.dir\\__\\__\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_gpio.c.obj"
+},
+{
+  "directory": "D:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test",
+  "command": "C:\\msys64\\ucrt64\\bin\\cc.exe -DDEBUG -DSTM32F446xx -DUSE_HAL_DRIVER -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Core/Inc -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/STM32F4xx_HAL_Driver/Inc -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32F4xx/Include -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/CMSIS/Include -g -std=gnu11 -o cmake\\stm32cubemx\\CMakeFiles\\STM32_Drivers.dir\\__\\__\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_dma_ex.c.obj -c D:\\RoboSoccer\\soccerbot\\soccer_hardware\\CubeMars_test\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_dma_ex.c",
+  "file": "D:\\RoboSoccer\\soccerbot\\soccer_hardware\\CubeMars_test\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_dma_ex.c",
+  "output": "cmake\\stm32cubemx\\CMakeFiles\\STM32_Drivers.dir\\__\\__\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_dma_ex.c.obj"
+},
+{
+  "directory": "D:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test",
+  "command": "C:\\msys64\\ucrt64\\bin\\cc.exe -DDEBUG -DSTM32F446xx -DUSE_HAL_DRIVER -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Core/Inc -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/STM32F4xx_HAL_Driver/Inc -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32F4xx/Include -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/CMSIS/Include -g -std=gnu11 -o cmake\\stm32cubemx\\CMakeFiles\\STM32_Drivers.dir\\__\\__\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_dma.c.obj -c D:\\RoboSoccer\\soccerbot\\soccer_hardware\\CubeMars_test\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_dma.c",
+  "file": "D:\\RoboSoccer\\soccerbot\\soccer_hardware\\CubeMars_test\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_dma.c",
+  "output": "cmake\\stm32cubemx\\CMakeFiles\\STM32_Drivers.dir\\__\\__\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_dma.c.obj"
+},
+{
+  "directory": "D:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test",
+  "command": "C:\\msys64\\ucrt64\\bin\\cc.exe -DDEBUG -DSTM32F446xx -DUSE_HAL_DRIVER -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Core/Inc -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/STM32F4xx_HAL_Driver/Inc -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32F4xx/Include -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/CMSIS/Include -g -std=gnu11 -o cmake\\stm32cubemx\\CMakeFiles\\STM32_Drivers.dir\\__\\__\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_pwr.c.obj -c D:\\RoboSoccer\\soccerbot\\soccer_hardware\\CubeMars_test\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_pwr.c",
+  "file": "D:\\RoboSoccer\\soccerbot\\soccer_hardware\\CubeMars_test\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_pwr.c",
+  "output": "cmake\\stm32cubemx\\CMakeFiles\\STM32_Drivers.dir\\__\\__\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_pwr.c.obj"
+},
+{
+  "directory": "D:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test",
+  "command": "C:\\msys64\\ucrt64\\bin\\cc.exe -DDEBUG -DSTM32F446xx -DUSE_HAL_DRIVER -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Core/Inc -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/STM32F4xx_HAL_Driver/Inc -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32F4xx/Include -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/CMSIS/Include -g -std=gnu11 -o cmake\\stm32cubemx\\CMakeFiles\\STM32_Drivers.dir\\__\\__\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_pwr_ex.c.obj -c D:\\RoboSoccer\\soccerbot\\soccer_hardware\\CubeMars_test\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_pwr_ex.c",
+  "file": "D:\\RoboSoccer\\soccerbot\\soccer_hardware\\CubeMars_test\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_pwr_ex.c",
+  "output": "cmake\\stm32cubemx\\CMakeFiles\\STM32_Drivers.dir\\__\\__\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_pwr_ex.c.obj"
+},
+{
+  "directory": "D:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test",
+  "command": "C:\\msys64\\ucrt64\\bin\\cc.exe -DDEBUG -DSTM32F446xx -DUSE_HAL_DRIVER -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Core/Inc -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/STM32F4xx_HAL_Driver/Inc -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32F4xx/Include -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/CMSIS/Include -g -std=gnu11 -o cmake\\stm32cubemx\\CMakeFiles\\STM32_Drivers.dir\\__\\__\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_cortex.c.obj -c D:\\RoboSoccer\\soccerbot\\soccer_hardware\\CubeMars_test\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_cortex.c",
+  "file": "D:\\RoboSoccer\\soccerbot\\soccer_hardware\\CubeMars_test\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_cortex.c",
+  "output": "cmake\\stm32cubemx\\CMakeFiles\\STM32_Drivers.dir\\__\\__\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_cortex.c.obj"
+},
+{
+  "directory": "D:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test",
+  "command": "C:\\msys64\\ucrt64\\bin\\cc.exe -DDEBUG -DSTM32F446xx -DUSE_HAL_DRIVER -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Core/Inc -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/STM32F4xx_HAL_Driver/Inc -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32F4xx/Include -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/CMSIS/Include -g -std=gnu11 -o cmake\\stm32cubemx\\CMakeFiles\\STM32_Drivers.dir\\__\\__\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal.c.obj -c D:\\RoboSoccer\\soccerbot\\soccer_hardware\\CubeMars_test\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal.c",
+  "file": "D:\\RoboSoccer\\soccerbot\\soccer_hardware\\CubeMars_test\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal.c",
+  "output": "cmake\\stm32cubemx\\CMakeFiles\\STM32_Drivers.dir\\__\\__\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal.c.obj"
+},
+{
+  "directory": "D:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test",
+  "command": "C:\\msys64\\ucrt64\\bin\\cc.exe -DDEBUG -DSTM32F446xx -DUSE_HAL_DRIVER -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Core/Inc -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/STM32F4xx_HAL_Driver/Inc -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32F4xx/Include -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/CMSIS/Include -g -std=gnu11 -o cmake\\stm32cubemx\\CMakeFiles\\STM32_Drivers.dir\\__\\__\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_exti.c.obj -c D:\\RoboSoccer\\soccerbot\\soccer_hardware\\CubeMars_test\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_exti.c",
+  "file": "D:\\RoboSoccer\\soccerbot\\soccer_hardware\\CubeMars_test\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_exti.c",
+  "output": "cmake\\stm32cubemx\\CMakeFiles\\STM32_Drivers.dir\\__\\__\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_exti.c.obj"
+},
+{
+  "directory": "D:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test",
+  "command": "C:\\msys64\\ucrt64\\bin\\cc.exe -DDEBUG -DSTM32F446xx -DUSE_HAL_DRIVER -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Core/Inc -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/STM32F4xx_HAL_Driver/Inc -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/CMSIS/Device/ST/STM32F4xx/Include -ID:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/../../Drivers/CMSIS/Include -g -std=gnu11 -o cmake\\stm32cubemx\\CMakeFiles\\STM32_Drivers.dir\\__\\__\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_uart.c.obj -c D:\\RoboSoccer\\soccerbot\\soccer_hardware\\CubeMars_test\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_uart.c",
+  "file": "D:\\RoboSoccer\\soccerbot\\soccer_hardware\\CubeMars_test\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_uart.c",
+  "output": "cmake\\stm32cubemx\\CMakeFiles\\STM32_Drivers.dir\\__\\__\\Drivers\\STM32F4xx_HAL_Driver\\Src\\stm32f4xx_hal_uart.c.obj"
+}
+]

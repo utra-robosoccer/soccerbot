@@ -1,0 +1,6 @@
+D:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/CMakeFiles/CubeMars_test.dir
+D:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/CMakeFiles/edit_cache.dir
+D:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/CMakeFiles/rebuild_cache.dir
+D:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir
+D:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/CMakeFiles/edit_cache.dir
+D:/RoboSoccer/soccerbot/soccer_hardware/CubeMars_test/cmake/stm32cubemx/CMakeFiles/rebuild_cache.dir
