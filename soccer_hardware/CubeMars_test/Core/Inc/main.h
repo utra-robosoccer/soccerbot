@@ -53,6 +53,10 @@ extern "C" {
 void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
+extern UART_HandleTypeDef huart2;
+extern CAN_HandleTypeDef hcan1;
+extern uint32_t TxMailbox;
+extern uint8_t can_receive_flag;
 
 /* USER CODE END EFP */
 

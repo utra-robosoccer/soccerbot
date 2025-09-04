@@ -1,9 +1,21 @@
-#include "can_test.h"
+#include "main.h"
 #include "stm32f4xx_hal_can.h"
 #include "stm32f4xx_hal_def.h"
-#include "stm32f4xx_hal_uart.h"
 #include <stdint.h>
+#include <sys/_intsup.h>
 #include <sys/types.h>
+#include "cubemars_test.h"
+
+uint16_t pos_int;
+uint16_t spd_int;
+uint16_t torq_int;
+uint8_t motor_temp;
+uint8_t error_code;
+
+float pos_float;
+float spd_float;
+float torq_float;
+float motor_temp_float;
 
 HAL_StatusTypeDef CAN_transmit_extid(CAN_HandleTypeDef *phcan, uint32_t* pTXmailBox, 
                                     uint32_t control_mode, uint8_t motor_id, const uint8_t *msg, uint8_t packet_len)
@@ -121,6 +133,29 @@ int float_to_int(float x, float x_min, float x_max, unsigned int bits)
     else if(x > x_max) x = x_max; 
     return (int) ((x- x_min)*((float)((1<<bits)/span))); 
 } 
+
+ float uint_to_float(int x_int, float x_min, float x_max, int bits)
+ {
+ /// converts unsigned int to float, given range and number of bits ///
+    float span = x_max- x_min;
+    float offset = x_min;
+    return ((float)x_int)*span/((float)((1<<bits)-1)) + offset;
+ }
+
+void CUBARMARS_unpack_mit_ctrl_parameters(uint8_t* recv_msg, int recv_msg_len)
+{
+    pos_int = (recv_msg[1] << 8) | recv_msg[2];
+    spd_int = (recv_msg[3] << 4) | (recv_msg[4] >> 4);
+    torq_int = ((recv_msg[4] & 0xF) << 8) | recv_msg[5];
+    motor_temp = recv_msg[6];
+    error_code = recv_msg[7];
+
+    pos_float = uint_to_float(pos_int, MIN_POS, MAX_POS, 16);
+    spd_float = uint_to_float(spd_int, MIN_RPM, MAX_RPM, 12);
+    torq_float = uint_to_float(torq_int, MIN_TORQUE, MAX_TORQUE, 12);
+    motor_temp_float = (float)motor_temp;
+    
+}
 
 HAL_StatusTypeDef CUBEMARS_set_motion_ctrl_parameters(CAN_HandleTypeDef *phcan, uint32_t* pTxMailBox,
                 float pos, float rpm, float kp, float kd, float torque)

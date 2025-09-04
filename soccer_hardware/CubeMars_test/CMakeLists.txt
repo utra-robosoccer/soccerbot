@@ -44,7 +44,8 @@ target_link_directories(${CMAKE_PROJECT_NAME} PRIVATE
 
 # Add sources to executable
 target_sources(${CMAKE_PROJECT_NAME} PRIVATE
-    Core/Src/can_test.c
+    Core/Src/cubemars_test.c
+    Core/Src/uart_dbg.c
     # Add user sources here
     
 )

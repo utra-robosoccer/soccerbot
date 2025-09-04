@@ -18,16 +18,19 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "stm32f4xx_hal.h"
-#include "stm32f4xx_hal_can.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "can_test.h"
+#include "cubemars_test.h"
+#include "stm32f4xx_hal.h"
 #include "stm32f4xx_hal_def.h"
 #include "stm32f4xx_hal_uart.h"
+#include <stdint.h>
+#include <stdio.h>
 #include <string.h>
 #include <sys/_intsup.h>
+#include <sys/types.h>
+#include "uart_dbg.h"
 
 
 /* USER CODE END Includes */
@@ -74,14 +77,22 @@ CAN_RxHeaderTypeDef RxHeader;
 
 uint32_t TxMailbox;
 
-uint8_t TXD[8];
-uint8_t RXD[8];
+uint8_t recv_msg[8];
 
-uint8_t count = 0;
+// uint32_t cur_time = 0;
+// float cur_pos = 3.14;
+
+char uart_msg[100];
+
+uint8_t can_receive_flag;
+
 
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan1)
 {
-  HAL_CAN_GetRxMessage(hcan1, CAN_RX_FIFO0, &RxHeader, RXD);
+  
+  HAL_CAN_GetRxMessage(hcan1, CAN_RX_FIFO0, &RxHeader, recv_msg);
+  CUBARMARS_unpack_mit_ctrl_parameters(recv_msg, sizeof(recv_msg));
+  can_receive_flag = 1;
 }
 
 
@@ -104,6 +115,7 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
+  can_receive_flag = 0;
 
   /* USER CODE END Init */
 
@@ -123,25 +135,7 @@ int main(void)
     return 1;
   }
   HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO0_MSG_PENDING);
-  // HAL_CAN_ActivateNotification(&hcan1, CAN_IT_RX_FIFO1_MSG_PENDING);
-  uint32_t cur_time = HAL_GetTick();
-  float cur_pos = 3.14;
-  CUBEMARS_enable_motion_ctrl(&hcan1, &TxMailbox);
-
-  //Prep before send out can messages
-  // TxHeader.DLC = 1; //Only transmit one byte
-  // TxHeader.ExtId = 0; //Since for this test program will be using std ID
-  // TxHeader.IDE = CAN_ID_STD; 
-  // TxHeader.RTR = CAN_RTR_DATA;
-  // TxHeader.StdId = 0x103; //Temperorily set the device id 103
-  // TxHeader.TransmitGlobalTime = DISABLE; //unsure about what is the global time doing here
-
-  // TXD[0] = 0xf3;
-
-  // if (HAL_CAN_AddTxMessage(&hcan1, &TxHeader, TXD, &TxMailbox) != HAL_OK){
-  //   return HAL_ERROR;
-  // }
-   //The Can transmit function for hal lib
+  char uart_msg[100];
   /*
     Go to the can filter config defined in the CAN 1 init function
     Filter Fifo assignment was assigned to CAN rx fifo 0
@@ -149,6 +143,7 @@ int main(void)
     count will increment
   */
 
+  // CUBEMARS_enable_motion_ctrl(&hcan1, &TxMailbox);
 
   /* USER CODE END 2 */
 
@@ -159,15 +154,28 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    if(HAL_GetTick() - cur_time > 1000){
-      cur_time = HAL_GetTick();
-      if (CUBEMARS_set_motion_ctrl_parameters(&hcan1, &TxMailbox, cur_pos, TEST_RPM, TEST_KP, TEST_KD, 10.0) != HAL_OK){
-        char *msg = "set pos failed\n";
-        HAL_UART_Transmit(&huart2, msg, strlen(msg), HAL_MAX_DELAY);
-        return -1;
-      }
-      cur_pos = -cur_pos;
+    
+    
+    // if (HAL_GetTick() - cur_time > 3000) {
+    //   cur_time = HAL_GetTick();
+    //   snprintf(uart_msg, sizeof(uart_msg), "Motor Report:\r\nTEMP: %0d | ERROR_CODE: %0x\r\nPOS: %0d | SPD: %0d | TORQ: %0d\r\n", motor_temp, error_code, pos_int, spd_int, torq_int);
+    //   HAL_UART_Transmit(&huart2, uart_msg, sizeof(uart_msg), HAL_MAX_DELAY);
+    //   if (CUBEMARS_set_motion_ctrl_parameters(&hcan1, &TxMailbox, cur_pos, 0, 200, 3, 0.0) != HAL_OK){
+    //     char *msg = "set pos failed\n";
+    //     HAL_UART_Transmit(&huart2, msg, strlen(msg), HAL_MAX_DELAY);
+    //   }
+    //     CUBEMARS_enable_motion_ctrl(&hcan1, &TxMailbox);
+    //   cur_pos = -cur_pos;
+    // }
+    snprintf(uart_msg, sizeof(uart_msg), "uart-cmd$: ");
+    HAL_UART_Transmit(&huart2, uart_msg, strlen(uart_msg), HAL_MAX_DELAY);
+    if(uart_get_new_line(&huart2, uart_msg, sizeof(uart_msg))!=HAL_OK){
+      snprintf(uart_msg, sizeof(uart_msg), "UART error\r\n");
+      HAL_UART_Transmit(&huart2, uart_msg, strlen(uart_msg), HAL_MAX_DELAY);
+      return -1;
     }
+    uart_parse_cmd(&huart2, uart_msg, strlen(uart_msg));
+
   }
   /* USER CODE END 3 */
 }
@@ -235,8 +243,8 @@ static void MX_CAN1_Init(void)
 
   /* USER CODE END CAN1_Init 1 */
   hcan1.Instance = CAN1;
-  hcan1.Init.Prescaler = 4;
-  hcan1.Init.Mode = CAN_MODE_LOOPBACK;
+  hcan1.Init.Prescaler = 2;
+  hcan1.Init.Mode = CAN_MODE_NORMAL;
   hcan1.Init.SyncJumpWidth = CAN_SJW_1TQ;
   hcan1.Init.TimeSeg1 = CAN_BS1_16TQ;
   hcan1.Init.TimeSeg2 = CAN_BS2_4TQ;
