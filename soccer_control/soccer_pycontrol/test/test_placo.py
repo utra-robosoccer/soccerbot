@@ -1,14 +1,12 @@
 import os
 import unittest
 from os.path import expanduser
-from random import uniform
 
 import cv2
 import numpy as np
-import pybullet as pb
 from soccer_object_detection.object_detect_node import ObjectDetectionNode
 from soccer_pycontrol.model.bez import Bez
-from soccer_pycontrol.pybullet_usage.pybullet_world import PybulletWorld
+from soccer_pycontrol.mujoco.simulator import Simulator
 from soccer_pycontrol.walk_engine.navigator import Navigator
 from soccer_trajectories.trajectory_manager_sim import TrajectoryManagerSim
 
@@ -19,7 +17,7 @@ REAL_TIME = True
 
 class TestPlaco(unittest.TestCase):
     def tearDown(self):
-        self.world.close()
+        # MuJoCo doesn't need explicit closing like PyBullet
         del self.bez
         del self.world
 
@@ -30,18 +28,16 @@ class TestPlaco(unittest.TestCase):
 
         detect = ObjectDetectionNode(model_path)
 
-        self.world = PybulletWorld(
-            camera_yaw=90,
-            real_time=REAL_TIME,
-            rate=200,
-        )
-        self.bez = Bez(robot_model="assembly", pose=Transformation(), fixed_base=False)
+        self.world = Simulator(scene_name="scene_assembly.xml")
+        self.bez = Bez(robot_model="assembly", pose=Transformation(), fixed_base=False, simulator=self.world)
         tm = TrajectoryManagerSim(self.world, self.bez, "bez2_sim", "getupfront")
 
         # self.bez = Bez(robot_model="bez1", pose=Transformation())
         walk = Navigator(self.world, self.bez, imu_feedback_enabled=False, ball=True)
         walk.ready()
-        self.world.wait(100)
+        # Wait equivalent in MuJoCo
+        for _ in range(100):
+            self.world.step()
         target_goal = [0.05, 0, 0.0, 10, 500]
         # target_goal = Transformation(position=[0, 0, 0], euler=[0, 0, 0])
         print("STARTING WALK")
@@ -178,11 +174,7 @@ class TestPlaco(unittest.TestCase):
 
     def test_bez1_walk(self):
 
-        self.world = PybulletWorld(
-            camera_yaw=90,
-            real_time=REAL_TIME,
-            rate=200,
-        )
+        self.world = Simulator(scene_name="scene_assembly.xml")
         self.bez = Bez(robot_model="assembly", pose=Transformation())
         # self.bez = Bez(robot_model="bez1", pose=Transformation())
         walk = Navigator(self.world, self.bez, imu_feedback_enabled=False)
@@ -208,11 +200,7 @@ class TestPlaco(unittest.TestCase):
 
     def test_bez1_auto(self):
 
-        self.world = PybulletWorld(
-            camera_yaw=90,
-            real_time=REAL_TIME,
-            rate=200,
-        )
+        self.world = Simulator(scene_name="scene_assembly.xml")
         self.bez = Bez(robot_model="assembly", pose=Transformation())
         tm = TrajectoryManagerSim(self.world, self.bez, "bez2_sim", "getupfront")
 
@@ -233,11 +221,7 @@ class TestPlaco(unittest.TestCase):
 
     def test_bez1_kick(self):
 
-        self.world = PybulletWorld(
-            camera_yaw=90,
-            real_time=REAL_TIME,
-            rate=200,
-        )
+        self.world = Simulator(scene_name="scene_assembly.xml")
         self.bez = Bez(robot_model="assembly", pose=Transformation())
         # self.bez = Bez(robot_model="bez1", pose=Transformation())
         walk = Navigator(self.world, self.bez, imu_feedback_enabled=False)
@@ -251,11 +235,7 @@ class TestPlaco(unittest.TestCase):
             self.world.step()
 
     def test_bez_motor_range_single(self):
-        self.world = PybulletWorld(
-            camera_yaw=90,
-            real_time=REAL_TIME,
-            rate=200,
-        )
+        self.world = Simulator(scene_name="scene_assembly.xml")
         # self.bez = Bez(robot_model="assembly", pose=Transformation())
         self.bez = Bez(robot_model="bez1", pose=Transformation())
         walk = Navigator(self.world, self.bez, imu_feedback_enabled=False)
@@ -293,11 +273,7 @@ class TestPlaco(unittest.TestCase):
             self.world.step()
 
     def test_bez1_start_stop(self):
-        self.world = PybulletWorld(
-            camera_yaw=90,
-            real_time=REAL_TIME,
-            rate=200,
-        )
+        self.world = Simulator(scene_name="scene_assembly.xml")
         self.bez = Bez(robot_model="assembly", pose=Transformation())
         # self.bez = Bez(robot_model="bez1", pose=Transformation())
         walk = Navigator(self.world, self.bez, imu_feedback_enabled=False)
@@ -314,11 +290,7 @@ class TestPlaco(unittest.TestCase):
             self.world.step()
 
     def test_bez1_ready(self):
-        self.world = PybulletWorld(
-            camera_yaw=90,
-            real_time=REAL_TIME,
-            rate=200,
-        )
+        self.world = Simulator(scene_name="scene_assembly.xml")
         # TODO should bez be init in walk_engine
         self.bez = Bez(robot_model="assembly", pose=Transformation())
         walk = Navigator(self.world, self.bez)

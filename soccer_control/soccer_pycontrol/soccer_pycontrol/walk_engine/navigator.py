@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import scipy
 from soccer_pycontrol.model.bez import Bez
-from soccer_pycontrol.pybullet_usage.pybullet_world import PybulletWorld
+from soccer_pycontrol.mujoco.simulator import Simulator  # Definitive switch to MuJoCo Simulator
 from soccer_pycontrol.walk_engine.error_calc import (
     find_new_vel,
     heading_error,
@@ -26,16 +26,46 @@ from soccer_common import PID, Transformation
 # TODO could make it more modular by passing in pybullet stuff or have it at one layer higher so we can reuse code
 # TODO change to trajectory controller
 class Navigator:
+    """
+    High-level navigation controller for the Bez robot using MuJoCo.
+
+    This class manages walking commands, PID control for pose navigation,
+    and coordination between the simulator, robot model, and walking engine.
+    It handles different walking modes and metrics recording.
+
+    Attributes:
+        world (Simulator): MuJoCo simulator instance.
+        bez (Bez): Robot model instance.
+        imu_feedback_enabled (bool): Whether IMU feedback is used.
+        foot_step_planner (FootStepPlanner): Planner for footstep generation.
+        walker (Walker): Walking execution handler.
+        nav_x_pid, nav_y_pid, nav_yaw_pid (PID): PID controllers for navigation.
+        max_vel (float): Maximum velocity for PID outputs.
+        error_tol (float): Position/orientation error tolerance.
+        record_walking_metrics (bool): Whether to record metrics.
+        walking_data (defaultdict): Storage for walking metrics.
+    """
+
     def __init__(
         self,
-        world: PybulletWorld,
+        world: Simulator,  # MuJoCo Simulator for simulation control
         bez: Bez,
         imu_feedback_enabled: bool = False,
         ball: bool = False,
         record_walking_metrics: bool = True,
         sim: bool = True,
     ):
+        """
+        Initialize the Navigator with MuJoCo simulator and robot.
 
+        Args:
+            world (Simulator): MuJoCo simulator instance.
+            bez (Bez): Robot model.
+            imu_feedback_enabled (bool): Enable IMU feedback for stabilization.
+            ball (bool): Enable ball-related features.
+            record_walking_metrics (bool): Record walking data.
+            sim (bool): Simulation mode flag.
+        """
         self.world = world
         self.bez = bez
         self.imu_feedback_enabled = imu_feedback_enabled
@@ -43,7 +73,7 @@ class Navigator:
         self.foot_step_planner = FootStepPlanner(self.bez.robot_model, self.bez.parameters, time.time, ball=ball, sim=sim)
         self.walker = Walker(bez, self.foot_step_planner, imu_feedback_enabled=imu_feedback_enabled)
 
-        self.max_vel = 0.1
+        self.max_vel = 0.1  # Maximum velocity for PID control
         self.nav_x_pid = PID(
             Kp=0.5,
             Kd=0,
@@ -51,14 +81,13 @@ class Navigator:
             setpoint=0,
             output_limits=(-self.max_vel, self.max_vel),
         )
-        self.nav_y_pid = PID(  # TODO properly tune later
+        self.nav_y_pid = PID(
             Kp=0.5,
             Kd=0,
             Ki=0,
             setpoint=0,
             output_limits=(-self.max_vel, self.max_vel),
-        )  # TODO could also mod if balance is decreasing
-
+        )
         self.nav_yaw_pid = PID(
             Kp=0.2,
             Kd=0,
@@ -67,22 +96,30 @@ class Navigator:
             output_limits=(-1, 1),
         )
         self.last_ball = [0, 0]
-        self.error_tol = 0.03  # in m TODO add as a param and in the ros version
-
-        # joints
-        self.left_ankle_index = self.bez.motor_control.motor_names["left_ankle_roll"]
-        self.right_ankle_index = self.bez.motor_control.motor_names["right_ankle_roll"]
-        # self.walker.torso_index = self.bez.motor_control.body.
-
+        self.error_tol = 0.03  # Tolerance for reaching target
         self.record_walking_metrics = record_walking_metrics
         self.walking_data = defaultdict(list)
 
     def wait(self, steps: int):
+        """
+        Wait for a specified number of simulation steps.
+
+        Args:
+            steps (int): Number of steps to wait.
+        """
         for i in range(steps):
             time.sleep(self.foot_step_planner.DT)
 
-    # TODO could make input a vector
     def walk(self, target_goal: Union[Transformation, List], ball_pixel=[0, 0], ball_mode: bool = False, display_metrics: bool = False):
+        """
+        Execute walking based on the target goal.
+
+        Args:
+            target_goal: Pose or velocity list for walking.
+            ball_pixel: Ball pixel coordinates for ball tracking.
+            ball_mode: Enable ball-tracking mode.
+            display_metrics: Show walking metrics.
+        """
         if self.walker.enable_walking:
             if isinstance(target_goal, Transformation):
                 if ball_mode:
@@ -97,9 +134,16 @@ class Navigator:
         # self.ready()
 
     def walk_pose(self, target_goal: Transformation):
-        pose = self.bez.sensors.get_pose()  # can use self.foot_step_planner.trajectory.get_p_world_CoM(t)
+        """
+        Navigate to a target pose using PID control.
+
+        Args:
+            target_goal (Transformation): Target position and orientation.
+        """
+        pose = self.bez.sensors.get_pose()  # Get current pose from MuJoCo
 
         if self.walker.t < 0:
+            # Initialize PID controllers and footstep planner
             self.walker.pid.reset_imus()
             self.nav_x_pid.reset()
             self.nav_x_pid.setpoint = target_goal.position[0]
@@ -151,6 +195,13 @@ class Navigator:
             self.walker.enable_walking = False
 
     def walk_ball(self, target_goal: Transformation, ball_pixel):
+        """
+        Walk towards a ball with head tracking.
+
+        Args:
+            target_goal (Transformation): Ball position.
+            ball_pixel: Ball coordinates in camera frame.
+        """
         if self.walker.t < 0:
             self.walker.pid.reset_imus()
 
@@ -192,6 +243,12 @@ class Navigator:
         #     self.walker.enable_walking = False
 
     def walk_time(self, target_goal: list):
+        """
+        Walk for a specified time with constant velocity.
+
+        Args:
+            target_goal (list): [dx, dy, dtheta, nb_steps, t_goal]
+        """
         if self.walker.t < 0:
             self.foot_step_planner.setup_walk(target_goal[0], target_goal[1], target_goal[2], target_goal[3])
             self.walker.pid.reset_imus()
@@ -204,6 +261,9 @@ class Navigator:
             self.walker.enable_walking = False
 
     def ready(self):
+        """
+        Set the robot to a ready stance.
+        """
         self.foot_step_planner.setup_tasks()
 
         self.bez.motor_control.set_angles_from_placo(self.foot_step_planner.robot)
@@ -322,7 +382,10 @@ class Navigator:
         rectangle_x_offset = 0
         rectangle_y_offset = 0
 
-        make_rotation = lambda theta, x, y: np.array([[np.cos(theta), -np.sin(theta), x], [np.sin(theta), np.cos(theta), y]])
+        def make_rotation(theta, x, y):
+            """Create a rotation and translation matrix for footprint visualization."""
+            return np.array([[np.cos(theta), -np.sin(theta), x], [np.sin(theta), np.cos(theta), y]])
+
         rectangle = np.array(
             [
                 [rectangle_x_offset - rectangle_width / 2, rectangle_y_offset + rectangle_length / 2, 1],
@@ -332,7 +395,10 @@ class Navigator:
                 [rectangle_x_offset - rectangle_width / 2, rectangle_y_offset + rectangle_length / 2, 1],
             ]
         )
-        make_rectangle = lambda theta, x, y: np.array([make_rotation(theta, x, y) @ rectangle[i].T for i in range(5)])
+
+        def make_rectangle(theta, x, y):
+            """Generate rectangle coordinates for footprint plotting."""
+            return np.array([make_rotation(theta, x, y) @ rectangle[i].T for i in range(5)])
 
         yaw_data = np.array(self.walking_data["IMU_0"]).T
 
@@ -390,11 +456,7 @@ class Navigator:
 
 
 if __name__ == "__main__":
-    world = PybulletWorld(
-        camera_yaw=90,
-        real_time=True,
-        rate=200,
-    )
-    bez = Bez(robot_model="bez1")
+    world = Simulator(scene_name="scene_bez2.xml")  # Load MuJoCo scene for Bez2 robot
+    bez = Bez(robot_model="bez1", simulator=world)  # Pass simulator to Bez (required)
     walk = Navigator(world, bez)
     walk.walk(t_goal=100)

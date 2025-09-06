@@ -1,7 +1,7 @@
 import unittest
 import matplotlib.pyplot as plt
 from soccer_pycontrol.model.bez import Bez  # Import the Bez class
-from soccer_pycontrol.pybullet_usage.pybullet_world import PybulletWorld  # Import the PybulletWorld class
+from soccer_pycontrol.mujoco.simulator import Simulator  # Import the MuJoCo Simulator class
 from soccer_common import Transformation
 
 
@@ -9,22 +9,18 @@ class TestSensors(unittest.TestCase):
 
     def setUp(self):
         """
-        Set up the PyBullet environment and the robot with sensors.
+        Set up the MuJoCo environment and the robot with sensors.
         """
-        self.world = PybulletWorld(
-            camera_yaw=90,
-            real_time=True,  # Change to False if you don't want real time simulation
-            rate=200,
-        )
+        self.world = Simulator(scene_name="scene_assembly.xml")
 
         self.robot_model = "assembly"
-        self.bez = Bez(robot_model=self.robot_model, pose=Transformation())
+        self.bez = Bez(robot_model=self.robot_model, pose=Transformation(), simulator=self.world)
 
     def tearDown(self):
         """
-        Close the PyBullet environment.
+        Close the MuJoCo environment.
         """
-        self.world.close()
+        # MuJoCo doesn't need explicit closing like PyBullet
         del self.bez
         del self.world
 

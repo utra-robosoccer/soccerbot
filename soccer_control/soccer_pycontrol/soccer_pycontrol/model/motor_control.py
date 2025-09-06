@@ -2,12 +2,12 @@ from typing import List
 
 import numpy as np
 
-# import pybullet as pb
+from soccer_pycontrol.mujoco.simulator import Simulator  # Import Simulator for MuJoCo motor control
 
 
 def wrapToPi(num: float) -> float:
     """
-    Wraps a angle to pi, etc -3pi -> pi
+    Wraps an angle to [-pi, pi].
     :param num: Angle in radians
     """
     rem = (num + np.pi) % (2 * np.pi) - np.pi
@@ -46,107 +46,190 @@ class MotorData:
         self.data = [0.0] * len(self.motor_names)
 
 
-# x = {"1": [0,0], "2":[1,1], "3":[2,2] } # TODO do analysis if this hurts performance
-# m = MotorData(x)
-# print(m["1":"2"])
-# print(m["1"])
-# print(m["2"])
-# m["1"] = 4
-# m["1":"2"] = [3,4]
-# print(m[:])
-# m[:] = 0
-# print("end", m[:])
 class MotorControl:
     """
-    Class controls access to motor information and sets motor angles in pybullet
+    Controller for managing motor/actuator commands in MuJoCo simulations.
+
+    This class handles setting joint angles, applying offsets, and sending control
+    signals to the MuJoCo actuators. It replaces PyBullet's motor control with
+    MuJoCo's actuator-based system.
+
+    Attributes:
+        simulator (Simulator): The MuJoCo simulator instance.
+        motor_names (dict): Mapping of motor names to indices.
+        numb_of_motors (int): Total number of motors.
+        configuration (MotorData): Current motor angle targets.
+        configuration_offset (MotorData): Offset values for motor angles.
+        max_forces (list): Maximum forces for each motor.
     """
 
-    # TODO update with the modified for pycontrol
-    def __init__(self, body):
-        self.body = body
+    def __init__(self, simulator: Simulator):
+        """
+        Initialize motor control with a MuJoCo Simulator.
 
-        self.motor_names = self.find_motor_names()  # motorname : [pybullet index, array index]
+        Args:
+            simulator (Simulator): The MuJoCo simulator instance.
+        """
+        self.simulator = simulator
+        self.motor_names = self.find_motor_names()  # Map actuator names to indices
         self.numb_of_motors = len(self.motor_names)
-
-        # Todo make it numpy and add getter and setters
         self.configuration = MotorData(self.motor_names)
         self.configuration_offset = MotorData(self.motor_names)
-
-        self.max_forces = []
-
-        for i in range(0, self.numb_of_motors):  # TODO change
-            self.max_forces.append(pb.getJointInfo(self.body, i)[10] or 6)  # TODO why is this acting so weird
-
-        self.set_motor()
+        self.max_forces = [100.0] * self.numb_of_motors  # Default max forces
+        self.set_motor()  # Apply initial motor settings
 
     def find_motor_names(self) -> dict:
-        names = {}
-        for i in range(pb.getNumJoints(self.body)):
-            joint_info = pb.getJointInfo(self.body, i)
-            if joint_info[2] == pb.JOINT_REVOLUTE:
-                names[joint_info[1].decode("utf-8")] = [i, len(names)]
+        """
+        Discover and map actuator names from the MuJoCo model.
 
+        Returns:
+            dict: Mapping of actuator names to [index, array_index] pairs.
+        """
+        names = {}
+        actuator_names = self.simulator.dof_names()  # Get names from simulator
+        for idx, name in enumerate(actuator_names):
+            names[name] = [idx, len(names)]
         return names
 
-    def get_motor_pybullet_indexes(self) -> List[float]:
-        return [i[0] for i in list(self.motor_names.values())]
+    def get_motor_indexes(self) -> List[int]:
+        """
+        Get the actuator indices for control.
 
-    def get_motor_indexes(self) -> List[float]:
-        return [i[1] for i in list(self.motor_names.values())]
+        Returns:
+            List[int]: List of actuator indices.
+        """
+        return [i[0] for i in list(self.motor_names.values())]
 
     def get_angles(self):
         """
-        Function for getting all the angles, combines the configuration with the configuration offset
+        Compute the final motor angles by combining configuration and offsets.
 
-        :return: All 18 angles of the robot in an array formation
+        Returns:
+            list: List of wrapped angles for all motors.
         """
-        # TODO is this needed
         angles = [wrapToPi(a + b) for a, b in zip(self.configuration.data, self.configuration_offset.data)]
         return angles
 
     def set_motor(self) -> None:
-        pb.setJointMotorControlArray(
-            bodyIndex=self.body,
-            controlMode=pb.POSITION_CONTROL,
-            jointIndices=self.get_motor_pybullet_indexes(),  # list(range(0, self.numb_of_motors, 1)),
-            targetPositions=self.get_angles(),
-            forces=self.max_forces,
-        )
+        """
+        Send motor control commands to MuJoCo actuators.
+        """
+        for name in self.motor_names:
+            target_angle = self.configuration[name] + self.configuration_offset[name]
+            self.simulator.set_control(name, wrapToPi(target_angle))  # Apply wrapped angle
 
-    def set_single_motor(self, name, target_angle: float) -> None:
+    def set_single_motor(self, name: str, target_angle: float) -> None:
+        """
+        Set the target angle for a single motor.
+
+        Args:
+            name (str): Motor name.
+            target_angle (float): Desired angle.
+        """
         self.configuration[name] = target_angle
+        self.set_motor()  # Update immediately
 
     def set_head_target_angles(self, target_angles: np.ndarray) -> None:
+        """
+        Set angles for head motors.
+
+        Args:
+            target_angles (np.ndarray): Angles for yaw and pitch.
+        """
         self.configuration["head_yaw":"head_pitch"] = target_angles
+        self.set_motor()
 
     def set_right_arm_target_angles(self, target_angles: np.ndarray) -> None:
+        """
+        Set angles for right arm motors.
+
+        Args:
+            target_angles (np.ndarray): Angles for shoulder and elbow.
+        """
         self.configuration["right_shoulder_pitch":"right_elbow"] = target_angles
+        self.set_motor()
 
     def set_left_arm_target_angles(self, target_angles: np.ndarray) -> None:
+        """
+        Set angles for left arm motors.
+
+        Args:
+            target_angles (np.ndarray): Angles for shoulder and elbow.
+        """
         self.configuration["left_shoulder_pitch":"left_elbow"] = target_angles
+        self.set_motor()
 
     def set_right_leg_target_angles(self, target_angles: np.ndarray) -> None:
+        """
+        Set angles for right leg motors.
+
+        Args:
+            target_angles (np.ndarray): Angles for leg joints.
+        """
         self.configuration["right_hip_yaw":"right_ankle_roll"] = target_angles
+        self.set_motor()
 
     def set_left_leg_target_angles(self, target_angles: np.ndarray) -> None:
+        """
+        Set angles for left leg motors.
+
+        Args:
+            target_angles (np.ndarray): Angles for leg joints.
+        """
         self.configuration["left_hip_yaw":"left_ankle_roll"] = target_angles
+        self.set_motor()
 
     def set_leg_joint_2_target_angle(self, target: float) -> None:
+        """
+        Apply hip roll offset for balance.
+
+        Args:
+            target (float): Offset value.
+        """
         self.configuration_offset["left_hip_roll"] = -target
         self.configuration_offset["right_hip_roll"] = +target
+        self.set_motor()
 
     def set_leg_joint_3_target_angle(self, target: float) -> None:
+        """
+        Apply hip pitch offset for balance.
+
+        Args:
+            target (float): Offset value.
+        """
         self.configuration_offset["left_hip_pitch"] = target
         self.configuration_offset["right_hip_pitch"] = target
+        self.set_motor()
 
     def set_leg_joint_5_target_angle(self, target: float) -> None:
+        """
+        Apply ankle pitch offset.
+
+        Args:
+            target (float): Offset value.
+        """
         self.configuration_offset["left_ankle_pitch"] = target
         self.configuration_offset["right_ankle_pitch"] = target
+        self.set_motor()
 
     def set_leg_joint_6_target_angle(self, target: float) -> None:
+        """
+        Apply ankle roll offset.
+
+        Args:
+            target (float): Offset value.
+        """
         self.configuration_offset["left_ankle_roll"] -= target
         self.configuration_offset["right_ankle_roll"] += target
+        self.set_motor()
 
     def set_angles_from_placo(self, planner) -> None:
+        """
+        Set motor angles based on Placo planner output.
+
+        Args:
+            planner: Placo planner object with get_joint method.
+        """
         for joint in self.motor_names:
             self.configuration[joint] = planner.get_joint(joint)
+        self.set_motor()
