@@ -1,5 +1,8 @@
 #ifndef CAN_TEST
 #define CAN_TEST
+#include "main.h"
+#include "stm32f4xx_hal.h"
+#include <stdint.h>
 
 // This CAN TEST lib is only for Cubmars
 /*

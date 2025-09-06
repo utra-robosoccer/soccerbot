@@ -1,13 +1,5 @@
-#include "cubemars.h"
 #include "uart_dbg.h"
-#include "main.h"
-#include "stm32f4xx_hal_def.h"
-#include "stm32f4xx_hal_uart.h"
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/_intsup.h>
+
 
 set_cmd_t set_cmd_list[] = {
     {"pos", 0.0},

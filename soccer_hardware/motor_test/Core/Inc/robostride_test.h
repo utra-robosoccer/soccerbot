@@ -1,6 +1,6 @@
 #ifndef ROBOSTRIDE
 #define ROBOSTRIDE
-
+#include "stm32f4xx_hal.h"
 #include "stm32f4xx_hal_can.h"
 #define P_MIN   -12.57f
 #define P_MAX    12.57f

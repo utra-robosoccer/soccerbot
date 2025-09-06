@@ -1,6 +1,13 @@
 #ifndef UART_DBG
 #define UART_DBG
+#include "stm32f4xx_hal.h"
 #include "main.h"
+#include "stm32f4xx_hal_def.h"
+#include "stm32f4xx_hal_uart.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "cubemars.h"
 
 typedef struct{
     char* cmd;

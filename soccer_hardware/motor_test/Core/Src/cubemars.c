@@ -1,8 +1,4 @@
 #include "cubemars.h"
-#include "main.h"
-#include "stm32f4xx_hal_can.h"
-#include "stm32f4xx_hal_def.h"
-#include <stdint.h>
 
 uint16_t pos_int;
 uint16_t spd_int;
@@ -89,6 +85,7 @@ HAL_StatusTypeDef CUBEMARS_enable_motion_ctrl(CAN_HandleTypeDef *phcan, uint32_t
     tx_buf[5] = 0xFF;
     tx_buf[6] = 0xFF;
     tx_buf[7] = 0xFC;
+    
 
     return CAN_transmit_stdid(phcan, pTxmailBox, TEST_MOTOR_ID, tx_buf, sizeof(tx_buf));
 }

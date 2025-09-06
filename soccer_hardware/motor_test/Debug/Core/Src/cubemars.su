@@ -1,0 +1,12 @@
+../Core/Src/cubemars.c:14:19:CAN_transmit_extid	56	static
+../Core/Src/cubemars.c:35:19:CAN_transmit_stdid	56	static
+../Core/Src/cubemars.c:54:6:buffer_fill_int32	24	static
+../Core/Src/cubemars.c:61:19:CUBEMARS_set_torque	40	static
+../Core/Src/cubemars.c:69:19:CUBEMARS_set_pos	40	static
+../Core/Src/cubemars.c:77:19:CUBEMARS_enable_motion_ctrl	32	static
+../Core/Src/cubemars.c:93:19:CUBEMARS_disable_motion_ctrl	32	static
+../Core/Src/cubemars.c:108:19:CUBEMARS_set_origin	32	static
+../Core/Src/cubemars.c:123:5:float_to_int	32	static
+../Core/Src/cubemars.c:132:8:uint_to_float	32	static
+../Core/Src/cubemars.c:140:6:CUBARMARS_unpack_mit_ctrl_parameters	16	static
+../Core/Src/cubemars.c:155:19:CUBEMARS_set_motion_ctrl_parameters	80	static
