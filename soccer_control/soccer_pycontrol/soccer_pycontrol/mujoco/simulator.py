@@ -6,7 +6,7 @@ import mujoco
 import mujoco.viewer
 import numpy as np
 from scipy.spatial.transform import Rotation
-
+import meshcat.transformations as tf
 
 class Simulator:
     """
@@ -233,8 +233,7 @@ class Simulator:
         quat = data[3:]
         pos = data[:3]
 
-        T = Rotation.from_quat(quat).as_matrix()
-        T = np.eye(4)[:3, :3] @ T
+        T = tf.quaternion_matrix(quat)
         T[:3, 3] = pos
         return T
 
@@ -247,7 +246,7 @@ class Simulator:
         """
         joint = self.data.joint("root")
 
-        quat = Rotation.from_matrix(T[:3, :3]).as_quat()
+        quat = tf.quaternion_from_matrix(T)
         pos = T[:3, 3]
 
         joint.qpos[:] = [*pos, *quat]

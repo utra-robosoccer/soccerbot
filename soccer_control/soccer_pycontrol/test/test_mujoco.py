@@ -16,17 +16,23 @@ class TestMujoco(unittest.TestCase):
         del self.world
 
     def test_imu(self):
-        self.world = Simulator(scene_name="scene_assembly.xml")
+        self.world = Simulator(scene_name="scene_bez2.xml")
         pose = Transformation()
         # pose = Transformation(position=[0, 0, 0.070], euler=[0, -1.57, 0])
         # pose = Transformation(position=[0, 0, 0.070], euler=[0, 1.57, 0])
         self.bez = Bez(robot_model="assembly", pose=pose, simulator=self.world)
         # Wait equivalent in MuJoCo
-        for _ in range(100):
-            self.world.step()
-        for i in range(100):
+        # for _ in range(100):
+        #     self.world.render(True)
+        #     self.world.step()
+        self.world.step()
+        self.world.set_T_world_site("left_foot", np.eye(4))
+
+        self.world.step()
+        for i in range(100000):
+            self.world.render(True)
             [_, pitch, roll] = self.bez.sensors.get_imu()
-            print(self.bez.fallen(pitch))
+            print(pitch, roll)
             self.world.step()
         # TODO add more
 
