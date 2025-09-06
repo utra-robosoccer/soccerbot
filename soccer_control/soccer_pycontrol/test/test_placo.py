@@ -18,10 +18,10 @@ REAL_TIME = True
 
 
 class TestPlaco(unittest.TestCase):
-    def tearDown(self):
-        self.world.close()
-        del self.bez
-        del self.world
+    # def tearDown(self):
+    # self.world.close()
+    # del self.bez
+    # del self.world
 
     def test_bez1(self):
         src_path = expanduser("~") + "/ros2_ws/src/soccerbot/soccer_perception/"

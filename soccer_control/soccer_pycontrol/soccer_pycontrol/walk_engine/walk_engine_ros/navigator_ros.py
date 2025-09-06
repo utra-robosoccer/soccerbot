@@ -36,7 +36,7 @@ class NavigatorRos(Navigator, Node):
         self.walker = Walker(self.bez, self.foot_step_planner, imu_feedback_enabled=imu_feedback_enabled)
         self.rate = self.create_rate(1 / self.foot_step_planner.DT)
         self.walk_pid = Stabilize(self.bez.parameters)
-        self.max_vel = 0.03
+        self.max_vel = 0.02
         self.nav_x_pid = PID(
             Kp=0.1,
             Kd=0,
@@ -59,17 +59,19 @@ class NavigatorRos(Navigator, Node):
             output_limits=(-0.1, 0.1),
         )
         self.ball_dx = 0
-        self.ball_dy = 0.7
+        self.ball_dy = 0.3
         self.error_tol = 0.05  # in m TODO add as a param and in the ros version
         self.position_create_subscription = self.create_subscription(PoseStamped, "goal", self.goal_callback, qos_profile=10)
         self.goal = PoseStamped()
         self.t = None
         self.enable_walking = None
         self.walker.reset_walk()
-        self.sub_boundingbox = self.create_subscription(PoseStamped, "/robot1/ball", self.box_callback, qos_profile=10)
-        self.sub_ball_pixel = self.create_subscription(Float32MultiArray, "/robot1/ball_pixel", self.pixel_callback, qos_profile=10)
+        self.sub_boundingbox = self.create_subscription(PoseStamped, "ball", self.box_callback, qos_profile=10)
+        self.sub_ball_pixel = self.create_subscription(Float32MultiArray, "ball_pixel", self.pixel_callback, qos_profile=10)
         self.last_ball = [0, 0]
         self.last_req = self.get_clock().now()
+        # self.last_req_ball = self.get_clock().now()
+        # self.last_req_ready = self.get_clock().now()
         self.ball_x_pid = PID(
             Kp=0.05,
             Kd=0,
@@ -94,6 +96,7 @@ class NavigatorRos(Navigator, Node):
         self.gamestate = GameStateMsg()
         self.traj_prog = self.create_subscription(Bool, "traj_prog", self.traj, qos_profile=10)
         self.game_sub = self.create_subscription(GameStateMsg, "gamestate", self.gamestate_callback, qos_profile=10)
+        self.red = False
 
     def traj(self, data: Bool):
         self.traj_in_progress = data.data
@@ -103,6 +106,13 @@ class NavigatorRos(Navigator, Node):
 
     def check_request_timeout(self, nsecs: int = 500000000):
         return (self.get_clock().now() - self.last_req) < Duration(seconds=1, nanoseconds=nsecs)
+
+    # def check_request_timeout2(self, nsecs: int = 500000000):
+    #     return (self.get_clock().now() - self.last_req_ball) > Duration(seconds=0, nanoseconds=nsecs)
+    #
+    # def check_request_timeout3(self, nsecs: int = 500000000):
+    #
+    #     return (self.get_clock().now() - self.last_req_ready) > Duration(seconds=20, nanoseconds=nsecs)
 
     def pixel_callback(self, data):
         self.ball_pixel = data.data
@@ -141,26 +151,62 @@ class NavigatorRos(Navigator, Node):
             # self.bez.motor_control.set_motor()
 
             if isinstance(target_goal, Transformation):
-                if self.ball is not None:
-                    if 0.0 < np.linalg.norm(self.ball.position[:2]) < 0.05 and kicked == False:
-                        print(self.ball.position)
-                        print(np.linalg.norm(self.ball.position[:2]))
-                        self.ready()
-                        msg = FixedTrajectoryCommand()
-                        msg.trajectory_name = "rightkick"
-                        msg.mirror = True
-                        self.pub_all_motor.publish(msg)
-                        kicked = True
-                        self.walker.reset_walk()
-                        self.ready()
-                    elif not kicked:
-                        if self.check_request_timeout():
-                            ready = False
-                            self.walk(self.ball, self.ball_pixel, ball_mode=True)
-                        elif not ready:
-                            self.ready()
-                            self.bez.motor_control.set_single_motor("head_pitch", 0.7)
-                            ready = True
+                pass
+                # if not self.traj_in_progress and (
+                #         self.gamestate.gamestate == 1 ) and self.gamestate.penalty == 0 and not self.check_request_timeout3():
+                #     self.walk_time([0.03, 0.0, 0.05, 10, 500])
+                #
+                #     if not self.red:
+                #         self.red = True
+                #         self.last_req_ready = self.get_clock().now()
+                #
+                # if self.gamestate.gamestate in [0,2,3,4]:
+                #     self.red = False
+                #     self.last_req_ready = self.get_clock().now()
+                self.gamestate.gamestate = 3
+                if (
+                    self.check_request_timeout()
+                    and self.ball is not None
+                    and not self.traj_in_progress
+                    and self.gamestate.gamestate == 3
+                    and self.gamestate.penalty == 0
+                ):
+                    # if 0.0 < np.linalg.norm(self.ball.position[:2]) < 0.05 and kicked == False:
+                    #     print(self.ball.position)
+                    #     print(np.linalg.norm(self.ball.position[:2]))
+                    #     self.ready()
+                    #     msg = FixedTrajectoryCommand()
+                    #     msg.trajectory_name = "rightkick"
+                    #     msg.mirror = True
+                    #     self.pub_all_motor.publish(msg)
+                    #     kicked = True
+                    #     self.walker.reset_walk()
+                    #     self.ready()
+                    # elif not kicked:
+                    # self.get_logger().info("{}".format(1))
+                    # if self.check_request_timeout() and self.check_request_timeout2():
+                    #     ready = False
+                    #     self.last_req_ball = self.get_clock().now()
+                    #     # self.get_logger().info("{}".format(1))
+                    #     self.walk(self.ball, self.ball_pixel, ball_mode=True)
+                    # self.walk(self.ball, self.ball_pixel, ball_mode=True)
+                    pass
+                    # elif not ready:
+                    #     self.ready()
+                    #     self.bez.motor_control.set_single_motor("head_pitch", 0.7)
+                    #     ready = True
+                # elif not self.traj_in_progress and (self.gamestate.gamestate == 1 or self.gamestate.gamestate == 3) and self.gamestate.penalty == 0:
+                #     self.walk_time([0.03, 0.05, 0.0, 10, 500])
+                elif not self.traj_in_progress:
+                    self.ready()
+
+                # if self.check_request_timeout() and self.check_request_timeout2():
+                #     ready = False
+                #     self.last_req_ball = self.get_clock().now()
+                #     # self.get_logger().info("{}".format(1))
+                #     self.walk(self.ball, self.ball_pixel, ball_mode=True)
+                # self.walk(self.ball, self.ball_pixel, ball_mode=True)
+
             elif isinstance(target_goal, list):  # [d_x: float = 0.0, d_y: float = 0.0, d_theta: float = 0.0, nb_steps: int = 10, t_goal: float = 10]
                 # if target_goal[:3] == [0.0,0.0,0]:
                 #     if self.imu_feedback_enabled and self.bez.sensors.imu_ready:
@@ -178,12 +224,13 @@ class NavigatorRos(Navigator, Node):
                 #
                 #     self.bez.motor_control.set_motor()
                 # else:
-                self.walk_time(target_goal)
-                pass
-                # if not self.traj_in_progress and (self.gamestate.gamestate == 1 or self.gamestate.gamestate == 3) and self.gamestate.penalty == 0:
-                #     self.walk_time(target_goal)
-                # elif not self.traj_in_progress:
-                #     self.ready()
+                # self.walk_time(target_goal)
+                # pass
+                # self.gamestate.gamestate = 3
+                if not self.traj_in_progress and (self.gamestate.gamestate == 1 or self.gamestate.gamestate == 3) and self.gamestate.penalty == 0:
+                    self.walk_time(target_goal)
+                elif not self.traj_in_progress:
+                    self.ready()
 
             # print(f"Height rotation: {self.bez.sensors.get_height().orientation_euler}")
             # print(f"Height position: {self.bez.sensors.get_height().position}")
@@ -224,9 +271,9 @@ def main():
         # walker.walk(d_x=0.04, t_goal=10)
         # target_goal = Transformation(position=[1, 0, 0], euler=[0, 0, 0])
         # walker.walk(target_goal)
-        target_goal = [0.03, 0.0, 0, 10, 500]
-        # target_goal = Transformation(position=[0, 0, 0], euler=[0, 0, 0])
-        # # walker.walk(target_goal)
+        target_goal = [0.03, 0.0, 0.0, 10, 500]
+        target_goal = Transformation(position=[0, 0, 0], euler=[0, 0, 0])
+        # walker.walk(target_goal)
         node.wait(50)
         node.run(target_goal)
 

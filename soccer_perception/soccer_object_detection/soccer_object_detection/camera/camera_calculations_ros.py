@@ -47,8 +47,8 @@ class CameraCalculationsRos(CameraCalculations):
         :param skip_if_not_found: If set to true, then will not wait if it cannot find the camera transform after the specified duration (1 second), it will just return
         """
         try:
-            if timestamp is None:
-                timestamp = rclpy.time.Time()
+            # if timestamp is None:
+            #     timestamp = rclpy.time.Time()
 
             if self.tf_buffer.can_transform("head", "left_foot", timestamp):
                 transform_stamaped = self.tf_buffer.lookup_transform("head", "left_foot", timestamp)
@@ -58,7 +58,7 @@ class CameraCalculationsRos(CameraCalculations):
                 self.pose = Transformation(position=[0, 0, trans.z], quaternion=[rot.x, rot.y, rot.z, rot.w])
 
                 e = self.pose.orientation_euler
-                e[0] *= 1
+                e[0] *= -1
                 self.pose.orientation_euler = e
 
         except Exception as e:

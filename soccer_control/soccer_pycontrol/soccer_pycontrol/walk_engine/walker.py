@@ -94,6 +94,7 @@ class Walker:
         # self.bez.motor_control.set_left_leg_target_angles([0, 0, 0, 0, 0, 0])
         # self.bez.motor_control.set_head_target_angles(
         #     [0, 0])
+
         self.bez.motor_control.set_motor()
 
         self.t = self.foot_step_planner.step(self.t)

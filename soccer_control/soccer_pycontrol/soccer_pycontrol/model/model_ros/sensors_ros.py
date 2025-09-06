@@ -68,7 +68,7 @@ class SensorsROS(Sensors):
         # Transformation(pose=self.odom_msg.pose.pose)
         # return Transformation(pose=self.odom_msg.pose.pose)
         try:
-            t = self.tf_buffer.lookup_transform("base_link", "left_foot", rclpy.time.Time())
+            t = self.tf_buffer.lookup_transform("head", "left_foot", rclpy.time.Time())
             return Transformation(
                 position=[0, 0, t.transform.translation.z],
                 quaternion=[t.transform.rotation.x, t.transform.rotation.y, t.transform.rotation.z, t.transform.rotation.w],

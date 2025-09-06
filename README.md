@@ -127,3 +127,10 @@ sudo apt install ros-humble-usb-cam
 
 pip install -U pandas
 pip install setuptools==71
+
+sudo chmod 777 /dev/ttyACM0
+
+source install/setup.bash
+cd
+source install/setup.bash
+PYTHONWARNINGS="ignore::FutureWarning" ros2 launch soccerbot test.launch

@@ -55,7 +55,7 @@ def generate_launch_description():
                 package="soccer_object_detection",
                 executable="soccer_object_detection",
                 name="object_detector",
-                output="screen",
+                output="log",
                 arguments=["--model", PathJoinSubstitution([FindPackageShare("soccer_object_detection"), "models", "half_5.pt"])],
                 parameters=[PathJoinSubstitution([FindPackageShare("soccer_object_detection"), "config", param_file_name])],
                 remappings=[("/camera/image_raw", "/image_raw")],

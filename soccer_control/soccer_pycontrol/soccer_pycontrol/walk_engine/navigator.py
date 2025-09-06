@@ -22,7 +22,6 @@ from soccer_common import PID, Transformation
 # from torch.distributed.checkpoint import planner
 
 
-
 # TODO could make it more modular by passing in pybullet stuff or have it at one layer higher so we can reuse code
 # TODO change to trajectory controller
 class Navigator:
@@ -211,7 +210,7 @@ class Navigator:
         self.bez.motor_control.configuration["right_shoulder_roll"] = 0.1
 
         self.bez.motor_control.set_single_motor("head_yaw", self.walker.ball_dx)
-        self.bez.motor_control.set_single_motor("head_pitch", 0.7)
+        self.bez.motor_control.set_single_motor("head_pitch", 0.3)
         self.bez.motor_control.set_motor()
 
     def display_walking_metrics(self, show_targets: bool = False) -> None:

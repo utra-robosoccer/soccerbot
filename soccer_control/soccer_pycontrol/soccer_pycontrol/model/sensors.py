@@ -2,10 +2,9 @@ from typing import List
 
 import cv2
 import numpy as np
+import pybullet as pb
 
 from soccer_common.transformation import Transformation
-
-# import pybullet as pb
 
 
 class Sensors:

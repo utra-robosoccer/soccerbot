@@ -111,7 +111,7 @@ class TrajectoryManagerRos(TrajectoryManager, Node):
         self.process_trajectory(command.trajectory_name, command.mirror)
 
     def process_trajectory(self, path: str, mirror: bool):
-        self.get_logger().info("Running Trajectory: " + path + f" {mirror}")
+        # self.get_logger().info("Running Trajectory: " + path + f" {mirror}")
         super(TrajectoryManagerRos, self).process_trajectory(path, mirror)
 
     # self.get_logger().info(f"Lost connection to serial port {ex}, retrying...", throttle_duration_sec=1)
@@ -159,7 +159,7 @@ class TrajectoryManagerRos(TrajectoryManager, Node):
                 # self.get_logger().info("4")
         self.traj_in_progress = False
         self.traj_prog.publish(Bool(data=self.traj_in_progress))
-        self.get_logger().info("Finished Trajectory: " + self.trajectory.trajectory_path)
+        # self.get_logger().info("Finished Trajectory: " + self.trajectory.trajectory_path)
         self.finish_trajectory_create_publisher.publish(Empty())
         self.trajectory.reset()
 
