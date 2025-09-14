@@ -1,9 +1,11 @@
-#include "main.h"
+
+#include <sys/_intsup.h>
+#include <sys/types.h>
+#include "stm32f4xx_hal.h"
 #include "stm32f4xx_hal_can.h"
 #include "stm32f4xx_hal_def.h"
 #include <stdint.h>
-#include <sys/_intsup.h>
-#include <sys/types.h>
+#include "main.h"
 #include "cubemars_test.h"
 
 uint16_t pos_int;

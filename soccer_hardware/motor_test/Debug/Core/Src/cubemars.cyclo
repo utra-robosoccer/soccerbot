@@ -6,7 +6,7 @@
 ../Core/Src/cubemars.c:77:19:CUBEMARS_enable_motion_ctrl	1
 ../Core/Src/cubemars.c:93:19:CUBEMARS_disable_motion_ctrl	1
 ../Core/Src/cubemars.c:108:19:CUBEMARS_set_origin	1
-../Core/Src/cubemars.c:123:5:float_to_int	3
-../Core/Src/cubemars.c:132:8:uint_to_float	1
+../Core/Src/cubemars.c:123:12:float_to_int	3
+../Core/Src/cubemars.c:132:14:uint_to_float	1
 ../Core/Src/cubemars.c:140:6:CUBARMARS_unpack_mit_ctrl_parameters	1
 ../Core/Src/cubemars.c:155:19:CUBEMARS_set_motion_ctrl_parameters	11

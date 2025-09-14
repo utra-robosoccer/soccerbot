@@ -132,6 +132,68 @@ void uart_parse_cmd(UART_HandleTypeDef* phuart, char* msg, int msg_len)
         }
 
     }
+    else if(!strncmp(token, "rs", strlen(token))){
+        token = strtok(NULL, " \n\r");
+        if (!strncmp(token, "demo", strlen(token))){
+            //exe demo
+        }
+        else if (!strncmp(token, "start", strlen(token))){
+            snprintf(copy, sizeof(copy), "Enable rs motor\n\r");
+            HAL_UART_Transmit(phuart, copy, strlen(copy), HAL_MAX_DELAY);
+            can_enable_motor(RS_test_motor_id, CAN_master_id);
+        }
+        else if (!strncmp(token, "stop", strlen(token))){
+            snprintf(copy, sizeof(copy), "Disable rs motor\n\r");
+            HAL_UART_Transmit(phuart, copy, strlen(copy), HAL_MAX_DELAY);
+            can_disable_motor(RS_test_motor_id, CAN_master_id);
+        }
+        else if (!strncmp(token, "send", strlen(token))){
+            snprintf(copy, sizeof(copy), "rs send MIT parameters: pos=%.3f, rpm=%.3f, kp=%.3f, kd=%.3f, torq=%.3f\n\r",
+                set_cmd_list[0].motor_config,
+                set_cmd_list[1].motor_config,
+                set_cmd_list[2].motor_config,
+                set_cmd_list[3].motor_config,
+                set_cmd_list[4].motor_config);
+            HAL_UART_Transmit(phuart, copy, strlen(copy), HAL_MAX_DELAY);
+            can_mit_control_set(RS_test_motor_id, set_cmd_list[4].motor_config, set_cmd_list[0].motor_config, set_cmd_list[1].motor_config,set_cmd_list[2].motor_config, set_cmd_list[3].motor_config);
+        }
+        else if (!strncmp(token, "set", strlen(token))){
+            char* set_type = strtok(NULL, " \n\r");
+            char* config = strtok(NULL, " \n\r");
+
+            if (!set_type){
+                snprintf(copy, sizeof(copy), "ERROR: Missing set type\n\r");
+                HAL_UART_Transmit(phuart, copy, strlen(copy), HAL_MAX_DELAY);
+                return;
+            }
+
+            if (!config){
+                snprintf(copy, sizeof(copy), "ERROR: Missing set config\n\r");
+                HAL_UART_Transmit(phuart, copy, strlen(copy), HAL_MAX_DELAY);
+                return;
+            }
+
+            float config_float = atof(config);
+
+            for (int i = 0; i< sizeof set_cmd_list; i ++){
+                if (!strncmp(set_type, set_cmd_list[i].cmd, strlen(set_type))){
+                    set_cmd_list[i].motor_config = config_float;
+                    snprintf(copy, sizeof(copy), "rs set: %s = %.3f\n\r", set_cmd_list[i].cmd, set_cmd_list[i].motor_config);
+                    HAL_UART_Transmit(&huart2, copy, strlen(copy), HAL_MAX_DELAY);
+                    return;
+                }
+            }
+            snprintf(copy, sizeof(copy), "Invalid set type\n\r");
+            HAL_UART_Transmit(phuart, copy, strlen(copy), HAL_MAX_DELAY);
+
+        }
+        else{
+            snprintf(copy, sizeof(copy), "ERROR: invalid motor cmd\n\r");
+            HAL_UART_Transmit(phuart, copy, strlen(copy), HAL_MAX_DELAY);
+            return;
+        }
+    }
+
     else{
         snprintf(copy, sizeof(copy), "ERROR: invalid motor series\n\r");
         HAL_UART_Transmit(phuart, copy, strlen(copy), HAL_MAX_DELAY);

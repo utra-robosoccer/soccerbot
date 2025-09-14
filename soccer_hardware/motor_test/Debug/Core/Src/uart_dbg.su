@@ -1,2 +1,2 @@
 ../Core/Src/uart_dbg.c:12:19:uart_get_new_line	32	static
-../Core/Src/uart_dbg.c:39:6:uart_parse_cmd	176	static
+../Core/Src/uart_dbg.c:39:6:uart_parse_cmd	248	static

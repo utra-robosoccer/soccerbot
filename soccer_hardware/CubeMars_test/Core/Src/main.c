@@ -21,7 +21,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "cubemars_test.h"
+
 #include "stm32f4xx_hal.h"
 #include "stm32f4xx_hal_def.h"
 #include "stm32f4xx_hal_uart.h"
@@ -31,6 +31,7 @@
 #include <sys/_intsup.h>
 #include <sys/types.h>
 #include "uart_dbg.h"
+#include "cubemars_test.h"
 
 
 /* USER CODE END Includes */
@@ -92,6 +93,7 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan1)
   
   HAL_CAN_GetRxMessage(hcan1, CAN_RX_FIFO0, &RxHeader, recv_msg);
   CUBARMARS_unpack_mit_ctrl_parameters(recv_msg, sizeof(recv_msg));
+  
   can_receive_flag = 1;
 }
 

@@ -1,0 +1,8 @@
+../Core/Src/robostride_test.c:22:12:float_to_uint	3
+../Core/Src/robostride_test.c:31:14:uint_to_float	1
+../Core/Src/robostride_test.c:40:19:can_enable_motor	1
+../Core/Src/robostride_test.c:54:19:can_mit_control_set	1
+../Core/Src/robostride_test.c:77:19:can_disable_motor	1
+../Core/Src/robostride_test.c:92:19:can_change_motor_mode	1
+../Core/Src/robostride_test.c:113:19:can_unpack_motor_feedback	2
+../Core/Src/robostride_test.c:134:19:can_set_mech_zero	1

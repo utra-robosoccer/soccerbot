@@ -120,7 +120,7 @@ HAL_StatusTypeDef CUBEMARS_set_origin(CAN_HandleTypeDef *phcan, uint32_t* pTxmai
     return CAN_transmit_stdid(phcan, pTxmailBox, TEST_MOTOR_ID, tx_buf, sizeof(tx_buf));
 }
 
-int float_to_int(float x, float x_min, float x_max, unsigned int bits)
+static int float_to_int(float x, float x_min, float x_max, unsigned int bits)
 {  
 /// Converts a float to an int, given range and number of bits ///  
     float span = x_max - x_min;  
@@ -129,7 +129,7 @@ int float_to_int(float x, float x_min, float x_max, unsigned int bits)
     return (int) ((x- x_min)*((float)((1<<bits)/span))); 
 } 
 
- float uint_to_float(int x_int, float x_min, float x_max, int bits)
+static float uint_to_float(int x_int, float x_min, float x_max, int bits)
  {
  /// converts unsigned int to float, given range and number of bits ///
     float span = x_max- x_min;

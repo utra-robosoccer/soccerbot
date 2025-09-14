@@ -42,6 +42,15 @@ cubemars demo -> run cubemars demo program
          read -> request parameters from the motor
          send -> send MIT parameters to the motor
          set <pos> <rpm> <kp> <kd> <torq> -> all floats
+
+rs  start
+    stop
+    set pos
+        rpm
+        kp
+        kd
+        torq
+    send
 */
 
 void uart_parse_cmd(UART_HandleTypeDef* phuart, char* msg, int msg_len)

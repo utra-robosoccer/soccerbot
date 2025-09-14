@@ -41,6 +41,9 @@ extern CAN_HandleTypeDef hcan1;
 extern uint32_t TxMailbox;
 extern uint8_t can_receive_flag;
 
+#define RS_test_motor_id	1
+#define CAN_master_id		253
+
 /* USER CODE END ET */
 
 /* Exported constants --------------------------------------------------------*/

@@ -21,7 +21,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "cubemars.h"
+
 #include "stm32f4xx_hal.h"
 #include "stm32f4xx_hal_def.h"
 #include "stm32f4xx_hal_uart.h"
@@ -29,6 +29,8 @@
 #include <stdio.h>
 #include <string.h>
 #include "uart_dbg.h"
+#include "cubemars.h"
+#include "robostride_test.h"
 
 /* USER CODE END Includes */
 
@@ -82,12 +84,20 @@ char uart_msg[100];
 
 uint8_t can_receive_flag;
 
+motor_t motor = {
+	.id = RS_test_motor_id,
+	.master_id = CAN_master_id,
+	.motor_mode = MIT_MODE
+};
+
 
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan1)
 {
 
-  HAL_CAN_GetRxMessage(hcan1, CAN_RX_FIFO0, &RxHeader, recv_msg);
-  CUBARMARS_unpack_mit_ctrl_parameters(recv_msg, sizeof(recv_msg));
+  HAL_CAN_GetRxMessage(hcan1, CAN_RX_FIFO0, &rs_can_rx_header, recv_msg);
+  can_unpack_motor_feedback(&motor, recv_msg);
+  snprintf(uart_msg, sizeof(uart_msg), "RS Feedback:\r\n temp=%.1f, pos=%.3f, rpm=%.3f, torq=%.3f\n\r",
+		  motor.temperature, motor.pos, motor.rpm, motor.torq);
   can_receive_flag = 1;
 }
 
@@ -137,6 +147,12 @@ int main(void)
      since we have turned on thee RX fifo0 intr, RXfifo msg pending callback will be called once incoming data was stored in the RX FIFO0
      count will increment
    */
+//   can_enable_motor(RS_test_motor_id, CAN_master_id);
+//   HAL_Delay(1000);
+//   can_mit_control_set(RS_test_motor_id, 0, 0, 2, 0, 10);
+//   can_disable_motor(RS_test_motor_id, CAN_master_id);
+
+
 
    // CUBEMARS_enable_motion_ctrl(&hcan1, &TxMailbox);
 
