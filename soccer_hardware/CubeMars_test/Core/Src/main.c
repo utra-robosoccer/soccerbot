@@ -32,6 +32,7 @@
 #include <sys/types.h>
 #include "uart_dbg.h"
 #include "cubemars_test.h"
+#include "robostride_test.h"
 
 
 /* USER CODE END Includes */
@@ -87,6 +88,8 @@ char uart_msg[100];
 
 uint8_t can_receive_flag;
 
+motor_t m1;
+motor_t m2;
 
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan1)
 {
@@ -95,6 +98,15 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan1)
   CUBARMARS_unpack_mit_ctrl_parameters(recv_msg, sizeof(recv_msg));
   
   can_receive_flag = 1;
+}
+
+void motor_init()
+{
+  m1 = {
+    .id = 0,
+    .master_id = 0,
+    .
+  };
 }
 
 

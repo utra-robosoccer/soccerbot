@@ -1,7 +1,8 @@
-../Core/Src/main.c:94:6:HAL_CAN_RxFifo0MsgPendingCallback	1
-../Core/Src/main.c:110:5:main	3
-../Core/Src/main.c:197:6:SystemClock_Config	3
-../Core/Src/main.c:245:13:MX_CAN1_Init	2
-../Core/Src/main.c:282:13:MX_USART2_UART_Init	2
-../Core/Src/main.c:315:13:MX_GPIO_Init	1
-../Core/Src/main.c:355:6:Error_Handler	1
+../Core/Src/main.c:90:6:can_motor_init	2
+../Core/Src/main.c:104:6:HAL_CAN_RxFifo0MsgPendingCallback	1
+../Core/Src/main.c:124:5:main	3
+../Core/Src/main.c:213:6:SystemClock_Config	3
+../Core/Src/main.c:261:13:MX_CAN1_Init	2
+../Core/Src/main.c:298:13:MX_USART2_UART_Init	2
+../Core/Src/main.c:331:13:MX_GPIO_Init	1
+../Core/Src/main.c:371:6:Error_Handler	1

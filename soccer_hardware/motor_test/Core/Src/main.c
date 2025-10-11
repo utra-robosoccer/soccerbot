@@ -84,21 +84,35 @@ char uart_msg[100];
 
 uint8_t can_receive_flag;
 
-motor_t motor = {
-	.id = RS_test_motor_id,
-	.master_id = CAN_master_id,
-	.motor_mode = MIT_MODE
-};
+motor_t motors[5]; //By default we assume 5 motors will be connected to the chain
+
+
+void can_motor_init()
+{
+	for (int i = 0; i < sizeof motors ; i ++){
+		motors[i].id = i + 1;
+		motors[i].master_id = CAN_master_id;
+		motors[i].motor_mode = MIT_MODE;
+
+		can_enable_motor(motors[i].id, motors[i].master_id);
+	}
+}
+
+
 
 
 void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef *hcan1)
 {
 
   HAL_CAN_GetRxMessage(hcan1, CAN_RX_FIFO0, &rs_can_rx_header, recv_msg);
-  can_unpack_motor_feedback(&motor, recv_msg);
+  uint8_t motor_id = rs_can_rx_header.ExtId & 0xFF;
+  snprintf(uart_msg, sizeof uart_msg, "Motor #%d Feedback Received:\n", motor_id);
+  HAL_UART_Transmit(&huart2, recv_msg, strlen(recv_msg), HAL_MAX_DELAY);
+  can_unpack_motor_feedback(&motors[(motor_id) - 1], recv_msg);
   snprintf(uart_msg, sizeof(uart_msg), "RS Feedback:\r\n temp=%.1f, pos=%.3f, rpm=%.3f, torq=%.3f\n\r",
-		  motor.temperature, motor.pos, motor.rpm, motor.torq);
-  can_receive_flag = 1;
+		  motors[motor_id - 1].temperature, motors[motor_id - 1].pos, motors[motor_id - 1].rpm,
+		  motors[motor_id - 1].torq);
+//  can_receive_flag = 1;
 }
 
 /* USER CODE END 0 */
@@ -149,8 +163,10 @@ int main(void)
    */
 //   can_enable_motor(RS_test_motor_id, CAN_master_id);
 //   HAL_Delay(1000);
-//   can_mit_control_set(RS_test_motor_id, 0, 0, 2, 0, 10);
-//   can_disable_motor(RS_test_motor_id, CAN_master_id);
+   can_motor_init();
+   HAL_Delay(1);
+   can_mit_control_set(motors[0].id, 0, 0, 10, 0, 5);
+   can_mit_control_set(motors[1].id, 0, 0, 2, 0, 5);
 
 
 
