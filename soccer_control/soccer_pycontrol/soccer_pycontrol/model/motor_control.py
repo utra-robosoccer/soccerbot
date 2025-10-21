@@ -1,8 +1,7 @@
 from typing import List
 
 import numpy as np
-
-# import pybullet as pb
+import pybullet as pb
 
 
 def wrapToPi(num: float) -> float:

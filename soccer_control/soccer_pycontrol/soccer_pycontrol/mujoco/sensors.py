@@ -1,18 +1,12 @@
-from typing import List
-
-import cv2
-import numpy as np
-import pybullet as pb
-
-from soccer_common.transformation import Transformation
+import mujoco
 
 
 class Sensors:
     """
-    Interfaces with pybullet to extract sensor data.
+    Interfaces with MuJoCo to extract sensor data.
     """
 
-    def __init__(self, body, ball):
+    def __init__(self, model: mujoco.MjModel, data: mujoco.MjData):
         # TODO does this need to be a class?
         self.body = body
         self.ball = ball
