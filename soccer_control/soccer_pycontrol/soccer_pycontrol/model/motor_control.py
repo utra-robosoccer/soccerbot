@@ -130,19 +130,19 @@ class MotorControl:
     def set_left_leg_target_angles(self, target_angles: np.ndarray) -> None:
         self.configuration["left_hip_yaw":"left_ankle_roll"] = target_angles
 
-    def set_leg_joint_2_target_angle(self, target: float) -> None:
+    def set_leg_hip_roll_target_angle(self, target: float) -> None:
         self.configuration_offset["left_hip_roll"] = -target
         self.configuration_offset["right_hip_roll"] = +target
 
-    def set_leg_joint_3_target_angle(self, target: float) -> None:
+    def set_leg_hip_pitch_target_angle(self, target: float) -> None:
         self.configuration_offset["left_hip_pitch"] = target
         self.configuration_offset["right_hip_pitch"] = target
 
-    def set_leg_joint_5_target_angle(self, target: float) -> None:
+    def set_leg_ankle_pitch_target_angle(self, target: float) -> None:
         self.configuration_offset["left_ankle_pitch"] = target
         self.configuration_offset["right_ankle_pitch"] = target
 
-    def set_leg_joint_6_target_angle(self, target: float) -> None:
+    def set_leg_ankle_roll_target_angle(self, target: float) -> None:
         self.configuration_offset["left_ankle_roll"] -= target
         self.configuration_offset["right_ankle_roll"] += target
 

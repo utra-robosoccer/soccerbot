@@ -113,7 +113,7 @@ class Walker:
 
     def stabilize_walk(self, pitch: float, roll: float) -> None:
         error_pitch = self.pid.walking_pitch_pid.update(pitch)
-        self.bez.motor_control.set_leg_joint_3_target_angle(error_pitch)  # TODO retune
+        self.bez.motor_control.set_leg_hip_pitch_target_angle(error_pitch)  # TODO retune
 
         error_roll = self.pid.walking_roll_pid.update(roll)  # TODO retune
-        self.bez.motor_control.set_leg_joint_2_target_angle(error_roll)
+        self.bez.motor_control.set_leg_hip_roll_target_angle(error_roll)

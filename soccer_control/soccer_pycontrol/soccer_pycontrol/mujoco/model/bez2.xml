@@ -44,6 +44,7 @@
     <body name="torso_2023">
       <freejoint name="root" />
       <site name="torso" />
+
       <inertial pos="-0.02024929347181477 0.00329389 -0.0267196" quat="0.727595 0.68359 0.0487527 -0.0305389" mass="1.44293"
                 diaginertia="0.00978489 0.00806535 0.00665576"/>
       <geom type="mesh" rgba="0.7 0.7 0.7 1" mesh="base_link"/>
@@ -152,9 +153,6 @@
             </body>
           </body>
         </body>
-      </body>
-      <body name="imu_link">
-        <inertial pos="0 0 0" mass="0.01" diaginertia="1e-09 1e-09 1e-09"/>
       </body>
     </body>
   </worldbody>
