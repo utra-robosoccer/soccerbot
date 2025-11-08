@@ -2,7 +2,6 @@ from typing import List
 
 import mujoco
 import numpy as np
-import pybullet as pb
 
 
 def wrapToPi(num: float) -> float:
@@ -35,10 +34,14 @@ class MotorControl:
         for name in self.dof_names:
             self.ctrl_dofs_to_index[name] = self.get_actuator_index(name)
 
-        self.configuration = np.zeros(len(self.dof_names))
-        self.configuration_offset = np.zeros(len(self.dof_names))
+        self.configuration = np.zeros(self.dof)
+        self.configuration_offset = np.zeros(self.dof)
 
         self.set_motor()
+
+    @property
+    def dof(self):  # TODO might rename
+        return len(self.dof_names)
 
     def get_range(self, name: str) -> np.ndarray:
         # Range of the joint
@@ -109,7 +112,8 @@ class MotorControl:
 
         # Sets the target position
         actuator_idx = self.get_actuator_index(name)
-        self.data.ctrl[actuator_idx] = value
+        # self.data.ctrl[actuator_idx] = value
+        self.configuration[actuator_idx] = value
 
         # Sets the position
         if reset:
@@ -118,6 +122,10 @@ class MotorControl:
     def reset_motors(self, q: np.ndarray):
         for idx, name in enumerate(self.ctrl_dofs_to_index.keys()):
             self.set_q(name, q[idx])
+
+    def clear_motor_target(self):
+        self.configuration.fill(0)
+        self.configuration_offset.fill(0)
 
     def get_angles(self):
         """

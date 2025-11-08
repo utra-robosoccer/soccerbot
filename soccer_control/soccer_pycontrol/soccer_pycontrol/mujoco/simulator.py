@@ -6,8 +6,6 @@ import meshcat.transformations as tf
 import mujoco
 import mujoco.viewer
 import numpy as np
-from soccer_pycontrol.mujoco.motor_control import MotorControl
-from soccer_pycontrol.mujoco.sensors import Sensors
 
 
 class SimWorld:
@@ -145,6 +143,12 @@ class SimWorld:
         mujoco.mj_step(self.model, self.data)
         self.frame += 1
 
+    def wait(self, steps: int, render: bool = True) -> None:
+        for i in range(steps):
+            if render:
+                self.render(True)
+            self.step()
+
     def reset(self) -> None:
         mujoco.mj_resetData(self.model, self.data)
 
@@ -197,8 +201,6 @@ if __name__ == "__main__":
 
     # sim = Simulator(scene_name="scene_bez1.xml")
     sim = SimWorld(scene_name="scene_bez2.xml")
-    sensor = Sensors(sim)
-    motor = MotorControl(sim.model, sim.data)
     # sim = Simulator(scene_name="scene_bez3.xml")
     # euler="-1.57  0 0.2 "  left_hip_pitch
     sim.step()
@@ -206,10 +208,7 @@ if __name__ == "__main__":
 
     sim.step()
     start = time.time()
-    model_dir = os.path.join(os.path.dirname(__file__) + "/model/")
-    once = True
-    count = 0
-    ti = 0
+
     while True:
         sim.render(True)
 
@@ -217,8 +216,8 @@ if __name__ == "__main__":
 
         elapsed = time.time() - start
         frames = sim.frame
-        motor.set_head_target_angles([1, 1])
-        motor.set_motor()
+        # motor.set_head_target_angles([1, 1])
+        # motor.set_motor()
         # print(sim.dofs)
         # print(sim.dofs_to_index)
         # print(sim.left_actuators_indexes)

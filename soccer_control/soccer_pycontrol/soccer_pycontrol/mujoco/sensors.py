@@ -79,6 +79,19 @@ class Sensors:
     def centroidal_force(self):
         return np.linalg.norm(self.world.data.qfrc_constraint[3:])
 
+    def get_imu(self) -> Transformation:
+        """
+        Simulates the IMU at the IMU link location.
+        TODO: Add noise model, make the refresh rate vary (currently in sync with the PyBullet time steps)
+        TODO maybe change name
+        :return: concatenated 3-axes values for linear acceleration and angular velocity
+        """
+        # TODO add unit test with rotation
+
+        # 6:8 for linear and angular velocity this gets the imu link position and orientation
+        self.imu_ready = True
+        return self.get_pose().orientation_euler
+
     def get_gyro(self) -> np.ndarray:
         """
         Gets the gyroscope data.
