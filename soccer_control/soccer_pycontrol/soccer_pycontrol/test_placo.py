@@ -6,7 +6,7 @@ from random import uniform
 import cv2
 import numpy as np
 import pybullet as pb
-from soccer_object_detection.object_detect_node import ObjectDetectionNode
+# from soccer_object_detection.object_detect_node import ObjectDetectionNode
 from soccer_pycontrol.model.bez import Bez
 from soccer_pycontrol.pybullet_usage.pybullet_world import PybulletWorld
 from soccer_pycontrol.walk_engine.navigator import Navigator
@@ -324,4 +324,4 @@ class TestPlaco(unittest.TestCase):
         walk = Navigator(self.world, self.bez)
         walk.ready()
         walk.world.step()
-        self.world.wait(100)
+        self.world.wait(100000)

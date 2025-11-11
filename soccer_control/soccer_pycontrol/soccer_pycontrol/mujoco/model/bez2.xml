@@ -64,7 +64,7 @@
       <site name="trunk" pos="-0.06 0 -0.09" />
       <body name="left_shoulder" pos="0.003 0.084 0.04475">
         <inertial pos="8.92269e-11 0.00784403 0" quat="0.5 0.5 0.5 0.5" mass="0.0105929" diaginertia="3e-06 3e-06 1e-06"/>
-        <joint class="xm430" name="left_shoulder_pitch" pos="0 0 0" axis="0 1 0"  />
+        <joint class="xm430" name="left_shoulder_pitch" pos="0 0 0" axis="0 -1 0"  />
         <geom pos="-0.003 -0.084 -0.04475" quat="1 0 0 0" type="mesh" rgba="0.960784 0.960784 0.964706 1" mesh="left_shoulder_v5_1"/>
         <body name="left_bicep" pos="0.019 0.0303 0">
           <inertial pos="-0.0194205 0.000104779 -0.0605146" quat="0.692309 0.0113936 0.00585463 0.721487" mass="0.186364" diaginertia="0.000444025 0.000442243 3.47325e-05"/>
@@ -72,7 +72,7 @@
           <geom pos="-0.022 -0.1143 -0.04475" quat="1 0 0 0" type="mesh" rgba="0.7 0.7 0.7 1" mesh="left_bicep_v6_1"/>
           <body name="left_forearm" pos="-0.020403 0.018801 -0.119141">
             <inertial pos="0.000490444 -0.0197004 -0.0814475" mass="0.0598454" diaginertia="0.000124 0.000119 2.1e-05"/>
-            <joint class="xm430" name="left_elbow" pos="0 0 0" axis="0 1 0"  />
+            <joint class="xm430" name="left_elbow" pos="0 0 0" axis="0 -1 0"  />
             <geom pos="-0.001597 -0.133101 0.074391" type="mesh" rgba="0.364706 0.439216 0.509804 1" mesh="left_forearm_v4_1"/>
           </body>
         </body>
@@ -87,15 +87,15 @@
           <geom pos="0.0547 -0.04125 0.1365" quat="1 0 0 0" type="mesh" rgba="0.960784 0.960784 0.964706 1" mesh="left_hip_front_v5_1"/>
           <body name="left_thigh" pos="0.066269 0.0235 -0.036">
             <inertial pos="-3.48325e-07 -0.0289611 -0.0366193" mass="0.0289828" diaginertia="3.5e-05 2.1e-05 1.7e-05"/>
-            <joint  class="mx64" name="left_hip_pitch" pos="0 0 0" axis="0 1 0"  />
+            <joint  class="mx64" name="left_hip_pitch" pos="0 0 0" axis="0 -1 0"  />
             <geom pos="-0.011569 -0.06475 0.1725" quat="1 0 0 0" type="mesh" rgba="0.960784 0.960784 0.964706 1" mesh="left_thigh_v1_1"/>
             <body name="left_calve" pos="0 0 -0.072">
               <inertial pos="-5.27217e-05 -0.0237668 -0.0239014" quat="0.998068 -0.0621374 0 0" mass="0.15898" diaginertia="0.000124 0.000108 4.3e-05"/>
-              <joint  class="mx64" name="left_knee" pos="0 0 0" axis="0 1 0"  />
+              <joint  class="mx64" name="left_knee" pos="0 0 0" axis="0 -1 0"  />
               <geom pos="-0.011569 -0.06475 0.2445" type="mesh" rgba="0.960784 0.960784 0.964706 1" mesh="left_calve_v5_1"/>
               <body name="left_ankle" pos="0 0 -0.088">
                 <inertial pos="-0.019088 -0.023327 -0.0185199" quat="0.538085 0.456499 0.483595 0.517889" mass="0.2722" diaginertia="0.000233099 0.000193073 0.000105828"/>
-                <joint  class="mx64" name="left_ankle_pitch" pos="0 0 0" axis="0 1 0"  />
+                <joint  class="mx64" name="left_ankle_pitch" pos="0 0 0" axis="0 -1 0"  />
                 <geom pos="-0.011569 -0.06475 0.3325" quat="1 0 0 0" type="mesh" rgba="0.627451 0.627451 0.627451 1" mesh="left_ankle_v7_1"/>
                 <body name="left_foot" pos="-0.0663 -0.0235 -0.036">
                   <site name="left_foot"  pos="0.0485 0.02 -0.028"/>
@@ -110,7 +110,7 @@
       </body>
       <body name="right_shoulder" pos="0.003 -0.084 0.04475">
         <inertial pos="8.95853e-11 -0.00784403 0" quat="0.5 0.5 0.5 0.5" mass="0.0105929" diaginertia="3e-06 3e-06 1e-06"/>
-        <joint class="xm430" name="right_shoulder_pitch" pos="0 0 0" axis="0 1 0"  />
+        <joint class="xm430" name="right_shoulder_pitch" pos="0 0 0" axis="0 -1 0"  />
         <geom pos="-0.003 0.084 -0.04475" quat="1 0 0 0" type="mesh" rgba="0.960784 0.960784 0.964706 1" mesh="right_shoulder_v1_1"/>
         <body name="right_bicep" pos="0.019 -0.0303 0">
           <inertial pos="-0.0190714 -0.00123171 -0.0605146" quat="0.751663 -0.00525377 0.0143766 0.659369" mass="0.186364" diaginertia="0.000444317 0.000443067 3.46163e-05"/>
@@ -118,7 +118,7 @@
           <geom pos="-0.022 0.1143 -0.04475" quat="1 0 0 0" type="mesh" rgba="0.7 0.7 0.7 1" mesh="right_bicep_v2_1"/>
           <body name="right_forearm" pos="-0.019597 -0.020801 -0.119141">
             <inertial pos="0.000490325 0.0197004 -0.0814475" mass="0.0598454" diaginertia="0.000124 0.000119 2.1e-05"/>
-            <joint class="xm430" name="right_elbow" pos="0 0 0" axis="0 1 0"  />
+            <joint class="xm430" name="right_elbow" pos="0 0 0" axis="0 -1 0"  />
             <geom pos="-0.002403 0.135101 0.074391" type="mesh" rgba="0.364706 0.439216 0.509804 1" mesh="right_forearm_v1_1"/>
           </body>
         </body>
@@ -133,15 +133,15 @@
           <geom pos="0.0547 0.04125 0.1365" quat="1 0 0 0" type="mesh" rgba="0.960784 0.960784 0.964706 1" mesh="right_hip_front_v5_1"/>
           <body name="right_thigh" pos="0.0663 -0.0235 -0.036">
             <inertial pos="9.83252e-08 0.0289611 -0.0366193" mass="0.0289828" diaginertia="3.5e-05 2.1e-05 1.7e-05"/>
-            <joint  class="mx64" name="right_hip_pitch" pos="0 0 0" axis="0 1 0"  />
+            <joint  class="mx64" name="right_hip_pitch" pos="0 0 0" axis="0 -1 0"  />
             <geom pos="-0.0116 0.06475 0.1725" type="mesh" rgba="0.960784 0.960784 0.964706 1" mesh="right_thigh_v1_1"/>
             <body name="right_calve" pos="0 0 -0.072">
               <inertial pos="5.24717e-05 0.0237668 -0.0239014" quat="0.998068 0.0621374 0 0" mass="0.15898" diaginertia="0.000124 0.000108 4.3e-05"/>
-              <joint  class="mx64" name="right_knee" pos="0 0 0" axis="0 1 0"  />
+              <joint  class="mx64" name="right_knee" pos="0 0 0" axis="0 -1 0"  />
               <geom pos="-0.0116 0.06475 0.2445" quat="1 0 0 0" type="mesh" rgba="0.960784 0.960784 0.964706 1" mesh="right_calve_v1_1"/>
               <body name="right_ankle" pos="0 0 -0.088">
                 <inertial pos="-0.0193325 0.0235572 -0.0181705" quat="0.530545 0.465974 0.453347 0.543936" mass="0.2722" diaginertia="0.000229026 0.00019101 0.000105965"/>
-                <joint  class="mx64" name="right_ankle_pitch" pos="0 0 0" axis="0 1 0"  />
+                <joint  class="mx64" name="right_ankle_pitch" pos="0 0 0" axis="0 -1 0"  />
                 <geom pos="-0.0116 0.06475 0.3325" quat="1 0 0 0" type="mesh" rgba="0.627451 0.627451 0.627451 1" mesh="right_ankle_v2_1"/>
                 <body name="right_foot" pos="-0.0663 0.0235 -0.036">
                   <site name="right_foot" pos="0.0485 -0.02 -0.028" />
@@ -163,24 +163,24 @@
     </sensor>
   <actuator>
         <position class="mx64" name="left_hip_roll" joint="left_hip_roll" ctrlrange="-0.785398 1.5708" />
-        <position class="mx64" name="left_hip_pitch" joint="left_hip_pitch" ctrlrange="-2.35619 0.785398" />
-        <position class="mx64" name="left_knee" joint="left_knee" ctrlrange=" 0 2.793" />
-        <position class="mx64" name="left_ankle_pitch" joint="left_ankle_pitch" ctrlrange="-1.5708 0.785398" />
+        <position class="mx64" name="left_hip_pitch" joint="left_hip_pitch" ctrlrange="-0.785398 2.35619" />
+        <position class="mx64" name="left_knee" joint="left_knee" ctrlrange=" -2.793 0" />
+        <position class="mx64" name="left_ankle_pitch" joint="left_ankle_pitch" ctrlrange="-0.785398 1.5708" />
         <position class="mx64" name="left_ankle_roll" joint="left_ankle_roll" ctrlrange="-0.785398 0.785398" />
         <position class="mx64" name="right_hip_roll" joint="right_hip_roll" ctrlrange="-0.785398 1.5708" />
-        <position class="mx64" name="right_hip_pitch" joint="right_hip_pitch" ctrlrange="-2.35619 0.785398" />
-        <position class="mx64" name="right_knee" joint="right_knee" ctrlrange=" 0 2.793" />
-        <position class="mx64" name="right_ankle_pitch" joint="right_ankle_pitch" ctrlrange="-1.5708 0.785398" />
+        <position class="mx64" name="right_hip_pitch" joint="right_hip_pitch" ctrlrange="-0.785398 2.35619" />
+        <position class="mx64" name="right_knee" joint="right_knee" ctrlrange=" -2.793 0" />
+        <position class="mx64" name="right_ankle_pitch" joint="right_ankle_pitch" ctrlrange="-0.785398 1.5708" />
         <position class="mx64" name="right_ankle_roll" joint="right_ankle_roll" ctrlrange="-0.785398 0.785398" />
 
         <position class="xm430" name="head_yaw" joint="head_yaw" ctrlrange="-1.5708 1.5708" />
         <position class="xm430" name="head_pitch" joint="head_pitch" ctrlrange="0 1.5708" />
         <position class="xm430" name="left_hip_yaw" joint="left_hip_yaw" ctrlrange="-1.309 0.524" />
         <position class="xm430" name="right_hip_yaw" joint="right_hip_yaw" ctrlrange="-1.309 0.524" />
-        <position class="xm430" name="left_shoulder_pitch" joint="left_shoulder_pitch" ctrlrange="-3.92699 3.14159" />
-        <position class="xm430" name="left_elbow" joint="left_elbow" ctrlrange="-3.14159 0" />
-        <position class="xm430" name="right_shoulder_pitch" joint="right_shoulder_pitch" ctrlrange=" -3.92699 3.14159" />
-        <position class="xm430" name="right_elbow" joint="right_elbow" ctrlrange="-3.14159 0" />
+        <position class="xm430" name="left_shoulder_pitch" joint="left_shoulder_pitch" ctrlrange="-3.14159 3.92699" />
+        <position class="xm430" name="left_elbow" joint="left_elbow" ctrlrange="0 3.14159" />
+        <position class="xm430" name="right_shoulder_pitch" joint="right_shoulder_pitch" ctrlrange="-3.14159 3.92699" />
+        <position class="xm430" name="right_elbow" joint="right_elbow" ctrlrange="0 3.14159" />
         <position class="xm430" name="left_shoulder_roll" joint="left_shoulder_roll" ctrlrange="0 1.5708" />
         <position class="xm430" name="right_shoulder_roll" joint="right_shoulder_roll" ctrlrange="0 1.5708" />
 

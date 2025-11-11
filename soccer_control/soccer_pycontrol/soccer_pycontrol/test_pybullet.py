@@ -14,10 +14,10 @@ REAL_TIME = True
 
 
 class TestPybullet(unittest.TestCase):
-    def tearDown(self):
-        self.world.close()
-        del self.bez
-        del self.world
+    # def tearDown(self):
+    #     self.world.close()
+    #     del self.bez
+    #     del self.world
 
     def test_imu(self):
         self.world = PybulletWorld(camera_yaw=45, real_time=REAL_TIME, rate=100)
@@ -69,10 +69,12 @@ class TestPybullet(unittest.TestCase):
 
         for j in angles:
             # x = [0.0] * self.bez.motor_control.numb_of_motors
-            t = "hip_yaw"
+            t = "elbow"
             # x[self.bez.motor_control.motor_names.index("head_pitch")] = j
-            self.bez.motor_control.configuration["right_" + t] = j
-            self.bez.motor_control.configuration["left_" + t] = j
+            # self.bez.motor_control.configuration["right_" + t] = j
+            # self.bez.motor_control.configuration["left_" + t] = j
+            self.bez.motor_control.configuration["head_pitch"] = j
+            print(j)
             # x[self.bez.motor_control.motor_names.index("right_"+t)] = j
             # x[self.bez.motor_control.motor_names.index("left_"+t)] = j
 

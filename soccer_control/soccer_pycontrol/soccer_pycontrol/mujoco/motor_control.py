@@ -45,7 +45,7 @@ class MotorControl:
 
     def get_range(self, name: str) -> np.ndarray:
         # Range of the joint
-        return self.model.joint(name).range
+        return self.model.actuator_ctrlrange[self.get_actuator_index(name)]
 
     def get_q(self, name: str):
         """
@@ -99,7 +99,7 @@ class MotorControl:
     def get_actuator_index(self, name: str):
         return mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_ACTUATOR, name)
 
-    def set_control(self, name: str, value: float, reset: bool = False) -> None:
+    def set_single_motor(self, name: str, value: float, reset: bool = False) -> None:
         """
         Sets the control for a given actuator.
         If the actuator is a position actuator, the value is the desired position.
@@ -185,4 +185,4 @@ class MotorControl:
 
     def set_angles_from_placo(self, planner) -> None:
         for joint in self.ctrl_dofs_to_index.keys():
-            self.configuration[joint] = planner.get_joint(joint)
+            self.configuration[self.ctrl_dofs_to_index[joint]] = planner.get_joint(joint)

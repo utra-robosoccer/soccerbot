@@ -7,13 +7,15 @@ import mujoco
 import mujoco.viewer
 import numpy as np
 
+from soccer_common import Transformation
+
 
 class SimWorld:
     """
     Class for interacting and management with MuJoCo simulator.
     """
 
-    def __init__(self, model_dir: Optional[str] = None, scene_name: str = "scene_bez2.xml"):
+    def __init__(self, model_dir: Optional[str] = None, scene_name: str = "scene_bez2.xml", position: str = "stand"):
         # If model_dir is not provided, use the current directory
         if model_dir is None:
             model_dir = os.path.join(os.path.dirname(__file__) + "/model/")
@@ -28,6 +30,21 @@ class SimWorld:
         self.dt: float = self.model.opt.timestep
         self.frame: int = 0
         self.data.ctrl[:] = 0
+
+        self.step()
+        if position == "stand":
+            self.set_T_world_site("left_foot", np.eye(4))
+        elif position == "fallen_front":
+            self.T = Transformation(position=[0, 0, 0.070], euler=[0, 1.57, 0])
+            self.set_T_world_site("left_foot", self.T.matrix)
+        elif position == "fallen_back":
+            self.T = Transformation(position=[0, 0, 0.070], euler=[0, -1.57, 0])
+            self.set_T_world_site("left_foot", self.T.matrix)
+        elif position == "float":
+            self.set_gravity([0, 0, 0])
+            self.T = Transformation(position=[0, 0, 0.6], euler=[0, 0, 0])
+            self.set_T_world_site("torso", self.T.matrix)
+        self.step()
 
     def set_floor_friction(self, friction: float) -> None:
         self.model.geom("floor").friction[0] = friction

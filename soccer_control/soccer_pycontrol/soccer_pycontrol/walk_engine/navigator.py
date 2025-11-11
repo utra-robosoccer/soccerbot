@@ -6,8 +6,9 @@ from typing import List, Union
 import matplotlib.pyplot as plt
 import numpy as np
 import scipy
-from soccer_pycontrol.model.bez import Bez
-from soccer_pycontrol.pybullet_usage.pybullet_world import PybulletWorld
+from soccer_pycontrol.mujoco.bez import Bez
+
+from soccer_pycontrol.mujoco.simulator import SimWorld
 from soccer_pycontrol.walk_engine.error_calc import (
     find_new_vel,
     heading_error,
@@ -28,7 +29,7 @@ from soccer_common import PID, Transformation
 class Navigator:
     def __init__(
         self,
-        world: PybulletWorld,
+        world: SimWorld,
         bez: Bez,
         imu_feedback_enabled: bool = False,
         ball: bool = False,
@@ -70,8 +71,8 @@ class Navigator:
         self.error_tol = 0.03  # in m TODO add as a param and in the ros version
 
         # joints
-        self.left_ankle_index = self.bez.motor_control.motor_names["left_ankle_roll"]
-        self.right_ankle_index = self.bez.motor_control.motor_names["right_ankle_roll"]
+        # self.left_ankle_index = self.bez.motor_control.motor_names["left_ankle_roll"] # TODO fix
+        # self.right_ankle_index = self.bez.motor_control.motor_names["right_ankle_roll"]
         # self.walker.torso_index = self.bez.motor_control.body.
 
         self.record_walking_metrics = record_walking_metrics
@@ -207,11 +208,11 @@ class Navigator:
         self.foot_step_planner.setup_tasks()
 
         self.bez.motor_control.set_angles_from_placo(self.foot_step_planner.robot)
-        self.bez.motor_control.configuration["left_shoulder_roll"] = 0.1
-        self.bez.motor_control.configuration["right_shoulder_roll"] = 0.1
-
-        self.bez.motor_control.set_single_motor("head_yaw", self.walker.ball_dx)
-        self.bez.motor_control.set_single_motor("head_pitch", 0.7)
+        # self.bez.motor_control.configuration["left_shoulder_roll"] = 0.1
+        # self.bez.motor_control.configuration["right_shoulder_roll"] = 0.1
+        #
+        # self.bez.motor_control.set_single_motor("head_yaw", self.walker.ball_dx)
+        # self.bez.motor_control.set_single_motor("head_pitch", 0.7)
         self.bez.motor_control.set_motor()
 
     def display_walking_metrics(self, show_targets: bool = False) -> None:

@@ -1,6 +1,6 @@
 from typing import List
 
-from soccer_pycontrol.model.bez import Bez
+from soccer_pycontrol.mujoco.bez import Bez
 from soccer_pycontrol.walk_engine.foot_step_planner import FootStepPlanner
 from soccer_pycontrol.walk_engine.stabilize import Stabilize
 
@@ -60,17 +60,17 @@ class Walker:
             self.ball_dx = self.ball_x_pid.update(3.2 - ball_pixel[0] / 100.0)
             self.ball_dy = self.ball_y_pid.update(ball_pixel[1] / 100.0)
         # print(f"{ball_pixel}, {self.ball_dx}, {self.ball_dy}")
-        self.bez.motor_control.configuration["head_yaw"] = self.ball_dx
-        self.bez.motor_control.configuration["head_pitch"] = self.ball_dy
+        # self.bez.motor_control.configuration["head_yaw"] = self.ball_dx
+        # self.bez.motor_control.configuration["head_pitch"] = self.ball_dy
 
         # self.bez.motor_control.configuration["head_yaw"] = self.ball_dx
         # self.bez.motor_control.configuration["head_pitch"] = 0.7
         # self.bez.motor_control.configuration_offset["left_hip_pitch"] = 0.15
         # self.bez.motor_control.configuration_offset["right_hip_pitch"] = 0.15
-        self.bez.motor_control.configuration["left_elbow"] = 1.57
-        self.bez.motor_control.configuration["right_elbow"] = 1.57
-        self.bez.motor_control.configuration["left_shoulder_roll"] = 0.1
-        self.bez.motor_control.configuration["right_shoulder_roll"] = 0.1
+        # self.bez.motor_control.configuration["left_elbow"] = 1.57
+        # self.bez.motor_control.configuration["right_elbow"] = 1.57
+        # self.bez.motor_control.configuration["left_shoulder_roll"] = 0.1
+        # self.bez.motor_control.configuration["right_shoulder_roll"] = 0.1
         # self.bez.motor_control.configuration["head_pitch"] = 0.7
         # self.bez.motor_control.set_single_motor("head_yaw", 0.7)
         # self.bez.motor_control.set_right_leg_target_angles(
