@@ -1,35 +1,81 @@
-from typing import List
-
-import cv2
 import numpy as np
 
-from soccer_common.transformation import Transformation
-
-# import pybullet as pb
+from soccer_common import Transformation
 
 
 class Sensors:
     """
-    Interfaces with pybullet to extract sensor data.
+    Interfaces with MuJoCo to extract sensor data.
     """
 
-    def __init__(self, body, ball):
+    def __init__(self, world):
         # TODO does this need to be a class?
-        self.body = body
-        self.ball = ball
+        self.world = world
+
         # TODO should get based on name
-        self.imu_link = pb.getNumJoints(self.body) - 1
         self.imu_ready = False
         self.get_imu()  # to init
 
-    def get_pose(self, link=None) -> Transformation:
+    def get_pose(self) -> Transformation:
         """
-        Get the 3D pose of the robot
+        Get the 3D pose of the robot in the world frame.
 
         :return: The 3D pose of the robot
         """
-        [position, quaternion] = pb.getLinkState(self.body, linkIndex=self.imu_link if not link else link)[4:6]  # TODO double check
-        return Transformation(position=position, quaternion=quaternion)
+        t_mat = self.world.get_T_world_site("torso")
+        return Transformation(matrix=t_mat)
+
+    def get_ball_local_frame(self):
+        robot_t_mat = self.get_pose()
+        ball_t_mat = self.get_ball_world_frame()
+        t_mat = (np.array(ball_t_mat.position) - np.array(robot_t_mat.position)).tolist()
+        return Transformation(position=t_mat, quaternion=ball_t_mat.quaternion)
+
+    def get_ball_world_frame(self):
+        t_mat = self.world.get_T_world_site("ball")
+        return Transformation(matrix=t_mat)
+
+    # def get_camera_image(self):
+    #     """
+    #     Captures the image from the camera mounted on the robot
+    #     """
+    #     # Add more offsets later
+    #     camera_position = self.get_pose(link=2).position
+    #
+    #     # print(f"Pos: {camera_position} Orient: {self.get_pose(link=2).orientation_euler}")
+    #     view_matrix = pb.computeViewMatrixFromYawPitchRoll(
+    #         camera_position,
+    #         0.000367,
+    #         pb.getJointState(self.body, 0)[0] * (180 / np.pi) - 90,  # self.get_pose(link=2).orientation_euler[0]*(180/np.pi) + 90,
+    #         -pb.getJointState(self.body, 1)[0] * (180 / np.pi),  # self.get_pose(link=2).orientation_euler[1]*(180/np.pi)+90,
+    #         0,  # self.get_pose(link=2).orientation_euler[2]*(180/np.pi) ,
+    #         2,
+    #     )
+    #     width, height = 640, 480
+    #     fov = 78
+    #     aspect = width / height
+    #     near = 0.2
+    #     far = 100
+    #
+    #     projection_matrix = pb.computeProjectionMatrixFOV(fov, aspect, near, far)
+    #
+    #     images = pb.getCameraImage(width, height, view_matrix, projection_matrix, shadow=False, renderer=pb.ER_BULLET_HARDWARE_OPENGL)
+    #
+    #     # NOTE: the ordering of height and width change based on the conversion
+    #     img = np.reshape(images[2], (height, width, 4))
+    #     img = cv2.cvtColor(img, cv2.COLOR_RGBA2BGR)
+    #     # rgb_opengl = np.reshape(images[2], (height, width, 4))[:, :, :3] * 1. / 255.
+    #     # depth_buffer_opengl = np.reshape(images[3], [width, height])
+    #     # depth_opengl = far * near / (far - (far - near) * depth_buffer_opengl)
+    #     # seg_opengl = np.reshape(images[4], [width, height]) * 1. / 255.
+    #
+    #     return img
+
+    def get_height(self):
+        return
+
+    def centroidal_force(self):
+        return np.linalg.norm(self.world.data.qfrc_constraint[3:])
 
     def get_imu(self) -> Transformation:
         """
@@ -41,92 +87,60 @@ class Sensors:
         # TODO add unit test with rotation
 
         # 6:8 for linear and angular velocity this gets the imu link position and orientation
-        [pos, orientation] = pb.getLinkState(self.body, linkIndex=self.imu_link, computeLinkVelocity=1)[4:6]  # TODO double check
         self.imu_ready = True
-        return Transformation(pos, orientation).orientation_euler
+        return self.get_pose().orientation_euler
 
-    def get_ball(self):
-        [position, quaternion] = pb.getBasePositionAndOrientation(self.body)
-        [ball_position, ball_quaternion] = pb.getBasePositionAndOrientation(self.ball)
-        trans = (np.array(ball_position) - np.array(position)).tolist()
-        return Transformation(position=trans, quaternion=ball_quaternion)
-
-    def get_ball_global(self):
-        [ball_position, ball_quaternion] = pb.getBasePositionAndOrientation(self.ball)
-        return Transformation(position=ball_position, quaternion=ball_quaternion)
-
-    def get_foot_pressure_sensors(self, floor) -> List[bool]:
+    def get_gyro(self) -> np.ndarray:
         """
-        Checks if 4 corners of the each feet are in contact with ground #
-        TODO fix docstring
-        # TODO add unit test with matplot for imu
-        | Indices for looking from above on the feet plates
-        |   Left         Right
-        | 4-------5    0-------1
-        | |   ^   |    |   ^   |      ^
-        | |   |   |    |   |   |      | forward direction
-        | |       |    |       |
-        | 6-------7    2-------3
+        Gets the gyroscope data.
 
-        :param floor: PyBullet body id of the plane the robot is walking on.
-        :return: boolean array of 8 contact points on both feet, True: that point is touching the ground False: otherwise
+        Returns:
+            np.ndarray: gyroscope data
         """
-        locations = [False] * 8
-        # TODO fix the links
-        #
-        # right_pts = pb.getContactPoints(bodyA=self.body, bodyB=floor, linkIndexA=Links.RIGHT_LEG_6)
-        # left_pts = pb.getContactPoints(bodyA=self.body, bodyB=floor, linkIndexA=Links.LEFT_LEG_6)
-        #
-        # right_center = np.array(pb.getLinkState(self.body, linkIndex=Links.RIGHT_LEG_6)[4])
-        # left_center = np.array(pb.getLinkState(self.body, linkIndex=Links.LEFT_LEG_6)[4])
-        #
-        # right_tr = Transformation(quaternion=pb.getLinkState(self.body, linkIndex=Links.RIGHT_LEG_6)[5]).rotation_matrix
-        # left_tr = Transformation(quaternion=pb.getLinkState(self.body, linkIndex=Links.LEFT_LEG_6)[5]).rotation_matrix
-        #
-        # # TODO verify calculations
-        # for point in right_pts:
-        #     index = np.signbit(np.matmul(right_tr, point[5] - right_center))[0:2]
-        #     locations[index[1] + index[0] * 2] = True
-        # for point in left_pts:
-        #     index = np.signbit(np.matmul(left_tr, point[5] - left_center))[0:2]
-        #     locations[index[1] + (index[0] * 2) + 4] = True
-        return locations
+        return self.world.data.sensor("gyro").data
 
-    def get_camera_image(self):
+    def get_accel(self) -> np.ndarray:
         """
-        Captures the image from the camera mounted on the robot
+        Gets the gyroscope data.
+
+        Returns:
+            np.ndarray: gyroscope data
         """
-        # Add more offsets later
-        camera_position = self.get_pose(link=2).position
+        return self.world.data.sensor("accelerometer").data
 
-        # print(f"Pos: {camera_position} Orient: {self.get_pose(link=2).orientation_euler}")
-        view_matrix = pb.computeViewMatrixFromYawPitchRoll(
-            camera_position,
-            0.000367,
-            pb.getJointState(self.body, 0)[0] * (180 / np.pi) - 90,  # self.get_pose(link=2).orientation_euler[0]*(180/np.pi) + 90,
-            -pb.getJointState(self.body, 1)[0] * (180 / np.pi),  # self.get_pose(link=2).orientation_euler[1]*(180/np.pi)+90,
-            0,  # self.get_pose(link=2).orientation_euler[2]*(180/np.pi) ,
-            2,
-        )
-        width, height = 640, 480
-        fov = 78
-        aspect = width / height
-        near = 0.2
-        far = 100
+    def get_foot_pressure_sensors(self) -> dict:
+        left_pressures = [
+            -self.world.data.sensor("left_foot_cleat_front_right").data[2],
+            -self.world.data.sensor("left_foot_cleat_front_left").data[2],
+            -self.world.data.sensor("left_foot_cleat_back_right").data[2],
+            -self.world.data.sensor("left_foot_cleat_back_left").data[2],
+        ]
+        right_pressures = [
+            -self.world.data.sensor("right_foot_cleat_front_right").data[2],
+            -self.world.data.sensor("right_foot_cleat_front_left").data[2],
+            -self.world.data.sensor("right_foot_cleat_back_right").data[2],
+            -self.world.data.sensor("right_foot_cleat_back_left").data[2],
+        ]
 
-        projection_matrix = pb.computeProjectionMatrixFOV(fov, aspect, near, far)
+        return {"left": left_pressures, "right": right_pressures}
 
-        images = pb.getCameraImage(width, height, view_matrix, projection_matrix, shadow=False, renderer=pb.ER_BULLET_HARDWARE_OPENGL)
+    def get_head_height(self):  # TODO add a transfomration from imu link
+        left_foot = self.world.get_T_world_site("left_foot")[0:3][:, 3]
+        right_foot = self.world.get_T_world_site("right_foot")[0:3][:, 3]
+        foot = (left_foot + right_foot) / 2
+        head_height = self.world.get_T_world_site("camera")[2][3] - foot[2]
+        if self.world.get_T_world_site("camera")[2][3] < foot[2]:
+            head_height = -10
+        return head_height
 
-        # NOTE: the ordering of height and width change based on the conversion
-        img = np.reshape(images[2], (height, width, 4))
-        img = cv2.cvtColor(img, cv2.COLOR_RGBA2BGR)
-        # rgb_opengl = np.reshape(images[2], (height, width, 4))[:, :, :3] * 1. / 255.
-        # depth_buffer_opengl = np.reshape(images[3], [width, height])
-        # depth_opengl = far * near / (far - (far - near) * depth_buffer_opengl)
-        # seg_opengl = np.reshape(images[4], [width, height]) * 1. / 255.
+    def get_rpy(self, site: str = "trunk") -> np.ndarray:
+        R = self.world.data.site(site).xmat
+        # pitch = np.arctan2(-R[6], np.sqrt(R[0] ** 2 + R[3] ** 2)) #
+        pitch = -np.arctan2(R[6], R[8])
+        roll = np.arctan2(R[7], R[8])  # atan2(R[2,1], R[2,2])
+        yaw = np.arctan2(R[3], R[0])
+        # fused, tilt = self.fused_tilt_from_xmat(R)
+        # psi, theta, phi, h = fused
 
-        return img
-
-    def get_height(self):
-        return
+        # return np.array([phi, psi, theta])
+        return np.array([roll, pitch, yaw])

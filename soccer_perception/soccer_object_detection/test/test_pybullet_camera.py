@@ -26,7 +26,7 @@ class TestPybullet(unittest.TestCase):
 
         self.world = PybulletWorld(camera_yaw=45, real_time=REAL_TIME, rate=100)
         pose = Transformation()
-        self.bez = Bez(robot_model="assembly", pose=pose)
+        self.bez = Bez(robot_model="bez2", pose=pose)
         for i in range(100):
             img = self.bez.sensors.get_camera_image()
             img = cv2.resize(img, dsize=(640, 480))
@@ -45,7 +45,7 @@ class TestPybullet(unittest.TestCase):
 
         self.world = PybulletWorld(camera_yaw=45, real_time=REAL_TIME, rate=100)
         pose = Transformation()
-        self.bez = Bez(robot_model="assembly", pose=pose)
+        self.bez = Bez(robot_model="bez2", pose=pose)
 
         self.world.wait(100)
         for i in range(100):
@@ -67,7 +67,7 @@ class TestPybullet(unittest.TestCase):
 
         self.world = PybulletWorld(camera_yaw=45, real_time=REAL_TIME, rate=100)
         pose = Transformation()
-        self.bez = Bez(robot_model="assembly", pose=pose)
+        self.bez = Bez(robot_model="bez2", pose=pose)
 
         for i in range(1000):
             img = self.bez.sensors.get_camera_image()
@@ -92,7 +92,7 @@ class TestPybullet(unittest.TestCase):
         detect = ObjectDetectionNode(model_path)
         self.world = PybulletWorld(camera_yaw=45, real_time=REAL_TIME, rate=100)
         pose = Transformation()
-        self.bez = Bez(robot_model="assembly", pose=pose)
+        self.bez = Bez(robot_model="bez2", pose=pose)
 
         for i in range(1000):
             img = self.bez.sensors.get_camera_image()

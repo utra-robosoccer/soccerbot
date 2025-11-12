@@ -1,0 +1,13 @@
+Metadata-Version: 2.4
+Name: soccer_common
+Version: 0.0.0
+Summary: The soccer_common package
+Maintainer: Jonathan Spraggett
+Maintainer-email: jonathanspraggett@gmail.com
+License: BSD
+Requires-Dist: setuptools
+Dynamic: license
+Dynamic: maintainer
+Dynamic: maintainer-email
+Dynamic: requires-dist
+Dynamic: summary

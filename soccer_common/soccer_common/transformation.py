@@ -8,7 +8,7 @@ from scipy.spatial.transform import Slerp
 class Transformation(np.ndarray):
     """
     3D transformation or pose of an object represented as a 4x4 matrix, but can take in many formats
-    """
+    """# TODO maybe rewrite and add more transformation stuff
 
     def __new__(
         cls,

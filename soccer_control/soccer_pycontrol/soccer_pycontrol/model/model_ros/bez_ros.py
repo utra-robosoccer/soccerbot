@@ -13,7 +13,7 @@ from soccer_pycontrol.model.model_ros.sensors_ros import SensorsROS
 class BezROS(Bez):
     def __init__(self, node: rclpy.node.Node):
         self.node = node
-        self.robot_model = "assembly"  # self.get_param("robot_model", "assembly")
+        self.robot_model = "bez2"  # self.get_param("robot_model", "bez2")
         self.node.declare_parameter("sim", os.environ.get("SIM", False))
         _sim = self.node.get_parameter("sim").get_parameter_value().bool_value
         if _sim:

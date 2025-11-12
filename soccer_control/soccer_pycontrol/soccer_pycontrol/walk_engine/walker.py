@@ -1,10 +1,8 @@
-from typing import List
-
 from soccer_pycontrol.model.bez import Bez
 from soccer_pycontrol.walk_engine.foot_step_planner import FootStepPlanner
 from soccer_pycontrol.walk_engine.stabilize import Stabilize
 
-from soccer_common import PID, Transformation
+from soccer_common import PID
 
 
 # TODO could make it more modular by passing in pybullet stuff or have it at one layer higher so we can reuse code
@@ -46,10 +44,10 @@ class Walker:
     def walk_loop(self, target_goal=[0, 0], ball_pixel=[0, 0]):  # TODO set default to something better
         self.foot_step_planner.plan_steps(self.t)
         self.bez.motor_control.set_angles_from_placo(self.foot_step_planner.robot)
-        # print(pitch, "  ", roll)
+
         if self.imu_feedback_enabled and self.bez.sensors.imu_ready:
             [_, pitch, roll] = self.bez.sensors.get_imu()
-            # print(pitch,"  ", roll)
+            print(pitch,"  ", roll)
             self.stabilize_walk(pitch, roll)
 
         # self.foot_step_planner.head_movement(target_goal)
@@ -60,17 +58,17 @@ class Walker:
             self.ball_dx = self.ball_x_pid.update(3.2 - ball_pixel[0] / 100.0)
             self.ball_dy = self.ball_y_pid.update(ball_pixel[1] / 100.0)
         # print(f"{ball_pixel}, {self.ball_dx}, {self.ball_dy}")
-        self.bez.motor_control.configuration["head_yaw"] = self.ball_dx
-        self.bez.motor_control.configuration["head_pitch"] = self.ball_dy
+        # self.bez.motor_control.configuration["head_yaw"] = self.ball_dx
+        # self.bez.motor_control.configuration["head_pitch"] = self.ball_dy
 
         # self.bez.motor_control.configuration["head_yaw"] = self.ball_dx
         # self.bez.motor_control.configuration["head_pitch"] = 0.7
         # self.bez.motor_control.configuration_offset["left_hip_pitch"] = 0.15
         # self.bez.motor_control.configuration_offset["right_hip_pitch"] = 0.15
-        self.bez.motor_control.configuration["left_elbow"] = 1.57
-        self.bez.motor_control.configuration["right_elbow"] = 1.57
-        self.bez.motor_control.configuration["left_shoulder_roll"] = 0.1
-        self.bez.motor_control.configuration["right_shoulder_roll"] = 0.1
+        # self.bez.motor_control.configuration["left_elbow"] = 1.57
+        # self.bez.motor_control.configuration["right_elbow"] = 1.57
+        # self.bez.motor_control.configuration["left_shoulder_roll"] = 0.1
+        # self.bez.motor_control.configuration["right_shoulder_roll"] = 0.1
         # self.bez.motor_control.configuration["head_pitch"] = 0.7
         # self.bez.motor_control.set_single_motor("head_yaw", 0.7)
         # self.bez.motor_control.set_right_leg_target_angles(
@@ -113,7 +111,7 @@ class Walker:
 
     def stabilize_walk(self, pitch: float, roll: float) -> None:
         error_pitch = self.pid.walking_pitch_pid.update(pitch)
-        self.bez.motor_control.set_leg_joint_3_target_angle(error_pitch)  # TODO retune
+        self.bez.motor_control.set_leg_hip_pitch_target_angle(error_pitch)  # TODO retune
 
         error_roll = self.pid.walking_roll_pid.update(roll)  # TODO retune
-        self.bez.motor_control.set_leg_joint_2_target_angle(error_roll)
+        self.bez.motor_control.set_leg_hip_roll_target_angle(error_roll)

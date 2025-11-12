@@ -28,7 +28,7 @@ class BehaviorExecutive:
             real_time=REAL_TIME,
             rate=200,
         )
-        self.bez = Bez(robot_model="assembly", pose=Transformation())
+        self.bez = Bez(robot_model="bez2", pose=Transformation())
         self.nav = Navigator(self.world, self.bez, imu_feedback_enabled=False)
 
         src_path = expanduser("~") + "/ros2_ws/src/soccerbot/soccer_perception/"

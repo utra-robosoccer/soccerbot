@@ -1,19 +1,13 @@
-import enum
+import time
 from os.path import expanduser
 
+import numpy as np
 import yaml
+
 from soccer_pycontrol.model.motor_control import MotorControl
 from soccer_pycontrol.model.sensors import Sensors
-from soccer_pycontrol.pybullet_usage.pybullet_load_model import LoadModel
-
-from soccer_common import Transformation
-
-
-class BezStatusEnum(enum.IntEnum):
-    BALANCE = 0
-    FIND_BALL = 1
-    WALK = 2
-    FALLEN = 3
+from soccer_pycontrol.model.sim_world import SimWorld
+from soccer_pycontrol.model.status_enum import BezStatusEnum
 
 
 class Bez:
@@ -25,20 +19,18 @@ class Bez:
 
     def __init__(
         self,
-        robot_model: str = "bez1",
-        pose: Transformation = Transformation(),
-        fixed_base: bool = False,
+        world: SimWorld,
+        robot_model: str = "bez2",
         status: BezStatusEnum = BezStatusEnum.BALANCE,
     ):
+        self.world = world
         self.robot_model = robot_model
         self.parameters = self.get_parameters()
         self._status = status
 
-        self.model = LoadModel(self.robot_model, self.parameters["walking_torso_height"], pose, fixed_base)
+        self.motor_control = MotorControl(self.world.model, self.world.data)
 
-        self.motor_control = MotorControl(self.model.body)
-
-        self.sensors = Sensors(self.model.body, self.model.ball)
+        self.sensors = Sensors(self.world)
 
     @property
     def status(self) -> BezStatusEnum:
@@ -51,7 +43,7 @@ class Bez:
     def get_parameters(self) -> dict:
         with open(
             expanduser("~")
-            + f"/ros2_ws/src/soccerbot/soccer_control/soccer_pycontrol/config/{self.robot_model}/{self.robot_model}_sim_pybullet.yaml",
+            + f"/ros2_ws/src/soccerbot/soccer_control/soccer_pycontrol/config/{self.robot_model}/{self.robot_model}_sim_mujoco.yaml",
             "r",
         ) as file:
             parameters = yaml.safe_load(file)
@@ -59,16 +51,21 @@ class Bez:
         return parameters
 
     @staticmethod
-    def fallen(pitch: float) -> bool:
+    def fallen(pitch: float, roll: float) -> str | None:  # TODO add fallen side
         angle_threshold = 1.25  # in radian
         if pitch > angle_threshold:
             print("Fallen Front")
-            return True
-
+            return "getupfront"
         elif pitch < -angle_threshold:
             print("Fallen Back")
-            return True
-        return False
+            return "getupback"
+        elif roll > angle_threshold:
+            print("Fallen Side Right")
+            return "getupsideright"
+        elif roll < -angle_threshold:
+            print("Fallen Side Left")
+            return "getupsideleft"
+        return None
 
     @property
     def is_balance(self) -> bool:
@@ -85,3 +82,36 @@ class Bez:
     @property
     def is_fallen(self) -> bool:
         return self.status == BezStatusEnum.FALLEN
+
+
+if __name__ == "__main__":
+
+    sim = SimWorld(robot_model="bez2")
+    # sim = SimWorld(scene_name="scene_bez2.xml")
+    bez = Bez(sim)
+
+    # sim = Simulator(scene_name="scene_bez3.xml")
+    # euler="-1.57  0 0.2 "  left_hip_pitch
+    sim.step()
+    sim.set_T_world_site("left_foot", np.eye(4))
+
+    sim.step()
+    start = time.time()
+
+    while True:
+        sim.render(True)
+
+        sim.step()
+
+        elapsed = time.time() - start
+        frames = sim.frame
+        # motor.set_head_target_angles([1, 1])
+        # motor.set_motor()
+        print(bez.sensors.get_pose().orientation_euler)
+        # print(sim.dofs)
+        # print(sim.dofs_to_index)
+        # print(sim.left_actuators_indexes)
+        # print(sim.get_control("left_knee"))
+        # print(sim.get_q("left_knee"))
+        print(f"Elapsed: {elapsed:.2f}, Frames: {frames}, FPS: {frames / elapsed:.2f}")
+    # sim.close_viewer()

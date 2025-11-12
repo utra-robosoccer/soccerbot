@@ -1,4 +1,3 @@
-import math
 import time
 from collections import defaultdict
 from typing import List, Union
@@ -7,14 +6,14 @@ import matplotlib.pyplot as plt
 import numpy as np
 import scipy
 from soccer_pycontrol.model.bez import Bez
-from soccer_pycontrol.pybullet_usage.pybullet_world import PybulletWorld
+
+from soccer_pycontrol.model.sim_world import SimWorld
 from soccer_pycontrol.walk_engine.error_calc import (
     find_new_vel,
     heading_error,
     position_error,
 )
 from soccer_pycontrol.walk_engine.foot_step_planner import FootStepPlanner
-from soccer_pycontrol.walk_engine.stabilize import Stabilize
 from soccer_pycontrol.walk_engine.walker import Walker
 
 from soccer_common import PID, Transformation
@@ -28,7 +27,7 @@ from soccer_common import PID, Transformation
 class Navigator:
     def __init__(
         self,
-        world: PybulletWorld,
+        world: SimWorld,
         bez: Bez,
         imu_feedback_enabled: bool = False,
         ball: bool = False,
@@ -70,8 +69,8 @@ class Navigator:
         self.error_tol = 0.03  # in m TODO add as a param and in the ros version
 
         # joints
-        self.left_ankle_index = self.bez.motor_control.motor_names["left_ankle_roll"]
-        self.right_ankle_index = self.bez.motor_control.motor_names["right_ankle_roll"]
+        # self.left_ankle_index = self.bez.motor_control.motor_names["left_ankle_roll"] # TODO fix
+        # self.right_ankle_index = self.bez.motor_control.motor_names["right_ankle_roll"]
         # self.walker.torso_index = self.bez.motor_control.body.
 
         self.record_walking_metrics = record_walking_metrics
@@ -143,7 +142,7 @@ class Navigator:
             dx = self.nav_x_pid.update(0)
             dy = self.nav_y_pid.update(0)
             dtheta = self.nav_yaw_pid.update(pose.orientation_euler[0])
-            print(round(dx, 3), " ", round(dy, 3), " ", round(dtheta, 3), " ", round(x_error, 3), " ", round(y_error, 3), " ", round(head_error, 3))
+            print(f"dx: {round(dx, 3)} dy: {round(dy, 3)} dtheta: {round(dtheta, 3)} err_x: {round(x_error, 3)} err_y: {round(y_error, 3)} err_theta: {round(head_error, 3)}")
             self.foot_step_planner.configure_planner(dx, dy, dtheta)
             self.walker.walk_loop()  # TODO move main loop out of here
         else:
@@ -207,11 +206,11 @@ class Navigator:
         self.foot_step_planner.setup_tasks()
 
         self.bez.motor_control.set_angles_from_placo(self.foot_step_planner.robot)
-        self.bez.motor_control.configuration["left_shoulder_roll"] = 0.1
-        self.bez.motor_control.configuration["right_shoulder_roll"] = 0.1
-
-        self.bez.motor_control.set_single_motor("head_yaw", self.walker.ball_dx)
-        self.bez.motor_control.set_single_motor("head_pitch", 0.7)
+        # self.bez.motor_control.configuration["left_shoulder_roll"] = 0.1
+        # self.bez.motor_control.configuration["right_shoulder_roll"] = 0.1
+        #
+        # self.bez.motor_control.set_single_motor("head_yaw", self.walker.ball_dx)
+        # self.bez.motor_control.set_single_motor("head_pitch", 0.7)
         self.bez.motor_control.set_motor()
 
     def display_walking_metrics(self, show_targets: bool = False) -> None:
