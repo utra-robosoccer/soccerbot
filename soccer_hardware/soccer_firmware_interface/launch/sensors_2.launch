@@ -25,10 +25,10 @@
 
     <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" />
 
-    <param name="robot_description" command="xacro '$(find assembly_description)/urdf/assembly.xacro'
+    <param name="robot_description" command="xacro '$(find bez2_description)/urdf/bez2.xacro'
             robot_name:=$(arg robot_name)
             model_type:=stl
-            file_path:=package://assembly_description
+            file_path:=package://bez2_description
             has_base_footprint:=false
             tf_prefix:=$(arg robot_name)
             "

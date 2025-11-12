@@ -1,4 +1,3 @@
-import math
 import time
 from collections import defaultdict
 from typing import List, Union
@@ -6,16 +5,15 @@ from typing import List, Union
 import matplotlib.pyplot as plt
 import numpy as np
 import scipy
-from soccer_pycontrol.mujoco.bez import Bez
+from soccer_pycontrol.model.bez import Bez
 
-from soccer_pycontrol.mujoco.simulator import SimWorld
+from soccer_pycontrol.model.sim_world import SimWorld
 from soccer_pycontrol.walk_engine.error_calc import (
     find_new_vel,
     heading_error,
     position_error,
 )
 from soccer_pycontrol.walk_engine.foot_step_planner import FootStepPlanner
-from soccer_pycontrol.walk_engine.stabilize import Stabilize
 from soccer_pycontrol.walk_engine.walker import Walker
 
 from soccer_common import PID, Transformation
@@ -144,7 +142,7 @@ class Navigator:
             dx = self.nav_x_pid.update(0)
             dy = self.nav_y_pid.update(0)
             dtheta = self.nav_yaw_pid.update(pose.orientation_euler[0])
-            print(round(dx, 3), " ", round(dy, 3), " ", round(dtheta, 3), " ", round(x_error, 3), " ", round(y_error, 3), " ", round(head_error, 3))
+            print(f"dx: {round(dx, 3)} dy: {round(dy, 3)} dtheta: {round(dtheta, 3)} err_x: {round(x_error, 3)} err_y: {round(y_error, 3)} err_theta: {round(head_error, 3)}")
             self.foot_step_planner.configure_planner(dx, dy, dtheta)
             self.walker.walk_loop()  # TODO move main loop out of here
         else:

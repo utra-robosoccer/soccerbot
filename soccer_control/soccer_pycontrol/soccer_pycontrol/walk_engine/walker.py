@@ -1,10 +1,8 @@
-from typing import List
-
-from soccer_pycontrol.mujoco.bez import Bez
+from soccer_pycontrol.model.bez import Bez
 from soccer_pycontrol.walk_engine.foot_step_planner import FootStepPlanner
 from soccer_pycontrol.walk_engine.stabilize import Stabilize
 
-from soccer_common import PID, Transformation
+from soccer_common import PID
 
 
 # TODO could make it more modular by passing in pybullet stuff or have it at one layer higher so we can reuse code
@@ -46,10 +44,10 @@ class Walker:
     def walk_loop(self, target_goal=[0, 0], ball_pixel=[0, 0]):  # TODO set default to something better
         self.foot_step_planner.plan_steps(self.t)
         self.bez.motor_control.set_angles_from_placo(self.foot_step_planner.robot)
-        # print(pitch, "  ", roll)
+
         if self.imu_feedback_enabled and self.bez.sensors.imu_ready:
             [_, pitch, roll] = self.bez.sensors.get_imu()
-            # print(pitch,"  ", roll)
+            print(pitch,"  ", roll)
             self.stabilize_walk(pitch, roll)
 
         # self.foot_step_planner.head_movement(target_goal)

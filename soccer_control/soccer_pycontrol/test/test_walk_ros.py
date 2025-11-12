@@ -76,7 +76,7 @@ class TestPybullet(unittest.TestCase):
         #     real_time=REAL_TIME,
         #     rate=200,
         # )
-        # self.bez = Bez(robot_model="assembly", pose=Transformation())
+        # self.bez = Bez(robot_model="bez2", pose=Transformation())
         # tm = TrajectoryManagerSim(self.world, self.bez, "bez2_sim", "getupfront")
 
         # self.bez = Bez(robot_model="bez1", pose=Transformation())
@@ -124,7 +124,7 @@ class TestPybullet(unittest.TestCase):
         #     real_time=REAL_TIME,
         #     rate=200,
         # )
-        # self.bez = Bez(robot_model="assembly", pose=Transformation())
+        # self.bez = Bez(robot_model="bez2", pose=Transformation())
         # tm = TrajectoryManagerSim(self.world, self.bez, "bez2_sim", "getupfront")
 
         # self.bez = Bez(robot_model="bez1", pose=Transformation())

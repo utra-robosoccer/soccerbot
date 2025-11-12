@@ -59,7 +59,7 @@ class TestTrajectory(unittest.TestCase):
 
 
 @pytest.mark.parametrize("trajectory_name", ["getupback"])  # getupside rightkick " getupback getupfront
-@pytest.mark.parametrize("robot_model", ["assembly"])
+@pytest.mark.parametrize("robot_model", ["bez2"])
 @pytest.mark.parametrize("real_time", [True])
 def test_trajectory_sim(trajectory_name: str, robot_model: str, real_time: bool):
     """

@@ -1,87 +1,87 @@
-bez2_controller:
+bez2:
   # Publish all joint states -----------------------------------
   joint_state_controller:
     type: joint_state_controller/JointStateController
     publish_rate: 50
 
   # Position Controllers --------------------------------------
-  right_leg_motor_0_position_controller:
+  left_hip_yaw_position_controller:
     type: effort_controllers/JointPositionController
-    joint: right_leg_motor_0
+    joint: left_hip_yaw
     pid: {p: 100.0, i: 0.01, d: 10.0}
-  left_leg_motor_0_position_controller:
+  left_ankle_roll_position_controller:
     type: effort_controllers/JointPositionController
-    joint: left_leg_motor_0
+    joint: left_ankle_roll
     pid: {p: 100.0, i: 0.01, d: 10.0}
-  left_leg_motor_1_position_controller:
+  left_shoulder_pitch_position_controller:
     type: effort_controllers/JointPositionController
-    joint: left_leg_motor_1
+    joint: left_shoulder_pitch
     pid: {p: 100.0, i: 0.01, d: 10.0}
-  right_leg_motor_1_position_controller:
+  left_shoulder_roll_position_controller:
     type: effort_controllers/JointPositionController
-    joint: right_leg_motor_1
+    joint: left_shoulder_roll
     pid: {p: 100.0, i: 0.01, d: 10.0}
-  left_leg_motor_2_position_controller:
+  left_elbow_position_controller:
     type: effort_controllers/JointPositionController
-    joint: left_leg_motor_2
+    joint: left_elbow
     pid: {p: 100.0, i: 0.01, d: 10.0}
-  right_leg_motor_2_position_controller:
+  head_yaw_position_controller:
     type: effort_controllers/JointPositionController
-    joint: right_leg_motor_2
+    joint: head_yaw
     pid: {p: 100.0, i: 0.01, d: 10.0}
-  left_leg_motor_3_position_controller:
+  head_pitch_position_controller:
     type: effort_controllers/JointPositionController
-    joint: left_leg_motor_3
+    joint: head_pitch
     pid: {p: 100.0, i: 0.01, d: 10.0}
-  right_leg_motor_3_position_controller:
+  right_hip_yaw_position_controller:
     type: effort_controllers/JointPositionController
-    joint: right_leg_motor_3
+    joint: right_hip_yaw
     pid: {p: 100.0, i: 0.01, d: 10.0}
-  left_leg_motor_4_position_controller:
+  right_ankle_pitch_position_controller:
     type: effort_controllers/JointPositionController
-    joint: left_leg_motor_4
+    joint: right_ankle_pitch
     pid: {p: 100.0, i: 0.01, d: 10.0}
-  right_leg_motor_4_position_controller:
+  right_ankle_roll_position_controller:
     type: effort_controllers/JointPositionController
-    joint: right_leg_motor_4
+    joint: right_ankle_roll
     pid: {p: 100.0, i: 0.01, d: 10.0}
-  right_leg_motor_5_position_controller:
+  right_shoulder_pitch_position_controller:
     type: effort_controllers/JointPositionController
-    joint: right_leg_motor_5
+    joint: right_shoulder_pitch
     pid: {p: 100.0, i: 0.01, d: 10.0}
-  left_leg_motor_5_position_controller:
+  right_shoulder_roll_position_controller:
     type: effort_controllers/JointPositionController
-    joint: left_leg_motor_5
+    joint: right_shoulder_roll
     pid: {p: 100.0, i: 0.01, d: 10.0}
-  head_motor_0_position_controller:
+  right_elbow_position_controller:
     type: effort_controllers/JointPositionController
-    joint: head_motor_0
+    joint: right_elbow
     pid: {p: 100.0, i: 0.01, d: 10.0}
-  head_motor_1_position_controller:
+  left_hip_pitch_position_controller:
     type: effort_controllers/JointPositionController
-    joint: head_motor_1
+    joint: left_hip_pitch
     pid: {p: 100.0, i: 0.01, d: 10.0}
-  right_arm_motor_0_position_controller:
+  right_hip_pitch_position_controller:
     type: effort_controllers/JointPositionController
-    joint: right_arm_motor_0
+    joint: right_hip_pitch
     pid: {p: 100.0, i: 0.01, d: 10.0}
-  left_arm_motor_0_position_controller:
+  left_hip_roll_position_controller:
     type: effort_controllers/JointPositionController
-    joint: left_arm_motor_0
+    joint: left_hip_roll
     pid: {p: 100.0, i: 0.01, d: 10.0}
-  left_arm_motor_1_position_controller:
+  left_knee_position_controller:
     type: effort_controllers/JointPositionController
-    joint: left_arm_motor_1
+    joint: left_knee
     pid: {p: 100.0, i: 0.01, d: 10.0}
-  right_arm_motor_1_position_controller:
+  left_ankle_pitch_position_controller:
     type: effort_controllers/JointPositionController
-    joint: right_arm_motor_1
+    joint: left_ankle_pitch
     pid: {p: 100.0, i: 0.01, d: 10.0}
-  left_arm_motor_2_position_controller:
+  right_hip_roll_position_controller:
     type: effort_controllers/JointPositionController
-    joint: left_arm_motor_2
+    joint: right_hip_roll
     pid: {p: 100.0, i: 0.01, d: 10.0}
-  right_arm_motor_2_position_controller:
+  right_knee_position_controller:
     type: effort_controllers/JointPositionController
-    joint: right_arm_motor_2
+    joint: right_knee
     pid: {p: 100.0, i: 0.01, d: 10.0}

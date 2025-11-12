@@ -4,11 +4,14 @@
 <material name="silver_default">
   <color rgba="0.700 0.700 0.700 1.000"/>
 </material>
+<material name="aluminum_satin">
+  <color rgba="0.9607843137254902 0.9607843137254902 0.9647058823529412 1.0"/>
+</material>
 <material name="steel_satin">
   <color rgba="0.6274509803921569 0.6274509803921569 0.6274509803921569 1.0"/>
 </material>
-<material name="plastic_matte_yellow">
-  <color rgba="0.9098039215686274 0.6784313725490196 0.13725490196078433 1.0"/>
+<material name="abs_white">
+  <color rgba="0.36470588235294116 0.4392156862745098 0.5098039215686274 1.0"/>
 </material>
 
 </robot>

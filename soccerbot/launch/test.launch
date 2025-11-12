@@ -90,9 +90,9 @@
 
 <!--     </group> -->
     <node pkg="robot_state_publisher" exec="robot_state_publisher" name="robot_state_publisher" output="screen">
-        <param name='robot_description' value="$(command 'xacro $(find-pkg-share assembly_description)/urdf/assembly.xacro
+        <param name='robot_description' value="$(command 'xacro $(find-pkg-share bez2_description)/urdf/bez2.xacro
         model_type:=dae
-        file_path:=package://assembly_description
+        file_path:=package://bez2_description
         has_base_footprint:=false
         tf_prefix:=
         ')"

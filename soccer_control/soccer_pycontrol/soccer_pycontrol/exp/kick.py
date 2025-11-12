@@ -11,7 +11,7 @@ Sigmaban humanoid is moving its legs while looking at a moving ball.
 """
 
 # Loading the robot
-robot_model = "assembly"
+robot_model = "bez2"
 model_filename = expanduser("~") + f"/ros2_ws/src/soccerbot/soccer_description/{robot_model}_description/urdf/robot.urdf"
 robot = placo.HumanoidRobot(model_filename)
 
