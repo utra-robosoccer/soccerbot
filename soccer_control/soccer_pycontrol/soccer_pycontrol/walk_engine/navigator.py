@@ -42,7 +42,7 @@ class Navigator:
         self.foot_step_planner = FootStepPlanner(self.bez.robot_model, self.bez.parameters, time.time, ball=ball, sim=sim)
         self.walker = Walker(bez, self.foot_step_planner, imu_feedback_enabled=imu_feedback_enabled)
 
-        self.max_vel = 0.1
+        self.max_vel = 0.05
         self.nav_x_pid = PID(
             Kp=0.5,
             Kd=0,
@@ -142,7 +142,7 @@ class Navigator:
             dx = self.nav_x_pid.update(0)
             dy = self.nav_y_pid.update(0)
             dtheta = self.nav_yaw_pid.update(pose.orientation_euler[0])
-            print(f"dx: {round(dx, 3)} dy: {round(dy, 3)} dtheta: {round(dtheta, 3)} err_x: {round(x_error, 3)} err_y: {round(y_error, 3)} err_theta: {round(head_error, 3)}")
+            # print(f"dx: {round(dx, 3)} dy: {round(dy, 3)} dtheta: {round(dtheta, 3)} err_x: {round(x_error, 3)} err_y: {round(y_error, 3)} err_theta: {round(head_error, 3)}")
             self.foot_step_planner.configure_planner(dx, dy, dtheta)
             self.walker.walk_loop()  # TODO move main loop out of here
         else:

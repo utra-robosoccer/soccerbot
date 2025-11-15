@@ -1,0 +1,40 @@
+<mujoco model="soccer_goal">
+  <worldbody>
+        <body name="goal_a_frame" pos="7 0 0" euler="0 0 1.570796327"> 
+            <geom type="cylinder" size="0.05 0.9" pos="-1.3 0 0.9" rgba="1 1 1 1"/> <!-- left vertical bar front -->
+            <geom type="cylinder" size="0.05 0.9" pos="1.3 0 0.9" rgba="1 1 1 1"/> <!-- right vertical bar front -->
+            <geom type="cylinder" fromto="-1.3 0 1.8 -1.3 -0.6 1.8" size="0.05" rgba="1 1 1 1"/> <!-- left vertical bar back-->
+            <geom type="cylinder" fromto="1.3 0 1.8 1.3 -0.6 1.8" size="0.05" rgba="1 1 1 1"/> <!-- right vertical bar back -->
+            <geom type="cylinder" size="0.05 1.3" pos="0 0 1.8" euler="0 1.570796327 0" rgba="1 1 1 1"/> <!-- -->
+            <geom type="cylinder" fromto="-1.3 0 0.05 -1.3 -0.6 0.05" size="0.05" rgba="1 1 1 1"/> <!-- -->
+            <geom type="cylinder" fromto="1.3 0 0.05 1.3 -0.6 0.05" size="0.05" rgba="1 1 1 1"/> <!-- -->
+            <geom type="cylinder" size="0.05 0.9" pos="-1.3 -0.6 0.9" rgba="1 1 1 1"/> <!-- -->
+            <geom type="cylinder" size="0.05 0.9" pos="1.3 -0.6 0.9" rgba="1 1 1 1"/> <!-- -->
+            <geom type="cylinder" size="0.05 1.3" pos="0 -0.6 1.8" euler="0 1.570796327 0" rgba="1 1 1 1"/><!-- -->
+            <geom type="cylinder" fromto="-1.3 0 1.8 -1.3 -0.6 1.8" size="0.05" rgba="1 1 1 1"/> <!---->
+            <geom type="cylinder" fromto="1.3 0 1.8 1.3 -0.6 1.8" size="0.05" rgba="1 1 1 1"/> <!-- -->
+
+            <geom type="box" size="1.3 0.005 0.9" pos="0 -0.6 0.9" rgba="1 1 1 0.3"/>
+            <geom type="box" size="0.005 0.3 0.9" pos="1.3 -0.3 0.9" rgba="1 1 1 0.3"/>
+            <geom type="box" size="0.005 0.3 0.9" pos="-1.3 -0.3 0.9" rgba="1 1 1 0.3"/>
+            <geom type="box" size="1.3 0.3 0.005" pos="0 -0.3 1.8" rgba="1 1 1 0.3"/>
+        </body>
+        <body name="goal_b_frame" pos="-7 0 0" euler="0 0 -1.570796327">
+            <geom type="cylinder" size="0.05 0.9" pos="-1.3 0 0.9" rgba="1 1 1 1"/>
+            <geom type="cylinder" size="0.05 0.9" pos="1.3 0 0.9" rgba="1 1 1 1"/>
+            <geom type="cylinder" size="0.05 1.3" pos="0 0 1.8" euler="0 1.570796327 0" rgba="1 1 1 1"/>
+            <geom type="cylinder" fromto="-1.3 0 0.05 -1.3 -0.6 0.05" size="0.05" rgba="1 1 1 1"/>
+            <geom type="cylinder" fromto="1.3 0 0.05 1.3 -0.6 0.05" size="0.05" rgba="1 1 1 1"/>
+            <geom type="cylinder" size="0.05 0.9" pos="-1.3 -0.6 0.9" rgba="1 1 1 1"/>
+            <geom type="cylinder" size="0.05 0.9" pos="1.3 -0.6 0.9" rgba="1 1 1 1"/>
+            <geom type="cylinder" size="0.05 1.3" pos="0 -0.6 1.8" euler="0 1.570796327 0" rgba="1 1 1 1"/>
+            <geom type="cylinder" fromto="-1.3 0 1.8 -1.3 -0.6 1.8" size="0.05" rgba="1 1 1 1"/>
+            <geom type="cylinder" fromto="1.3 0 1.8 1.3 -0.6 1.8" size="0.05" rgba="1 1 1 1"/>
+
+            <geom type="box" size="1.3 0.005 0.9" pos="0 -0.6 0.9" rgba="1 1 1 0.3"/>
+            <geom type="box" size="0.005 0.3 0.9" pos="1.3 -0.3 0.9" rgba="1 1 1 0.3"/>
+            <geom type="box" size="0.005 0.3 0.9" pos="-1.3 -0.3 0.9" rgba="1 1 1 0.3"/>
+            <geom type="box" size="1.3 0.3 0.005" pos="0 -0.3 1.8" rgba="1 1 1 0.3"/>
+        </body>
+  </worldbody>
+</mujoco>

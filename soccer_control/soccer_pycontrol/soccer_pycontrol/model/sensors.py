@@ -1,3 +1,4 @@
+import mujoco
 import numpy as np
 
 from soccer_common import Transformation
@@ -16,6 +17,9 @@ class Sensors:
         self.imu_ready = False
         self.get_imu()  # to init
 
+        self.cam_id = mujoco.mj_name2id(self.world.model, mujoco.mjtObj.mjOBJ_CAMERA, "cam")
+        self.renderer = mujoco.Renderer(self.world.model, 480, 640)
+
     def get_pose(self) -> Transformation:
         """
         Get the 3D pose of the robot in the world frame.
@@ -23,6 +27,15 @@ class Sensors:
         :return: The 3D pose of the robot
         """
         t_mat = self.world.get_T_world_site("torso")
+        return Transformation(matrix=t_mat)
+
+    def get_cam_pose(self) -> Transformation:
+        """
+        Get the 3D pose of the robot in the world frame.
+
+        :return: The 3D pose of the robot
+        """
+        t_mat = self.world.get_T_world_site("camera")
         return Transformation(matrix=t_mat)
 
     def get_ball_local_frame(self):
@@ -70,6 +83,10 @@ class Sensors:
     #     # seg_opengl = np.reshape(images[4], [width, height]) * 1. / 255.
     #
     #     return img
+
+    def get_camera_image(self):
+        self.renderer.update_scene(self.world.data, camera=self.cam_id)
+        return self.renderer.render()[:,:,::-1]
 
     def get_height(self):
         return

@@ -19,4 +19,5 @@
 
 	</worldbody>
 <!--	<include file="ball.xml" />-->
+    <option noslip_iterations="1" cone="elliptic" timestep="0.0025"></option>
 </mujoco>

@@ -99,7 +99,7 @@ class ObjectDetectionNodeRos(ObjectDetectionNode, Node):
         self.pub_detection.publish(self.br.cv2_to_imgmsg(detection_image, encoding="bgr8"))
 
         for box in bbs_msg.bounding_boxes:
-            if box.data == "0":
+            if box.class_id == "0":
                 boundingBoxes = [[box.xmin, box.ymin], [box.xmax, box.ymax]]
 
                 ball_pixel = Float32MultiArray()
@@ -120,7 +120,7 @@ class ObjectDetectionNodeRos(ObjectDetectionNode, Node):
 
             # TODO
             # for box in bbs_msg.bounding_boxes:
-            #     if box.Class == "0":
+            #     if box.class_id == "0":
             #         boundingBoxes = [[box.xmin, box.ymin], [box.xmax, box.ymax]]
             #         ball_pose = self.camera.calculate_ball_from_bounding_boxes(boundingBoxes)
             #         self.br2.sendTransform(
@@ -142,7 +142,7 @@ class ObjectDetectionNodeRos(ObjectDetectionNode, Node):
             #             "robot1" + "/camera",
             #         )
             #
-            #     elif box.Class == "1":
+            #     elif box.class_id == "1":
             #         pos = [box.xbase, box.ybase]
             #
             #         floor_coordinate_robot = self.camera.find_floor_coordinate(pos)

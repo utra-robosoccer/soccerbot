@@ -91,10 +91,10 @@ class ObjectDetectionNode:
                     bb_msg.ymax = round(y2)
                     bb_msg.probability = float(confidence)
                     bb_msg.id = id
-                    bb_msg.data = str(int(img_class))
+                    bb_msg.class_id = str(int(img_class))
                     # TODO Joanne look the pixels of the image in addition to the bounding box,
                     #  calculate likely foot coordinate xy
-                    if bb_msg.data == "2" or bb_msg.data == "0" or bb_msg.data == "1":
+                    if bb_msg.class_id == "2" or bb_msg.class_id == "0" or bb_msg.class_id == "1":
 
                         # --- simple version just draw the box in bottom ratio of box to detect feet position---
                         # only look at bottom 1/3 of bounding box (assumption: bounding box is of a standing robot)
@@ -155,10 +155,10 @@ class ObjectDetectionNode:
                     bb_msg.ymax = round(y2)
                     bb_msg.probability = confidence
                     bb_msg.id = id
-                    bb_msg.Class = str(int(img_class))
+                    bb_msg.class_id = str(int(img_class))
                     # TODO Joanne look the pixels of the image in addition to the bounding box,
                     #  calculate likely foot coordinate xy
-                    if bb_msg.Class == "2" or bb_msg.Class == "0" or bb_msg.Class == "1":
+                    if bb_msg.class_id == "2" or bb_msg.class_id == "0" or bb_msg.class_id == "1":
 
                         # --- simple version just draw the box in bottom ratio of box to detect feet position---
                         # only look at bottom 1/3 of bounding box (assumption: bounding box is of a standing robot)

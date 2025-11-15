@@ -47,7 +47,7 @@ class Walker:
 
         if self.imu_feedback_enabled and self.bez.sensors.imu_ready:
             [_, pitch, roll] = self.bez.sensors.get_imu()
-            print(pitch,"  ", roll)
+            # print(pitch,"  ", roll)
             self.stabilize_walk(pitch, roll)
 
         # self.foot_step_planner.head_movement(target_goal)
@@ -58,7 +58,7 @@ class Walker:
             self.ball_dx = self.ball_x_pid.update(3.2 - ball_pixel[0] / 100.0)
             self.ball_dy = self.ball_y_pid.update(ball_pixel[1] / 100.0)
         # print(f"{ball_pixel}, {self.ball_dx}, {self.ball_dy}")
-        # self.bez.motor_control.configuration["head_yaw"] = self.ball_dx
+        self.bez.motor_control.set_head_target_angles([-self.ball_dx, self.ball_dy])
         # self.bez.motor_control.configuration["head_pitch"] = self.ball_dy
 
         # self.bez.motor_control.configuration["head_yaw"] = self.ball_dx

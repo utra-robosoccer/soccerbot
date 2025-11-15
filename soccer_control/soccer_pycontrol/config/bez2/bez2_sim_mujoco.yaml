@@ -15,7 +15,7 @@ walking_pitch_ki: 0.000
 walking_pitch_setpoint: -0.0
 walking_pitch_offset: 0.0
 
-walking_roll_kp: 0 #1.5   1
+walking_roll_kp: 0.25 #1.5   1
 walking_roll_kd: 0 #0.5
 walking_roll_ki: 0.0
 walking_roll_setpoint: -0.0

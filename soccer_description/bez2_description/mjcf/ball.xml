@@ -1,11 +1,19 @@
 <mujoco model="ball">
+<compiler meshdir="../meshes/" angle="radian" assetdir="assets"/>
+     <asset>
+    <texture name="ball" type="cube" fileup="up.png" filedown="down.png" filefront="front.png" fileback="back.png" fileleft="left.png" fileright="right.png"/>
+    <material name="ball" texture="ball"/>
+  </asset>
 
   <worldbody>
     <body name="ball"  pos="0 0 0.14">
       <freejoint name="ball_root" />
       <site name="ball" />
       <inertial pos="0 0 0" mass="0.3" diaginertia="0.00128 0.00128 0.00128"/>
-      <geom size="0.07" rgba="1 1 1 1"/>
+<!--      <geom size="0.07" rgba="1 1 1 1"/>-->
+        <geom name="ball" pos="0 0 0" size="0.07" mass="0.3" friction="0.4 0.01 0.01" rgba="1 1 1 1" condim="6" priority="1" solref="-5000 -20" type="sphere" material="ball"/>
+
+
     </body>
   </worldbody>
 </mujoco>

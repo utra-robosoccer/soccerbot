@@ -1,4 +1,5 @@
 <mujoco model="bez2">
+    <compiler meshdir="../meshes/" angle="radian" assetdir="assets"/>
   <default>
         <default class="mx106">
             <position kp="21" forcerange="-8 8" />
@@ -13,7 +14,7 @@
             <joint damping="1.084" armature="0.045" frictionloss="0.03"/>
         </default>
     </default>
-	<option noslip_iterations="1" cone="elliptic" ></option>
+	<option noslip_iterations="1" cone="elliptic" timestep="0.0025"></option>
 <!--    <option noslip_iterations="1" cone="elliptic" impratio="10"></option>-->
 
   <asset>
@@ -58,7 +59,9 @@
                     diaginertia="0.000267836 0.000238997 0.000135166"/>
           <joint class="xm430" name="head_pitch" pos="0 0 0" axis="0 1 0"  />
           <geom pos="0 0.01825 -0.0975" quat="1 0 0 0" type="mesh" rgba="0.627451 0.627451 0.627451 1" mesh="head_v4_1"/>
-          <site name="camera" pos="0.02 0.019 0.055" quat="0 0.707107 0 -0.707107"/>
+          <site name="camera" pos="0.02 0.019 0.055" euler="0 0 0"/>
+             <camera name="cam" pos="0.02 0.019 0.055" euler="1.57 -1.57 0" fovy="43.3" mode="fixed"
+           />
         </body>
       </body>
       <site name="trunk" pos="-0.06 0 -0.09" />
@@ -162,27 +165,29 @@
         <accelerometer site="torso" name="accelerometer" />
     </sensor>
   <actuator>
+        <position class="xm430" name="head_yaw" joint="head_yaw" ctrlrange="-1.5708 1.5708" />
+        <position class="xm430" name="head_pitch" joint="head_pitch" ctrlrange="0 1.5708" />
+
+        <position class="xm430" name="left_shoulder_pitch" joint="left_shoulder_pitch" ctrlrange="-3.14159 3.92699" />
+        <position class="xm430" name="left_shoulder_roll" joint="left_shoulder_roll" ctrlrange="0 1.5708" />
+        <position class="xm430" name="left_elbow" joint="left_elbow" ctrlrange="0 3.14159" />
+
+        <position class="xm430" name="left_hip_yaw" joint="left_hip_yaw" ctrlrange="-1.309 0.524" />
         <position class="mx64" name="left_hip_roll" joint="left_hip_roll" ctrlrange="-0.785398 1.5708" />
         <position class="mx64" name="left_hip_pitch" joint="left_hip_pitch" ctrlrange="-0.785398 2.35619" />
         <position class="mx64" name="left_knee" joint="left_knee" ctrlrange=" -2.793 0" />
         <position class="mx64" name="left_ankle_pitch" joint="left_ankle_pitch" ctrlrange="-0.785398 1.5708" />
         <position class="mx64" name="left_ankle_roll" joint="left_ankle_roll" ctrlrange="-0.785398 0.785398" />
+
+        <position class="xm430" name="right_shoulder_pitch" joint="right_shoulder_pitch" ctrlrange="-3.14159 3.92699" />
+        <position class="xm430" name="right_shoulder_roll" joint="right_shoulder_roll" ctrlrange="0 1.5708" />
+        <position class="xm430" name="right_elbow" joint="right_elbow" ctrlrange="0 3.14159" />
+
+        <position class="xm430" name="right_hip_yaw" joint="right_hip_yaw" ctrlrange="-1.309 0.524" />
         <position class="mx64" name="right_hip_roll" joint="right_hip_roll" ctrlrange="-0.785398 1.5708" />
         <position class="mx64" name="right_hip_pitch" joint="right_hip_pitch" ctrlrange="-0.785398 2.35619" />
         <position class="mx64" name="right_knee" joint="right_knee" ctrlrange=" -2.793 0" />
         <position class="mx64" name="right_ankle_pitch" joint="right_ankle_pitch" ctrlrange="-0.785398 1.5708" />
         <position class="mx64" name="right_ankle_roll" joint="right_ankle_roll" ctrlrange="-0.785398 0.785398" />
-
-        <position class="xm430" name="head_yaw" joint="head_yaw" ctrlrange="-1.5708 1.5708" />
-        <position class="xm430" name="head_pitch" joint="head_pitch" ctrlrange="0 1.5708" />
-        <position class="xm430" name="left_hip_yaw" joint="left_hip_yaw" ctrlrange="-1.309 0.524" />
-        <position class="xm430" name="right_hip_yaw" joint="right_hip_yaw" ctrlrange="-1.309 0.524" />
-        <position class="xm430" name="left_shoulder_pitch" joint="left_shoulder_pitch" ctrlrange="-3.14159 3.92699" />
-        <position class="xm430" name="left_elbow" joint="left_elbow" ctrlrange="0 3.14159" />
-        <position class="xm430" name="right_shoulder_pitch" joint="right_shoulder_pitch" ctrlrange="-3.14159 3.92699" />
-        <position class="xm430" name="right_elbow" joint="right_elbow" ctrlrange="0 3.14159" />
-        <position class="xm430" name="left_shoulder_roll" joint="left_shoulder_roll" ctrlrange="0 1.5708" />
-        <position class="xm430" name="right_shoulder_roll" joint="right_shoulder_roll" ctrlrange="0 1.5708" />
-
     </actuator>
 </mujoco>

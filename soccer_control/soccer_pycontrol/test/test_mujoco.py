@@ -1,8 +1,12 @@
 import time
 import unittest
+from os.path import expanduser
 from random import uniform
 
+import cv2
 import numpy as np
+
+from soccer_object_detection.object_detect_node import ObjectDetectionNode
 from soccer_pycontrol.model.bez import Bez
 from soccer_pycontrol.model.sim_world import SimWorld
 
@@ -19,13 +23,36 @@ class TestMuJoCo(unittest.TestCase):
         bez = Bez(sim)
         start = time.time()
 
-        while sim.t < 3:
+        while sim.t < 3000:
             sim.render(True)
 
             sim.step()
 
             elapsed = time.time() - start
             frames = sim.frame
+            [_, pitch, roll] = bez.sensors.get_imu()
+            print(bez.fallen(pitch, roll))  # TODO add assert
+
+            print(f"Elapsed: {elapsed:.2f}, Frames: {frames}, FPS: {frames / elapsed:.2f}")
+
+        sim.close_viewer()
+
+    def test_cam(self):
+        sim = SimWorld()
+        bez = Bez(sim)
+        start = time.time()
+
+        while sim.t < 200:
+            sim.render(True)
+
+            sim.step()
+
+            elapsed = time.time() - start
+            frames = sim.frame
+            cv2.namedWindow("ball_cam", cv2.WINDOW_NORMAL)
+            cv2.imshow("ball_cam", bez.sensors.get_camera_image())
+            if cv2.waitKey(1) & 0xFF == 27:  # ESC
+                break
             [_, pitch, roll] = bez.sensors.get_imu()
             print(bez.fallen(pitch, roll))  # TODO add assert
 
@@ -161,22 +188,27 @@ class TestMuJoCo(unittest.TestCase):
     def test_walk(self):
         sim = SimWorld()
         bez = Bez(sim)
-        walk = Navigator(sim, bez, imu_feedback_enabled=False)
+        walk = Navigator(sim, bez, imu_feedback_enabled=True)
         walk.ready()
         walk.world.step()
         sim.wait(200)
         # walk.wait(100)
-        target_goal = [0.1, 0, 0.0, 10, 500]
+        target_goal = [0, 0.1, 0, 10, 500]
         # target_goal = Transformation(position=[0, 0, 0], euler=[0, 0, 0])
         start = time.time()
         print("STARTING WALK")
+        s = time.time()
         while sim.t < 20:
+
+            if sim.frame % int(walk.foot_step_planner.DT/sim.dt) == 0: # TODO investigate interp
+                walk.walk(target_goal, display_metrics=False)
+                print("here: " + str(1/(time.time() - s)))
+                s = time.time()
+
             sim.render(True)
             sim.step()
             elapsed = time.time() - start
             frames = sim.frame
-            walk.walk(target_goal, display_metrics=False)
-
             print(f"Elapsed: {elapsed:.2f}, Frames: {frames}, FPS: {frames / elapsed:.2f}")
 
         sim.close_viewer()
@@ -185,37 +217,38 @@ class TestMuJoCo(unittest.TestCase):
     def test_walk_rand(self): # TODO needs tuning
         sim = SimWorld()
         bez = Bez(sim)
-        walk = Navigator(sim, bez, imu_feedback_enabled=False)
+        walk = Navigator(sim, bez, imu_feedback_enabled=True)
         walk.ready()
         walk.world.step()
         sim.wait(200)
         # walk.wait(100)
         target_goal = [0.1, 0, 0.0, 10, 500]
-        target_goal = Transformation(position=[0.08, -0.06, 0], euler=[0, 0, 0])
+        target_goal = Transformation(position=[0.07, -0.00, 0], euler=[0, 0, 0])
         start = time.time()
         print("STARTING WALK")
-        while sim.t < 10:
+        while sim.t < 100:
             sim.render(True)
 
             sim.step()
 
             elapsed = time.time() - start
             frames = sim.frame
-
+            # print(bez.sensors.get_pose().position)
             if not walk.walker.enable_walking:
                 print("WALK ENABLED")
                 x = uniform(-1, 1) # TODO own unit test for yaw
                 y = uniform(-1, 1)
                 theta = uniform(-3.14, 3.14)
-                print(x, y, theta)
-                target_goal = Transformation(keyframe=[x, y, 0], euler=[theta, 0, 0])
+                print("here: ", x, y, theta)
+                target_goal = Transformation(position=[x, y, 0], euler=[theta, 0, 0])
                 walk.walker.reset_walk()
-            walk.walk(target_goal, display_metrics=False)
+            if sim.frame % int(walk.foot_step_planner.DT/sim.dt) == 0: # TODO investigate interp
+                    walk.walk(target_goal, display_metrics=False)
+
+            # walk.walk(target_goal, display_metrics=False)
             # print(f"Elapsed: {elapsed:.2f}, Frames: {frames}, FPS: {frames / elapsed:.2f}")
 
         sim.close_viewer()
-
-
 
     def test_ready(self):
         sim = SimWorld()
@@ -223,6 +256,7 @@ class TestMuJoCo(unittest.TestCase):
         walk = Navigator(sim, bez, imu_feedback_enabled=False)
         walk.ready()
         walk.world.step()
+        sim.wait(200)
 
         start = time.time()
         print("STARTING WALK")
@@ -230,7 +264,10 @@ class TestMuJoCo(unittest.TestCase):
             sim.render(True)
 
             sim.step()
-
+            # cv2.namedWindow("ball_cam", cv2.WINDOW_NORMAL)
+            # cv2.imshow("ball_cam", bez.sensors.get_camera_image())
+            # if cv2.waitKey(1) & 0xFF == 27:  # ESC
+            #     break
             elapsed = time.time() - start
             frames = sim.frame
             # print(bez.fallen(pitch))  # TODO add assert
@@ -239,7 +276,139 @@ class TestMuJoCo(unittest.TestCase):
 
         sim.close_viewer()
 
+    def test_ball_loc(self):
+        src_path = expanduser("~") + "/ros2_ws/src/soccerbot/soccer_perception/"
+        model_path = src_path + "soccer_object_detection/models/yolov8s_detect_best.pt"
+        model_path = src_path + "soccer_object_detection/models/half_5.pt"
 
+        detect = ObjectDetectionNode(model_path)
+
+        sim = SimWorld()
+        bez = Bez(sim)
+        walk = Navigator(sim, bez, imu_feedback_enabled=False)
+        walk.ready()
+        walk.world.step()
+
+        start = time.time()
+        print("STARTING WALK")
+        while sim.t < 300:
+            if sim.frame % 20 == 0:
+                img = bez.sensors.get_camera_image()
+                img = cv2.resize(img, dsize=(640, 480))
+                dimg, bbs_msg = detect.get_model_output(img)
+                for box in bbs_msg.bounding_boxes:
+                    if box.class_id == "0":
+                        detect.camera.pose.position = [0, 0, bez.sensors.get_cam_pose().position[2]]
+                        detect.camera.pose.orientation_euler = bez.sensors.get_cam_pose().orientation_euler
+                        boundingBoxes = [[box.xmin, box.ymin], [box.xmax, box.ymax]]
+                        pos = [box.xbase, box.ybase]
+                        floor_coordinate_robot = detect.camera.find_floor_coordinate(pos)
+                        string = (
+                                  f"z: {bez.sensors.get_cam_pose().position[2]}  eul: {bez.sensors.get_cam_pose().orientation_euler}" +
+                                  f" floor pos: {detect.camera.calculate_ball_from_bounding_boxes(boundingBoxes).position} ball: {bez.sensors.get_ball_local_frame().position}" +
+                                  f" floor pos2: {floor_coordinate_robot}  ball: {bez.sensors.get_ball_local_frame().position}" +
+                                  f" pos2: {bez.sensors.get_pose().rotation_matrix @ bez.sensors.get_ball_local_frame().position + bez.sensors.get_pose().position} ball: {bez.sensors.get_ball_world_frame().position}"
+                                  )
+
+                        print(
+                            string,#end='\r',
+                            flush=True,
+                        )
+
+
+                # if "DISPLAY" in os.environ:
+                cv2.imshow("CVT Color2", dimg)
+                cv2.waitKey(1)
+
+            elapsed = time.time() - start
+            frames = sim.frame
+            sim.render(True)
+            sim.step()
+            # print(bez.fallen(pitch))  # TODO add assert
+
+            # print(f"Elapsed: {elapsed:.2f}, Frames: {frames}, FPS: {frames / elapsed:.2f}")
+
+        sim.close_viewer()
+
+
+    def test_full(self):
+        src_path = expanduser("~") + "/ros2_ws/src/soccerbot/soccer_perception/"
+        model_path = src_path + "soccer_object_detection/models/yolov8s_detect_best.pt"
+        model_path = src_path + "soccer_object_detection/models/half_5.pt"
+
+        detect = ObjectDetectionNode(model_path)
+
+        sim = SimWorld()
+        bez = Bez(sim)
+        tm = TrajectoryManagerSim(sim, bez, "bez2", "getupfront")
+        walk = Navigator(sim, bez, imu_feedback_enabled=True)
+        walk.ready()
+        sim.wait(500)
+        walk.world.step()
+
+        start = time.time()
+        print("STARTING WALK")
+        ball_pos = Transformation(position=[0, 0, 0], euler=[0, 0, 0])
+        kicked = False
+        ball_pixel = [0, 0]
+        while sim.t < 300:
+            if sim.frame % 20 == 0:
+                img = bez.sensors.get_camera_image()
+                img = cv2.resize(img, dsize=(640, 480))
+                dimg, bbs_msg = detect.get_model_output(img)
+                for box in bbs_msg.bounding_boxes:
+                    if box.class_id == "0":
+                        detect.camera.pose.position = [0, 0, bez.sensors.get_cam_pose().position[2]]
+                        detect.camera.pose.orientation_euler = bez.sensors.get_cam_pose().orientation_euler
+                        boundingBoxes = [[box.xmin, box.ymin], [box.xmax, box.ymax]]
+                        ball_pixel = [(box.xmin + box.xmax) / 2.0, (box.ymin + box.ymax) / 2.0]
+                        kicked = False
+                        ball_pos = bez.sensors.get_ball_local_frame()
+                        pos = [box.xbase, box.ybase]
+                        floor_coordinate_robot = detect.camera.find_floor_coordinate(pos)
+                        string = (
+                                  f"z: {bez.sensors.get_cam_pose().position[2]}  eul: {bez.sensors.get_cam_pose().orientation_euler}" +
+                                  f" floor pos: {detect.camera.calculate_ball_from_bounding_boxes(boundingBoxes).position} ball: {bez.sensors.get_ball_local_frame().position}" +
+                                  f" floor pos2: {floor_coordinate_robot}  ball: {bez.sensors.get_ball_local_frame().position}"
+                                  )
+
+                        print(
+                            string,#end='\r',
+                            flush=True,
+                        )
+
+                        # ball_pos = Transformation(position=floor_coordinate_robot)
+
+
+                # if "DISPLAY" in os.environ:
+                cv2.imshow("CVT Color2", dimg)
+                cv2.waitKey(1)
+            if 0 < np.linalg.norm(ball_pos.position[:2]) < 0.0 and not kicked:
+                walk.ready()
+                walk.wait(100)
+                tm.send_trajectory("rightkick")
+                kicked = True
+
+
+                walk.walker.reset_walk()
+            else:
+
+                if sim.frame % int(walk.foot_step_planner.DT / sim.dt) == 0:  # TODO investigate interp
+                    walk.walk(ball_pos, ball_pixel, True)
+                    # print("here: " + str(1 / (time.time() - s)))
+                    # s = time.time()
+                    # print("ba;ll: " + str(np.linalg.norm(ball_pos.position[:2])))
+                # walk.walk(ball_pos, ball_pixel, True)
+                # print( "ba;ll: "+ str(np.linalg.norm(ball_pos.position[:2])) )
+            elapsed = time.time() - start
+            frames = sim.frame
+            sim.render(True)
+            sim.step()
+            # print(bez.fallen(pitch))  # TODO add assert
+
+            # print(f"Elapsed: {elapsed:.2f}, Frames: {frames}, FPS: {frames / elapsed:.2f}")
+
+        sim.close_viewer()
     def test_bez1_start_stop(self):
         sim = SimWorld()
         bez = Bez(sim)
@@ -267,7 +436,7 @@ class TestMuJoCo(unittest.TestCase):
 
 
     def test_bez1_auto(self):
-        sim = SimWorld(keyframe="fallen_side_left")
+        sim = SimWorld(keyframe="fallen_front")
         bez = Bez(sim)
         tm = TrajectoryManagerSim(sim, bez, "bez2", "getupfront")
         start = time.time()
@@ -291,7 +460,29 @@ class TestMuJoCo(unittest.TestCase):
 
         sim.close_viewer()
 
+    def test_bez1_kick(self):
+        sim = SimWorld()
+        bez = Bez(sim)
+        tm = TrajectoryManagerSim(sim, bez, "bez2", "getupfront")
+        start = time.time()
 
+        while sim.t < 50:
+            sim.render(True)
+
+            sim.step()
+
+            elapsed = time.time() - start
+            frames = sim.frame
+
+
+            tm.send_trajectory("rightkick")
+
+
+            # print(bez.fallen(pitch))  # TODO add assert
+
+            print(f"Elapsed: {elapsed:.2f}, Frames: {frames}, FPS: {frames / elapsed:.2f}")
+
+        sim.close_viewer()
 
 
 # TODO test stand plane - apply force

@@ -10,4 +10,4 @@ int64 xbase
 int64 ybase
 bool obstacle_detected
 int16 id
-string data
+string class_id
