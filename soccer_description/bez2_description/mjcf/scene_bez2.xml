@@ -1,5 +1,5 @@
 <mujoco model="bez2">
-    <compiler meshdir="../meshes/" angle="radian"/>
+    <compiler meshdir="../meshes/" angle="radian" assetdir="assets"/>
 	<visual>
 		<headlight diffuse="0.6 0.6 0.6" ambient="0.3 0.3 0.3" specular="0 0 0"/>
 		<rgba haze="0.15 0.25 0.35 1"/>
@@ -13,11 +13,18 @@
 		<material name="groundplane" texture="groundplane" texuniform="true" texrepeat="5 5" reflectance="0.2"/>
         <model name="ball" file="ball.xml"/>
         <model name="bez2" file="bez2.xml"/>
-	</asset>
+        <texture name="pitch" file="pitch_nologo_l.png" type="2d"/>
+<!--        <texture name="pitch" file="adult_field.png" type="2d"/>-->
+        <material name="pitch" reflectance="0.0" texture="pitch" texrepeat="1 1" texuniform="false"/>
 
+	</asset>
+<include file="goal.xml"/>
 	<worldbody>
 		<light pos="0 0 3.5" dir="0 0 -1" directional="true"/>
-		<geom name="floor" size="0 0 0.05" pos="0 0 0" type="plane" material="groundplane"/>
+<!--		<geom name="floor" size="0 0 0.05" pos="0 0 0" type="plane" material="groundplane"/>-->
+<!--        <geom material="pitch" name="pitch" pos="0 0 0" size="5 3 1" type="plane"/>-->
+        <geom material="pitch" name="pitch" pos="0 0 0" size="8 5.5 1" type="plane"/>
+
         <frame pos="0 0 0">
           <attach model="bez2" body="torso_2023" prefix=""/>
         </frame>
@@ -26,5 +33,6 @@
           <attach model="ball" body="ball" prefix=""/>
         </frame>
 	</worldbody>
+	<option noslip_iterations="1" cone="elliptic" timestep="0.0025"></option>
 
 </mujoco>

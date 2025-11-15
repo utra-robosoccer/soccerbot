@@ -1,7 +1,6 @@
 import unittest
 import matplotlib.pyplot as plt
 from soccer_pycontrol.model.bez import Bez  # Import the Bez class
-from soccer_pycontrol.pybullet_usage.pybullet_world import PybulletWorld  # Import the PybulletWorld class
 from soccer_common import Transformation
 
 

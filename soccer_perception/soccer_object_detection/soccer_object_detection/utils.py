@@ -35,7 +35,7 @@ def check_bounding_box(bounding_box: BoundingBox, lines: List[AnyStr], cam_width
     for line in lines:
         info = line.split(" ")
         label = int(info[0])
-        if label != int(bounding_box.Class):
+        if label != int(bounding_box.class_id):
             continue
 
         x = float(info[1])

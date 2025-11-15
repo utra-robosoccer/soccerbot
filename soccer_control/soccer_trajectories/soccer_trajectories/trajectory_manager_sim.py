@@ -41,12 +41,15 @@ class TrajectoryManagerSim(TrajectoryManager):
                 self.send_joint_msg(t)
             except Exception as ex:
                 exit(0)
-            t += self.world.dt
+            t += 1/100.0
 
             # print("time", t)
-
-            self.world.render(True)
-            self.world.step()
+            # print(int((1/100.0)/ self.world.dt))
+            for i in range(int((1/100.0)/ self.world.dt)): # TODO idk if i like this
+                self.world.render(True)
+                self.world.step()
+            # self.world.render(True)
+            # self.world.step()
             # time.sleep(0.01)
         # self.sim.ramp.close()
         # self.trajectory.reset()

@@ -14,7 +14,7 @@ from cv2 import Mat
 
 from soccer_common import Transformation
 from soccer_common.utils import download_dataset, wrapToPi
-from soccer_perception.soccer_object_detection.soccer_object_detection import (
+from soccer_perception.soccer_object_detection.soccer_object_detection.utils import (
     check_bounding_box,
 )
 from soccer_perception.soccer_object_detection.soccer_object_detection.object_detect_node import (
@@ -51,7 +51,7 @@ class TestObjectDetection(TestCase):
             # TODO is this really necessary
             # Also can it be a function
             for bounding_box in bbs_msg.bounding_boxes:
-                if bounding_box.probability >= n.CONFIDENCE_THRESHOLD and int(bounding_box.Class) in [
+                if bounding_box.probability >= n.CONFIDENCE_THRESHOLD and int(bounding_box.class_id) in [
                     Label.BALL.value,
                     Label.ROBOT.value,
                     Label.GOALPOST.value,

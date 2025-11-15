@@ -120,10 +120,10 @@
 #         camera_to_obstacle = None
 #         # TODO needs to be reworked also some of this should be in strategy and detector node
 #         for box in msg.bounding_boxes:
-#             if box.Class == "0":
+#             if box.class_id == "0":
 #                 if self.detect_ball(box):
 #                     continue
-#             elif box.Class == "2":
+#             elif box.class_id == "2":
 #                 if box.probability > 0.78:
 #                     if box.obstacle_detected:
 #                         pos = [box.xbase, box.ybase]

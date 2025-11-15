@@ -18,7 +18,7 @@ class FindBall(Behavior):
         # detect.camera.pose.orientation_euler = [0, np.pi / 8, 0]
         dimg, bbs_msg = self.detect.get_model_output(img)
         for box in bbs_msg.bounding_boxes:
-            if box.Class == "0":
+            if box.class_id == "0":
                 self.detect.camera.pose = self.bez.sensors.get_pose(link=2)
                 boundingBoxes = [[box.xmin, box.ymin], [box.xmax, box.ymax]]
                 print(self.detect.camera.calculate_ball_from_bounding_boxes(boundingBoxes).position)

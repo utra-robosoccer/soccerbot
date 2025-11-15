@@ -151,7 +151,7 @@ class TestPybullet(unittest.TestCase):
             # dimg, bbs_msg = detect.get_model_output_v8(img)
             dimg, bbs_msg = detect.get_model_output(img)
             for box in bbs_msg.bounding_boxes:
-                if box.Class == "0":
+                if box.class_id == "0":
                     detect.camera.pose.position = [0, 0, 0.6]
                     detect.camera.pose.position = [0, 0, bez.sensors.get_height().position[2]]
                     # detect.camera.pose.orientation_euler = self.bez.sensors.get_pose(link=2).orientation_euler
