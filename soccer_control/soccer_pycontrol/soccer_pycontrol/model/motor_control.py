@@ -102,6 +102,19 @@ class MotorControl:
         """
         addr = self.model.jnt_dofadr[self.dofs_to_index[name]]
         return self.data.qvel[addr]
+    def get_q_legs(self):
+        names = ["left_hip_yaw", "left_hip_roll", "left_hip_pitch", "left_knee", "left_ankle_pitch", "left_ankle_roll", "right_hip_yaw", "right_hip_roll", "right_hip_pitch", "right_knee", "right_ankle_pitch", "right_ankle_roll"]
+        index = []
+        for name in names:
+            index.append(self.get_q(name))
+        return index
+
+    def get_qvel_legs(self):
+        names = ["left_hip_yaw", "left_hip_roll", "left_hip_pitch", "left_knee", "left_ankle_pitch", "left_ankle_roll", "right_hip_yaw", "right_hip_roll", "right_hip_pitch", "right_knee", "right_ankle_pitch", "right_ankle_roll"]
+        index = []
+        for name in names:
+            index.append(self.get_qdot(name))
+        return index
 
     def set_q(self, name: str, value: float):
         """
@@ -169,6 +182,10 @@ class MotorControl:
     def set_motor(self) -> None:
         indexes = list(self.ctrl_dofs_to_index.values())
         self.data.ctrl[indexes] = self.get_angles()
+
+    def set_motor_head(self) -> None:
+        indexes = self.get_dof_indexes(["head_yaw", "head_pitch"])
+        self.data.ctrl[indexes] = self.get_angles()[:2]
 
     def get_dof_indexes(self, names: List[str]) -> list:
         index = []

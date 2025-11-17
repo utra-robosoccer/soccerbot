@@ -35,6 +35,9 @@ class Navigator:
         sim: bool = True,
     ):
 
+        self.dx = 0
+        self.dy = 0
+        self.dtheta = 0
         self.world = world
         self.bez = bez
         self.imu_feedback_enabled = imu_feedback_enabled
@@ -59,7 +62,7 @@ class Navigator:
         )  # TODO could also mod if balance is decreasing
 
         self.nav_yaw_pid = PID(
-            Kp=0.2,
+            Kp=0.5,
             Kd=0,
             Ki=0,
             setpoint=0,
@@ -109,10 +112,10 @@ class Navigator:
             self.nav_yaw_pid.reset()
             self.nav_yaw_pid.setpoint = target_goal.orientation_euler[0]
 
-            dx, dy = find_new_vel(goal_loc=target_goal.position[:2])
+            self.dx, self.dy = find_new_vel(goal_loc=target_goal.position[:2])
             # he = self.heading_error(target_goal.orientation_euler[0], pose.orientation_euler[0])
             # dtheta = math.copysign(0.5, he)
-            self.foot_step_planner.setup_walk(dx, dy)
+            # self.foot_step_planner.setup_walk(dx, dy)
             self.walker.t = 0
             # TODO fix and add to a nav could add a funct for pybullet or python
             # TODO could have a balancing mode by default could use the COM
@@ -120,7 +123,7 @@ class Navigator:
 
         if (
             position_error(pose.position[:2], target_goal.position[:2]) > self.error_tol
-            or abs(heading_error(target_goal.orientation_euler[0], pose.orientation_euler[0])) > self.error_tol
+            # or abs(heading_error(target_goal.orientation_euler[0], pose.orientation_euler[0])) > self.error_tol
         ):  # self.bez.sensors.get_pose() #TODO about 20% or 40% error
             pose = (
                 self.bez.sensors.get_pose()
@@ -139,12 +142,12 @@ class Navigator:
             # TODO make  a 2d unit test
             self.nav_x_pid.setpoint = goal.position[0]
             self.nav_y_pid.setpoint = goal.position[1]
-            dx = self.nav_x_pid.update(0)
-            dy = self.nav_y_pid.update(0)
-            dtheta = self.nav_yaw_pid.update(pose.orientation_euler[0])
-            # print(f"dx: {round(dx, 3)} dy: {round(dy, 3)} dtheta: {round(dtheta, 3)} err_x: {round(x_error, 3)} err_y: {round(y_error, 3)} err_theta: {round(head_error, 3)}")
-            self.foot_step_planner.configure_planner(dx, dy, dtheta)
-            self.walker.walk_loop()  # TODO move main loop out of here
+            self.dx = self.nav_x_pid.update(0)
+            self.dy = self.nav_y_pid.update(0)
+            self.dtheta = self.nav_yaw_pid.update(pose.orientation_euler[0])
+            # print(f"dx: {round(self.dx, 3)} dy: {round(self.dy, 3)} dtheta: {round(self.dtheta, 3)} err_x: {round(x_error, 3)} err_y: {round(y_error, 3)} err_theta: {round(head_error, 3)}")
+            # self.foot_step_planner.configure_planner(dx, dy, dtheta)
+            # self.walker.walk_loop()  # TODO move main loop out of here
         else:
             self.ready()
             self.walker.enable_walking = False
@@ -162,8 +165,8 @@ class Navigator:
             self.nav_yaw_pid.reset()
             self.nav_yaw_pid.setpoint = 0  # TODO add  yaw modes
 
-            dx, dy = find_new_vel(goal_loc=target_goal.position[:2])
-            self.foot_step_planner.setup_walk(dx, dy)
+            self.dx, self.dy = find_new_vel(goal_loc=target_goal.position[:2])
+            # self.foot_step_planner.setup_walk(dx, dy)
             self.walker.t = 0
             # TODO fix and add to a nav could add a funct for pybullet or python
             # TODO could have a balancing mode by default could use the COM
@@ -178,13 +181,13 @@ class Navigator:
             # TODO replace with pure pursuit
             # TODO make  a 2d unit test
 
-            dx = self.nav_x_pid.update(0)
-            dy = self.nav_y_pid.update(0)
+            self.dx = self.nav_x_pid.update(0)
+            self.dy = self.nav_y_pid.update(0)
 
-            dtheta = self.nav_yaw_pid.update(self.bez.sensors.get_pose().orientation_euler[0])
+            self.dtheta = self.nav_yaw_pid.update(self.bez.sensors.get_pose().orientation_euler[0])
             # print(round(dx, 3), " ", round(dy, 3), " ", round(dtheta, 3), " ", round(x_error, 3), " ", round(y_error, 3), " ", round(head_error, 3))
-            self.foot_step_planner.configure_planner(dx, dy, dtheta)
-
+            # self.foot_step_planner.configure_planner(self.dx, self.dy, self.dtheta)
+            #
             self.walker.walk_loop(target_goal.position, ball_pixel)
         # else:
         #     self.ready()

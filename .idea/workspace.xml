@@ -5,31 +5,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1718606a-6ea1-4edd-a178-2f51136d492a" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/mjx_notes.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test/keyboard_gamepad.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test/onnx/bez222_policy.onnx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test/onnx/bez22_policy.onnx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test/onnx/bez2_policy.onnx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/soccer_description/bez2_description/mjcf/bez2_mjx.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MUJOCO_LOG.TXT" beforeDir="false" afterPath="$PROJECT_DIR$/MUJOCO_LOG.TXT" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/MUJOCO_LOG.TXT" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/config/bez2/bez2_sim_mujoco.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/config/bez2/bez2_sim_mujoco.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/soccer_pycontrol/model/sensors.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/soccer_pycontrol/model/sensors.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/soccer_pycontrol/model/sim_world.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/soccer_pycontrol/model/sim_world.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/soccer_pycontrol/test_placo.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/soccer_pycontrol/test_placo.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/soccer_pycontrol/model/motor_control.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/soccer_pycontrol/model/motor_control.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/soccer_pycontrol/walk_engine/navigator.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/soccer_pycontrol/walk_engine/navigator.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/soccer_pycontrol/walk_engine/walker.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/soccer_pycontrol/walk_engine/walker.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test/test_mujoco.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test/test_mujoco.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test/test_perception.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test/test_perception.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test/test_walk_ros.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test/test_walk_ros.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_trajectories/soccer_trajectories/trajectory_manager_sim.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_trajectories/soccer_trajectories/trajectory_manager_sim.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_trajectories/trajectories/bez2/rightkick.csv" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_trajectories/trajectories/bez2/rightkick.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_description/bez1_description/mjcf/scene_bez1.xml" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_description/bez1_description/mjcf/scene_bez1.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_description/bez2_description/mjcf/ball.xml" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_description/bez2_description/mjcf/ball.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/soccer_description/bez2_description/mjcf/bez2.xml" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_description/bez2_description/mjcf/bez2.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/soccer_description/bez2_description/mjcf/scene_bez2.xml" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_description/bez2_description/mjcf/scene_bez2.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_msgs/msg/BoundingBox.msg" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_msgs/msg/BoundingBox.msg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/soccer_object_detection/object_detect_node.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/soccer_object_detection/object_detect_node.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/soccer_object_detection/object_detect_node_ros.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/soccer_object_detection/object_detect_node_ros.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/soccer_object_detection/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/soccer_object_detection/utils.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/test/test_object_detection.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/soccer_object_detection/test_object_detection.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/test/test_pybullet_camera.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_detection/test/test_pybullet_camera.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/src/soccer_object_localization/detector_objects.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_perception/soccer_object_localization/src/soccer_object_localization/detector_objects.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_strategy/src/soccer_strategy/behavior/state/find_ball.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_strategy/src/soccer_strategy/behavior/state/find_ball.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/soccer_description/bez2_description/urdf/robot1.urdf" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_description/bez2_description/urdf/robot1.urdf" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -66,140 +58,124 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python tests.pytest for fsdfsd.test_mujoco.TestMuJoCo.test_ready.executor": "Run",
-    "Python tests.pytest for soccer_object_detection.test_object_detection.TestObjectDetection.test_object_detection.executor": "Run",
-    "Python tests.pytest for soccer_pycontrol.model.test_mujoco.TestMuJoCo.test_ready.executor": "Run",
-    "Python tests.pytest for soccer_pycontrol.model.test_mujoco.TestMuJoCo.test_walk.executor": "Run",
-    "Python tests.pytest for soccer_pycontrol.mujoco.test_mujoco.TestMuJoCo.test_ball_pose.executor": "Run",
-    "Python tests.pytest for soccer_pycontrol.mujoco.test_mujoco.TestMuJoCo.test_bez1_auto.executor": "Run",
-    "Python tests.pytest for soccer_pycontrol.mujoco.test_mujoco.TestMuJoCo.test_imu.executor": "Debug",
-    "Python tests.pytest for soccer_pycontrol.mujoco.test_mujoco.TestMuJoCo.test_walk.executor": "Run",
-    "Python tests.pytest for soccer_pycontrol.mujoco.test_mujoco.TestPybullet.test_bez1_auto.executor": "Run",
-    "Python tests.pytest for soccer_pycontrol.mujoco.test_mujoco.TestPybullet.test_bez_motor_range_single.executor": "Run",
-    "Python tests.pytest for soccer_pycontrol.mujoco.test_mujoco.TestPybullet.test_imu.executor": "Run",
-    "Python tests.pytest for soccer_pycontrol.mujoco.test_mujoco.TestPybullet.test_ready.executor": "Run",
-    "Python tests.pytest for soccer_pycontrol.mujoco.test_mujoco.TestPybullet.test_walk.executor": "Run",
-    "Python tests.pytest for soccer_pycontrol.mujoco.test_mujoco.TestPybullet.test_walk_rand.executor": "Run",
-    "Python tests.pytest for soccer_pycontrol.mujoco.test_pybullet.TestPybullet.test_bez1_auto.executor": "Run",
-    "Python tests.pytest for soccer_pycontrol.mujoco.test_pybullet.TestPybullet.test_bez1_start_stop.executor": "Run",
-    "Python tests.pytest for soccer_pycontrol.mujoco.test_pybullet.TestPybullet.test_bez_motor_range.executor": "Run",
-    "Python tests.pytest for soccer_pycontrol.mujoco.test_pybullet.TestPybullet.test_bez_motor_range_single.executor": "Run",
-    "Python tests.pytest for soccer_pycontrol.mujoco.test_pybullet.TestPybullet.test_foot_sensor.executor": "Run",
-    "Python tests.pytest for soccer_pycontrol.mujoco.test_pybullet.TestPybullet.test_imu.executor": "Run",
-    "Python tests.pytest for soccer_pycontrol.mujoco.test_pybullet.TestPybullet.test_ready.executor": "Run",
-    "Python tests.pytest for soccer_pycontrol.mujoco.test_pybullet.TestPybullet.test_walk.executor": "Run",
-    "Python tests.pytest for soccer_pycontrol.mujoco.test_pybullet.TestPybullet.test_walk_goal.executor": "Run",
-    "Python tests.pytest for soccer_pycontrol.mujoco.test_pybullet.TestPybullet.test_walk_rand.executor": "Run",
-    "Python tests.pytest for soccer_pycontrol.test_mujoco.TestMuJoCo.test_imu.executor": "Run",
-    "Python tests.pytest for soccer_pycontrol.test_mujoco.TestMuJoCo.test_ready.executor": "Run",
-    "Python tests.pytest for soccer_pycontrol.test_placo.TestPlaco.test_bez1_ready.executor": "Run",
-    "Python tests.pytest for soccer_pycontrol.test_pybullet.TestPybullet.test_bez_motor_range_single.executor": "Run",
-    "Python tests.pytest for test.test_mujoco.TestMuJoCo.test_bez1_auto.executor": "Run",
-    "Python tests.pytest for test.test_mujoco.TestMuJoCo.test_bez_motor_range_single.executor": "Run",
-    "Python tests.pytest for test.test_mujoco.TestMuJoCo.test_cam.executor": "Run",
-    "Python tests.pytest for test.test_mujoco.TestMuJoCo.test_full.executor": "Run",
-    "Python tests.pytest for test.test_mujoco.TestMuJoCo.test_imu.executor": "Run",
-    "Python tests.pytest for test.test_mujoco.TestMuJoCo.test_obj_det.executor": "Run",
-    "Python tests.pytest for test.test_mujoco.TestMuJoCo.test_ready (1).executor": "Run",
-    "Python tests.pytest for test.test_mujoco.TestMuJoCo.test_ready (2).executor": "Run",
-    "Python tests.pytest for test.test_mujoco.TestMuJoCo.test_ready.executor": "Debug",
-    "Python tests.pytest for test.test_mujoco.TestMuJoCo.test_walk.executor": "Run",
-    "Python tests.pytest for test.test_object_detection.TestObjectDetection.test_object_detection (1).executor": "Run",
-    "Python tests.pytest for test.test_object_detection.TestObjectDetection.test_object_detection.executor": "Run",
-    "Python tests.pytest for test.test_pybullet.TestPybullet.test_bez_motor_range_single.executor": "Run",
-    "Python tests.pytest for test_camera.TestCamera.test_camera_find_camera_coordinate.executor": "Run",
-    "Python tests.pytest for test_firmware_interface.test_firmware_interface.executor": "Run",
-    "Python tests.pytest for test_firmware_interface.test_firmware_interface_single_motor_range.executor": "Run",
-    "Python tests.pytest for test_object_detection.TestObjectDetection.test_object_detection.executor": "Run",
-    "Python tests.pytest for test_object_detection.TestObjectDetection.test_object_detection_vid.executor": "Run",
-    "Python tests.pytest for test_object_localization.TestObjectLocalization.test_fieldline_detection_vid.executor": "Run",
-    "Python tests.pytest for test_perception.TestSensors.test_camera_image_capture.executor": "Run",
-    "Python tests.pytest for test_placo.TestPlaco.test_bez1.executor": "Run",
-    "Python tests.pytest for test_placo.TestPlaco.test_bez1_ready.executor": "Run",
-    "Python tests.pytest for test_placo.TestPlaco.test_bez1_start_stop.executor": "Run",
-    "Python tests.pytest for test_placo.TestPlaco.test_bez1_walk.executor": "Run",
-    "Python tests.pytest for test_placo.TestPlaco.test_bez_motor_range_single.executor": "Run",
-    "Python tests.pytest for test_placo.TestPlaco.test_camera.executor": "Run",
-    "Python tests.pytest for test_pybullet.TestPybullet.test_bez_motor_range.executor": "Run",
-    "Python tests.pytest for test_pybullet.TestPybullet.test_bez_motor_range_single.executor": "Run",
-    "Python tests.pytest for test_pybullet.TestPybullet.test_cam.executor": "Run",
-    "Python tests.pytest for test_pybullet.TestPybullet.test_imu.executor": "Run",
-    "Python tests.pytest for test_pybullet_camera.TestPybullet.test_ball_localization.executor": "Run",
-    "Python tests.pytest for test_pybullet_camera.TestPybullet.test_ball_localization2.executor": "Run",
-    "Python tests.pytest for test_pybullet_camera.TestPybullet.test_cam.executor": "Run",
-    "Python tests.pytest for test_pybullet_camera.TestPybullet.test_detection.executor": "Run",
-    "Python tests.pytest for test_trajectory.TestTrajectory.test_trajectory.executor": "Run",
-    "Python tests.pytest for test_trajectory.test_traj_ros.executor": "Run",
-    "Python tests.pytest for test_trajectory.test_trajectory_sim.executor": "Run",
-    "Python tests.pytest for test_walk_ros.TestPybullet.test_camera.executor": "Run",
-    "Python tests.pytest for test_walk_ros.TestPybullet.test_camera2.executor": "Run",
-    "Python tests.pytest for test_walk_ros.TestPybullet.test_ready_ros_local.executor": "Run",
-    "Python tests.pytest for test_walk_ros.TestPybullet.test_walk_ros_local.executor": "Run",
-    "Python tests.pytest for test_walk_ros.TestPybullet.test_walk_ros_webots.executor": "Run",
-    "Python tests.pytest for tests.test_mujoco.TestMuJoCo.test_ready.executor": "Run",
-    "Python tests.pytest in test_pybullet.py.executor": "Run",
-    "Python.bez.executor": "Run",
-    "Python.convert_stl2dae.executor": "Run",
-    "Python.dgfs.executor": "Run",
-    "Python.ff.executor": "Run",
-    "Python.fsf.executor": "Run",
-    "Python.motor_control.executor": "Run",
-    "Python.simulator.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
-    "WebServerToolWindowPanel.toolwindow.highlight.mappings": "true",
-    "WebServerToolWindowPanel.toolwindow.highlight.symlinks": "true",
-    "WebServerToolWindowPanel.toolwindow.show.date": "false",
-    "WebServerToolWindowPanel.toolwindow.show.permissions": "false",
-    "WebServerToolWindowPanel.toolwindow.show.size": "false",
-    "git-widget-placeholder": "js__sim",
-    "last_opened_file_path": "/home/jonathan/ros2_ws/src/soccerbot/soccer_description/bez2_description/mjcf",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable",
-    "vue.rearranger.settings.migration": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python tests.pytest for fsdfsd.test_mujoco.TestMuJoCo.test_ready.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for soccer_object_detection.test_object_detection.TestObjectDetection.test_object_detection.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for soccer_pycontrol.model.test_mujoco.TestMuJoCo.test_ready.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for soccer_pycontrol.model.test_mujoco.TestMuJoCo.test_walk.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for soccer_pycontrol.mujoco.test_mujoco.TestMuJoCo.test_ball_pose.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for soccer_pycontrol.mujoco.test_mujoco.TestMuJoCo.test_bez1_auto.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for soccer_pycontrol.mujoco.test_mujoco.TestMuJoCo.test_imu.executor&quot;: &quot;Debug&quot;,
+    &quot;Python tests.pytest for soccer_pycontrol.mujoco.test_mujoco.TestMuJoCo.test_walk.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for soccer_pycontrol.mujoco.test_mujoco.TestPybullet.test_bez1_auto.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for soccer_pycontrol.mujoco.test_mujoco.TestPybullet.test_bez_motor_range_single.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for soccer_pycontrol.mujoco.test_mujoco.TestPybullet.test_imu.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for soccer_pycontrol.mujoco.test_mujoco.TestPybullet.test_ready.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for soccer_pycontrol.mujoco.test_mujoco.TestPybullet.test_walk.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for soccer_pycontrol.mujoco.test_mujoco.TestPybullet.test_walk_rand.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for soccer_pycontrol.mujoco.test_pybullet.TestPybullet.test_bez1_auto.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for soccer_pycontrol.mujoco.test_pybullet.TestPybullet.test_bez1_start_stop.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for soccer_pycontrol.mujoco.test_pybullet.TestPybullet.test_bez_motor_range.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for soccer_pycontrol.mujoco.test_pybullet.TestPybullet.test_bez_motor_range_single.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for soccer_pycontrol.mujoco.test_pybullet.TestPybullet.test_foot_sensor.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for soccer_pycontrol.mujoco.test_pybullet.TestPybullet.test_imu.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for soccer_pycontrol.mujoco.test_pybullet.TestPybullet.test_ready.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for soccer_pycontrol.mujoco.test_pybullet.TestPybullet.test_walk.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for soccer_pycontrol.mujoco.test_pybullet.TestPybullet.test_walk_goal.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for soccer_pycontrol.mujoco.test_pybullet.TestPybullet.test_walk_rand.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for soccer_pycontrol.test_mujoco.TestMuJoCo.test_imu.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for soccer_pycontrol.test_mujoco.TestMuJoCo.test_ready.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for soccer_pycontrol.test_placo.TestPlaco.test_bez1_ready.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for soccer_pycontrol.test_pybullet.TestPybullet.test_bez_motor_range_single.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test.test_mujoco.TestMuJoCo.test_bez1_auto.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test.test_mujoco.TestMuJoCo.test_bez_motor_range_single.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test.test_mujoco.TestMuJoCo.test_cam.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test.test_mujoco.TestMuJoCo.test_full.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test.test_mujoco.TestMuJoCo.test_imu.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test.test_mujoco.TestMuJoCo.test_obj_det.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test.test_mujoco.TestMuJoCo.test_on.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test.test_mujoco.TestMuJoCo.test_ready (1).executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test.test_mujoco.TestMuJoCo.test_ready (2).executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test.test_mujoco.TestMuJoCo.test_ready.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test.test_mujoco.TestMuJoCo.test_walk.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test.test_mujoco.TestMuJoCo.test_walk_rand.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test.test_object_detection.TestObjectDetection.test_object_detection (1).executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test.test_object_detection.TestObjectDetection.test_object_detection.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test.test_pybullet.TestPybullet.test_bez_motor_range_single.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_camera.TestCamera.test_camera_find_camera_coordinate.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_firmware_interface.test_firmware_interface.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_firmware_interface.test_firmware_interface_single_motor_range.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_object_detection.TestObjectDetection.test_object_detection.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_object_detection.TestObjectDetection.test_object_detection_vid.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_object_localization.TestObjectLocalization.test_fieldline_detection_vid.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_perception.TestSensors.test_camera_image_capture.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_placo.TestPlaco.test_bez1.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_placo.TestPlaco.test_bez1_ready.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_placo.TestPlaco.test_bez1_start_stop.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_placo.TestPlaco.test_bez1_walk.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_placo.TestPlaco.test_bez_motor_range_single.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_placo.TestPlaco.test_camera.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_pybullet.TestPybullet.test_bez_motor_range.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_pybullet.TestPybullet.test_bez_motor_range_single.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_pybullet.TestPybullet.test_cam.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_pybullet.TestPybullet.test_imu.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_pybullet_camera.TestPybullet.test_ball_localization.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_pybullet_camera.TestPybullet.test_ball_localization2.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_pybullet_camera.TestPybullet.test_cam.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_pybullet_camera.TestPybullet.test_detection.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_trajectory.TestTrajectory.test_trajectory.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_trajectory.test_traj_ros.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_trajectory.test_trajectory_sim.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_walk_ros.TestPybullet.test_camera.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_walk_ros.TestPybullet.test_camera2.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_walk_ros.TestPybullet.test_ready_ros_local.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_walk_ros.TestPybullet.test_walk_ros_local.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for test_walk_ros.TestPybullet.test_walk_ros_webots.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest for tests.test_mujoco.TestMuJoCo.test_ready.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.pytest in test_pybullet.py.executor&quot;: &quot;Run&quot;,
+    &quot;Python.bez.executor&quot;: &quot;Run&quot;,
+    &quot;Python.convert_stl2dae.executor&quot;: &quot;Run&quot;,
+    &quot;Python.dgfs.executor&quot;: &quot;Run&quot;,
+    &quot;Python.ff.executor&quot;: &quot;Run&quot;,
+    &quot;Python.fsf.executor&quot;: &quot;Run&quot;,
+    &quot;Python.motor_control.executor&quot;: &quot;Run&quot;,
+    &quot;Python.simulator.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowPanel.toolwindow.highlight.mappings&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowPanel.toolwindow.highlight.symlinks&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowPanel.toolwindow.show.date&quot;: &quot;false&quot;,
+    &quot;WebServerToolWindowPanel.toolwindow.show.permissions&quot;: &quot;false&quot;,
+    &quot;WebServerToolWindowPanel.toolwindow.show.size&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/manx52/ros2_ws/src/soccerbot/soccer_control/soccer_pycontrol/test/onnx&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test/onnx" />
+      <recent name="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
       <recent name="$PROJECT_DIR$/soccer_description/bez2_description/mjcf" />
       <recent name="$PROJECT_DIR$/soccer_description/bez2_description/mjcf/assets" />
       <recent name="$PROJECT_DIR$/soccer_perception/soccer_object_detection/test" />
-      <recent name="$PROJECT_DIR$/soccer_description/bez1_description/mjcf/assets" />
-      <recent name="$PROJECT_DIR$/soccer_control/soccer_pycontrol/soccer_pycontrol" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test/onnx" />
       <recent name="$PROJECT_DIR$/soccer_perception/soccer_object_detection/soccer_object_detection" />
       <recent name="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
       <recent name="$PROJECT_DIR$/soccer_control/soccer_pycontrol/soccer_pycontrol/model" />
       <recent name="$PROJECT_DIR$/soccer_description/assembly_description" />
-      <recent name="$PROJECT_DIR$/soccer_control/soccer_pycontrol/soccer_pycontrol" />
     </key>
   </component>
-  <component name="RunManager" selected="Python tests.pytest for test.test_mujoco.TestMuJoCo.test_ready">
-    <configuration name="pytest for test.test_mujoco.TestMuJoCo.test_cam" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
-      <module name="soccerbot" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="_new_keywords" value="&quot;&quot;" />
-      <option name="_new_parameters" value="&quot;&quot;" />
-      <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test.test_mujoco.TestMuJoCo.test_cam&quot;" />
-      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
-      <method v="2" />
-    </configuration>
+  <component name="RunManager" selected="Python tests.pytest for test.test_mujoco.TestMuJoCo.test_full">
     <configuration name="pytest for test.test_mujoco.TestMuJoCo.test_full" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
       <module name="soccerbot" />
       <option name="ENV_FILES" value="" />
@@ -213,7 +189,7 @@
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="_new_keywords" value="&quot;&quot;" />
       <option name="_new_parameters" value="&quot;&quot;" />
-      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_additionalArguments" value="&quot;-s&quot;" />
       <option name="_new_target" value="&quot;test.test_mujoco.TestMuJoCo.test_full&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
@@ -231,11 +207,29 @@
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="_new_keywords" value="&quot;&quot;" />
       <option name="_new_parameters" value="&quot;&quot;" />
-      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_additionalArguments" value="&quot;-s&quot;" />
       <option name="_new_target" value="&quot;test.test_mujoco.TestMuJoCo.test_imu&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
+    <configuration name="pytest for test.test_mujoco.TestMuJoCo.test_on" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
+      <module name="soccerbot" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="_new_keywords" value="&quot;&quot;" />
+      <option name="_new_parameters" value="&quot;&quot;" />
+      <option name="_new_additionalArguments" value="&quot;-s&quot;" />
+      <option name="_new_target" value="&quot;test.test_mujoco.TestMuJoCo.test_on&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <method v="2" />
+    </configuration>
     <configuration name="pytest for test.test_mujoco.TestMuJoCo.test_ready" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
       <module name="soccerbot" />
       <option name="ENV_FILES" value="" />
@@ -249,7 +243,7 @@
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="_new_keywords" value="&quot;&quot;" />
       <option name="_new_parameters" value="&quot;&quot;" />
-      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_additionalArguments" value="&quot;-s&quot;" />
       <option name="_new_target" value="&quot;test.test_mujoco.TestMuJoCo.test_ready&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
@@ -290,7 +284,7 @@
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
-    <configuration name="pytest for test.test_mujoco.TestMuJoCo.test_walk" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
+    <configuration name="pytest for test.test_mujoco.TestMuJoCo.test_walk_rand" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
       <module name="soccerbot" />
       <option name="ENV_FILES" value="" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -303,43 +297,25 @@
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="_new_keywords" value="&quot;&quot;" />
       <option name="_new_parameters" value="&quot;&quot;" />
-      <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test.test_mujoco.TestMuJoCo.test_walk&quot;" />
-      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
-      <method v="2" />
-    </configuration>
-    <configuration name="pytest for test.test_object_detection.TestObjectDetection.test_object_detection" type="tests" factoryName="py.test" temporary="true" nameIsGenerated="true">
-      <module name="soccerbot" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="_new_keywords" value="&quot;&quot;" />
-      <option name="_new_parameters" value="&quot;&quot;" />
-      <option name="_new_additionalArguments" value="&quot;&quot;" />
-      <option name="_new_target" value="&quot;test.test_object_detection.TestObjectDetection.test_object_detection&quot;" />
+      <option name="_new_additionalArguments" value="&quot;-s&quot;" />
+      <option name="_new_target" value="&quot;test.test_mujoco.TestMuJoCo.test_walk_rand&quot;" />
       <option name="_new_targetType" value="&quot;PYTHON&quot;" />
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Python tests.pytest for test.test_mujoco.TestMuJoCo.test_cam" />
-      <item itemvalue="Python tests.pytest for test.test_mujoco.TestMuJoCo.test_full" />
       <item itemvalue="Python tests.pytest for test.test_mujoco.TestMuJoCo.test_imu" />
-      <item itemvalue="Python tests.pytest for test.test_mujoco.TestMuJoCo.test_walk" />
+      <item itemvalue="Python tests.pytest for test.test_mujoco.TestMuJoCo.test_walk_rand" />
+      <item itemvalue="Python tests.pytest for test.test_mujoco.TestMuJoCo.test_on" />
+      <item itemvalue="Python tests.pytest for test.test_mujoco.TestMuJoCo.test_full" />
       <item itemvalue="Python tests.pytest for test.test_mujoco.TestMuJoCo.test_ready" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Python tests.pytest for test.test_mujoco.TestMuJoCo.test_ready" />
-        <item itemvalue="Python tests.pytest for test.test_mujoco.TestMuJoCo.test_imu" />
-        <item itemvalue="Python tests.pytest for test.test_mujoco.TestMuJoCo.test_walk" />
-        <item itemvalue="Python tests.pytest for test.test_mujoco.TestMuJoCo.test_cam" />
         <item itemvalue="Python tests.pytest for test.test_mujoco.TestMuJoCo.test_full" />
+        <item itemvalue="Python tests.pytest for test.test_mujoco.TestMuJoCo.test_walk_rand" />
+        <item itemvalue="Python tests.pytest for test.test_mujoco.TestMuJoCo.test_on" />
+        <item itemvalue="Python tests.pytest for test.test_mujoco.TestMuJoCo.test_imu" />
+        <item itemvalue="Python tests.pytest for test.test_mujoco.TestMuJoCo.test_ready" />
       </list>
     </recent_temporary>
   </component>
@@ -417,6 +393,8 @@
       <workItem from="1762813388552" duration="36333000" />
       <workItem from="1762980155129" duration="18065000" />
       <workItem from="1763149320760" duration="3737000" />
+      <workItem from="1763313822011" duration="12458000" />
+      <workItem from="1763348235542" duration="9110000" />
     </task>
     <servers />
   </component>
@@ -611,43 +589,13 @@
           <option name="timeStamp" value="11" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/soccer_perception/soccer_object_detection/soccer_object_detection/object_detect_node.py</url>
-          <line>86</line>
-          <option name="timeStamp" value="46" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/soccer_control/soccer_pycontrol/test/test_walk_ros.py</url>
-          <line>154</line>
-          <option name="timeStamp" value="47" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/soccer_control/soccer_pycontrol/test/test_walk_ros.py</url>
-          <line>93</line>
-          <option name="timeStamp" value="48" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/soccer_control/soccer_pycontrol/soccer_pycontrol/walk_engine/navigator.py</url>
-          <line>235</line>
-          <option name="timeStamp" value="49" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/soccer_control/soccer_pycontrol/soccer_pycontrol/model/model_ros/motor_control_ros.py</url>
           <option name="timeStamp" value="53" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/soccer_control/soccer_pycontrol/test/test_mujoco.py</url>
-          <line>398</line>
+          <line>595</line>
           <option name="timeStamp" value="67" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/soccer_control/soccer_pycontrol/soccer_pycontrol/walk_engine/navigator.py</url>
-          <line>100</line>
-          <option name="timeStamp" value="69" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/soccer_control/soccer_pycontrol/soccer_pycontrol/walk_engine/navigator.py</url>
-          <line>120</line>
-          <option name="timeStamp" value="71" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/soccer_control/soccer_pycontrol/soccer_pycontrol/walk_engine/walker.py</url>
@@ -656,98 +604,125 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/soccer_control/soccer_pycontrol/test/test_mujoco.py</url>
-          <line>83</line>
+          <line>234</line>
           <option name="timeStamp" value="78" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/soccer_control/soccer_pycontrol/test/test_mujoco.py</url>
-          <line>270</line>
-          <option name="timeStamp" value="79" />
+          <line>120</line>
+          <option name="timeStamp" value="80" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/soccer_control/soccer_pycontrol/test/test_mujoco.py</url>
+          <line>450</line>
+          <option name="timeStamp" value="81" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/soccer_control/soccer_pycontrol/test/test_mujoco.py</url>
+          <line>73</line>
+          <option name="timeStamp" value="82" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/soccer_control/soccer_pycontrol/test/test_mujoco.py</url>
+          <line>617</line>
+          <option name="timeStamp" value="85" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/soccer_control/soccer_pycontrol/test/test_mujoco.py</url>
+          <line>643</line>
+          <option name="timeStamp" value="86" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/soccer_control/soccer_pycontrol/test/test_mujoco.py</url>
+          <line>101</line>
+          <option name="timeStamp" value="88" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_in_test_pybullet_py.coverage" NAME="pytest in test_pybullet.py Coverage Results" MODIFIED="1762817070252" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_soccer_pycontrol_mujoco_test_mujoco_TestMuJoCo_test_bez1_auto.coverage" NAME="pytest for soccer_pycontrol.mujoco.test_mujoco.TestMuJoCo.test_bez1_auto Coverage Results" MODIFIED="1762906492182" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_pybullet_TestPybullet_test_bez_motor_range_single.coverage" NAME="pytest for test_pybullet.TestPybullet.test_bez_motor_range_single Coverage Results" MODIFIED="1752766699750" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_test_mujoco_TestMujoco_test_bez_motor_range.coverage" NAME="pytest for test.test_mujoco.TestMujoco.test_bez_motor_range Coverage Results" MODIFIED="1758397640065" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol" />
-    <SUITE FILE_PATH="coverage/soccerbot$dgfs.coverage" NAME="dgfs Coverage Results" MODIFIED="1730141845344" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tools/setup" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_tests_test_mujoco_TestMuJoCo_test_ready.coverage" NAME="pytest for tests.test_mujoco.TestMuJoCo.test_ready Coverage Results" MODIFIED="1762908719226" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_test_object_detection_TestObjectDetection_test_object_detection.coverage" NAME="pytest for test.test_object_detection.TestObjectDetection.test_object_detection Coverage Results" MODIFIED="1762994985011" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_camera_TestCamera_test_camera_find_camera_coordinate.coverage" NAME="pytest for test_camera.TestCamera.test_camera_find_camera_coordinate Coverage Results" MODIFIED="1733345010797" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_perception/soccer_object_detection/test" />
-    <SUITE FILE_PATH="coverage/soccerbot$bez.coverage" NAME="bez Coverage Results" MODIFIED="1762988121101" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/soccer_pycontrol/model" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_soccer_pycontrol_mujoco_test_mujoco_TestMuJoCo_test_ball_pose.coverage" NAME="pytest for soccer_pycontrol.mujoco.test_mujoco.TestMuJoCo.test_ball_pose Coverage Results" MODIFIED="1762904554737" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_test_pybullet_TestPybullet_test_bez_motor_range_single.coverage" NAME="pytest for test.test_pybullet.TestPybullet.test_bez_motor_range_single Coverage Results" MODIFIED="1762820898447" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_walk_ros_TestPybullet_test_walk_ros_local.coverage" NAME="pytest for test_walk_ros.TestPybullet.test_walk_ros_local Coverage Results" MODIFIED="1740861410910" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_test_mujoco_TestMuJoCo_test_ready__1_.coverage" NAME="pytest for test.test_mujoco.TestMuJoCo.test_ready (1) Coverage Results" MODIFIED="1762908605825" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_test_mujoco_TestMuJoCo_test_ready.coverage" NAME="pytest for test.test_mujoco.TestMuJoCo.test_ready Coverage Results" MODIFIED="1763165747364" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_test_pybullet_TestPybullet_test_bez_motor_range.coverage" NAME="pytest for test.test_pybullet.TestPybullet.test_bez_motor_range Coverage Results" MODIFIED="1757184857801" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_soccer_pycontrol_test_mujoco_TestMuJoCo_test_ready.coverage" NAME="pytest for soccer_pycontrol.test_mujoco.TestMuJoCo.test_ready Coverage Results" MODIFIED="1762908792810" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_trajectory_test_trajectory_sim.coverage" NAME="pytest for test_trajectory.test_trajectory_sim Coverage Results" MODIFIED="1752673018157" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_trajectories/test" />
     <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_placo_TestPlaco_test_bez1_ready.coverage" NAME="pytest for test_placo.TestPlaco.test_bez1_ready Coverage Results" MODIFIED="1740859465979" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_soccer_pycontrol_mujoco_test_pybullet_TestPybullet_test_walk_rand.coverage" NAME="pytest for soccer_pycontrol.mujoco.test_pybullet.TestPybullet.test_walk_rand Coverage Results" MODIFIED="1762890990946" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_soccer_pycontrol_mujoco_test_pybullet_TestPybullet_test_bez_motor_range.coverage" NAME="pytest for soccer_pycontrol.mujoco.test_pybullet.TestPybullet.test_bez_motor_range Coverage Results" MODIFIED="1762819577794" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_soccer_pycontrol_mujoco_test_pybullet_TestPybullet_test_walk_goal.coverage" NAME="pytest for soccer_pycontrol.mujoco.test_pybullet.TestPybullet.test_walk_goal Coverage Results" MODIFIED="1762891187812" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_fsdfsd_test_mujoco_TestMuJoCo_test_ready.coverage" NAME="pytest for fsdfsd.test_mujoco.TestMuJoCo.test_ready Coverage Results" MODIFIED="1762908533112" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_soccer_pycontrol_mujoco_test_pybullet_TestPybullet_test_imu.coverage" NAME="pytest for soccer_pycontrol.mujoco.test_pybullet.TestPybullet.test_imu Coverage Results" MODIFIED="1762820109249" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_test_mujoco_TestMuJoCo_test_cam.coverage" NAME="pytest for test.test_mujoco.TestMuJoCo.test_cam Coverage Results" MODIFIED="1763160698311" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_perception_TestSensors_test_camera_image_capture.coverage" NAME="pytest for test_perception.TestSensors.test_camera_image_capture Coverage Results" MODIFIED="1740863541479" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_soccer_pycontrol_model_test_mujoco_TestMuJoCo_test_ready.coverage" NAME="pytest for test.test_mujoco.TestMuJoCo.test_ready Coverage Results" MODIFIED="1762908924845" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_test_object_detection_TestObjectDetection_test_object_detection__1_.coverage" NAME="pytest for test.test_object_detection.TestObjectDetection.test_object_detection (1) Coverage Results" MODIFIED="1762995015225" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_object_localization_TestObjectLocalization_test_fieldline_detection_vid.coverage" NAME="pytest for test_object_localization.TestObjectLocalization.test_fieldline_detection_vid Coverage Results" MODIFIED="1733177322454" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_perception/soccer_object_localization/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_soccer_pycontrol_mujoco_test_pybullet_TestPybullet_test_ready.coverage" NAME="pytest for soccer_pycontrol.mujoco.test_pybullet.TestPybullet.test_ready Coverage Results" MODIFIED="1762891488124" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_test_mujoco_TestMuJoCo_test_on.coverage" NAME="pytest for test.test_mujoco.TestMuJoCo.test_on Coverage Results" MODIFIED="1763358876745" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_soccer_pycontrol_mujoco_test_mujoco_TestPybullet_test_imu.coverage" NAME="pytest for soccer_pycontrol.mujoco.test_mujoco.TestPybullet.test_imu Coverage Results" MODIFIED="1762897415784" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_test_mujoco_TestMuJoCo_test_obj_det.coverage" NAME="pytest for test.test_mujoco.TestMuJoCo.test_obj_det Coverage Results" MODIFIED="1763072337677" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_pybullet_TestPybullet_test_bez_motor_range.coverage" NAME="pytest for test_pybullet.TestPybullet.test_bez_motor_range Coverage Results" MODIFIED="1752604970095" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
     <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_walk_ros_TestPybullet_test_ready_ros_local.coverage" NAME="pytest for test_walk_ros.TestPybullet.test_ready_ros_local Coverage Results" MODIFIED="1752675216881" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
-    <SUITE FILE_PATH="coverage/soccerbot$ff.coverage" NAME="ff Coverage Results" MODIFIED="1751752072053" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_hardware/soccer_firmware_interface/soccer_firmware_interface" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_soccer_pycontrol_mujoco_test_mujoco_TestPybullet_test_ready.coverage" NAME="pytest for soccer_pycontrol.mujoco.test_mujoco.TestPybullet.test_ready Coverage Results" MODIFIED="1762897589631" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_soccer_pycontrol_mujoco_test_mujoco_TestMuJoCo_test_walk.coverage" NAME="pytest for soccer_pycontrol.model.test_mujoco.TestMuJoCo.test_walk Coverage Results" MODIFIED="1762908213871" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_test_mujoco_TestMuJoCo_test_bez_motor_range_single.coverage" NAME="pytest for test.test_mujoco.TestMuJoCo.test_bez_motor_range_single Coverage Results" MODIFIED="1762989057541" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_trajectory_test_traj_ros.coverage" NAME="pytest for test_trajectory.test_traj_ros Coverage Results" MODIFIED="1752674998164" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_trajectories/test" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_placo_TestPlaco_test_bez_motor_range_single.coverage" NAME="pytest for test_placo.TestPlaco.test_bez_motor_range_single Coverage Results" MODIFIED="1733523977555" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_soccer_pycontrol_mujoco_test_pybullet_TestPybullet_test_bez_motor_range_single.coverage" NAME="pytest for soccer_pycontrol.mujoco.test_pybullet.TestPybullet.test_bez_motor_range_single Coverage Results" MODIFIED="1762822428163" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_soccer_pycontrol_mujoco_test_mujoco_TestPybullet_test_bez_motor_range_single.coverage" NAME="pytest for soccer_pycontrol.mujoco.test_mujoco.TestPybullet.test_bez_motor_range_single Coverage Results" MODIFIED="1762897433275" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_soccer_pycontrol_mujoco_test_pybullet_TestPybullet_test_bez1_start_stop.coverage" NAME="pytest for soccer_pycontrol.mujoco.test_pybullet.TestPybullet.test_bez1_start_stop Coverage Results" MODIFIED="1762891508948" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_test_mujoco_TestMuJoCo_test_ready__2_.coverage" NAME="pytest for test.test_mujoco.TestMuJoCo.test_ready Coverage Results" MODIFIED="1762908477174" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_firmware_interface_test_firmware_interface_single_motor_range.coverage" NAME="pytest for test_firmware_interface.test_firmware_interface_single_motor_range Coverage Results" MODIFIED="1752766730170" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_hardware/soccer_firmware_interface/test" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_object_detection_TestObjectDetection_test_object_detection_vid.coverage" NAME="pytest for test_object_detection.TestObjectDetection.test_object_detection_vid Coverage Results" MODIFIED="1733177240556" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_perception/soccer_object_detection/test" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_walk_ros_TestPybullet_test_walk_ros_webots.coverage" NAME="pytest for test_walk_ros.TestPybullet.test_walk_ros_webots Coverage Results" MODIFIED="1733529136484" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
     <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_placo_TestPlaco_test_bez1.coverage" NAME="pytest for test_placo.TestPlaco.test_bez1 Coverage Results" MODIFIED="1740863112244" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_test_mujoco_TestMuJoCo_test_imu.coverage" NAME="pytest for test.test_mujoco.TestMuJoCo.test_imu Coverage Results" MODIFIED="1763161018397" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_pybullet_camera_TestPybullet_test_cam.coverage" NAME="pytest for test_pybullet_camera.TestPybullet.test_cam Coverage Results" MODIFIED="1733341716195" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_perception/soccer_object_detection/test" />
-    <SUITE FILE_PATH="coverage/soccerbot$simulator.coverage" NAME="simulator Coverage Results" MODIFIED="1762630327398" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/soccer_pycontrol/mujoco" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_soccer_pycontrol_mujoco_test_pybullet_TestPybullet_test_walk.coverage" NAME="pytest for soccer_pycontrol.mujoco.test_mujoco.TestPybullet.test_walk Coverage Results" MODIFIED="1762897560103" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_pybullet_TestPybullet_test_imu.coverage" NAME="pytest for test_pybullet.TestPybullet.test_imu Coverage Results" MODIFIED="1740863652365" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_trajectory_TestTrajectory_test_trajectory.coverage" NAME="pytest for test_trajectory.TestTrajectory.test_trajectory Coverage Results" MODIFIED="1733176109562" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_trajectories/test" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_placo_TestPlaco_test_bez1_start_stop.coverage" NAME="pytest for test_placo.TestPlaco.test_bez1_start_stop Coverage Results" MODIFIED="1740859429993" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_soccer_pycontrol_mujoco_test_mujoco_TestMuJoCo_test_imu.coverage" NAME="pytest for soccer_pycontrol.mujoco.test_mujoco.TestMuJoCo.test_imu Coverage Results" MODIFIED="1762904355188" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_test_mujoco_TestMujoco_test_imu.coverage" NAME="pytest for test.test_mujoco.TestMujoco.test_imu Coverage Results" MODIFIED="1758397457077" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_pybullet_TestPybullet_test_cam.coverage" NAME="pytest for test_pybullet.TestPybullet.test_cam Coverage Results" MODIFIED="1733339971514" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_soccer_pycontrol_mujoco_test_mujoco_TestPybullet_test_bez1_auto.coverage" NAME="pytest for soccer_pycontrol.mujoco.test_mujoco.TestPybullet.test_bez1_auto Coverage Results" MODIFIED="1762897612880" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_test_mujoco_TestMuJoCo_test_walk.coverage" NAME="pytest for test.test_mujoco.TestMuJoCo.test_walk Coverage Results" MODIFIED="1763160949836" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_soccer_pycontrol_test_placo_TestPlaco_test_bez1_ready.coverage" NAME="pytest for soccer_pycontrol.test_placo.TestPlaco.test_bez1_ready Coverage Results" MODIFIED="1762822569571" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_test_pybullet_TestPybullet_test_bez_motor_range.coverage" NAME="pytest for test.test_pybullet.TestPybullet.test_bez_motor_range Coverage Results" MODIFIED="1757184857801" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_soccer_pycontrol_mujoco_test_mujoco_TestPybullet_test_walk_rand.coverage" NAME="pytest for soccer_pycontrol.mujoco.test_mujoco.TestPybullet.test_walk_rand Coverage Results" MODIFIED="1762897833964" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_test_mujoco_TestMuJoCo_test_bez1_auto.coverage" NAME="pytest for test.test_mujoco.TestMuJoCo.test_bez1_auto Coverage Results" MODIFIED="1762984622677" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_walk_ros_TestPybullet_test_camera.coverage" NAME="pytest for test_walk_ros.TestPybullet.test_camera Coverage Results" MODIFIED="1737271899804" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_soccer_pycontrol_mujoco_test_pybullet_TestPybullet_test_ready.coverage" NAME="pytest for soccer_pycontrol.mujoco.test_pybullet.TestPybullet.test_ready Coverage Results" MODIFIED="1762891488124" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_test_mujoco_TestMuJoCo_test_full.coverage" NAME="pytest for test.test_mujoco.TestMuJoCo.test_full Coverage Results" MODIFIED="1763160174896" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_soccer_pycontrol_mujoco_test_pybullet_TestPybullet_test_bez_motor_range_single.coverage" NAME="pytest for soccer_pycontrol.mujoco.test_pybullet.TestPybullet.test_bez_motor_range_single Coverage Results" MODIFIED="1762822428163" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_in_test_pybullet_py.coverage" NAME="pytest in test_pybullet.py Coverage Results" MODIFIED="1762817070252" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_walk_ros_TestPybullet_test_walk_ros_webots.coverage" NAME="pytest for test_walk_ros.TestPybullet.test_walk_ros_webots Coverage Results" MODIFIED="1733529136484" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_test_mujoco_TestMuJoCo_test_ready__1_.coverage" NAME="pytest for test.test_mujoco.TestMuJoCo.test_ready (1) Coverage Results" MODIFIED="1762908605825" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/soccerbot$fsf.coverage" NAME="fsf Coverage Results" MODIFIED="1733336572304" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/src/soccer_pycontrol/pybullet_usage" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_soccer_pycontrol_mujoco_test_pybullet_TestPybullet_test_imu.coverage" NAME="pytest for soccer_pycontrol.mujoco.test_pybullet.TestPybullet.test_imu Coverage Results" MODIFIED="1762820109249" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/soccerbot$motor_control.coverage" NAME="motor_control Coverage Results" MODIFIED="1733514993668" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/src/soccer_pycontrol/model" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_soccer_pycontrol_mujoco_test_pybullet_TestPybullet_test_foot_sensor.coverage" NAME="pytest for soccer_pycontrol.mujoco.test_pybullet.TestPybullet.test_foot_sensor Coverage Results" MODIFIED="1762633681407" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_test_mujoco_TestMuJoCo_test_obj_det.coverage" NAME="pytest for test.test_mujoco.TestMuJoCo.test_obj_det Coverage Results" MODIFIED="1763072337677" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_soccer_pycontrol_mujoco_test_pybullet_TestPybullet_test_walk_rand.coverage" NAME="pytest for soccer_pycontrol.mujoco.test_pybullet.TestPybullet.test_walk_rand Coverage Results" MODIFIED="1762890990946" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_pybullet_camera_TestPybullet_test_ball_localization2.coverage" NAME="pytest for test_pybullet_camera.TestPybullet.test_ball_localization2 Coverage Results" MODIFIED="1733348082263" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_perception/soccer_object_detection/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_soccer_pycontrol_mujoco_test_mujoco_TestPybullet_test_ready.coverage" NAME="pytest for soccer_pycontrol.mujoco.test_mujoco.TestPybullet.test_ready Coverage Results" MODIFIED="1762897589631" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_trajectory_test_traj_ros.coverage" NAME="pytest for test_trajectory.test_traj_ros Coverage Results" MODIFIED="1752674998164" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_trajectories/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_soccer_pycontrol_mujoco_test_pybullet_TestPybullet_test_bez1_auto.coverage" NAME="pytest for soccer_pycontrol.mujoco.test_pybullet.TestPybullet.test_bez1_auto Coverage Results" MODIFIED="1762886726908" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_soccer_pycontrol_mujoco_test_mujoco_TestMuJoCo_test_walk.coverage" NAME="pytest for soccer_pycontrol.model.test_mujoco.TestMuJoCo.test_walk Coverage Results" MODIFIED="1762908213871" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_camera_TestCamera_test_camera_find_camera_coordinate.coverage" NAME="pytest for test_camera.TestCamera.test_camera_find_camera_coordinate Coverage Results" MODIFIED="1733345010797" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_perception/soccer_object_detection/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$bez.coverage" NAME="bez Coverage Results" MODIFIED="1762988121101" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/soccer_pycontrol/model" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_test_mujoco_TestMuJoCo_test_ready.coverage" NAME="pytest for test.test_mujoco.TestMuJoCo.test_ready Coverage Results" MODIFIED="1763334886868" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_walk_ros_TestPybullet_test_camera.coverage" NAME="pytest for test_walk_ros.TestPybullet.test_camera Coverage Results" MODIFIED="1737271899804" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$simulator.coverage" NAME="simulator Coverage Results" MODIFIED="1762630327398" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/soccer_pycontrol/mujoco" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_soccer_pycontrol_mujoco_test_mujoco_TestPybullet_test_bez_motor_range_single.coverage" NAME="pytest for soccer_pycontrol.mujoco.test_mujoco.TestPybullet.test_bez_motor_range_single Coverage Results" MODIFIED="1762897433275" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_test_mujoco_TestMuJoCo_test_walk.coverage" NAME="pytest for test.test_mujoco.TestMuJoCo.test_walk Coverage Results" MODIFIED="1763245260221" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_test_mujoco_TestMujoco_test_imu.coverage" NAME="pytest for test.test_mujoco.TestMujoco.test_imu Coverage Results" MODIFIED="1758397457077" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_test_mujoco_TestMuJoCo_test_full.coverage" NAME="pytest for test.test_mujoco.TestMuJoCo.test_full Coverage Results" MODIFIED="1763359375080" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_soccer_pycontrol_mujoco_test_mujoco_TestMuJoCo_test_imu.coverage" NAME="pytest for soccer_pycontrol.mujoco.test_mujoco.TestMuJoCo.test_imu Coverage Results" MODIFIED="1762904355188" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_soccer_pycontrol_test_pybullet_TestPybullet_test_bez_motor_range_single.coverage" NAME="pytest for soccer_pycontrol.test_pybullet.TestPybullet.test_bez_motor_range_single Coverage Results" MODIFIED="1762822418020" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_walk_ros_TestPybullet_test_walk_ros_local.coverage" NAME="pytest for test_walk_ros.TestPybullet.test_walk_ros_local Coverage Results" MODIFIED="1740861410910" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_test_pybullet_TestPybullet_test_bez_motor_range_single.coverage" NAME="pytest for test.test_pybullet.TestPybullet.test_bez_motor_range_single Coverage Results" MODIFIED="1762820898447" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/soccerbot$pytest_for_soccer_object_detection_test_object_detection_TestObjectDetection_test_object_detection.coverage" NAME="pytest for soccer_object_detection.test_object_detection.TestObjectDetection.test_object_detection Coverage Results" MODIFIED="1762995953771" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_walk_ros_TestPybullet_test_camera2.coverage" NAME="pytest for test_walk_ros.TestPybullet.test_camera2 Coverage Results" MODIFIED="1737261475852" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_perception_TestSensors_test_camera_image_capture.coverage" NAME="pytest for test_perception.TestSensors.test_camera_image_capture Coverage Results" MODIFIED="1740863541479" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_soccer_pycontrol_test_pybullet_TestPybullet_test_bez_motor_range_single.coverage" NAME="pytest for soccer_pycontrol.test_pybullet.TestPybullet.test_bez_motor_range_single Coverage Results" MODIFIED="1762822418020" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_soccer_pycontrol_mujoco_test_mujoco_TestPybullet_test_imu.coverage" NAME="pytest for soccer_pycontrol.mujoco.test_mujoco.TestPybullet.test_imu Coverage Results" MODIFIED="1762897415784" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_placo_TestPlaco_test_camera.coverage" NAME="pytest for test_placo.TestPlaco.test_camera Coverage Results" MODIFIED="1752611314987" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_soccer_pycontrol_mujoco_test_pybullet_TestPybullet_test_bez1_auto.coverage" NAME="pytest for soccer_pycontrol.mujoco.test_pybullet.TestPybullet.test_bez1_auto Coverage Results" MODIFIED="1762886726908" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_placo_TestPlaco_test_bez1_walk.coverage" NAME="pytest for test_placo.TestPlaco.test_bez1_walk Coverage Results" MODIFIED="1752762740137" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_soccer_pycontrol_test_mujoco_TestMuJoCo_test_ready.coverage" NAME="pytest for soccer_pycontrol.test_mujoco.TestMuJoCo.test_ready Coverage Results" MODIFIED="1762908792810" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_object_localization_TestObjectLocalization_test_fieldline_detection_vid.coverage" NAME="pytest for test_object_localization.TestObjectLocalization.test_fieldline_detection_vid Coverage Results" MODIFIED="1733177322454" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_perception/soccer_object_localization/test" />
-    <SUITE FILE_PATH="coverage/soccerbot$convert_stl2dae.coverage" NAME="convert_stl2dae Coverage Results" MODIFIED="1752834676629" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_description/assembly_description/meshes/simplified" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_firmware_interface_test_firmware_interface.coverage" NAME="pytest for test_firmware_interface.test_firmware_interface Coverage Results" MODIFIED="1752880780199" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_hardware/soccer_firmware_interface/test" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_pybullet_camera_TestPybullet_test_ball_localization.coverage" NAME="pytest for test_pybullet_camera.TestPybullet.test_ball_localization Coverage Results" MODIFIED="1733348570876" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_perception/soccer_object_detection/test" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_pybullet_camera_TestPybullet_test_detection.coverage" NAME="pytest for test_pybullet_camera.TestPybullet.test_detection Coverage Results" MODIFIED="1733341814899" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_perception/soccer_object_detection/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_soccer_pycontrol_test_placo_TestPlaco_test_bez1_ready.coverage" NAME="pytest for soccer_pycontrol.test_placo.TestPlaco.test_bez1_ready Coverage Results" MODIFIED="1762822569571" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_test_placo_TestPlaco_test_bez1_walk.coverage" NAME="pytest for test.test_placo.TestPlaco.test_bez1_walk Coverage Results" MODIFIED="1757194145187" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_test_mujoco_TestMujoco_test_bez_motor_range.coverage" NAME="pytest for test.test_mujoco.TestMujoco.test_bez_motor_range Coverage Results" MODIFIED="1758397640065" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_placo_TestPlaco_test_bez_motor_range_single.coverage" NAME="pytest for test_placo.TestPlaco.test_bez_motor_range_single Coverage Results" MODIFIED="1733523977555" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_soccer_pycontrol_mujoco_test_mujoco_TestPybullet_test_walk_rand.coverage" NAME="pytest for soccer_pycontrol.mujoco.test_mujoco.TestPybullet.test_walk_rand Coverage Results" MODIFIED="1762897833964" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_placo_TestPlaco_test_bez1_walk.coverage" NAME="pytest for test_placo.TestPlaco.test_bez1_walk Coverage Results" MODIFIED="1752762740137" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_test_mujoco_TestMuJoCo_test_bez1_auto.coverage" NAME="pytest for test.test_mujoco.TestMuJoCo.test_bez1_auto Coverage Results" MODIFIED="1762984622677" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_soccer_pycontrol_mujoco_test_pybullet_TestPybullet_test_foot_sensor.coverage" NAME="pytest for soccer_pycontrol.mujoco.test_pybullet.TestPybullet.test_foot_sensor Coverage Results" MODIFIED="1762633681407" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_test_mujoco_TestMuJoCo_test_cam.coverage" NAME="pytest for test.test_mujoco.TestMuJoCo.test_cam Coverage Results" MODIFIED="1763185550615" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_test_mujoco_TestMuJoCo_test_walk_rand.coverage" NAME="pytest for test.test_mujoco.TestMuJoCo.test_walk_rand Coverage Results" MODIFIED="1763359043723" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_soccer_pycontrol_mujoco_test_mujoco_TestMuJoCo_test_bez1_auto.coverage" NAME="pytest for soccer_pycontrol.mujoco.test_mujoco.TestMuJoCo.test_bez1_auto Coverage Results" MODIFIED="1762906492182" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_firmware_interface_test_firmware_interface.coverage" NAME="pytest for test_firmware_interface.test_firmware_interface Coverage Results" MODIFIED="1752880780199" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_hardware/soccer_firmware_interface/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_pybullet_TestPybullet_test_imu.coverage" NAME="pytest for test_pybullet.TestPybullet.test_imu Coverage Results" MODIFIED="1740863652365" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_placo_TestPlaco_test_bez1_start_stop.coverage" NAME="pytest for test_placo.TestPlaco.test_bez1_start_stop Coverage Results" MODIFIED="1740859429993" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_placo_TestPlaco_test_camera.coverage" NAME="pytest for test_placo.TestPlaco.test_camera Coverage Results" MODIFIED="1752611314987" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
     <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_object_detection_TestObjectDetection_test_object_detection.coverage" NAME="pytest for test_object_detection.TestObjectDetection.test_object_detection Coverage Results" MODIFIED="1733338878669" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_perception/soccer_object_detection/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_pybullet_camera_TestPybullet_test_ball_localization.coverage" NAME="pytest for test_pybullet_camera.TestPybullet.test_ball_localization Coverage Results" MODIFIED="1733348570876" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_perception/soccer_object_detection/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_soccer_pycontrol_mujoco_test_mujoco_TestPybullet_test_bez1_auto.coverage" NAME="pytest for soccer_pycontrol.mujoco.test_mujoco.TestPybullet.test_bez1_auto Coverage Results" MODIFIED="1762897612880" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_pybullet_TestPybullet_test_bez_motor_range_single.coverage" NAME="pytest for test_pybullet.TestPybullet.test_bez_motor_range_single Coverage Results" MODIFIED="1752766699750" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_soccer_pycontrol_mujoco_test_pybullet_TestPybullet_test_bez_motor_range.coverage" NAME="pytest for soccer_pycontrol.mujoco.test_pybullet.TestPybullet.test_bez_motor_range Coverage Results" MODIFIED="1762819577794" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_test_mujoco_TestMuJoCo_test_imu.coverage" NAME="pytest for test.test_mujoco.TestMuJoCo.test_imu Coverage Results" MODIFIED="1763348708276" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/soccerbot$convert_stl2dae.coverage" NAME="convert_stl2dae Coverage Results" MODIFIED="1752834676629" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_description/assembly_description/meshes/simplified" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_tests_test_mujoco_TestMuJoCo_test_ready.coverage" NAME="pytest for tests.test_mujoco.TestMuJoCo.test_ready Coverage Results" MODIFIED="1762908719226" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_trajectory_TestTrajectory_test_trajectory.coverage" NAME="pytest for test_trajectory.TestTrajectory.test_trajectory Coverage Results" MODIFIED="1733176109562" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_trajectories/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_pybullet_TestPybullet_test_cam.coverage" NAME="pytest for test_pybullet.TestPybullet.test_cam Coverage Results" MODIFIED="1733339971514" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_test_mujoco_TestMuJoCo_test_bez_motor_range_single.coverage" NAME="pytest for test.test_mujoco.TestMuJoCo.test_bez_motor_range_single Coverage Results" MODIFIED="1762989057541" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_soccer_pycontrol_mujoco_test_mujoco_TestMuJoCo_test_ball_pose.coverage" NAME="pytest for soccer_pycontrol.mujoco.test_mujoco.TestMuJoCo.test_ball_pose Coverage Results" MODIFIED="1762904554737" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/soccerbot$pytest_for_soccer_pycontrol_test_mujoco_TestMuJoCo_test_imu.coverage" NAME="pytest for soccer_pycontrol.test_mujoco.TestMuJoCo.test_imu Coverage Results" MODIFIED="1762908890189" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_soccer_pycontrol_model_test_mujoco_TestMuJoCo_test_ready.coverage" NAME="pytest for test.test_mujoco.TestMuJoCo.test_ready Coverage Results" MODIFIED="1762908924845" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_soccer_pycontrol_mujoco_test_pybullet_TestPybullet_test_walk_goal.coverage" NAME="pytest for soccer_pycontrol.mujoco.test_pybullet.TestPybullet.test_walk_goal Coverage Results" MODIFIED="1762891187812" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_test_mujoco_TestMuJoCo_test_ready__2_.coverage" NAME="pytest for test.test_mujoco.TestMuJoCo.test_ready Coverage Results" MODIFIED="1762908477174" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_test_object_detection_TestObjectDetection_test_object_detection.coverage" NAME="pytest for test.test_object_detection.TestObjectDetection.test_object_detection Coverage Results" MODIFIED="1762994985011" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_object_detection_TestObjectDetection_test_object_detection_vid.coverage" NAME="pytest for test_object_detection.TestObjectDetection.test_object_detection_vid Coverage Results" MODIFIED="1733177240556" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_perception/soccer_object_detection/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$ff.coverage" NAME="ff Coverage Results" MODIFIED="1751752072053" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_hardware/soccer_firmware_interface/soccer_firmware_interface" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_pybullet_camera_TestPybullet_test_detection.coverage" NAME="pytest for test_pybullet_camera.TestPybullet.test_detection Coverage Results" MODIFIED="1733341814899" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_perception/soccer_object_detection/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_soccer_pycontrol_mujoco_test_pybullet_TestPybullet_test_walk.coverage" NAME="pytest for soccer_pycontrol.mujoco.test_mujoco.TestPybullet.test_walk Coverage Results" MODIFIED="1762897560103" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_pybullet_camera_TestPybullet_test_cam.coverage" NAME="pytest for test_pybullet_camera.TestPybullet.test_cam Coverage Results" MODIFIED="1733341716195" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_perception/soccer_object_detection/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_test_firmware_interface_test_firmware_interface_single_motor_range.coverage" NAME="pytest for test_firmware_interface.test_firmware_interface_single_motor_range Coverage Results" MODIFIED="1752766730170" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/soccer_hardware/soccer_firmware_interface/test" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_fsdfsd_test_mujoco_TestMuJoCo_test_ready.coverage" NAME="pytest for fsdfsd.test_mujoco.TestMuJoCo.test_ready Coverage Results" MODIFIED="1762908533112" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/soccerbot$dgfs.coverage" NAME="dgfs Coverage Results" MODIFIED="1730141845344" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/tools/setup" />
+    <SUITE FILE_PATH="coverage/soccerbot$pytest_for_soccer_pycontrol_mujoco_test_pybullet_TestPybullet_test_bez1_start_stop.coverage" NAME="pytest for soccer_pycontrol.mujoco.test_pybullet.TestPybullet.test_bez1_start_stop Coverage Results" MODIFIED="1762891508948" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

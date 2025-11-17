@@ -1,0 +1,90 @@
+cd ~/ros2_ws/src/mujoco_playground/mujoco_playground/_src/locomotion/bez2
+ mjx-testspeed --mjcf=xmls/scene_mjx_feetonly_flat_terrain.xml --base_path=.
+
+
+
+ berk
+  Total JIT time: 31.45 s
+ Total simulation time: 1.16 s
+ Total steps per second: 880664
+ Total realtime factor: 1761.33 x
+ Total time per step: 1.14 µs
+
+
+ g1
+ Total JIT time: 49.57 s
+ Total simulation time: 1.84 s
+ Total steps per second: 556957
+ Total realtime factor: 1113.91 x
+ Total time per step: 1.80 µs
+
+ bez2 only head
+
+ Total JIT time: 21.88 s
+ Total simulation time: 5.00 s
+ Total steps per second: 204634
+ Total realtime factor: 409.27 x
+ Total time per step: 4.89 µs
+
+bez2 only feet  box
+ Total JIT time: 21.48 s
+ Total simulation time: 0.99 s
+ Total steps per second: 1038202
+ Total realtime factor: 2076.40 x
+ Total time per step: 0.96 µs
+
+ bez2  only feet mesh
+   Total JIT time: 31.45 s
+ Total simulation time: 2.58 s
+ Total steps per second: 397097
+ Total realtime factor: 794.19 x
+ Total time per step: 2.52 µ
+
+  bez2  only feet convex mesh
+   Total JIT time: 33.26 s
+ Total simulation time: 1.29 s
+ Total steps per second: 791963
+ Total realtime factor: 1583.93 x
+ Total time per step: 1.26 µs
+
+ go1 feet only
+
+ Total JIT time: 16.25 s
+ Total simulation time: 0.64 s
+ Total steps per second: 1608187
+ Total realtime factor: 6432.75 x
+ Total time per step: 0.62 µs
+
+ go1 scene_mjx_fullcollisions_flat_terrain.xml
+
+  Total JIT time: 32.26 s
+ Total simulation time: 3.62 s
+ Total steps per second: 282638
+ Total realtime factor: 1130.55 x
+ Total time per step: 3.54 µs
+
+go1 scene_mjx_flat_terrain.xml
+
+Total JIT time: 20.63 s
+ Total simulation time: 1.23 s
+ Total steps per second: 835247
+ Total realtime factor: 3340.99 x
+ Total time per step: 1.20 µs
+
+ op3 feet only
+
+ Total JIT time: 33.70 s
+ Total simulation time: 1.38 s
+ Total steps per second: 740388
+ Total realtime factor: 2961.55 x
+ Total time per step: 1.35 µs
+
+bez2 dof 20
+
+time to jit: 0:02:13.416952
+time to train: 0:53:36.504378
+
+bez2 dof 12
+
+time to jit: 0:02:13.416952
+time to train: 0:53:36.504378

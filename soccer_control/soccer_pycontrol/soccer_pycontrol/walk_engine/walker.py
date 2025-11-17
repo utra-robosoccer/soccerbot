@@ -32,7 +32,7 @@ class Walker:
             Kd=0,
             Ki=-0.03,
             setpoint=2.4,
-            output_limits=(0.4, 1.3),
+            output_limits=(0.1, 1.3),
         )
 
     def reset_walk(self):
@@ -42,13 +42,13 @@ class Walker:
     # TODO could make input a vector
 
     def walk_loop(self, target_goal=[0, 0], ball_pixel=[0, 0]):  # TODO set default to something better
-        self.foot_step_planner.plan_steps(self.t)
-        self.bez.motor_control.set_angles_from_placo(self.foot_step_planner.robot)
+        # self.foot_step_planner.plan_steps(self.t)
+        # self.bez.motor_control.set_angles_from_placo(self.foot_step_planner.robot)
 
-        if self.imu_feedback_enabled and self.bez.sensors.imu_ready:
-            [_, pitch, roll] = self.bez.sensors.get_imu()
-            # print(pitch,"  ", roll)
-            self.stabilize_walk(pitch, roll)
+        # if self.imu_feedback_enabled and self.bez.sensors.imu_ready:
+        #     [_, pitch, roll] = self.bez.sensors.get_imu()
+        #     # print(pitch,"  ", roll)
+        #     self.stabilize_walk(pitch, roll)
 
         # self.foot_step_planner.head_movement(target_goal)
         if ball_pixel != self.last_ball:
@@ -57,7 +57,7 @@ class Walker:
             self.last_ball = ball_pixel
             self.ball_dx = self.ball_x_pid.update(3.2 - ball_pixel[0] / 100.0)
             self.ball_dy = self.ball_y_pid.update(ball_pixel[1] / 100.0)
-        # print(f"{ball_pixel}, {self.ball_dx}, {self.ball_dy}")
+        print(f"{ball_pixel}, {self.ball_dx}, {self.ball_dy}")
         self.bez.motor_control.set_head_target_angles([-self.ball_dx, self.ball_dy])
         # self.bez.motor_control.configuration["head_pitch"] = self.ball_dy
 
@@ -92,7 +92,8 @@ class Walker:
         # self.bez.motor_control.set_left_leg_target_angles([0, 0, 0, 0, 0, 0])
         # self.bez.motor_control.set_head_target_angles(
         #     [0, 0])
-        self.bez.motor_control.set_motor()
+
+        self.bez.motor_control.set_motor_head()
 
         self.t = self.foot_step_planner.step(self.t)
 

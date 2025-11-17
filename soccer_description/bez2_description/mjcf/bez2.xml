@@ -14,7 +14,7 @@
             <joint damping="1.084" armature="0.045" frictionloss="0.03"/>
         </default>
     </default>
-	<option noslip_iterations="1" cone="elliptic" timestep="0.0025"></option>
+	<option noslip_iterations="1" cone="elliptic" timestep="0.002"></option>
 <!--    <option noslip_iterations="1" cone="elliptic" impratio="10"></option>-->
 
   <asset>
@@ -163,6 +163,8 @@
   <sensor>
         <gyro site="torso" name="gyro" />
         <accelerometer site="torso" name="accelerometer" />
+              <velocimeter site="torso" name="local_linvel"/>
+
     </sensor>
   <actuator>
         <position class="xm430" name="head_yaw" joint="head_yaw" ctrlrange="-1.5708 1.5708" />

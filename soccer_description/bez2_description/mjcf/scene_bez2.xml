@@ -23,16 +23,51 @@
 		<light pos="0 0 3.5" dir="0 0 -1" directional="true"/>
 <!--		<geom name="floor" size="0 0 0.05" pos="0 0 0" type="plane" material="groundplane"/>-->
 <!--        <geom material="pitch" name="pitch" pos="0 0 0" size="5 3 1" type="plane"/>-->
-        <geom material="pitch" name="pitch" pos="0 0 0" size="8 5.5 1" type="plane"/>
+        <geom material="pitch" name="pitch" pos="0 0 0" size="8 5.5 1" type="plane" contype="1" conaffinity="0"/>
 
         <frame pos="0 0 0">
           <attach model="bez2" body="torso_2023" prefix=""/>
         </frame>
 
-        <frame pos="2 0 0">
+        <frame pos="2 1 0">
           <attach model="ball" body="ball" prefix=""/>
         </frame>
 	</worldbody>
-	<option noslip_iterations="1" cone="elliptic" timestep="0.0025"></option>
+	<option noslip_iterations="1" cone="elliptic" timestep="0.002"></option>
+<keyframe>
+<!--      <key name="home"-->
+<!--      qpos="-->
+<!--        0.01006381 -0.00524273  0.3554218   0.99986568  0.00176925  0.01470567-->
+<!-- -0.0070161  -0.02879865  0.06594161  0.88049179 -1.53157813  0.6816981-->
+<!-- -0.07176462 -0.01780979  0.05104029  0.86242893 -1.540901    0.70639566-->
+<!-- -0.05184008-->
 
+<!--    "-->
+<!--    ctrl="-->
+
+<!--   -0.02879865  0.06594161  0.88049179 -1.53157813  0.6816981-->
+<!-- -0.07176462 -0.01780979  0.05104029  0.86242893 -1.540901    0.70639566-->
+<!-- -0.05184008-->
+<!--    "/>-->
+<!--"/>  </keyframe>-->
+    <key name="home"
+      qpos="
+        0.00797 -0.00160 0.35488
+
+        0.99990 0.00099 0.00449 0.01343
+
+        -0.00038 0.00058
+        -0.44675 0.00074 2.50858
+        -0.02901 0.06566 0.87410 -1.54022 0.67634 -0.07002
+        -0.44962 -0.00074 2.50967
+        -0.01830 0.04949 0.85711 -1.54784 0.69839 -0.05164
+
+    "
+    ctrl="
+        -0.00038 0.00058
+        -0.44675 0.00074 2.50858
+        -0.02901 0.06566 0.87410 -1.54022 0.67634 -0.07002
+        -0.44962 -0.00074 2.50967
+        -0.01830 0.04949 0.85711 -1.54784 0.69839 -0.05164
+    "/>  </keyframe>
 </mujoco>
