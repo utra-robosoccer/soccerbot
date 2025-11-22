@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import enum
+import time
 
 import numpy as np
 import torch
@@ -59,6 +60,7 @@ class ObjectDetectionNode:
 
         self.camera = CameraCalculations()
         self.camera.reset_position()
+        self.ls = []
 
     def get_model_output(self, image: Mat) -> [Mat, BoundingBoxes]:
         # webots: 480x640x4pixels
@@ -73,9 +75,12 @@ class ObjectDetectionNode:
             img = img[..., ::-1]  # convert bgr to rgb
             img = img[max(0, h + 1) :, :]
             # 2. inference
-
+            start = time.time()
             results = self.model(img)
-
+            if len(self.ls) > 50:
+                self.ls.pop(0)
+            self.ls.append(time.time() - start)
+            print(np.array(self.ls).mean())
             # TODO should be a func
             bbs_msg = BoundingBoxes()
             id = 0

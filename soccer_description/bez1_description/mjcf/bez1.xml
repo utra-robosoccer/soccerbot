@@ -47,7 +47,7 @@
     <mesh name="right_calve" file="right_calve.stl" scale="1 1 1"/>
   </asset>
   <worldbody>
-    <body name="torso_2023">
+    <body name="torso">
       <freejoint name="root" />
       <site name="torso"  pos="-0.0 0 -0.04"/>
       <site name="trunk" pos="-0.0 0 -0.12" />

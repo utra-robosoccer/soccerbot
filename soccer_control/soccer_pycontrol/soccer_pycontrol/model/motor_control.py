@@ -193,6 +193,9 @@ class MotorControl:
             index.append(self.ctrl_dofs_to_index[name])
         return index
 
+    def set_all_angles(self, target_angles: np.ndarray) -> None:
+        self.configuration[:] = target_angles
+
     def set_head_target_angles(self, target_angles: np.ndarray) -> None:
         dof_idx = self.get_dof_indexes(["head_yaw", "head_pitch"])
         self.configuration[dof_idx] = target_angles

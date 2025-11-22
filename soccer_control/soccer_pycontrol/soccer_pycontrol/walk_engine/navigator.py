@@ -69,7 +69,7 @@ class Navigator:
             output_limits=(-1, 1),
         )
         self.last_ball = [0, 0]
-        self.error_tol = 0.03  # in m TODO add as a param and in the ros version
+        self.error_tol = 0.05  # in m TODO add as a param and in the ros version
 
         # joints
         # self.left_ankle_index = self.bez.motor_control.motor_names["left_ankle_roll"] # TODO fix
@@ -123,7 +123,7 @@ class Navigator:
 
         if (
             position_error(pose.position[:2], target_goal.position[:2]) > self.error_tol
-            # or abs(heading_error(target_goal.orientation_euler[0], pose.orientation_euler[0])) > self.error_tol
+            or abs(heading_error(target_goal.orientation_euler[0], pose.orientation_euler[0])) > self.error_tol
         ):  # self.bez.sensors.get_pose() #TODO about 20% or 40% error
             pose = (
                 self.bez.sensors.get_pose()

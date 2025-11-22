@@ -1,5 +1,6 @@
 from typing import List
 
+import numpy as np
 import rclpy
 from sensor_msgs.msg import JointState
 from soccer_pycontrol.model.motor_control import MotorControl, MotorData
@@ -24,6 +25,43 @@ class MotorControlROS(MotorControl):
 
         # TODo fix namespace
         self.pub_all_motor = self.node.create_publisher(JointState, ns + "joint_command", qos_profile=10)
+        self._joint_state_sub = self.node.create_subscription(
+            JointState, "joint_states", self._joint_state_callback, 1
+        )
+        self.joint_state = JointState()
+        self.joint_vel = [0] * 12
+        self.last_time = self.node.get_clock().now()
+        self.joint_angles_leg = None
+        self.last_joint_angles_leg = None
+
+        self.joint_state_ready = False
+
+    def _joint_state_callback(self, msg:JointState):
+
+        self.joint_state = msg
+        names = ["left_hip_yaw", "left_hip_roll", "left_hip_pitch", "left_knee", "left_ankle_pitch", "left_ankle_roll",
+                 "right_hip_yaw", "right_hip_roll", "right_hip_pitch", "right_knee", "right_ankle_pitch",
+                 "right_ankle_roll"]
+        self.joint_angles_leg = np.array([
+            self.joint_state.position[self.joint_state.name.index(name)]
+            for name in names
+        ], dtype=np.float32)
+        # if self.joint_angles_leg is None:
+        self.timestep = msg.header.stamp - self.last_time
+
+        if self.last_joint_angles_leg is not None:
+            self.joint_vel = (self.joint_angles_leg - self.last_joint_angles_leg) / self.timestep
+            self.joint_state_ready = True # TODO
+        self.last_joint_angles_leg = self.joint_angles_leg
+
+
+    def get_q_legs(self):
+        assert self.joint_angles_leg is not None
+        return self.joint_angles_leg
+
+
+    def get_qvel_legs(self):
+        return  self.joint_vel
 
     def set_motor(self) -> None:
         """

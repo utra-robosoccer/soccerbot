@@ -57,7 +57,7 @@ class Walker:
             self.last_ball = ball_pixel
             self.ball_dx = self.ball_x_pid.update(3.2 - ball_pixel[0] / 100.0)
             self.ball_dy = self.ball_y_pid.update(ball_pixel[1] / 100.0)
-        print(f"{ball_pixel}, {self.ball_dx}, {self.ball_dy}")
+        # print(f"{ball_pixel}, {self.ball_dx}, {self.ball_dy}")
         self.bez.motor_control.set_head_target_angles([-self.ball_dx, self.ball_dy])
         # self.bez.motor_control.configuration["head_pitch"] = self.ball_dy
 

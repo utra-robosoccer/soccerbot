@@ -137,7 +137,7 @@ class FirmwareInterface(Node):
                 motor_angle_radian = -motor_angle_radian
             j.name.append(motor_name)
 
-            j.position.append(motor_angle_radian)
+            j.position.append(motor_angle_radian) # TODO we need velocity
         self.joint_state_create_publisher.publish(j)
 
     def pub_imu(self, data):

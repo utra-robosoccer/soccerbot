@@ -48,42 +48,6 @@ class Sensors:
         t_mat = self.world.get_T_world_site("ball")
         return Transformation(matrix=t_mat)
 
-    # def get_camera_image(self):
-    #     """
-    #     Captures the image from the camera mounted on the robot
-    #     """
-    #     # Add more offsets later
-    #     camera_position = self.get_pose(link=2).position
-    #
-    #     # print(f"Pos: {camera_position} Orient: {self.get_pose(link=2).orientation_euler}")
-    #     view_matrix = pb.computeViewMatrixFromYawPitchRoll(
-    #         camera_position,
-    #         0.000367,
-    #         pb.getJointState(self.body, 0)[0] * (180 / np.pi) - 90,  # self.get_pose(link=2).orientation_euler[0]*(180/np.pi) + 90,
-    #         -pb.getJointState(self.body, 1)[0] * (180 / np.pi),  # self.get_pose(link=2).orientation_euler[1]*(180/np.pi)+90,
-    #         0,  # self.get_pose(link=2).orientation_euler[2]*(180/np.pi) ,
-    #         2,
-    #     )
-    #     width, height = 640, 480
-    #     fov = 78
-    #     aspect = width / height
-    #     near = 0.2
-    #     far = 100
-    #
-    #     projection_matrix = pb.computeProjectionMatrixFOV(fov, aspect, near, far)
-    #
-    #     images = pb.getCameraImage(width, height, view_matrix, projection_matrix, shadow=False, renderer=pb.ER_BULLET_HARDWARE_OPENGL)
-    #
-    #     # NOTE: the ordering of height and width change based on the conversion
-    #     img = np.reshape(images[2], (height, width, 4))
-    #     img = cv2.cvtColor(img, cv2.COLOR_RGBA2BGR)
-    #     # rgb_opengl = np.reshape(images[2], (height, width, 4))[:, :, :3] * 1. / 255.
-    #     # depth_buffer_opengl = np.reshape(images[3], [width, height])
-    #     # depth_opengl = far * near / (far - (far - near) * depth_buffer_opengl)
-    #     # seg_opengl = np.reshape(images[4], [width, height]) * 1. / 255.
-    #
-    #     return img
-
     def get_camera_image(self):
         self.renderer.update_scene(self.world.data, camera=self.cam_id)
         return self.renderer.render()[:,:,::-1]
@@ -106,6 +70,10 @@ class Sensors:
         # 6:8 for linear and angular velocity this gets the imu link position and orientation
         self.imu_ready = True
         return self.get_pose().orientation_euler
+
+    def get_gravity_vec(self) -> np.ndarray:
+        gravity = self.get_pose().rotation_matrix.T @ np.array([0, 0, -1], dtype=np.float32)
+        return gravity
 
     def get_gyro(self) -> np.ndarray:
         """

@@ -60,6 +60,33 @@ class SensorsROS(Sensors):
             ],
         ).orientation_euler
 
+    def get_gravity_vec(self) -> np.ndarray:
+        assert self.imu_ready
+        imu = Transformation(
+            [0, 0, 0],
+            [
+                self.imu_msg.orientation.x,
+                self.imu_msg.orientation.y,
+                self.imu_msg.orientation.z,
+                self.imu_msg.orientation.w,
+            ],
+        )
+        gravity =  imu.rotation_matrix.T @ np.array([0, 0, -1], dtype=np.float32)
+        return gravity
+    def get_gyro(self) -> np.ndarray:
+        """
+        Gets the gyroscope data.
+
+        Returns:
+            np.ndarray: gyroscope data
+        """
+        return np.array([
+            self.imu_msg.angular_velocity.x,
+            self.imu_msg.angular_velocity.y,
+            self.imu_msg.angular_velocity.z
+        ], dtype=np.float32)
+
+
     def get_foot_pressure_sensors(self, floor):
         # TODO subscribe to foot pressure sensors
         pass

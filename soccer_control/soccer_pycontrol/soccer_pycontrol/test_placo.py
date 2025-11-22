@@ -86,15 +86,3 @@ class TestPlaco(unittest.TestCase):
 
 
 
-
-
-        for i in range(10000):
-            img = self.bez.sensors.get_camera_image()
-            img = cv2.resize(img, dsize=(640, 480))
-
-            if "DISPLAY" in os.environ:
-                cv2.imshow("CVT Color2", img)
-                cv2.waitKey(1)
-            self.world.step()
-
-

@@ -32,6 +32,14 @@ class Bez:
 
         self.sensors = Sensors(self.world)
 
+        self.default_angles = np.array([-0.00038 ,0.00058
+                    ,-0.44675 ,0.00074 ,2.50858
+                    ,-0.02901 ,0.06566 ,0.87410 ,-1.54022 ,0.67634 ,-0.07002
+                    ,-0.44962 ,-0.00074 ,2.50967
+                    ,-0.01830 ,0.04949 ,0.85711 ,-1.54784 ,0.69839 ,-0.05164])
+        self.default_leg_angles = np.array([-0.02901, 0.06566, 0.87410, -1.54022, 0.67634, -0.07002
+                                            , -0.01830, 0.04949, 0.85711, -1.54784, 0.69839, -0.05164])
+
     @property
     def status(self) -> BezStatusEnum:
         return self._status
@@ -40,6 +48,9 @@ class Bez:
     def status(self, status: BezStatusEnum) -> None:
         self._status = status
 
+    def ready(self): # TODO fix default angles it leans
+        self.motor_control.set_all_angles(self.default_angles)
+        self.motor_control.set_motor()
     def get_parameters(self) -> dict:
         with open(
             expanduser("~")

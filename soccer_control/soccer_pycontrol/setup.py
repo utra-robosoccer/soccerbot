@@ -17,6 +17,7 @@ setup(
         ("share/" + package_name + "/launch", glob("launch/*.launch")),
         ("share/" + package_name + "/launch", glob("launch/*.yaml")),
         ("share/" + package_name + "/launch", glob("launch/*.py")),
+        ("share/" + package_name + "/models", glob("models/*.onnx")),
     ],
     maintainer="Jonathan Spraggett",
     maintainer_email="jonathanspraggett@gmail.com",
@@ -25,6 +26,7 @@ setup(
     entry_points={
         "console_scripts": [
             "soccer_walk = soccer_pycontrol.walk_engine.walk_engine_ros.navigator_ros:main",
+            "soccer_rl_walk = soccer_pycontrol.walk_engine.walk_engine_ros.rl_walk_ros:main",
         ],
     },
 )
