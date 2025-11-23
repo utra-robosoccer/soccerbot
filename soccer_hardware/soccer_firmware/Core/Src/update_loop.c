@@ -19,7 +19,7 @@ BMI088 imu;
 
 void update()
 {
-  uint8_t txBuf[2 + 20 * 2 + 6 + 6] = {0}; // 20 motors * 2 bytes each + 6 bytes for IMU
+  uint8_t txBuf[2 + 20 * 4 + 6 + 6] = {0}; // 20 motors * 2 bytes each + 6 bytes for IMU
   txBuf[0] = txBuf[1] = 0xfe;
   uint32_t lastTime = HAL_GetTick();
   while(1)
@@ -30,6 +30,7 @@ void update()
 
       // we read want to read 1 motor position from each port
       read_motors(txBuf);
+      read_motors_vel(txBuf);
 //      read_motors_sync(txBuf);
 
       // get current linear Acceleration and Rotational speed
@@ -195,19 +196,19 @@ void read_imu(uint8_t *rxBuf) {
   // Read gyro after accel, otherwise we get HAL_error (not sure why :/)
   BMI088_ReadGyroscope(&hi2c1, &gyroX, &gyroY, &gyroZ);
 
-  rxBuf[2 + 20 * 2 + 0] = (accX >> 8) & 0xFF; // MSB first means big endian
-  rxBuf[2 + 20 * 2 + 1] = accX & 0xFF;
-  rxBuf[2 + 20 * 2 + 2] = (accY >> 8) & 0xFF;
-  rxBuf[2 + 20 * 2 + 3] = accY & 0xFF;
-  rxBuf[2 + 20 * 2 + 4] = (accZ >> 8) & 0xFF;
-  rxBuf[2 + 20 * 2 + 5] = accZ & 0xFF;
+  rxBuf[2 + 20*4 + 0] = (accX >> 8) & 0xFF; // MSB first means big endian
+  rxBuf[2 + 20*4 + 1] = accX & 0xFF;
+  rxBuf[2 + 20*4 + 2] = (accY >> 8) & 0xFF;
+  rxBuf[2 + 20*4 + 3] = accY & 0xFF;
+  rxBuf[2 + 20*4 + 4] = (accZ >> 8) & 0xFF;
+  rxBuf[2 + 20*4 + 5] = accZ & 0xFF;
 
-  rxBuf[2 + 20 * 2 + 6 + 0] = (gyroX >> 8) & 0xFF;
-  rxBuf[2 + 20 * 2 + 6 + 1] = gyroX & 0xFF;
-  rxBuf[2 + 20 * 2 + 6 + 2] = (gyroY >> 8) & 0xFF;
-  rxBuf[2 + 20 * 2 + 6 + 3] = gyroY & 0xFF;
-  rxBuf[2 + 20 * 2 + 6 + 4] = (gyroZ >> 8) & 0xFF;
-  rxBuf[2 + 20 * 2 + 6 + 5] = gyroZ & 0xFF;
+  rxBuf[2 + 20*4 + 6 + 0] = (gyroX >> 8) & 0xFF;
+  rxBuf[2 + 20*4 + 6 + 1] = gyroX & 0xFF;
+  rxBuf[2 + 20*4 + 6 + 2] = (gyroY >> 8) & 0xFF;
+  rxBuf[2 + 20*4 + 6 + 3] = gyroY & 0xFF;
+  rxBuf[2 + 20*4 + 6 + 4] = (gyroZ >> 8) & 0xFF;
+  rxBuf[2 + 20*4 + 6 + 5] = gyroZ & 0xFF;
 
 }
 
@@ -338,6 +339,76 @@ void read_motors(uint8_t *rxBuf) {
         } else {
           rxBuf[2 + motorId * 2] = p->rxBuffer[9];
           rxBuf[2 + motorId * 2 + 1] = p->rxBuffer[10];
+        }
+        p->dmaDoneReading = false;
+        numMotorsReceived++;
+        p->motorServiced = true;
+        p->currReadMotor = (p->currReadMotor + 1) % p->numMotors;
+      } else {
+        //timeout logic
+        if(HAL_GetTick() - p->timeout > 10) { // units in milliseconds
+          HAL_UART_DMAStop(p->huart);
+          numMotorsReceived++; // unsuccesful but we still count as received
+          p->motorServiced = true;
+          p->currReadMotor = (p->currReadMotor + 1) % p->numMotors;
+        }
+      }
+    }
+
+    if(numMotorsReceived == numMotorsRequested) return; // all motors serviced, peace out
+  }
+}
+
+void read_motors_vel(uint8_t *rxBuf) {
+  for (uint16_t i = 0; i < 6; i++) {// reset variables
+    motorPorts[i]->dmaDoneReading = false;
+    motorPorts[i]->timeout = 0;
+    motorPorts[i]->motorServiced = false;
+  };
+
+  // send read command to 1 motor on each port
+  uint8_t numMotorsRequested = 0;
+  for (uint8_t i = 0; i < 6; i ++) {
+    MotorPort *p = motorPorts[i];
+    uint8_t currMotor = p->currReadMotor;
+    uint8_t motorId = p->motorIds[currMotor];
+    uint8_t protocol = p->protocol[currMotor];
+
+    if (p->numMotors == 0) {
+      continue;
+    }
+
+
+      p->rxPacketLen = 15;
+      HAL_UART_Receive_DMA(p->huart, p->rxBuffer, p->rxPacketLen);
+      read_motor_present_velocity_p2(p, motorId);
+
+    p->timeout = HAL_GetTick();
+    numMotorsRequested++; // keep track of how many motors we are reading
+  }
+
+  // now we wait for all motors to respond back
+  uint8_t numMotorsReceived = 0;
+  while(1)
+  {
+    for (uint16_t i = 0; i < 6; i++)
+    {
+      MotorPort *p = motorPorts[i];
+      uint8_t idx = p->currReadMotor;
+      uint8_t motorId = p->motorIds[idx];
+      uint8_t protocol = p->protocol[idx];
+
+      if (p->numMotors == 0 || p->motorServiced) {
+        continue;
+      }
+
+      if (p->dmaDoneReading) {
+        if (protocol == 1) {
+          rxBuf[2 + 20*2+ motorId * 2] = p->rxBuffer[5];
+          rxBuf[2 + 20*2+motorId * 2 + 1] = p->rxBuffer[6];
+        } else {
+          rxBuf[2 + 20*2+motorId * 2] = p->rxBuffer[9];
+          rxBuf[2 + 20*2+ motorId * 2 + 1] = p->rxBuffer[10];
         }
         p->dmaDoneReading = false;
         numMotorsReceived++;

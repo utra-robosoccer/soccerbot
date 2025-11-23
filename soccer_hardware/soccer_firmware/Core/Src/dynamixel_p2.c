@@ -95,6 +95,12 @@ void read_motor_present_position_p2(MotorPort * p, uint8_t id) {
   _motor_read_p2(p, id, addr, dataLen);
 }
 
+void read_motor_present_velocity_p2(MotorPort * p, uint8_t id) {
+  uint16_t dataLen = 4;
+  uint16_t addr = 128;
+  _motor_read_p2(p, id, addr, dataLen);
+}
+
 void write_goal_position_p2(MotorPort *port, uint8_t id, uint16_t angle) {
   uint8_t data[4] = {angle & 0xff, (angle>>8) & 0xff, 0, 0};
   uint16_t dataLen = 4;
