@@ -5,26 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1718606a-6ea1-4edd-a178-2f51136d492a" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/external/hlvs_webots" beforeDir="false" afterPath="$PROJECT_DIR$/external/hlvs_webots" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/external/hlvs_webots/protos/Utra/Bez2Robocup/Bez2_meshes/Bez2.proto" beforeDir="false" afterPath="$PROJECT_DIR$/external/hlvs_webots/protos/Utra/Bez2Robocup/Bez2_meshes/Bez2.proto" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/external/hlvs_webots/protos/Utra/Bez3Robocup/Bez3.proto" beforeDir="false" afterPath="$PROJECT_DIR$/external/hlvs_webots/protos/Utra/Bez3Robocup/Bez3.proto" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/external/hlvs_webots/worlds/.robocup.wbproj" beforeDir="false" afterPath="$PROJECT_DIR$/external/hlvs_webots/worlds/.robocup.wbproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/soccer_pycontrol/model/bez.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/soccer_pycontrol/model/bez.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/soccer_pycontrol/model/model_ros/bez_ros.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/soccer_pycontrol/model/model_ros/bez_ros.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/soccer_pycontrol/model/model_ros/motor_control_ros.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/soccer_pycontrol/model/model_ros/motor_control_ros.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/soccer_pycontrol/model/motor_control.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/soccer_pycontrol/model/motor_control.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/soccer_pycontrol/walk_engine/rl_walk.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/soccer_pycontrol/walk_engine/rl_walk.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/soccer_pycontrol/walk_engine/walk_engine_ros/rl_walk_ros.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/soccer_pycontrol/walk_engine/walk_engine_ros/rl_walk_ros.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test/test_walk.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_control/soccer_pycontrol/test/test_walk.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_description/bez2_description/urdf/assembly.xacro" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_description/bez2_description/urdf/assembly.xacro" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_hardware/soccer_firmware/.settings/language.settings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_hardware/soccer_firmware/.settings/language.settings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_hardware/soccer_firmware/Core/Inc/dynamixel_p2.h" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_hardware/soccer_firmware/Core/Inc/dynamixel_p2.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_hardware/soccer_firmware/Core/Src/dynamixel_p2.c" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_hardware/soccer_firmware/Core/Src/dynamixel_p2.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_hardware/soccer_firmware/Core/Src/main.c" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_hardware/soccer_firmware/Core/Src/main.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_hardware/soccer_firmware/Core/Src/update_loop.c" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_hardware/soccer_firmware/Core/Src/update_loop.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccer_hardware/soccer_firmware_interface/soccer_firmware_interface/firmware_interface.py" beforeDir="false" afterPath="$PROJECT_DIR$/soccer_hardware/soccer_firmware_interface/soccer_firmware_interface/firmware_interface.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/soccerbot/launch/test2.launch" beforeDir="false" afterPath="$PROJECT_DIR$/soccerbot/launch/test2.launch" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -156,7 +140,7 @@
     "WebServerToolWindowPanel.toolwindow.show.date": "false",
     "WebServerToolWindowPanel.toolwindow.show.permissions": "false",
     "WebServerToolWindowPanel.toolwindow.show.size": "false",
-    "git-widget-placeholder": "master",
+    "git-widget-placeholder": "js__walk__rl",
     "last_opened_file_path": "/home/manx52/ros2_ws/src/soccerbot/soccer_control/soccer_pycontrol/models",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -372,7 +356,7 @@
       <workItem from="1763496864191" duration="322000" />
       <workItem from="1763500617365" duration="654000" />
       <workItem from="1763505121239" duration="5616000" />
-      <workItem from="1763920891646" duration="11088000" />
+      <workItem from="1763920891646" duration="11978000" />
     </task>
     <servers />
   </component>
