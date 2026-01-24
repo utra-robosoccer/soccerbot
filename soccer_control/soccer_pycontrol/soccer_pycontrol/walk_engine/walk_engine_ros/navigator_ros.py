@@ -14,8 +14,8 @@ from soccer_pycontrol.walk_engine.walker import Walker
 from std_msgs.msg import Bool, Float32MultiArray
 
 from soccer_common import PID, Transformation
-from soccer_msgs.msg import BoundingBoxes, FixedTrajectoryCommand
-from soccer_msgs.msg import GameState as GameStateMsg
+from evtol_interfaces.msg import BoundingBoxes, FixedTrajectoryCommand
+from evtol_interfaces.msg import GameState as GameStateMsg
 
 
 class NavigatorRos(Navigator, Node):

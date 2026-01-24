@@ -48,7 +48,7 @@ class CameraCalculationsRos(CameraCalculations):
         """
         try:
             if timestamp is None:
-                timestamp = rclpy.time.Time()
+                timestamp = self.node.get_clock().now().to_msg() # TODO verify this is the correct format
 
             if self.tf_buffer.can_transform("head", "left_foot", timestamp):
                 transform_stamaped = self.tf_buffer.lookup_transform("head", "left_foot", timestamp)

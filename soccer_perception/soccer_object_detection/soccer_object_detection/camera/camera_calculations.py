@@ -1,15 +1,25 @@
 import math
 
+import cv2
 import numpy as np
+from sensor_msgs.msg import CameraInfo
+
 from soccer_object_detection.camera.camera_base import CameraBase
 
 from soccer_common.transformation import Transformation
+from shape_msgs.msg import Plane
+import PyKDL
 
 
 class CameraCalculations(CameraBase):
     def __init__(self):
         super(CameraCalculations, self).__init__()
         self.pose = Transformation()
+
+        # camera intriniscs and extrinsics
+        self.intrinsic_matrix = self.get_intrinsic_matrix()
+        self.inverse_intrinsic_matrix = np.linalg.inv(self.intrinsic_matrix)
+
 
     def calculate_horizon_cover_area(self) -> int:
         """
@@ -46,8 +56,7 @@ class CameraCalculations(CameraBase):
             rot = [0, 0, 0, 1]
             self.pose = Transformation(trans, rot)
 
-    # TODO maybe in localization
-    def find_floor_coordinate(self, pos: [int]) -> [int]:
+    def find_floor_coordinate(self, pos: list[int]) -> list[int]:
         """
         From a camera pixel, get a coordinate on the floor
 
@@ -61,11 +70,219 @@ class CameraCalculations(CameraBase):
         pixel_pose = Transformation(position=(self.focal_length, tx, ty))
         camera_pose = self.pose
         pixel_world_pose = camera_pose @ pixel_pose
-        ratio = (camera_pose.position[2] - pixel_world_pose.position[2]) / self.pose.position[2]  # TODO Fix divide by 0 problem
+        ratio = (camera_pose.position[2] - pixel_world_pose.position[2]) / camera_pose.position[2]  # TODO Fix divide by 0 problem
         x_delta = (pixel_world_pose.position[0] - camera_pose.position[0]) / ratio
         y_delta = (pixel_world_pose.position[1] - camera_pose.position[1]) / ratio
 
         return [x_delta + camera_pose.position[0], y_delta + camera_pose.position[1], 0]
+
+    def uv_to_roadXYZ_camframe(self, u, v):
+        # NOTE: The results depend very much on the pitch angle (0.5 degree error yields bad result)
+        # Here is a paper on vehicle pitch estimation:
+        # https://refubium.fu-berlin.de/handle/fub188/26792
+        camera_pose = self.pose
+        ypr = camera_pose.orientation_euler
+        yaw = np.deg2rad(ypr[0])
+        pitch = np.deg2rad(ypr[1])
+        roll = np.deg2rad(ypr[2])
+        cy, sy = np.cos(yaw), np.sin(yaw)
+        cp, sp = np.cos(pitch), np.sin(pitch)
+        cr, sr = np.cos(roll), np.sin(roll)
+        rotation_road_to_cam = np.array([[cr * cy + sp * sr * sy, cr * sp * sy - cy * sr, -cp * sy],
+                                         [cp * sr, cp * cr, sp],
+                                         [cr * sy - cy * sp * sr, -cr * cy * sp - sr * sy, cp * cy]])
+        self.rotation_cam_to_road = rotation_road_to_cam.T  # for rotation matrices, taking the transpose is the same as inversion
+        self.translation_cam_to_road = np.array([0, -camera_pose.position[2], 0])
+        self.trafo_cam_to_road = np.eye(4)
+        self.trafo_cam_to_road[0:3, 0:3] = self.rotation_cam_to_road
+        self.trafo_cam_to_road[0:3, 3] = self.translation_cam_to_road
+        # compute vector nc. Note that R_{rc}^T = R_{cr}
+        self.road_normal_camframe = self.rotation_cam_to_road.T @ np.array([0, 1, 0])
+        uv_hom = np.array([u, v, 1])
+        Kinv_uv_hom = self.inverse_intrinsic_matrix @ uv_hom
+        denominator = self.road_normal_camframe.dot(Kinv_uv_hom)
+        return camera_pose.position[2] * Kinv_uv_hom / denominator
+    def get_intrinsic_matrix(self, ):
+        # For our Carla camera alpha_u = alpha_v = alpha
+        # alpha can be computed given the cameras field of view via
+        alpha1 = (self.horizontal_aspect / 2.0) / np.tan(self.horizontal_fov / 2.)
+        # alpha1 = self.focal_length*self.horizontal_aspect/self.image_sensor_width
+        alpha2 = (self.vertical_aspect / 2.0) / np.tan(self.vertical_fov / 2.)
+        # alpha2 = self.focal_length * self.vertical_aspect / self.image_sensor_height
+        Cu = self.horizontal_aspect / 2.0
+        Cv = self.vertical_aspect / 2.0
+        return np.array([[alpha1, 0, Cu],
+                         [0, alpha2, Cv],
+                         [0, 0, 1.0]])
+    def map_point(self,u, v):
+        plane_msg = Plane()
+        plane_msg.coef[2] = 1.0  # Normal in z direction
+        # plane_msg.coef[3] = -self.pose.position[2]
+        # Convert plane from general form to point normal form
+        plane = self.plane_general_to_point_normal(plane_msg)
+
+        # View plane from camera frame
+        plane_base_point, plane_normal = self.transform_plane_to_frame(
+            plane=plane)
+
+        points =  np.array([[u, v]])
+        # Convert points to float if they aren't allready
+        if points.dtype.char not in np.typecodes['AllFloat']:
+            points = points.astype(np.float32)
+
+        # Get intersection points with plane
+        np_points = self.get_field_intersection_for_pixels(
+            points,
+            plane_normal,
+            plane_base_point)
+
+        t_cam_to_map = Transformation(position=-1*self.pose.position, rotation_matrix=self.pose.rotation_matrix.T)
+        np.einsum(
+            'ij, pj -> pi',
+            t_cam_to_map.rotation_matrix,
+            np_points) + t_cam_to_map.position
+        np_point = np_points[0]
+        return np_point
+
+    def plane_general_to_point_normal(self, plane: Plane) -> tuple[np.ndarray, np.ndarray]:
+        """
+        Convert general plane form to point normal form.
+
+        :param plane: The input plane in general form
+        :returns: A tuple with the point and normal
+        """
+        # ax + by + cz + d = 0 where a, b, c are the normal vector
+        a, b, c, d = plane.coef
+        # A perpendicular array to the plane
+        perpendicular = np.array([a, b, c])
+        # Get closest point from (0, 0, 0) to the plane
+        point = perpendicular * -d / np.dot(perpendicular, perpendicular)
+        # A normal vector to the plane
+        normal = perpendicular / np.linalg.norm(perpendicular)
+        return point, normal
+
+    def transform_plane_to_frame(self,
+            plane: tuple[np.ndarray, np.ndarray],
+           ) -> tuple[np.ndarray, np.ndarray]:
+        """
+        Transform a plane from one frame to another.
+
+        :param plane: The planes base point and normal vector as numpy arrays
+        :param input_frame: Current frame of the plane
+        :param output_frame: The desired frame of the plane
+        :param time: Timestamp which is used to query the tf buffer and get the tranform at this moment
+        :param buffer: The refrence to the used tf buffer
+        :param timeout: An optinal timeout after which an exception is raised
+        :returns: A Tuple containing the planes base point and normal vector in the
+             new frame at the provided timestamp
+        """
+
+        # Create two points to transform the base point and the normal vector
+        # The second point is generated by adding the normal to the base point
+        camera_pose = self.pose
+        field_normal = Transformation(position=(
+            plane[0][0] + plane[1][0],
+            plane[0][1] + plane[1][1],
+            plane[0][2] + plane[1][2]))
+        print("1", field_normal.position)
+        # field_normal = field_normal @ camera_pose
+        field_normal = camera_pose @ field_normal
+        print("2", field_normal.position)
+
+        field_point = Transformation(position=(
+            plane[0][0],
+            plane[0][1],
+            plane[0][2]))
+        print("3", field_point.position)
+
+        # field_point = field_point @ camera_pose
+        field_point = camera_pose @ field_point
+        # field_point = camera_pose.rotation_matrix @ field_point.position + camera_pose.position
+
+        print("4", field_point.position)
+
+        field_point = np.array(
+            field_point.position)
+        field_normal = np.array(
+            field_normal.position)
+        print(self.pose.position, self.pose.quaternion)
+        # print(field_normal, field_point)
+        return field_point, field_normal
+        return field_point, field_normal
+        # field normal is a vector! so it stats at field point and goes up in z direction
+        field_normal = field_point - field_normal
+        return field_point, field_normal
+
+    def get_field_intersection_for_pixels(self,
+            points: np.ndarray,
+            plane_normal: np.ndarray,
+            plane_base_point: np.ndarray,
+            scale: float = 1.0,
+            use_distortion: bool = False) -> np.ndarray:
+        """
+        Map a NumPy array of points in image space on the given plane.
+
+        :param points: A nx2 array with n being the number of points
+        :param plane_normal: The normal vector of the mapping plane
+        :param plane_base_point: The base point of the mapping plane
+        :param scale: A scaling factor used if e.g. a mask with a lower resolution is transformed
+        :param use_distortion: A flag to indicate if distortion should be accounted for.
+            Do not use this if you are working with pixel coordinates from a rectified image.
+        :returns: A NumPy array containing the mapped points
+            in 3d relative to the camera optical frame
+        """
+        # Apply binning and scale
+        # binning_x = max(camera_info.binning_x, 1) / scale
+        # binning_y = max(camera_info.binning_y, 1) / scale
+        # points = points * np.array([binning_x, binning_y])
+
+        # Create identity distortion coefficients if no distortion is used
+        # if use_distortion:
+        #     distortion_coefficients = np.array(camera_info.d)
+        # else:
+        distortion_coefficients = np.zeros(5)
+
+        # Get the ray directions relative to the camera optical frame for each of the points
+        ray_directions = np.ones((points.shape[0], 3))
+        if points.shape[0] > 0:
+            ray_directions[:, :2] = cv2.undistortPoints(
+                points.reshape(1, -1, 2).astype(np.float32),
+                #np.array(camera_info.k).reshape(3, 3),
+                self.intrinsic_matrix.reshape(3, 3),
+                distortion_coefficients).reshape(-1, 2)
+        # print(ray_directions)
+        # Calculate ray -> plane intersections
+        intersections = self.line_plane_intersections(
+            plane_normal, plane_base_point, ray_directions)
+
+        return intersections
+
+    def line_plane_intersections(self,
+            plane_normal: np.ndarray,
+            plane_base_point: np.ndarray,
+            ray_directions: np.ndarray) -> np.ndarray:
+        """
+        Calculate the intersections of rays with a plane described by a normal and a point.
+
+        :param plane_normal: The normal vector of the mapping plane
+        :param plane_base_point: The base point of the mapping plane
+        :param ray_directions: A nx3 array with n being the number of rays
+        :returns: A nx3 array containing the 3d intersection points with n being the number of rays.
+        """
+        n_dot_u = np.tensordot(plane_normal, ray_directions, axes=([0], [1]))
+        relative_ray_distance = plane_normal.dot(plane_base_point) / n_dot_u
+
+        # we are casting a ray, intersections need to be in front of the camera
+        relative_ray_distance[relative_ray_distance <= 0] = np.nan
+
+        ray_directions[:, 0] = np.multiply(
+            relative_ray_distance, ray_directions[:, 0])
+        ray_directions[:, 1] = np.multiply(
+            relative_ray_distance, ray_directions[:, 1])
+        ray_directions[:, 2] = np.multiply(
+            relative_ray_distance, ray_directions[:, 2])
+
+        return ray_directions
 
     def find_camera_coordinate(self, pos: [int]) -> [int]:
         """

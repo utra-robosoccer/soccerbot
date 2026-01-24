@@ -26,7 +26,7 @@ from rclpy.qos import qos_profile_sensor_data
 # from rospy import ROSException
 from sensor_msgs.msg import Image
 
-from soccer_msgs.msg import BoundingBoxes
+from evtol_interfaces.msg import BoundingBoxes
 
 # TODO should be somewhere else
 

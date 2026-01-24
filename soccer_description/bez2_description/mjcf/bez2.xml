@@ -68,7 +68,7 @@
             <geom  class="collision" size="0.035555 0.04732 0.042165" pos="-0.00985 0.01921 0.02791" type="box" rgba="0.627451 0.627451 0.627451 1"/>
             <geom class="visual" pos="0 0.01825 -0.0975" quat="1 0 0 0" type="mesh" rgba="0.627451 0.627451 0.627451 1" mesh="head_v4_1"/>
           <site name="camera" pos="0.02 0.019 0.055" euler="0 0 0"/>
-             <camera name="cam" pos="0.02 0.019 0.055" euler="1.57 -1.57 0" fovy="43.3" mode="fixed"
+             <camera name="cam" pos="0.02 0.019 0.055" euler="1.57 -1.57 0" fovy="43.3" mode="fixed" resolution="1920 1080"
            />
         </body>
       </body>

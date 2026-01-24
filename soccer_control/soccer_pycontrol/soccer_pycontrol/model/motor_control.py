@@ -12,36 +12,36 @@ def wrapToPi(num: float) -> float: # TODO put in common
     rem = (num + np.pi) % (2 * np.pi) - np.pi
     return rem
 
-# class MotorData:
-#     def __init__(self, motor_names: dict):
-#         self.motor_names = motor_names
-#         self.data = [0.0] * len(motor_names)
-#
-#     def __getitem__(self, index):
-#         if isinstance(index, slice):
-#             if type(index.start) is str:
-#                 return self.data[self.motor_names[index.start][1] : self.motor_names[index.stop][1] + 1]
-#             else:
-#                 return self.data[slice(index.start, index.stop)]
-#         if type(index) is str:
-#             return self.data[self.motor_names[index][1]]
-#
-#         return self.data[index]
-#
-#     def __setitem__(self, index, value):
-#         if isinstance(index, slice):
-#             if type(index.start) is str:
-#                 self.data[self.motor_names[index.start][1] : self.motor_names[index.stop][1] + 1] = value
-#             else:
-#                 self.data[slice(index.start, index.stop)] = value
-#         else:
-#             if type(index) is str:
-#                 self.data[self.motor_names[index][1]] = value
-#             else:
-#                 self.data[index] = value
-#
-#     def reset(self):
-#         self.data = [0.0] * len(self.motor_names)
+class MotorData:
+    def __init__(self, motor_names: dict):
+        self.motor_names = motor_names
+        self.data = [0.0] * len(motor_names)
+
+    def __getitem__(self, index):
+        if isinstance(index, slice):
+            if type(index.start) is str:
+                return self.data[self.motor_names[index.start][1] : self.motor_names[index.stop][1] + 1]
+            else:
+                return self.data[slice(index.start, index.stop)]
+        if type(index) is str:
+            return self.data[self.motor_names[index][1]]
+
+        return self.data[index]
+
+    def __setitem__(self, index, value):
+        if isinstance(index, slice):
+            if type(index.start) is str:
+                self.data[self.motor_names[index.start][1] : self.motor_names[index.stop][1] + 1] = value
+            else:
+                self.data[slice(index.start, index.stop)] = value
+        else:
+            if type(index) is str:
+                self.data[self.motor_names[index][1]] = value
+            else:
+                self.data[index] = value
+
+    def reset(self):
+        self.data = [0.0] * len(self.motor_names)
 class MotorControl:
     """
     Class controls access to motor information and sets motor angles in MuJoCo
@@ -108,6 +108,7 @@ class MotorControl:
         for name in names:
             index.append(self.get_q(name))
         return index
+
 
     def get_qvel_legs(self):
         names = ["left_hip_yaw", "left_hip_roll", "left_hip_pitch", "left_knee", "left_ankle_pitch", "left_ankle_roll", "right_hip_yaw", "right_hip_roll", "right_hip_pitch", "right_knee", "right_ankle_pitch", "right_ankle_roll"]

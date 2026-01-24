@@ -8,7 +8,7 @@ import torch
 from cv2 import Mat
 from soccer_object_detection.camera.camera_calculations import CameraCalculations
 
-from soccer_msgs.msg import BoundingBox, BoundingBoxes
+from evtol_interfaces.msg import BoundingBox, BoundingBoxes
 
 
 # TODO should be somewhere else
@@ -104,10 +104,10 @@ class ObjectDetectionNode:
                         # --- simple version just draw the box in bottom ratio of box to detect feet position---
                         # only look at bottom 1/3 of bounding box (assumption: bounding box is of a standing robot)
                         # Calculate ymin value to start checking for black pixels
-                        if bb_msg.ymax < self.camera.resolution_y - 5:
+                        if bb_msg.ymax < self.camera.vertical_aspect - 5:
                             temp_ymin = round(bb_msg.ymax * 0.85 + bb_msg.ymin * 0.15)
                             midpoint = [(bb_msg.xmax + bb_msg.xmin) / 2, (bb_msg.ymax + temp_ymin) / 2]
-                            bb_msg.ybase = round(midpoint[1])
+                            bb_msg.ybase = bb_msg.ymax
                             bb_msg.xbase = round(midpoint[0])
                             bb_msg.obstacle_detected = True
                     bbs_msg.bounding_boxes.append(bb_msg)
