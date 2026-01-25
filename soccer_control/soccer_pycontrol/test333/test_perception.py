@@ -41,8 +41,8 @@ class TestSensors(unittest.TestCase):
 
         sim = SimWorld()
         bez = Bez(sim)
-        # bez.motor_control.set_single_motor("head_pitch", 0.1)
-        # bez.motor_control.set_motor()
+        bez.motor_control.set_single_motor("head_pitch", 0.4)
+        bez.motor_control.set_motor()
         start = time.time()
         cam_dt = 1.0/30.0
         n_substeps = int(round(cam_dt / sim.dt))

@@ -8,7 +8,7 @@ import torch
 from cv2 import Mat
 from soccer_object_detection.camera.camera_calculations import CameraCalculations
 
-from evtol_interfaces.msg import BoundingBox, BoundingBoxes
+from soccer_msgs.msg import BoundingBox, BoundingBoxes
 
 
 # TODO should be somewhere else
