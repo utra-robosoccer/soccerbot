@@ -77,38 +77,13 @@ class CameraCalculations(CameraBase):
 
         return [x_delta + camera_pose.position[0], y_delta + camera_pose.position[1], 0]
 
-    def uv_to_roadXYZ_camframe(self, u, v):
-        # NOTE: The results depend very much on the pitch angle (0.5 degree error yields bad result)
-        # Here is a paper on vehicle pitch estimation:
-        # https://refubium.fu-berlin.de/handle/fub188/26792
-        camera_pose = self.pose
-        ypr = camera_pose.orientation_euler
-        yaw = np.deg2rad(ypr[0])
-        pitch = np.deg2rad(ypr[1])
-        roll = np.deg2rad(ypr[2])
-        cy, sy = np.cos(yaw), np.sin(yaw)
-        cp, sp = np.cos(pitch), np.sin(pitch)
-        cr, sr = np.cos(roll), np.sin(roll)
-        rotation_road_to_cam = np.array([[cr * cy + sp * sr * sy, cr * sp * sy - cy * sr, -cp * sy],
-                                         [cp * sr, cp * cr, sp],
-                                         [cr * sy - cy * sp * sr, -cr * cy * sp - sr * sy, cp * cy]])
-        self.rotation_cam_to_road = rotation_road_to_cam.T  # for rotation matrices, taking the transpose is the same as inversion
-        self.translation_cam_to_road = np.array([0, -camera_pose.position[2], 0])
-        self.trafo_cam_to_road = np.eye(4)
-        self.trafo_cam_to_road[0:3, 0:3] = self.rotation_cam_to_road
-        self.trafo_cam_to_road[0:3, 3] = self.translation_cam_to_road
-        # compute vector nc. Note that R_{rc}^T = R_{cr}
-        self.road_normal_camframe = self.rotation_cam_to_road.T @ np.array([0, 1, 0])
-        uv_hom = np.array([u, v, 1])
-        Kinv_uv_hom = self.inverse_intrinsic_matrix @ uv_hom
-        denominator = self.road_normal_camframe.dot(Kinv_uv_hom)
-        return camera_pose.position[2] * Kinv_uv_hom / denominator
+
     def get_intrinsic_matrix(self, ):
         # For our Carla camera alpha_u = alpha_v = alpha
         # alpha can be computed given the cameras field of view via
-        alpha1 = (self.horizontal_aspect_orig / 2.0) / np.tan(self.horizontal_fov / 2.)
+        alpha1 = (self.horizontal_aspect / 2.0) / np.tan(self.horizontal_fov / 2.)
         # alpha1 = self.focal_length*self.horizontal_aspect/self.image_sensor_width
-        alpha2 = (self.vertical_aspect_orig / 2.0) / np.tan(self.vertical_fov / 2.)
+        alpha2 = (self.vertical_aspect / 2.0) / np.tan(self.vertical_fov / 2.)
         # alpha2 = self.focal_length * self.vertical_aspect / self.image_sensor_height
         Cu = self.horizontal_aspect / 2.0
         Cv = self.vertical_aspect / 2.0
@@ -118,13 +93,17 @@ class CameraCalculations(CameraBase):
     def map_point(self,u, v):
 
         # convert the map -> cam transform into the correct orientation for the IPM
-        rot = Transformation(euler=[0, 1.57, 0])
-        t_map_to_cam = self.pose
+        rot = Transformation(euler=[-1.57, 0, -1.57])
+        t_map_to_cam = Transformation(position=(0,0,self.pose.position[2]))
+        # t_map_to_cam = self.pose
         t_map_to_cam.rotation_matrix = rot.rotation_matrix @ t_map_to_cam.rotation_matrix
-        t_cam_to_map = np.linalg.inv(t_map_to_cam)
+        rot = Transformation(euler=self.pose.orientation_euler)
+        t_map_to_cam.rotation_matrix = rot.rotation_matrix @ t_map_to_cam.rotation_matrix
+        # print(t_map_to_cam.position, " 1 ", t_map_to_cam.orientation_euler)
+        t_cam_to_map =  np.linalg.inv(t_map_to_cam)
         plane_msg = Plane()
         plane_msg.coef[2] = 1.0  # Normal in z direction
-        # plane_msg.coef[3] = -self.pose.position[2]
+
         # Convert plane from general form to point normal form
         plane = self.plane_general_to_point_normal(plane_msg)
 
@@ -255,7 +234,8 @@ class CameraCalculations(CameraBase):
                 # np.array([1338.64532, 0., 1026.12387, 0., 1337.89746, 748.42213, 0., 0., 1.]).reshape(3, 3),
                 self.intrinsic_matrix.reshape(3, 3),
                 distortion_coefficients).reshape(-1, 2)
-        # print("here: ", ray_directions)
+        # print(f"dd: {points.reshape(1, -1, 2).astype(np.float32)}  {self.intrinsic_matrix.reshape(3, 3)}    {distortion_coefficients} ")
+        # print("here1: ", ray_directions)
         # Calculate ray -> plane intersections
         intersections = self.line_plane_intersections(
             plane_normal, plane_base_point, ray_directions)

@@ -8,11 +8,11 @@ class CameraBase:
 
     def __init__(self, camera_info: CameraInfo = CameraInfo(height=480, width=640)):
         self.camera_info = camera_info
-        self.diagFOV = 1.36136 #1.380555
-        # self.diagFOV = 1.380555
-        self.focal_length = 0.00367 #24  #: Focal length of the camera (millimeters) distance to the camera plane as projected in 3D
+        # self.diagFOV = 1.36136 #1.380555
+        self.diagFOV = 1.380555
+        # self.focal_length = 0.00367 #24  #: Focal length of the camera (millimeters) distance to the camera plane as projected in 3D
 
-        # self.focal_length = 24
+        self.focal_length = 0.0024
         self.horizontal_aspect_orig = 1920
         self.vertical_aspect_orig = 1080
 

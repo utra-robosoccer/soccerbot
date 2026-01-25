@@ -6,13 +6,14 @@ from soccer_object_detection.camera.camera_calculations import CameraCalculation
 
 if __name__ == '__main__':
     cam = CameraCalculations()
-    cam.pose.position = [-0.029215,   0.0008118,     0.53978]
-    cam.pose.orientation_euler = [0, 0, 0]
-    # cam.pose.orientation_euler = [1.3413e-05, 0.22717, -0.0001832]
+    # cam.pose.position = [-0.029215,   0.0008118,     0.53978]
+    cam.pose.position = [0, 0, 0.53978]
+    # cam.pose.orientation_euler = [-1.57, 0, -1.57]
+    cam.pose.orientation_euler = [0, 0.22717, 0]
     # cam.pose.rotation_matrix = cam.pose.rotation_matrix.T
     # cam.pose.orientation_euler = [3.14153443 ,1.34442265, 3.14134969]
     # ang = -1.57 - 2*0.22717
-    # rot = Transformation(euler=[0, 0, 1.57])
+    # rot = Transformation(euler=[0, 0.22717, 0])
     # cam.pose.rotation_matrix = rot.rotation_matrix@ cam.pose.rotation_matrix
     # rot = Transformation(euler=[0, 0, -1.57])
     # cam.pose.rotation_matrix = rot.rotation_matrix @ cam.pose.rotation_matrix

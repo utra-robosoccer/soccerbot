@@ -7,6 +7,7 @@ import cv2
 from soccer_object_detection.object_detect_node import ObjectDetectionNode
 from soccer_pycontrol.model.bez import Bez  # Import the Bez class
 from soccer_pycontrol.model.sim_world import SimWorld
+from cv_bridge import CvBridge
 
 
 class TestSensors(unittest.TestCase):
@@ -42,6 +43,7 @@ class TestSensors(unittest.TestCase):
         sim = SimWorld()
         bez = Bez(sim)
         bez.motor_control.set_single_motor("head_pitch", 0.4)
+        # bez.motor_control.set_single_motor("head_yaw", 0.1)
         bez.motor_control.set_motor()
         start = time.time()
         cam_dt = 1.0/30.0
@@ -49,7 +51,7 @@ class TestSensors(unittest.TestCase):
         while sim.t < 300:
             if sim.frame % n_substeps == 0:
                 img = bez.sensors.get_camera_image()
-                img = cv2.resize(img, dsize=(640, 480))
+                img = cv2.resize(img, dsize=(640, 480), interpolation=cv2.INTER_NEAREST)
                 start = time.time()
                 dimg, bbs_msg = detect.get_model_output(img)
 
@@ -60,13 +62,11 @@ class TestSensors(unittest.TestCase):
                         boundingBoxes = [[box.xmin, box.ymin], [box.xmax, box.ymax]]
                         pos = [box.xbase, box.ybase]
                         floor_coordinate_robot = detect.camera.find_floor_coordinate(pos)
-                        xx = detect.camera.uv_to_roadXYZ_camframe(box.xbase,box.ybase)
                         yy = detect.camera.map_point(box.xbase,box.ybase)
                         string = (
                                  # f"z: {bez.sensors.get_cam_pose().position[2]}  eul: {bez.sensors.get_cam_pose().orientation_euler}" +
                                   f" floor pos: {detect.camera.calculate_ball_from_bounding_boxes(boundingBoxes).position}" +
                                   f" floor pos2: {floor_coordinate_robot} " +
-                                  f" floor pos3: {xx} " +
                                   f" floor pos4: {yy} " #+
                                   # f" pos2: {bez.sensors.get_pose().rotation_matrix @ bez.sensors.get_ball_local_frame().position + bez.sensors.get_pose().position} ball: {bez.sensors.get_ball_world_frame().position}"
                                   )
