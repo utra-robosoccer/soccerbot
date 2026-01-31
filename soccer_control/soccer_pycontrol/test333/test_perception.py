@@ -42,7 +42,7 @@ class TestSensors(unittest.TestCase):
 
         sim = SimWorld()
         bez = Bez(sim)
-        bez.motor_control.set_single_motor("head_pitch", 0.4)
+        # bez.motor_control.set_single_motor("head_pitch", 0.4)
         # bez.motor_control.set_single_motor("head_yaw", 0.1)
         bez.motor_control.set_motor()
         start = time.time()
@@ -56,7 +56,7 @@ class TestSensors(unittest.TestCase):
                 dimg, bbs_msg = detect.get_model_output(img)
 
                 for box in bbs_msg.bounding_boxes:
-                    if box.class_id == "0":
+                    if box.class_id == "2":
                         detect.camera.pose.position = [0, 0, bez.sensors.get_cam_pose().position[2]]
                         detect.camera.pose.orientation_euler = bez.sensors.get_cam_pose().orientation_euler
                         boundingBoxes = [[box.xmin, box.ymin], [box.xmax, box.ymax]]
@@ -65,7 +65,26 @@ class TestSensors(unittest.TestCase):
                         yy = detect.camera.map_point(box.xbase,box.ybase)
                         string = (
                                  # f"z: {bez.sensors.get_cam_pose().position[2]}  eul: {bez.sensors.get_cam_pose().orientation_euler}" +
-                                  f" floor pos: {detect.camera.calculate_ball_from_bounding_boxes(boundingBoxes).position}" +
+                                  f"robot floor pos: {detect.camera.calculate_ball_from_bounding_boxes(boundingBoxes,object_width=0.27,object_height=0.54).position}" +
+                                  f" floor pos2: {floor_coordinate_robot} " +
+                                  f" floor pos4: {yy} " #+
+                                  # f" pos2: {bez.sensors.get_pose().rotation_matrix @ bez.sensors.get_ball_local_frame().position + bez.sensors.get_pose().position} ball: {bez.sensors.get_ball_world_frame().position}"
+                                  )
+
+                        print(
+                            string,#end='\r',
+                            flush=True,
+                        )
+                    elif box.class_id == "0":
+                        detect.camera.pose.position = [0, 0, bez.sensors.get_cam_pose().position[2]]
+                        detect.camera.pose.orientation_euler = bez.sensors.get_cam_pose().orientation_euler
+                        boundingBoxes = [[box.xmin, box.ymin], [box.xmax, box.ymax]]
+                        pos = [box.xbase, box.ybase]
+                        floor_coordinate_robot = detect.camera.find_floor_coordinate(pos)
+                        yy = detect.camera.map_point(box.xbase,box.ybase)
+                        string = (
+                                 # f"z: {bez.sensors.get_cam_pose().position[2]}  eul: {bez.sensors.get_cam_pose().orientation_euler}" +
+                                  f"ball floor pos: {detect.camera.calculate_ball_from_bounding_boxes(boundingBoxes).position}" +
                                   f" floor pos2: {floor_coordinate_robot} " +
                                   f" floor pos4: {yy} " #+
                                   # f" pos2: {bez.sensors.get_pose().rotation_matrix @ bez.sensors.get_ball_local_frame().position + bez.sensors.get_pose().position} ball: {bez.sensors.get_ball_world_frame().position}"

@@ -1,6 +1,7 @@
 import math
 from functools import cached_property
 
+import numpy as np
 from sensor_msgs.msg import CameraInfo
 
 
@@ -16,35 +17,58 @@ class CameraBase:
         self.horizontal_aspect_orig = 1920
         self.vertical_aspect_orig = 1080
 
-    def image_to_world_frame(self, pixel_x: int, pixel_y: int) -> tuple:
+    def pixel_to_image_plane(self, u: int, v: int) -> tuple:
         """
-        From image pixel coordinates, get the coordinates of the pixel as if they have been projected ot the camera plane, which is
-        positioned at (0,0) in 3D world coordinates
+        From image plane pixel coordinates, get the coordinates of the pixel as if they have been projected to the image plan in 2D world coordinates at z=focal length
 
-        :param pixel_x: x pixel of the camera
-        :param pixel_y: y pixel of the camera
-        :return: 3D position (X, Y) of the pixel in meters
+        :param u: u pixel of the camera
+        :param v: v pixel of the camera
+        :return: 2D position (x, y) of the pixel in meters
         """
+        # return (
+        #     (self.cx - (u + 0.5)) / self.pixel_per_meter_width*-1,
+        #     (self.cy - (v + 0.5)) / self.pixel_per_meter_height*-1,
+        # )
+
         return (
-            (self.horizontal_aspect / 2.0 - (pixel_x + 0.5)) * self.pixel_width,
-            (self.vertical_aspect / 2.0 - (pixel_y + 0.5)) * self.pixel_height,
+            ((u + 0.5) - self.cx ) / self.pixel_per_meter_width,
+            ((v + 0.5) - self.cy) / self.pixel_per_meter_height,
         )
 
-    def world_to_image_frame(self, pos_x: float, pos_y: float) -> tuple:
+    def image_plane_to_pixel(self, pos_x: float, pos_y: float) -> tuple:
         """
-        Reverse function for  :func:`imageToWorldFrame`, takes the 3D world coordinates of the camera plane
+        Reverse function for  :func:`pixel_to_image_plane`, takes the 3D world coordinates of the camera plane
         and returns pixels
 
         :param pos_x: X position of the pixel on the world plane in meters
         :param pos_y: Y position of the pixel on the world plane in meters
         :return: Tuple (x, y) of the pixel coordinates of in the image
         """
+        # return (
+        #     (self.cx + pos_x * self.pixel_per_meter_width) - 0.5,
+        #     (self.cy + pos_y * self.pixel_per_meter_height) - 0.5,
+        # )
+
         return (
-            (self.horizontal_aspect / 2.0 + pos_x / self.pixel_width) - 0.5,
-            (self.vertical_aspect / 2.0 + pos_y / self.pixel_height) - 0.5,
+            (self.cx + pos_x * self.pixel_per_meter_width) - 0.5,
+            (self.cy + pos_y * self.pixel_per_meter_height) - 0.5,
         )
 
     # CACHED PROPERTIES ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    @cached_property
+    def intrinsic_matrix(self):
+        # For our Carla camera alpha_u = alpha_v = alpha
+        # alpha can be computed given the cameras field of view via
+        fx = (self.horizontal_aspect / 2.0) / np.tan(self.horizontal_fov / 2.)
+        # alpha1 = self.focal_length*self.horizontal_aspect/self.image_sensor_width
+        fy = (self.vertical_aspect / 2.0) / np.tan(self.vertical_fov / 2.)
+        # alpha2 = self.focal_length * self.vertical_aspect / self.image_sensor_height
+        cx = self.cx
+        cy = self.cy
+        return np.array([[fx, 0, cx],
+                         [0, fy, cy],
+                         [0, 0, 1.0]])
+
     @cached_property
     def horizontal_aspect(self) -> int:
         """
@@ -71,6 +95,24 @@ class CameraBase:
         :return: width in pixels
         """
         return math.sqrt(self.horizontal_aspect_orig**2 + self.horizontal_aspect_orig**2) # TODO should this be rounded ?
+
+    @cached_property
+    def cx(self) -> int:
+        """
+        The center x pixel coordinate of the camera
+
+        :return: width in pixels
+        """
+        return int(self.horizontal_aspect / 2)
+
+    @cached_property
+    def cy(self) -> int:
+        """
+        The center y pixel coordinate of the camera
+
+        :return: width in pixels
+        """
+        return int(self.vertical_aspect / 2)
 
     @cached_property
     def horizontal_fov(self):
@@ -104,15 +146,15 @@ class CameraBase:
         return math.tan(self.horizontal_fov / 2.0) * 2.0 * self.focal_length
 
     @cached_property
-    def pixel_height(self):
+    def pixel_per_meter_height(self):
         """
-        The height of a pixel in real 3d measurements (m). This is how we relate pixels to real distance
+        Converts pixels to meters in 3d measurements (m/pixel). This is how we relate pixels to real distance
         """
-        return self.image_sensor_height / self.vertical_aspect
+        return self.vertical_aspect / self.image_sensor_height
 
     @cached_property
-    def pixel_width(self):
+    def pixel_per_meter_width(self):
         """
-        The width of a pixel in real 3d measurements (m). This is how we relate pixels to real distance
+        Converts pixels to meters in 3d measurements (m/pixel). This is how we relate pixels to real distance
         """
-        return self.image_sensor_width / self.horizontal_aspect
+        return self.horizontal_aspect / self.image_sensor_width

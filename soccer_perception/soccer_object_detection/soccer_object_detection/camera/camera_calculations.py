@@ -17,8 +17,6 @@ class CameraCalculations(CameraBase):
         self.pose = Transformation()
 
         # camera intriniscs and extrinsics
-        self.intrinsic_matrix = self.get_intrinsic_matrix()
-        self.inverse_intrinsic_matrix = np.linalg.inv(self.intrinsic_matrix)
 
 
 
@@ -34,7 +32,7 @@ class CameraCalculations(CameraBase):
         pitch = self.pose.orientation_euler[1]
         d = math.sin(pitch) * self.focal_length
 
-        (r, h) = self.world_to_image_frame(0, -d)
+        (r, h) = self.image_plane_to_pixel(0, -d)
         return int(min(max(0, h), self.resolution_y))
 
     def reset_position(self, from_world_frame=False, camera_frame="/camera", skip_if_not_found=False):
@@ -67,8 +65,9 @@ class CameraCalculations(CameraBase):
         # TODO this actually might need an accruate pose, but is it truly necessay
         # TODO verify the math
         # TODO should be easy to verify if the relative conversion works since you have the answers
-        tx, ty = self.image_to_world_frame(pos[0], pos[1])
-        pixel_pose = Transformation(position=(self.focal_length, tx, ty))
+        tx, ty = self.pixel_to_image_plane(pos[0], pos[1])
+        # test output
+        pixel_pose = Transformation(position=(self.focal_length, -tx, -ty))
         camera_pose = self.pose
         pixel_world_pose = camera_pose @ pixel_pose
         ratio = (camera_pose.position[2] - pixel_world_pose.position[2]) / camera_pose.position[2]  # TODO Fix divide by 0 problem
@@ -77,19 +76,6 @@ class CameraCalculations(CameraBase):
 
         return [x_delta + camera_pose.position[0], y_delta + camera_pose.position[1], 0]
 
-
-    def get_intrinsic_matrix(self, ):
-        # For our Carla camera alpha_u = alpha_v = alpha
-        # alpha can be computed given the cameras field of view via
-        alpha1 = (self.horizontal_aspect / 2.0) / np.tan(self.horizontal_fov / 2.)
-        # alpha1 = self.focal_length*self.horizontal_aspect/self.image_sensor_width
-        alpha2 = (self.vertical_aspect / 2.0) / np.tan(self.vertical_fov / 2.)
-        # alpha2 = self.focal_length * self.vertical_aspect / self.image_sensor_height
-        Cu = self.horizontal_aspect / 2.0
-        Cv = self.vertical_aspect / 2.0
-        return np.array([[alpha1, 0, Cu],
-                         [0, alpha2, Cv],
-                         [0, 0, 1.0]])
     def map_point(self,u, v):
 
         # convert the map -> cam transform into the correct orientation for the IPM
@@ -295,7 +281,7 @@ class CameraCalculations(CameraBase):
 
         tx = pos.position[1] * ratio
         ty = pos.position[2] * ratio
-        x, y = self.world_to_image_frame(tx, ty)
+        x, y = self.image_plane_to_pixel(tx, ty)
         return [x, y]
 
     # TODO should these be here or in the node?
@@ -350,68 +336,68 @@ class CameraCalculations(CameraBase):
 
         return bounding_box
 
-    def calculate_ball_from_bounding_boxes(self, bounding_boxes: [float] = [], ball_radius: float = 0.07) -> Transformation:
+    def calculate_ball_from_bounding_boxes(self, bounding_boxes: list[float], object_width: float = 0.14, object_height: float = 0.14) -> Transformation:
         """
         Reverse function for  :func:`~soccer_common.Camera.calculateBoundingBoxesFromBall`, takes the bounding boxes
-        of the ball as seen on the camera and return the 3D position of the ball assuming that the ball is on the ground
+        of the object as seen on the camera and return the 3D position of the ball assuming that the ball is on the ground
 
-        :param ball_radius: The radius of the ball in meters
         :param bounding_boxes: The bounding boxes of the ball on the camera in the format [[x1,y1], [x1,y1]] which are the top left and bottom right of the bounding box respectively
+        :param object_width: The width of the object in meters
+        :param object_height: The height of the object in meters
         :return: 3D coordinates of the ball stored in the :class:`Transformation` format
         """
 
         # bounding boxes [(y1, z1), (y2, z2)]
-        r = ball_radius
+        
+        y1_pixel = bounding_boxes[0][0]
+        z1_pixel = bounding_boxes[0][1]
+        y2_pixel = bounding_boxes[1][0]
+        z2_pixel = bounding_boxes[1][1]
+        
+        if object_width == object_height: # box
+            # Assuming the ball is a sphere, the bounding box must be a square, averaging the borders
+            ym = (y1_pixel + y2_pixel) / 2
+            zm = (z1_pixel + z2_pixel) / 2
+            length = z2_pixel - z1_pixel
+            width = y2_pixel - y1_pixel
+            y1_pixel = ym - (width / 2)
+            z1_pixel = zm - (length / 2)
+            y2_pixel = ym + (width / 2)
+            z2_pixel = zm + (length / 2)
 
-        y1 = bounding_boxes[0][0]
-        z1 = bounding_boxes[0][1]
-        y2 = bounding_boxes[1][0]
-        z2 = bounding_boxes[1][1]
+            trig_func = math.sin
+        else:
+            trig_func = math.tan
 
-        # Assuming the ball is a sphere, the bounding box must be a square, averaging the borders
-        ym = (y1 + y2) / 2
-        zm = (z1 + z2) / 2
-        length = z2 - z1
-        width = y2 - y1
-        y1 = ym - (width / 2)
-        z1 = zm - (length / 2)
-        y2 = ym + (width / 2)
-        z2 = zm + (length / 2)
 
-        y1w, z1w = self.image_to_world_frame(y1, z1)
-        y2w, z2w = self.image_to_world_frame(y2, z2)
-        y1w = -y1w
-        z1w = -z1w
-        y2w = -y2w
-        z2w = -z2w
+        y1_plane, z1_plane = self.pixel_to_image_plane(y1_pixel, z1_pixel)
+        y2_plane, z2_plane = self.pixel_to_image_plane(y2_pixel, z2_pixel)
 
-        f = self.focal_length
-
-        theta_y1 = math.atan2(y1w, f)
-        theta_y2 = math.atan2(y2w, f)
+        theta_y1 = math.atan2(y1_plane, self.focal_length)
+        theta_y2 = math.atan2(y2_plane, self.focal_length)
 
         theta_yy = (theta_y2 - theta_y1) / 2
         theta_y = theta_y1 + theta_yy
 
-        dy = r / math.sin(theta_yy)
+        dy = (object_width/2.0) / trig_func(theta_yy)
 
         xy = (math.cos(theta_y) * dy, math.sin(theta_y) * dy)
 
-        theta_z1 = math.atan2(z1w, f)
-        theta_z2 = math.atan2(z2w, f)
+        theta_z1 = math.atan2(z1_plane, self.focal_length)
+        theta_z2 = math.atan2(z2_plane, self.focal_length)
 
         theta_zz = (theta_z2 - theta_z1) / 2
         theta_z = theta_z1 + theta_zz
 
-        dz = r / math.sin(theta_zz)
+        dz = (object_height/2) / trig_func(theta_zz)
 
         xz = (math.cos(theta_z) * dz, math.sin(theta_z) * dz)
 
-        ball_x = xy[0]
+        ball_x = xy[0] # 0.5 * (xy[0] + xz[0])
         ball_y = xy[1]
         ball_z = xz[1]
 
         tr = Transformation([ball_x, -ball_y, -ball_z])
         tr_cam = self.pose @ tr
-        # print(tr) # TODO could use for head control
+        # print(tr.position) # TODO could use for head control
         return tr_cam  # tr
