@@ -1,7 +1,7 @@
 from soccer_common import PID
 
 
-class Stabilize:
+class StabilizeController:
     """
     Manages PID loops for pitch, roll while standing and walking.
     """
@@ -29,10 +29,13 @@ class Stabilize:
         self.walking_roll_offset = parameters["walking_roll_offset"]
 
     # TODO i feel like this can be better organized
-    def reset_imus(self):
+    def reset(self):
         """
         Reset the walking and standing PID values
         """
 
         self.walking_pitch_pid.reset()
         self.walking_roll_pid.reset()
+
+    def update(self,pitch, roll):
+        return self.walking_pitch_pid.update(pitch), self.walking_roll_pid.update(roll)

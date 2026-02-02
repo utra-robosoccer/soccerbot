@@ -9,7 +9,7 @@ from rclpy.node import Node
 from soccer_pycontrol.model.model_ros.bez_ros import BezROS
 from soccer_pycontrol.walk_engine.foot_step_planner import FootStepPlanner
 from soccer_pycontrol.walk_engine.navigator import Navigator
-from soccer_pycontrol.walk_engine.stabilize import Stabilize
+from soccer_pycontrol.walk_engine.stabilize_controller import StabilizeController
 from soccer_pycontrol.walk_engine.walker import Walker
 from std_msgs.msg import Bool, Float32MultiArray
 
@@ -35,7 +35,7 @@ class NavigatorRos(Navigator, Node):
         # self.func_step = self.rate.sleep  # TODO is this needed?
         self.walker = Walker(self.bez, self.foot_step_planner, imu_feedback_enabled=imu_feedback_enabled)
         self.rate = self.create_rate(1 / self.foot_step_planner.DT)
-        self.walk_pid = Stabilize(self.bez.parameters)
+        self.walk_pid = StabilizeController(self.bez.parameters)
         self.max_vel = 0.03
         self.nav_x_pid = PID(
             Kp=0.1,

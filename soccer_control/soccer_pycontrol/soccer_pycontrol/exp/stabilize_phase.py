@@ -87,7 +87,7 @@ class StabilizePhase:
         F = self.walking_pid_roll.update(y_n)
         return min(t + F, robot_path.duration())
 
-    def reset_imus(self):
+    def reset(self):
         """
         Reset the walking and standing PID values
         """
