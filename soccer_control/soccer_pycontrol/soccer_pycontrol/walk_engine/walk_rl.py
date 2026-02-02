@@ -89,7 +89,7 @@ class WalkRL(WalkInterface):
     def walking(self,dx:float= 0, dy:float= 0, dtheta:float = 0) -> None:
         self.cmd[0] = dx * 12.5
         self.cmd[1] = dy * 12.5
-        self.cmd[2] = dtheta * 3
+        self.cmd[2] = dtheta * 12.5
 
         self.get_control()
 

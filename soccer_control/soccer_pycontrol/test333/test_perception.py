@@ -123,9 +123,10 @@ class TestSensors(unittest.TestCase):
         bez = Bez(sim)
         head = HeadControl(bez)
         walk = Navigator(bez, imu_feedback_enabled=True, walk_engine_type="RL")
-
+        sim.set_T_world_ball(Transformation(position=[2, -1, 0.14], euler=[0, 0, 0]))
         bez.motor_control.set_single_motor("head_pitch", 0.4)
         # bez.motor_control.set_single_motor("head_yaw", 0.1)
+        # bez.ready()
         bez.motor_control.set_motor()
         start = time.time()
         cam_dt = 1.0/30.0
@@ -133,10 +134,11 @@ class TestSensors(unittest.TestCase):
         last_time = 0
         ball_pixel = [0, 0]
         while sim.t < 300:
-            if (sim.t - last_time) > 1:
+            if (sim.t - last_time) > 6:
                 last_time = sim.t
-                x,y = random.uniform(0.5, 5), random.uniform(-1.5, 1.5)
-                sim.set_T_world_ball(Transformation(position=[x, y, 0.14], euler=[0, 0, 0]))
+                x,y = random.uniform(0.5, 2), random.uniform(-1.5, 1.5)
+                # x,y = 2,1
+                # sim.set_T_world_ball(Transformation(position=[2, y, 0.14], euler=[0, 0, 0]))
 
             if sim.frame % n_substeps == 0:
                 img = bez.sensors.get_camera_image()
@@ -161,16 +163,21 @@ class TestSensors(unittest.TestCase):
                                   # f" pos2: {bez.sensors.get_pose().rotation_matrix @ bez.sensors.get_ball_local_frame().position + bez.sensors.get_pose().position} ball: {bez.sensors.get_ball_world_frame().position}"
                                   )
 
-                        print(
-                            string,#end='\r',
-                            flush=True,
-                        )
+                        # print(
+                        #     string,#end='\r',
+                        #     flush=True,
+                        # )
 
 
                 # if "DISPLAY" in os.environ:
                 cv2.imshow("CVT Color2", dimg)
                 cv2.waitKey(1)
-            head.track_ball(ball_pixel)
+            yaw_cmd = head.track_ball(ball_pixel)
+            print(bez.sensors.get_pose().position)
+            pos = Transformation(position=[2.5,-2,0], euler=[yaw_cmd,0,0])
+            # if yaw_cmd == 0:
+            #     walk.walk_engine.reset_walk()
+            walk.walk(pos, False)
             elapsed = time.time() - start
             frames = sim.frame
             sim.render(True)

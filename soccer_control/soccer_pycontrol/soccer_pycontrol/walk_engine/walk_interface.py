@@ -36,7 +36,7 @@ class WalkInterface(ABC):
             self.stabilize_walk(pitch, roll)
 
     def stop(self) -> None:
-        self.bez.ready()
+        # self.bez.ready()
         self.enable_walking = False
 
 

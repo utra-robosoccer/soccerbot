@@ -80,7 +80,7 @@ class ObjectDetectionNode:
             if len(self.ls) > 50:
                 self.ls.pop(0)
             self.ls.append(time.time() - start)
-            print(np.array(self.ls).mean())
+            # print(np.array(self.ls).mean())
             # TODO should be a func
             bbs_msg = BoundingBoxes()
             id = 0

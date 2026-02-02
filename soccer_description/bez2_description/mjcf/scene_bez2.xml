@@ -31,7 +31,7 @@
 <!--		<frame pos="5 0.5 0.4">-->
 <!--          <attach model="bez2" body="torso" prefix="tt"/>-->
 <!--        </frame>-->
-        <frame pos="5 -0.5 0">
+        <frame pos="2 -0.5 0">
           <attach model="ball" body="ball" prefix=""/>
         </frame>
 	</worldbody>

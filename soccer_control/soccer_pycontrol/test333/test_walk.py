@@ -42,7 +42,7 @@ class TestMuJoCo(unittest.TestCase):
         )
         while sim.t < 3000:
             # walk.walk(1)
-            policy.cmd = [1,0, 0]
+            policy.cmd = [0,0, 0]
 
             policy.get_control()
 
@@ -90,7 +90,7 @@ class TestMuJoCo(unittest.TestCase):
         sim = SimWorld()
         bez = Bez(sim)
         walk = Navigator(bez, imu_feedback_enabled=True, walk_engine_type="RL")
-        bez.ready()
+        # bez.ready()
         sim.wait(200)
 
         target_goal = Transformation(position=[0.07, -0.00, 0], euler=[0, 0, 0])
@@ -193,7 +193,7 @@ class TestMuJoCo(unittest.TestCase):
 
                 head.track_ball(ball_pixel)
 
-                walk.walk(ball_pos, True)
+                walk.walk(ball_pos, True) # TODO interesting glitch where if the head doesnt turn down it will not go forward whern the ball is about to go off screen
 
                 # print("here: " + str(1 / (time.time() - s)))
                 # s = time.time()

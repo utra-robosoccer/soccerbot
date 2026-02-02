@@ -15,6 +15,7 @@ from soccer_pycontrol.walk_engine.error_calc import (
 from soccer_pycontrol.walk_engine.velocity_path_controller import VelocityPathController
 
 from soccer_common import PID, Transformation
+from soccer_pycontrol.walk_engine.velocity_yaw_controller import VelocityYawController
 from soccer_pycontrol.walk_engine.walk_placo import WalkPlaco
 from soccer_pycontrol.walk_engine.walk_rl import WalkRL
 
@@ -47,7 +48,7 @@ class Navigator:
             self.walk_engine =  WalkRL(self.bez, imu_feedback_enabled, policy_name=policy_name)
 
         self.vel_path_control = VelocityPathController()
-
+        self.vel_yaw_control = VelocityYawController()
 
         self.error_tol = 0.05  # in m TODO add as a param and in the ros version
 
@@ -78,7 +79,8 @@ class Navigator:
         if self.walk_engine.t < 0:
 
             self.vel_path_control.reset()
-            self.vel_path_control.setpoint(target_goal.position[0], target_goal.position[1], target_goal.orientation_euler[0])
+            self.vel_path_control.setpoint(0,0)#target_goal.position[0], target_goal.position[1])
+            self.vel_yaw_control.setpoint( 0 )#target_goal.orientation_euler[0])
             dx, dy = find_new_vel(goal_loc=target_goal.position[:2])
             self.walk_engine.setup(dx,dy)
             # he = self.heading_error(target_goal.orientation_euler[0], pose.orientation_euler[0])
@@ -102,41 +104,46 @@ class Navigator:
             goal.rotation_matrix = np.matmul(target_goal.rotation_matrix, scipy.linalg.inv(pose.rotation_matrix))
             goal.position = pose.rotation_matrix.T @ target_goal.position - pose.rotation_matrix.T @ pose.position
             # print(goal.position , pose.position)
-            x_error = target_goal.position[0] - pose.position[0]
-            y_error = target_goal.position[1] - pose.position[1]
-            head_error = heading_error(target_goal.orientation_euler[0], pose.orientation_euler[0])
+            # x_error = target_goal.position[0] - pose.position[0]
+            # y_error = target_goal.position[1] - pose.position[1]
+            # head_error = heading_error(target_goal.orientation_euler[0], pose.orientation_euler[0])
             # TODO replace with pure pursuit
             # TODO make  a 2d unit test
-            self.vel_path_control.setpoint(goal.position[0], goal.position[1], target_goal.orientation_euler[0])
-            dx, dy, dtheta = self.vel_path_control.update(0, 0,pose.orientation_euler[0] )
+            # self.vel_path_control.setpoint(goal.position[0], goal.position[1])
+            # self.vel_yaw_control.setpoint( target_goal.orientation_euler[0])
+            dx, dy = self.vel_path_control.update(goal.position[0], goal.position[1])
+            error_theta = target_goal.orientation_euler[0] - self.bez.sensors.get_pose().orientation_euler[0]
+
+            dtheta = self.vel_yaw_control.update( error_theta)
             # print(f"dx: {round(dx, 3)} dy: {round(dy, 3)} dtheta: {round(dtheta, 3)} err_x: {round(x_error, 3)} err_y: {round(y_error, 3)} err_theta: {round(head_error, 3)}")
             self.walk_engine.walking(dx,dy,dtheta)
-        else:
-            self.walk_engine.stop()
+        # else:
+        #     self.walk_engine.stop()
 
     def walk_ball(self, target_goal: Transformation):
         if self.walk_engine.t < 0:
 
             self.vel_path_control.reset()
-            self.vel_path_control.setpoint(target_goal.position[0], target_goal.position[1], 0)
-
+            self.vel_path_control.setpoint(0,0)
+            self.vel_yaw_control.setpoint(0)
             dx, dy = find_new_vel(goal_loc=target_goal.position[:2])
+            self.walk_engine.setup(dx, dy)
 
-            self.walk_engine.setup(dx,dy)
             # TODO fix and add to a nav could add a funct for pybullet or python
             # TODO could have a balancing mode by default could use the COM
             # TODO for ball could just remove
+        print(f" hi {target_goal.orientation_euler}   {self.bez.sensors.get_pose().orientation_euler[0]}   {abs(heading_error(target_goal.orientation_euler[0], self.bez.sensors.get_pose().orientation_euler[0]))}")
         if (
             position_error(target_goal.position[:2]) > self.error_tol
             or abs(heading_error(target_goal.orientation_euler[0], self.bez.sensors.get_pose().orientation_euler[0])) > self.error_tol
         ):
-            self.vel_path_control.setpoint(target_goal.position[0], target_goal.position[1], 0)
-
-            dx, dy, dtheta = self.vel_path_control.update(0,0, self.bez.sensors.get_pose().orientation_euler[0])
+            dx, dy = self.vel_path_control.update(target_goal.position[0], target_goal.position[1])
+            error_theta = target_goal.orientation_euler[0] - self.bez.sensors.get_pose().orientation_euler[0]
+            dtheta = self.vel_yaw_control.update(error_theta)
 
             # TODO replace with pure pursuit
             # TODO make  a 2d unit test
-            # print(round(dx, 3), " ", round(dy, 3), " ", round(dtheta, 3), " ", round(x_error, 3), " ", round(y_error, 3), " ", round(head_error, 3))
+            print(round(dx, 3), " ", round(dy, 3), " ", round(dtheta, 3), " ",)
             self.walk_engine.walking(dx,dy,dtheta)
         # else:
         #     self.ready()
