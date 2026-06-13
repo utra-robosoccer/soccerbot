@@ -68,7 +68,7 @@ class Bez:
         self._status = status
 
     def ready(self):  # TODO fix default angles it leans
-        # self.motor_control.set_all_angles(self.default_angles)
+        self.motor_control.set_all_angles(self.default_angles)
         names = [
             "left_hip_yaw",
             "left_hip_roll",
@@ -84,7 +84,7 @@ class Bez:
             "right_ankle_roll",
         ]
 
-        self.motor_control.set_motor(names, self.default_leg_angles)
+        # self.motor_control.set_motor(names, self.default_leg_angles)
 
     def get_parameters(self) -> dict:
         with open(
