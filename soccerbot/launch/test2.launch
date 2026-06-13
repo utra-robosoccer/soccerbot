@@ -61,7 +61,7 @@
 
 <node pkg="soccer_firmware_interface" name="soccer_firmware_interface"  exec="soccer_firmware" output="screen" >
 <!--         <param name="robot_model" value="$(var robot_model)" /> -->
-<!--         <param name="/use_sim_time" value="$(arg simulation)" /> -->
+<!--         <param name="/use_sim_time" value="$(var simulation)" /> -->
         <param name="motor_types" value="$(var motor_types)" />
         <param name ="motor_mapping" value="$(var motor_mapping)" />
     </node>
@@ -89,7 +89,7 @@
 
 <!--     </group> -->
     <node pkg="robot_state_publisher" exec="robot_state_publisher" name="robot_state_publisher" output="screen">
-        <param name='robot_description' value="$(command 'xacro $(find-pkg-share bez2_description)/urdf/bez2.xacro
+        <param name='robot_description' value="$(command 'xacro $(find-pkg-share bez2_description)/urdf/assembly.xacro
         model_type:=dae
         file_path:=package://bez2_description
         has_base_footprint:=false
