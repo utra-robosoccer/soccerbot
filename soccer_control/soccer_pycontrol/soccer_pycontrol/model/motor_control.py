@@ -4,13 +4,14 @@ import mujoco
 import numpy as np
 
 
-def wrapToPi(num: float) -> float: # TODO put in common
+def wrapToPi(num: float) -> float:  # TODO put in common
     """
     Wraps a angle to pi, etc -3pi -> pi
     :param num: Angle in radians
     """
     rem = (num + np.pi) % (2 * np.pi) - np.pi
     return rem
+
 
 # class MotorData:
 #     def __init__(self, motor_names: dict):
@@ -62,7 +63,7 @@ class MotorControl:
         self.ctrl_dofs_to_index = {}
         for name in self.dof_names:
             self.ctrl_dofs_to_index[name] = self.get_actuator_index(name)
-
+        print()  # TODO this whole thing should be a dict
         self.configuration = np.zeros(self.dof)
         self.configuration_offset = np.zeros(self.dof)
 
@@ -102,15 +103,42 @@ class MotorControl:
         """
         addr = self.model.jnt_dofadr[self.dofs_to_index[name]]
         return self.data.qvel[addr]
+
     def get_q_legs(self):
-        names = ["left_hip_yaw", "left_hip_roll", "left_hip_pitch", "left_knee", "left_ankle_pitch", "left_ankle_roll", "right_hip_yaw", "right_hip_roll", "right_hip_pitch", "right_knee", "right_ankle_pitch", "right_ankle_roll"]
+        names = [
+            "left_hip_yaw",
+            "left_hip_roll",
+            "left_hip_pitch",
+            "left_knee",
+            "left_ankle_pitch",
+            "left_ankle_roll",
+            "right_hip_yaw",
+            "right_hip_roll",
+            "right_hip_pitch",
+            "right_knee",
+            "right_ankle_pitch",
+            "right_ankle_roll",
+        ]
         index = []
         for name in names:
             index.append(self.get_q(name))
         return index
 
     def get_qvel_legs(self):
-        names = ["left_hip_yaw", "left_hip_roll", "left_hip_pitch", "left_knee", "left_ankle_pitch", "left_ankle_roll", "right_hip_yaw", "right_hip_roll", "right_hip_pitch", "right_knee", "right_ankle_pitch", "right_ankle_roll"]
+        names = [
+            "left_hip_yaw",
+            "left_hip_roll",
+            "left_hip_pitch",
+            "left_knee",
+            "left_ankle_pitch",
+            "left_ankle_roll",
+            "right_hip_yaw",
+            "right_hip_roll",
+            "right_hip_pitch",
+            "right_knee",
+            "right_ankle_pitch",
+            "right_ankle_roll",
+        ]
         index = []
         for name in names:
             index.append(self.get_qdot(name))
@@ -217,7 +245,7 @@ class MotorControl:
         self.configuration[dof_idx] = target_angles
 
     def set_leg_hip_roll_target_angle(self, target: float) -> None:
-        self.configuration_offset[self.ctrl_dofs_to_index["left_hip_roll"]] = -target # todo maybe can optimize thhis
+        self.configuration_offset[self.ctrl_dofs_to_index["left_hip_roll"]] = -target  # todo maybe can optimize thhis
         self.configuration_offset[self.ctrl_dofs_to_index["right_hip_roll"]] = +target
 
     def set_leg_hip_pitch_target_angle(self, target: float) -> None:

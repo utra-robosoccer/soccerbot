@@ -117,7 +117,8 @@ void init_ports() {
 	  .currMotor  = 0,
 	  .currReadMotor  = 0,
       .numMotors      = 3,
-      .motorIds       = {2, 3, 19}, // right arm chain + top neck motor
+
+      .motorIds       = {4, 5, 6}, // left hip
       .protocol       = {2, 2, 2}
     };
 
@@ -132,8 +133,8 @@ void init_ports() {
 	  .currMotor  = 0,
 	  .currReadMotor  = 0,
       .numMotors      = 3,
-      .motorIds       = {4, 5, 6}, // left hip
-      .protocol       = {2, 2, 2}
+	  .motorIds       = {2, 3, 19}, // right arm chain + top neck motor
+	        .protocol       = {2, 2, 2}
     };
 
   // port4 => UART4 ==> J3 on new PCB

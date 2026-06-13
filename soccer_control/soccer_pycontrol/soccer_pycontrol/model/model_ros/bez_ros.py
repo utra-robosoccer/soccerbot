@@ -14,8 +14,8 @@ class BezROS(Bez):
     def __init__(self, node: rclpy.node.Node):
         self.node = node
         self.robot_model = "bez2"  # self.get_param("robot_model", "bez2")
-        self.node.declare_parameter("sim", os.environ.get("SIM", False))
-        _sim = self.node.get_parameter("sim").get_parameter_value().bool_value
+        # self.node.declare_parameter("sim", os.environ.get("SIM", False))
+        _sim = False  # self.node.get_parameter("sim").get_parameter_value().bool_value
         if _sim:
             sim = "_sim"
         else:
@@ -30,6 +30,52 @@ class BezROS(Bez):
         self.motor_control = MotorControlROS(self.node, motor_offsets)
 
         self.sensors = SensorsROS(self.node)
+        self.default_leg_angles = np.array(
+            [-0.02901, 0.06566, 0.87410, -1.54022, 0.67634, -0.07002, -0.01830, 0.04949, 0.85711, -1.54784, 0.69839, -0.05164]
+        )
+        self.default_angles = np.array(
+            [
+                -0.00038,
+                0.00058,
+                -0.44675,
+                0.00074,
+                2.50858,
+                -0.02901,
+                0.06566,
+                0.87410,
+                -1.54022,
+                0.67634,
+                -0.07002,
+                -0.44962,
+                -0.00074,
+                2.50967,
+                -0.01830,
+                0.04949,
+                0.85711,
+                -1.54784,
+                0.69839,
+                -0.05164,
+            ]
+        )
+
+    def ready(self):  # TODO fix default angles it leans
+        # self.motor_control.set_all_angles(self.default_angles)
+        names = [
+            "left_hip_yaw",
+            "left_hip_roll",
+            "left_hip_pitch",
+            "left_knee",
+            "left_ankle_pitch",
+            "left_ankle_roll",
+            "right_hip_yaw",
+            "right_hip_roll",
+            "right_hip_pitch",
+            "right_knee",
+            "right_ankle_pitch",
+            "right_ankle_roll",
+        ]
+
+        self.motor_control.set_motor(names, self.default_leg_angles)
 
     # TODO fix dupe
     def get_motor_names(self):

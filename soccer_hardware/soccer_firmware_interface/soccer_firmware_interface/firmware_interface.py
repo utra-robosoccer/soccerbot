@@ -102,7 +102,7 @@ class FirmwareInterface(Node):
                     # angle = data_l[0] | (data_h[0] << 8)
                     # print(data_h[0], data_l[0], angle)
 
-                    data = self.serial.read(size=2 + 2 * 20 + 12)
+                    data = self.serial.read(size=2 + 4 * 20 + 12)
                     # s = time.time()
                     # data = self.serial.read(size=2 + 2 * 20 + 12)
                     # print(1.0 / (time.time() - s))
@@ -121,6 +121,7 @@ class FirmwareInterface(Node):
         j.header.stamp = self.get_clock().now().to_msg()
         for i in range(20):
             val = data[i * 2 + 2] | data[i * 2 + 3] << 8
+            val2 = data[i * 2 + 2 + 20 * 2] | data[i * 2 + 3 + 20 * 2] << 8
 
             motor_name = self.motor_id_to_name_dict[i]
             motor_type = self.motor_mapping[motor_name]["type"]
@@ -137,7 +138,17 @@ class FirmwareInterface(Node):
                 motor_angle_radian = -motor_angle_radian
             j.name.append(motor_name)
 
+            # print(motor_name, ": ",data[2 + 2 * 20: 2 + 4 * 20])
+            if val2 > 300:
+                val2 = 65535 - val2
+            # val2 = 65535 - val2
+            vel = (val2 * 0.229 * 2 * math.pi) / 60.0
+
             j.position.append(motor_angle_radian) # TODO we need velocity
+            j.velocity.append(vel)
+
+
+
         self.joint_state_create_publisher.publish(j)
 
     def pub_imu(self, data):
@@ -145,7 +156,7 @@ class FirmwareInterface(Node):
 
         imu.header.stamp = self.get_clock().now().to_msg()
         imu.header.frame_id = "imu_link"
-        imu_data = data[2 + 2 * 20: 2 + 2 * 20 + 12]
+        imu_data = data[2 + 4 * 20: 2 + 4 * 20 + 12]
 
         # https://www.mouser.com/datasheet/2/783/BST_BMI088_DS001-1509549.pdf
         ACC_RANGE = 32768.0 / 2.0 / 1.5  # page 27 datasheet bmi088

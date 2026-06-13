@@ -2,8 +2,8 @@
 <robot name="bez2" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
 <xacro:include filename="$(find bez2_description)/urdf/materials.xacro" />
-<xacro:include filename="$(find bez2_description)/urdf/bez2.trans" />
-<xacro:include filename="$(find bez2_description)/urdf/bez2.gazebo" />
+<xacro:include filename="$(find bez2_description)/urdf/assembly.trans" />
+<xacro:include filename="$(find bez2_description)/urdf/assembly.gazebo" />
 <link name="base_link">
   <inertial>
     <origin xyz="-0.02024929347181477 0.00329389202927954 -0.02671963219571571" rpy="-1.57 0  0"/>

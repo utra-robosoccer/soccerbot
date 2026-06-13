@@ -19,6 +19,7 @@ void motor_torque_en_p2(MotorPort *p, uint8_t id, uint8_t val);
 
 void read_motor_id_p2(MotorPort * p);
 void read_motor_present_position_p2(MotorPort * p, uint8_t id);
+void read_motor_present_velocity_p2(MotorPort * p, uint8_t id);
 void write_min_position_limit_p2(MotorPort *port, uint8_t id, uint32_t limit);
 void write_max_position_limit_p2(MotorPort *port, uint8_t id, uint32_t limit);
 
