@@ -6,25 +6,23 @@ from random import uniform
 import cv2
 import mujoco
 import numpy as np
+import onnxruntime as rt
 from etils import epath
-
 from soccer_object_detection.object_detect_node import ObjectDetectionNode
 from soccer_pycontrol.model.bez import Bez
 from soccer_pycontrol.model.sim_world import SimWorld
-
-from soccer_common import Transformation
 from soccer_pycontrol.walk_engine.head_controller import HeadControl
 from soccer_pycontrol.walk_engine.navigator import Navigator
 from soccer_pycontrol.walk_engine.rl_walk import RLWalk
 from soccer_trajectories.trajectory_manager_sim import TrajectoryManagerSim
-import onnxruntime as rt
-
 from test333.keyboard_gamepad import KeyboardGamepad
+
+from soccer_common import Transformation
 
 REAL_TIME = True
 
-class TestMuJoCo(unittest.TestCase):
 
+class TestMuJoCo(unittest.TestCase):
     def test_walk_policy(self):
         sim = SimWorld(keyframe="stand")
         bez = Bez(sim)
@@ -42,7 +40,7 @@ class TestMuJoCo(unittest.TestCase):
         )
         while sim.t < 3000:
             # walk.walk(1)
-            policy.cmd = [0,0, 0]
+            policy.cmd = [0, 0, 0]
 
             policy.get_control()
 
@@ -53,20 +51,17 @@ class TestMuJoCo(unittest.TestCase):
             elapsed = time.time() - start
             frames = sim.frame
 
-
             print(f"Elapsed: {elapsed:.2f}, Frames: {frames}, FPS: {frames / elapsed:.2f}")
 
         sim.close_viewer()
 
-
-
-    def test_walk_placo(self): # TODO get placo workign as a base line
+    def test_walk_placo(self):  # TODO get placo workign as a base line
         sim = SimWorld()
         bez = Bez(sim)
-        walk = Navigator(bez, imu_feedback_enabled=True,  walk_engine_type="PLACO")
+        walk = Navigator(bez, imu_feedback_enabled=True, walk_engine_type="PLACO")
         bez.ready()
         sim.wait(200)
-        target_goal = [0.04, 0., 0, 10, 500]
+        target_goal = [0.04, 0.0, 0, 10, 500]
         # target_goal = Transformation(position=[0, 0, 0], euler=[0, 0, 0])
         start = time.time()
         print("STARTING WALK")
@@ -74,7 +69,7 @@ class TestMuJoCo(unittest.TestCase):
         while sim.t < 20:
             walk.walk(target_goal)
 
-            print("here: " + str(1/(time.time() - s)))
+            print("here: " + str(1 / (time.time() - s)))
             s = time.time()
 
             sim.render(True)
@@ -85,8 +80,7 @@ class TestMuJoCo(unittest.TestCase):
 
         sim.close_viewer()
 
-
-    def test_walk_rand(self): # TODO needs tuning
+    def test_walk_rand(self):  # TODO needs tuning
         sim = SimWorld()
         bez = Bez(sim)
         walk = Navigator(bez, imu_feedback_enabled=True, walk_engine_type="RL")
@@ -95,9 +89,8 @@ class TestMuJoCo(unittest.TestCase):
 
         target_goal = Transformation(position=[0.07, -0.00, 0], euler=[0, 0, 0])
 
-
         start = time.time()
-        x,y,theta = 0,0,0
+        x, y, theta = 0, 0, 0
         print("STARTING WALK")
         while sim.t < 1000:
             sim.render(True)
@@ -109,7 +102,7 @@ class TestMuJoCo(unittest.TestCase):
             # print(bez.sensors.get_pose().position)
             if not walk.walk_engine.enable_walking:
                 print("WALK ENABLED")
-                x = uniform(-1, 1) # TODO own unit test for yaw
+                x = uniform(-1, 1)  # TODO own unit test for yaw
                 y = uniform(-1, 1)
                 theta = uniform(-3.14, 3.14)
                 print("here1: ", x, y, theta)
@@ -117,7 +110,9 @@ class TestMuJoCo(unittest.TestCase):
                 walk.walk_engine.reset_walk()
 
             print("here: ", x, y, theta)
-            print(f"ex: {x - bez.sensors.get_pose().position[0]} ey: {y - bez.sensors.get_pose().position[1]} etheta: {theta - bez.sensors.get_pose().orientation_euler[0]}")
+            print(
+                f"ex: {x - bez.sensors.get_pose().position[0]} ey: {y - bez.sensors.get_pose().position[1]} etheta: {theta - bez.sensors.get_pose().orientation_euler[0]}"
+            )
 
             walk.walk(target_goal)
             # walk.walk(target_goal, display_metrics=False)
@@ -135,7 +130,7 @@ class TestMuJoCo(unittest.TestCase):
 
         sim = SimWorld()
         bez = Bez(sim)
-        tm = TrajectoryManagerSim(sim, bez, "bez2", "getupfront") # TODO nav and traj should not require world
+        tm = TrajectoryManagerSim(sim, bez, "bez2", "getupfront")  # TODO nav and traj should not require world
         walk = Navigator(bez, imu_feedback_enabled=True, walk_engine_type="RL")
         head = HeadControl(bez)
         bez.ready()
@@ -150,10 +145,10 @@ class TestMuJoCo(unittest.TestCase):
         kicked = False
         ball_pixel = [0, 0]
         while sim.t < 300:
-            if sim.frame % int((1/30.0) / sim.dt) == 0:
+            if sim.frame % int((1 / 30.0) / sim.dt) == 0:
                 img = bez.sensors.get_camera_image()
                 img = cv2.resize(img, dsize=(640, 480))
-                dimg, bbs_msg = detect.get_model_output(img) # TODO put in node
+                dimg, bbs_msg = detect.get_model_output(img)  # TODO put in node
                 for box in bbs_msg.bounding_boxes:
                     if box.class_id == "0":
                         detect.camera.pose.position = [0, 0, bez.sensors.get_cam_pose().position[2]]
@@ -165,18 +160,17 @@ class TestMuJoCo(unittest.TestCase):
                         pos = [box.xbase, box.ybase]
                         floor_coordinate_robot = detect.camera.find_floor_coordinate(pos)
                         string = (
-                                  f"z: {bez.sensors.get_cam_pose().position[2]}  eul: {bez.sensors.get_cam_pose().orientation_euler}" +
-                                  f" floor pos: {detect.camera.calculate_ball_from_bounding_boxes(boundingBoxes).position} ball: {bez.sensors.get_ball_local_frame().position}" +
-                                  f" floor pos2: {floor_coordinate_robot}  ball: {bez.sensors.get_ball_local_frame().position}"
-                                  )
+                            f"z: {bez.sensors.get_cam_pose().position[2]}  eul: {bez.sensors.get_cam_pose().orientation_euler}"
+                            + f" floor pos: {detect.camera.calculate_ball_from_bounding_boxes(boundingBoxes).position} ball: {bez.sensors.get_ball_local_frame().position}"
+                            + f" floor pos2: {floor_coordinate_robot}  ball: {bez.sensors.get_ball_local_frame().position}"
+                        )
 
                         print(
-                            string,#end='\r',
+                            string,  # end='\r',
                             flush=True,
                         )
 
                         ball_pos = Transformation(position=floor_coordinate_robot)
-
 
                 # if "DISPLAY" in os.environ:
                 cv2.imshow("CVT Color2", dimg)
@@ -187,18 +181,18 @@ class TestMuJoCo(unittest.TestCase):
                 tm.send_trajectory("rightkick")
                 kicked = True
 
-
                 walk.walk_engine.reset_walk()
             else:
 
                 head.track_ball(ball_pixel)
 
-                walk.walk(ball_pos, True) # TODO interesting glitch where if the head doesnt turn down it will not go forward whern the ball is about to go off screen
+                walk.walk(
+                    ball_pos, True
+                )  # TODO interesting glitch where if the head doesnt turn down it will not go forward whern the ball is about to go off screen
 
                 # print("here: " + str(1 / (time.time() - s)))
                 # s = time.time()
                 # print("ba;ll: " + str(np.linalg.norm(ball_pos.position[:2])))
-
 
                 # walk.walk(ball_pos, ball_pixel, True)
                 # print( "ba;ll: "+ str(np.linalg.norm(ball_pos.position[:2])) )
@@ -212,7 +206,7 @@ class TestMuJoCo(unittest.TestCase):
 
         sim.close_viewer()
 
-    def test_bez1_start_stop(self): # TODO dont know if we need this
+    def test_bez1_start_stop(self):  # TODO dont know if we need this
         sim = SimWorld()
         bez = Bez(sim)
         walk = Navigator(bez, imu_feedback_enabled=False)
