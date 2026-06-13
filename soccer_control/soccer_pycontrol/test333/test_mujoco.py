@@ -17,7 +17,7 @@ from soccer_pycontrol.walk_engine.navigator import Navigator
 from soccer_trajectories.trajectory_manager_sim import TrajectoryManagerSim
 import onnxruntime as rt
 
-from test.keyboard_gamepad import KeyboardGamepad
+from test333.keyboard_gamepad import KeyboardGamepad
 
 REAL_TIME = True
 class TestMuJoCo(unittest.TestCase):
@@ -144,7 +144,7 @@ class TestMuJoCo(unittest.TestCase):
     def test_ready(self):
         sim = SimWorld()
         bez = Bez(sim)
-        walk = Navigator(sim, bez, imu_feedback_enabled=False)
+        walk = Navigator(bez, imu_feedback_enabled=False)
         walk.ready()
         walk.world.step()
         sim.wait(200)

@@ -1,15 +1,24 @@
 import math
 
+import cv2
 import numpy as np
+from sensor_msgs.msg import CameraInfo
+
 from soccer_object_detection.camera.camera_base import CameraBase
 
 from soccer_common.transformation import Transformation
+from shape_msgs.msg import Plane
+import PyKDL
 
 
 class CameraCalculations(CameraBase):
     def __init__(self):
         super(CameraCalculations, self).__init__()
         self.pose = Transformation()
+
+        # camera intriniscs and extrinsics
+
+
 
     def calculate_horizon_cover_area(self) -> int:
         """
@@ -23,7 +32,7 @@ class CameraCalculations(CameraBase):
         pitch = self.pose.orientation_euler[1]
         d = math.sin(pitch) * self.focal_length
 
-        (r, h) = self.world_to_image_frame(0, -d)
+        (r, h) = self.image_plane_to_pixel(0, -d)
         return int(min(max(0, h), self.resolution_y))
 
     def reset_position(self, from_world_frame=False, camera_frame="/camera", skip_if_not_found=False):
@@ -46,8 +55,7 @@ class CameraCalculations(CameraBase):
             rot = [0, 0, 0, 1]
             self.pose = Transformation(trans, rot)
 
-    # TODO maybe in localization
-    def find_floor_coordinate(self, pos: [int]) -> [int]:
+    def find_floor_coordinate(self, pos: list[int]) -> list[int]:
         """
         From a camera pixel, get a coordinate on the floor
 
@@ -57,15 +65,194 @@ class CameraCalculations(CameraBase):
         # TODO this actually might need an accruate pose, but is it truly necessay
         # TODO verify the math
         # TODO should be easy to verify if the relative conversion works since you have the answers
-        tx, ty = self.image_to_world_frame(pos[0], pos[1])
-        pixel_pose = Transformation(position=(self.focal_length, tx, ty))
+        tx, ty = self.pixel_to_image_plane(pos[0], pos[1])
+        # test output
+        pixel_pose = Transformation(position=(self.focal_length, -tx, -ty))
         camera_pose = self.pose
         pixel_world_pose = camera_pose @ pixel_pose
-        ratio = (camera_pose.position[2] - pixel_world_pose.position[2]) / self.pose.position[2]  # TODO Fix divide by 0 problem
+        ratio = (camera_pose.position[2] - pixel_world_pose.position[2]) / camera_pose.position[2]  # TODO Fix divide by 0 problem
         x_delta = (pixel_world_pose.position[0] - camera_pose.position[0]) / ratio
         y_delta = (pixel_world_pose.position[1] - camera_pose.position[1]) / ratio
 
         return [x_delta + camera_pose.position[0], y_delta + camera_pose.position[1], 0]
+
+    def map_point(self,u, v):
+
+        # convert the map -> cam transform into the correct orientation for the IPM
+        rot = Transformation(euler=[-1.57, 0, -1.57])
+        t_map_to_cam = Transformation(position=(0,0,self.pose.position[2]))
+        # t_map_to_cam = self.pose
+        t_map_to_cam.rotation_matrix = rot.rotation_matrix @ t_map_to_cam.rotation_matrix
+        rot = Transformation(euler=self.pose.orientation_euler)
+        t_map_to_cam.rotation_matrix = rot.rotation_matrix @ t_map_to_cam.rotation_matrix
+        # print(t_map_to_cam.position, " 1 ", t_map_to_cam.orientation_euler)
+        t_cam_to_map =  np.linalg.inv(t_map_to_cam)
+        plane_msg = Plane()
+        plane_msg.coef[2] = 1.0  # Normal in z direction
+
+        # Convert plane from general form to point normal form
+        plane = self.plane_general_to_point_normal(plane_msg)
+
+        # View plane from camera frame
+        plane_base_point, plane_normal = self.transform_plane_to_frame(
+            plane=plane, camera_pose=t_cam_to_map)
+
+        points =  np.array([[u, v]])
+        # Convert points to float if they aren't allready
+        if points.dtype.char not in np.typecodes['AllFloat']:
+            points = points.astype(np.float32)
+
+        # Get intersection points with plane
+        np_points = self.get_field_intersection_for_pixels(
+            points,
+            plane_normal,
+            plane_base_point)
+        # print("here: ", np_points)
+        # print(self.pose.position, "   ", self.pose.quaternion)
+
+        # print(t_map_to_cam.position, "   ", t_map_to_cam.quaternion)
+        np_points = np.einsum(
+            'ij, pj -> pi',
+            t_map_to_cam.rotation_matrix,
+            np_points) + t_map_to_cam.position
+        np_point = np_points[0]
+        return np_point
+
+    def plane_general_to_point_normal(self, plane: Plane) -> tuple[np.ndarray, np.ndarray]:
+        """
+        Convert general plane form to point normal form.
+
+        :param plane: The input plane in general form
+        :returns: A tuple with the point and normal
+        """
+        # ax + by + cz + d = 0 where a, b, c are the normal vector
+        a, b, c, d = plane.coef
+        # A perpendicular array to the plane
+        perpendicular = np.array([a, b, c])
+        # Get closest point from (0, 0, 0) to the plane
+        point = perpendicular * -d / np.dot(perpendicular, perpendicular)
+        # A normal vector to the plane
+        normal = perpendicular / np.linalg.norm(perpendicular)
+        return point, normal
+
+    def transform_plane_to_frame(self,
+            plane: tuple[np.ndarray, np.ndarray], camera_pose
+           ) -> tuple[np.ndarray, np.ndarray]:
+        """
+        Transform a plane from one frame to another.
+
+        :param plane: The planes base point and normal vector as numpy arrays
+        :param input_frame: Current frame of the plane
+        :param output_frame: The desired frame of the plane
+        :param time: Timestamp which is used to query the tf buffer and get the tranform at this moment
+        :param buffer: The refrence to the used tf buffer
+        :param timeout: An optinal timeout after which an exception is raised
+        :returns: A Tuple containing the planes base point and normal vector in the
+             new frame at the provided timestamp
+        """
+
+        # Create two points to transform the base point and the normal vector
+        # The second point is generated by adding the normal to the base point
+        field_normal = Transformation(position=(
+            plane[0][0] + plane[1][0],
+            plane[0][1] + plane[1][1],
+            plane[0][2] + plane[1][2]))
+        # print("1", field_normal.position)
+        # field_normal = field_normal @ camera_pose
+        field_normal = camera_pose @ field_normal
+        # print("2", field_normal.position)
+
+        field_point = Transformation(position=(
+            plane[0][0],
+            plane[0][1],
+            plane[0][2]))
+        # print("3", field_point.position)
+
+        # field_point = field_point @ camera_pose
+        field_point = camera_pose @ field_point
+        # field_point = camera_pose.rotation_matrix @ field_point.position + camera_pose.position
+
+        # print("4", field_point.position)
+
+        field_point = np.array(
+            field_point.position)
+        field_normal = np.array(
+            field_normal.position)
+        # print(field_normal, field_point)
+        # field normal is a vector! so it stats at field point and goes up in z direction
+        field_normal = field_point - field_normal
+        return field_point, field_normal
+
+    def get_field_intersection_for_pixels(self,
+            points: np.ndarray,
+            plane_normal: np.ndarray,
+            plane_base_point: np.ndarray,
+            scale: float = 1.0,
+            use_distortion: bool = False) -> np.ndarray:
+        """
+        Map a NumPy array of points in image space on the given plane.
+
+        :param points: A nx2 array with n being the number of points
+        :param plane_normal: The normal vector of the mapping plane
+        :param plane_base_point: The base point of the mapping plane
+        :param scale: A scaling factor used if e.g. a mask with a lower resolution is transformed
+        :param use_distortion: A flag to indicate if distortion should be accounted for.
+            Do not use this if you are working with pixel coordinates from a rectified image.
+        :returns: A NumPy array containing the mapped points
+            in 3d relative to the camera optical frame
+        """
+        # Apply binning and scale
+        # binning_x = max(camera_info.binning_x, 1) / scale
+        # binning_y = max(camera_info.binning_y, 1) / scale
+        # points = points * np.array([binning_x, binning_y])
+
+        # Create identity distortion coefficients if no distortion is used
+        # if use_distortion:
+        #     distortion_coefficients = np.array(camera_info.d)
+        # else:
+        distortion_coefficients = np.zeros(5)
+
+        # Get the ray directions relative to the camera optical frame for each of the points
+        ray_directions = np.ones((points.shape[0], 3))
+        if points.shape[0] > 0:
+            ray_directions[:, :2] = cv2.undistortPoints(
+                points.reshape(1, -1, 2).astype(np.float32),
+                # np.array([1338.64532, 0., 1026.12387, 0., 1337.89746, 748.42213, 0., 0., 1.]).reshape(3, 3),
+                self.intrinsic_matrix.reshape(3, 3),
+                distortion_coefficients).reshape(-1, 2)
+        # print(f"dd: {points.reshape(1, -1, 2).astype(np.float32)}  {self.intrinsic_matrix.reshape(3, 3)}    {distortion_coefficients} ")
+        # print("here1: ", ray_directions)
+        # Calculate ray -> plane intersections
+        intersections = self.line_plane_intersections(
+            plane_normal, plane_base_point, ray_directions)
+        return intersections
+
+    def line_plane_intersections(self,
+            plane_normal: np.ndarray,
+            plane_base_point: np.ndarray,
+            ray_directions: np.ndarray) -> np.ndarray:
+        """
+        Calculate the intersections of rays with a plane described by a normal and a point.
+
+        :param plane_normal: The normal vector of the mapping plane
+        :param plane_base_point: The base point of the mapping plane
+        :param ray_directions: A nx3 array with n being the number of rays
+        :returns: A nx3 array containing the 3d intersection points with n being the number of rays.
+        """
+        n_dot_u = np.tensordot(plane_normal, ray_directions, axes=([0], [1]))
+        relative_ray_distance = plane_normal.dot(plane_base_point) / n_dot_u
+
+        # we are casting a ray, intersections need to be in front of the camera
+        relative_ray_distance[relative_ray_distance <= 0] = np.nan
+
+        ray_directions[:, 0] = np.multiply(
+            relative_ray_distance, ray_directions[:, 0])
+        ray_directions[:, 1] = np.multiply(
+            relative_ray_distance, ray_directions[:, 1])
+        ray_directions[:, 2] = np.multiply(
+            relative_ray_distance, ray_directions[:, 2])
+
+        return ray_directions
 
     def find_camera_coordinate(self, pos: [int]) -> [int]:
         """
@@ -94,7 +281,7 @@ class CameraCalculations(CameraBase):
 
         tx = pos.position[1] * ratio
         ty = pos.position[2] * ratio
-        x, y = self.world_to_image_frame(tx, ty)
+        x, y = self.image_plane_to_pixel(tx, ty)
         return [x, y]
 
     # TODO should these be here or in the node?
@@ -149,68 +336,68 @@ class CameraCalculations(CameraBase):
 
         return bounding_box
 
-    def calculate_ball_from_bounding_boxes(self, bounding_boxes: [float] = [], ball_radius: float = 0.07) -> Transformation:
+    def calculate_ball_from_bounding_boxes(self, bounding_boxes: list[float], object_width: float = 0.14, object_height: float = 0.14) -> Transformation:
         """
         Reverse function for  :func:`~soccer_common.Camera.calculateBoundingBoxesFromBall`, takes the bounding boxes
-        of the ball as seen on the camera and return the 3D position of the ball assuming that the ball is on the ground
+        of the object as seen on the camera and return the 3D position of the ball assuming that the ball is on the ground
 
-        :param ball_radius: The radius of the ball in meters
         :param bounding_boxes: The bounding boxes of the ball on the camera in the format [[x1,y1], [x1,y1]] which are the top left and bottom right of the bounding box respectively
+        :param object_width: The width of the object in meters
+        :param object_height: The height of the object in meters
         :return: 3D coordinates of the ball stored in the :class:`Transformation` format
         """
 
         # bounding boxes [(y1, z1), (y2, z2)]
-        r = ball_radius
+        
+        y1_pixel = bounding_boxes[0][0]
+        z1_pixel = bounding_boxes[0][1]
+        y2_pixel = bounding_boxes[1][0]
+        z2_pixel = bounding_boxes[1][1]
+        
+        if object_width == object_height: # box
+            # Assuming the ball is a sphere, the bounding box must be a square, averaging the borders
+            ym = (y1_pixel + y2_pixel) / 2
+            zm = (z1_pixel + z2_pixel) / 2
+            length = z2_pixel - z1_pixel
+            width = y2_pixel - y1_pixel
+            y1_pixel = ym - (width / 2)
+            z1_pixel = zm - (length / 2)
+            y2_pixel = ym + (width / 2)
+            z2_pixel = zm + (length / 2)
 
-        y1 = bounding_boxes[0][0]
-        z1 = bounding_boxes[0][1]
-        y2 = bounding_boxes[1][0]
-        z2 = bounding_boxes[1][1]
+            trig_func = math.sin
+        else:
+            trig_func = math.tan
 
-        # Assuming the ball is a sphere, the bounding box must be a square, averaging the borders
-        ym = (y1 + y2) / 2
-        zm = (z1 + z2) / 2
-        length = z2 - z1
-        width = y2 - y1
-        y1 = ym - (width / 2)
-        z1 = zm - (length / 2)
-        y2 = ym + (width / 2)
-        z2 = zm + (length / 2)
 
-        y1w, z1w = self.image_to_world_frame(y1, z1)
-        y2w, z2w = self.image_to_world_frame(y2, z2)
-        y1w = -y1w
-        z1w = -z1w
-        y2w = -y2w
-        z2w = -z2w
+        y1_plane, z1_plane = self.pixel_to_image_plane(y1_pixel, z1_pixel)
+        y2_plane, z2_plane = self.pixel_to_image_plane(y2_pixel, z2_pixel)
 
-        f = self.focal_length
-
-        theta_y1 = math.atan2(y1w, f)
-        theta_y2 = math.atan2(y2w, f)
+        theta_y1 = math.atan2(y1_plane, self.focal_length)
+        theta_y2 = math.atan2(y2_plane, self.focal_length)
 
         theta_yy = (theta_y2 - theta_y1) / 2
         theta_y = theta_y1 + theta_yy
 
-        dy = r / math.sin(theta_yy)
+        dy = (object_width/2.0) / trig_func(theta_yy)
 
         xy = (math.cos(theta_y) * dy, math.sin(theta_y) * dy)
 
-        theta_z1 = math.atan2(z1w, f)
-        theta_z2 = math.atan2(z2w, f)
+        theta_z1 = math.atan2(z1_plane, self.focal_length)
+        theta_z2 = math.atan2(z2_plane, self.focal_length)
 
         theta_zz = (theta_z2 - theta_z1) / 2
         theta_z = theta_z1 + theta_zz
 
-        dz = r / math.sin(theta_zz)
+        dz = (object_height/2) / trig_func(theta_zz)
 
         xz = (math.cos(theta_z) * dz, math.sin(theta_z) * dz)
 
-        ball_x = xy[0]
+        ball_x = xy[0] # 0.5 * (xy[0] + xz[0])
         ball_y = xy[1]
         ball_z = xz[1]
 
         tr = Transformation([ball_x, -ball_y, -ball_z])
         tr_cam = self.pose @ tr
-        # print(tr) # TODO could use for head control
+        # print(tr.position) # TODO could use for head control
         return tr_cam  # tr
