@@ -60,7 +60,7 @@ class RLWalk:
                 self.bez.sensors.get_gravity_vec(),
                 command,
                 joint_angles,
-                # self.bez.motor_control.get_qvel_legs(),
+                self.bez.motor_control.get_qvel_legs(),
                 self._last_action,
                 phase,
             ]

@@ -32,7 +32,7 @@ class TestMuJoCo(unittest.TestCase):
         n_substeps = int(round(ctrl_dt / sim_dt))
 
         policy = RLWalk(
-            policy_name="bez22_flat_no_vel_policy.onnx",
+            policy_name="bez222_policy.onnx",
             bez=bez,
             ctrl_dt=ctrl_dt,
             n_substeps=n_substeps,
